@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.4 $ $Date: 2004/03/07 10:53:56 $
+ * @version $Revision: 1.5 $ $Date: 2004/03/07 15:29:06 $
  */
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public TestPStmtPoolingBasicDataSource(String testName) {
@@ -85,6 +85,32 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         stmt1.close();
         PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt4);
+    }
+
+    // Bugzilla Bug 27246
+    // PreparedStatement cache should be different depending on the Catalog    
+    public void testPStmtCatalog() throws Exception {
+        Connection conn = getConnection();
+        conn.setCatalog("catalog1");
+        DelegatingPreparedStatement stmt1 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        TesterPreparedStatement inner1 = (TesterPreparedStatement) stmt1.getInnermostDelegate();
+        assertEquals("catalog1", inner1.getCatalog());
+        stmt1.close();
+        
+        conn.setCatalog("catalog2");
+        DelegatingPreparedStatement stmt2 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        TesterPreparedStatement inner2 = (TesterPreparedStatement) stmt2.getInnermostDelegate();
+        assertEquals("catalog2", inner2.getCatalog());
+        stmt2.close();
+
+        conn.setCatalog("catalog1");
+        DelegatingPreparedStatement stmt3 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        TesterPreparedStatement inner3 = (TesterPreparedStatement) stmt1.getInnermostDelegate();
+        assertEquals("catalog1", inner3.getCatalog());
+        stmt3.close();
+        
+        assertNotSame(inner1, inner2);
+        assertSame(inner1, inner3);
     }
 
     public void testPStmtPoolingWithNoClose() throws Exception {
