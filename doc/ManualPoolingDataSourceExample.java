@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/doc/ManualPoolingDataSourceExample.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.5 $
+ * $Date: 2003/11/10 14:54:33 $
  *
  * ====================================================================
  *
@@ -67,11 +67,10 @@ import java.sql.SQLException;
 
 //
 // Here are the dbcp-specific classes.
-// Note that they are only used in the setupDriver
+// Note that they are only used in the setupDataSource
 // method. In normal use, your classes interact
 // only with the standard JDBC API
 //
-import java.sql.DriverManager;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.dbcp.ConnectionFactory;
@@ -131,7 +130,11 @@ public class ManualPoolingDataSourceExample {
         // system property.
         //
         System.out.println("Loading underlying JDBC driver.");
-        Class.forName("oracle.jdbc.driver.OracleDriver");
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         System.out.println("Done.");
 
         //
@@ -147,7 +150,6 @@ public class ManualPoolingDataSourceExample {
         //
         // Now, we can use JDBC DataSource as we normally would.
         //
-
         Connection conn = null;
         Statement stmt = null;
         ResultSet rset = null;
