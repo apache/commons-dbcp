@@ -1,4 +1,4 @@
-Release notes for Commons-DBCP 2.0
+Release notes for Commons-DBCP 1.1
 ===================================
 There were a lot changes since the 1.0 release on 12 Aug 2002.
 * All existing featueres can now be configured by JNDI Context providers (Tomcat)
@@ -24,7 +24,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 
 * UML Class & sequence diagrams, configuration documentation
 
-* The following issues were resolved: (see Bugzilla for complete description)
+* The following issues were resolved since v1.0: (see Bugzilla for complete description)
  6934    2003-09-20    Blo    DUPL    SQLTransformer.java - infinite loop in getConnection
  7038    2002-03-18    Nor    FIXE    DBCP does not build under JDK 1.4
  7727    2002-04-20    Maj    FIXE    Infinite loop (stack overflow) in BasicDataSource
@@ -104,3 +104,6 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 23293    2003-09-20    Nor    FIXE    setAutoCommit(true) when returning connection to the pool
 23304    2003-09-21    Nor    FIXE    NullpointerException when no driverClassName is specified
 
+* The following issues were resolved since v1.1RC1:
+22776     2003-09-30   Nor    FIXE    DBCP should not be writing messages to stderr or stdout
+                                      (removed unneeded logging in AbandonedObjectPool)
