@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.4 2002/06/28 15:28:20 glenn Exp $
- * $Revision: 1.4 $
- * $Date: 2002/06/28 15:28:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.5 2002/11/01 15:27:21 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2002/11/01 15:27:21 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnection.java,v 1.4 2002/06/28 15:28:20 glenn Exp $
+ * @version $Id: PoolableConnection.java,v 1.5 2002/11/01 15:27:21 rwaldhoff Exp $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -106,14 +106,18 @@ public class PoolableConnection extends DelegatingConnection {
      * Returns me to my pool.
      */
     public void close() throws SQLException {
-        try {
-            _pool.returnObject(this);
-        } catch(SQLException e) {
-            throw e;
-        } catch(RuntimeException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new SQLException(e.toString());
+        if(isClosed()) {
+            throw new SQLException("Already closed.");
+        } else {
+            try {
+                _pool.returnObject(this);
+            } catch(SQLException e) {
+                throw e;
+            } catch(RuntimeException e) {
+                throw e;
+            } catch(Exception e) {
+                throw new SQLException(e.toString());
+            }
         }
     }
 
