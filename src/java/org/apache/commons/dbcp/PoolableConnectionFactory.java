@@ -30,7 +30,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.21 $ $Date: 2004/05/12 18:28:58 $
+ * @version $Revision: 1.22 $ $Date: 2004/05/20 13:11:56 $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -348,7 +348,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public void passivateObject(Object obj) throws Exception {
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
-            if(!conn.getAutoCommit()) {
+            if(!conn.getAutoCommit() && !conn.isReadOnly()) {
                 conn.rollback();
             }
             conn.clearWarnings();
