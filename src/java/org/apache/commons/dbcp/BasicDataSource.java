@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.3 2002/04/20 18:31:01 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/04/20 18:31:01 $
  *
  * ====================================================================
  *
@@ -79,7 +79,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2002/03/17 14:55:20 $
+ * @version $Revision: 1.3 $ $Date: 2002/04/20 18:31:01 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -427,8 +427,8 @@ public class BasicDataSource implements DataSource {
         } catch (Throwable t) {
             String message = "Cannot load JDBC driver class '" +
                 driverClassName + "'";
-            getLogWriter().println(message);
-            t.printStackTrace(getLogWriter());
+            logWriter.println(message);
+            t.printStackTrace(logWriter);
             throw new SQLException(message);
         }
 
@@ -439,8 +439,8 @@ public class BasicDataSource implements DataSource {
         } catch (Throwable t) {
             String message = "Cannot create JDBC driver of class '" +
                 driverClassName + "'";
-            getLogWriter().println(message);
-            t.printStackTrace(getLogWriter());
+            logWriter.println(message);
+            t.printStackTrace(logWriter);
             throw new SQLException(message);
         }
 
