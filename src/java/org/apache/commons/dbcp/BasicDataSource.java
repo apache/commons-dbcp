@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.18 2003/08/21 19:00:26 dirkv Exp $
- * $Revision: 1.18 $
- * $Date: 2003/08/21 19:00:26 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.19 2003/08/21 22:21:37 dirkv Exp $
+ * $Revision: 1.19 $
+ * $Date: 2003/08/21 22:21:37 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.18 $ $Date: 2003/08/21 19:00:26 $
+ * @version $Revision: 1.19 $ $Date: 2003/08/21 22:21:37 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -662,7 +662,12 @@ public class BasicDataSource implements DataSource {
         }
 
         // Create an object pool to contain our active connections
-        connectionPool = new GenericObjectPool();
+        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned() == true)) {
+            connectionPool = new AbandonedObjectPool(null,abandonedConfig);
+        }
+        else {
+            connectionPool = new GenericObjectPool();
+        }
         connectionPool.setMaxActive(maxActive);
         connectionPool.setMaxIdle(maxIdle);
         connectionPool.setMinIdle(minIdle);
