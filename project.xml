@@ -19,7 +19,7 @@
   
   <id>commons-dbcp</id>
   <inceptionYear>2001</inceptionYear>
-  <currentVersion>1.2-RC1</currentVersion>
+  <currentVersion>1.2</currentVersion>
   <name>Commons DBCP</name>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
@@ -31,7 +31,7 @@
   <organization>
     <name>The Apache Software Foundation</name>
     <url>http://jakarta.apache.org</url>
-    <logo>http://jakarta.apache.org/images/original-jakarta-logo.gif</logo>
+    <logo>http://jakarta.apache.org/images/jakarta-logo.gif</logo>
   </organization>
 
   <licenses>
@@ -80,9 +80,9 @@
       <tag>DBCP_1_1</tag>
     </version>
     <version>
-      <id>1.2-RC1</id>
-      <name>1.2-RC1</name>
-      <tag>DBCP_1_2_RC1</tag>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>DBCP_1_2</tag>
     </version>
   </versions>
   <branches>
@@ -155,7 +155,7 @@
     </dependency>
     <dependency>
       <id>commons-pool</id>
-      <version>1.2-RC1</version>
+      <version>1.2</version>
     </dependency>
     <dependency>
       <id>jdbc</id>
