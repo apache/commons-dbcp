@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.19 $ $Date: 2004/05/18 18:41:16 $
+ * @version $Revision: 1.20 $ $Date: 2004/05/18 22:01:10 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -263,8 +263,8 @@ public class TestBasicDataSource extends TestConnectionPool {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
         
-        assertEquals(false, ds.getConnectionPool().getTestOnBorrow());
-        assertEquals(false, ds.getConnectionPool().getTestWhileIdle());
-        assertEquals(true, ds.getConnectionPool().getTestOnReturn());
+        assertEquals(false, ds.connectionPool.getTestOnBorrow());
+        assertEquals(false, ds.connectionPool.getTestWhileIdle());
+        assertEquals(true, ds.connectionPool.getTestOnReturn());
     }
 }
