@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/05/16 21:25:38 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.4 2002/06/29 16:46:02 glenn Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/06/29 16:46:02 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.4 2002/06/29 16:46:02 glenn Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -182,16 +182,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
 
     synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
-        try {
-            conn.setAutoCommit(_defaultAutoCommit);
-        } catch(SQLException e) {
-            ; // ignored for now
-        }
-        try {
-            conn.setReadOnly(_defaultReadOnly);
-        } catch(SQLException e) {
-            ; // ignored for now
-        }
         if(null != _stmtPoolFactory) {
             KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
             conn = new PoolingConnection(conn,stmtpool);
@@ -264,16 +254,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                 if(!conn.getAutoCommit()) {
                     conn.rollback();
                 }
-            } catch(SQLException e) {
-                ; // ignored
-            }
-            try {
-                conn.setAutoCommit(_defaultAutoCommit);
-            } catch(SQLException e) {
-                ; // ignored
-            }
-            try {
-                conn.setReadOnly(_defaultReadOnly);
             } catch(SQLException e) {
                 ; // ignored
             }
