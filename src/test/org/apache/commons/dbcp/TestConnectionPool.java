@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestConnectionPool.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/10/15 19:52:13 $
+ * $Revision: 1.10 $
+ * $Date: 2003/11/02 17:55:42 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import junit.framework.TestCase;
  * @author John McNally
  * @author Dirk Verbeeck
  * 
- * @version $Id: TestConnectionPool.java,v 1.9 2003/10/15 19:52:13 dirkv Exp $
+ * @version $Id: TestConnectionPool.java,v 1.10 2003/11/02 17:55:42 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -486,5 +486,26 @@ public abstract class TestConnectionPool extends TestCase {
             _complete = true;
         }
     }
-    
+
+    // Bugzilla Bug 24328: PooledConnectionImpl ignores resultsetType 
+    // and Concurrency if statement pooling is not enabled
+    // http://issues.apache.org/bugzilla/show_bug.cgi?id=24328
+    public void testPrepareStatementOptions() throws Exception 
+    {
+        Connection conn = getConnection();
+        assertTrue(null != conn);
+        PreparedStatement stmt = conn.prepareStatement("select * from dual", 
+            ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        assertTrue(null != stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        
+        assertEquals(ResultSet.TYPE_SCROLL_SENSITIVE, rset.getType());
+        assertEquals(ResultSet.CONCUR_UPDATABLE, rset.getConcurrency());
+        
+        rset.close();
+        stmt.close();
+        conn.close();
+    }    
 }
