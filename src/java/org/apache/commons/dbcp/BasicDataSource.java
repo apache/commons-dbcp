@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.17 2003/08/11 16:11:34 dirkv Exp $
- * $Revision: 1.17 $
- * $Date: 2003/08/11 16:11:34 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.18 2003/08/21 19:00:26 dirkv Exp $
+ * $Revision: 1.18 $
+ * $Date: 2003/08/21 19:00:26 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.17 $ $Date: 2003/08/11 16:11:34 $
+ * @version $Revision: 1.18 $ $Date: 2003/08/21 19:00:26 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -161,6 +161,19 @@ public class BasicDataSource implements DataSource {
         this.maxIdle = maxIdle;
     }
 
+    /**
+     * The minimum number of active connections that can remain idle in the
+     * pool, without extra ones being created, or 0 to create none.
+     */
+    protected int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;;
+
+    public int getMinIdle() {
+        return (this.minIdle);
+    }
+
+    public void setMinIdle(int minIdle) {
+       this.minIdle = minIdle;
+    }
 
     /**
      * The maximum number of milliseconds that the pool will wait (when there
@@ -652,6 +665,7 @@ public class BasicDataSource implements DataSource {
         connectionPool = new GenericObjectPool();
         connectionPool.setMaxActive(maxActive);
         connectionPool.setMaxIdle(maxIdle);
+        connectionPool.setMinIdle(minIdle);
         connectionPool.setMaxWait(maxWait);
         connectionPool.setTestOnBorrow(testOnBorrow);
         connectionPool.setTestOnReturn(testOnReturn);
