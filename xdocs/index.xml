@@ -54,7 +54,7 @@ servlet container presents a DBCP DataSource as a JNDI Datasource.
 <a href="http://james.apache.org/">James</a> (Java Apache Mail Enterprise Server) 
 has integrated DBCP into the <a href="http://avalon.apache.org/">Avalon</a> framework.
 A Avalon-style datasource is created by 
-<a href="http://cvs.apache.org/viewcvs/james-server/src/java/org/apache/james/util/dbcp/JdbcDataSource.java">
+<a href="http://svn.apache.org/viewcvs/james/server/trunk/src/java/org/apache/james/util/dbcp/JdbcDataSource.java?view=markup">
 wrapping</a> the DBCP implementation.
 The pooling logic of DBCP and the configuration found in Avalon's excalibur 
 code is what was needed to create an integrated reliable DataSource.
