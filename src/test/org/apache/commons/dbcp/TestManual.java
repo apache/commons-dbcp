@@ -35,7 +35,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.18 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.19 $ $Date: 2004/05/17 18:36:45 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -61,6 +61,7 @@ public class TestManual extends TestConnectionPool {
         assertNotNull(pcf);
         driver = new PoolingDriver();
         driver.registerPool("test",pool);
+        PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
         DriverManager.registerDriver(driver);
     }
 
@@ -68,6 +69,22 @@ public class TestManual extends TestConnectionPool {
         DriverManager.deregisterDriver(driver);
     }
 
+    /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=28912 */
+    public void testReportedBug28912() throws Exception {
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        conn1.close();        
+        
+        Connection conn2 = getConnection();
+        assertNotNull(conn2);
+        
+        try {
+            conn1.close();
+            fail("Expected SQLException");
+        }
+        catch (SQLException e) { }
+    }
+    
     /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
     public void testReportedBug12400() throws Exception {
         ObjectPool connectionPool = new GenericObjectPool(
