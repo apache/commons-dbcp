@@ -28,7 +28,7 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * TestCase for AbandonedObjectPool
  * 
  * @author Wayne Woodfield
- * @version $Revision: 1.1 $ $Date: 2004/05/01 12:43:12 $
+ * @version $Revision: 1.2 $ $Date: 2004/05/04 17:56:10 $
  */
 public class TestAbandonedObjectPool extends TestCase {
     private AbandonedObjectPool pool = null;
@@ -44,13 +44,13 @@ public class TestAbandonedObjectPool extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-		config = new AbandonedConfig();
+        config = new AbandonedConfig();
         
         // -- Uncomment the following line to enable logging -- 
         // config.setLogAbandoned(true);
         
-		config.setRemoveAbandoned(true);
-		config.setRemoveAbandonedTimeout(1);
+        config.setRemoveAbandoned(true);
+        config.setRemoveAbandonedTimeout(1);
         pool = new AbandonedObjectPool(new SimpleFactory(), config);
     }
 
@@ -60,10 +60,10 @@ public class TestAbandonedObjectPool extends TestCase {
         pool = null;
     }
 
-	/**
-	* Tests fix for Bug 28579, a bug in AbandonedObjectPool that causes numActive to go negative
-	* in GenericObjectPool
-	*/
+    /**
+    * Tests fix for Bug 28579, a bug in AbandonedObjectPool that causes numActive to go negative
+    * in GenericObjectPool
+    */
     public void testConcurrentInvalidation() throws Exception {
         final int POOL_SIZE = 30;
         pool.setMaxActive(POOL_SIZE);
@@ -140,9 +140,9 @@ public class TestAbandonedObjectPool extends TestCase {
 
         public void destroyObject(Object obj) {
             ((PooledTestObject)obj).setActive(false);
-            // destroying an object will often take a few milliseconds, especially when the object is a network connection
-            try { Thread.sleep(30); }
-            catch (InterruptedException e) { }
+            // while destroying connections, yield control to other threads
+            // helps simulate threading errors
+            Thread.yield();
         }
     }
 }
