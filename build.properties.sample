@@ -1,10 +1,21 @@
 # commons-collections.jar - Commons-Collections Classpath
-commons-collections.jar=${basedir}/../collections/build/commons-collections.jar
+commons-collections.home=${basedir}/../collections/dist
+commons-collections.jar=${commons-collections.home}/commons-collections.jar
 # commons-pool.jar - Commons-Pool Classpath
-commons-pool.jar=${basedir}/../pool/build/commons-pool.jar
+commons-pool.home=${basedir}/../pool/dist
+commons-pool.jar=${commons-pool.home}/commons-pool.jar
+
+root=/cvs/bcom/bcom/stable/ext/lib/
 # sax2.jar - SAX2 API Classpath
-sax2.jar=/cvs/bcom/bcom/stable/ext/lib/sax2.jar
+
+sax2.jar=${root}/sax2.jar
+# Alternatively, use jaxp.jar which contains SAX2 classes:
+# jaxp.home=${root}
+# jaxp.jaxp.jar=${jaxp.home}/jaxp.jar
+# sax2.jar=${jaxp.jaxp.jar}
+
 # jdbc20ext.jar - JDBC Optional Package 2.0 (also included in j2ee.jar)
-jdbc20ext.jar=/cvs/bcom/bcom/stable/ext/lib/jdbc2_0-stdext.jar
+jdbc20ext.jar=${root}/jdbc2_0-stdext.jar
 # junit.jar - JUnit 3.2+ Classpath
-junit.jar=/java/junit/junit.jar
+junit.home=/java/junit
+junit.jar=${junit.home}/junit.jar
