@@ -56,13 +56,10 @@ package org.apache.commons.dbcp.datasources;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.sql.ConnectionPoolDataSource;
-import javax.sql.DataSource;
 
 import org.apache.commons.collections.LRUMap;
 import org.apache.commons.pool.KeyedObjectPool;
@@ -80,7 +77,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SharedPoolDataSource.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * @version $Id: SharedPoolDataSource.java,v 1.2 2003/08/13 11:48:23 dirkv Exp $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {

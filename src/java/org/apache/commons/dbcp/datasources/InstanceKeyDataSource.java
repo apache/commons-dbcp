@@ -58,9 +58,6 @@ import java.io.Serializable;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -125,7 +122,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.2 2003/08/13 11:48:23 dirkv Exp $
  */
 abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {

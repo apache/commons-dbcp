@@ -62,7 +62,6 @@ import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.sql.ConnectionPoolDataSource;
-import javax.sql.DataSource;
 
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -81,7 +80,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * @version $Id: PerUserPoolDataSource.java,v 1.2 2003/08/13 11:48:23 dirkv Exp $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
