@@ -30,7 +30,7 @@ import java.util.List;
  * extend this class.
  * 
  * @author Glenn L. Nielsen
- * @version $Revision: 1.11 $ $Date: 2004/02/28 11:48:04 $
+ * @version $Revision: 1.12 $ $Date: 2004/04/25 10:36:24 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedTrace {
@@ -200,8 +200,8 @@ public class AbandonedTrace {
      */
     public void printStackTrace() {
         if (createdBy != null) {
-            System.err.println(format.format(new Date(createdTime)));
-            createdBy.printStackTrace();
+            System.out.println(format.format(new Date(createdTime)));
+            createdBy.printStackTrace(System.out);
         }
         synchronized(this) {
             Iterator it = this.trace.iterator();
