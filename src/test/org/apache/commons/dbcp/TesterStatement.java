@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterStatement.java,v $
- * $Revision: 1.12 $
- * $Date: 2003/11/02 17:46:12 $
+ * $Revision: 1.13 $
+ * $Date: 2003/12/22 14:59:43 $
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.sql.Statement;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2003/11/02 17:46:12 $
+ * @version $Revision: 1.13 $ $Date: 2003/12/22 14:59:43 $
  */
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {
@@ -98,6 +98,7 @@ public class TesterStatement implements Statement {
     protected int _fetchSize = 1;
     protected int _resultSetConcurrency = 1;
     protected int _resultSetType = 1;
+    protected ResultSet _resultSet = null;
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
@@ -122,6 +123,10 @@ public class TesterStatement implements Statement {
     public void close() throws SQLException {
         checkOpen();
         _open = false;
+        if (_resultSet != null) {
+            _resultSet.close();
+            _resultSet = null;
+        }
     }
 
     public int getMaxFieldSize() throws SQLException {
@@ -184,7 +189,10 @@ public class TesterStatement implements Statement {
 
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
-        return new TesterResultSet(this);
+        if (_resultSet == null) {
+            _resultSet = new TesterResultSet(this); 
+        }
+        return _resultSet;
     }
 
     public int getUpdateCount() throws SQLException {
