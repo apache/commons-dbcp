@@ -145,7 +145,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.12 2003/06/29 12:42:16 mpoeschl Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.13 2003/07/26 01:23:21 jmcnally Exp $
  */
 public class Jdbc2PoolDataSource
         implements DataSource, Referenceable, Serializable, ObjectFactory {
@@ -166,10 +166,8 @@ public class Jdbc2PoolDataSource
     private boolean defaultAutoCommit = false;
     private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-    private int defaultMaxWait = 
-        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_MAX_WAIT) ?
-        (int)(GenericObjectPool.DEFAULT_MAX_WAIT) :
-        Integer.MAX_VALUE;
+    private int defaultMaxWait = (int)Math.min((long)Integer.MAX_VALUE,
+        GenericObjectPool.DEFAULT_MAX_WAIT);
     private boolean defaultReadOnly = false;
     /** Description */
     private String description = null;
@@ -186,15 +184,14 @@ public class Jdbc2PoolDataSource
     private Map perUserDefaultReadOnly = null;    
     private boolean _testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
     private boolean _testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
-    private int _timeBetweenEvictionRunsMillis = 
-        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS) ?
-        (int)(GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS) :
-        Integer.MAX_VALUE;;
-    private int _numTestsPerEvictionRun = GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
-    private int _minEvictableIdleTimeMillis =
-        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS) ?
-        (int)(GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS) :
-        Integer.MAX_VALUE;;    
+    private int _timeBetweenEvictionRunsMillis = (int)
+        Math.min((long)Integer.MAX_VALUE,
+                 GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+    private int _numTestsPerEvictionRun = 
+        GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+    private int _minEvictableIdleTimeMillis = (int)
+    Math.min((long)Integer.MAX_VALUE,
+             GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
     private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
     private boolean testPositionSet = false;
