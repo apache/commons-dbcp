@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/04/03 11:57:16 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.4 2002/04/03 12:33:02 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/04/03 12:33:02 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import org.apache.commons.pool.impl.*;
 
 /**
  * @author Rodney Waldhoff
- * @version $Id: TestManual.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
+ * @version $Id: TestManual.java,v 1.4 2002/04/03 12:33:02 rwaldhoff Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -91,7 +91,7 @@ public class TestManual extends TestCase {
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
         PoolingDriver driver = new PoolingDriver();
         driver.registerPool("test",pool);
-        DriverManager.registerDritestSimplever(driver);
+        DriverManager.registerDriver(driver);
     }
 
     public void testIsClosed() throws Exception {
