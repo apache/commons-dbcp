@@ -1,7 +1,7 @@
 /*
- * $Id: TestAll.java,v 1.5 2002/11/08 19:17:24 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2002/11/08 19:17:24 $
+ * $Id: TestAll.java,v 1.6 2003/08/11 23:55:43 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/11 23:55:43 $
  *
  * ====================================================================
  *
@@ -66,7 +66,7 @@ import org.apache.commons.dbcp.jdbc2pool.TestJdbc2PoolDataSource;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.5 $ $Date: 2002/11/08 19:17:24 $
+ * @version $Revision: 1.6 $ $Date: 2003/08/11 23:55:43 $
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {
@@ -78,6 +78,7 @@ public class TestAll extends TestCase {
         suite.addTest(TestManual.suite());
         suite.addTest(TestJOCLed.suite());
         suite.addTest(TestBasicDataSource.suite());
+        suite.addTest(TestDelegatingConnection.suite());
         suite.addTest(TestDelegatingStatement.suite());
         suite.addTest(TestDelegatingPreparedStatement.suite());
         suite.addTest(TestJdbc2PoolDataSource.suite());

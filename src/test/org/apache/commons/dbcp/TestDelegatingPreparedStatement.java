@@ -1,7 +1,7 @@
 /*
- * $Id: TestDelegatingPreparedStatement.java,v 1.1 2002/10/31 21:41:50 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2002/10/31 21:41:50 $
+ * $Id: TestDelegatingPreparedStatement.java,v 1.2 2003/08/11 23:55:43 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/11 23:55:43 $
  *
  * ====================================================================
  *
@@ -70,7 +70,8 @@ import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.1 $ $Date: 2002/10/31 21:41:50 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.2 $ $Date: 2003/08/11 23:55:43 $
  */
 public class TestDelegatingPreparedStatement extends TestCase {
     public TestDelegatingPreparedStatement(String testName) {
@@ -107,6 +108,29 @@ public class TestDelegatingPreparedStatement extends TestCase {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         stmt = new DelegatingPreparedStatement(conn,delegateStmt);
         assertEquals(delegateStmt,stmt.getDelegate());
+    }
+
+    public void testHashCodeNull() {
+        stmt = new DelegatingPreparedStatement(conn, null);
+        assertEquals(0, stmt.hashCode());
+    }
+    
+    public void testHashCode() {
+        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
+        DelegatingPreparedStatement stmt = new DelegatingPreparedStatement(conn,delegateStmt);
+        DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn,delegateStmt);
+        assertEquals(stmt.hashCode(), stmt2.hashCode());
+    }
+    
+    public void testEquals() {
+        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
+        DelegatingPreparedStatement stmt = new DelegatingPreparedStatement(conn, delegateStmt);
+        DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn, delegateStmt);
+        DelegatingPreparedStatement stmt3 = new DelegatingPreparedStatement(conn, null);
+        
+        assertTrue(!stmt.equals(null));
+        assertTrue(stmt.equals(stmt2));
+        assertTrue(!stmt.equals(stmt3));
     }
 
 }
