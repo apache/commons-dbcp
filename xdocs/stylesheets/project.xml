@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Commons - DBCP" href="http://jakarta.apache.org/commons/pool">
-    <title>Commons Pool</title>
+    <title>Commons DBCP</title>
     <logo href="http://jakarta.apache.org/commons/images/logo.jpg">Jakarta-Commons</logo>
     <!--
       Note: Per the .vsl file, "/site" links will be prefixed with "http://jakarta.apache.org/site"
