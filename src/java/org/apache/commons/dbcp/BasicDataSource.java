@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.10 2002/07/20 17:37:44 craigmcc Exp $
- * $Revision: 1.10 $
- * $Date: 2002/07/20 17:37:44 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.11 2002/07/21 00:38:35 craigmcc Exp $
+ * $Revision: 1.11 $
+ * $Date: 2002/07/21 00:38:35 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.10 $ $Date: 2002/07/20 17:37:44 $
+ * @version $Revision: 1.11 $ $Date: 2002/07/21 00:38:35 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -546,6 +546,9 @@ public class BasicDataSource implements DataSource {
         connectionPool.setMaxActive(maxActive);
         connectionPool.setMaxIdle(maxIdle);
         connectionPool.setMaxWait(maxWait);
+        if (validationQuery != null) {
+            connectionPool.setTestOnBorrow(true);
+        }
 
         // Set up the driver connection factory we will use
         if (username != null) {
