@@ -35,7 +35,7 @@ import org.apache.commons.pool.KeyedObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.10 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.11 $ $Date: 2004/03/07 10:50:37 $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
     /**
@@ -59,6 +59,12 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
         super((DelegatingConnection) conn, stmt);
         _pool = pool;
         _key = key;
+
+        // Remove from trace now because this statement will be 
+        // added by the activate method.
+        if(_conn != null) {
+            _conn.removeTrace(this);
+        }
     }
 
     /**
@@ -85,7 +91,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
         if(_conn != null) {
             _conn.addTrace(this);
         }
-        super.passivate();
+        super.activate();
     }
   
     protected void passivate() throws SQLException {
@@ -93,7 +99,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
         if(_conn != null) {
             _conn.removeTrace(this);
         }
-           
+
         // The JDBC spec requires that a statment close any open
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
