@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2002/11/08 19:17:23 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.5 2003/08/11 14:53:34 dirkv Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/11 14:53:34 $
  *
  * ====================================================================
  *
@@ -61,6 +61,7 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -68,11 +69,11 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.commons.jocl.JOCLContentHandler;
 import org.apache.commons.pool.ObjectPool;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -81,7 +82,8 @@ import org.apache.commons.pool.ObjectPool;
  * {@link ObjectPool}.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolingDriver.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
+ * @author Dirk Verbeeck
+ * @version $Id: PoolingDriver.java,v 1.5 2003/08/11 14:53:34 dirkv Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -98,7 +100,22 @@ public class PoolingDriver implements Driver {
     public PoolingDriver() {
     }
 
+    /**
+     * WARNING: This method throws DbcpExceptions (RuntimeExceptions)
+     * and will be replaced by the protected getConnectionPool method.
+     * 
+     * @deprecated This will be removed in a future version of DBCP.
+     */
     synchronized public ObjectPool getPool(String name) {
+        try {
+            return getConnectionPool(name);
+        }
+        catch (Exception e) {
+            throw new DbcpException(e);
+        }
+    }
+    
+    synchronized protected ObjectPool getConnectionPool(String name) throws SQLException {
         ObjectPool pool = (ObjectPool)(_pools.get(name));
         if(null == pool) {
             InputStream in = this.getClass().getResourceAsStream(String.valueOf(name) + ".jocl");
@@ -106,8 +123,12 @@ public class PoolingDriver implements Driver {
                 JOCLContentHandler jocl = null;
                 try {
                     jocl = JOCLContentHandler.parse(in);
-                } catch(Exception e) {
-                    throw new DbcpException(e);
+                }
+                catch (SAXException e) {
+                    throw new SQLNestedException("Could not parse configuration file", e);
+                }
+                catch (IOException e) {
+                    throw new SQLNestedException("Could not load configuration file", e);
                 }
                 if(jocl.getType(0).equals(String.class)) {
                     pool = getPool((String)(jocl.getValue(0)));
@@ -120,6 +141,9 @@ public class PoolingDriver implements Driver {
                         registerPool(name,pool);
                     }
                 }
+            }
+            else {
+                throw new SQLException("Configuration file not found");
             }
         }
         return pool;
@@ -139,7 +163,7 @@ public class PoolingDriver implements Driver {
 
     public Connection connect(String url, Properties info) throws SQLException {
         if(acceptsURL(url)) {
-            ObjectPool pool = getPool(url.substring(URL_PREFIX_LEN));
+            ObjectPool pool = getConnectionPool(url.substring(URL_PREFIX_LEN));
             if(null == pool) {
                 throw new SQLException("No pool found for " + url + ".");
             } else {
@@ -147,12 +171,8 @@ public class PoolingDriver implements Driver {
                     return (Connection)(pool.borrowObject());
                 } catch(SQLException e) {
                     throw e;
-                } catch(NoSuchElementException e) {
-                    throw new SQLException(e.toString());
-                } catch(RuntimeException e) {
-                    throw e;
-                } catch(Exception e) {
-                    throw new SQLException(e.toString());
+                } catch(Throwable e) {
+                    throw new SQLNestedException("Connect failed", e);
                 }
             }
         } else {
