@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE org.apache.commons.menus SYSTEM '../../../jakarta-commons/commons-build/menus/menus.dtd'>
+<!DOCTYPE org.apache.commons.menus SYSTEM '../../commons-build/menus/menus.dtd'>
 <project name="Commons DBCP">
     <title>Commons DBCP</title>
     <body>
-        &top-menus;
         <menu name="Commons&#xA0;DBCP">
             <item name="Overview"                      href="/index.html" />
             <item name="Configuration"                 href="/configuration.html" />
@@ -15,6 +14,6 @@
             <item name="Examples"                      href="http://cvs.apache.org/viewcvs/jakarta-commons/dbcp/doc/"/>
             <item name="Downloads"                     href="/downloads.html"/>
         </menu>
-        &bottom-menus;
+        &common-menus;
     </body>
 </project>
