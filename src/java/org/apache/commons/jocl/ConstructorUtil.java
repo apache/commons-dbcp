@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/jocl/ConstructorUtil.java,v 1.1 2001/04/14 17:16:12 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:16:12 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/jocl/ConstructorUtil.java,v 1.2 2003/08/11 12:12:27 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/11 12:12:27 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Miscellaneous {@link Constructor} related utility functions.
  *
- * @version $Id: ConstructorUtil.java,v 1.1 2001/04/14 17:16:12 rwaldhoff Exp $
+ * @version $Id: ConstructorUtil.java,v 1.2 2003/08/11 12:12:27 dirkv Exp $
  * @author Rodney Waldhoff
  */
 public class ConstructorUtil {
@@ -109,7 +109,7 @@ public class ConstructorUtil {
                             break;
                         }
                     }
-                    if(canuse = true) {
+                    if(canuse == true) {
                         ctor = ctors[i];
                         break;
                     }
