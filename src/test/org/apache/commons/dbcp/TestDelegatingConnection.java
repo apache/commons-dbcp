@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestDelegatingConnection.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/10/15 19:53:30 $
+ * $Revision: 1.5 $
+ * $Date: 2004/02/21 13:26:30 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision: 1.4 $ $Date: 2003/10/15 19:53:30 $
+ * @version $Revision: 1.5 $ $Date: 2004/02/21 13:26:30 $
  */
 public class TestDelegatingConnection extends TestCase {
     public TestDelegatingConnection(String testName) {
@@ -82,9 +82,11 @@ public class TestDelegatingConnection extends TestCase {
 
     private DelegatingConnection conn = null;
     private Connection delegateConn = null;
+    private Connection delegateConn2 = null;
 
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
+        delegateConn2 = new TesterConnection("test", "test");
         conn = new DelegatingConnection(delegateConn);
     }
 
@@ -93,10 +95,16 @@ public class TestDelegatingConnection extends TestCase {
         assertEquals(delegateConn,conn.getDelegate());
     }
 
-    public void testHashCode() {
+    public void testHashCodeEqual() {
         DelegatingConnection conn = new DelegatingConnection(delegateConn);
         DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
         assertEquals(conn.hashCode(), conn2.hashCode());
+    }
+
+    public void testHashCodeNotEqual() {
+        DelegatingConnection conn = new DelegatingConnection(delegateConn);
+        DelegatingConnection conn2 = new DelegatingConnection(delegateConn2);
+        assertTrue(conn.hashCode() != conn2.hashCode());
     }
     
     public void testEquals() {
