@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.2 2002/06/23 21:41:42 glenn Exp $
- * $Revision: 1.2 $
- * $Date: 2002/06/23 21:41:42 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.3 2003/03/06 18:59:12 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/03/06 18:59:12 $ 
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.2 $ $Date: 2002/06/23 21:41:42 $
+ * @version $Revision: 1.3 $ $Date: 2003/03/06 18:59:12 $
  */
 public class AbandonedObjectPool extends GenericObjectPool {
 
@@ -140,6 +140,13 @@ public class AbandonedObjectPool extends GenericObjectPool {
         super.returnObject(obj);
     }
 
+    public synchronized void invalidateObject(Object obj) throws Exception {
+        if (config != null && config.getRemoveAbandoned()) {
+            trace.remove(obj);
+        }
+        super.invalidateObject(obj);        
+    }
+    
     /**
      * Recover abandoned db connections which have been idle
      * greater than the removeAbandonedTimeout.
