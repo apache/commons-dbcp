@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.4 2003/03/06 00:11:32 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/03/06 00:11:32 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.5 2003/08/11 23:40:40 dirkv Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/11 23:40:40 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  * A dummy {@link Connection}, for testing purposes.
  * @author Rodney Waldhoff
- * @version $Id: TesterConnection.java,v 1.4 2003/03/06 00:11:32 rwaldhoff Exp $
+ * @version $Id: TesterConnection.java,v 1.5 2003/08/11 23:40:40 dirkv Exp $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -77,9 +77,15 @@ public class TesterConnection implements Connection {
     protected String _catalog = null;
     protected Map _typeMap = null;
     protected boolean _readOnly = false;
+    protected SQLWarning warnings = null;
+
+    public void setWarnings(SQLWarning warning) {
+        this.warnings = warning;
+    }
 
     public void clearWarnings() throws SQLException {
         checkOpen();
+        warnings = null;
     }
 
     public void close() throws SQLException {
@@ -128,7 +134,7 @@ public class TesterConnection implements Connection {
 
     public SQLWarning getWarnings() throws SQLException {
         checkOpen();
-        return null;
+        return warnings;
     }
 
     public boolean isClosed() throws SQLException {
@@ -265,5 +271,4 @@ public class TesterConnection implements Connection {
     }
 
 /* JDBC_3_ANT_KEY_END */
-
 }
