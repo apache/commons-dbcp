@@ -47,7 +47,7 @@ import java.sql.SQLException;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.18 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.19 $ $Date: 2004/03/06 13:35:31 $
  */
 public class DelegatingCallableStatement extends DelegatingPreparedStatement
         implements CallableStatement {
@@ -88,334 +88,248 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         _stmt = s;
     }
 
-    public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException { checkOpen(); _stmt.registerOutParameter( parameterIndex,  sqlType);  }
-    public void registerOutParameter(int parameterIndex, int sqlType, int scale) throws SQLException { checkOpen(); _stmt.registerOutParameter( parameterIndex,  sqlType,  scale);  }
-    public boolean wasNull() throws SQLException { checkOpen(); return _stmt.wasNull();  }
-    public String getString(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getString( parameterIndex);  }
-    public boolean getBoolean(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getBoolean( parameterIndex);  }
-    public byte getByte(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getByte( parameterIndex);  }
-    public short getShort(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getShort( parameterIndex);  }
-    public int getInt(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getInt( parameterIndex);  }
-    public long getLong(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getLong( parameterIndex);  }
-    public float getFloat(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getFloat( parameterIndex);  }
-    public double getDouble(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getDouble( parameterIndex);  }
+    public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter( parameterIndex,  sqlType); } catch (SQLException e) { handleException(e); } }
+
+    public void registerOutParameter(int parameterIndex, int sqlType, int scale) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter( parameterIndex,  sqlType,  scale); } catch (SQLException e) { handleException(e); } }
+
+    public boolean wasNull() throws SQLException
+    { checkOpen(); try { return _stmt.wasNull(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public String getString(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getString( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public boolean getBoolean(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getBoolean( parameterIndex); } catch (SQLException e) { handleException(e); return false; } }
+
+    public byte getByte(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getByte( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public short getShort(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getShort( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getInt(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getInt( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public long getLong(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getLong( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public float getFloat(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getFloat( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public double getDouble(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getDouble( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
     /** @deprecated */
-    public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException { checkOpen(); return _stmt.getBigDecimal( parameterIndex,  scale);  }
-    public byte[] getBytes(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getBytes( parameterIndex);  }
-    public Date getDate(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getDate( parameterIndex);  }
-    public Time getTime(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getTime( parameterIndex);  }
-    public Timestamp getTimestamp(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getTimestamp( parameterIndex);  }
-    public Object getObject(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getObject( parameterIndex);  }
-    public BigDecimal getBigDecimal(int parameterIndex) throws SQLException { checkOpen(); return _stmt.getBigDecimal( parameterIndex);  }
-    public Object getObject(int i, Map map) throws SQLException { checkOpen(); return _stmt.getObject( i, map);  }
-    public Ref getRef(int i) throws SQLException { checkOpen(); return _stmt.getRef( i);  }
-    public Blob getBlob(int i) throws SQLException { checkOpen(); return _stmt.getBlob( i);  }
-    public Clob getClob(int i) throws SQLException { checkOpen(); return _stmt.getClob( i);  }
-    public Array getArray(int i) throws SQLException { checkOpen(); return _stmt.getArray( i);  }
-    public Date getDate(int parameterIndex, Calendar cal) throws SQLException { checkOpen(); return _stmt.getDate( parameterIndex,  cal);  }
-    public Time getTime(int parameterIndex, Calendar cal) throws SQLException { checkOpen(); return _stmt.getTime( parameterIndex,  cal);  }
-    public Timestamp getTimestamp(int parameterIndex, Calendar cal) throws SQLException { checkOpen(); return _stmt.getTimestamp( parameterIndex,  cal);  }
-    public void registerOutParameter(int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.registerOutParameter( paramIndex,  sqlType,  typeName);  }
+    public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException
+    { checkOpen(); try { return _stmt.getBigDecimal( parameterIndex,  scale); } catch (SQLException e) { handleException(e); return null; } }
+
+    public byte[] getBytes(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getBytes( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getDate( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getTime( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getTimestamp( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Object getObject(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getObject( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public BigDecimal getBigDecimal(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getBigDecimal( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Object getObject(int i, Map map) throws SQLException
+    { checkOpen(); try { return _stmt.getObject( i, map); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Ref getRef(int i) throws SQLException
+    { checkOpen(); try { return _stmt.getRef( i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Blob getBlob(int i) throws SQLException
+    { checkOpen(); try { return _stmt.getBlob( i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Clob getClob(int i) throws SQLException
+    { checkOpen(); try { return _stmt.getClob( i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Array getArray(int i) throws SQLException
+    { checkOpen(); try { return _stmt.getArray( i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(int parameterIndex, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getDate( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(int parameterIndex, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getTime( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(int parameterIndex, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getTimestamp( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public void registerOutParameter(int paramIndex, int sqlType, String typeName) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter( paramIndex,  sqlType,  typeName); } catch (SQLException e) { handleException(e); } }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
-    public void registerOutParameter(String parameterName, int sqlType)
-        throws SQLException {
-        checkOpen();
-        _stmt.registerOutParameter(parameterName, sqlType);
-    }
+    public void registerOutParameter(String parameterName, int sqlType) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter(parameterName, sqlType); } catch (SQLException e) { handleException(e); } }
 
-    public void registerOutParameter(String parameterName,
-        int sqlType, int scale) throws SQLException {
-        checkOpen();
-        _stmt.registerOutParameter(parameterName, sqlType, scale);
-    }
+    public void registerOutParameter(String parameterName, int sqlType, int scale) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter(parameterName, sqlType, scale); } catch (SQLException e) { handleException(e); } }
 
-    public void registerOutParameter(String parameterName,
-        int sqlType, String typeName) throws SQLException {
-        checkOpen();
-        _stmt.registerOutParameter(parameterName, sqlType, typeName);
-    }
+    public void registerOutParameter(String parameterName, int sqlType, String typeName) throws SQLException
+    { checkOpen(); try { _stmt.registerOutParameter(parameterName, sqlType, typeName); } catch (SQLException e) { handleException(e); } }
 
-    public URL getURL(int parameterIndex) throws SQLException {
-        checkOpen();
-        return _stmt.getURL(parameterIndex);
-    }
+    public URL getURL(int parameterIndex) throws SQLException
+    { checkOpen(); try { return _stmt.getURL(parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
 
-    public void setURL(String parameterName, URL val) throws SQLException {
-        checkOpen();
-        _stmt.setURL(parameterName, val);
-    }
+    public void setURL(String parameterName, URL val) throws SQLException
+    { checkOpen(); try { _stmt.setURL(parameterName, val); } catch (SQLException e) { handleException(e); } }
 
-    public void setNull(String parameterName, int sqlType)
-        throws SQLException {
-        checkOpen();
-        _stmt.setNull(parameterName, sqlType);
-    }
+    public void setNull(String parameterName, int sqlType) throws SQLException
+    { checkOpen(); try { _stmt.setNull(parameterName, sqlType); } catch (SQLException e) { handleException(e); } }
 
-    public void setBoolean(String parameterName, boolean x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setBoolean(parameterName, x);
-    }
+    public void setBoolean(String parameterName, boolean x) throws SQLException
+    { checkOpen(); try { _stmt.setBoolean(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setByte(String parameterName, byte x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setByte(parameterName, x);
-    }
+    public void setByte(String parameterName, byte x) throws SQLException
+    { checkOpen(); try { _stmt.setByte(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setShort(String parameterName, short x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setShort(parameterName, x);
-    }
+    public void setShort(String parameterName, short x) throws SQLException
+    { checkOpen(); try { _stmt.setShort(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setInt(String parameterName, int x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setInt(parameterName, x);
-    }
+    public void setInt(String parameterName, int x) throws SQLException
+    { checkOpen(); try { _stmt.setInt(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setLong(String parameterName, long x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setLong(parameterName, x);
-    }
+    public void setLong(String parameterName, long x) throws SQLException
+    { checkOpen(); try { _stmt.setLong(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setFloat(String parameterName, float x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setFloat(parameterName, x);
-    }
+    public void setFloat(String parameterName, float x) throws SQLException
+    { checkOpen(); try { _stmt.setFloat(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setDouble(String parameterName, double x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setDouble(parameterName, x);
-    }
+    public void setDouble(String parameterName, double x) throws SQLException
+    { checkOpen(); try { _stmt.setDouble(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setBigDecimal(String parameterName, BigDecimal x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setBigDecimal(parameterName, x);
-    }
+    public void setBigDecimal(String parameterName, BigDecimal x) throws SQLException
+    { checkOpen(); try { _stmt.setBigDecimal(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setString(String parameterName, String x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setString(parameterName, x);
-    }
+    public void setString(String parameterName, String x) throws SQLException
+    { checkOpen(); try { _stmt.setString(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setBytes(String parameterName, byte [] x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setBytes(parameterName, x);
-    }
+    public void setBytes(String parameterName, byte [] x) throws SQLException
+    { checkOpen(); try { _stmt.setBytes(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setDate(String parameterName, Date x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setDate(parameterName, x);
-    }
+    public void setDate(String parameterName, Date x) throws SQLException
+    { checkOpen(); try { _stmt.setDate(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setTime(String parameterName, Time x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setTime(parameterName, x);
-    }
+    public void setTime(String parameterName, Time x) throws SQLException
+    { checkOpen(); try { _stmt.setTime(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setTimestamp(String parameterName, Timestamp x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setTimestamp(parameterName, x);
-    }
+    public void setTimestamp(String parameterName, Timestamp x) throws SQLException
+    { checkOpen(); try { _stmt.setTimestamp(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setAsciiStream(String parameterName,
-        InputStream x, int length)
-        throws SQLException {
-        checkOpen();
-        _stmt.setAsciiStream(parameterName, x, length);
-    }
+    public void setAsciiStream(String parameterName, InputStream x, int length) throws SQLException
+    { checkOpen(); try { _stmt.setAsciiStream(parameterName, x, length); } catch (SQLException e) { handleException(e); } }
 
-    public void setBinaryStream(String parameterName,
-        InputStream x, int length)
-        throws SQLException {
-        checkOpen();
-        _stmt.setBinaryStream(parameterName, x, length);
-    }
+    public void setBinaryStream(String parameterName, InputStream x, int length) throws SQLException
+    { checkOpen(); try { _stmt.setBinaryStream(parameterName, x, length); } catch (SQLException e) { handleException(e); } }
 
-    public void setObject(String parameterName,
-        Object x, int targetSqlType, int scale)
-        throws SQLException {
-        checkOpen();
-        _stmt.setObject(parameterName, x, targetSqlType, scale);
-    }
+    public void setObject(String parameterName, Object x, int targetSqlType, int scale) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterName, x, targetSqlType, scale); } catch (SQLException e) { handleException(e); } }
 
-    public void setObject(String parameterName,
-        Object x, int targetSqlType)
-        throws SQLException {
-        checkOpen();
-        _stmt.setObject(parameterName, x, targetSqlType);
-    }
+    public void setObject(String parameterName, Object x, int targetSqlType) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterName, x, targetSqlType); } catch (SQLException e) { handleException(e); } }
 
-    public void setObject(String parameterName, Object x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setObject(parameterName, x);
-    }
+    public void setObject(String parameterName, Object x) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void setCharacterStream(String parameterName,
-        Reader reader, int length) throws SQLException {
-        checkOpen();
-        _stmt.setCharacterStream(parameterName, reader, length);
-    }
+    public void setCharacterStream(String parameterName, Reader reader, int length) throws SQLException
+    { checkOpen(); _stmt.setCharacterStream(parameterName, reader, length); }
 
-    public void setDate(String parameterName,
-        Date x, Calendar cal) throws SQLException {
-        checkOpen();
-        _stmt.setDate(parameterName, x, cal);
-    }
+    public void setDate(String parameterName, Date x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setDate(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
 
-    public void setTime(String parameterName,
-        Time x, Calendar cal) throws SQLException {
-        checkOpen();
-        _stmt.setTime(parameterName, x, cal);
-    }
+    public void setTime(String parameterName, Time x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setTime(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
 
-    public void setTimestamp(String parameterName,
-        Timestamp x, Calendar cal) throws SQLException {
-        checkOpen();
-        _stmt.setTimestamp(parameterName, x, cal);
-    }
+    public void setTimestamp(String parameterName, Timestamp x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setTimestamp(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
 
-    public void setNull(String parameterName,
-        int sqlType, String typeName) throws SQLException {
-        checkOpen();
-        _stmt.setNull(parameterName, sqlType, typeName);
-    }
+    public void setNull(String parameterName, int sqlType, String typeName) throws SQLException
+    { checkOpen(); try { _stmt.setNull(parameterName, sqlType, typeName); } catch (SQLException e) { handleException(e); } }
 
-    public String getString(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getString(parameterName);
-    }
+    public String getString(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getString(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public boolean getBoolean(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getBoolean(parameterName);
-    }
+    public boolean getBoolean(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getBoolean(parameterName); } catch (SQLException e) { handleException(e); return false; } }
 
-    public byte getByte(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getByte(parameterName);
-    }
+    public byte getByte(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getByte(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public short getShort(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getShort(parameterName);
-    }
+    public short getShort(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getShort(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public int getInt(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getInt(parameterName);
-    }
+    public int getInt(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getInt(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public long getLong(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getLong(parameterName);
-    }
+    public long getLong(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getLong(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public float getFloat(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getFloat(parameterName);
-    }
+    public float getFloat(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getFloat(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public double getDouble(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getDouble(parameterName);
-    }
+    public double getDouble(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getDouble(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public byte[] getBytes(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getBytes(parameterName);
-    }
+    public byte[] getBytes(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getBytes(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Date getDate(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getDate(parameterName);
-    }
+    public Date getDate(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getDate(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Time getTime(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getTime(parameterName);
-    }
+    public Time getTime(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getTime(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Timestamp getTimestamp(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getTimestamp(parameterName);
-    }
+    public Timestamp getTimestamp(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getTimestamp(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Object getObject(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getObject(parameterName);
-    }
+    public Object getObject(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getObject(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public BigDecimal getBigDecimal(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getBigDecimal(parameterName);
-    }
+    public BigDecimal getBigDecimal(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getBigDecimal(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Object getObject(String parameterName, Map map)
-        throws SQLException {
-        checkOpen();
-        return _stmt.getObject(parameterName, map);
-    }
+    public Object getObject(String parameterName, Map map) throws SQLException
+    { checkOpen(); try { return _stmt.getObject(parameterName, map); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Ref getRef(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getRef(parameterName);
-    }
+    public Ref getRef(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getRef(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Blob getBlob(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getBlob(parameterName);
-    }
+    public Blob getBlob(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getBlob(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Clob getClob(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getClob(parameterName);
-    }
+    public Clob getClob(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getClob(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Array getArray(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getArray(parameterName);
-    }
+    public Array getArray(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getArray(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Date getDate(String parameterName, Calendar cal)
-        throws SQLException {
-        checkOpen();
-        return _stmt.getDate(parameterName, cal);
-    }
+    public Date getDate(String parameterName, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getDate(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Time getTime(String parameterName, Calendar cal)
-        throws SQLException {
-        checkOpen();
-        return _stmt.getTime(parameterName, cal);
-    }
+    public Time getTime(String parameterName, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getTime(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
-    public Timestamp getTimestamp(String parameterName, Calendar cal)
-        throws SQLException {
-        checkOpen();
-        return _stmt.getTimestamp(parameterName, cal);
-    }
+    public Timestamp getTimestamp(String parameterName, Calendar cal) throws SQLException
+    { checkOpen(); try { return _stmt.getTimestamp(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
-    public URL getURL(String parameterName) throws SQLException {
-        checkOpen();
-        return _stmt.getURL(parameterName);
-    }
+    public URL getURL(String parameterName) throws SQLException
+    { checkOpen(); try { return _stmt.getURL(parameterName); } catch (SQLException e) { handleException(e); return null; } }
 
 /* JDBC_3_ANT_KEY_END */
 }

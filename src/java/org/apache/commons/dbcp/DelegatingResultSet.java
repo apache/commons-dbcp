@@ -48,7 +48,8 @@ import java.util.Calendar;
  *
  * @author Glenn L. Nielsen
  * @author James House
- * @version $Revision: 1.12 $ $Date: 2004/02/28 12:18:17 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.13 $ $Date: 2004/03/06 13:35:31 $
  */
 public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 
@@ -142,197 +143,447 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
      * the original ResultSet.
      */
     public void close() throws SQLException {
-        if(_stmt != null) {
-            ((AbandonedTrace)_stmt).removeTrace(this);
-            _stmt = null;
+        try {
+            if(_stmt != null) {
+                ((AbandonedTrace)_stmt).removeTrace(this);
+                _stmt = null;
+            }
+            _res.close();
         }
-        _res.close();
+        catch (SQLException e) {
+            handleException(e);
+        }
     }
 
-    public boolean next() throws SQLException { return _res.next();  }
-    public boolean wasNull() throws SQLException { return _res.wasNull();  }
-    public String getString(int columnIndex) throws SQLException { return _res.getString(columnIndex);  }
-    public boolean getBoolean(int columnIndex) throws SQLException { return _res.getBoolean(columnIndex);  }
-    public byte getByte(int columnIndex) throws SQLException { return _res.getByte(columnIndex); }
-    public short getShort(int columnIndex) throws SQLException { return _res.getShort(columnIndex); }
-    public int getInt(int columnIndex) throws SQLException { return _res.getInt(columnIndex); }
-    public long getLong(int columnIndex) throws SQLException { return _res.getLong(columnIndex); }
-    public float getFloat(int columnIndex) throws SQLException { return _res.getFloat(columnIndex); }
-    public double getDouble(int columnIndex) throws SQLException { return _res.getDouble(columnIndex); }
+    protected void handleException(SQLException e) throws SQLException {
+        if ((_stmt != null) && (_stmt instanceof DelegatingStatement)) {
+            ((DelegatingStatement)_stmt).handleException(e);
+        }
+        else {
+            throw e;
+        }
+    }
+
+    public boolean next() throws SQLException 
+    { try { return _res.next(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean wasNull() throws SQLException
+    { try { return _res.wasNull(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public String getString(int columnIndex) throws SQLException
+    { try { return _res.getString(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public boolean getBoolean(int columnIndex) throws SQLException
+    { try { return _res.getBoolean(columnIndex); } catch (SQLException e) { handleException(e); return false; } }
+
+    public byte getByte(int columnIndex) throws SQLException
+    { try { return _res.getByte(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public short getShort(int columnIndex) throws SQLException
+    { try { return _res.getShort(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getInt(int columnIndex) throws SQLException
+    { try { return _res.getInt(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public long getLong(int columnIndex) throws SQLException
+    { try { return _res.getLong(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public float getFloat(int columnIndex) throws SQLException
+    { try { return _res.getFloat(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public double getDouble(int columnIndex) throws SQLException
+    { try { return _res.getDouble(columnIndex); } catch (SQLException e) { handleException(e); return 0; } }
+
     /** @deprecated */
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException { return _res.getBigDecimal(columnIndex); }
-    public byte[] getBytes(int columnIndex) throws SQLException { return _res.getBytes(columnIndex); }
-    public Date getDate(int columnIndex) throws SQLException { return _res.getDate(columnIndex); }
-    public Time getTime(int columnIndex) throws SQLException { return _res.getTime(columnIndex); }
-    public Timestamp getTimestamp(int columnIndex) throws SQLException { return _res.getTimestamp(columnIndex); }
-    public InputStream getAsciiStream(int columnIndex) throws SQLException { return _res.getAsciiStream(columnIndex); }
+    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException
+    { try { return _res.getBigDecimal(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public byte[] getBytes(int columnIndex) throws SQLException
+    { try { return _res.getBytes(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(int columnIndex) throws SQLException
+    { try { return _res.getDate(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(int columnIndex) throws SQLException
+    { try { return _res.getTime(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(int columnIndex) throws SQLException
+    { try { return _res.getTimestamp(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public InputStream getAsciiStream(int columnIndex) throws SQLException
+    { try { return _res.getAsciiStream(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
     /** @deprecated */
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException { return _res.getUnicodeStream(columnIndex); }
-    public InputStream getBinaryStream(int columnIndex) throws SQLException { return _res.getBinaryStream(columnIndex); }
-    public String getString(String columnName) throws SQLException { return _res.getString(columnName); }
-    public boolean getBoolean(String columnName) throws SQLException { return _res.getBoolean(columnName); }
-    public byte getByte(String columnName) throws SQLException { return _res.getByte(columnName); }
-    public short getShort(String columnName) throws SQLException { return _res.getShort(columnName); }
-    public int getInt(String columnName) throws SQLException { return _res.getInt(columnName); }
-    public long getLong(String columnName) throws SQLException { return _res.getLong(columnName); }
-    public float getFloat(String columnName) throws SQLException { return _res.getFloat(columnName); }
-    public double getDouble(String columnName) throws SQLException { return _res.getDouble(columnName); }
+    public InputStream getUnicodeStream(int columnIndex) throws SQLException
+    { try { return _res.getUnicodeStream(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public InputStream getBinaryStream(int columnIndex) throws SQLException
+    { try { return _res.getBinaryStream(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public String getString(String columnName) throws SQLException
+    { try { return _res.getString(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public boolean getBoolean(String columnName) throws SQLException
+    { try { return _res.getBoolean(columnName); } catch (SQLException e) { handleException(e); return false; } }
+
+    public byte getByte(String columnName) throws SQLException
+    { try { return _res.getByte(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public short getShort(String columnName) throws SQLException
+    { try { return _res.getShort(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getInt(String columnName) throws SQLException
+    { try { return _res.getInt(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public long getLong(String columnName) throws SQLException
+    { try { return _res.getLong(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public float getFloat(String columnName) throws SQLException
+    { try { return _res.getFloat(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public double getDouble(String columnName) throws SQLException
+    { try { return _res.getDouble(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
     /** @deprecated */
-    public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException { return _res.getBigDecimal(columnName); }
-    public byte[] getBytes(String columnName) throws SQLException { return _res.getBytes(columnName); }
-    public Date getDate(String columnName) throws SQLException { return _res.getDate(columnName); }
-    public Time getTime(String columnName) throws SQLException { return _res.getTime(columnName); }
-    public Timestamp getTimestamp(String columnName) throws SQLException { return _res.getTimestamp(columnName); }
-    public InputStream getAsciiStream(String columnName) throws SQLException { return _res.getAsciiStream(columnName); }
+    public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException
+    { try { return _res.getBigDecimal(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public byte[] getBytes(String columnName) throws SQLException
+    { try { return _res.getBytes(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(String columnName) throws SQLException
+    { try { return _res.getDate(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(String columnName) throws SQLException
+    { try { return _res.getTime(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(String columnName) throws SQLException
+    { try { return _res.getTimestamp(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public InputStream getAsciiStream(String columnName) throws SQLException
+    { try { return _res.getAsciiStream(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
     /** @deprecated */
-    public InputStream getUnicodeStream(String columnName) throws SQLException { return _res.getUnicodeStream(columnName); }
-    public InputStream getBinaryStream(String columnName) throws SQLException { return _res.getBinaryStream(columnName); }
-    public SQLWarning getWarnings() throws SQLException { return _res.getWarnings();  }
-    public void clearWarnings() throws SQLException { _res.clearWarnings();  }
-    public String getCursorName() throws SQLException { return _res.getCursorName();  }
-    public ResultSetMetaData getMetaData() throws SQLException { return _res.getMetaData();  }
-    public Object getObject(int columnIndex) throws SQLException { return _res.getObject(columnIndex);  }
-    public Object getObject(String columnName) throws SQLException { return _res.getObject(columnName);  }
-    public int findColumn(String columnName) throws SQLException { return _res.findColumn(columnName);  }
-    public Reader getCharacterStream(int columnIndex) throws SQLException { return _res.getCharacterStream(columnIndex);  }
-    public Reader getCharacterStream(String columnName) throws SQLException { return _res.getCharacterStream(columnName);  }
-    public BigDecimal getBigDecimal(int columnIndex) throws SQLException { return _res.getBigDecimal(columnIndex);  }
-    public BigDecimal getBigDecimal(String columnName) throws SQLException { return _res.getBigDecimal(columnName);  }
-    public boolean isBeforeFirst() throws SQLException { return _res.isBeforeFirst();  }
-    public boolean isAfterLast() throws SQLException { return _res.isAfterLast();  }
-    public boolean isFirst() throws SQLException { return _res.isFirst();  }
-    public boolean isLast() throws SQLException { return _res.isLast();  }
-    public void beforeFirst() throws SQLException { _res.beforeFirst();  }
-    public void afterLast() throws SQLException { _res.afterLast();  }
-    public boolean first() throws SQLException { return _res.first();  }
-    public boolean last() throws SQLException { return _res.last();  }
-    public int getRow() throws SQLException { return _res.getRow();  }
-    public boolean absolute(int row) throws SQLException { return _res.absolute(row);  }
-    public boolean relative(int rows) throws SQLException { return _res.relative(rows);  }
-    public boolean previous() throws SQLException { return _res.previous();  }
-    public void setFetchDirection(int direction) throws SQLException { _res.setFetchDirection(direction);  }
-    public int getFetchDirection() throws SQLException { return _res.getFetchDirection();  }
-    public void setFetchSize(int rows) throws SQLException { _res.setFetchSize(rows); }
-    public int getFetchSize() throws SQLException { return _res.getFetchSize();  }
-    public int getType() throws SQLException { return _res.getType();  }
-    public int getConcurrency() throws SQLException { return _res.getConcurrency();  }
-    public boolean rowUpdated() throws SQLException { return _res.rowUpdated();  }
-    public boolean rowInserted() throws SQLException { return _res.rowInserted();  }
-    public boolean rowDeleted() throws SQLException { return _res.rowDeleted();  }
-    public void updateNull(int columnIndex) throws SQLException {  _res.updateNull(columnIndex);  }
-    public void updateBoolean(int columnIndex, boolean x) throws SQLException {  _res.updateBoolean(columnIndex, x);  }
-    public void updateByte(int columnIndex, byte x) throws SQLException {  _res.updateByte(columnIndex, x);  }
-    public void updateShort(int columnIndex, short x) throws SQLException {  _res.updateShort(columnIndex, x);  }
-    public void updateInt(int columnIndex, int x) throws SQLException {  _res.updateInt(columnIndex, x);  }
-    public void updateLong(int columnIndex, long x) throws SQLException {  _res.updateLong(columnIndex, x); }
-    public void updateFloat(int columnIndex, float x) throws SQLException {  _res.updateFloat(columnIndex, x);  }
-    public void updateDouble(int columnIndex, double x) throws SQLException {  _res.updateDouble(columnIndex, x);  }
-    public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {  _res.updateBigDecimal(columnIndex, x);  }
-    public void updateString(int columnIndex, String x) throws SQLException {  _res.updateString(columnIndex, x);  }
-    public void updateBytes(int columnIndex, byte[] x) throws SQLException {  _res.updateBytes(columnIndex, x); }
-    public void updateDate(int columnIndex, Date x) throws SQLException {  _res.updateDate(columnIndex, x);  }
-    public void updateTime(int columnIndex, Time x) throws SQLException {  _res.updateTime(columnIndex, x); }
-    public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {  _res.updateTimestamp(columnIndex, x);  }
-    public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {  _res.updateAsciiStream(columnIndex, x, length);  }
-    public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {  _res.updateBinaryStream(columnIndex, x, length); }
-    public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {  _res.updateCharacterStream(columnIndex, x, length); }
-    public void updateObject(int columnIndex, Object x, int scale) throws SQLException {  _res.updateObject(columnIndex, x);  }
-    public void updateObject(int columnIndex, Object x) throws SQLException {  _res.updateObject(columnIndex, x);  }
-    public void updateNull(String columnName) throws SQLException {  _res.updateNull(columnName);  }
-    public void updateBoolean(String columnName, boolean x) throws SQLException {  _res.updateBoolean(columnName, x);  }
-    public void updateByte(String columnName, byte x) throws SQLException {  _res.updateByte(columnName, x);  }
-    public void updateShort(String columnName, short x) throws SQLException {  _res.updateShort(columnName, x);  }
-    public void updateInt(String columnName, int x) throws SQLException {  _res.updateInt(columnName, x);  }
-    public void updateLong(String columnName, long x) throws SQLException {  _res.updateLong(columnName, x);  }
-    public void updateFloat(String columnName, float x) throws SQLException {  _res.updateFloat(columnName, x);  }
-    public void updateDouble(String columnName, double x) throws SQLException { _res.updateDouble(columnName, x);  }
-    public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException {  _res.updateBigDecimal(columnName, x);  }
-    public void updateString(String columnName, String x) throws SQLException {  _res.updateString(columnName, x);  }
-    public void updateBytes(String columnName, byte[] x) throws SQLException {  _res.updateBytes(columnName, x);  }
-    public void updateDate(String columnName, Date x) throws SQLException {  _res.updateDate(columnName, x);  }
-    public void updateTime(String columnName, Time x) throws SQLException {  _res.updateTime(columnName, x);  }
-    public void updateTimestamp(String columnName, Timestamp x) throws SQLException {  _res.updateTimestamp(columnName, x);  }
-    public void updateAsciiStream(String columnName, InputStream x, int length) throws SQLException {  _res.updateAsciiStream(columnName, x, length);  }
-    public void updateBinaryStream(String columnName, InputStream x, int length) throws SQLException {  _res.updateBinaryStream(columnName, x, length);  }
-    public void updateCharacterStream(String columnName, Reader reader, int length) throws SQLException {  _res.updateCharacterStream(columnName, reader, length);  }
-    public void updateObject(String columnName, Object x, int scale) throws SQLException {  _res.updateObject(columnName, x);  }
-    public void updateObject(String columnName, Object x) throws SQLException {  _res.updateObject(columnName, x);  }
-    public void insertRow() throws SQLException {  _res.insertRow();  }
-    public void updateRow() throws SQLException {  _res.updateRow();  }
-    public void deleteRow() throws SQLException {  _res.deleteRow();  }
-    public void refreshRow() throws SQLException {  _res.refreshRow();  }
-    public void cancelRowUpdates() throws SQLException {  _res.cancelRowUpdates();  }
-    public void moveToInsertRow() throws SQLException {  _res.moveToInsertRow();  }
-    public void moveToCurrentRow() throws SQLException {  _res.moveToCurrentRow();  }
-    public Object getObject(int i, Map map) throws SQLException { return _res.getObject(i, map);  }
-    public Ref getRef(int i) throws SQLException { return _res.getRef(i);  }
-    public Blob getBlob(int i) throws SQLException { return _res.getBlob(i);  }
-    public Clob getClob(int i) throws SQLException { return _res.getClob(i);  }
-    public Array getArray(int i) throws SQLException { return _res.getArray(i);  }
-    public Object getObject(String colName, Map map) throws SQLException { return _res.getObject(colName, map);  }
-    public Ref getRef(String colName) throws SQLException { return _res.getRef(colName);  }
-    public Blob getBlob(String colName) throws SQLException { return _res.getBlob(colName);  }
-    public Clob getClob(String colName) throws SQLException { return _res.getClob(colName);  }
-    public Array getArray(String colName) throws SQLException { return _res.getArray(colName);  }
-    public Date getDate(int columnIndex, Calendar cal) throws SQLException { return _res.getDate(columnIndex, cal);  }
-    public Date getDate(String columnName, Calendar cal) throws SQLException { return _res.getDate(columnName, cal);  }
-    public Time getTime(int columnIndex, Calendar cal) throws SQLException { return _res.getTime(columnIndex, cal);  }
-    public Time getTime(String columnName, Calendar cal) throws SQLException { return _res.getTime(columnName, cal);  }
-    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException { return _res.getTimestamp(columnIndex, cal);  }
-    public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException { return _res.getTimestamp(columnName, cal);  }
+    public InputStream getUnicodeStream(String columnName) throws SQLException
+    { try { return _res.getUnicodeStream(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public InputStream getBinaryStream(String columnName) throws SQLException
+    { try { return _res.getBinaryStream(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public SQLWarning getWarnings() throws SQLException
+    { try { return _res.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
+
+    public void clearWarnings() throws SQLException
+    { try { _res.clearWarnings(); } catch (SQLException e) { handleException(e); } }
+
+    public String getCursorName() throws SQLException
+    { try { return _res.getCursorName(); } catch (SQLException e) { handleException(e); return null; } }
+
+    public ResultSetMetaData getMetaData() throws SQLException
+    { try { return _res.getMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Object getObject(int columnIndex) throws SQLException
+    { try { return _res.getObject(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Object getObject(String columnName) throws SQLException
+    { try { return _res.getObject(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public int findColumn(String columnName) throws SQLException
+    { try { return _res.findColumn(columnName); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public Reader getCharacterStream(int columnIndex) throws SQLException
+    { try { return _res.getCharacterStream(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Reader getCharacterStream(String columnName) throws SQLException
+    { try { return _res.getCharacterStream(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public BigDecimal getBigDecimal(int columnIndex) throws SQLException
+    { try { return _res.getBigDecimal(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
+
+    public BigDecimal getBigDecimal(String columnName) throws SQLException
+    { try { return _res.getBigDecimal(columnName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public boolean isBeforeFirst() throws SQLException
+    { try { return _res.isBeforeFirst(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean isAfterLast() throws SQLException
+    { try { return _res.isAfterLast(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean isFirst() throws SQLException
+    { try { return _res.isFirst(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean isLast() throws SQLException
+    { try { return _res.isLast(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public void beforeFirst() throws SQLException
+    { try { _res.beforeFirst(); } catch (SQLException e) { handleException(e); } }
+
+    public void afterLast() throws SQLException
+    { try { _res.afterLast(); } catch (SQLException e) { handleException(e); } }
+
+    public boolean first() throws SQLException
+    { try { return _res.first(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean last() throws SQLException
+    { try { return _res.last(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public int getRow() throws SQLException
+    { try { return _res.getRow(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public boolean absolute(int row) throws SQLException
+    { try { return _res.absolute(row); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean relative(int rows) throws SQLException
+    { try { return _res.relative(rows); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean previous() throws SQLException
+    { try { return _res.previous(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public void setFetchDirection(int direction) throws SQLException
+    { try { _res.setFetchDirection(direction); } catch (SQLException e) { handleException(e); } }
+
+    public int getFetchDirection() throws SQLException
+    { try { return _res.getFetchDirection(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setFetchSize(int rows) throws SQLException
+    { try { _res.setFetchSize(rows); } catch (SQLException e) { handleException(e); } }
+
+    public int getFetchSize() throws SQLException
+    { try { return _res.getFetchSize(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getType() throws SQLException
+    { try { return _res.getType(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getConcurrency() throws SQLException
+    { try { return _res.getConcurrency(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public boolean rowUpdated() throws SQLException
+    { try { return _res.rowUpdated(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean rowInserted() throws SQLException
+    { try { return _res.rowInserted(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public boolean rowDeleted() throws SQLException
+    { try { return _res.rowDeleted(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public void updateNull(int columnIndex) throws SQLException
+    { try { _res.updateNull(columnIndex); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBoolean(int columnIndex, boolean x) throws SQLException
+    { try { _res.updateBoolean(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateByte(int columnIndex, byte x) throws SQLException
+    { try { _res.updateByte(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateShort(int columnIndex, short x) throws SQLException
+    { try { _res.updateShort(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateInt(int columnIndex, int x) throws SQLException
+    { try { _res.updateInt(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateLong(int columnIndex, long x) throws SQLException
+    { try { _res.updateLong(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateFloat(int columnIndex, float x) throws SQLException
+    { try { _res.updateFloat(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateDouble(int columnIndex, double x) throws SQLException
+    { try { _res.updateDouble(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException
+    { try { _res.updateBigDecimal(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateString(int columnIndex, String x) throws SQLException
+    { try { _res.updateString(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBytes(int columnIndex, byte[] x) throws SQLException
+    { try { _res.updateBytes(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateDate(int columnIndex, Date x) throws SQLException
+    { try { _res.updateDate(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateTime(int columnIndex, Time x) throws SQLException
+    { try { _res.updateTime(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException
+    { try { _res.updateTimestamp(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException
+    { try { _res.updateAsciiStream(columnIndex, x, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException
+    { try { _res.updateBinaryStream(columnIndex, x, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException
+    { try { _res.updateCharacterStream(columnIndex, x, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateObject(int columnIndex, Object x, int scale) throws SQLException
+    { try { _res.updateObject(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateObject(int columnIndex, Object x) throws SQLException
+    { try { _res.updateObject(columnIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateNull(String columnName) throws SQLException
+    { try { _res.updateNull(columnName); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBoolean(String columnName, boolean x) throws SQLException
+    { try { _res.updateBoolean(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateByte(String columnName, byte x) throws SQLException
+    { try { _res.updateByte(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateShort(String columnName, short x) throws SQLException
+    { try { _res.updateShort(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateInt(String columnName, int x) throws SQLException
+    { try { _res.updateInt(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateLong(String columnName, long x) throws SQLException
+    { try { _res.updateLong(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateFloat(String columnName, float x) throws SQLException
+    { try { _res.updateFloat(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateDouble(String columnName, double x) throws SQLException
+    { try { _res.updateDouble(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException
+    { try { _res.updateBigDecimal(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateString(String columnName, String x) throws SQLException
+    { try { _res.updateString(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBytes(String columnName, byte[] x) throws SQLException
+    { try { _res.updateBytes(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateDate(String columnName, Date x) throws SQLException
+    { try { _res.updateDate(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateTime(String columnName, Time x) throws SQLException
+    { try { _res.updateTime(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateTimestamp(String columnName, Timestamp x) throws SQLException
+    { try { _res.updateTimestamp(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateAsciiStream(String columnName, InputStream x, int length) throws SQLException
+    { try { _res.updateAsciiStream(columnName, x, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateBinaryStream(String columnName, InputStream x, int length) throws SQLException
+    { try { _res.updateBinaryStream(columnName, x, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateCharacterStream(String columnName, Reader reader, int length) throws SQLException
+    { try { _res.updateCharacterStream(columnName, reader, length); } catch (SQLException e) { handleException(e); } }
+
+    public void updateObject(String columnName, Object x, int scale) throws SQLException
+    { try { _res.updateObject(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void updateObject(String columnName, Object x) throws SQLException
+    { try { _res.updateObject(columnName, x); } catch (SQLException e) { handleException(e); } }
+
+    public void insertRow() throws SQLException
+    { try { _res.insertRow(); } catch (SQLException e) { handleException(e); } }
+
+    public void updateRow() throws SQLException
+    { try { _res.updateRow(); } catch (SQLException e) { handleException(e); } }
+
+    public void deleteRow() throws SQLException
+    { try { _res.deleteRow(); } catch (SQLException e) { handleException(e); } }
+
+    public void refreshRow() throws SQLException
+    { try { _res.refreshRow(); } catch (SQLException e) { handleException(e); } }
+
+    public void cancelRowUpdates() throws SQLException
+    { try { _res.cancelRowUpdates(); } catch (SQLException e) { handleException(e); } }
+
+    public void moveToInsertRow() throws SQLException
+    { try { _res.moveToInsertRow(); } catch (SQLException e) { handleException(e); } }
+
+    public void moveToCurrentRow() throws SQLException
+    { try { _res.moveToCurrentRow(); } catch (SQLException e) { handleException(e); } }
+
+    public Object getObject(int i, Map map) throws SQLException
+    { try { return _res.getObject(i, map); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Ref getRef(int i) throws SQLException
+    { try { return _res.getRef(i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Blob getBlob(int i) throws SQLException
+    { try { return _res.getBlob(i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Clob getClob(int i) throws SQLException
+    { try { return _res.getClob(i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Array getArray(int i) throws SQLException
+    { try { return _res.getArray(i); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Object getObject(String colName, Map map) throws SQLException
+    { try { return _res.getObject(colName, map); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Ref getRef(String colName) throws SQLException
+    { try { return _res.getRef(colName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Blob getBlob(String colName) throws SQLException
+    { try { return _res.getBlob(colName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Clob getClob(String colName) throws SQLException
+    { try { return _res.getClob(colName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Array getArray(String colName) throws SQLException
+    { try { return _res.getArray(colName); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(int columnIndex, Calendar cal) throws SQLException
+    { try { return _res.getDate(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Date getDate(String columnName, Calendar cal) throws SQLException
+    { try { return _res.getDate(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(int columnIndex, Calendar cal) throws SQLException
+    { try { return _res.getTime(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Time getTime(String columnName, Calendar cal) throws SQLException
+    { try { return _res.getTime(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException
+    { try { return _res.getTimestamp(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
+
+    public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException
+    { try { return _res.getTimestamp(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
+
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
-    public java.net.URL getURL(int columnIndex) throws SQLException {
-        return _res.getURL(columnIndex);
-    }
+    public java.net.URL getURL(int columnIndex) throws SQLException
+    { try { return _res.getURL(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
 
-    public java.net.URL getURL(String columnName) throws SQLException {
-        return _res.getURL(columnName);
-    }
+    public java.net.URL getURL(String columnName) throws SQLException
+    { try { return _res.getURL(columnName); } catch (SQLException e) { handleException(e); return null; } }
 
-    public void updateRef(int columnIndex, java.sql.Ref x)
-        throws SQLException {
-        _res.updateRef(columnIndex, x);
-    }
+    public void updateRef(int columnIndex, java.sql.Ref x) throws SQLException
+    { try { _res.updateRef(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateRef(String columnName, java.sql.Ref x)
-        throws SQLException {
-        _res.updateRef(columnName, x);
-    }
+    public void updateRef(String columnName, java.sql.Ref x) throws SQLException
+    { try { _res.updateRef(columnName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateBlob(int columnIndex, java.sql.Blob x)
-        throws SQLException {
-        _res.updateBlob(columnIndex, x);
-    }
+    public void updateBlob(int columnIndex, java.sql.Blob x) throws SQLException
+    { try { _res.updateBlob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateBlob(String columnName, java.sql.Blob x)
-        throws SQLException {
-        _res.updateBlob(columnName, x);
-    }
+    public void updateBlob(String columnName, java.sql.Blob x) throws SQLException
+    { try { _res.updateBlob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateClob(int columnIndex, java.sql.Clob x)
-        throws SQLException {
-        _res.updateClob(columnIndex, x);
-    }
+    public void updateClob(int columnIndex, java.sql.Clob x) throws SQLException
+    { try { _res.updateClob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateClob(String columnName, java.sql.Clob x)
-        throws SQLException {
-        _res.updateClob(columnName, x);
-    }
+    public void updateClob(String columnName, java.sql.Clob x) throws SQLException
+    { try { _res.updateClob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateArray(int columnIndex, java.sql.Array x)
-        throws SQLException {
-        _res.updateArray(columnIndex, x);
-    }
+    public void updateArray(int columnIndex, java.sql.Array x) throws SQLException
+    { try { _res.updateArray(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
-    public void updateArray(String columnName, java.sql.Array x)
-        throws SQLException {
-        _res.updateArray(columnName, x);
-    }
+    public void updateArray(String columnName, java.sql.Array x) throws SQLException
+    { try { _res.updateArray(columnName, x); } catch (SQLException e) { handleException(e); } }
 
 /* JDBC_3_ANT_KEY_END */
 }
