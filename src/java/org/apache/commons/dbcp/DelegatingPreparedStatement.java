@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.9 2003/03/06 00:11:32 rwaldhoff Exp $
- * $Revision: 1.9 $
- * $Date: 2003/03/06 00:11:32 $
+ * $Id: DelegatingPreparedStatement.java,v 1.10 2003/03/06 19:25:32 rwaldhoff Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/03/06 19:25:32 $
  *
  * ====================================================================
  *
@@ -61,13 +61,19 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.io.InputStream;
-import java.io.Reader;
 import java.math.BigDecimal;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
@@ -85,7 +91,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.9 $ $Date: 2003/03/06 00:11:32 $
+ * @version $Revision: 1.10 $ $Date: 2003/03/06 19:25:32 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -342,7 +348,7 @@ public class DelegatingPreparedStatement extends AbandonedTrace
         _stmt.setURL(parameterIndex, x);
     }
 
-    public ParameterMetaData getParameterMetaData() throws SQLException {
+    public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
         checkOpen();
         return _stmt.getParameterMetaData();
     }

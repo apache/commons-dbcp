@@ -1,7 +1,7 @@
 /*
- * $Id: TesterStatement.java,v 1.6 2003/03/06 00:11:32 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2003/03/06 00:11:32 $
+ * $Id: TesterStatement.java,v 1.7 2003/03/06 19:25:36 rwaldhoff Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/03/06 19:25:36 $
  *
  * ====================================================================
  *
@@ -61,11 +61,11 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {
@@ -235,7 +235,6 @@ public class TesterStatement implements Statement {
     // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
-
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -278,7 +277,6 @@ public class TesterStatement implements Statement {
         checkOpen();
         throw new SQLException("Not implemented.");
     }
-
 /* JDBC_3_ANT_KEY_END */
 
 }

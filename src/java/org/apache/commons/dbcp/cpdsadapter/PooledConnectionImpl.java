@@ -54,22 +54,17 @@ package org.apache.commons.dbcp.cpdsadapter;
  * <http://www.apache.org/>.
  */
 
-import java.util.Map;
-import java.util.Iterator;
-import java.util.EventObject;
-import java.util.Vector;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
-import java.sql.CallableStatement;
-import java.sql.Statement;
-import java.sql.SQLWarning;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
+
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp.*;
+import org.apache.commons.dbcp.DelegatingPreparedStatement;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
@@ -78,7 +73,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.3 2003/03/06 15:10:19 rwaldhoff Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.4 2003/03/06 19:25:37 rwaldhoff Exp $
  */
 class PooledConnectionImpl 
     implements PooledConnection, KeyedPoolableObjectFactory

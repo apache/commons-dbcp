@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.10 2003/03/06 00:11:33 rwaldhoff Exp $
- * $Revision: 1.10 $
- * $Date: 2003/03/06 00:11:33 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.11 2003/03/06 19:25:34 rwaldhoff Exp $
+ * $Revision: 1.11 $
+ * $Date: 2003/03/06 19:25:34 $
  *
  * ====================================================================
  *
@@ -61,10 +61,15 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
-import java.util.Map;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.List;
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -84,7 +89,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.10 2003/03/06 00:11:33 rwaldhoff Exp $
+ * @version $Id: DelegatingConnection.java,v 1.11 2003/03/06 19:25:34 rwaldhoff Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {

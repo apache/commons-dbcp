@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.3 2002/10/30 23:26:59 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/10/30 23:26:59 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.4 2003/03/06 19:25:37 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 19:25:37 $
  *
  * ====================================================================
  *
@@ -61,9 +61,11 @@
 
 package org.apache.commons.jocl;
 
-import junit.framework.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.xml.sax.helpers.AttributesImpl;
 
 public class TestJOCLContentHandler extends TestCase {
     public TestJOCLContentHandler(String testName) {

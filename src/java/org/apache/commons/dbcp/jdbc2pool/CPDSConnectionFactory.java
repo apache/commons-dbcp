@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
- * $Revision: 1.3 $
- * $Date: 2002/11/16 19:18:27 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.4 2003/03/06 19:25:38 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 19:25:38 $
  *
  * ====================================================================
  *
@@ -61,24 +61,28 @@
 
 package org.apache.commons.dbcp.jdbc2pool;
 
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
-import java.sql.*;
-import javax.sql.ConnectionPoolDataSource;
-import javax.sql.PooledConnection;
+
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.PooledConnection;
 
-import org.apache.commons.pool.*;
-import org.apache.commons.dbcp.*;
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.PoolableObjectFactory;
 
 /**
- * A {*link PoolableObjectFactory} that creates
- * {*link PoolableConnection}s.
+ * A {@link PoolableObjectFactory} that creates
+ * {@link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.4 2003/03/06 19:25:38 rwaldhoff Exp $
  */
 class CPDSConnectionFactory 
     implements PoolableObjectFactory, ConnectionEventListener {
