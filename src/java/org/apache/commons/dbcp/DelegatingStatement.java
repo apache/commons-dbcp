@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v $
- * $Revision: 1.13 $
- * $Date: 2003/12/26 15:16:28 $
+ * $Revision: 1.14 $
+ * $Date: 2003/12/26 15:43:55 $
  *
  * ====================================================================
  *
@@ -85,7 +85,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2003/12/26 15:16:28 $
+ * @version $Revision: 1.14 $ $Date: 2003/12/26 15:43:55 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -175,8 +175,38 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * any ResultSets that were not explicitly closed.
      */
     public void close() throws SQLException {
-        passivate();
+        _closed = true;
+        if (_conn != null) {
+            _conn.removeTrace(this);
+            _conn = null;
+        }
+
+        // The JDBC spec requires that a statment close any open
+        // ResultSet's when it is closed.
+        // FIXME The PreparedStatement we're wrapping should handle this for us.
+        // See bug 17301 for what could happen when ResultSets are closed twice.
+        List resultSets = getTrace();
+        if( resultSets != null) {
+            ResultSet[] set = (ResultSet[]) resultSets.toArray(new ResultSet[resultSets.size()]);
+            for (int i = 0; i < set.length; i++) {
+                set[i].close();
+            }
+            clearTrace();
+        }
+
         _stmt.close();
+    }
+
+    protected void activate() throws SQLException {
+        if(_stmt instanceof DelegatingStatement) {
+            ((DelegatingStatement)_stmt).activate();
+        }
+    }
+
+    protected void passivate() throws SQLException {
+        if(_stmt instanceof DelegatingStatement) {
+            ((DelegatingStatement)_stmt).passivate();
+        }
     }
 
     public Connection getConnection() throws SQLException {
@@ -222,36 +252,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
             throw new SQLException(this.getClass().getName() + " is closed.");
-        }
-    }
-
-    protected void activate() {
-        _closed = false;
-        if(_stmt instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)_stmt).activate();
-        }
-    }
-
-    protected void passivate() throws SQLException {
-        _closed = true;
-        if (_conn != null) {
-            _conn.removeTrace(this);
-           _conn = null;
-        }
-
-        // The JDBC spec requires that a statment close any open
-        // ResultSet's when it is closed.
-        List resultSets = getTrace();
-        if( resultSets != null) {
-            ResultSet[] set = new ResultSet[resultSets.size()];
-            resultSets.toArray(set);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
-            }
-            clearTrace();
-        }
-        if(_stmt instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)_stmt).passivate();
         }
     }
     

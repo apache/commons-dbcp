@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingPreparedStatement.java,v $
- * $Revision: 1.16 $
- * $Date: 2003/12/26 15:16:28 $
+ * $Revision: 1.17 $
+ * $Date: 2003/12/26 15:43:55 $
  *
  * ====================================================================
  *
@@ -72,7 +72,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
@@ -91,7 +90,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Revision: 1.16 $ $Date: 2003/12/26 15:16:28 $
+ * @version $Revision: 1.17 $ $Date: 2003/12/26 15:43:55 $
  */
 public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {
@@ -131,15 +130,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setDelegate(PreparedStatement s) {
         super.setDelegate(s);
         _stmt = s;
-    }
-
-    /**
-     * Close this DelegatingPreparedStatement, and close
-     * any ResultSets that were not explicitly closed.
-     */
-    public void close() throws SQLException {
-        _stmt.close();
-        passivate();
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
@@ -217,38 +207,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setTime(int parameterIndex, java.sql.Time x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTime(parameterIndex,x,cal);}
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x,cal);}
     public void setNull (int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
-
-    protected void activate() {
-        _closed = false;
-        if(_stmt instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)_stmt).activate();
-        }
-    }
-
-    protected void passivate() throws SQLException {
-        _closed = true;
-        if(_conn != null) {
-            _conn.removeTrace(this);
-           _conn = null;
-        }
-         
-        // The JDBC spec requires that a statment close any open
-        // ResultSet's when it is closed.
-        // FIXME The PreparedStatement we're wrapping should handle this for us.
-        // See bug 17301 for what could happen when ResultSets are closed twice.
-        List resultSets = getTrace();
-        if( resultSets != null) {
-            ResultSet[] set = new ResultSet[resultSets.size()];
-            resultSets.toArray(set);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
-            }
-            clearTrace();
-        }
-        if(_stmt instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)_stmt).passivate();
-        }
-    }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system

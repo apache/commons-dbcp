@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.11 $
+ * $Date: 2003/12/26 15:43:55 $
  *
  * ====================================================================
  *
@@ -76,6 +76,8 @@ import org.apache.commons.pool.*;
  *
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.11 $ $Date: 2003/12/26 15:43:55 $
  */
 public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
     /** My pool of {@link PreparedStatement}s. */
@@ -259,7 +261,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * @param key ignored
      * @param obj ignored
      */
-    public void activateObject(Object key, Object obj) {
+    public void activateObject(Object key, Object obj) throws Exception {
         ((DelegatingPreparedStatement)obj).activate();
     }
 
