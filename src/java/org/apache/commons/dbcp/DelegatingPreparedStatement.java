@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingPreparedStatement.java,v $
- * $Revision: 1.17 $
- * $Date: 2003/12/26 15:43:55 $
+ * $Revision: 1.18 $
+ * $Date: 2003/12/26 16:32:31 $
  *
  * ====================================================================
  *
@@ -90,7 +90,7 @@ import java.util.Calendar;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Revision: 1.17 $ $Date: 2003/12/26 15:43:55 $
+ * @version $Revision: 1.18 $ $Date: 2003/12/26 16:32:31 $
  */
 public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {
@@ -160,6 +160,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void clearWarnings() throws SQLException { checkOpen(); _stmt.clearWarnings();}
     public void setCursorName(String name) throws SQLException { checkOpen(); _stmt.setCursorName(name);}
     public boolean execute(String sql) throws SQLException { checkOpen(); return _stmt.execute(sql);}
+    
     public int getUpdateCount() throws SQLException { checkOpen(); return _stmt.getUpdateCount();}
     public boolean getMoreResults() throws SQLException { checkOpen(); return _stmt.getMoreResults();}
     public void setFetchDirection(int direction) throws SQLException { checkOpen(); _stmt.setFetchDirection(direction);}
@@ -183,7 +184,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setDouble(int parameterIndex, double x) throws SQLException { checkOpen(); _stmt.setDouble(parameterIndex,x);}
     public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException { checkOpen(); _stmt.setBigDecimal(parameterIndex,x);}
     public void setString(int parameterIndex, String x) throws SQLException { checkOpen(); _stmt.setString(parameterIndex,x);}
-    public void setBytes(int parameterIndex, byte x[]) throws SQLException { checkOpen(); _stmt.setBytes(parameterIndex,x);}
+    public void setBytes(int parameterIndex, byte[] x) throws SQLException { checkOpen(); _stmt.setBytes(parameterIndex,x);}
     public void setDate(int parameterIndex, java.sql.Date x) throws SQLException { checkOpen(); _stmt.setDate(parameterIndex,x);}
     public void setTime(int parameterIndex, java.sql.Time x) throws SQLException { checkOpen(); _stmt.setTime(parameterIndex,x);}
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x);}
@@ -198,15 +199,15 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public boolean execute() throws SQLException { checkOpen(); return _stmt.execute();}
     public void addBatch() throws SQLException { checkOpen(); _stmt.addBatch();}
     public void setCharacterStream(int parameterIndex, java.io.Reader reader, int length) throws SQLException { checkOpen(); _stmt.setCharacterStream(parameterIndex,reader,length);}
-    public void setRef (int i, Ref x) throws SQLException { checkOpen(); _stmt.setRef(i,x);}
-    public void setBlob (int i, Blob x) throws SQLException { checkOpen(); _stmt.setBlob(i,x);}
-    public void setClob (int i, Clob x) throws SQLException { checkOpen(); _stmt.setClob(i,x);}
-    public void setArray (int i, Array x) throws SQLException { checkOpen(); _stmt.setArray(i,x);}
+    public void setRef(int i, Ref x) throws SQLException { checkOpen(); _stmt.setRef(i,x);}
+    public void setBlob(int i, Blob x) throws SQLException { checkOpen(); _stmt.setBlob(i,x);}
+    public void setClob(int i, Clob x) throws SQLException { checkOpen(); _stmt.setClob(i,x);}
+    public void setArray(int i, Array x) throws SQLException { checkOpen(); _stmt.setArray(i,x);}
     public ResultSetMetaData getMetaData() throws SQLException { checkOpen(); return _stmt.getMetaData();}
     public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException { checkOpen(); _stmt.setDate(parameterIndex,x,cal);}
     public void setTime(int parameterIndex, java.sql.Time x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTime(parameterIndex,x,cal);}
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x,cal);}
-    public void setNull (int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
+    public void setNull(int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
@@ -276,5 +277,4 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     }
 
 /* JDBC_3_ANT_KEY_END */
-
 }
