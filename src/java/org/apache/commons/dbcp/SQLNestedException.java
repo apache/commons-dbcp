@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/SQLNestedException.java,v 1.1 2003/08/11 14:51:25 dirkv Exp $
- * $Revision: 1.1 $
- * $Date: 2003/08/11 14:51:25 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/SQLNestedException.java,v 1.2 2003/08/11 15:59:16 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/11 15:59:16 $
  *
  * ====================================================================
  *
@@ -69,9 +69,9 @@ import java.sql.SQLException;
  * A SQLException subclass containing another Throwable
  * 
  * @author Dirk Verbeeck
- * @version $Id: SQLNestedException.java,v 1.1 2003/08/11 14:51:25 dirkv Exp $
+ * @version $Id: SQLNestedException.java,v 1.2 2003/08/11 15:59:16 dirkv Exp $
  */
-class SQLNestedException extends SQLException {
+public class SQLNestedException extends SQLException {
 
     /**
      * Holds the reference to the exception or error that caused
