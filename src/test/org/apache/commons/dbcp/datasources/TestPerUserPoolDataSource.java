@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/10/09 21:05:30 $
+ * $Revision: 1.7 $
+ * $Date: 2003/10/15 19:55:57 $
  *
  * ====================================================================
  *
@@ -78,12 +78,13 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp.TestConnectionPool;
+import org.apache.commons.dbcp.TesterDriver;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.6 $ $Date: 2003/10/09 21:05:30 $
+ * @version $Revision: 1.7 $ $Date: 2003/10/15 19:55:57 $
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
@@ -530,5 +531,76 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         in.close();
 
         assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
+    }
+
+    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    // unregistered user is in the same pool as without username 
+    public void testUnregisteredUser() throws Exception {
+        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        
+        assertEquals(0, tds.getNumActive());
+        assertEquals(0, tds.getNumIdle());
+        
+        Connection conn = tds.getConnection();
+        assertNotNull(conn);
+        assertEquals(1, tds.getNumActive());
+        assertEquals(0, tds.getNumIdle());
+
+        conn.close();
+        assertEquals(0, tds.getNumActive());
+        assertEquals(1, tds.getNumIdle());
+
+        conn = tds.getConnection("u1", null);
+        assertNotNull(conn);
+        assertEquals(1, tds.getNumActive());
+        assertEquals(0, tds.getNumIdle());
+
+        conn.close();
+        assertEquals(0, tds.getNumActive());
+        assertEquals(1, tds.getNumIdle());
+    }
+
+    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    public void testDefaultUser1() throws Exception {
+        TesterDriver.addUser("mkh", "password");
+        TesterDriver.addUser("hanafey", "password");
+        TesterDriver.addUser("jsmith", "password");
+
+        PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
+        puds.setPerUserMaxActive("jsmith", new Integer(2));
+        String[] users = {"mkh", "hanafey", "jsmith"};
+        String password = "password";
+        Connection[] c = new Connection[users.length];
+        for (int i = 0; i < users.length; i++) {
+            c[i] = puds.getConnection(users[i], password);
+        }
+        System.out.println("testDefaultUser1:");
+        for (int i = 0; i < users.length; i++) {
+            System.out.println(
+                "   Tried: " + users[i] + 
+                "   got: " + getUsername(c[i]));
+        }
+    }
+    
+    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    public void testDefaultUser2() throws Exception {
+        TesterDriver.addUser("mkh", "password");
+        TesterDriver.addUser("hanafey", "password");
+        TesterDriver.addUser("jsmith", "password");
+
+        PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
+        puds.setPerUserMaxActive("jsmith", new Integer(2));
+        String[] users = {"jsmith", "hanafey", "mkh"};
+        String password = "password";
+        Connection[] c = new Connection[users.length];
+        for (int i = 0; i < users.length; i++) {
+            c[i] = puds.getConnection(users[i], password);
+        }
+        System.out.println("testDefaultUser2:");
+        for (int i = 0; i < users.length; i++) {
+            System.out.println(
+                "   Tried: " + users[i] + 
+                "   got: " + getUsername(c[i]));
+        }
     }
 }
