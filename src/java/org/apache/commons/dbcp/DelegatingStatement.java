@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/19 06:05:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/05/16 21:25:38 $
  *
  * ====================================================================
  *
@@ -63,6 +63,9 @@ package org.apache.commons.dbcp;
 
 import java.sql.*;
 
+import java.util.List;
+import java.util.Iterator;
+
 /**
  * A base delegating implementation of {@link Statement}.
  * <p>
@@ -70,19 +73,34 @@ import java.sql.*;
  * simply check to see that the {@link Statement} is active,
  * and call the corresponding method on the "delegate"
  * provided in my constructor.
+ * <p>
+ * Extends AbandonedTrace to implement Statement tracking and
+ * logging of code which created the Statement. Tracking the
+ * Statement ensures that the Connection which created it can
+ * close any open Statement's on Connection close.
  *
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
+ * @author Glenn L. Nielsen
+ * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  */
-public class DelegatingStatement implements Statement {
+public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
     protected Statement _stmt = null;
+    /** The connection that created me. **/
+    protected DelegatingConnection _conn = null;
 
     /**
-     * Constructor.
+     * Create a wrapper for the Statement which traces this
+     * Statement to the Connection which created it and the
+     * code which created it.
+     *
      * @param s the {@link Statement} to delegate all calls to.
+     * @param c the {@link DelegatingConnection} that created this statement.
      */
-    public DelegatingStatement(Statement s) {
+    public DelegatingStatement(DelegatingConnection c, Statement s) {
+        super(c);
         _stmt = s;
+        _conn = c;
     }
 
     /**
@@ -124,9 +142,49 @@ public class DelegatingStatement implements Statement {
         _stmt = s;
     }
 
-    public ResultSet executeQuery(String sql) throws SQLException { checkOpen(); return _stmt.executeQuery(sql);}
+    /**
+     * Close this DelegatingStatement, and close
+     * any ResultSets that were not explicitly closed.
+     */
+    public void close() throws SQLException {
+        if (_conn != null) {
+            _conn.removeTrace(this);
+           _conn = null;
+        }
+
+        // The JDBC spec requires that a statment close any open  
+        // ResultSet's when it is closed.
+        List resultSets = getTrace();
+        if( resultSets != null) {
+            Iterator it = resultSets.iterator();
+            while(it.hasNext()) {
+                ((ResultSet)it.next()).close();
+            }
+            clearTrace();
+        }
+
+        passivate();
+        _stmt.close();
+    }
+
+    public Connection getConnection() throws SQLException {
+        checkOpen();
+        return _conn; // return the delegating connection that created this
+    }
+
+    public ResultSet executeQuery(String sql) throws SQLException {
+        checkOpen();
+
+        return new DelegatingResultSet(this, _stmt.executeQuery(sql));
+    }
+
+    public ResultSet getResultSet() throws SQLException {
+        checkOpen();
+
+        return new DelegatingResultSet(this, _stmt.getResultSet());
+    }
+
     public int executeUpdate(String sql) throws SQLException { checkOpen(); return _stmt.executeUpdate(sql);}
-    public void close() throws SQLException { passivate(); _stmt.close();}
     public int getMaxFieldSize() throws SQLException { checkOpen(); return _stmt.getMaxFieldSize();}
     public void setMaxFieldSize(int max) throws SQLException { checkOpen(); _stmt.setMaxFieldSize(max);}
     public int getMaxRows() throws SQLException { checkOpen(); return _stmt.getMaxRows();}
@@ -139,7 +197,6 @@ public class DelegatingStatement implements Statement {
     public void clearWarnings() throws SQLException { checkOpen(); _stmt.clearWarnings();}
     public void setCursorName(String name) throws SQLException { checkOpen(); _stmt.setCursorName(name);}
     public boolean execute(String sql) throws SQLException { checkOpen(); return _stmt.execute(sql);}
-    public ResultSet getResultSet() throws SQLException { checkOpen(); return _stmt.getResultSet();}
     public int getUpdateCount() throws SQLException { checkOpen(); return _stmt.getUpdateCount();}
     public boolean getMoreResults() throws SQLException { checkOpen(); return _stmt.getMoreResults();}
     public void setFetchDirection(int direction) throws SQLException { checkOpen(); _stmt.setFetchDirection(direction);}
@@ -151,7 +208,6 @@ public class DelegatingStatement implements Statement {
     public void addBatch(String sql) throws SQLException { checkOpen(); _stmt.addBatch(sql);}
     public void clearBatch() throws SQLException { checkOpen(); _stmt.clearBatch();}
     public int[] executeBatch() throws SQLException { checkOpen(); return _stmt.executeBatch();}
-    public Connection getConnection() throws SQLException { checkOpen(); return _stmt.getConnection();}
 
     protected void checkOpen() throws SQLException {
         if(_closed) {

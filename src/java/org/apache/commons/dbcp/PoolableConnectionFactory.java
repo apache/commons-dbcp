@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/05/16 21:25:38 $
  *
  * ====================================================================
  *
@@ -72,7 +72,9 @@ import org.apache.commons.pool.*;
  * {@link PoolableConnection}s.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolableConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * @author Glenn L. Nielsen
+ * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Id: PoolableConnectionFactory.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -87,6 +89,27 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) throws Exception {
         _connFactory = connFactory;
         _pool = pool;
+        _pool.setFactory(this);
+        _stmtPoolFactory = stmtPoolFactory;
+        _validationQuery = validationQuery;
+        _defaultReadOnly = defaultReadOnly;
+        _defaultAutoCommit = defaultAutoCommit;
+    }
+
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link PreparedStatement}s, or <tt>null</tt> to disable {@link PreparedStatement} pooling
+     * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
+     * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
+     * @param config the AbandonedConfig if tracing SQL objects
+     */
+    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit, AbandonedConfig config) {
+        _connFactory = connFactory;
+        _pool = pool;
+        _config = config;
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
@@ -174,7 +197,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             conn = new PoolingConnection(conn,stmtpool);
             stmtpool.setFactory((PoolingConnection)conn);
         }
-        return new PoolableConnection(conn,_pool);
+        return new PoolableConnection(conn,_pool,_config);
     }
 
     public void destroyObject(Object obj) throws Exception {
@@ -212,6 +235,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                         return false;
                     }
                 } catch(Exception e) {
+                    return false;
+                } finally {
                     try {
                         rset.close();
                     } catch(Exception t) {
@@ -222,7 +247,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                     } catch(Exception t) {
                         // ignored
                     }
-                    return false;
+
                 }
             } else {
                 return true;
@@ -283,4 +308,5 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected boolean _defaultReadOnly = false;
     protected boolean _defaultAutoCommit = true;
+    protected AbandonedConfig _config = null;
 }
