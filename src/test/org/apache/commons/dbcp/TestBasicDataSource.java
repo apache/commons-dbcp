@@ -16,6 +16,7 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -26,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.17 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.18 $ $Date: 2004/05/01 12:54:32 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -225,5 +226,26 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         assertEquals(0, ds.getNumActive());
         assertEquals(10, ds.getNumIdle());
+    }
+
+    // Bugzilla Bug 28251:  Returning dead database connections to BasicDataSource
+    // isClosed() failure blocks returning a connection to the pool 
+    public void testIsClosedFailure() throws SQLException {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        assertEquals(1, ds.getNumActive());
+        
+        // set an IO failure causing the isClosed mathod to fail
+        TesterConnection tconn = (TesterConnection) ((DelegatingConnection)conn).getInnermostDelegate();
+        tconn.setFailure(new IOException("network error"));
+        
+        try {
+            conn.close();
+            fail("Expected SQLException");
+        }
+        catch(SQLException ex) { }
+        
+        assertEquals(0, ds.getNumActive());
     }
 }
