@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2003-2004 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+   <properties>
+      <title>Release notes for Commons-DBCP 1.1</title>
+      <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+      <revision>$Id: release-notes-1.1.xml,v 1.1 2004/05/20 15:59:44 dirkv Exp $</revision>
+   </properties>
+
+   <body>
+     <section name="Release notes for Commons-DBCP 1.1">
+<p>
+There were a lot changes since the 1.0 release on 12 Aug 2002.
+<ul>
+<li>All existing features can now be configured by JNDI Context providers (Tomcat)</li>
+<br/>
+<li>The double close() of a pooled connection is more effectively blocked
+  (you may experience more "Already closed" SQLExceptions)</li>
+<br/>
+<li>Prepared statement pooling is now implemented in BasicDataSource
+  (set poolPreparedStatements=true, maxOpenPreparedStatements=xxx)</li>
+<br/>
+<li>Access to the underlying connection is blocked by default
+  You can access the underlying connection by setting
+  accessToUnderlyingConnectionAllowed=true and by using the following construct:
+  Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();</li>
+<br/>
+<li>New minIdle parameter for a minimum number of idle connections ready for use</li>
+<br/>
+<li>New connection default properties: defaultCatalog and defaultTransactionIsolation</li>
+<br/>
+<li>Missing driverClassName will now give the following error "No suitable driver"</li>
+<br/>
+<li>Bad validationQuery will produce a meaningful SQLException</li>
+<br/>
+<li>UML Class and sequence diagrams, configuration documentation</li>
+<br/>
+<li>The following issues were resolved since v1.0: (see Bugzilla for complete description)
+<table>
+<tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=6934">  6934</a></td><td>2003-09-20</td><td>Blo</td><td>DUPL</td><td>SQLTransformer.java - infinite loop in getConnection</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=7038">  7038</a></td><td>2002-03-18</td><td>Nor</td><td>FIXE</td><td>DBCP does not build under JDK 1.4</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=7727">  7727</a></td><td>2002-04-20</td><td>Maj</td><td>FIXE</td><td>Infinite loop (stack overflow) in BasicDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=7728">  7728</a></td><td>2002-04-20</td><td>Maj</td><td>FIXE</td><td>BasicDataSource cannot use many JDBC drivers</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=8620">  8620</a></td><td>2002-04-29</td><td>Nor</td><td>INVA</td><td>Closed Connection Exception on setAutoCommit</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=9073">  9073</a></td><td>2002-07-20</td><td>Nor</td><td>FIXE</td><td>BasicDataSource - invalid connections are not checked</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=9850">  9850</a></td><td>2002-07-20</td><td>Nor</td><td>FIXE</td><td>No way to get at SQLException if connection to database fail</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10592">10592</a></td><td>2002-07-20</td><td>Nor</td><td>DUPL</td><td>dataSource.getConnection never returns in Tomcat using DBCP</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10614">10614</a></td><td>2002-07-20</td><td>Nor</td><td>FIXE</td><td>DBCP connection pooling broken in Tomcat-4.1.7 (regression)</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10688">10688</a></td><td>2002-07-20</td><td>Min</td><td>FIXE</td><td>Version in the Manifest</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10969">10969</a></td><td>2002-07-20</td><td>Maj</td><td>FIXE</td><td>BasicDataSource defaults are unusable</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=11507">11507</a></td><td>2002-08-06</td><td>Nor</td><td>INVA</td><td>Cleanup dead connections</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12047">12047</a></td><td>2002-11-01</td><td>Nor</td><td>INVA</td><td>validationQuery + MSSQL</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12400">12400</a></td><td>2002-11-07</td><td>Nor</td><td>WORK</td><td>same connections</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12409">12409</a></td><td>2002-11-01</td><td>Blo</td><td>FIXE</td><td>Connection can be closed twice</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12733">12733</a></td><td>2003-02-06</td><td>Nor</td><td>FIXE</td><td>[DBCP][PATCH]Statement.getResultSet() doesn't return null if</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12869">12869</a></td><td>2002-11-01</td><td>Maj</td><td>FIXE</td><td>Abandoned Connections are never closed</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13077">13077</a></td><td>2002-11-07</td><td>Enh</td><td>FIXE</td><td>Jdbc2PoolDataSource issues</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13129">13129</a></td><td>2002-11-01</td><td>Nor</td><td>FIXE</td><td>CPDSConnectionFactory prints invalid error messages</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13155">13155</a></td><td>2002-10-30</td><td>Nor</td><td>DUPL</td><td>unexpected "exausted pool" error</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13235">13235</a></td><td>2002-11-16</td><td>Blo</td><td>FIXE</td><td>referenced UserPassKey instances get erroneously returned to</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13930">13930</a></td><td>2003-03-06</td><td>Enh</td><td>FIXE</td><td>Adding connection parameters to BasicDataSourceFactory</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13988">13988</a></td><td>2003-03-17</td><td>Enh</td><td>DUPL</td><td>permission error makes connection loop</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=14267">14267</a></td><td>2003-04-28</td><td>Maj</td><td>INVA</td><td>DBCP doesn't work on Tomcat 4.1.12 and Oracle JDBC driver</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=14592">14592</a></td><td>2002-11-15</td><td>Enh</td><td>INVA</td><td>DBCP must be robust against e.g. database shutdowns</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=14663">14663</a></td><td>2003-05-14</td><td>Nor</td><td>REMI</td><td>Tomcat5 server hangs when trying to get the database connect</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=15123">15123</a></td><td>2003-08-21</td><td>Maj</td><td>FIXE</td><td>Incorrect stack trace shown when abandoned connections are c</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=15539">15539</a></td><td>2003-02-06</td><td>Maj</td><td>DUPL</td><td>Strange Result Set on output</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=16283">16283</a></td><td>2003-02-01</td><td>Nor</td><td>WONT</td><td>Inproper use of Exception</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=16581">16581</a></td><td>2003-03-06</td><td>Maj</td><td>FIXE</td><td>Deadlock in AbandonedObjectPool when firewall closes connect</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=16629">16629</a></td><td>2003-03-06</td><td>Nor</td><td>FIXE</td><td>org.apache.commons.dbcp.jdbc2pool.Jdbc2PoolDataSource: setti</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=16987">16987</a></td><td>2003-08-11</td><td>Maj</td><td>FIXE</td><td>race condition in PoolableConnection.close()</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17015">17015</a></td><td>2003-03-06</td><td>Nor</td><td>FIXE</td><td>GenericObjectPool.invalidateObject() doesn't work with Aband</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17200">17200</a></td><td>2003-03-06</td><td>Maj</td><td>FIXE</td><td>DBCP: org.apache.commons.dbcp.cpdsadapter.PooledConnectionIm</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17301">17301</a></td><td>2003-04-08</td><td>Nor</td><td>WONT</td><td>NPE in Oracle driver when using DBCP PoolingDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17456">17456</a></td><td>2003-04-08</td><td>Enh</td><td>FIXE</td><td>BasicDataSource should use commons-logging</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17635">17635</a></td><td>2003-03-06</td><td>Min</td><td>FIXE</td><td>PoolableConnectionFactory-Construction declared to throw Exc</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17677">17677</a></td><td>2003-05-31</td><td>Maj</td><td>INVA</td><td>Pooled connection architecture vulnerable to double use</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17678">17678</a></td><td>2003-04-01</td><td>Maj</td><td>FIXE</td><td>DBCP Fails silently in many cases</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17680">17680</a></td><td>2003-03-13</td><td>Maj</td><td>INVA</td><td>PoolableConnection.reallyClose() doesn't decrement active co</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17911">17911</a></td><td>2003-04-07</td><td>Maj</td><td>WONT</td><td>Problem with getConnection() and Informix</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18012">18012</a></td><td>2003-08-26</td><td>Enh</td><td>FIXE</td><td>BasicDataSource doesn't include PreparedStmt Pooling</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18483">18483</a></td><td>2003-04-08</td><td>Nor</td><td>WONT</td><td>AbandonedObjectPool.removeAbandoned never cleans up the trac</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18502">18502</a></td><td>2003-03-30</td><td>Blo</td><td>INVA</td><td>java.lang.ClassNotFoundException: org.apache.commons.pool.St</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18550">18550</a></td><td>2003-08-25</td><td>Enh</td><td>FIXE</td><td>Add defaultTransactionIsolation to BasicDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18834">18834</a></td><td>2003-04-08</td><td>Nor</td><td>FIXE</td><td>Jdbc2PoolDataSource throws a RuntimeException when database</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18905">18905</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Couldn't get connection (Jdbc2PoolDataSource)</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18921">18921</a></td><td>2003-08-11</td><td>Enh</td><td>FIXE</td><td>Per User methods not working in Jdbc2PoolDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18982">18982</a></td><td>2003-04-13</td><td>Maj</td><td>INVA</td><td>Binary distribution missing package</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19374">19374</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Potential for DelegateStatement, DelegateResultSet to be lef</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19614">19614</a></td><td>2003-08-13</td><td>Maj</td><td>FIXE</td><td>Poor performance under load</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19615">19615</a></td><td>2003-05-02</td><td>Maj</td><td>INVA</td><td>Unecessary global synchronized in AbandonedObjectPool method</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19706">19706</a></td><td>2003-08-26</td><td>Enh</td><td>WONT</td><td>Add Initial Commons Logging to DBCP</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=20649">20649</a></td><td>2003-08-11</td><td>Cri</td><td>INVA</td><td>deadlock when acquiring connections from a pool</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21132">21132</a></td><td>2003-08-11</td><td>Cri</td><td>DUPL</td><td>Broken pipe despite validation query set</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21182">21182</a></td><td>2003-08-21</td><td>Nor</td><td>INVA</td><td>[dbcp] removing a webapp does not force connections closed</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21229">21229</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>ConnectionFactory throws SQLException but implementations do</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21273">21273</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Memory-leak like behaviour in DBCP due to warnings chained t</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21418">21418</a></td><td>2003-08-11</td><td>Min</td><td>FIXE</td><td>Example code</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21453">21453</a></td><td>2003-08-11</td><td>Maj</td><td>INVA</td><td>NullPointerException  in DBCP when used for client-server ap</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21458">21458</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Statements and connections don't implement equals()/hashCode</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21748">21748</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>BasicDataSource.close() throws NPE</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22078">22078</a></td><td>2003-08-12</td><td>Nor</td><td>FIXE</td><td>[DBCP] testOnBorrow fails if setAutoCommit() throws an excep</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22079">22079</a></td><td>2003-08-13</td><td>Nor</td><td>FIXE</td><td>[DBCP] if connection closed twice *closed* connection is ret</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22214">22214</a></td><td>2003-08-11</td><td>Maj</td><td>FIXE</td><td>Delegating ResultSet causing NPE</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22229">22229</a></td><td>2003-08-13</td><td>Cri</td><td>FIXE</td><td>Foul connection causes livelock of all pool operations</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22598">22598</a></td><td>2003-08-21</td><td>Enh</td><td>FIXE</td><td>minIdle Functionality for DBCP via Patches Posted for common</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22736">22736</a></td><td>2003-08-29</td><td>Maj</td><td>INVA</td><td>validationQuery parameter hangs getConnection method.</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22750">22750</a></td><td>2003-08-27</td><td>Nor</td><td>FIXE</td><td>BasicDataSource always sets testOnBorrow if given a validati</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22776">22776</a></td><td>2003-09-20</td><td>Nor</td><td>WONT</td><td>DBCP should not be writing messages to stderr or stdout</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23066">23066</a></td><td>2003-09-13</td><td>Maj</td><td>FIXE</td><td>DriverManager.getConnection() throws DbcpException</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23081">23081</a></td><td>2003-09-20</td><td>Nor</td><td>FIXE</td><td>DBCP - Bad DB Validation Query Hangs Everything</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23138">23138</a></td><td>2003-09-13</td><td>Nor</td><td>FIXE</td><td>getDelegate no longer useful since v1.7 of PoolingDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23157">23157</a></td><td>2003-09-20</td><td>Enh</td><td>FIXE</td><td>add defaultCatalog to BasicDataSource</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23185">23185</a></td><td>2003-09-21</td><td>Nor</td><td>WONT</td><td>PoolableConnection.close() won't allow multiple close</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23291">23291</a></td><td>2003-09-20</td><td>Nor</td><td>FIXE</td><td>impossible to turn off all validation tests when a validatio</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23293">23293</a></td><td>2003-09-20</td><td>Nor</td><td>FIXE</td><td>setAutoCommit(true) when returning connection to the pool</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23304">23304</a></td><td>2003-09-21</td><td>Nor</td><td>FIXE</td><td>NullpointerException when no driverClassName is specified</td></tr>
+</table>
+</li>
+<br/>
+<li>The following issues were resolved since v1.1RC1:
+<table>
+<tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22776">22776</a></td><td>2003-09-30</td><td>Nor</td><td>FIXE</td><td>DBCP should not be writing messages to stderr or stdout (removed unneeded logging in AbandonedObjectPool)</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23491">23491</a></td><td>2003-10-13</td><td>Cri</td><td>FIXE</td><td>Can't configure PerUserPoolDataSource for use with tomcat, <a href="http://jakarta.apache.org/commons/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html">more...</a></td></tr>
+</table>
+</li>
+<br/>
+<li>The following issues were resolved since v1.1RC2:
+<table>
+<tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23843">23843</a></td><td>2003-10-20</td><td>Blo</td><td>FIXE</td><td>PerUserPoolDataSource.getConnection(username, pw) may return connection under wrong username</td></tr>
+</table>
+</li>
+</ul>
+</p>
+</section>
+</body>
+</document>
+
