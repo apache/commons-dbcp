@@ -32,7 +32,7 @@ import org.apache.commons.pool.*;
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.14 $ $Date: 2004/03/07 15:26:38 $
  */
 public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
     /** My pool of {@link PreparedStatement}s. */
@@ -147,14 +147,22 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * Create a PStmtKey for the given arguments.
      */
     protected Object createKey(String sql, int resultSetType, int resultSetConcurrency) {
-        return new PStmtKey(normalizeSQL(sql),resultSetType,resultSetConcurrency);
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (Exception e) {}
+        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency);
     }
 
     /**
      * Create a PStmtKey for the given arguments.
      */
     protected Object createKey(String sql) {
-        return new PStmtKey(normalizeSQL(sql));
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (Exception e) {}
+        return new PStmtKey(normalizeSQL(sql), catalog);
     }
 
     /**
@@ -242,9 +250,15 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         protected String _sql = null;
         protected Integer _resultSetType = null;
         protected Integer _resultSetConcurrency = null;
-
+        protected String _catalog = null;
+        
         PStmtKey(String sql) {
             _sql = sql;
+        }
+
+        PStmtKey(String sql, String catalog) {
+            _sql = sql;
+            _catalog = catalog;
         }
 
         PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
@@ -253,10 +267,18 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             _resultSetConcurrency = new Integer(resultSetConcurrency);
         }
 
+        PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
+            _sql = sql;
+            _catalog = catalog;
+            _resultSetType = new Integer(resultSetType);
+            _resultSetConcurrency = new Integer(resultSetConcurrency);
+        }
+
         public boolean equals(Object that) {
             try {
                 PStmtKey key = (PStmtKey)that;
                 return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
+                        ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
                         ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
                         ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency))
                       );
@@ -268,13 +290,18 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         }
 
         public int hashCode() {
-            return(null == _sql ? 0 : _sql.hashCode());
+            if (_catalog==null)
+                return(null == _sql ? 0 : _sql.hashCode());
+            else
+                return(null == _sql ? _catalog.hashCode() : (_catalog + _sql).hashCode());
         }
 
         public String toString() {
             StringBuffer buf = new StringBuffer();
             buf.append("PStmtKey: sql=");
             buf.append(_sql);
+            buf.append(", catalog=");
+            buf.append(_catalog);
             buf.append(", resultSetType=");
             buf.append(_resultSetType);
             buf.append(", resultSetConcurrency=");
