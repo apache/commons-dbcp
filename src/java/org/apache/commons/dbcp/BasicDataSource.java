@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.8 2002/05/21 11:57:14 glenn Exp $
- * $Revision: 1.8 $
- * $Date: 2002/05/21 11:57:14 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.9 2002/05/27 13:15:43 glenn Exp $
+ * $Revision: 1.9 $
+ * $Date: 2002/05/27 13:15:43 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.8 $ $Date: 2002/05/21 11:57:14 $
+ * @version $Revision: 1.9 $ $Date: 2002/05/27 13:15:43 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -535,7 +535,7 @@ public class BasicDataSource implements DataSource {
             driver = DriverManager.getDriver(url);
         } catch (Throwable t) {
             String message = "Cannot create JDBC driver of class '" +
-                driverClassName + "'";
+                driverClassName + "' for connect URL '" + url + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
             throw new SQLException(message);
@@ -548,8 +548,18 @@ public class BasicDataSource implements DataSource {
         connectionPool.setMaxWait(maxWait);
 
         // Set up the driver connection factory we will use
-        connectionProperties.put("user", username);
-        connectionProperties.put("password", password);
+        if (username != null) {
+            connectionProperties.put("user", username);
+        } else {
+            System.out.println(
+                "DBCP DataSource configured without a 'username'");
+        }
+        if (password != null) {
+            connectionProperties.put("password", password);
+        } else {
+            System.out.println(
+                "DBCP DataSource configured without a 'password'");
+        }
         DriverConnectionFactory driverConnectionFactory =
             new DriverConnectionFactory(driver, url, connectionProperties);
 
