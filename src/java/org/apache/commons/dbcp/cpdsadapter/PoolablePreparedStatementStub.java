@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/PoolablePreparedStatementStub.java,v $
- * $Revision: 1.5 $
- * $Date: 2003/10/09 21:03:35 $
+ * $Revision: 1.6 $
+ * $Date: 2003/12/26 15:48:40 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.commons.dbcp.PoolablePreparedStatement;
  * package.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PoolablePreparedStatementStub.java,v 1.5 2003/10/09 21:03:35 rdonkin Exp $
+ * @version $Id: PoolablePreparedStatementStub.java,v 1.6 2003/12/26 15:48:40 dirkv Exp $
  */
 class PoolablePreparedStatementStub extends PoolablePreparedStatement {
 
@@ -89,7 +89,7 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement {
         super(stmt, key, pool, conn);
     }
 
-    protected void activate() {
+    protected void activate() throws SQLException {
         super.activate();
     }
 
