@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/DriverAdapterCPDS.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/22 16:59:11 $
  *
  * ====================================================================
  *
@@ -88,7 +88,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * <code>ConnectionPoolDataSource</code>s are not used within general 
  * applications.  They are used by <code>DataSource</code> implementations
  * that pool <code>Connection</code>s, such as 
- * {@link org.apache.commons.dbcp.jdbc2pool.Jdbc2PoolDataSource}.  A J2EE
+ * {@link org.apache.commons.dbcp.datasources.SharedPoolDataSource}.  A J2EE
  * container will normally provide some method of initializing the
  * <code>ConnectionPoolDataSource</code> whose attributes are presented
  * as bean getters/setters and then deploying it via JNDI.  It is then
@@ -119,13 +119,13 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * <p>
  * The <a href="package-summary.html">package documentation</a> contains an 
  * example using catalina and JNDI.  The <a 
- * href="../datasources/package-summary.html">jdbc2pool package documentation</a>
+ * href="../datasources/package-summary.html">datasources package documentation</a>
  * shows how to use <code>DriverAdapterCPDS</code> as a source for
  * <code>Jdbc2PoolDataSource</code> without the use of JNDI.
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DriverAdapterCPDS.java,v 1.4 2003/08/22 16:08:32 dirkv Exp $
+ * @version $Id: DriverAdapterCPDS.java,v 1.5 2003/08/22 16:59:11 dirkv Exp $
  */
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 

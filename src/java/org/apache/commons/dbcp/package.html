@@ -1,11 +1,11 @@
-<!-- $Id: package.html,v 1.1 2001/04/14 17:15:48 rwaldhoff Exp $ -->
+<!-- $Id: package.html,v 1.2 2003/08/22 16:59:11 dirkv Exp $ -->
 <html>
    <head>
       <title>Package Documentation for org.apache.commons.dbcp</title>
    </head>
    <body>
       <p>
-         Database Connection Pool API
+         Database Connection Pool API.
       </p>
 
       <b>Overview in Dialog Form</b>
@@ -81,7 +81,7 @@
             the actual database {@link java.sql.Connection}s will be obtained.
           </li>
           <li>
-            An empty and factory-less {@link org.apache.commons.pool.Object}
+            An empty and factory-less {@link org.apache.commons.pool.ObjectPool}
             in which the {@link java.sql.Connection}s will be stored.
             <br>
             When you pass an {@link org.apache.commons.pool.ObjectPool} into the
@@ -121,7 +121,7 @@ driver.registerPool("example",connectionPool);</pre>
       </p><p>
          A: If you're using the {@link org.apache.commons.dbcp.PoolingDriver}, you
          don't need to do this configuration in code.  Instead, you can provide
-         a {@link org.apache.commons.jocl JOCL document} that describes the connection pool,
+         a JOCL document that describes the connection pool,
          and let the {@link org.apache.commons.dbcp.PoolingDriver} discover it at
          runtime.
       </p><p>
