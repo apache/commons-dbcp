@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v $
- * $Revision: 1.15 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.16 $
+ * $Date: 2003/11/30 18:40:46 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Id: PoolableConnectionFactory.java,v 1.15 2003/10/09 21:04:44 rdonkin Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.16 2003/11/30 18:40:46 dirkv Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -312,7 +312,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
     }
 
-    synchronized public boolean validateObject(Object obj) {
+    public boolean validateObject(Object obj) {
         if(obj instanceof Connection) {
             try {
                 validateConnection((Connection) obj);
@@ -325,7 +325,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
     }
 
-    synchronized public void validateConnection(Connection conn) throws SQLException {
+    public void validateConnection(Connection conn) throws SQLException {
         String query = _validationQuery;
         if(conn.isClosed()) {
             throw new SQLException("validateConnection: connection closed");
