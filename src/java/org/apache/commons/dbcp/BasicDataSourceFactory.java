@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/08/26 14:19:28 $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/13 22:29:39 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import javax.naming.spi.ObjectFactory;
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2003/08/26 14:19:28 $
+ * @version $Revision: 1.10 $ $Date: 2003/09/13 22:29:39 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -253,6 +253,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
         ra = ref.get("validationQuery");
         if (ra != null) {
             dataSource.setValidationQuery(ra.getContent().toString());
+        }
+
+        ra = ref.get("accessToUnderlyingConnectionAllowed");
+        if (ra != null) {
+            dataSource.setAccessToUnderlyingConnectionAllowed
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("removeAbandoned");
