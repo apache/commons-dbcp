@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.5 2003/03/06 21:41:47 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2003/03/06 21:41:47 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.6 2003/03/07 00:24:09 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/03/07 00:24:09 $
  *
  * ====================================================================
  *
@@ -67,16 +67,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp.TestConnectionPool;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * @author John McNally
- * @version $Revision: 1.5 $ $Date: 2003/03/06 21:41:47 $
+ * @version $Revision: 1.6 $ $Date: 2003/03/07 00:24:09 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -401,8 +401,10 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
                     rset.close();
                     stmt.close();
                     conn.close();
+                } catch (RuntimeException e) {
+                    throw e;
                 } catch (Exception e) {
-                    throw new NestableRuntimeException(e);
+                    throw new RuntimeException(e.toString());
                 }
             }
         }

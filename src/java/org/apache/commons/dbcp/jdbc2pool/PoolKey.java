@@ -1,5 +1,3 @@
-package org.apache.commons.dbcp.jdbc2pool;
-
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
@@ -53,9 +51,9 @@ package org.apache.commons.dbcp.jdbc2pool;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.commons.dbcp.jdbc2pool;
  
 import java.io.Serializable;
-import org.apache.commons.lang.ObjectUtils;
 
 class PoolKey
     implements Serializable
@@ -90,15 +88,16 @@ class PoolKey
     
     public boolean equals(Object obj)
     {
-        boolean equal = false;
         if ( obj instanceof PoolKey ) 
         {
             PoolKey pk = (PoolKey)obj;
-            equal = ObjectUtils.equals(pk.datasourceName, datasourceName);
-            equal &= ObjectUtils.equals(pk.username, username);
-        }            
-
-        return equal;
+            return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
+                (null == username ? null == pk.username : username.equals(pk.username));
+        } 
+        else
+        {
+            return false;   
+        }
     }
 
     public int hashCode()

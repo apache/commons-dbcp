@@ -94,11 +94,6 @@
     </dependency>
 
     <dependency>
-      <id>commons-lang</id>
-      <version>1.0-b1</version>
-    </dependency>
-    
-    <dependency>
       <id>commons-pool</id>
       <version>SNAPSHOT</version>
     </dependency>
