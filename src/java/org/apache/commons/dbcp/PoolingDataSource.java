@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.9 $
+ * $Date: 2003/09/13 22:29:39 $
  *
  * ====================================================================
  *
@@ -84,9 +84,13 @@ import org.apache.commons.pool.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Id: PoolingDataSource.java,v 1.8 2003/08/22 16:08:31 dirkv Exp $
+ * @version $Id: PoolingDataSource.java,v 1.9 2003/09/13 22:29:39 dirkv Exp $
  */
 public class PoolingDataSource implements DataSource {
+
+    /** Controls access to the underlying connection */
+    private boolean accessToUnderlyingConnectionAllowed = false; 
+
     public PoolingDataSource() {
         this(null);
     }
@@ -104,6 +108,27 @@ public class PoolingDataSource implements DataSource {
             _pool = pool;
         }
     }
+
+    /**
+     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * 
+     * @return true if access to the underlying is allowed, false otherwise.
+     */
+    public boolean isAccessToUnderlyingConnectionAllowed() {
+        return this.accessToUnderlyingConnectionAllowed;
+    }
+
+    /**
+     * Sets the value of the accessToUnderlyingConnectionAllowed property.
+     * It controls if the PoolGuard allows access to the underlying connection.
+     * (Default: false)
+     * 
+     * @param allow Access to the underlying connection is granted when true.
+     */
+    public void setAccessToUnderlyingConnectionAllowed(boolean allow) {
+        this.accessToUnderlyingConnectionAllowed = allow;
+    }
+    
     //--- DataSource methods -----------------------------------------
 
     /**
@@ -179,14 +204,13 @@ public class PoolingDataSource implements DataSource {
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
      * closed connection cannot be used anymore.
-     * 
-     * @author Dirk Verbeeck
      */
-    private class PoolGuardConnectionWrapper implements Connection {
+    private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
         private Connection delegate;
     
         PoolGuardConnectionWrapper(Connection delegate) {
+            super(delegate);
             this.delegate = delegate;
         }
 
@@ -198,7 +222,9 @@ public class PoolingDataSource implements DataSource {
     
         public void close() throws SQLException {
             checkOpen();
-            delegate.close();
+            this.delegate.close();
+            this.delegate = null;
+            super.setDelegate(null);
         }
 
         public boolean isClosed() throws SQLException {
@@ -405,5 +431,27 @@ public class PoolingDataSource implements DataSource {
         }
 
 /* JDBC_3_ANT_KEY_END */
+
+        /**
+         * @see org.apache.commons.dbcp.DelegatingConnection#getDelegate()
+         */
+        public Connection getDelegate() {
+            if (isAccessToUnderlyingConnectionAllowed()) {
+                return super.getDelegate();
+            } else {
+                return null;
+            }
+        }
+
+        /**
+         * @see org.apache.commons.dbcp.DelegatingConnection#getInnermostDelegate()
+         */
+        public Connection getInnermostDelegate() {
+            if (isAccessToUnderlyingConnectionAllowed()) {
+                return super.getInnermostDelegate();
+            } else {
+                return null;
+            }
+        }
     }
 }

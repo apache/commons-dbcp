@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.23 $
- * $Date: 2003/08/27 15:43:55 $
+ * $Revision: 1.24 $
+ * $Date: 2003/09/13 22:29:39 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.23 $ $Date: 2003/08/27 15:43:55 $
+ * @version $Revision: 1.24 $ $Date: 2003/09/13 22:29:39 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -423,6 +423,30 @@ public class BasicDataSource implements DataSource {
         this.validationQuery = validationQuery;
     }
 
+    /** 
+     * Controls access to the underlying connection 
+     */
+    private boolean accessToUnderlyingConnectionAllowed = false; 
+
+    /**
+     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * 
+     * @return true if access to the underlying is allowed, false otherwise.
+     */
+    public boolean isAccessToUnderlyingConnectionAllowed() {
+        return this.accessToUnderlyingConnectionAllowed;
+    }
+
+    /**
+     * Sets the value of the accessToUnderlyingConnectionAllowed property.
+     * It controls if the PoolGuard allows access to the underlying connection.
+     * (Default: false)
+     * 
+     * @param allow Access to the underlying connection is granted when true.
+     */
+    public void setAccessToUnderlyingConnectionAllowed(boolean allow) {
+        this.accessToUnderlyingConnectionAllowed = allow;
+    }
 
     // ----------------------------------------------------- Instance Variables
 
@@ -624,9 +648,7 @@ public class BasicDataSource implements DataSource {
         abandonedConfig.setLogAbandoned(logAbandoned);
     }
 
-
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Add a custom connection property to the set that will be passed to our
@@ -786,6 +808,7 @@ public class BasicDataSource implements DataSource {
 
         // Create and return the pooling data source to manage the connections
         dataSource = new PoolingDataSource(connectionPool);
+        ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         dataSource.setLogWriter(logWriter);
         return (dataSource);
 
