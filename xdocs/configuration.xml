@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+
+<document>
+
+ <properties>
+  <title>Configuration</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+<section name="Introduction">
+<p>TODO: add section about tomcat configuration and avoiding the resource leak when reloading tomcat webapps.</p>
+</section>
+
+
+<section name="Parameters">
+
+<table>
+<hr><th>Parameter</th><th>Description</th></hr>
+<tr>
+   <td>username</td>
+   <td>The connection username to be passed to our JDBC driver to establish a connection.</td>
+</tr>
+<tr>
+   <td>password</td>
+   <td>The connection password to be passed to our JDBC driver to establish a connection.</td>
+</tr>
+<tr>
+   <td>url</td>
+   <td>The connection URL to be passed to our JDBC driver to establish a connection.</td>
+</tr>
+<tr>
+   <td>driverClassName</td>
+   <td>The fully qualified Java class name of the JDBC driver to be used.</td>
+</tr>
+<tr>
+   <td>connectionProperties</td>
+   <td>The connection properties that will be sent to our JDBC driver when establishing new connections.
+       <br/><strong>NOTE</strong> - The "user" and "password" properties will be passed explicitly, 
+       so they do not need to be included here.
+   </td>
+</tr>
+</table>
+
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr>
+   <td>defaultAutoCommit</td>
+   <td>true</td>
+   <td>The default auto-commit state of connections created by this pool.</td>
+</tr>
+<tr>
+   <td>defaultReadOnly</td>
+   <td>false</td>
+   <td>The default read-only state of connections created by this pool.</td>
+</tr>
+<tr>
+   <td>defaultTransactionIsolation</td>
+   <td>driver default</td>
+   <td>The default TransactionIsolation state of connections created by this pool.
+       One of the following: (see 
+       <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Connection.html#field_summary">javadoc</a>)
+       <ul>
+          <li>NONE</li>
+          <li>READ_COMMITTED</li>
+          <li>READ_UNCOMMITTED</li>
+          <li>REPEATABLE_READ</li>
+          <li>SERIALIZABLE</li>
+       </ul>
+   </td>
+</tr>
+</table>
+
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr>
+   <td>maxActive</td>
+   <td>8</td>
+   <td>
+      The maximum number of active connections that can be allocated from
+      this pool at the same time, or zero for no limit.
+   </td>
+</tr>
+<tr>
+   <td>maxIdle</td>
+   <td>8</td>
+   <td>
+      The maximum number of active connections that can remain idle in the
+      pool, without extra ones being released, or zero for no limit.
+   </td>
+</tr>
+<tr>
+   <td>minIdle</td>
+   <td>0</td>
+   <td>
+      The minimum number of active connections that can remain idle in the
+      pool, without extra ones being created, or zero to create none.
+   </td>
+</tr>
+<tr>
+   <td>maxWait</td>
+   <td>indefinitely</td>
+   <td>
+      The maximum number of milliseconds that the pool will wait (when there
+      are no available connections) for a connection to be returned before
+      throwing an exception, or -1 to wait indefinitely.
+   </td>
+</tr>
+</table>
+
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr>
+   <td>validationQuery</td>
+   <td></td>
+   <td>
+The SQL query that will be used to validate connections from this pool
+before returning them to the caller.  If specified, this query
+<strong>MUST</strong> be an SQL SELECT statement that returns at least
+one row.
+   </td>
+</tr>
+<tr>
+   <td>testOnBorrow</td>
+   <td>true</td>
+   <td>
+      The indication of whether objects will be validated before being
+      borrowed from the pool.  If the object fails to validate, it will be
+      dropped from the pool, and we will attempt to borrow another.
+   </td>
+</tr>
+<tr>
+   <td>testOnReturn</td>
+   <td>false</td>
+   <td>
+      The indication of whether objects will be validated before being
+      returned to the pool.
+   </td>
+</tr>
+<tr>
+   <td>testWhileIdle</td>
+   <td>false</td>
+   <td>
+      The indication of whether objects will be validated by the idle object
+      evictor (if any).  If an object fails to validate, it will be dropped
+      from the pool.
+   </td>
+</tr>
+<tr>
+   <td>timeBetweenEvictionRunsMillis</td>
+   <td>-1</td>
+   <td>
+      The number of milliseconds to sleep between runs of the idle object
+      evictor thread.  When non-positive, no idle object evictor thread will
+      be run.
+   </td>
+</tr>
+<tr>
+   <td>numTestsPerEvictionRun</td>
+   <td>3</td>
+   <td>
+      The number of objects to examine during each run of the idle object
+      evictor thread (if any).
+   </td>
+</tr>
+<tr>
+   <td>minEvictableIdleTimeMillis</td>
+   <td>1000 * 60 * 30</td>
+   <td>
+      The minimum amount of time an object may sit idle in the pool before it
+      is eligable for eviction by the idle object evictor (if any).
+   </td>
+</tr>
+</table>
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr><tr>
+   <td>poolPreparedStatements</td>
+   <td>false</td>
+   <td>Enable prepared statement pooling for this pool.</td>
+</tr>
+<tr>
+   <td>maxOpenPreparedStatements</td>
+   <td>unlimited</td>
+   <td>
+      The maximum number of open statements that can be allocated from
+      the statement pool at the same time, or zero for no limit.
+   </td>
+</tr>
+</table>
+<p>
+This component has also the ability to pool PreparedStatements.
+When enabled a statement pool will be created for each Connection
+and PreparedStatements created by one of the following methods will be pooled:
+<ul>
+   <li>public PreparedStatement prepareStatement(String sql)</li>
+   <li>public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)</li>
+</ul>
+<strong>NOTE</strong> - Make sure your connection has some resources left for the other statements.
+</p>
+
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr><tr>
+   <td>accessToUnderlyingConnectionAllowed</td>
+   <td>false</td>
+   <td>Controls if the PoolGuard allows access to the underlying connection.</td>
+</tr>
+</table>
+<p>When allowed you can access the underlying connection using the following construct:</p>
+<source>
+    Connection conn = ds.getConnection();
+    Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+    ...
+    conn.close()
+</source>
+<p>
+Default is false, it is a potential dangerous operation and misbehaving programs can do harmfull things. (closing the underlying or continue using it when the guarded connection is already closed)
+Be carefull and only use when you need direct access to driver specific extentions.
+<br/><b>NOTE:</b> Do not close the underlying connection, only the original one.
+</p>
+
+
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr>
+   <td>removeAbandoned</td>
+   <td>false</td>
+   <td>
+      Flag to remove abandoned connections if they exceed the
+      removeAbandonedTimout.<br/>
+      If set to true a connection is considered abandoned and eligible
+      for removal if it has been idle longer than the removeAbandonedTimeout.
+      Setting this to true can recover db connections from poorly written
+      applications which fail to close a connection.
+   </td>
+</tr>
+<tr>
+   <td>removeAbandonedTimeout</td>
+   <td>300</td>
+   <td>Timeout in seconds before an abandoned connection can be removed.</td>
+</tr>
+<tr>
+   <td>logAbandoned</td>
+   <td>false</td>
+   <td>
+      Flag to log stack traces for application code which abandoned
+      a Statement or Connection.<br/>
+      Logging of abandoned Statements and Connections adds overhead
+      for every Connection open or new Statement because a stack   
+      trace has to be generated.  
+   </td>
+</tr>
+</table>
+<p>
+If you have enabled "removeAbandoned" then it is possible that a connection is reclaimed by the pool because it is considered to be abandoned.
+This mechanism is triggered when (getNumIdle() &lt; 2) and (getNumActive() &gt; getMaxActive() - 3)
+For example maxActive=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
+But only the active connections that aren't used for more then "removeAbandonedTimeout" seconds are removed,
+default (300 sec). Traversing a resultset doesn't count as being used. 
+</p>
+
+</section>
+
+</body>
+</document>
