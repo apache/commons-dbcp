@@ -30,9 +30,9 @@ import org.apache.commons.pool.*;
  * actually close the statement, but rather returns it to my pool. (See {@link PoolablePreparedStatement}.)
  *
  * @see PoolablePreparedStatement
- * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
+ * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2004/02/28 11:48:05 $
+ * @version $Revision: 1.13 $ $Date: 2004/02/28 12:18:17 $
  */
 public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
     /** My pool of {@link PreparedStatement}s. */

@@ -79,8 +79,8 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * <code>Jdbc2PoolDataSource</code> without the use of JNDI.
  * </p>
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DriverAdapterCPDS.java,v 1.7 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 

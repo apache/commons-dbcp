@@ -207,7 +207,7 @@ import java.io.IOException;
  * <b>Note that this class is not synchronized.</b>
  * <p>
  * @author Rodney Waldhoff
- * @version $Id: JOCLContentHandler.java,v 1.4 2004/02/28 11:48:06 dirkv Exp $
+ * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:18 $
  */
 public class JOCLContentHandler extends DefaultHandler implements ContentHandler {
 

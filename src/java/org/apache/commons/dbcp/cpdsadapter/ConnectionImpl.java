@@ -34,8 +34,8 @@ import java.sql.SQLException;
  * be used after closed() is called.  Any further usage will result in an
  * SQLException.
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConnectionImpl.java,v 1.8 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.9 $ $Date: 2004/02/28 12:18:17 $
  */
 class ConnectionImpl implements Connection {
     private static final String CLOSED 

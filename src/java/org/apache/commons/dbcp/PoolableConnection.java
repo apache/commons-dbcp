@@ -27,8 +27,8 @@ import org.apache.commons.pool.ObjectPool;
  *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
- * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnection.java,v 1.12 2004/02/28 11:48:05 dirkv Exp $
+ * @author James House
+ * @version $Revision: 1.13 $ $Date: 2004/02/28 12:18:17 $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */

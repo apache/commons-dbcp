@@ -32,12 +32,12 @@ import junit.framework.TestCase;
 
 /**
  * Base test suite for DBCP pools.
+ * 
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * @author John McNally
  * @author Dirk Verbeeck
- * 
- * @version $Id: TestConnectionPool.java,v 1.13 2004/02/28 11:47:51 dirkv Exp $
+ * @version $Revision: 1.14 $ $Date: 2004/02/28 12:18:18 $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {

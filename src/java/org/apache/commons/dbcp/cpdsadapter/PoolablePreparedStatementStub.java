@@ -27,8 +27,8 @@ import org.apache.commons.dbcp.PoolablePreparedStatement;
  * are declared protected and we need to be able to call them within this
  * package.
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PoolablePreparedStatementStub.java,v 1.7 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
  */
 class PoolablePreparedStatementStub extends PoolablePreparedStatement {
 

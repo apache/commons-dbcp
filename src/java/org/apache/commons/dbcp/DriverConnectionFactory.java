@@ -24,7 +24,7 @@ import java.util.Properties;
  * A {@link Driver}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Id: DriverConnectionFactory.java,v 1.6 2004/02/28 11:48:05 dirkv Exp $
+ * @version $Revision: 1.7 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DriverConnectionFactory implements ConnectionFactory {
     public DriverConnectionFactory(Driver driver, String connectUri, Properties props) {

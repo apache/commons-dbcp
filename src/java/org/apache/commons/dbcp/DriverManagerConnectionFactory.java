@@ -25,8 +25,7 @@ import java.util.Properties;
  *
  * @author Rodney Waldhoff
  * @author Ignacio J. Ortega
- *
- * @version $Id: DriverManagerConnectionFactory.java,v 1.7 2004/02/28 11:48:05 dirkv Exp $
+ * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
