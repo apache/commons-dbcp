@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.4 2002/06/29 16:46:02 glenn Exp $
- * $Revision: 1.4 $
- * $Date: 2002/06/29 16:46:02 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.5 2003/03/06 15:26:07 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/03/06 15:26:07 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.4 2002/06/29 16:46:02 glenn Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.5 2003/03/06 15:26:07 rwaldhoff Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -86,7 +86,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) throws Exception {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) {
         _connFactory = connFactory;
         _pool = pool;
         _pool.setFactory(this);
