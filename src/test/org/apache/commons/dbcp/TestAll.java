@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAll.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.11 $
+ * $Date: 2003/10/26 17:18:11 $
  *
  * ====================================================================
  *
@@ -64,10 +64,11 @@ package org.apache.commons.dbcp;
 import junit.framework.*;
 import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
 import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
+import org.apache.commons.dbcp.datasources.TestFactory;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.10 $ $Date: 2003/10/09 21:05:29 $
+ * @version $Revision: 1.11 $ $Date: 2003/10/26 17:18:11 $
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {
@@ -85,6 +86,7 @@ public class TestAll extends TestCase {
         suite.addTest(TestDelegatingPreparedStatement.suite());
         suite.addTest(TestSharedPoolDataSource.suite());
         suite.addTest(TestPerUserPoolDataSource.suite());
+        suite.addTest(TestFactory.suite());
         return suite;
     }
 
