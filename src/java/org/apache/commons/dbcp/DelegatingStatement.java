@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.4 2002/06/28 15:28:20 glenn Exp $
- * $Revision: 1.4 $
- * $Date: 2002/06/28 15:28:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.5 2002/06/29 17:36:37 glenn Exp $
+ * $Revision: 1.5 $
+ * $Date: 2002/06/29 17:36:37 $
  *
  * ====================================================================
  *
@@ -217,9 +217,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         // ResultSet's when it is closed.
         List resultSets = getTrace();
         if( resultSets != null) {
-            Iterator it = resultSets.iterator();
-            while(it.hasNext()) {
-                ((ResultSet)it.next()).close();
+            ResultSet[] set = new ResultSet[resultSets.size()];
+            resultSets.toArray(set);
+            for (int i = 0; i < set.length; i++) {
+                set[i].close();
             }
             clearTrace();
         }
