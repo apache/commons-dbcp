@@ -4,7 +4,7 @@ commons-collections.jar=${basedir}/../collections/build/commons-collections.jar
 commons-pool.jar=${basedir}/../pool/build/commons-pool.jar
 # sax2.jar - SAX2 API Classpath
 sax2.jar=/cvs/bcom/bcom/stable/ext/lib/sax2.jar
-# j2ee.jar - J2EE Classpath
-j2ee.jar=/cvs/bcom/bcom/stable/ext/lib/j2ee.jar
+# jdbc20ext.jar - JDBC Optional Package 2.0 (also included in j2ee.jar)
+jdbc20ext.jar=/cvs/bcom/bcom/stable/ext/lib/jdbc2_0-stdext.jar
 # junit.jar - JUnit 3.2+ Classpath
 junit.jar=/java/junit/junit.jar
