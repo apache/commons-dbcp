@@ -30,7 +30,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.19 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.20 $ $Date: 2004/02/29 20:18:25 $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -48,7 +48,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = defaultReadOnly;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -68,7 +68,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = defaultReadOnly;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
@@ -99,7 +99,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = defaultReadOnly;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -131,7 +131,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = defaultReadOnly;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
@@ -155,6 +155,41 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         boolean defaultReadOnly,
+        boolean defaultAutoCommit,
+        int defaultTransactionIsolation,
+        String defaultCatalog,
+        AbandonedConfig config) {
+            
+        _connFactory = connFactory;
+        _pool = pool;
+        _config = config;
+        _pool.setFactory(this);
+        _stmtPoolFactory = stmtPoolFactory;
+        _validationQuery = validationQuery;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultAutoCommit = defaultAutoCommit;
+        _defaultTransactionIsolation = defaultTransactionIsolation;
+        _defaultCatalog = defaultCatalog;
+    }
+
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
+     * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
+     * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
+     * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
+     * @param defaultCatalog the default "catalog" setting for returned {@link Connection}s
+     * @param config the AbandonedConfig if tracing SQL objects
+     */
+    public PoolableConnectionFactory(
+        ConnectionFactory connFactory,
+        ObjectPool pool,
+        KeyedObjectPoolFactory stmtPoolFactory,
+        String validationQuery,
+        Boolean defaultReadOnly,
         boolean defaultAutoCommit,
         int defaultTransactionIsolation,
         String defaultCatalog,
@@ -224,7 +259,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
     public void setDefaultReadOnly(boolean defaultReadOnly) {
-        _defaultReadOnly = defaultReadOnly;
+        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
     }
 
     /**
@@ -334,7 +369,9 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
                 conn.setTransactionIsolation(_defaultTransactionIsolation);
             }
-            conn.setReadOnly(_defaultReadOnly);
+            if (_defaultReadOnly != null) {
+                conn.setReadOnly(_defaultReadOnly.booleanValue());
+            }
             if (_defaultCatalog != null) {
                 conn.setCatalog(_defaultCatalog);
             }
@@ -345,7 +382,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected String _validationQuery = null;
     protected ObjectPool _pool = null;
     protected KeyedObjectPoolFactory _stmtPoolFactory = null;
-    protected boolean _defaultReadOnly = false;
+    protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     protected String _defaultCatalog;
