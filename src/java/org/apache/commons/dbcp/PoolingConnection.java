@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/07/20 22:55:34 $
  *
  * ====================================================================
  *
@@ -188,7 +188,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
                 }
             }
         } catch(Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new DbcpException(e);
         }
     }
 

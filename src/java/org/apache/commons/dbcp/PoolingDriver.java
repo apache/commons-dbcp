@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/07/20 22:55:34 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import java.io.InputStream;
  * {@link ObjectPool}.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolingDriver.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * @version $Id: PoolingDriver.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -106,7 +106,7 @@ public class PoolingDriver implements Driver {
                 try {
                     jocl = JOCLContentHandler.parse(in);
                 } catch(Exception e) {
-                    throw new RuntimeException(e.toString());
+                    throw new DbcpException(e);
                 }
                 if(jocl.getType(0).equals(String.class)) {
                     pool = getPool((String)(jocl.getValue(0)));

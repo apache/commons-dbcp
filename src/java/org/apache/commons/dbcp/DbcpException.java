@@ -1,6 +1,6 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.2 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DbcpException.java,v 1.1 2002/07/20 22:55:34 craigmcc Exp $
+ * $Revision: 1.1 $
  * $Date: 2002/07/20 22:55:34 $
  *
  * ====================================================================
@@ -60,37 +60,97 @@
  */
 
 package org.apache.commons.dbcp;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.SQLException;
-import java.util.Properties;
+
 
 /**
- * A {@link Driver}-based implementation of {@link ConnectionFactory}.
+ * <p>Subclass of <code>RuntimeException</code> that can be used to wrap
+ * a <code>SQLException</code> using the "root cause" pattern of JDK 1.4
+ * exceptions, but without requiring a 1.4 runtime environment.</p>
  *
- * @author Rodney Waldhoff
- * @version $Id: DriverConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
+ * @author Jonathan Fuerth
+ * @author Dan Fraser
+ * @version $Revision: 1.1 $ $Date: 2002/07/20 22:55:34 $
  */
-public class DriverConnectionFactory implements ConnectionFactory {
-    public DriverConnectionFactory(Driver driver, String connectUri, Properties props) {
-        _driver = driver;
-        _connectUri = connectUri;
-        _props = props;
+
+public class DbcpException extends RuntimeException {
+
+
+    // ----------------------------------------------------------- Constructors
+
+
+    /**
+     * Construct a new runtime exception with <code>null</code> as its
+     * detail message.
+     */
+    public DbcpException() {
+
+        super();
+
     }
 
-    public Connection createConnection() {
-        try {
-            return _driver.connect(_connectUri,_props);
-        } catch(SQLException e) {
-            throw new DbcpException(e);
-        }
+
+    /**
+     * Construct a new runtime exception with the specified detail message.
+     *
+     * @param message The detail message for this exception
+     */
+    public DbcpException(String message) {
+
+        this(message, null);
+
     }
 
-    protected Driver _driver = null;
-    protected String _connectUri = null;
-    protected Properties _props = null;
 
-    public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(_driver) + ";" + String.valueOf(_connectUri) + ";"  + String.valueOf(_props) + "]";
+    /**
+     * Construct a new runtime exception with the specified detail message
+     * and cause.
+     *
+     * @param message The detail message for this exception
+     * @param cause The root cause for this exception
+     */
+    public DbcpException(String message, Throwable cause) {
+
+        super(message);
+        this.cause = cause;
+
     }
+
+
+    /**
+     * Construct a new runtime exception with the specified cause and a
+     * detail message of <code>(cause == null ? null : cause.toString())</code>.
+     *
+     * @param cause The root cause for this exception
+     */
+    public DbcpException(Throwable cause) {
+
+        super((cause == null) ? (String) null : cause.toString());
+        this.cause = cause;
+
+    }
+
+
+    // ----------------------------------------------------- Instance Variables
+
+
+    /**
+     * The root cause of this exception (typically an
+     * <code>SQLException</code> but this is not required).
+     */
+    protected Throwable cause = null;
+
+
+    // --------------------------------------------------------- Public Methods
+
+
+    /**
+     * Return the root cause of this exception (if any).
+     */
+    public Throwable getCause() {
+
+        return (this.cause);
+
+    }
+
+
 }

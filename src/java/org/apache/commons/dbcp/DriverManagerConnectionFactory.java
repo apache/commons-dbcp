@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.2 2001/04/15 17:31:40 nacho Exp $
- * $Revision: 1.2 $
- * $Date: 2001/04/15 17:31:40 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/07/20 22:55:34 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.Properties;
  * @author Rodney Waldhoff
  * @author Ignacio J. Ortega
  *
- * @version $Id: DriverManagerConnectionFactory.java,v 1.2 2001/04/15 17:31:40 nacho Exp $
+ * @version $Id: DriverManagerConnectionFactory.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
@@ -98,7 +98,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
                 return DriverManager.getConnection(_connectUri,_props);
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e.toString());
+            throw new DbcpException(e);
         }
     }
 
