@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.4 2003/03/06 14:58:42 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/03/06 14:58:42 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.5 2003/03/06 15:22:25 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/03/06 15:22:25 $
  *
  * ====================================================================
  *
@@ -61,12 +61,15 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.ByteArrayInputStream;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.Reference;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 
@@ -78,7 +81,7 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2003/03/06 14:58:42 $
+ * @version $Revision: 1.5 $ $Date: 2003/03/06 15:22:25 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -230,9 +233,34 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
+        ra = ref.get("connectionProperties");
+        if (ra != null) {
+          Properties p = getProperties(ra.getContent().toString());
+          Enumeration e = p.propertyNames();
+          while (e.hasMoreElements()) {
+            String propertyName = (String) e.nextElement();
+            dataSource.addConnectionProperty(propertyName, p.getProperty(propertyName));
+          }
+        }
+
         // Return the configured data source instance
         return (dataSource);
 
+    }
+
+
+    /**
+     * <p>Parse properties from the string. Format of the string must be [propertyName=property;]*<p>
+     * @param propText
+     * @return Properties
+     * @throws Exception
+     */
+    static private Properties getProperties(String propText) throws Exception {
+      Properties p = new Properties();
+      if (propText != null) {
+        p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes()));
+      }
+      return p;
     }
 
 }
