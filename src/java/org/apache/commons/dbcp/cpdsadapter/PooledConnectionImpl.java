@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/PooledConnectionImpl.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/11/10 14:45:35 $
+ * $Revision: 1.12 $
+ * $Date: 2003/12/26 15:48:40 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.11 2003/11/10 14:45:35 dirkv Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.12 2003/12/26 15:48:40 dirkv Exp $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -353,7 +353,7 @@ class PooledConnectionImpl
      * @param key ignored
      * @param obj ignored
      */
-    public void activateObject(Object key, Object obj) {
+    public void activateObject(Object key, Object obj) throws Exception {
         ((PoolablePreparedStatementStub) obj).activate();
     }
 
