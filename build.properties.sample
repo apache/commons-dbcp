@@ -1,10 +1,10 @@
 # commons-collections.jar - Commons-Collections Classpath
 base.path=/usr/local
-commons-collections.home=${base.path}/commons-collections-2.0
-commons-collections.jar=${commons-collections.home}/commons-collections.jar
+commons-collections.home=${base.path}/commons-collections-3.1
+commons-collections.jar=${commons-collections.home}/commons-collections-3.1.jar
 # commons-pool.jar - Commons-Pool Classpath
-commons-pool.home=${base.path}/commons-pool-1.0
-commons-pool.jar=${commons-pool.home}/commons-pool.jar
+commons-pool.home=${base.path}/commons-pool-1.2
+commons-pool.jar=${commons-pool.home}/commons-pool-1.2.jar
 
 # jdbc20ext.jar - JDBC Optional Package 2.0 (also included in j2ee.jar)
 jdbc20ext.home=${base.path}/jdbc2_0-stdext
@@ -12,7 +12,7 @@ jdbc20ext.lib=${jdbc20ext.home}
 jdbc20ext.jar=${jdbc20ext.lib}/jdbc2_0-stdext.jar
 
 # junit.jar - JUnit 3.2+ Classpath
-junit.home=${base.path}/junit3.7
+junit.home=${base.path}/junit3.8.1
 junit.lib=${junit.home}
 junit.jar=${junit.lib}/junit.jar
 
