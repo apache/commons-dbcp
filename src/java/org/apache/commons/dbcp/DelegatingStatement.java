@@ -40,7 +40,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.16 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.17 $ $Date: 2004/03/06 13:35:31 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -125,31 +125,61 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         _stmt = s;
     }
 
+    protected boolean _closed = false;
+
+    protected boolean isClosed() {
+        return _closed;
+    }
+
+    protected void checkOpen() throws SQLException {
+        if(isClosed()) {
+            throw new SQLException(this.getClass().getName() + " is closed.");
+        }
+    }
+
     /**
      * Close this DelegatingStatement, and close
      * any ResultSets that were not explicitly closed.
      */
     public void close() throws SQLException {
-        _closed = true;
-        if (_conn != null) {
-            _conn.removeTrace(this);
-            _conn = null;
-        }
-
-        // The JDBC spec requires that a statment close any open
-        // ResultSet's when it is closed.
-        // FIXME The PreparedStatement we're wrapping should handle this for us.
-        // See bug 17301 for what could happen when ResultSets are closed twice.
-        List resultSets = getTrace();
-        if( resultSets != null) {
-            ResultSet[] set = (ResultSet[]) resultSets.toArray(new ResultSet[resultSets.size()]);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
+        try {
+            try {
+                if (_conn != null) {
+                    _conn.removeTrace(this);
+                    _conn = null;
+                }
+        
+                // The JDBC spec requires that a statment close any open
+                // ResultSet's when it is closed.
+                // FIXME The PreparedStatement we're wrapping should handle this for us.
+                // See bug 17301 for what could happen when ResultSets are closed twice.
+                List resultSets = getTrace();
+                if( resultSets != null) {
+                    ResultSet[] set = (ResultSet[]) resultSets.toArray(new ResultSet[resultSets.size()]);
+                    for (int i = 0; i < set.length; i++) {
+                        set[i].close();
+                    }
+                    clearTrace();
+                }
+        
+                _stmt.close();
             }
-            clearTrace();
+            catch (SQLException e) {
+                handleException(e);
+            }
         }
+        finally {
+            _closed = true;
+        }
+    }
 
-        _stmt.close();
+    protected void handleException(SQLException e) throws SQLException {
+        if (_conn != null) {
+            _conn.handleException(e);
+        }
+        else {
+            throw e;
+        }
     }
 
     protected void activate() throws SQLException {
@@ -171,107 +201,129 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
-        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery(sql));
+        try {
+            return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery(sql));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
-        return DelegatingResultSet.wrapResultSet(this,_stmt.getResultSet());
-    }
-
-    public int executeUpdate(String sql) throws SQLException { checkOpen(); return _stmt.executeUpdate(sql);}
-    public int getMaxFieldSize() throws SQLException { checkOpen(); return _stmt.getMaxFieldSize();}
-    public void setMaxFieldSize(int max) throws SQLException { checkOpen(); _stmt.setMaxFieldSize(max);}
-    public int getMaxRows() throws SQLException { checkOpen(); return _stmt.getMaxRows();}
-    public void setMaxRows(int max) throws SQLException { checkOpen(); _stmt.setMaxRows(max);}
-    public void setEscapeProcessing(boolean enable) throws SQLException { checkOpen(); _stmt.setEscapeProcessing(enable);}
-    public int getQueryTimeout() throws SQLException { checkOpen(); return _stmt.getQueryTimeout();}
-    public void setQueryTimeout(int seconds) throws SQLException { checkOpen(); _stmt.setQueryTimeout(seconds);}
-    public void cancel() throws SQLException { checkOpen(); _stmt.cancel();}
-    public SQLWarning getWarnings() throws SQLException { checkOpen(); return _stmt.getWarnings();}
-    public void clearWarnings() throws SQLException { checkOpen(); _stmt.clearWarnings();}
-    public void setCursorName(String name) throws SQLException { checkOpen(); _stmt.setCursorName(name);}
-    public boolean execute(String sql) throws SQLException { checkOpen(); return _stmt.execute(sql);}
-    public int getUpdateCount() throws SQLException { checkOpen(); return _stmt.getUpdateCount();}
-    public boolean getMoreResults() throws SQLException { checkOpen(); return _stmt.getMoreResults();}
-    public void setFetchDirection(int direction) throws SQLException { checkOpen(); _stmt.setFetchDirection(direction);}
-    public int getFetchDirection() throws SQLException { checkOpen(); return _stmt.getFetchDirection();}
-    public void setFetchSize(int rows) throws SQLException { checkOpen(); _stmt.setFetchSize(rows);}
-    public int getFetchSize() throws SQLException { checkOpen(); return _stmt.getFetchSize();}
-    public int getResultSetConcurrency() throws SQLException { checkOpen(); return _stmt.getResultSetConcurrency();}
-    public int getResultSetType() throws SQLException { checkOpen(); return _stmt.getResultSetType();}
-    public void addBatch(String sql) throws SQLException { checkOpen(); _stmt.addBatch(sql);}
-    public void clearBatch() throws SQLException { checkOpen(); _stmt.clearBatch();}
-    public int[] executeBatch() throws SQLException { checkOpen(); return _stmt.executeBatch();}
-
-    protected void checkOpen() throws SQLException {
-        if(isClosed()) {
-            throw new SQLException(this.getClass().getName() + " is closed.");
+        try {
+            return DelegatingResultSet.wrapResultSet(this,_stmt.getResultSet());
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
         }
     }
-    
-    protected boolean isClosed() {
-        return _closed;
-    }
 
-    protected boolean _closed = false;
+    public int executeUpdate(String sql) throws SQLException
+    { checkOpen(); try { return _stmt.executeUpdate(sql); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getMaxFieldSize() throws SQLException
+    { checkOpen(); try { return _stmt.getMaxFieldSize(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setMaxFieldSize(int max) throws SQLException
+    { checkOpen(); try { _stmt.setMaxFieldSize(max); } catch (SQLException e) { handleException(e); } }
+
+    public int getMaxRows() throws SQLException
+    { checkOpen(); try { return _stmt.getMaxRows(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setMaxRows(int max) throws SQLException
+    { checkOpen(); try { _stmt.setMaxRows(max); } catch (SQLException e) { handleException(e); } }
+
+    public void setEscapeProcessing(boolean enable) throws SQLException
+    { checkOpen(); try { _stmt.setEscapeProcessing(enable); } catch (SQLException e) { handleException(e); } }
+
+    public int getQueryTimeout() throws SQLException
+    { checkOpen(); try { return _stmt.getQueryTimeout(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setQueryTimeout(int seconds) throws SQLException
+    { checkOpen(); try { _stmt.setQueryTimeout(seconds); } catch (SQLException e) { handleException(e); } }
+
+    public void cancel() throws SQLException
+    { checkOpen(); try { _stmt.cancel(); } catch (SQLException e) { handleException(e); } }
+
+    public SQLWarning getWarnings() throws SQLException
+    { checkOpen(); try { return _stmt.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
+
+    public void clearWarnings() throws SQLException
+    { checkOpen(); try { _stmt.clearWarnings(); } catch (SQLException e) { handleException(e); } }
+
+    public void setCursorName(String name) throws SQLException
+    { checkOpen(); try { _stmt.setCursorName(name); } catch (SQLException e) { handleException(e); } }
+
+    public boolean execute(String sql) throws SQLException
+    { checkOpen(); try { return _stmt.execute(sql); } catch (SQLException e) { handleException(e); return false; } }
+
+    public int getUpdateCount() throws SQLException
+    { checkOpen(); try { return _stmt.getUpdateCount(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public boolean getMoreResults() throws SQLException
+    { checkOpen(); try { return _stmt.getMoreResults(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public void setFetchDirection(int direction) throws SQLException
+    { checkOpen(); try { _stmt.setFetchDirection(direction); } catch (SQLException e) { handleException(e); } }
+
+    public int getFetchDirection() throws SQLException
+    { checkOpen(); try { return _stmt.getFetchDirection(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setFetchSize(int rows) throws SQLException
+    { checkOpen(); try { _stmt.setFetchSize(rows); } catch (SQLException e) { handleException(e); } }
+
+    public int getFetchSize() throws SQLException
+    { checkOpen(); try { return _stmt.getFetchSize(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getResultSetConcurrency() throws SQLException
+    { checkOpen(); try { return _stmt.getResultSetConcurrency(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public int getResultSetType() throws SQLException
+    { checkOpen(); try { return _stmt.getResultSetType(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void addBatch(String sql) throws SQLException
+    { checkOpen(); try { _stmt.addBatch(sql); } catch (SQLException e) { handleException(e); } }
+
+    public void clearBatch() throws SQLException
+    { checkOpen(); try { _stmt.clearBatch(); } catch (SQLException e) { handleException(e); } }
+
+    public int[] executeBatch() throws SQLException
+    { checkOpen(); try { return _stmt.executeBatch(); } catch (SQLException e) { handleException(e); return null; } }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
-    public boolean getMoreResults(int current) throws SQLException {
-        checkOpen();
-        return _stmt.getMoreResults(current);
-    }
+    public boolean getMoreResults(int current) throws SQLException
+    { checkOpen(); try { return _stmt.getMoreResults(current); } catch (SQLException e) { handleException(e); return false; } }
 
-    public ResultSet getGeneratedKeys() throws SQLException {
-        checkOpen();
-        return _stmt.getGeneratedKeys();
-    }
+    public ResultSet getGeneratedKeys() throws SQLException
+    { checkOpen(); try { return _stmt.getGeneratedKeys(); } catch (SQLException e) { handleException(e); return null; } }
 
-    public int executeUpdate(String sql, int autoGeneratedKeys)
-        throws SQLException {
-        checkOpen();
-        return _stmt.executeUpdate(sql, autoGeneratedKeys);
-    }
+    public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException
+    { checkOpen(); try { return _stmt.executeUpdate(sql, autoGeneratedKeys); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public int executeUpdate(String sql, int columnIndexes[])
-        throws SQLException {
-        checkOpen();
-        return _stmt.executeUpdate(sql, columnIndexes);
-    }
+    public int executeUpdate(String sql, int columnIndexes[]) throws SQLException
+    { checkOpen(); try { return _stmt.executeUpdate(sql, columnIndexes); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public int executeUpdate(String sql, String columnNames[])
-        throws SQLException {
-        checkOpen();
-        return _stmt.executeUpdate(sql, columnNames);
-    }
+    public int executeUpdate(String sql, String columnNames[]) throws SQLException
+    { checkOpen(); try { return _stmt.executeUpdate(sql, columnNames); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public boolean execute(String sql, int autoGeneratedKeys)
-        throws SQLException {
-        checkOpen();
-        return _stmt.execute(sql, autoGeneratedKeys);
-    }
+    public boolean execute(String sql, int autoGeneratedKeys) throws SQLException
+    { checkOpen(); try { return _stmt.execute(sql, autoGeneratedKeys); } catch (SQLException e) { handleException(e); return false; } }
 
-    public boolean execute(String sql, int columnIndexes[])
-        throws SQLException {
-        checkOpen();
-        return _stmt.execute(sql, columnIndexes);
-    }
+    public boolean execute(String sql, int columnIndexes[]) throws SQLException
+    { checkOpen(); try { return _stmt.execute(sql, columnIndexes); } catch (SQLException e) { handleException(e); return false; } }
 
-    public boolean execute(String sql, String columnNames[])
-        throws SQLException {
-        checkOpen();
-        return _stmt.execute(sql, columnNames);
-    }
+    public boolean execute(String sql, String columnNames[]) throws SQLException
+    { checkOpen(); try { return _stmt.execute(sql, columnNames); } catch (SQLException e) { handleException(e); return false; } }
 
-    public int getResultSetHoldability() throws SQLException {
-        checkOpen();
-        return _stmt.getResultSetHoldability();
-    }
+    public int getResultSetHoldability() throws SQLException
+    { checkOpen(); try { return _stmt.getResultSetHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
 /* JDBC_3_ANT_KEY_END */
-
 }

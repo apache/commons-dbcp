@@ -44,7 +44,7 @@ import java.util.Calendar;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.21 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.22 $ $Date: 2004/03/06 13:35:31 $
  */
 public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {
@@ -88,60 +88,128 @@ public class DelegatingPreparedStatement extends DelegatingStatement
 
     public ResultSet executeQuery() throws SQLException {
         checkOpen();
-        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery());
+        try {
+            return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery());
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
-    public int executeUpdate() throws SQLException { checkOpen(); return _stmt.executeUpdate();}
-    public void setNull(int parameterIndex, int sqlType) throws SQLException { checkOpen(); _stmt.setNull(parameterIndex,sqlType);}
-    public void setBoolean(int parameterIndex, boolean x) throws SQLException { checkOpen(); _stmt.setBoolean(parameterIndex,x);}
-    public void setByte(int parameterIndex, byte x) throws SQLException { checkOpen(); _stmt.setByte(parameterIndex,x);}
-    public void setShort(int parameterIndex, short x) throws SQLException { checkOpen(); _stmt.setShort(parameterIndex,x);}
-    public void setInt(int parameterIndex, int x) throws SQLException { checkOpen(); _stmt.setInt(parameterIndex,x);}
-    public void setLong(int parameterIndex, long x) throws SQLException { checkOpen(); _stmt.setLong(parameterIndex,x);}
-    public void setFloat(int parameterIndex, float x) throws SQLException { checkOpen(); _stmt.setFloat(parameterIndex,x);}
-    public void setDouble(int parameterIndex, double x) throws SQLException { checkOpen(); _stmt.setDouble(parameterIndex,x);}
-    public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException { checkOpen(); _stmt.setBigDecimal(parameterIndex,x);}
-    public void setString(int parameterIndex, String x) throws SQLException { checkOpen(); _stmt.setString(parameterIndex,x);}
-    public void setBytes(int parameterIndex, byte[] x) throws SQLException { checkOpen(); _stmt.setBytes(parameterIndex,x);}
-    public void setDate(int parameterIndex, java.sql.Date x) throws SQLException { checkOpen(); _stmt.setDate(parameterIndex,x);}
-    public void setTime(int parameterIndex, java.sql.Time x) throws SQLException { checkOpen(); _stmt.setTime(parameterIndex,x);}
-    public void setTimestamp(int parameterIndex, java.sql.Timestamp x) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x);}
-    public void setAsciiStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException { checkOpen(); _stmt.setAsciiStream(parameterIndex,x,length);}
+    public int executeUpdate() throws SQLException
+    { checkOpen(); try { return _stmt.executeUpdate(); } catch (SQLException e) { handleException(e); return 0; } }
+
+    public void setNull(int parameterIndex, int sqlType) throws SQLException
+    { checkOpen(); try { _stmt.setNull(parameterIndex,sqlType); } catch (SQLException e) { handleException(e); } }
+
+    public void setBoolean(int parameterIndex, boolean x) throws SQLException
+    { checkOpen(); try { _stmt.setBoolean(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setByte(int parameterIndex, byte x) throws SQLException
+    { checkOpen(); try { _stmt.setByte(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setShort(int parameterIndex, short x) throws SQLException
+    { checkOpen(); try { _stmt.setShort(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setInt(int parameterIndex, int x) throws SQLException
+    { checkOpen(); try { _stmt.setInt(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setLong(int parameterIndex, long x) throws SQLException
+    { checkOpen(); try { _stmt.setLong(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setFloat(int parameterIndex, float x) throws SQLException
+    { checkOpen(); try { _stmt.setFloat(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setDouble(int parameterIndex, double x) throws SQLException
+    { checkOpen(); try { _stmt.setDouble(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException
+    { checkOpen(); try { _stmt.setBigDecimal(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setString(int parameterIndex, String x) throws SQLException
+    { checkOpen(); try { _stmt.setString(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setBytes(int parameterIndex, byte[] x) throws SQLException
+    { checkOpen(); try { _stmt.setBytes(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setDate(int parameterIndex, java.sql.Date x) throws SQLException
+    { checkOpen(); try { _stmt.setDate(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setTime(int parameterIndex, java.sql.Time x) throws SQLException
+    { checkOpen(); try { _stmt.setTime(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setTimestamp(int parameterIndex, java.sql.Timestamp x) throws SQLException
+    { checkOpen(); try { _stmt.setTimestamp(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setAsciiStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
+    { checkOpen(); try { _stmt.setAsciiStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+
     /** @deprecated */
-    public void setUnicodeStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException { checkOpen(); _stmt.setUnicodeStream(parameterIndex,x,length);}
-    public void setBinaryStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException{ checkOpen(); _stmt.setBinaryStream(parameterIndex,x,length);}
-    public void clearParameters() throws SQLException { checkOpen(); _stmt.clearParameters();}
-    public void setObject(int parameterIndex, Object x, int targetSqlType, int scale) throws SQLException { checkOpen(); _stmt.setObject(parameterIndex, x, targetSqlType, scale);}
-    public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException { checkOpen(); _stmt.setObject(parameterIndex, x, targetSqlType);}
-    public void setObject(int parameterIndex, Object x) throws SQLException { checkOpen(); _stmt.setObject(parameterIndex, x);}
-    public boolean execute() throws SQLException { checkOpen(); return _stmt.execute();}
-    public void addBatch() throws SQLException { checkOpen(); _stmt.addBatch();}
-    public void setCharacterStream(int parameterIndex, java.io.Reader reader, int length) throws SQLException { checkOpen(); _stmt.setCharacterStream(parameterIndex,reader,length);}
-    public void setRef(int i, Ref x) throws SQLException { checkOpen(); _stmt.setRef(i,x);}
-    public void setBlob(int i, Blob x) throws SQLException { checkOpen(); _stmt.setBlob(i,x);}
-    public void setClob(int i, Clob x) throws SQLException { checkOpen(); _stmt.setClob(i,x);}
-    public void setArray(int i, Array x) throws SQLException { checkOpen(); _stmt.setArray(i,x);}
-    public ResultSetMetaData getMetaData() throws SQLException { checkOpen(); return _stmt.getMetaData();}
-    public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException { checkOpen(); _stmt.setDate(parameterIndex,x,cal);}
-    public void setTime(int parameterIndex, java.sql.Time x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTime(parameterIndex,x,cal);}
-    public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x,cal);}
-    public void setNull(int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
+    public void setUnicodeStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
+    { checkOpen(); try { _stmt.setUnicodeStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+    
+    public void setBinaryStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
+    { checkOpen(); try { _stmt.setBinaryStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+
+    public void clearParameters() throws SQLException
+    { checkOpen(); try { _stmt.clearParameters(); } catch (SQLException e) { handleException(e); } }
+
+    public void setObject(int parameterIndex, Object x, int targetSqlType, int scale) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterIndex, x, targetSqlType, scale); } catch (SQLException e) { handleException(e); } }
+
+    public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterIndex, x, targetSqlType); } catch (SQLException e) { handleException(e); } }
+
+    public void setObject(int parameterIndex, Object x) throws SQLException
+    { checkOpen(); try { _stmt.setObject(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
+
+    public boolean execute() throws SQLException
+    { checkOpen(); try { return _stmt.execute(); } catch (SQLException e) { handleException(e); return false; } }
+
+    public void addBatch() throws SQLException
+    { checkOpen(); try { _stmt.addBatch(); } catch (SQLException e) { handleException(e); } }
+
+    public void setCharacterStream(int parameterIndex, java.io.Reader reader, int length) throws SQLException
+    { checkOpen(); try { _stmt.setCharacterStream(parameterIndex,reader,length); } catch (SQLException e) { handleException(e); } }
+
+    public void setRef(int i, Ref x) throws SQLException
+    { checkOpen(); try { _stmt.setRef(i,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setBlob(int i, Blob x) throws SQLException
+    { checkOpen(); try { _stmt.setBlob(i,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setClob(int i, Clob x) throws SQLException
+    { checkOpen(); try { _stmt.setClob(i,x); } catch (SQLException e) { handleException(e); } }
+
+    public void setArray(int i, Array x) throws SQLException
+    { checkOpen(); try { _stmt.setArray(i,x); } catch (SQLException e) { handleException(e); } }
+
+    public ResultSetMetaData getMetaData() throws SQLException
+    { checkOpen(); try { return _stmt.getMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+
+    public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setDate(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+
+    public void setTime(int parameterIndex, java.sql.Time x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setTime(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+
+    public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException
+    { checkOpen(); try { _stmt.setTimestamp(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+
+    public void setNull(int paramIndex, int sqlType, String typeName) throws SQLException
+    { checkOpen(); try { _stmt.setNull(paramIndex,sqlType,typeName); } catch (SQLException e) { handleException(e); } }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
-    public void setURL(int parameterIndex, java.net.URL x)
-        throws SQLException {
-        checkOpen();
-        _stmt.setURL(parameterIndex, x);
-    }
+    public void setURL(int parameterIndex, java.net.URL x) throws SQLException
+    { checkOpen(); try { _stmt.setURL(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
 
-    public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
-        checkOpen();
-        return _stmt.getParameterMetaData();
-    }
+    public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
+    { checkOpen(); try { return _stmt.getParameterMetaData(); } catch (SQLException e) { handleException(e); return null; } }
 
 /* JDBC_3_ANT_KEY_END */
 }

@@ -44,7 +44,8 @@ import java.util.Map;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House
- * @version $Revision: 1.18 $ $Date: 2004/02/28 12:18:17 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.19 $ $Date: 2004/03/06 13:35:31 $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -52,7 +53,7 @@ public class DelegatingConnection extends AbandonedTrace
     protected Connection _conn = null;
 
     protected boolean _closed = false;
-
+    
     /**
      * Create a wrapper for the Connectin which traces this
      * Connection in the AbandonedObjectPool.
@@ -150,63 +151,133 @@ public class DelegatingConnection extends AbandonedTrace
         _conn.close();
     }
 
+    protected void handleException(SQLException e) throws SQLException {
+        throw e;
+    }
+
     public Statement createStatement() throws SQLException {
         checkOpen();
-
-        return new DelegatingStatement(this, _conn.createStatement());
+        try {
+            return new DelegatingStatement(this, _conn.createStatement());
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public Statement createStatement(int resultSetType,
-                                     int resultSetConcurrency)
-            throws SQLException {
+                                     int resultSetConcurrency) throws SQLException {
         checkOpen();
-
-        return new DelegatingStatement
-            (this, _conn.createStatement(resultSetType,resultSetConcurrency));
+        try {
+            return new DelegatingStatement
+                (this, _conn.createStatement(resultSetType,resultSetConcurrency));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         checkOpen();
-
-        return new DelegatingPreparedStatement
-            (this, _conn.prepareStatement(sql));
+        try {
+            return new DelegatingPreparedStatement
+                (this, _conn.prepareStatement(sql));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql,
                                               int resultSetType,
-                                              int resultSetConcurrency)
-            throws SQLException {
+                                              int resultSetConcurrency) throws SQLException {
         checkOpen();
-
-        return new DelegatingPreparedStatement
-            (this, _conn.prepareStatement
-                (sql,resultSetType,resultSetConcurrency));
+        try {
+            return new DelegatingPreparedStatement
+                (this, _conn.prepareStatement
+                    (sql,resultSetType,resultSetConcurrency));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public CallableStatement prepareCall(String sql) throws SQLException {
         checkOpen();
-
-        return new DelegatingCallableStatement(this, _conn.prepareCall(sql));
+        try {
+            return new DelegatingCallableStatement(this, _conn.prepareCall(sql));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public CallableStatement prepareCall(String sql,
                                          int resultSetType,
-                                         int resultSetConcurrency)
-            throws SQLException {
+                                         int resultSetConcurrency) throws SQLException {
         checkOpen();
-
-        return new DelegatingCallableStatement
-            (this, _conn.prepareCall(sql, resultSetType,resultSetConcurrency));
+        try {
+            return new DelegatingCallableStatement
+                (this, _conn.prepareCall(sql, resultSetType,resultSetConcurrency));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
-    public void clearWarnings() throws SQLException { checkOpen(); _conn.clearWarnings();}
-    public void commit() throws SQLException { checkOpen(); _conn.commit();}
-    public boolean getAutoCommit() throws SQLException { checkOpen(); return _conn.getAutoCommit();}
-    public String getCatalog() throws SQLException { checkOpen(); return _conn.getCatalog();}
-    public DatabaseMetaData getMetaData() throws SQLException { checkOpen(); return _conn.getMetaData();}
-    public int getTransactionIsolation() throws SQLException { checkOpen(); return _conn.getTransactionIsolation();}
-    public Map getTypeMap() throws SQLException { checkOpen(); return _conn.getTypeMap();}
-    public SQLWarning getWarnings() throws SQLException { checkOpen(); return _conn.getWarnings();}
+    public void clearWarnings() throws SQLException
+    { checkOpen(); try { _conn.clearWarnings(); } catch (SQLException e) { handleException(e); } }
+    
+    public void commit() throws SQLException
+    { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
+    
+    public boolean getAutoCommit() throws SQLException
+    { checkOpen(); try { return _conn.getAutoCommit(); } catch (SQLException e) { handleException(e); return false; } 
+    }
+    public String getCatalog() throws SQLException
+    { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
+    
+    public DatabaseMetaData getMetaData() throws SQLException
+    { checkOpen(); try { return _conn.getMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+    
+    public int getTransactionIsolation() throws SQLException
+    { checkOpen(); try { return _conn.getTransactionIsolation(); } catch (SQLException e) { handleException(e); return -1; } }
+    
+    public Map getTypeMap() throws SQLException
+    { checkOpen(); try { return _conn.getTypeMap(); } catch (SQLException e) { handleException(e); return null; } }
+    
+    public SQLWarning getWarnings() throws SQLException
+    { checkOpen(); try { return _conn.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
+    
+    public boolean isReadOnly() throws SQLException
+    { checkOpen(); try { return _conn.isReadOnly(); } catch (SQLException e) { handleException(e); return false; } }
+    
+    public String nativeSQL(String sql) throws SQLException
+    { checkOpen(); try { return _conn.nativeSQL(sql); } catch (SQLException e) { handleException(e); return null; } }
+    
+    public void rollback() throws SQLException
+    { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
+    
+    public void setAutoCommit(boolean autoCommit) throws SQLException
+    { checkOpen(); try { _conn.setAutoCommit(autoCommit); } catch (SQLException e) { handleException(e); } }
+
+    public void setCatalog(String catalog) throws SQLException
+    { checkOpen(); try { _conn.setCatalog(catalog); } catch (SQLException e) { handleException(e); } }
+
+    public void setReadOnly(boolean readOnly) throws SQLException
+    { checkOpen(); try { _conn.setReadOnly(readOnly); } catch (SQLException e) { handleException(e); } }
+
+    public void setTransactionIsolation(int level) throws SQLException
+    { checkOpen(); try { _conn.setTransactionIsolation(level); } catch (SQLException e) { handleException(e); } }
+
+    public void setTypeMap(Map map) throws SQLException
+    { checkOpen(); try { _conn.setTypeMap(map); } catch (SQLException e) { handleException(e); } }
 
     public boolean isClosed() throws SQLException {
          if(_closed || _conn.isClosed()) {
@@ -214,15 +285,6 @@ public class DelegatingConnection extends AbandonedTrace
          }
          return false;
     }
-
-    public boolean isReadOnly() throws SQLException { checkOpen(); return _conn.isReadOnly();}
-    public String nativeSQL(String sql) throws SQLException { checkOpen(); return _conn.nativeSQL(sql);}
-    public void rollback() throws SQLException { checkOpen(); _conn.rollback();}
-    public void setAutoCommit(boolean autoCommit) throws SQLException { checkOpen(); _conn.setAutoCommit(autoCommit);}
-    public void setCatalog(String catalog) throws SQLException { checkOpen(); _conn.setCatalog(catalog);}
-    public void setReadOnly(boolean readOnly) throws SQLException { checkOpen(); _conn.setReadOnly(readOnly);}
-    public void setTransactionIsolation(int level) throws SQLException { checkOpen(); _conn.setTransactionIsolation(level);}
-    public void setTypeMap(Map map) throws SQLException { checkOpen(); _conn.setTypeMap(map);}
 
     protected void checkOpen() throws SQLException {
         if(_closed) {
@@ -239,21 +301,25 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     protected void passivate() throws SQLException {
-        _closed = true;
-        // The JDBC spec requires that a Connection close any open
-        // Statement's when it is closed.
-        List statements = getTrace();
-        if( statements != null) {
-            Statement[] set = new Statement[statements.size()];
-            statements.toArray(set);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
+        try {
+            // The JDBC spec requires that a Connection close any open
+            // Statement's when it is closed.
+            List statements = getTrace();
+            if( statements != null) {
+                Statement[] set = new Statement[statements.size()];
+                statements.toArray(set);
+                for (int i = 0; i < set.length; i++) {
+                    set[i].close();
+                }
+                clearTrace();
             }
-            clearTrace();
+            setLastUsed(0);
+            if(_conn instanceof DelegatingConnection) {
+                ((DelegatingConnection)_conn).passivate();
+            }
         }
-        setLastUsed(0);
-        if(_conn instanceof DelegatingConnection) {
-            ((DelegatingConnection)_conn).passivate();
+        finally {
+            _closed = true;
         }
     }
 
@@ -262,84 +328,100 @@ public class DelegatingConnection extends AbandonedTrace
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
-    public int getHoldability() throws SQLException {
-        checkOpen();
-        return _conn.getHoldability();
-    }
+    public int getHoldability() throws SQLException
+    { checkOpen(); try { return _conn.getHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public void setHoldability(int holdability) throws SQLException {
-        checkOpen();
-        _conn.setHoldability(holdability);
-    }
+    public void setHoldability(int holdability) throws SQLException
+    { checkOpen(); try { _conn.setHoldability(holdability); } catch (SQLException e) { handleException(e); } }
 
-    public java.sql.Savepoint setSavepoint() throws SQLException {
-        checkOpen();
-        return _conn.setSavepoint();
-    }
+    public java.sql.Savepoint setSavepoint() throws SQLException
+    { checkOpen(); try { return _conn.setSavepoint(); } catch (SQLException e) { handleException(e); return null; } }
 
-    public java.sql.Savepoint setSavepoint(String name) throws SQLException {
-        checkOpen();
-        return _conn.setSavepoint(name);
-    }
+    public java.sql.Savepoint setSavepoint(String name) throws SQLException
+    { checkOpen(); try { return _conn.setSavepoint(name); } catch (SQLException e) { handleException(e); return null; } }
 
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
-        checkOpen();
-        _conn.rollback(savepoint);
-    }
+    public void rollback(java.sql.Savepoint savepoint) throws SQLException
+    { checkOpen(); try { _conn.rollback(savepoint); } catch (SQLException e) { handleException(e); } }
 
-    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException {
-        checkOpen();
-        _conn.releaseSavepoint(savepoint);
-    }
+    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException
+    { checkOpen(); try { _conn.releaseSavepoint(savepoint); } catch (SQLException e) { handleException(e); } }
 
     public Statement createStatement(int resultSetType,
                                      int resultSetConcurrency,
-                                     int resultSetHoldability)
-        throws SQLException {
+                                     int resultSetHoldability) throws SQLException {
         checkOpen();
-        return new DelegatingStatement(this, _conn.createStatement(
-            resultSetType, resultSetConcurrency, resultSetHoldability));
+        try {
+            return new DelegatingStatement(this, _conn.createStatement(
+                resultSetType, resultSetConcurrency, resultSetHoldability));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency,
-                                              int resultSetHoldability)
-        throws SQLException {
+                                              int resultSetHoldability) throws SQLException {
         checkOpen();
-        return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-            sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        try {
+            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
+                sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType,
                                          int resultSetConcurrency,
-                                         int resultSetHoldability)
-        throws SQLException {
+                                         int resultSetHoldability) throws SQLException {
         checkOpen();
-        return new DelegatingCallableStatement(this, _conn.prepareCall(
-            sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        try {
+            return new DelegatingCallableStatement(this, _conn.prepareCall(
+                sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
-        throws SQLException {
+    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
         checkOpen();
-        return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-            sql, autoGeneratedKeys));
+        try {
+            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
+                sql, autoGeneratedKeys));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
-    public PreparedStatement prepareStatement(String sql, int columnIndexes[])
-        throws SQLException {
+    public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
         checkOpen();
-        return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-            sql, columnIndexes));
+        try {
+            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
+                sql, columnIndexes));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
-    public PreparedStatement prepareStatement(String sql, String columnNames[])
-        throws SQLException {
+    public PreparedStatement prepareStatement(String sql, String columnNames[]) throws SQLException {
         checkOpen();
-        return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-            sql, columnNames));
+        try {
+            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
+                sql, columnNames));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
-
 /* JDBC_3_ANT_KEY_END */
-
 }
