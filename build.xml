@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.23 2003/10/11 14:18:35 dirkv Exp $ -->
+<!-- $Id: build.xml,v 1.24 2004/02/28 12:44:20 dirkv Exp $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -164,7 +164,7 @@
       <mkdir dir="${dist.dir}"/>
       <jar jarfile="${dist.jar}">
          <fileset dir="${build.classes.dir}"/>
-         <metainf dir="${basedir}" includes="LICENSE.txt"/>
+         <metainf dir="${basedir}" includes="LICENSE.txt,NOTICE.txt"/>
          <manifest>
             <attribute name="Built-By" value="${user.name}"/>
             <attribute name="Package" value="${package}"/>
@@ -179,6 +179,7 @@
 
    <target name="build" depends="clean,build-jar,javadoc">
       <copy todir="${dist.dir}" file="${basedir}/LICENSE.txt"/>
+      <copy todir="${dist.dir}" file="${basedir}/NOTICE.txt"/>
       <copy todir="${dist.dir}" file="${basedir}/README.txt"/>
    </target>
 
