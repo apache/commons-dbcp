@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.8 $
+ * $Date: 2003/08/22 16:59:11 $
  *
  * ====================================================================
  *
@@ -148,14 +148,14 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
 
     /**
-     * Create a {@link PoolingConnection.PStmtKey} for the given arguments.
+     * Create a PStmtKey for the given arguments.
      */
     protected Object createKey(String sql, int resultSetType, int resultSetConcurrency) {
         return new PStmtKey(normalizeSQL(sql),resultSetType,resultSetConcurrency);
     }
 
     /**
-     * Create a {@link PoolingConnection.PStmtKey} for the given arguments.
+     * Create a PStmtKey for the given arguments.
      */
     protected Object createKey(String sql) {
         return new PStmtKey(normalizeSQL(sql));
