@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.7 2002/04/03 12:43:30 rwaldhoff Exp $
- * $Revision: 1.7 $
- * $Date: 2002/04/03 12:43:30 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.8 2002/10/19 19:21:51 sullis Exp $
+ * $Revision: 1.8 $
+ * $Date: 2002/10/19 19:21:51 $
  *
  * ====================================================================
  *
@@ -67,8 +67,11 @@ import org.apache.commons.pool.*;
 import org.apache.commons.pool.impl.*;
 
 /**
+ * 
  * @author Rodney Waldhoff
- * @version $Id: TestManual.java,v 1.7 2002/04/03 12:43:30 rwaldhoff Exp $
+ * @author Sean C. Sullivan
+ * 
+ * @version $Id: TestManual.java,v 1.8 2002/10/19 19:21:51 sullis Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -188,4 +191,25 @@ public class TestManual extends TestCase {
         Connection conn3 = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertTrue( conn3 == conn || conn3 == conn2 );
     }
+    
+    public void testAutoCommitBehavior() throws Exception {
+    	
+    	final String strDriverUrl = "jdbc:apache:commons:dbcp:test";
+        Connection conn = DriverManager.getConnection(strDriverUrl);
+        assertTrue(conn != null);
+        assertTrue(conn.getAutoCommit());
+        conn.setAutoCommit(false);
+        conn.close();
+        
+        Connection conn2 = DriverManager.getConnection(strDriverUrl);
+        assertTrue( conn2.getAutoCommit() );
+        
+        Connection conn3 = DriverManager.getConnection(strDriverUrl);
+        assertTrue( conn3.getAutoCommit() );
+
+		conn2.close();
+		
+		conn3.close();
+    }
+    
 }
