@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/SQLNestedException.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.4 $
+ * $Date: 2003/09/14 00:10:54 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import java.sql.SQLException;
  * A SQLException subclass containing another Throwable
  * 
  * @author Dirk Verbeeck
- * @version $Id: SQLNestedException.java,v 1.3 2003/08/22 16:08:31 dirkv Exp $
+ * @version $Id: SQLNestedException.java,v 1.4 2003/09/14 00:10:54 dirkv Exp $
  */
 public class SQLNestedException extends SQLException {
 
@@ -101,16 +101,16 @@ public class SQLNestedException extends SQLException {
     public String getLocalizedMessage() {
         return super.getLocalizedMessage() + ", cause: " + this.cause.getLocalizedMessage();
     }
-    public String getMessage() {
-        return super.getMessage() + ", cause: " + this.cause.getMessage();
-    }
     public void printStackTrace() {
+        System.err.println(getClass().getName() + ": " + getMessage() + ", cause: ");
         this.cause.printStackTrace();
     }
     public void printStackTrace(PrintStream s) {
+        s.println(getClass().getName() + ": " + getMessage() + ", cause: ");
         this.cause.printStackTrace(s);
     }
     public void printStackTrace(PrintWriter s) {
+        s.println(getClass().getName() + ": " + getMessage() + ", cause: ");
         this.cause.printStackTrace(s);
     }
 }
