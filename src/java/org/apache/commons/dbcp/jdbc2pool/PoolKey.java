@@ -1,7 +1,13 @@
-/* ====================================================================
+/* 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PoolKey.java,v 1.4 2003/04/15 01:35:55 dgraham Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/04/15 01:35:55 $
+ * 
+ * ====================================================================
+ * 
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,12 +57,12 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+ 
 package org.apache.commons.dbcp.jdbc2pool;
  
 import java.io.Serializable;
 
-class PoolKey
-    implements Serializable
+class PoolKey implements Serializable
 {
     private String datasourceName;
     private String username;
@@ -66,25 +72,6 @@ class PoolKey
         this.datasourceName = datasourceName;
         this.username = username;
     }
-        
-    /* *
-     * Get the value of datasourceName.
-     * @return value of datasourceName.
-     * /
-    public String getDatasourceName() 
-    {
-        return datasourceName;
-    }
-    
-    /* *
-     * Get the value of username.
-     * @return value of username.
-     * /
-    public String getUsername() 
-    {
-        return username;
-    }
-    */
     
     public boolean equals(Object obj)
     {

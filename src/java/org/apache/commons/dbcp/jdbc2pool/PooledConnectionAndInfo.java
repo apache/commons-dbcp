@@ -1,9 +1,13 @@
-package org.apache.commons.dbcp.jdbc2pool;
-
-/* ====================================================================
+/* 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PooledConnectionAndInfo.java,v 1.2 2003/04/15 01:35:55 dgraham Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/04/15 01:35:55 $
+ * 
+ * ====================================================================
+ * 
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +58,8 @@ package org.apache.commons.dbcp.jdbc2pool;
  * <http://www.apache.org/>.
  */
  
-//import org.apache.commons.lang.ObjectUtils;
+package org.apache.commons.dbcp.jdbc2pool;
+
 import javax.sql.PooledConnection;
 
 final class PooledConnectionAndInfo
