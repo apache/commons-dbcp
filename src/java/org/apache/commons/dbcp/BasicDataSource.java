@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.14 2003/04/09 02:39:16 dgraham Exp $
- * $Revision: 1.14 $
- * $Date: 2003/04/09 02:39:16 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.15 2003/08/11 15:02:07 dirkv Exp $
+ * $Revision: 1.15 $
+ * $Date: 2003/08/11 15:02:07 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.14 $ $Date: 2003/04/09 02:39:16 $
+ * @version $Revision: 1.15 $ $Date: 2003/08/11 15:02:07 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -589,7 +589,9 @@ public class BasicDataSource implements DataSource {
         connectionPool = null;
         dataSource = null;
         try {
-            oldpool.close();
+            if (oldpool != null) {
+                oldpool.close();
+            }
         } catch(SQLException e) {
             throw e;
         } catch(RuntimeException e) {
