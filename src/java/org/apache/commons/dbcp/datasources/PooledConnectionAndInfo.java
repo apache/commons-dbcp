@@ -1,7 +1,7 @@
 /* 
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/UserPassKey.java,v 1.5 2003/06/29 12:42:16 mpoeschl Exp $
- * $Revision: 1.5 $
- * $Date: 2003/06/29 12:42:16 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PooledConnectionAndInfo.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * $Revision: 1.1 $
+ * $Date: 2003/08/12 06:09:20 $
  * 
  * ====================================================================
  * 
@@ -57,28 +57,38 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+ 
+package org.apache.commons.dbcp.datasources;
 
-package org.apache.commons.dbcp.jdbc2pool;
+import javax.sql.PooledConnection;
 
-import java.io.Serializable;
+final class PooledConnectionAndInfo {
+    private final PooledConnection pooledConnection;
+    private final String password;
+    private final String username;
+    private final UserPassKey upkey;
 
-/**
- * Holds a username, password pair.
- */
-class UserPassKey implements Serializable {
-    private String password;
-    private String username;
-    
-    UserPassKey(String username, String password) {
+    PooledConnectionAndInfo(PooledConnection pc, 
+                            String username, String password) {
+        this.pooledConnection = pc;
         this.username = username;
         this.password = password;
+        upkey = new UserPassKey(username, password);
     }
-        
+
+    final PooledConnection getPooledConnection() {
+        return pooledConnection;
+    }
+
+    final UserPassKey getUserPassKey() {
+        return upkey;
+    }
+
     /**
      * Get the value of password.
      * @return value of password.
      */
-    public String getPassword() {
+    final String getPassword() {
         return password;
     }
     
@@ -86,51 +96,7 @@ class UserPassKey implements Serializable {
      * Get the value of username.
      * @return value of username.
      */
-    public String getUsername() {
+    final String getUsername() {
         return username;
-    }
-    
-    /**
-     * @return <code>true</code> if the username and password fields for both 
-     * objects are equal.
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-
-        if (obj == this) {
-            return true;
-        }
-        
-        if (!(obj instanceof UserPassKey)) {
-            return false;
-        }
-        
-        UserPassKey key = (UserPassKey) obj;
-        
-        boolean usersEqual =
-            (this.username == null
-                ? key.username == null
-                : this.username.equals(key.username));
-                
-        boolean passwordsEqual =
-            (this.password == null
-                ? key.password == null
-                : this.password.equals(key.password));
-
-        return (usersEqual && passwordsEqual);
-    }
-
-    public int hashCode() {
-        return (this.username != null ? this.username.hashCode() : 0);
-    }
-
-    public String toString() {
-        StringBuffer sb = new StringBuffer(50);
-        sb.append("UserPassKey(");
-        sb.append(username).append(", ").append(password).append(')');
-        return sb.toString();
     }
 }
