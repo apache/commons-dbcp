@@ -28,7 +28,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House
- * @version $Revision: 1.13 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.14 $ $Date: 2004/05/01 12:50:12 $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -62,7 +62,18 @@ public class PoolableConnection extends DelegatingConnection {
      * Returns me to my pool.
      */
      public synchronized void close() throws SQLException {
-        if(isClosed()) {
+        boolean isClosed = false;
+        try {
+            isClosed = isClosed();
+        } catch (SQLException e) {
+            try {
+                _pool.invalidateObject(this);
+            } catch (Exception ie) {
+                // DO NOTHING the original exception will be rethrown
+            }
+            throw new SQLNestedException("Cannot close connection (isClosed check failed)", e);
+        }
+        if (isClosed) {
             throw new SQLException("Already closed.");
         } else {
             try {
