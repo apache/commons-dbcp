@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.4 2002/11/01 15:42:32 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2002/11/01 15:42:32 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.5 2003/08/11 16:01:25 dirkv Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/11 16:01:25 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.commons.pool.KeyedObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolablePreparedStatement.java,v 1.4 2002/11/01 15:42:32 rwaldhoff Exp $
+ * @version $Id: PoolablePreparedStatement.java,v 1.5 2003/08/11 16:01:25 dirkv Exp $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
     /**
@@ -122,7 +122,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
             } catch(RuntimeException e) {
                 throw e;
             } catch(Exception e) {
-                throw new SQLException(e.toString());
+                throw new SQLNestedException("Cannot close preparedstatement (return to pool failed)", e);
             }
         }
     }

@@ -65,6 +65,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp.DelegatingPreparedStatement;
+import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
@@ -73,7 +74,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.6 2003/06/29 12:42:16 mpoeschl Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.7 2003/08/11 16:01:47 dirkv Exp $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -144,12 +145,10 @@ class PooledConnectionImpl
                     pstmtPool = null;
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException)e;
-            } else {
-                throw new SQLException(e.getMessage());
-            }
+            throw new SQLNestedException("Cannot close connection (return to pool failed)", e);
         } finally {
             connection.close();
         }
@@ -239,7 +238,7 @@ class PooledConnectionImpl
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                throw new SQLException(e.toString());
+                throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
             }
         }
     }
@@ -260,7 +259,7 @@ class PooledConnectionImpl
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                throw new SQLException(e.toString());
+                throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
             }
         }
     }

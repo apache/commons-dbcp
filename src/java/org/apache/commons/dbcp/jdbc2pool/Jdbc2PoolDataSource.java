@@ -86,6 +86,7 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.collections.LRUMap;
+import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -145,7 +146,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.14 2003/08/11 14:08:39 dirkv Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.15 2003/08/11 16:02:10 dirkv Exp $
  */
 public class Jdbc2PoolDataSource
         implements DataSource, Referenceable, Serializable, ObjectFactory {
@@ -959,8 +960,7 @@ public class Jdbc2PoolDataSource
                 registerPool(username, password);
                 pool = pools.get(key);
             } catch (NamingException e) {
-                e.printStackTrace();
-                throw new SQLException(e.getMessage());
+                throw new SQLNestedException("RegisterPool failed", e);
             }
         }
 
@@ -971,7 +971,7 @@ public class Jdbc2PoolDataSource
                     ((ObjectPool) pool).borrowObject();
             } catch (NoSuchElementException e) {
                 closeDueToException(info);
-                throw new SQLException(e.getMessage());
+                throw new SQLNestedException("Cannot borrow connection from pool", e);
             } catch (RuntimeException e) {
                 closeDueToException(info);
                 throw e;
@@ -980,7 +980,7 @@ public class Jdbc2PoolDataSource
                 throw e;
             } catch (Exception e) {
                 closeDueToException(info);
-                throw new SQLException(e.getMessage());
+                throw new SQLNestedException("Cannot borrow connection from pool", e);
             }
         } else {
             // assume KeyedObjectPool
@@ -990,7 +990,7 @@ public class Jdbc2PoolDataSource
                     ((KeyedObjectPool) pool).borrowObject(upkey);
             } catch (NoSuchElementException e) {
                 closeDueToException(info);
-                throw new SQLException(e.getMessage());
+                throw new SQLNestedException("Cannot borrow connection from pool", e);
             } catch (RuntimeException e) {
                 closeDueToException(info);
                 throw e;
@@ -999,7 +999,7 @@ public class Jdbc2PoolDataSource
                 throw e;
             } catch (Exception e) {
                 closeDueToException(info);
-                throw new SQLException(e.getMessage());
+                throw new SQLNestedException("Cannot borrow connection from pool", e);
             }
         }
         if (!(null == password ? null == info.getPassword() 

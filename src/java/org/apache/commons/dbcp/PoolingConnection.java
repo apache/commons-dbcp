@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.5 2003/08/11 14:49:33 dirkv Exp $
- * $Revision: 1.5 $
- * $Date: 2003/08/11 14:49:33 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.6 2003/08/11 16:01:25 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/11 16:01:25 $
  *
  * ====================================================================
  *
@@ -113,7 +113,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             } catch(SQLException e) {
                 throw e;
             } catch(Exception e) {
-                throw new SQLException(e.toString());
+                throw new SQLNestedException("Cannot close connection", e);
             }
         }
         getInnermostDelegate().close();
@@ -129,7 +129,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLException(e.toString());
+            throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
         }
     }
 
@@ -143,7 +143,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLException(e.toString());
+            throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
         }
     }
 
