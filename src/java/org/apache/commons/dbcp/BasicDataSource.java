@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.9 2002/05/27 13:15:43 glenn Exp $
- * $Revision: 1.9 $
- * $Date: 2002/05/27 13:15:43 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.10 2002/07/20 17:37:44 craigmcc Exp $
+ * $Revision: 1.10 $
+ * $Date: 2002/07/20 17:37:44 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.9 $ $Date: 2002/05/27 13:15:43 $
+ * @version $Revision: 1.10 $ $Date: 2002/07/20 17:37:44 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -136,7 +136,7 @@ public class BasicDataSource implements DataSource {
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or zero for no limit.
      */
-    protected int maxActive = 0;
+    protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
 
     public int getMaxActive() {
         return (this.maxActive);
@@ -151,7 +151,7 @@ public class BasicDataSource implements DataSource {
      * The maximum number of active connections that can remain idle in the
      * pool, without extra ones being released, or zero for no limit.
      */
-    protected int maxIdle = 0;
+    protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;;
 
     public int getMaxIdle() {
         return (this.maxIdle);
@@ -167,7 +167,7 @@ public class BasicDataSource implements DataSource {
      * are no available connections) for a connection to be returned before
      * throwing an exception, or -1 to wait indefinitely.
      */
-    protected long maxWait = -1;
+    protected long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
 
     public long getMaxWait() {
         return (this.maxWait);
