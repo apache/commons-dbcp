@@ -16,7 +16,9 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -25,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.8 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.9 $ $Date: 2004/05/01 12:56:26 $
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public TestAbandonedBasicDataSource(String testName) {
@@ -84,5 +86,52 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         getConnection2();
         getConnection3();
         System.err.println("----------------------------------------");
+    }
+    
+    public void testAbandonedClose() throws Exception {
+        // force abandoned
+        ds.setRemoveAbandonedTimeout(0);
+        ds.setMaxActive(1);
+
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        
+        Connection conn2 = getConnection();        
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        
+        try { conn2.close(); } catch (SQLException ex) { }
+        assertEquals(0, ds.getNumActive());
+        
+        try { conn1.close(); } catch (SQLException ex) { }
+        assertEquals(0, ds.getNumActive());
+    }
+
+    public void testAbandonedCloseWithExceptions() throws Exception {
+        // force abandoned
+        ds.setRemoveAbandonedTimeout(0);
+        ds.setMaxActive(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        
+        Connection conn2 = getConnection();        
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        
+        // set an IO failure causing the isClosed mathod to fail
+        TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection)conn1).getInnermostDelegate();
+        tconn1.setFailure(new IOException("network error"));
+        TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection)conn2).getInnermostDelegate();
+        tconn2.setFailure(new IOException("network error"));
+        
+        try { conn2.close(); } catch (SQLException ex) { }
+        assertEquals(0, ds.getNumActive());
+        
+        try { conn1.close(); } catch (SQLException ex) { }
+        assertEquals(0, ds.getNumActive());
     }
 }
