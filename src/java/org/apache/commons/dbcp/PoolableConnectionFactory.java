@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.7 2003/04/09 00:19:37 dgraham Exp $
- * $Revision: 1.7 $
- * $Date: 2003/04/09 00:19:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.8 2003/08/11 23:39:53 dirkv Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/08/11 23:39:53 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.7 2003/04/09 00:19:37 dgraham Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.8 2003/08/11 23:39:53 dirkv Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -256,6 +256,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             if(!conn.getAutoCommit()) {
                 conn.rollback();
             }
+            conn.clearWarnings();
         }
         if(obj instanceof DelegatingConnection) {
             ((DelegatingConnection)obj).passivate();
