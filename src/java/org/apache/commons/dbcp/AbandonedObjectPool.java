@@ -30,7 +30,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.13 $ $Date: 2004/02/28 11:48:04 $
+ * @version $Revision: 1.14 $ $Date: 2004/04/25 09:53:48 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -91,7 +91,10 @@ public class AbandonedObjectPool extends GenericObjectPool {
     public void returnObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
             synchronized(trace) {
-                trace.remove(obj);
+                boolean foundObject = trace.remove(obj);
+                if (!foundObject) {
+                    return; // This connection has already been invalidated.  Stop now.
+                }
             }
         }
         super.returnObject(obj);
@@ -100,7 +103,10 @@ public class AbandonedObjectPool extends GenericObjectPool {
     public void invalidateObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
             synchronized(trace) {
-                trace.remove(obj);
+                boolean foundObject = trace.remove(obj);
+                if (!foundObject) {
+                    return; // This connection has already been invalidated.  Stop now.
+                }
             }
         }
         super.invalidateObject(obj);        
