@@ -54,39 +54,40 @@ package org.apache.commons.dbcp.jdbc2pool;
  * <http://www.apache.org/>.
  */
  
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-
-import java.util.Hashtable;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import javax.sql.ConnectionPoolDataSource;
-import javax.sql.PooledConnection;
-import javax.naming.Name;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Properties;
+
+import javax.naming.BinaryRefAddr;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.Referenceable;
-import javax.naming.Reference;
-import javax.naming.RefAddr;
-import javax.naming.BinaryRefAddr;
-import javax.naming.StringRefAddr;
+import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
+import javax.sql.PooledConnection;
 
 import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
 
 /**
@@ -143,7 +144,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.5 2002/11/07 21:31:19 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.6 2002/11/08 19:17:24 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -1066,17 +1067,22 @@ public class Jdbc2PoolDataSource
             try
             {
                 pc = (PooledConnection)((ObjectPool)pool).borrowObject();
-            }
-            catch (Exception e)
+            } 
+            catch(NoSuchElementException e) 
             {
-                if (e instanceof RuntimeException) 
-                {
-                    throw (RuntimeException)e;
-                }
-                else 
-                {
-                    throw new SQLException(e.getMessage());
-                }
+                throw new SQLException(e.getMessage());
+            }
+            catch(RuntimeException e) 
+            {
+                throw e;
+            }
+            catch(SQLException e) 
+            {
+                throw e;
+            }
+            catch(Exception e) 
+            {
+                throw new SQLException(e.getMessage());
             }
         }
         else // assume KeyedObjectPool
@@ -1088,16 +1094,21 @@ public class Jdbc2PoolDataSource
                     ((KeyedObjectPool)pool).borrowObject(upkey);
                 returnPCKey(upkey);
             }
-            catch (Exception e)
+            catch(NoSuchElementException e) 
             {
-                if (e instanceof RuntimeException) 
-                {
-                    throw (RuntimeException)e;
-                }
-                else 
-                {
-                    throw new SQLException(e.getMessage());
-                }
+                throw new SQLException(e.getMessage());
+            }
+            catch(RuntimeException e) 
+            {
+                throw e;
+            }
+            catch(SQLException e) 
+            {
+                throw e;
+            }
+            catch(Exception e) 
+            {
+                throw new SQLException(e.getMessage());
             }
         }
         

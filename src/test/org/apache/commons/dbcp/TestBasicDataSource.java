@@ -1,8 +1,7 @@
 /*
- * $Id: TestAll.java,v 1.5 2002/11/08 19:17:24 rwaldhoff Exp $
- * $Revision: 1.5 $
+ * $Id: TestBasicDataSource.java,v 1.1 2002/11/08 19:17:24 rwaldhoff Exp $
+ * $Revision: 1.1 $
  * $Date: 2002/11/08 19:17:24 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,31 +60,50 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import org.apache.commons.dbcp.jdbc2pool.TestJdbc2PoolDataSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
+import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
- * @author Rodney Waldhoff
- * @version $Revision: 1.5 $ $Date: 2002/11/08 19:17:24 $
+ * @version $Revision: 1.1 $ $Date: 2002/11/08 19:17:24 $
  */
-public class TestAll extends TestCase {
-    public TestAll(String testName) {
+public class TestBasicDataSource extends TestConnectionPool {
+    public TestBasicDataSource(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(TestManual.suite());
-        suite.addTest(TestJOCLed.suite());
-        suite.addTest(TestBasicDataSource.suite());
-        suite.addTest(TestDelegatingStatement.suite());
-        suite.addTest(TestDelegatingPreparedStatement.suite());
-        suite.addTest(TestJdbc2PoolDataSource.suite());
-        return suite;
+        return new TestSuite(TestBasicDataSource.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestAll.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected Connection getConnection() throws Exception {
+        return ds.getConnection();
+    }
+
+    private BasicDataSource ds = null;
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        ds = new BasicDataSource();
+        ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
+        ds.setUrl("jdbc:apache:commons:testdriver");
+        ds.setMaxActive(getMaxActive());
+        ds.setMaxWait(getMaxWait());
+        ds.setDefaultAutoCommit(true);
+        ds.setDefaultReadOnly(false);
+        ds.setUsername("username");
+        ds.setPassword("password");
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+    }
+
+    public void tearDown() throws Exception {
+        ds = null;
     }
 }
