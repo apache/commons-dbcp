@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.1 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.1 $
- * $Date: 2002/05/16 21:25:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.2 2002/05/29 01:24:09 glenn Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/05/29 01:24:09 $
  *
  * ====================================================================
  *
@@ -260,4 +260,58 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException { return _res.getTimestamp(columnIndex, cal);  }
     public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException { return _res.getTimestamp(columnName, cal);  }
 
+    // ------------------- JDBC 3.0 -----------------------------------------
+    // Will be uncommented by the build process on a JDBC 3.0 system
+
+/* JDBC_3_ANT_KEY
+
+    public java.net.URL getURL(int columnIndex) throws SQLException {
+        return _res.getURL(columnIndex);
+    }
+
+    public java.net.URL getURL(String columnName) throws SQLException {
+        return _res.getURL(columnName);
+    }
+
+    public void updateRef(int columnIndex, java.sql.Ref x)
+        throws SQLException {
+        _res.updateRef(columnIndex, x);
+    }
+
+    public void updateRef(String columnName, java.sql.Ref x)
+        throws SQLException {
+        _res.updateRef(columnName, x);
+    }
+
+    public void updateBlob(int columnIndex, java.sql.Blob x)
+        throws SQLException {
+        _res.updateBlob(columnIndex, x);
+    }
+
+    public void updateBlob(String columnName, java.sql.Blob x)
+        throws SQLException {
+        _res.updateBlob(columnName, x);
+    }
+
+    public void updateClob(int columnIndex, java.sql.Clob x)
+        throws SQLException {
+        _res.updateClob(columnIndex, x);
+    }
+
+    public void updateClob(String columnName, java.sql.Clob x)
+        throws SQLException {
+        _res.updateClob(columnName, x);
+    }
+
+    public void updateArray(int columnIndex, java.sql.Array x)
+        throws SQLException {
+        _res.updateArray(columnIndex, x);
+    }
+
+    public void updateArray(String columnName, java.sql.Array x)
+        throws SQLException {
+        _res.updateArray(columnName, x);
+    }
+
+JDBC_3_ANT_KEY */
 }
