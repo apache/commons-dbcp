@@ -1,7 +1,7 @@
 /*
- * $Id: TestSharedPoolDataSource.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
- * $Revision: 1.1 $
- * $Date: 2003/08/12 06:09:20 $
+ * $Id: TestSharedPoolDataSource.java,v 1.2 2003/08/13 15:23:21 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/13 15:23:21 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.1 $ $Date: 2003/08/12 06:09:20 $
+ * @version $Revision: 1.2 $ $Date: 2003/08/13 15:23:21 $
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
@@ -397,7 +397,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
 
         public void run() {
-            Thread thread = Thread.currentThread();
             isRun = true;
             while (isRun) {
                 try {
