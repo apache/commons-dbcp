@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/08/25 16:17:45 $
+ * $Revision: 1.9 $
+ * $Date: 2003/08/26 14:19:28 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import javax.naming.spi.ObjectFactory;
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.8 $ $Date: 2003/08/25 16:17:45 $
+ * @version $Revision: 1.9 $ $Date: 2003/08/26 14:19:28 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -271,6 +271,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (ra != null) {
             dataSource.setLogAbandoned
                 (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("poolPreparedStatements");
+        if (ra != null) {
+            dataSource.setPoolPreparedStatements
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("maxOpenPreparedStatements");
+        if (ra != null) {
+            dataSource.setMaxOpenPreparedStatements
+                (Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("connectionProperties");
