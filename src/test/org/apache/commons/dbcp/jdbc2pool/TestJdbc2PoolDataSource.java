@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/11/08 19:37:26 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.4 2002/11/16 19:18:27 jmcnally Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/11/16 19:18:27 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@ package org.apache.commons.dbcp.jdbc2pool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 import junit.framework.Test;
@@ -75,7 +76,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * @author John McNally
- * @version $Revision: 1.3 $ $Date: 2002/11/08 19:37:26 $
+ * @version $Revision: 1.4 $ $Date: 2002/11/16 19:18:27 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -107,6 +108,213 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         tds.setPerUserMaxWait("foo",new Integer((int)(getMaxWait())));
 
         ds = tds;
+    }
+
+    public void testSimple() throws Exception 
+    {
+        Connection conn = ds.getConnection();
+        assertTrue(null != conn);
+        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    public void testSimpleWithUsername() throws Exception 
+    {
+        Connection conn = ds.getConnection("u", "p");
+        assertTrue(null != conn);
+        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    public void testClosingWithUserName() 
+        throws Exception 
+    {
+        Connection[] c = new Connection[getMaxActive()];
+        // open the maximum connections
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i] = ds.getConnection("u", "p");
+        }
+
+        // close one of the connections
+        c[0].close();
+        assertTrue(c[0].isClosed());
+        // get a new connection
+        c[0] = ds.getConnection("u", "p");
+
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i].close();
+        }
+
+        // open the maximum connections
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i] = ds.getConnection("u", "p");
+        }
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i].close();
+        }
+    }
+
+    public void testIncorrectPassword() 
+        throws Exception 
+    {
+        ds.getConnection("u", "p").close();
+        try 
+        {
+            ds.getConnection("u", "x").close();
+            fail("Able to retrieve connection with incorrect password");
+        }
+        catch (SQLException e)
+        {
+            if (!e.getMessage().startsWith("Given password did not match")) 
+            {
+                throw e;
+            }
+            // else the exception was expected
+        }
+    }
+
+    public void testSimple2() 
+        throws Exception 
+    {
+        Connection conn = ds.getConnection();
+        assertTrue(null != conn);
+
+        PreparedStatement stmt = 
+            conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        
+        conn.close();
+        try 
+        {
+            conn.createStatement();
+            fail("Can't use closed connections");
+        } 
+        catch(SQLException e) 
+        {
+            // expected
+        }
+
+        conn = ds.getConnection();
+        assertTrue(null != conn);
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        
+        conn.close();
+        conn = null;
+    }
+
+    public void testOpening() 
+        throws Exception 
+    {
+        Connection[] c = new Connection[getMaxActive()];
+        // test that opening new connections is not closing previous
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i] = ds.getConnection();
+            assertTrue(c[i] != null);
+            for (int j=0; j<=i; j++) 
+            {
+                assertTrue(!c[j].isClosed());
+            }
+        }
+
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i].close();
+        }
+    }
+
+    public void testClosing() 
+        throws Exception 
+    {
+        Connection[] c = new Connection[getMaxActive()];
+        // open the maximum connections
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i] = ds.getConnection();
+        }
+
+        // close one of the connections
+        c[0].close();
+        assertTrue(c[0].isClosed());
+        
+        // get a new connection
+        c[0] = ds.getConnection();
+
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i].close();
+        }
+    }
+
+    public void testMaxActive() 
+        throws Exception 
+    {
+        Connection[] c = new Connection[getMaxActive()];
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i] = ds.getConnection();
+            assertTrue(c[i] != null);            
+        }
+
+        try
+        {
+            ds.getConnection();
+            fail("Allowed to open more than DefaultMaxActive connections.");
+        }
+        catch(java.sql.SQLException e)
+        {
+            // should only be able to open 10 connections, so this test should
+            // throw an exception
+        }
+
+        for (int i=0; i<c.length; i++) 
+        {
+            c[i].close();
+        }
     }
     
     public void testMultipleThreads() throws Exception {

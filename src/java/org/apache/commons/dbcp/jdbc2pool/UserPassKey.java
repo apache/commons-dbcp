@@ -56,17 +56,17 @@ package org.apache.commons.dbcp.jdbc2pool;
  
 import java.io.Serializable;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.pool.BasePoolableObjectFactory;
 
 class UserPassKey
     implements Serializable
 {
     private String password;
-    private boolean reusable;
     private String username;
     
-    UserPassKey()
+    UserPassKey(String username, String password)
     {
+        this.username = username;
+        this.password = password;
     }
         
     /**
@@ -79,35 +79,6 @@ class UserPassKey
     }
     
     /**
-     * Set the value of password.
-     * @param v  Value to assign to password.
-     */
-    public void setPassword(String  v) 
-    {
-        this.password = v;
-    }
-    
-    
-    /**
-     * Get the value of reusable.
-     * @return value of reusable.
-     */
-    public boolean isReusable() 
-    {
-        return reusable;
-    }
-    
-    /**
-     * Set the value of reusable.
-     * @param v  Value to assign to reusable.
-     */
-    public void setReusable(boolean  v) 
-    {
-        this.reusable = v;
-    }
-
-    
-    /**
      * Get the value of username.
      * @return value of username.
      */
@@ -116,29 +87,6 @@ class UserPassKey
         return username;
     }
     
-    /**
-     * Set the value of username.
-     * @param v  Value to assign to username.
-     */
-    public void setUsername(String  v) 
-    {
-        this.username = v;
-    }
-    
-    /**
-     * Initialize key for method with no arguments.
-     *
-     * @param instanceOrClass the Object on which the method is invoked.  if 
-     * the method is static, a String representing the class name is used.
-     * @param method the method name
-     */
-    void init(String username, String password) 
-    {
-        this.reusable = true;
-        this.username = username;
-        this.password = password;
-    }
-
     public boolean equals(Object obj)
     {
         boolean equal = false;
@@ -165,37 +113,7 @@ class UserPassKey
     {
         StringBuffer sb = new StringBuffer(50);
         sb.append("UserPassKey(");
-        sb.append(username).append(", ").append(password)
-            .append(", ").append(reusable);
-        sb.append(')');
+        sb.append(username).append(", ").append(password).append(')');
         return sb.toString();
-    }
-
-    // ************* PoolableObjectFactory implementation *******************
-
-    static class Factory 
-        extends BasePoolableObjectFactory
-    {
-        /**
-         * Creates an instance that can be returned by the pool.
-         * @return an instance that can be returned by the pool.
-         */
-        public Object makeObject() 
-            throws Exception
-        {
-            return new UserPassKey();
-        }
-        
-        /**
-         * Uninitialize an instance to be returned to the pool.
-         * @param obj the instance to be passivated
-         */
-        public void passivateObject(Object obj) 
-            throws Exception
-        {
-            UserPassKey key = (UserPassKey)obj;
-            key.username = null;
-            key.password = null;
-        }
     }
 }

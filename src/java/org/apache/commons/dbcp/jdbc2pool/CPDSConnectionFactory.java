@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/11/01 16:03:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/11/16 19:18:27 $
  *
  * ====================================================================
  *
@@ -63,6 +63,7 @@ package org.apache.commons.dbcp.jdbc2pool;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.sql.*;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
@@ -77,7 +78,7 @@ import org.apache.commons.dbcp.*;
  * {*link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:20 rwaldhoff Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
  */
 class CPDSConnectionFactory 
     implements PoolableObjectFactory, ConnectionEventListener {
@@ -153,9 +154,10 @@ class CPDSConnectionFactory
 
 
     synchronized public Object makeObject() {
-        PooledConnection pc = null;
+        Object obj;
         try
         {
+            PooledConnection pc = null;
             if ( _username == null ) 
             {
                 pc = _cpds.getPooledConnection();
@@ -167,18 +169,21 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
+            obj = new PooledConnectionAndInfo(pc, _username, _password);
+            pcMap.put(pc, obj);
         }
         catch (SQLException e)
         {
             throw new RuntimeException(e.getMessage());
         }
-        return pc;
+        return obj;
     }
 
     public void destroyObject(Object obj) {
-        if(obj instanceof PooledConnection) {
+        if(obj instanceof PooledConnectionAndInfo) {
             try {
-                ((PooledConnection)obj).close();
+                ((PooledConnectionAndInfo)obj)
+                    .getPooledConnection().close();
             } catch(RuntimeException e) {
                 throw e;
             } catch(SQLException e) {
@@ -189,8 +194,9 @@ class CPDSConnectionFactory
 
     public boolean validateObject(Object obj) {
         boolean valid = false;
-        if(obj instanceof PooledConnection) {
-            PooledConnection pconn = (PooledConnection)obj;
+        if(obj instanceof PooledConnectionAndInfo) {
+            PooledConnection pconn = 
+                ((PooledConnectionAndInfo)obj).getPooledConnection();
             String query = _validationQuery;
             if(null != query) {
                 Connection conn = null;
@@ -264,13 +270,19 @@ class CPDSConnectionFactory
         // otherwise return the connection to the pool.
         if (!validatingMap.containsKey(pc)) 
         {
+            Object info = pcMap.get(pc);
+            if (info == null) 
+            {
+                throw new IllegalStateException(NO_KEY_MESSAGE);
+            }            
+
             try
             {
-                _pool.returnObject(pc);
+                _pool.returnObject(info);
             }
             catch (Exception e)
             {
-                destroyObject(pc);
+                destroyObject(info);
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + 
                                    "NOT BE RETURNED TO THE POOL");
             }
@@ -300,9 +312,17 @@ class CPDSConnectionFactory
             // ignore
         }
 
-        destroyObject(pc);
+        Object info = pcMap.get(pc);
+        if (info == null) 
+        {
+            throw new IllegalStateException(NO_KEY_MESSAGE);
+        }            
+        destroyObject(info);
     }
 
+    private static final String NO_KEY_MESSAGE = 
+        "close() was called on a Connection, but " + 
+        "I have no record of the underlying PooledConnection.";
 
     protected ConnectionPoolDataSource _cpds = null;
     protected String _validationQuery = null;
@@ -310,4 +330,5 @@ class CPDSConnectionFactory
     protected String _username = null;
     protected String _password = null;
     private Map validatingMap = new HashMap();
+    private WeakHashMap pcMap = new WeakHashMap();
 }

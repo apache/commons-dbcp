@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:21 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/11/01 16:03:21 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/11/16 19:18:27 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import org.apache.commons.dbcp.*;
  * {*link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: KeyedCPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:21 rwaldhoff Exp $
+ * @version $Id: KeyedCPDSConnectionFactory.java,v 1.3 2002/11/16 19:18:27 jmcnally Exp $
  */
 class KeyedCPDSConnectionFactory 
     implements KeyedPoolableObjectFactory, ConnectionEventListener {
@@ -147,38 +147,38 @@ class KeyedCPDSConnectionFactory
     }
 
     synchronized public Object makeObject(Object key) {
+        Object obj = null;
         UserPassKey upkey = (UserPassKey)key;
-        // since we are using the key to make a new object, we will
-        // declare the key invalid for reuse.
-        upkey.setReusable(false);
-        String username = upkey.getUsername();
-        PooledConnection pc = null;
         try
         {
+            PooledConnection pc = null;
+            String username = upkey.getUsername();
+            String password = upkey.getPassword();
             if ( username == null ) 
             {
                 pc = _cpds.getPooledConnection();
             }
             else 
             {
-                pc = _cpds.getPooledConnection(username, upkey.getPassword());
+                pc = _cpds.getPooledConnection(username, password);
             }
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pcKeyMap.put(pc, key);
+            obj = new PooledConnectionAndInfo(pc, username, password);
+            pcMap.put(pc, obj);
         }
         catch (SQLException e)
         {
             throw new RuntimeException(e.getMessage());
         }
-        return pc;
+        return obj;
     }
 
     public void destroyObject(Object key, Object obj) {
-        if(obj instanceof PooledConnection) {
+        if(obj instanceof PooledConnectionAndInfo) {
             try {
-                ((PooledConnection)obj).close();
+                ((PooledConnectionAndInfo)obj).getPooledConnection().close();
             } catch(RuntimeException e) {
                 throw e;
             } catch(SQLException e) {
@@ -189,8 +189,9 @@ class KeyedCPDSConnectionFactory
 
     public boolean validateObject(Object key, Object obj) {
         boolean valid = false;
-        if(obj instanceof PooledConnection) {
-            PooledConnection pconn = (PooledConnection)obj;
+        if(obj instanceof PooledConnectionAndInfo) {
+            PooledConnection pconn = 
+                ((PooledConnectionAndInfo)obj).getPooledConnection();
             String query = _validationQuery;
             if(null != query) {
                 Connection conn = null;
@@ -264,18 +265,19 @@ class KeyedCPDSConnectionFactory
         // otherwise return the connection to the pool.
         if (!validatingMap.containsKey(pc)) 
         {
-            Object key = pcKeyMap.get(pc);
-            if (key == null) 
+            PooledConnectionAndInfo info = 
+                (PooledConnectionAndInfo)pcMap.get(pc);
+            if (info == null) 
             {
                 throw new IllegalStateException(NO_KEY_MESSAGE);
             }            
             try
             {
-                _pool.returnObject(key, pc);
+                _pool.returnObject(info.getUserPassKey(), info);
             }
             catch (Exception e)
             {
-                destroyObject(key, pc);
+                destroyObject(info.getUserPassKey(), info);
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + 
                                    "NOT BE RETURNED TO THE POOL");
             }
@@ -305,12 +307,12 @@ class KeyedCPDSConnectionFactory
             // ignore
         }
 
-        Object key = pcKeyMap.get(pc);
-        if (key == null) 
+        PooledConnectionAndInfo info = (PooledConnectionAndInfo)pcMap.get(pc);
+        if (info == null) 
         {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }            
-        destroyObject(key, pc);
+        destroyObject(info.getUserPassKey(), info);
     }
 
     private static final String NO_KEY_MESSAGE = 
@@ -321,5 +323,5 @@ class KeyedCPDSConnectionFactory
     protected String _validationQuery = null;
     protected KeyedObjectPool _pool = null;
     private Map validatingMap = new HashMap();
-    private WeakHashMap pcKeyMap = new WeakHashMap();
+    private WeakHashMap pcMap = new WeakHashMap();
 }
