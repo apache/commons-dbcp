@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.34 $ $Date: 2004/02/28 11:48:04 $
+ * @version $Revision: 1.35 $ $Date: 2004/02/29 20:18:25 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -62,17 +62,19 @@ public class BasicDataSource implements DataSource {
     /**
      * The default read-only state of connections created by this pool.
      */
-    protected boolean defaultReadOnly = false;
+    protected Boolean defaultReadOnly = null;
 
     public synchronized boolean getDefaultReadOnly() {
-        return this.defaultReadOnly;
+        if (this.defaultReadOnly != null) {
+            return this.defaultReadOnly.booleanValue();
+        }
+        return false;
     }
 
     public synchronized void setDefaultReadOnly(boolean defaultReadOnly) {
-        this.defaultReadOnly = defaultReadOnly;
+        this.defaultReadOnly = Boolean.valueOf(defaultReadOnly);
         this.restartNeeded = true;
     }
-
 
     /**
      * The default TransactionIsolation state of connections created by this pool.
