@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/09/23 13:29:30 $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/26 12:45:13 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.9 $ $Date: 2003/09/23 13:29:30 $
+ * @version $Revision: 1.10 $ $Date: 2003/09/26 12:45:13 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -152,9 +152,11 @@ public class AbandonedObjectPool extends GenericObjectPool {
         super.returnObject(obj);
     }
 
-    public synchronized void invalidateObject(Object obj) throws Exception {
+    public void invalidateObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
-            trace.remove(obj);
+            synchronized(trace) {
+                trace.remove(obj);
+            }
         }
         super.invalidateObject(obj);        
     }
@@ -163,23 +165,26 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * Recover abandoned db connections which have been idle
      * greater than the removeAbandonedTimeout.
      */
-    private synchronized void removeAbandoned() {
+    private void removeAbandoned() {
         // Generate a list of abandoned connections to remove
         long now = System.currentTimeMillis();
         long timeout = now - (config.getRemoveAbandonedTimeout() * 1000);
         ArrayList remove = new ArrayList();
-        Iterator it = trace.iterator();
-        while (it.hasNext()) {
-            PoolableConnection pc = (PoolableConnection)it.next();
-            if (pc.getLastUsed() > timeout) {
-                continue;
-            }
-            if (pc.getLastUsed() > 0) {
-                remove.add(pc);
+        synchronized(trace) {
+            Iterator it = trace.iterator();
+            while (it.hasNext()) {
+                PoolableConnection pc = (PoolableConnection)it.next();
+                if (pc.getLastUsed() > timeout) {
+                    continue;
+                }
+                if (pc.getLastUsed() > 0) {
+                    remove.add(pc);
+                }
             }
         }
+
         // Now remove the abandoned connections
-        it = remove.iterator();
+        Iterator it = remove.iterator();
         while (it.hasNext()) {
             PoolableConnection pc = (PoolableConnection)it.next();
             if (config.getLogAbandoned()) {
