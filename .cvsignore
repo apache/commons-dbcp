@@ -2,6 +2,7 @@ build.properties
 dist
 .classpath
 .project
+.checkstyle
 target
 maven.log
 velocity.log
