@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/05/01 12:52:23 $
+ * @version $Revision: 1.14 $ $Date: 2004/05/20 13:07:43 $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -70,6 +70,9 @@ public class TesterConnection implements Connection {
 
     public void commit() throws SQLException {
         checkOpen();
+        if (isReadOnly()) {
+            throw new SQLException("Cannot commit a readonly connection");
+        }
     }
 
     public Statement createStatement() throws SQLException {
@@ -159,6 +162,9 @@ public class TesterConnection implements Connection {
 
     public void rollback() throws SQLException {
         checkOpen();
+        if (isReadOnly()) {
+            throw new SQLException("Cannot rollback a readonly connection");
+        }
     }
 
     public void setAutoCommit(boolean autoCommit) throws SQLException {
