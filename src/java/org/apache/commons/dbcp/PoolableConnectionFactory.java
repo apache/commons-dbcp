@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/08/22 16:59:11 $
+ * $Revision: 1.11 $
+ * $Date: 2003/08/25 16:17:45 $
  *
  * ====================================================================
  *
@@ -74,7 +74,8 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.10 2003/08/22 16:59:11 dirkv Exp $
+ * @author Dirk Verbeeck
+ * @version $Id: PoolableConnectionFactory.java,v 1.11 2003/08/25 16:17:45 dirkv Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -94,6 +95,27 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly;
         _defaultAutoCommit = defaultAutoCommit;
+    }
+
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
+     * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
+     * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
+     * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
+     */
+    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
+        _connFactory = connFactory;
+        _pool = pool;
+        _pool.setFactory(this);
+        _stmtPoolFactory = stmtPoolFactory;
+        _validationQuery = validationQuery;
+        _defaultReadOnly = defaultReadOnly;
+        _defaultAutoCommit = defaultAutoCommit;
+        _defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
     /**
@@ -124,6 +146,39 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly;
         _defaultAutoCommit = defaultAutoCommit;
+    }
+
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
+     * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
+     * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
+     * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
+     * @param config the AbandonedConfig if tracing SQL objects
+     * @deprecated AbandonedConfig is now deprecated.
+     */
+    public PoolableConnectionFactory(
+        ConnectionFactory connFactory,
+        ObjectPool pool,
+        KeyedObjectPoolFactory stmtPoolFactory,
+        String validationQuery,
+        boolean defaultReadOnly,
+        boolean defaultAutoCommit,
+        int defaultTransactionIsolation,
+        AbandonedConfig config) {
+            
+        _connFactory = connFactory;
+        _pool = pool;
+        _config = config;
+        _pool.setFactory(this);
+        _stmtPoolFactory = stmtPoolFactory;
+        _validationQuery = validationQuery;
+        _defaultReadOnly = defaultReadOnly;
+        _defaultAutoCommit = defaultAutoCommit;
+        _defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
     /**
@@ -187,6 +242,14 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public void setDefaultAutoCommit(boolean defaultAutoCommit) {
         _defaultAutoCommit = defaultAutoCommit;
+    }
+
+    /**
+     * Sets the default "Transaction Isolation" setting for borrowed {@link Connection}s
+     * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
+     */
+    public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
+        _defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
     synchronized public Object makeObject() throws Exception {
@@ -271,6 +334,9 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             Connection conn = (Connection)obj;
             conn.setAutoCommit(_defaultAutoCommit);
             conn.setReadOnly(_defaultReadOnly);
+            if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
+                conn.setTransactionIsolation(_defaultTransactionIsolation);
+            }
         }
     }
 
@@ -280,9 +346,16 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected boolean _defaultReadOnly = false;
     protected boolean _defaultAutoCommit = true;
+    protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     
     /**
      * @deprecated AbandonedConfig is now deprecated.
      */
     protected AbandonedConfig _config = null;
+
+    /**
+     * Internal constant to indicate the level is not set. 
+     */
+	static final int UNKNOWN_TRANSACTIONISOLATION = -1;
+
 }
