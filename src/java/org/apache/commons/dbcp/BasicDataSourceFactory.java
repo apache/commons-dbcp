@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v $
- * $Revision: 1.13 $
- * $Date: 2004/01/25 19:49:27 $
+ * $Revision: 1.14 $
+ * $Date: 2004/02/07 14:54:33 $
  *
  * ====================================================================
  *
@@ -83,9 +83,8 @@ import javax.sql.DataSource;
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/01/25 19:49:27 $
+ * @version $Revision: 1.14 $ $Date: 2004/02/07 14:54:33 $
  */
-
 public class BasicDataSourceFactory implements ObjectFactory {
 
     private final static String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";
@@ -96,6 +95,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_MAXACTIVE = "maxActive";
     private final static String PROP_MAXIDLE = "maxIdle";
     private final static String PROP_MINIDLE = "minIdle";
+    private final static String PROP_INITIALSIZE = "initialSize";
     private final static String PROP_MAXWAIT = "maxWait";
     private final static String PROP_TESTONBORROW = "testOnBorrow";
     private final static String PROP_TESTONRETURN = "testOnReturn";
@@ -124,6 +124,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_MAXACTIVE,
         PROP_MAXIDLE,
         PROP_MINIDLE,
+        PROP_INITIALSIZE,
         PROP_MAXWAIT,
         PROP_TESTONBORROW,
         PROP_TESTONRETURN,
@@ -260,6 +261,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_MINIDLE);
         if (value != null) {
             dataSource.setMinIdle(Integer.parseInt(value));
+        }
+
+        value = properties.getProperty(PROP_INITIALSIZE);
+        if (value != null) {
+            dataSource.setInitialSize(Integer.parseInt(value));
         }
 
         value = properties.getProperty(PROP_MAXWAIT);
