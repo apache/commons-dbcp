@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.5 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/25 16:18:51 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.5 $ $Date: 2003/08/22 16:08:32 $
+ * @version $Revision: 1.6 $ $Date: 2003/08/25 16:18:51 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -93,6 +93,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMaxWait(getMaxWait());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
+        ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setUsername("username");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
@@ -101,4 +102,23 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void tearDown() throws Exception {
         ds = null;
     }
+    
+    public void testTransactionIsolationBehavior() throws Exception {
+        Connection conn = getConnection();
+        assertTrue(conn != null);
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
+        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        conn.close();
+        
+        Connection conn2 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
+        
+        Connection conn3 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn3.getTransactionIsolation());
+
+        conn2.close();
+        
+        conn3.close();
+    }
+
 }
