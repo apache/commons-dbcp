@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterDriver.java,v 1.1 2001/04/14 17:16:29 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:16:29 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterDriver.java,v 1.2 2003/04/15 23:34:34 dgraham Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/04/15 23:34:34 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,11 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class TesterDriver implements Driver {
@@ -73,19 +77,11 @@ public class TesterDriver implements Driver {
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        try {
-            return url.equals(CONNECT_STRING);
-        } catch(NullPointerException e) {
-            return false;
-        }
+        return CONNECT_STRING.equals(url);
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        if(acceptsURL(url)) {
-            return new TesterConnection();
-        } else {
-            return null;
-        }
+        return (acceptsURL(url) ? new TesterConnection() : null);
     }
 
     public int getMajorVersion() {
