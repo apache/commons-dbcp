@@ -78,7 +78,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
  */
 class PooledConnectionImpl 
     implements PooledConnection, KeyedPoolableObjectFactory
@@ -146,6 +146,7 @@ class PooledConnectionImpl
     public void close()
         throws SQLException
     {        
+        assertOpen();
         isClosed = true;
         if (pstmtPool != null) 
         {

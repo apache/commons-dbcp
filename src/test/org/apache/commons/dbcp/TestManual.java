@@ -1,13 +1,12 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.11 2002/11/07 21:06:57 rwaldhoff Exp $
- * $Revision: 1.11 $
- * $Date: 2002/11/07 21:06:57 $
- *
+ * $Id: TestManual.java,v 1.12 2002/11/08 18:51:07 rwaldhoff Exp $
+ * $Revision: 1.12 $
+ * $Date: 2002/11/08 18:51:07 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,19 +60,25 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import java.sql.*;
-import org.apache.commons.pool.*;
-import org.apache.commons.pool.impl.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
+import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
- * 
+ * Tests for a "manually configured", {@link GenericObjectPool}
+ * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * 
- * @version $Id: TestManual.java,v 1.11 2002/11/07 21:06:57 rwaldhoff Exp $
+ * @version $Revision: 1.12 $ $Date: 2002/11/08 18:51:07 $
  */
-public class TestManual extends TestCase {
+public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
         super(testName);
     }
@@ -82,171 +87,27 @@ public class TestManual extends TestCase {
         return new TestSuite(TestManual.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestManual.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected Connection getConnection() throws Exception {
+        return DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
     }
 
+    private PoolingDriver driver = null;
+    
     public void setUp() throws Exception {
-        GenericObjectPool pool = new GenericObjectPool(null, 10, GenericObjectPool.WHEN_EXHAUSTED_BLOCK, 2000L, 10, true, true, 10000L, 5, 5000L, true);
+        super.setUp();
+        GenericObjectPool pool = new GenericObjectPool(null, getMaxActive(), GenericObjectPool.WHEN_EXHAUSTED_BLOCK, getMaxWait(), 10, true, true, 10000L, 5, 5000L, true);
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
         GenericKeyedObjectPoolFactory opf = new GenericKeyedObjectPoolFactory(null, 10, GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK, 2000L, 10, true, true, 10000L, 5, 5000L, true);
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
-        PoolingDriver driver = new PoolingDriver();
+        driver = new PoolingDriver();
         driver.registerPool("test",pool);
         DriverManager.registerDriver(driver);
     }
 
-    public void testIsClosed() throws Exception {
-        for(int i=0;i<10;i++) {
-            Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-            assertTrue(null != conn);
-            assertTrue(!conn.isClosed());
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-            conn.close();
-            assertTrue(conn.isClosed());
-        }
+    public void tearDown() throws Exception {
+        DriverManager.deregisterDriver(driver);
     }
 
-    public void testCantCloseConnectionTwice() throws Exception {
-        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-            assertTrue(null != conn);
-            assertTrue(!conn.isClosed());
-            conn.close();
-            assertTrue(conn.isClosed());
-            try {
-                conn.close();
-                fail("Expected SQLException on second attempt to close");
-            } catch(SQLException e) {
-                // expected
-            }
-            assertTrue(conn.isClosed());
-        }
-    }
-
-    public void testCantCloseStatementTwice() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(null != conn);
-        assertTrue(!conn.isClosed());
-        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            stmt.close();
-            try {
-                stmt.close();
-                fail("Expected SQLException on second attempt to close");
-            } catch(SQLException e) {
-                // expected
-            }
-        }
-        conn.close();
-    }
-
-    public void testSimple() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(null != conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    public void testSimple2() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(null != conn);
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        try {
-            conn.createStatement();
-            fail("Can't use closed connections");
-        } catch(SQLException e) {
-            ; // expected
-        }
-
-        conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(null != conn);
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        conn = null;
-    }
-
-    public void testPooling() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(conn != null);
-        Connection conn2 = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue(conn2 != null);
-        assertTrue(conn != conn2);
-        conn2.close();
-        conn.close();
-        Connection conn3 = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
-        assertTrue( conn3 == conn || conn3 == conn2 );
-    }
-    
-    public void testAutoCommitBehavior() throws Exception {
-        
-        final String strDriverUrl = "jdbc:apache:commons:dbcp:test";
-        Connection conn = DriverManager.getConnection(strDriverUrl);
-        assertTrue(conn != null);
-        assertTrue(conn.getAutoCommit());
-        conn.setAutoCommit(false);
-        conn.close();
-        
-        Connection conn2 = DriverManager.getConnection(strDriverUrl);
-        assertTrue( conn2.getAutoCommit() );
-        
-        Connection conn3 = DriverManager.getConnection(strDriverUrl);
-        assertTrue( conn3.getAutoCommit() );
-
-        conn2.close();
-        
-        conn3.close();
-    }
-    
     /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
     public void testReportedBug12400() throws Exception {
         ObjectPool connectionPool = new GenericObjectPool(

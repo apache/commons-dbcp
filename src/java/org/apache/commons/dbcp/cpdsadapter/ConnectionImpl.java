@@ -3,7 +3,7 @@ package org.apache.commons.dbcp.cpdsadapter;
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,7 @@ import java.sql.SQLException;
  * SQLException.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConnectionImpl.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * @version $Id: ConnectionImpl.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
  */
 class ConnectionImpl 
     implements Connection
@@ -170,6 +170,7 @@ class ConnectionImpl
     public void close()
         throws SQLException
     {
+        assertOpen();
         isClosed = true;
         pooledConnection.notifyListeners();
     }
