@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.9 2002/06/29 17:53:28 glenn Exp $ -->
+<!-- $Id: build.xml,v 1.10 2002/07/20 18:02:27 craigmcc Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -48,25 +48,34 @@
       <property name="Name" value="Commons-DBCP"/>
       <property name="Name-Long" value="Jakarta Commons Database Connection Pool"/>
 
+      <!-- The current version number of this component -->
+      <property name="component.package" value="org.apache.commons.dbcp"/>
+      <property name="component.version" value="1.0-dev"/>
+      <filter  token="package"           value="${component.package}"/>
+      <filter  token="version"           value="${component.version}"/>
+
       <property name="test.entry" value="org.apache.commons.dbcp.TestAll"/>
       <property name="test.failonerror" value="true" />
       <property name="test.runner" value="junit.textui.TestRunner" />
 
       <property name="workdir" value="${java.io.tmpdir}/buildtemp_${DSTAMP}${TSTAMP}"/>
-      <property name="source" value="${basedir}"/>
-      <property name="source.src" value="${basedir}/src"/>
+      <property name="source"          value="${basedir}"/>
+      <property name="source.src"      value="${basedir}/src"/>
+      <property name="source.src.conf" value="${source.src}/conf"/>
       <property name="source.src.java" value="${source.src}/java"/>
       <property name="source.src.test" value="${source.src}/test"/>
-      <property name="source.doc" value="${basedir}/doc"/>
-      <property name="dest" value="${basedir}/dist"/>
-      <property name="dest.src" value="${dest}/src"/>
+      <property name="source.doc"      value="${basedir}/doc"/>
+      <property name="dest"         value="${basedir}/dist"/>
+      <property name="dest.src"     value="${dest}/src"/>
       <property name="dest.classes" value="${dest}/classes"/>
-      <property name="dest.doc" value="${dest}/docs"/>
+      <property name="dest.conf"    value="${dest}/conf"/>
+      <property name="dest.doc"     value="${dest}/docs"/>
       <property name="dest.doc.api" value="${dest.doc}/api"/>
-      <property name="dest.jardir" value="${dest}"/>
+      <property name="dest.jardir"  value="${dest}"/>
       <property name="dest.jardir.jar" value="${dest.jardir}/${name}.jar"/>
-
-      <available property="available-doc" file="${source.doc}"/> <!-- does this module have docs? -->
+      <available property="available-doc" file="${source.doc}"/> <!-- does this
+ module have docs? -->
+      <available property="available-src-conf" file="${source.src.conf}"/> <!-- does this module have conf src? -->
       <available property="available-src-java" file="${source.src.java}"/> <!-- does this module have java src? -->
       <available property="available-src-test" file="${source.src.test}"/> <!-- does this module have test src? -->
       <available property="jndi.present" classname="javax.naming.Context"/>
@@ -82,6 +91,13 @@
          <fileset dir="${source.src.java}">
             <patternset refid="patternset-javadocable-sources"/>
          </fileset>
+      </copy>
+   </target>
+
+   <target name="copy-conf" depends="init" if="available-src-conf">
+      <mkdir  dir="${dest.conf}"/>
+      <copy todir="${dest.conf}" filtering="yes">
+         <fileset dir="${source.src.conf}"/>
       </copy>
    </target>
 
@@ -248,7 +264,7 @@
 
    <!-- ######################################################### -->
 
-   <target name="dist" depends="dist-jar,doc" description="builds binary distribution"/>
+   <target name="dist" depends="copy-conf,dist-jar,doc" description="builds binary distribution"/>
 
    <target name="dist-jar" depends="build">
       <mkdir dir="${dest.jardir}"/>
@@ -258,7 +274,7 @@
             <patternset refid="patternset-non-test-classes"/>
          </fileset>
       </copy>
-      <jar jarfile="${dest.jardir.jar}">
+      <jar jarfile="${dest.jardir.jar}" manifest="${dest.conf}/MANIFEST.MF">
          <fileset dir="${workdir}"/>
       </jar>
       <delete dir="${workdir}"/>
