@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v $
- * $Revision: 1.16 $
- * $Date: 2003/11/10 14:40:26 $
+ * $Revision: 1.17 $
+ * $Date: 2004/01/18 23:09:36 $
  *
  * ====================================================================
  *
@@ -61,6 +61,8 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -78,7 +80,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.16 $ $Date: 2003/11/10 14:40:26 $
+ * @version $Revision: 1.17 $ $Date: 2004/01/18 23:09:36 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -162,5 +164,47 @@ public class TestManual extends TestConnectionPool {
         catch (SQLException e) {
             // OK
         }
+    }
+    
+    public void testLogWriter() throws Exception {
+        PrintStream ps = System.out;
+        PrintWriter pw = new PrintWriter(System.err);
+        SQLException ex;
+        
+        DriverManager.setLogWriter(pw);
+        ex = new SQLNestedException("A", new Exception("a"));
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException("B", null);
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException(null, new Exception("c"));
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException(null, null);
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+
+        DriverManager.setLogWriter(null);
+        ex = new SQLNestedException("A", new Exception("a"));
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException("B", null);
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException(null, new Exception("c"));
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
+        ex = new SQLNestedException(null, null);
+        ex.printStackTrace();
+        ex.printStackTrace(ps);
+        ex.printStackTrace(pw);
     }
 }
