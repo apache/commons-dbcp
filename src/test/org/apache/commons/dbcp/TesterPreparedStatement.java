@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterPreparedStatement.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/10/15 19:53:30 $
+ * $Revision: 1.10 $
+ * $Date: 2003/11/02 17:46:12 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2003/10/15 19:53:30 $
+ * @version $Revision: 1.10 $ $Date: 2003/11/02 17:46:12 $
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
     private ResultSetMetaData _resultSetMetaData = null;
@@ -93,12 +93,17 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         _sql = sql;
     }
 
+    public TesterPreparedStatement(Connection conn, String sql, int resultSetType, int resultSetConcurrency) {
+        super(conn, resultSetType, resultSetConcurrency);
+        _sql = sql;
+    }
+
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
         if("null".equals(sql)) {
             return null;
         } else {
-            return new TesterResultSet(this);
+            return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
         }
     }
 
@@ -112,7 +117,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         if("null".equals(_sql)) {
             return null;
         } else {
-            return new TesterResultSet(this);
+            return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
         }
     }
 
