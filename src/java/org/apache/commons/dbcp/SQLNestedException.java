@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/SQLNestedException.java,v $
- * $Revision: 1.5 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.6 $
+ * $Date: 2004/01/18 23:08:45 $
  *
  * ====================================================================
  *
@@ -63,15 +63,33 @@ package org.apache.commons.dbcp;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
  * A SQLException subclass containing another Throwable
  * 
  * @author Dirk Verbeeck
- * @version $Id: SQLNestedException.java,v 1.5 2003/10/09 21:04:44 rdonkin Exp $
+ * @version $Id: SQLNestedException.java,v 1.6 2004/01/18 23:08:45 dirkv Exp $
  */
 public class SQLNestedException extends SQLException {
+
+    /* Throwable.getCause detection as found in commons-lang */
+    private static final Method THROWABLE_CAUSE_METHOD;
+    static {
+        Method getCauseMethod;
+        try {
+            getCauseMethod = Throwable.class.getMethod("getCause", null);
+        } catch (Exception e) {
+            getCauseMethod = null;
+        }
+        THROWABLE_CAUSE_METHOD = getCauseMethod;
+    }
+    
+    private static boolean hasThrowableCauseMethod() {
+        return THROWABLE_CAUSE_METHOD != null;
+    }
 
     /**
      * Holds the reference to the exception or error that caused
@@ -89,28 +107,30 @@ public class SQLNestedException extends SQLException {
      */
     public SQLNestedException(String msg, Throwable cause) {
         super(msg);
-        if (cause == null) {
-            cause = new Exception("No cause");
-        }
         this.cause = cause;
+        if ((cause != null) && (DriverManager.getLogWriter() != null)) {
+            DriverManager.getLogWriter().print("Caused by: ");
+            cause.printStackTrace(DriverManager.getLogWriter());
+        }
     }
     
     public Throwable getCause() {
         return this.cause;
     }
-    public String getLocalizedMessage() {
-        return super.getLocalizedMessage() + ", cause: " + this.cause.getLocalizedMessage();
-    }
-    public void printStackTrace() {
-        System.err.println(getClass().getName() + ": " + getMessage() + ", cause: ");
-        this.cause.printStackTrace();
-    }
+
     public void printStackTrace(PrintStream s) {
-        s.println(getClass().getName() + ": " + getMessage() + ", cause: ");
-        this.cause.printStackTrace(s);
+        super.printStackTrace(s);
+        if ((cause != null) && !hasThrowableCauseMethod()) {
+            s.print("Caused by: ");
+            this.cause.printStackTrace(s);
+        }
     }
+
     public void printStackTrace(PrintWriter s) {
-        s.println(getClass().getName() + ": " + getMessage() + ", cause: ");
-        this.cause.printStackTrace(s);
+        super.printStackTrace(s);
+        if ((cause != null) && !hasThrowableCauseMethod()) {
+            s.print("Caused by: ");
+            this.cause.printStackTrace(s);
+        }
     }
 }
