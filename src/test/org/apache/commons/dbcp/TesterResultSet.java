@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterResultSet.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.8 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -61,25 +61,54 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
 import java.math.BigDecimal;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.Calendar;
 
+/**
+ * A dummy {@link ResultSet}, for testing purposes.
+ * 
+ * @author Rodney Waldhoff
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.8 $ $Date: 2003/10/15 19:53:30 $
+ */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {
         _statement = stmt;
     }
 
+    public TesterResultSet(Statement stmt, Object[][] data) {
+        _statement = stmt;
+        _data = data;
+    }
+
+    protected Object[][] _data = null;
+    protected int _currentRow = -1;
+    
     protected Statement _statement = null;
     protected int _rowsLeft = 2;
     protected boolean _open = true;
 
     public boolean next() throws SQLException {
         checkOpen();
-        if(--_rowsLeft > 0) {
-            return true;
-        } else {
-            return false;
+        if (_data != null) {
+            _currentRow++;
+            return _currentRow < _data.length;
+        }
+        else {
+            if(--_rowsLeft > 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -94,6 +123,9 @@ public class TesterResultSet implements ResultSet {
 
     public String getString(int columnIndex) throws SQLException {
         checkOpen();
+        if (_data != null) {
+            return (String) getObject(columnIndex);
+        }
         return "String" + columnIndex;
     }
 
@@ -277,6 +309,9 @@ public class TesterResultSet implements ResultSet {
 
     public Object getObject(int columnIndex) throws SQLException {
         checkOpen();
+        if (_data != null) {
+            return _data[_currentRow][columnIndex-1];
+        }
         return new Object();
     }
 

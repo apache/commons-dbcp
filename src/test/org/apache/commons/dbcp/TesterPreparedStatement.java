@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterPreparedStatement.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.9 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -73,6 +73,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+/**
+ * A dummy {@link PreparedStatement}, for testing purposes.
+ * 
+ * @author Rodney Waldhoff
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.9 $ $Date: 2003/10/15 19:53:30 $
+ */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
     private ResultSetMetaData _resultSetMetaData = null;
     private String _sql = null;
