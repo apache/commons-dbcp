@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterStatement.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/10/15 19:52:13 $
+ * $Revision: 1.12 $
+ * $Date: 2003/11/02 17:46:12 $
  *
  * ====================================================================
  *
@@ -72,12 +72,19 @@ import java.sql.Statement;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.11 $ $Date: 2003/10/15 19:52:13 $
+ * @version $Revision: 1.12 $ $Date: 2003/11/02 17:46:12 $
  */
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {
         _connection = conn;
     }
+
+    public TesterStatement(Connection conn, int resultSetType, int resultSetConcurrency) {
+        _connection = conn;
+        _resultSetType = resultSetType;
+        _resultSetConcurrency = resultSetConcurrency;
+    }
+    
     protected Connection _connection = null;
     protected boolean _open = true;
     protected int _rowsUpdated = 1;

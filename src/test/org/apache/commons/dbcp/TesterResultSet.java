@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterResultSet.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/10/15 19:53:30 $
+ * $Revision: 1.9 $
+ * $Date: 2003/11/02 17:46:12 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.8 $ $Date: 2003/10/15 19:53:30 $
+ * @version $Revision: 1.9 $ $Date: 2003/11/02 17:46:12 $
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {
@@ -89,6 +89,16 @@ public class TesterResultSet implements ResultSet {
         _statement = stmt;
         _data = data;
     }
+
+    public TesterResultSet(Statement stmt, Object[][] data, int type, int concurrency) {
+        _statement = stmt;
+        _data = data;
+        _type = type;
+        _concurrency = concurrency;
+    }
+    
+    protected int _type = ResultSet.TYPE_FORWARD_ONLY;
+    protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
 
     protected Object[][] _data = null;
     protected int _currentRow = -1;
@@ -423,11 +433,11 @@ public class TesterResultSet implements ResultSet {
     }
 
     public int getType() throws SQLException {
-        return 1003;
+        return this._type;
     }
 
     public int getConcurrency() throws SQLException {
-        return 1007;
+        return this._concurrency;
     }
 
     public boolean rowUpdated() throws SQLException {

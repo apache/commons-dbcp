@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/10/15 19:53:30 $
+ * $Revision: 1.10 $
+ * $Date: 2003/11/02 17:46:12 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import java.util.Map;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2003/10/15 19:53:30 $
+ * @version $Revision: 1.10 $ $Date: 2003/11/02 17:46:12 $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -190,7 +190,7 @@ public class TesterConnection implements Connection {
 
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         checkOpen();
-        return new TesterPreparedStatement(this, sql);
+        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
     }
 
     public void rollback() throws SQLException {
