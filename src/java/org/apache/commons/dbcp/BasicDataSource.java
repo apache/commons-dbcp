@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.38 $ $Date: 2004/07/11 16:51:34 $
+ * @version $Revision: 1.39 $ $Date: 2004/08/21 20:50:39 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -564,6 +564,8 @@ public class BasicDataSource implements DataSource {
      * Return the login timeout (in seconds) for connecting to the database.
      *
      * @exception SQLException if a database access error occurs
+     * @exception UnsupportedOperationException If the DataSource implementation
+     *   does not support the login timeout feature.
      */
     public int getLoginTimeout() throws SQLException {
         return createDataSource().getLoginTimeout();

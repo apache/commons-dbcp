@@ -39,7 +39,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.14 $ $Date: 2004/08/21 20:50:39 $
  */
 public class PoolingDataSource implements DataSource {
 
@@ -127,20 +127,20 @@ public class PoolingDataSource implements DataSource {
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * Do this configuration within my {@link ObjectPool}.
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException As this
+     *   implementation does not support this feature.
      */
     public int getLoginTimeout() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Login timeout is not supported.");
     }
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * Do this configuration within my {@link ObjectPool}.
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException As this
+     *   implementation does not support this feature.
      */
     public void setLoginTimeout(int seconds) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Login timeout is not supported.");
     }
 
     /**
