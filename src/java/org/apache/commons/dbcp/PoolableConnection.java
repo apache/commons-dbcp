@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/05/16 21:25:38 $
  *
  * ====================================================================
  *
@@ -71,7 +71,9 @@ import org.apache.commons.pool.ObjectPool;
  * closed.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolableConnection.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * @author Glenn L. Nielsen
+ * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Id: PoolableConnection.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -88,10 +90,24 @@ public class PoolableConnection extends DelegatingConnection {
     }
 
     /**
+     *
+     * @param conn my underlying connection
+     * @param pool the pool to which I should return when closed
+     * @param config the abandoned configuration settings
+     */
+    public PoolableConnection(Connection conn, ObjectPool pool,
+                              AbandonedConfig config) {
+        super(conn, config);
+        _pool = pool;
+    }
+
+
+    /**
      * Returns me to my pool.
      */
     public void close() throws SQLException {
         try {
+            setLastUsed(0);
             _pool.returnObject(this);
         } catch(SQLException e) {
             throw e;
@@ -108,5 +124,6 @@ public class PoolableConnection extends DelegatingConnection {
     public void reallyClose() throws SQLException {
         _conn.close();
     }
+
 }
 

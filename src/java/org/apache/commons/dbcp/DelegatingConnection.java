@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/04/03 11:57:16 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.4 2002/05/16 21:25:37 glenn Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/05/16 21:25:37 $
  *
  * ====================================================================
  *
@@ -63,6 +63,8 @@ package org.apache.commons.dbcp;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -71,21 +73,47 @@ import java.util.Map;
  * simply check to see that the {@link Connection} is active,
  * and call the corresponding method on the "delegate"
  * provided in my constructor.
+ * <p>
+ * Extends AbandonedTrace to implement Connection tracking and
+ * logging of code which created the Connection. Tracking the
+ * Connection ensures that the AbandonedObjectPool can close
+ * this connection and recycle it if its pool of connections
+ * is nearing exhaustion and this connection's last usage is
+ * older than the removeAbandonedTimeout.
  *
  * @author Rodney Waldhoff
- * @version $Id: DelegatingConnection.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
+ * @author Glenn L. Nielsen
+ * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Id: DelegatingConnection.java,v 1.4 2002/05/16 21:25:37 glenn Exp $
  */
-public class DelegatingConnection implements Connection {
+public class DelegatingConnection extends AbandonedTrace
+        implements Connection {
     /** My delegate {@link Connection}. */
     protected Connection _conn = null;
 
     protected boolean _closed = false;
 
     /**
-     * Constructor.
+     * Create a wrapper for the Connectin which traces this
+     * Connection in the AbandonedObjectPool.
+     *
      * @param c the {@link Connection} to delegate all calls to.
      */
     public DelegatingConnection(Connection c) {
+        super();
+        _conn = c;
+    }
+
+    /**
+     * Create a wrapper for the Connection which traces
+     * the Statements created so that any unclosed Statements
+     * can be closed when this Connection is closed.
+     *
+     * @param Connection the {@link Connection} to delegate all calls to.
+     * @param AbandonedConfig the configuration for tracing abandoned objects
+     */
+    public DelegatingConnection(Connection c, AbandonedConfig config) {
+        super(config);
         _conn = c;
     }
 
@@ -128,11 +156,77 @@ public class DelegatingConnection implements Connection {
         _conn = c;
     }
 
+    /**
+     * Closes the underlying connection, and close
+     * any Statements that were not explicitly closed.
+     */
+    public void close() throws SQLException
+    {
+        // The JDBC spec requires that a Connection close any open  
+        // Statement's when it is closed.
+        List statements = getTrace();
+        if( statements != null) {
+            Iterator it = statements.iterator();
+            while(it.hasNext()) {
+                ((ResultSet)it.next()).close();
+            }
+            clearTrace();
+        }
+        passivate();
+        _conn.close();
+    }
+
+    public Statement createStatement() throws SQLException {
+        checkOpen();
+
+        return new DelegatingStatement(this, _conn.createStatement());
+    }
+
+    public Statement createStatement(int resultSetType,
+                                     int resultSetConcurrency)
+            throws SQLException {
+        checkOpen();
+
+        return new DelegatingStatement
+            (this, _conn.createStatement(resultSetType,resultSetConcurrency));
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        checkOpen();
+
+        return new DelegatingPreparedStatement
+            (this, _conn.prepareStatement(sql));
+    }
+
+    public PreparedStatement prepareStatement(String sql,
+                                              int resultSetType,
+                                              int resultSetConcurrency)
+            throws SQLException {
+        checkOpen();
+
+        return new DelegatingPreparedStatement
+            (this, _conn.prepareStatement
+                (sql,resultSetType,resultSetConcurrency));
+    }
+
+    public CallableStatement prepareCall(String sql) throws SQLException {
+        checkOpen();
+
+        return new DelegatingCallableStatement(this, _conn.prepareCall(sql));
+    }
+
+    public CallableStatement prepareCall(String sql,
+                                         int resultSetType,
+                                         int resultSetConcurrency)
+            throws SQLException {
+        checkOpen();
+
+        return new DelegatingCallableStatement
+            (this, _conn.prepareCall(sql, resultSetType,resultSetConcurrency));
+    }
+
     public void clearWarnings() throws SQLException { checkOpen(); _conn.clearWarnings();}
-    public void close() throws SQLException { passivate(); _conn.close();}
     public void commit() throws SQLException { checkOpen(); _conn.commit();}
-    public Statement createStatement() throws SQLException { checkOpen(); return _conn.createStatement();}
-    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException { checkOpen(); return _conn.createStatement(resultSetType,resultSetConcurrency);}
     public boolean getAutoCommit() throws SQLException { checkOpen(); return _conn.getAutoCommit();}
     public String getCatalog() throws SQLException { checkOpen(); return _conn.getCatalog();}
     public DatabaseMetaData getMetaData() throws SQLException { checkOpen(); return _conn.getMetaData();}
@@ -142,10 +236,6 @@ public class DelegatingConnection implements Connection {
     public boolean isClosed() throws SQLException { return _closed || _conn.isClosed();}
     public boolean isReadOnly() throws SQLException { checkOpen(); return _conn.isReadOnly();}
     public String nativeSQL(String sql) throws SQLException { checkOpen(); return _conn.nativeSQL(sql);}
-    public CallableStatement prepareCall(String sql) throws SQLException { checkOpen(); return _conn.prepareCall(sql);}
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException { checkOpen(); return _conn.prepareCall(sql,resultSetType,resultSetConcurrency);}
-    public PreparedStatement prepareStatement(String sql) throws SQLException { checkOpen(); return _conn.prepareStatement(sql);}
-    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException { checkOpen(); return _conn.prepareStatement(sql,resultSetType,resultSetConcurrency);}
     public void rollback() throws SQLException { checkOpen(); _conn.rollback();}
     public void setAutoCommit(boolean autoCommit) throws SQLException { checkOpen(); _conn.setAutoCommit(autoCommit);}
     public void setCatalog(String catalog) throws SQLException { checkOpen(); _conn.setCatalog(catalog);}

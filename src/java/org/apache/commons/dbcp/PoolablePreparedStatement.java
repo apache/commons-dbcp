@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/17 14:55:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/05/16 21:25:38 $
  *
  * ====================================================================
  *
@@ -74,7 +74,9 @@ import org.apache.commons.pool.KeyedObjectPool;
  *
  * @see PoolingConnection
  * @author Rodney Waldhoff
- * @version $Id: PoolablePreparedStatement.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * @author Glenn L. Nielsen
+ * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Id: PoolablePreparedStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
     /**
@@ -100,7 +102,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
      * @param conn the {@link Connection} from which I was created
      */
     public PoolablePreparedStatement(PreparedStatement stmt, Object key, KeyedObjectPool pool, Connection conn) {
-        super(stmt);
+        super((DelegatingConnection) conn, stmt);
         _pool = pool;
         _key = key;
         _conn = conn;

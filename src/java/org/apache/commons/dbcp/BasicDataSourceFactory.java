@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.1 2002/01/16 00:19:36 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2002/01/16 00:19:36 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.2 2002/05/16 21:25:37 glenn Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/05/16 21:25:37 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2002/01/16 00:19:36 $
+ * @version $Revision: 1.2 $ $Date: 2002/05/16 21:25:37 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -176,12 +176,27 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setValidationQuery(ra.getContent().toString());
         }
 
+        ra = ref.get("removeAbandoned");
+        if (ra != null) {
+            dataSource.setRemoveAbandoned
+                (Boolean.getBoolean(ra.getContent().toString()));
+        }
+
+        ra = ref.get("removeAbandonedTimeout");
+        if (ra != null) {     
+            dataSource.setRemoveAbandonedTimeout
+                (Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("logAbandoned");
+        if (ra != null) {     
+            dataSource.setLogAbandoned
+                (Boolean.getBoolean(ra.getContent().toString()));
+        }
+
         // Return the configured data source instance
         return (dataSource);
 
     }
-
-
-
 
 }

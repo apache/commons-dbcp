@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.6 2002/05/01 06:27:52 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2002/05/01 06:27:52 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.7 2002/05/16 21:25:37 glenn Exp $
+ * $Revision: 1.7 $
+ * $Date: 2002/05/16 21:25:37 $
  *
  * ====================================================================
  *
@@ -79,8 +79,9 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * combine the <em>commons-dbcp</em> and <em>commons-pool</em> packages,
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
+ * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.6 $ $Date: 2002/05/01 06:27:52 $
+ * @version $Revision: 1.7 $ $Date: 2002/05/16 21:25:37 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -382,6 +383,75 @@ public class BasicDataSource implements DataSource {
 
     }
 
+    private AbandonedConfig abandonedConfig;
+
+    /**                       
+     * Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimout.
+     *
+     * Set to true or false, default false.
+     * If set to true a connection is considered abandoned and eligible
+     * for removal if it has been idle longer than the removeAbandonedTimeout.
+     * Setting this to true can recover db connections from poorly written    
+     * applications which fail to close a connection.                         
+     */                                                                   
+    public boolean getRemoveAbandoned() {   
+        if (abandonedConfig != null) {
+            return abandonedConfig.getRemoveAbandoned();
+        }
+        return false;
+    }                                    
+                                      
+    public void setRemoveAbandoned(boolean removeAbandoned) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setRemoveAbandoned(removeAbandoned);
+    }                                                        
+                                               
+    /**
+     * Timeout in seconds before an abandoned connection can be removed.
+     *
+     * Defaults to 300 seconds.                                         
+     */                                                                 
+    public int getRemoveAbandonedTimeout() { 
+        if (abandonedConfig != null) {
+            return abandonedConfig.getRemoveAbandonedTimeout();
+        }
+        return 300;
+    }                                        
+                                             
+    public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+    }                                                                  
+                                                             
+    /**
+     * Flag to log stack traces for application code which abandoned
+     * a Statement or Connection.
+     *
+     * Defaults to false.                
+     *                                                              
+     * Logging of abandoned Statements and Connections adds overhead
+     * for every Connection open or new Statement because a stack   
+     * trace has to be generated.                                   
+     */                                                          
+    public boolean getLogAbandoned() {   
+        if (abandonedConfig != null) {
+            return abandonedConfig.getLogAbandoned();
+        }
+        return false;
+    }                                 
+                                   
+    public void setLogAbandoned(boolean logAbandoned) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setLogAbandoned(logAbandoned);
+    }
+
 
     // --------------------------------------------------------- Public Methods
 
@@ -492,9 +562,8 @@ public class BasicDataSource implements DataSource {
                                               null, // FIXME - stmtPoolFactory?
                                               validationQuery,
                                               defaultReadOnly,
-                                              defaultAutoCommit);
-        } catch(SQLException e) {
-            throw e;
+                                              defaultAutoCommit,
+                                              abandonedConfig);
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
