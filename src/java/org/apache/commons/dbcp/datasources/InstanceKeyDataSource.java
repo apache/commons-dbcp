@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/InstanceKeyDataSource.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/10/13 05:29:36 $
+ * $Revision: 1.9 $
+ * $Date: 2003/12/26 13:17:33 $
  *
  * ====================================================================
  *
@@ -124,7 +124,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.8 2003/10/13 05:29:36 jmcnally Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.9 2003/12/26 13:17:33 dirkv Exp $
  */
 public abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
@@ -735,7 +735,15 @@ public abstract class InstanceKeyDataSource
             } else {
                 ctx = new InitialContext(jndiEnvironment);
             }
-            cpds = (ConnectionPoolDataSource) ctx.lookup(dataSourceName);
+            Object ds = ctx.lookup(dataSourceName);
+            if (ds instanceof ConnectionPoolDataSource) {
+                cpds = (ConnectionPoolDataSource) ds;
+            } else {
+                throw new SQLException("Illegal configuration: "
+                    + "DataSource " + dataSourceName
+                    + " (" + ds.getClass().getName() + ")"
+                    + " doesn't implement javax.sql.ConnectionPoolDataSource");
+            }
         }
         
         // try to get a connection with the supplied username/password
