@@ -77,7 +77,7 @@ Timeline:
   review period and when mayor issues are resolved.
 
 * Implementation Period
-  25 October 2003 - 31 October 2003
+  16 October 2003 - 19 October 2003
   (assuming the Review Period is not extended)
 
   During this period, any remaining implementation, testing
