@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingPreparedStatement.java,v $
- * $Revision: 1.15 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.16 $
+ * $Date: 2003/12/26 15:16:28 $
  *
  * ====================================================================
  *
@@ -65,7 +65,6 @@ import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Ref;
 import java.sql.ResultSet;
@@ -91,14 +90,14 @@ import java.util.List;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.15 $ $Date: 2003/10/09 21:04:44 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.16 $ $Date: 2003/12/26 15:16:28 $
  */
-public class DelegatingPreparedStatement extends AbandonedTrace
+public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {
+
     /** My delegate. */
     protected PreparedStatement _stmt = null;
-    /** The connection that created me. **/
-    protected DelegatingConnection _conn = null;
 
     /**
      * Create a wrapper for the Statement which traces this
@@ -110,21 +109,12 @@ public class DelegatingPreparedStatement extends AbandonedTrace
      */
     public DelegatingPreparedStatement(DelegatingConnection c,
                                        PreparedStatement s) {
-        super(c);
+        super(c, s);
         _stmt = s;
-        _conn = c;
-    }
-
-    /**
-     * Returns my underlying {@link PreparedStatement}.
-     * @return my underlying {@link PreparedStatement}.
-     */
-    public PreparedStatement getDelegate() {
-        return _stmt;
     }
 
     public boolean equals(Object obj) {
-        PreparedStatement delegate = getInnermostDelegate();
+        PreparedStatement delegate = (PreparedStatement) getInnermostDelegate();
         if (delegate == null) {
             return false;
         }
@@ -137,42 +127,9 @@ public class DelegatingPreparedStatement extends AbandonedTrace
         }
     }
 
-    public int hashCode() {
-        Object obj = getInnermostDelegate();
-        if (obj == null) {
-            return 0;
-        }
-        return obj.hashCode();
-    }
-
-    /**
-     * If my underlying {@link PreparedStatement} is not a
-     * <tt>DelegatingPreparedStatement</tt>, returns it,
-     * otherwise recursively invokes this method on
-     * my delegate.
-     * <p>
-     * Hence this method will return the first
-     * delegate that is not a <tt>DelegatingPreparedStatement</tt>,
-     * or <tt>null</tt> when no non-<tt>DelegatingPreparedStatement</tt>
-     * delegate can be found by transversing this chain.
-     * <p>
-     * This method is useful when you may have nested
-     * <tt>DelegatingPreparedStatement</tt>s, and you want to make
-     * sure to obtain a "genuine" {@link PreparedStatement}.
-     */
-    public PreparedStatement getInnermostDelegate() {
-        PreparedStatement s = _stmt;
-        while(s != null && s instanceof DelegatingPreparedStatement) {
-            s = ((DelegatingPreparedStatement)s).getDelegate();
-            if(this == s) {
-                return null;
-            }
-        }
-        return s;
-    }
-
     /** Sets my delegate. */
     public void setDelegate(PreparedStatement s) {
+        super.setDelegate(s);
         _stmt = s;
     }
 
@@ -183,11 +140,6 @@ public class DelegatingPreparedStatement extends AbandonedTrace
     public void close() throws SQLException {
         _stmt.close();
         passivate();
-    }
-
-    public Connection getConnection() throws SQLException {
-        checkOpen();
-        return _conn; // return the delegating connection that created this
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
@@ -266,12 +218,6 @@ public class DelegatingPreparedStatement extends AbandonedTrace
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException { checkOpen(); _stmt.setTimestamp(parameterIndex,x,cal);}
     public void setNull (int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
 
-    protected void checkOpen() throws SQLException {
-        if (_closed) {
-            throw new SQLException("PreparedStatement is closed.");
-        }
-    }
-
     protected void activate() {
         _closed = false;
         if(_stmt instanceof DelegatingPreparedStatement) {
@@ -303,12 +249,6 @@ public class DelegatingPreparedStatement extends AbandonedTrace
             ((DelegatingPreparedStatement)_stmt).passivate();
         }
     }
-
-    protected boolean isClosed() {
-        return _closed;
-    }
-
-    protected boolean _closed = false;
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system

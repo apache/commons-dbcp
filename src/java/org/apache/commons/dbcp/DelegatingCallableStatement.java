@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v $
- * $Revision: 1.12 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.13 $
+ * $Date: 2003/12/26 15:16:28 $
  *
  * ====================================================================
  *
@@ -78,7 +78,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLWarning;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -97,15 +96,14 @@ import java.util.List;
  *
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.12 $ $Date: 2003/10/09 21:04:44 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.13 $ $Date: 2003/12/26 15:16:28 $
  */
-public class DelegatingCallableStatement extends AbandonedTrace
+public class DelegatingCallableStatement extends DelegatingPreparedStatement
         implements CallableStatement {
 
     /** My delegate. */
     protected CallableStatement _stmt = null;
-    /** The connection that created me. **/
-    protected DelegatingConnection _conn = null;
 
     /**
      * Create a wrapper for the Statement which traces this
@@ -116,18 +114,12 @@ public class DelegatingCallableStatement extends AbandonedTrace
      */
     public DelegatingCallableStatement(DelegatingConnection c,
                                        CallableStatement s) {
-        super(c);
-        _conn = c;
+        super(c, s);
         _stmt = s;
     }
 
-    /** Return the {@link CallableStatement} I'm wrapping. */
-    public CallableStatement getDelegate() {
-        return _stmt;
-    }
-
     public boolean equals(Object obj) {
-        CallableStatement delegate = getInnermostDelegate();
+        CallableStatement delegate = (CallableStatement) getInnermostDelegate();
         if (delegate == null) {
             return false;
         }
@@ -140,40 +132,12 @@ public class DelegatingCallableStatement extends AbandonedTrace
         }
     }
 
-    public int hashCode() {
-        Object obj = getInnermostDelegate();
-        if (obj == null) {
-            return 0;
-        }
-        return obj.hashCode();
+    /** Sets my delegate. */
+    public void setDelegate(CallableStatement s) {
+        super.setDelegate(s);
+        _stmt = s;
     }
 
-    /**
-     * If my underlying {@link CallableStatement} is not a
-     * <tt>DelegatingCallableStatement</tt>, returns it,
-     * otherwise recursively invokes this method on
-     * my delegate.
-     * <p>
-     * Hence this method will return the first
-     * delegate that is not a <tt>DelegatingCallableStatement</tt>,
-     * or <tt>null</tt> when no non-<tt>DelegatingCallableStatement</tt>
-     * delegate can be found by transversing this chain.
-     * <p>
-     * This method is useful when you may have nested
-     * <tt>DelegatingCallableStatement</tt>s, and you want to make
-     * sure to obtain a "genuine" {@link CallableStatement}.
-     */
-    public CallableStatement getInnermostDelegate() {
-        CallableStatement s = _stmt;
-        while(s != null && s instanceof DelegatingPreparedStatement) {
-            s = ((DelegatingCallableStatement)s).getDelegate();
-            if(this == s) {
-                return null;
-            }
-        }
-        return s;
-    }
-    
     /**
      * Close this DelegatingCallableStatement, and close
      * any ResultSets that were not explicitly closed.
@@ -197,10 +161,6 @@ public class DelegatingCallableStatement extends AbandonedTrace
         }
 
         _stmt.close();
-    }
-
-    public Connection getConnection() throws SQLException {
-      return _conn;
     }
 
     public ResultSet executeQuery() throws SQLException {
@@ -292,7 +252,6 @@ public class DelegatingCallableStatement extends AbandonedTrace
     public void clearWarnings() throws SQLException { _stmt.clearWarnings();  }
     public void setCursorName(String name) throws SQLException { _stmt.setCursorName( name);  }
     public boolean execute(String sql) throws SQLException { return _stmt.execute( sql);  }
-
 
     public int getUpdateCount() throws SQLException { return _stmt.getUpdateCount();  }
     public boolean getMoreResults() throws SQLException { return _stmt.getMoreResults();  }
