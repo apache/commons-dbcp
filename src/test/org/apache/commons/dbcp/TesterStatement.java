@@ -27,7 +27,7 @@ import java.sql.Statement;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.15 $ $Date: 2004/03/07 10:54:55 $
  */
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {
@@ -61,6 +61,8 @@ public class TesterStatement implements Statement {
             return null;
         } if("invalid".equals(sql)) {
             throw new SQLException("invalid query");
+        } if ("broken".equals(sql)) {
+            throw new SQLException("broken connection");
         } if("select username".equals(sql)) {
             String username = ((TesterConnection) _connection).getUsername();
             Object[][] data = {{username}};

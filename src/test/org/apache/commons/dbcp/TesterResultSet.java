@@ -33,7 +33,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.11 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.12 $ $Date: 2004/03/07 10:54:55 $
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {
@@ -90,6 +90,9 @@ public class TesterResultSet implements ResultSet {
 
     public String getString(int columnIndex) throws SQLException {
         checkOpen();
+        if (columnIndex == -1) {
+            throw new SQLException("broken connection");
+        }
         if (_data != null) {
             return (String) getObject(columnIndex);
         }
