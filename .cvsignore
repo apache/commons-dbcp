@@ -1,2 +1,5 @@
 build.properties
 dist
+.classpath
+.project
+target
