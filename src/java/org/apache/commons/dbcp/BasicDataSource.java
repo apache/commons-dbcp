@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.5 2002/04/30 18:06:30 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2002/04/30 18:06:30 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.6 2002/05/01 06:27:52 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/05/01 06:27:52 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2002/04/30 18:06:30 $
+ * @version $Revision: 1.6 $ $Date: 2002/05/01 06:27:52 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -184,7 +184,7 @@ public class BasicDataSource implements DataSource {
      */
     public int getNumActive() {
         if (connectionPool != null) {
-            return (connectionPool.numActive());
+            return (connectionPool.getNumActive());
         } else {
             return (0);
         }
@@ -197,7 +197,7 @@ public class BasicDataSource implements DataSource {
      */
     public int getNumIdle() {
         if (connectionPool != null) {
-            return (connectionPool.numIdle());
+            return (connectionPool.getNumIdle());
         } else {
             return (0);
         }
