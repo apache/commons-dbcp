@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/08/25 16:18:51 $
+ * $Revision: 1.7 $
+ * $Date: 2003/08/26 14:20:15 $
  *
  * ====================================================================
  *
@@ -62,12 +62,14 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.6 $ $Date: 2003/08/25 16:18:51 $
+ * @version $Revision: 1.7 $ $Date: 2003/08/26 14:20:15 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -121,4 +123,41 @@ public class TestBasicDataSource extends TestConnectionPool {
         conn3.close();
     }
 
+    public void testPreparedStatementPooling() throws Exception {
+        ds.setPoolPreparedStatements(true);
+        ds.setMaxOpenPreparedStatements(2);
+        
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        
+        PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        
+        PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        assertNotNull(stmt2);
+        
+        assertTrue(stmt1 != stmt2);
+        
+        // go over the maxOpen limit
+        PreparedStatement stmt3 = null;
+		try {
+			stmt3 = conn.prepareStatement("select 'c' from dual");
+            fail("expected SQLException");
+		} 
+        catch (SQLException e) {}
+        
+        // make idle
+        stmt2.close();
+
+        // test cleanup the 'b' statement
+        stmt3 = conn.prepareStatement("select 'c' from dual");
+        assertNotNull(stmt3);
+        assertTrue(stmt3 != stmt1);
+        assertTrue(stmt3 != stmt2);
+        
+        // normal reuse of statement
+        stmt1.close();
+        PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt4);
+    }
 }
