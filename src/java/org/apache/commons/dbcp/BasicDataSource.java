@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.25 $
- * $Date: 2003/09/14 00:15:47 $
+ * $Revision: 1.26 $
+ * $Date: 2003/09/20 14:28:54 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.25 $ $Date: 2003/09/14 00:15:47 $
+ * @version $Revision: 1.26 $ $Date: 2003/09/20 14:28:54 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -132,6 +132,24 @@ public class BasicDataSource implements DataSource {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
+    /**
+     * The default "catalog" of connections created by this pool.
+     */
+    protected String defaultCatalog = null;
+
+    public String getDefaultCatalog() {
+        return this.defaultCatalog;
+    }
+
+    public void setDefaultCatalog(String defaultCatalog) {
+        if ((defaultCatalog != null) && (defaultCatalog.trim().length() > 0)) {
+            this.defaultCatalog = defaultCatalog;
+        }
+        else {
+            this.defaultCatalog = null;
+        }
+    }
+    
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
@@ -800,6 +818,7 @@ public class BasicDataSource implements DataSource {
                                               defaultReadOnly,
                                               defaultAutoCommit,
                                               defaultTransactionIsolation,
+                                              defaultCatalog,
                                               abandonedConfig);
             if (connectionFactory == null) {
                 throw new SQLException("Cannot create PoolableConnectionFactory");
