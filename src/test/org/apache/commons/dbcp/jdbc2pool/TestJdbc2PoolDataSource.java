@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.6 2003/03/07 00:24:09 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2003/03/07 00:24:09 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.7 2003/04/15 01:56:28 dgraham Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/04/15 01:56:28 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
 /**
  * @author John McNally
- * @version $Revision: 1.6 $ $Date: 2003/03/07 00:24:09 $
+ * @version $Revision: 1.7 $ $Date: 2003/04/15 01:56:28 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -170,9 +170,16 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         }
     }
 
-    public void testIncorrectPassword() 
-        throws Exception 
+    public void testIncorrectPassword() throws Exception 
     {
+        try {
+            // Use bad password
+            ds.getConnection("u", "zlsafjk").close();
+        } catch (SQLException e1) {
+            // should fail
+        }
+        
+        // Use good password
         ds.getConnection("u", "p").close();
         try 
         {
@@ -187,6 +194,9 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
             }
             // else the exception was expected
         }
+        
+        // Make sure we can still use our good password.
+        ds.getConnection("u", "p").close();
     }
 
     public void testSimple2() 
