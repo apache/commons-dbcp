@@ -35,7 +35,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.19 $ $Date: 2004/05/17 18:36:45 $
+ * @version $Revision: 1.20 $ $Date: 2004/05/20 17:54:50 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -66,6 +66,7 @@ public class TestManual extends TestConnectionPool {
     }
 
     public void tearDown() throws Exception {
+        driver.closePool("test");
         DriverManager.deregisterDriver(driver);
     }
 
