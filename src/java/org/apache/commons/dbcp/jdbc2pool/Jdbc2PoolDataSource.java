@@ -145,7 +145,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.7 2002/11/16 19:18:27 jmcnally Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.8 2003/03/06 18:13:37 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -1540,7 +1540,7 @@ public class Jdbc2PoolDataSource
                 RefAddr ra = ref.get("isNew");
                 if (ra != null && ra.getContent() != null) 
                 {
-                    isNew = Boolean.getBoolean(ra.getContent().toString());
+                    isNew = Boolean.valueOf(ra.getContent().toString()).booleanValue();
                 }
 
                 ra = ref.get("instanceKey");
@@ -1559,7 +1559,7 @@ public class Jdbc2PoolDataSource
                 if (ra != null && ra.getContent() != null) 
                 {
                     setDefaultAutoCommit
-                        (Boolean.getBoolean(ra.getContent().toString()));
+                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("defaultMaxActive");
@@ -1587,7 +1587,7 @@ public class Jdbc2PoolDataSource
                 if (ra != null && ra.getContent() != null) 
                 {
                     setDefaultReadOnly
-                        (Boolean.getBoolean(ra.getContent().toString()));
+                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("description");
@@ -1655,14 +1655,14 @@ public class Jdbc2PoolDataSource
                 if (ra != null && ra.getContent() != null) 
                 {
                     setTestOnBorrow
-                        (Boolean.getBoolean(ra.getContent().toString()));
+                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("testOnReturn");
                 if (ra != null && ra.getContent() != null) 
                 {
                     setTestOnReturn
-                        (Boolean.getBoolean(ra.getContent().toString()));
+                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("timeBetweenEvictionRunsMillis");
@@ -1690,7 +1690,7 @@ public class Jdbc2PoolDataSource
                 if (ra != null && ra.getContent() != null) 
                 {
                     setTestWhileIdle
-                        (Boolean.getBoolean(ra.getContent().toString()));
+                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
                 }
                 
                 ra = ref.get("validationQuery");
