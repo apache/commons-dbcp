@@ -3,7 +3,7 @@
   <extend>../commons-build/project.xml</extend>
   <name>Commons DBCP</name>
   <id>commons-dbcp</id>
-  <logo>/images/dbcp-logo-blue.jpg</logo>
+  <logo>/images/dbcp-logo-white.png</logo>
   <url>http://jakarta.apache.org/commons/dbcp/</url>
   <inceptionYear>2001</inceptionYear>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
