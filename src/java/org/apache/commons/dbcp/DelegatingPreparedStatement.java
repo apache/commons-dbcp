@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.6 2002/10/31 21:14:32 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2002/10/31 21:14:32 $
+ * $Id: DelegatingPreparedStatement.java,v 1.7 2002/11/01 15:42:32 rwaldhoff Exp $
+ * $Revision: 1.7 $
+ * $Date: 2002/11/01 15:42:32 $
  *
  * ====================================================================
  *
@@ -85,7 +85,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.6 $ $Date: 2002/10/31 21:14:32 $
+ * @version $Revision: 1.7 $ $Date: 2002/11/01 15:42:32 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -153,8 +153,8 @@ public class DelegatingPreparedStatement extends AbandonedTrace
      * any ResultSets that were not explicitly closed.
      */
     public void close() throws SQLException {
-        passivate();
         _stmt.close();
+        passivate();
     }
 
     public Connection getConnection() throws SQLException {
@@ -272,6 +272,10 @@ public class DelegatingPreparedStatement extends AbandonedTrace
         if(_stmt instanceof DelegatingPreparedStatement) {
             ((DelegatingPreparedStatement)_stmt).passivate();
         }
+    }
+
+    protected boolean isClosed() {
+        return _closed;
     }
 
     protected boolean _closed = false;
