@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.6 2002/03/19 02:09:55 jefft Exp $ -->
+<!-- $Id: build.xml,v 1.7 2002/03/19 06:05:34 craigmcc Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -49,9 +49,9 @@
       <property name="Name-Long" value="Jakarta Commons Database Connection Pool"/>
 
       <property name="test.entry" value="org.apache.commons.dbcp.TestAll"/>
-      <property name="test.failonerror" value="true" /> 
-      <property name="test.runner" value="junit.textui.TestRunner" /> 
-      
+      <property name="test.failonerror" value="true" />
+      <property name="test.runner" value="junit.textui.TestRunner" />
+
       <property name="workdir" value="${java.io.tmpdir}/buildtemp_${DSTAMP}${TSTAMP}"/>
       <property name="source" value="${basedir}"/>
       <property name="source.src" value="${basedir}/src"/>
@@ -59,6 +59,7 @@
       <property name="source.src.test" value="${source.src}/test"/>
       <property name="source.doc" value="${basedir}/doc"/>
       <property name="dest" value="${basedir}/dist"/>
+      <property name="dest.src" value="${dest}/src"/>
       <property name="dest.classes" value="${dest}/classes"/>
       <property name="dest.doc" value="${dest}/docs"/>
       <property name="dest.doc.api" value="${dest.doc}/api"/>
@@ -66,9 +67,10 @@
       <property name="dest.jardir.jar" value="${dest.jardir}/${name}.jar"/>
 
       <available property="available-doc" file="${source.doc}"/> <!-- does this module have docs? -->
-      <available property="available-src-java" file="${source.src.java}"/> <!-- does this module have java src? -->      
-      <available property="available-src-test" file="${source.src.test}"/> <!-- does this module have test src? -->      
+      <available property="available-src-java" file="${source.src.java}"/> <!-- does this module have java src? -->
+      <available property="available-src-test" file="${source.src.test}"/> <!-- does this module have test src? -->
       <available property="jndi.present" classname="javax.naming.Context"/>
+      <available property="jdbc3.present" classname="java.sql.Savepoint"/>
 
    </target>
 
@@ -171,10 +173,28 @@
 
    <target name="build" depends="init,build-java" description="compiles source files"/>
 
-   <target name="build-java" depends="init" if="available-src-java">
+   <target name="copy-src" depends="init">
+      <mkdir dir="${dest.src}"/>
+      <!-- the source code directory -->
+      <copy todir="${dest.src}/org" filtering="yes">
+         <fileset dir="${source.src.java}" defaultexcludes="no">
+            <include name="**/*.java"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+            <include name="**/package.html"/>
+         </fileset>
+      </copy>
+   </target>
+
+   <target name="prepare-jdbc3" if="jdbc3.present">
+      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY" value=""/>
+      <replace dir="${dest.src}" token="JDBC_3_ANT_KEY */" value=""/>
+   </target>
+
+   <target name="build-java" depends="copy-src,prepare-jdbc3" if="available-src-java">
       <mkdir dir="${dest.classes}"/>
       <javac destdir="${dest.classes}"
-             srcdir="${source.src.java}"
+             srcdir="${dest.src}"
              classpath="${classpath}"
              debug="false"
              deprecation="true"
@@ -185,9 +205,17 @@
    </target>
 
    <target name="build-test" depends="init,build-java" if="available-src-test">
+      <mkdir dir="${dest.src}"/>
+      <!-- the source code directory -->
+      <copy todir="${dest.src}/org" filtering="yes">
+        <fileset dir="${source.src.test}" defaultexcludes="no">
+          <include name="**/*.java"/>
+        </fileset>
+      </copy>
+      <antcall target="prepare-jdbc3"/>
       <mkdir dir="${dest.classes}"/>
       <javac destdir="${dest.classes}"
-             srcdir="${source.src.test}"
+             srcdir="${dest.src}"
              classpath="${classpath}"
              debug="false"
              deprecation="true"

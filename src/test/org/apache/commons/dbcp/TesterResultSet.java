@@ -622,7 +622,7 @@ public class TesterResultSet implements ResultSet {
         return null;
     }
 
-    public java.sql.Timestamp getTimestamp(String columnName, Calendar cal)	
+    public java.sql.Timestamp getTimestamp(String columnName, Calendar cal)
       throws SQLException {
         checkOpen();
         return null;
@@ -633,14 +633,60 @@ public class TesterResultSet implements ResultSet {
             throw new SQLException("Connection is closed.");
         }
     }
+
+    // ------------------- JDBC 3.0 -----------------------------------------
+    // Will be uncommented by the build process on a JDBC 3.0 system
+
+/* JDBC_3_ANT_KEY
+
+    public java.net.URL getURL(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public java.net.URL getURL(String columnName) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateRef(int columnIndex, java.sql.Ref x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateRef(String columnName, java.sql.Ref x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(int columnIndex, java.sql.Blob x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(String columnName, java.sql.Blob x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(int columnIndex, java.sql.Clob x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(String columnName, java.sql.Clob x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateArray(int columnIndex, java.sql.Array x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateArray(String columnName, java.sql.Array x)
+        throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+JDBC_3_ANT_KEY */
+
 }
-
-
-
-
-
-
-
-
-
-
