@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.9 2003/08/11 23:34:52 dirkv Exp $
- * $Revision: 1.9 $
- * $Date: 2003/08/11 23:34:52 $
+ * $Id: TestPerUserPoolDataSource.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * $Revision: 1.1 $
+ * $Date: 2003/08/12 06:09:20 $
  *
  * ====================================================================
  *
@@ -59,7 +59,7 @@
  *
  */
 
-package org.apache.commons.dbcp.jdbc2pool;
+package org.apache.commons.dbcp.datasources;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -77,15 +77,15 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2003/08/11 23:34:52 $
+ * @version $Revision: 1.1 $ $Date: 2003/08/12 06:09:20 $
  */
-public class TestJdbc2PoolDataSource extends TestConnectionPool {
-    public TestJdbc2PoolDataSource(String testName) {
+public class TestPerUserPoolDataSource extends TestConnectionPool {
+    public TestPerUserPoolDataSource(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestJdbc2PoolDataSource.class);
+        return new TestSuite(TestPerUserPoolDataSource.class);
     }
 
     protected Connection getConnection() throws Exception {
@@ -101,7 +101,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         pcds.setUser("foo");
         pcds.setPassword("bar");
 
-        Jdbc2PoolDataSource tds = new Jdbc2PoolDataSource();
+        PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxActive(getMaxActive());
         tds.setDefaultMaxWait((int)(getMaxWait()));
@@ -337,7 +337,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
     }
     
     public void testPerUserMethods() throws Exception {
-        Jdbc2PoolDataSource tds = (Jdbc2PoolDataSource) ds;
+        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         
         // you need to set maxActive otherwise there is no accounting
         tds.setPerUserMaxActive("u1", new Integer(5));

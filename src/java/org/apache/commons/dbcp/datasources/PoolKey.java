@@ -1,7 +1,7 @@
 /* 
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PooledConnectionAndInfo.java,v 1.3 2003/06/29 12:42:16 mpoeschl Exp $
- * $Revision: 1.3 $
- * $Date: 2003/06/29 12:42:16 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PoolKey.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * $Revision: 1.1 $
+ * $Date: 2003/08/12 06:09:20 $
  * 
  * ====================================================================
  * 
@@ -58,45 +58,45 @@
  * <http://www.apache.org/>.
  */
  
-package org.apache.commons.dbcp.jdbc2pool;
+package org.apache.commons.dbcp.datasources;
+ 
+import java.io.Serializable;
 
-import javax.sql.PooledConnection;
-
-final class PooledConnectionAndInfo {
-    private final PooledConnection pooledConnection;
-    private final String password;
-    private final String username;
-    private final UserPassKey upkey;
-
-    PooledConnectionAndInfo(PooledConnection pc, 
-                            String username, String password) {
-        this.pooledConnection = pc;
+class PoolKey implements Serializable {
+    private String datasourceName;
+    private String username;
+    
+    PoolKey(String datasourceName, String username) {
+        this.datasourceName = datasourceName;
         this.username = username;
-        this.password = password;
-        upkey = new UserPassKey(username, password);
-    }
-
-    final PooledConnection getPooledConnection() {
-        return pooledConnection;
-    }
-
-    final UserPassKey getUserPassKey() {
-        return upkey;
-    }
-
-    /**
-     * Get the value of password.
-     * @return value of password.
-     */
-    final String getPassword() {
-        return password;
     }
     
-    /**
-     * Get the value of username.
-     * @return value of username.
-     */
-    final String getUsername() {
-        return username;
+    public boolean equals(Object obj) {
+        if (obj instanceof PoolKey) {
+            PoolKey pk = (PoolKey)obj;
+            return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
+                (null == username ? null == pk.username : username.equals(pk.username));
+        } else {
+            return false;   
+        }
+    }
+
+    public int hashCode() {
+        int h = 0;
+        if (datasourceName != null) {
+            h += datasourceName.hashCode();
+        }
+        if (username != null) {
+            h = 29 * h + username.hashCode();
+        }
+        return h;
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer(50);
+        sb.append("PoolKey(");
+        sb.append(username).append(", ").append(datasourceName);
+        sb.append(')');
+        return sb.toString();
     }
 }
