@@ -73,7 +73,7 @@ import java.sql.SQLException;
  * SQLException.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConnectionImpl.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
+ * @version $Id: ConnectionImpl.java,v 1.3 2003/03/06 00:04:58 rwaldhoff Exp $
  */
 class ConnectionImpl 
     implements Connection
@@ -469,9 +469,9 @@ class ConnectionImpl
     }
 
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public int getHoldability() throws SQLException {
         assertOpen();
@@ -550,5 +550,5 @@ class ConnectionImpl
         return connection.prepareStatement(sql, columnNames);
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 }

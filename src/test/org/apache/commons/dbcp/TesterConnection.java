@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/19 06:05:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.3 2003/03/06 00:04:59 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/03/06 00:04:59 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  * A dummy {@link Connection}, for testing purposes.
  * @author Rodney Waldhoff
- * @version $Id: TesterConnection.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
+ * @version $Id: TesterConnection.java,v 1.3 2003/03/06 00:04:59 rwaldhoff Exp $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -202,7 +202,7 @@ public class TesterConnection implements Connection {
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public int getHoldability() throws SQLException {
         throw new SQLException("Not implemented.");
@@ -264,6 +264,6 @@ public class TesterConnection implements Connection {
         throw new SQLException("Not implemented.");
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: TesterStatement.java,v 1.4 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: TesterStatement.java,v 1.5 2003/03/06 00:04:59 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/03/06 00:04:59 $
  *
  * ====================================================================
  *
@@ -234,7 +234,7 @@ public class TesterStatement implements Statement {
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -279,6 +279,6 @@ public class TesterStatement implements Statement {
         throw new SQLException("Not implemented.");
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }

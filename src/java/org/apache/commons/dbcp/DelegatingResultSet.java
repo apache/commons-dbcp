@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.5 2002/11/28 19:09:36 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2002/11/28 19:09:36 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.6 2003/03/06 00:04:58 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/03/06 00:04:58 $
  *
  * ====================================================================
  *
@@ -279,7 +279,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public java.net.URL getURL(int columnIndex) throws SQLException {
         return _res.getURL(columnIndex);
@@ -329,5 +329,5 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         _res.updateArray(columnName, x);
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: TesterPreparedStatement.java,v 1.3 2002/10/31 21:41:50 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/10/31 21:41:50 $
+ * $Id: TesterPreparedStatement.java,v 1.4 2003/03/06 00:04:59 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 00:04:59 $
  *
  * ====================================================================
  *
@@ -247,7 +247,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -301,6 +301,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         throw new SQLException("Not implemented.");
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }
