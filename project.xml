@@ -4,8 +4,8 @@
   <extend>../project.xml</extend>
   <id>commons-dbcp</id>
   <name>DBCP</name>
-  <currentVersion>1.0-dev</currentVersion>
-  <inceptionYear>2002</inceptionYear>
+  <currentVersion>1.1-dev</currentVersion>
+  <inceptionYear>2001</inceptionYear>
   <gumpRepositoryId>jakarta</gumpRepositoryId>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
 
@@ -39,8 +39,8 @@
       <organization></organization>
     </developer>
     <developer>
-      <name>Rodney Waldoff</name>
-      <id>rwaldof</id>
+      <name>Rodney Waldhoff</name>
+      <id>rwaldhoff</id>
       <email></email>
       <organization></organization>
     </developer>
