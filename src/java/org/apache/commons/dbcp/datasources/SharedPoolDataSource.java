@@ -38,7 +38,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * maximum number of Connections in this datasource.
  *
  * @author John D. McNally
- * @version $Revision: 1.9 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.10 $ $Date: 2004/10/20 20:46:30 $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
@@ -210,11 +210,11 @@ public class SharedPoolDataSource
     protected void setupDefaults(Connection con, String username)
         throws SQLException {
         con.setAutoCommit(isDefaultAutoCommit());
-        con.setReadOnly(isDefaultReadOnly());
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
+        con.setReadOnly(isDefaultReadOnly());
     }
 
     /**
