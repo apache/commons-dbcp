@@ -40,7 +40,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.17 $ $Date: 2004/03/06 13:35:31 $
+ * @version $Revision: 1.18 $ $Date: 2004/08/21 21:00:15 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -292,6 +292,15 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     public int[] executeBatch() throws SQLException
     { checkOpen(); try { return _stmt.executeBatch(); } catch (SQLException e) { handleException(e); return null; } }
+
+    /**
+     * Returns a String representation of this object.
+     *
+     * @return String
+     */
+    public String toString() {
+	return _stmt.toString();
+    }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system

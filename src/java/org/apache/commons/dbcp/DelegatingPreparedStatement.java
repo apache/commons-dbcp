@@ -44,7 +44,7 @@ import java.util.Calendar;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.22 $ $Date: 2004/03/06 13:35:31 $
+ * @version $Revision: 1.23 $ $Date: 2004/08/21 21:00:15 $
  */
 public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {
@@ -199,6 +199,15 @@ public class DelegatingPreparedStatement extends DelegatingStatement
 
     public void setNull(int paramIndex, int sqlType, String typeName) throws SQLException
     { checkOpen(); try { _stmt.setNull(paramIndex,sqlType,typeName); } catch (SQLException e) { handleException(e); } }
+
+    /**
+     * Returns a String representation of this object.
+     *
+     * @return String
+     */
+    public String toString() {
+	return _stmt.toString();
+    }
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
