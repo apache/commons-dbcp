@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.11 2002/07/21 00:38:35 craigmcc Exp $
- * $Revision: 1.11 $
- * $Date: 2002/07/21 00:38:35 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.12 2003/03/06 14:58:42 rwaldhoff Exp $
+ * $Revision: 1.12 $
+ * $Date: 2003/03/06 14:58:42 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.11 $ $Date: 2002/07/21 00:38:35 $
+ * @version $Revision: 1.12 $ $Date: 2003/03/06 14:58:42 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -177,7 +177,98 @@ public class BasicDataSource implements DataSource {
         this.maxWait = maxWait;
     }
 
+    /**
+     * The indication of whether objects will be validated before being
+     * borrowed from the pool.  If the object fails to validate, it will be
+     * dropped from the pool, and we will attempt to borrow another.
+     */
+    protected boolean testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
 
+    public boolean getTestOnBorrow() {
+        return (this.testOnBorrow);
+    }
+
+    public void setTestOnBorrow(boolean testOnBorrow) {
+        this.testOnBorrow = testOnBorrow;
+    }
+
+    /**
+     * The indication of whether objects will be validated before being
+     * returned to the pool.
+     */
+    protected boolean testOnReturn =  GenericObjectPool.DEFAULT_TEST_ON_RETURN;
+
+    public boolean getTestOnReturn() {
+        return (this.testOnReturn);
+    }
+
+    public void setTestOnReturn(boolean testOnReturn) {
+        this.testOnReturn = testOnReturn;
+    }
+
+
+    /**
+     * The number of milliseconds to sleep between runs of the idle object
+     * evictor thread.  When non-positive, no idle object evictor thread will
+     * be run.
+     */
+    protected long timeBetweenEvictionRunsMillis =
+        GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+        
+    public long getTimeBetweenEvictionRunsMillis() {
+        return (this.timeBetweenEvictionRunsMillis);
+    }
+
+    public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
+        this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+    }
+
+
+    /**
+     * The number of objects to examine during each run of the idle object
+     * evictor thread (if any).
+     */
+    protected int numTestsPerEvictionRun =
+        GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+
+    public int getNumTestsPerEvictionRun() {
+        return (this.numTestsPerEvictionRun);
+    }
+
+    public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
+        this.numTestsPerEvictionRun = numTestsPerEvictionRun;
+    }
+
+
+    /**
+     * The minimum amount of time an object may sit idle in the pool before it
+     * is eligable for eviction by the idle object evictor (if any).
+     */
+    protected long minEvictableIdleTimeMillis =
+        GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+
+    public long getMinEvictableIdleTimeMillis() {
+        return (this.minEvictableIdleTimeMillis);
+    }
+
+    public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
+        this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+
+    /**
+     * The indication of whether objects will be validated by the idle object
+     * evictor (if any).  If an object fails to validate, it will be dropped
+     * from the pool.
+     */
+    protected boolean testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
+
+    public boolean getTestWhileIdle() {
+        return (this.testWhileIdle);
+    }
+
+    public void setTestWhileIdle(boolean testWhileIdle) {
+        this.testWhileIdle = testWhileIdle;
+    }
 
     /**
      * [Read Only] The current number of active connections that have been
@@ -546,6 +637,13 @@ public class BasicDataSource implements DataSource {
         connectionPool.setMaxActive(maxActive);
         connectionPool.setMaxIdle(maxIdle);
         connectionPool.setMaxWait(maxWait);
+        connectionPool.setTestOnBorrow(testOnBorrow);
+        connectionPool.setTestOnReturn(testOnReturn);
+        connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+        connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        connectionPool.setTestWhileIdle(testWhileIdle);
+        
         if (validationQuery != null) {
             connectionPool.setTestOnBorrow(true);
         }
