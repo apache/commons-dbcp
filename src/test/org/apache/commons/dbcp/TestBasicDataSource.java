@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/09/14 00:19:43 $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/20 14:29:59 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.9 $ $Date: 2003/09/14 00:19:43 $
+ * @version $Revision: 1.10 $ $Date: 2003/09/20 14:29:59 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -85,6 +85,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     private BasicDataSource ds = null;
+    private static String CATALOG = "test catalog";
     
     public void setUp() throws Exception {
         super.setUp();
@@ -96,6 +97,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ds.setDefaultCatalog(CATALOG);
         ds.setUsername("username");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
@@ -213,6 +215,30 @@ public class TestBasicDataSource extends TestConnectionPool {
             if (e.toString().indexOf("invalid") < 0) {
                 fail("expected detailed error message");
             }
+        }
+    }
+    
+    public void testDefaultCatalog() throws Exception {
+        Connection[] c = new Connection[getMaxActive()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = getConnection();
+            assertTrue(c[i] != null);
+            assertEquals(CATALOG, c[i].getCatalog()); 
+        }
+
+        for (int i = 0; i < c.length; i++) {
+            c[i].setCatalog("error");
+            c[i].close();
+        }
+        
+        for (int i = 0; i < c.length; i++) {
+            c[i] = getConnection();
+            assertTrue(c[i] != null);
+            assertEquals(CATALOG, c[i].getCatalog()); 
+        }        
+
+        for (int i = 0; i < c.length; i++) {
+            c[i].close();
         }
     }
 }
