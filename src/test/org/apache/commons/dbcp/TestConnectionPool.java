@@ -1,7 +1,7 @@
 /*
- * $Id: TestConnectionPool.java,v 1.2 2002/11/08 19:17:24 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/11/08 19:17:24 $
+ * $Id: TestConnectionPool.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/11/08 19:37:26 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -79,7 +79,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * 
- * @version $Id: TestConnectionPool.java,v 1.2 2002/11/08 19:17:24 rwaldhoff Exp $
+ * @version $Id: TestConnectionPool.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -167,6 +167,21 @@ public abstract class TestConnectionPool extends TestCase {
         rset.close();
         stmt.close();
         conn.close();
+    }
+
+    public void testRepeatedBorrowAndReturn() throws Exception {
+        for(int i=0;i<100;i++) {
+            Connection conn = getConnection();
+            assertTrue(null != conn);
+            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            assertTrue(null != stmt);
+            ResultSet rset = stmt.executeQuery();
+            assertTrue(null != rset);
+            assertTrue(rset.next());
+            rset.close();
+            stmt.close();
+            conn.close();
+        }
     }
 
     public void testSimple2() throws Exception {
