@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v $
- * $Revision: 1.12 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.13 $
+ * $Date: 2004/01/25 19:49:27 $
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import javax.naming.Name;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-
+import javax.sql.DataSource;
 
 /**
  * <p>JNDI object factory that creates an instance of
@@ -83,14 +83,68 @@ import javax.naming.spi.ObjectFactory;
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2003/10/09 21:04:44 $
+ * @version $Revision: 1.13 $ $Date: 2004/01/25 19:49:27 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
 
+    private final static String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";
+    private final static String PROP_DEFAULTREADONLY = "defaultReadOnly";
+    private final static String PROP_DEFAULTTRANSACTIONISOLATION = "defaultTransactionIsolation";
+    private final static String PROP_DEFAULTCATALOG = "defaultCatalog";
+    private final static String PROP_DRIVERCLASSNAME = "driverClassName";
+    private final static String PROP_MAXACTIVE = "maxActive";
+    private final static String PROP_MAXIDLE = "maxIdle";
+    private final static String PROP_MINIDLE = "minIdle";
+    private final static String PROP_MAXWAIT = "maxWait";
+    private final static String PROP_TESTONBORROW = "testOnBorrow";
+    private final static String PROP_TESTONRETURN = "testOnReturn";
+    private final static String PROP_TIMEBETWEENEVICTIONRUNSMILLIS = "timeBetweenEvictionRunsMillis";
+    private final static String PROP_NUMTESTSPEREVICTIONRUN = "numTestsPerEvictionRun";
+    private final static String PROP_MINEVICTABLEIDLETIMEMILLIS = "minEvictableIdleTimeMillis";
+    private final static String PROP_TESTWHILEIDLE = "testWhileIdle";
+    private final static String PROP_PASSWORD = "password";
+    private final static String PROP_URL = "url";
+    private final static String PROP_USERNAME = "username";
+    private final static String PROP_VALIDATIONQUERY = "validationQuery";
+    private final static String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";
+    private final static String PROP_REMOVEABANDONED = "removeAbandoned";
+    private final static String PROP_REMOVEABANDONEDTIMEOUT = "removeAbandonedTimeout";
+    private final static String PROP_LOGABANDONED = "logAbandoned";
+    private final static String PROP_POOLPREPAREDSTATEMENTS = "poolPreparedStatements";
+    private final static String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
+    private final static String PROP_CONNECTIONPROPERTIES = "connectionProperties";
+
+    private final static String[] ALL_PROPERTIES = {
+        PROP_DEFAULTAUTOCOMMIT,
+        PROP_DEFAULTREADONLY,
+        PROP_DEFAULTTRANSACTIONISOLATION,
+        PROP_DEFAULTCATALOG,
+        PROP_DRIVERCLASSNAME,
+        PROP_MAXACTIVE,
+        PROP_MAXIDLE,
+        PROP_MINIDLE,
+        PROP_MAXWAIT,
+        PROP_TESTONBORROW,
+        PROP_TESTONRETURN,
+        PROP_TIMEBETWEENEVICTIONRUNSMILLIS,
+        PROP_NUMTESTSPEREVICTIONRUN,
+        PROP_MINEVICTABLEIDLETIMEMILLIS,
+        PROP_TESTWHILEIDLE,
+        PROP_PASSWORD,
+        PROP_URL,
+        PROP_USERNAME,
+        PROP_VALIDATIONQUERY,
+        PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED,
+        PROP_REMOVEABANDONED,
+        PROP_REMOVEABANDONEDTIMEOUT,
+        PROP_LOGABANDONED,
+        PROP_POOLPREPAREDSTATEMENTS,
+        PROP_MAXOPENPREPAREDSTATEMENTS,
+        PROP_CONNECTIONPROPERTIES
+    };
 
     // -------------------------------------------------- ObjectFactory Methods
-
 
     /**
      * <p>Create and return a new <code>BasicDataSource</code> instance.  If no
@@ -114,33 +168,46 @@ public class BasicDataSourceFactory implements ObjectFactory {
         // We only know how to deal with <code>javax.naming.Reference</code>s
         // that specify a class name of "javax.sql.DataSource"
         if ((obj == null) || !(obj instanceof Reference)) {
-            return (null);
+            return null;
         }
         Reference ref = (Reference) obj;
         if (!"javax.sql.DataSource".equals(ref.getClassName())) {
-            return (null);
+            return null;
         }
 
-        // Create and configure a BasicDataSource instance based on the
-        // RefAddr values associated with this Reference
+        Properties properties = new Properties();
+        for (int i = 0 ; i < ALL_PROPERTIES.length ; i++) {
+            String propertyName = ALL_PROPERTIES[i];
+            RefAddr ra = ref.get(propertyName);
+            if (ra != null) {
+                String propertyValue = ra.getContent().toString();
+                properties.setProperty(propertyName, propertyValue);
+            }
+        }
+
+        return createDataSource(properties);
+    }
+
+    /**
+     * Creates and configures a BasicDataSource instance based on the
+     * given properties.
+     */
+    public static DataSource createDataSource(Properties properties) throws Exception {
         BasicDataSource dataSource = new BasicDataSource();
-        RefAddr ra = null;
+        String value = null;
 
-        ra = ref.get("defaultAutoCommit");
-        if (ra != null) {
-            dataSource.setDefaultAutoCommit
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_DEFAULTAUTOCOMMIT);
+        if (value != null) {
+            dataSource.setDefaultAutoCommit(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("defaultReadOnly");
-        if (ra != null) {
-            dataSource.setDefaultReadOnly
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_DEFAULTREADONLY);
+        if (value != null) {
+            dataSource.setDefaultReadOnly(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("defaultTransactionIsolation");
-        if (ra != null) {
-            String value = ra.getContent().toString();
+        value = properties.getProperty(PROP_DEFAULTTRANSACTIONISOLATION);
+        if (value != null) {
             int level = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
             if ("NONE".equalsIgnoreCase(value)) {
                 level = Connection.TRANSACTION_NONE;
@@ -170,135 +237,119 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setDefaultTransactionIsolation(level);
         }
 
-        ra = ref.get("defaultCatalog");
-        if (ra != null) {
-            dataSource.setDefaultCatalog(ra.getContent().toString());
+        value = properties.getProperty(PROP_DEFAULTCATALOG);
+        if (value != null) {
+            dataSource.setDefaultCatalog(value);
         }
 
-        ra = ref.get("driverClassName");
-        if (ra != null) {
-            dataSource.setDriverClassName(ra.getContent().toString());
+        value = properties.getProperty(PROP_DRIVERCLASSNAME);
+        if (value != null) {
+            dataSource.setDriverClassName(value);
         }
 
-        ra = ref.get("maxActive");
-        if (ra != null) {
-            dataSource.setMaxActive
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MAXACTIVE);
+        if (value != null) {
+            dataSource.setMaxActive(Integer.parseInt(value));
         }
 
-        ra = ref.get("maxIdle");
-        if (ra != null) {
-            dataSource.setMaxIdle
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MAXIDLE);
+        if (value != null) {
+            dataSource.setMaxIdle(Integer.parseInt(value));
         }
 
-        ra = ref.get("minIdle");
-        if (ra != null) {
-            dataSource.setMinIdle
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MINIDLE);
+        if (value != null) {
+            dataSource.setMinIdle(Integer.parseInt(value));
         }
 
-        ra = ref.get("maxWait");
-        if (ra != null) {
-            dataSource.setMaxWait
-                (Long.parseLong(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MAXWAIT);
+        if (value != null) {
+            dataSource.setMaxWait(Long.parseLong(value));
         }
 
-        ra = ref.get("testOnBorrow");
-        if (ra != null) {
-            dataSource.setTestOnBorrow
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_TESTONBORROW);
+        if (value != null) {
+            dataSource.setTestOnBorrow(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("testOnReturn");
-        if (ra != null) {
-            dataSource.setTestOnReturn
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_TESTONRETURN);
+        if (value != null) {
+            dataSource.setTestOnReturn(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("timeBetweenEvictionRunsMillis");
-        if (ra != null) {
-            dataSource.setTimeBetweenEvictionRunsMillis
-                (Long.parseLong(ra.getContent().toString()));
+        value = properties.getProperty(PROP_TIMEBETWEENEVICTIONRUNSMILLIS);
+        if (value != null) {
+            dataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(value));
         }
 
-        ra = ref.get("numTestsPerEvictionRun");
-        if (ra != null) {
-            dataSource.setNumTestsPerEvictionRun
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_NUMTESTSPEREVICTIONRUN);
+        if (value != null) {
+            dataSource.setNumTestsPerEvictionRun(Integer.parseInt(value));
         }
 
-        ra = ref.get("minEvictableIdleTimeMillis");
-        if (ra != null) {
-            dataSource.setMinEvictableIdleTimeMillis
-                (Long.parseLong(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MINEVICTABLEIDLETIMEMILLIS);
+        if (value != null) {
+            dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(value));
         }
 
-        ra = ref.get("testWhileIdle");
-        if (ra != null) {
-            dataSource.setTestWhileIdle
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_TESTWHILEIDLE);
+        if (value != null) {
+            dataSource.setTestWhileIdle(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("password");
-        if (ra != null) {
-            dataSource.setPassword(ra.getContent().toString());
+        value = properties.getProperty(PROP_PASSWORD);
+        if (value != null) {
+            dataSource.setPassword(value);
         }
 
-        ra = ref.get("url");
-        if (ra != null) {
-            dataSource.setUrl(ra.getContent().toString());
+        value = properties.getProperty(PROP_URL);
+        if (value != null) {
+            dataSource.setUrl(value);
         }
 
-        ra = ref.get("username");
-        if (ra != null) {
-            dataSource.setUsername(ra.getContent().toString());
+        value = properties.getProperty(PROP_USERNAME);
+        if (value != null) {
+            dataSource.setUsername(value);
         }
 
-        ra = ref.get("validationQuery");
-        if (ra != null) {
-            dataSource.setValidationQuery(ra.getContent().toString());
+        value = properties.getProperty(PROP_VALIDATIONQUERY);
+        if (value != null) {
+            dataSource.setValidationQuery(value);
         }
 
-        ra = ref.get("accessToUnderlyingConnectionAllowed");
-        if (ra != null) {
-            dataSource.setAccessToUnderlyingConnectionAllowed
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED);
+        if (value != null) {
+            dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("removeAbandoned");
-        if (ra != null) {
-            dataSource.setRemoveAbandoned
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_REMOVEABANDONED);
+        if (value != null) {
+            dataSource.setRemoveAbandoned(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("removeAbandonedTimeout");
-        if (ra != null) {     
-            dataSource.setRemoveAbandonedTimeout
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_REMOVEABANDONEDTIMEOUT);
+        if (value != null) {     
+            dataSource.setRemoveAbandonedTimeout(Integer.parseInt(value));
         }
 
-        ra = ref.get("logAbandoned");
-        if (ra != null) {
-            dataSource.setLogAbandoned
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_LOGABANDONED);
+        if (value != null) {
+            dataSource.setLogAbandoned(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("poolPreparedStatements");
-        if (ra != null) {
-            dataSource.setPoolPreparedStatements
-                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        value = properties.getProperty(PROP_POOLPREPAREDSTATEMENTS);
+        if (value != null) {
+            dataSource.setPoolPreparedStatements(Boolean.valueOf(value).booleanValue());
         }
 
-        ra = ref.get("maxOpenPreparedStatements");
-        if (ra != null) {
-            dataSource.setMaxOpenPreparedStatements
-                (Integer.parseInt(ra.getContent().toString()));
+        value = properties.getProperty(PROP_MAXOPENPREPAREDSTATEMENTS);
+        if (value != null) {
+            dataSource.setMaxOpenPreparedStatements(Integer.parseInt(value));
         }
 
-        ra = ref.get("connectionProperties");
-        if (ra != null) {
-          Properties p = getProperties(ra.getContent().toString());
+        value = properties.getProperty(PROP_CONNECTIONPROPERTIES);
+        if (value != null) {
+          Properties p = getProperties(value);
           Enumeration e = p.propertyNames();
           while (e.hasMoreElements()) {
             String propertyName = (String) e.nextElement();
@@ -306,11 +357,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
           }
         }
 
-        // Return the configured data source instance
-        return (dataSource);
-
+        // Return the configured DataSource instance
+        return dataSource;
     }
-
 
     /**
      * <p>Parse properties from the string. Format of the string must be [propertyName=property;]*<p>
@@ -325,5 +374,4 @@ public class BasicDataSourceFactory implements ObjectFactory {
       }
       return p;
     }
-
 }
