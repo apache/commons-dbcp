@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.7 2003/04/15 01:56:28 dgraham Exp $
- * $Revision: 1.7 $
- * $Date: 2003/04/15 01:56:28 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.8 2003/06/02 04:54:12 jmcnally Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/06/02 04:54:12 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
 /**
  * @author John McNally
- * @version $Revision: 1.7 $ $Date: 2003/04/15 01:56:28 $
+ * @version $Revision: 1.8 $ $Date: 2003/06/02 04:54:12 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -110,6 +110,43 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         ds = tds;
     }
 
+    /**
+     * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
+     * exhibit the bug detailed in 
+     * http://nagoya.apache.org/bugzilla/show_bug.cgi?id=18905
+     */
+    public void testIncorrectPassword() throws Exception 
+    {
+        try {
+            // Use bad password
+            ds.getConnection("u1", "zlsafjk").close();
+            fail("Able to retrieve connection with incorrect password");
+        } catch (SQLException e1) {
+            // should fail
+
+        }
+        
+        // Use good password
+        ds.getConnection("u1", "p1").close();
+        try 
+        {
+            ds.getConnection("u1", "x").close();
+            fail("Able to retrieve connection with incorrect password");
+        }
+        catch (SQLException e)
+        {
+            if (!e.getMessage().startsWith("Given password did not match")) 
+            {
+                throw e;
+            }
+            // else the exception was expected
+        }
+        
+        // Make sure we can still use our good password.
+        ds.getConnection("u1", "p1").close();
+    }
+
+
     public void testSimple() throws Exception 
     {
         Connection conn = ds.getConnection();
@@ -126,7 +163,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
 
     public void testSimpleWithUsername() throws Exception 
     {
-        Connection conn = ds.getConnection("u", "p");
+        Connection conn = ds.getConnection("u1", "p1");
         assertTrue(null != conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertTrue(null != stmt);
@@ -145,14 +182,14 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
-            c[i] = ds.getConnection("u", "p");
+            c[i] = ds.getConnection("u1", "p1");
         }
 
         // close one of the connections
         c[0].close();
         assertTrue(c[0].isClosed());
         // get a new connection
-        c[0] = ds.getConnection("u", "p");
+        c[0] = ds.getConnection("u1", "p1");
 
         for (int i=0; i<c.length; i++) 
         {
@@ -162,41 +199,12 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
-            c[i] = ds.getConnection("u", "p");
+            c[i] = ds.getConnection("u1", "p1");
         }
         for (int i=0; i<c.length; i++) 
         {
             c[i].close();
         }
-    }
-
-    public void testIncorrectPassword() throws Exception 
-    {
-        try {
-            // Use bad password
-            ds.getConnection("u", "zlsafjk").close();
-        } catch (SQLException e1) {
-            // should fail
-        }
-        
-        // Use good password
-        ds.getConnection("u", "p").close();
-        try 
-        {
-            ds.getConnection("u", "x").close();
-            fail("Able to retrieve connection with incorrect password");
-        }
-        catch (SQLException e)
-        {
-            if (!e.getMessage().startsWith("Given password did not match")) 
-            {
-                throw e;
-            }
-            // else the exception was expected
-        }
-        
-        // Make sure we can still use our good password.
-        ds.getConnection("u", "p").close();
     }
 
     public void testSimple2() 
