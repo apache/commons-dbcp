@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.1 2001/04/14 17:16:18 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:16:18 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/16 13:29:49 $
  *
  * ====================================================================
  *
@@ -213,8 +213,8 @@ public class TestJOCLContentHandler extends TestCase {
         assertEquals(java.util.Date.class,jocl.getType(1));
         assertEquals(java.util.Date.class,jocl.getType(2));
 
-        assert(null == jocl.getValue(0));
-        assert(null != jocl.getValue(1));
+        assertTrue(null == jocl.getValue(0));
+        assertTrue(null != jocl.getValue(1));
         assertEquals(new java.util.Date(3,4,5),jocl.getValue(2));
     }
 }

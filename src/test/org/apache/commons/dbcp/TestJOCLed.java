@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestJOCLed.java,v 1.1 2001/04/14 17:16:22 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:16:22 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestJOCLed.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/16 13:29:49 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.apache.commons.pool.impl.*;
 
 /**
  * @author Rodney Waldhoff
- * @version $Id: TestJOCLed.java,v 1.1 2001/04/14 17:16:22 rwaldhoff Exp $
+ * @version $Id: TestJOCLed.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
  */
 public class TestJOCLed extends TestCase {
     public TestJOCLed(String testName) {
@@ -97,12 +97,12 @@ public class TestJOCLed extends TestCase {
 
     public void testSimple() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assert(null != conn);
+        assertTrue(null != conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assert(null != stmt);
+        assertTrue(null != stmt);
         ResultSet rset = stmt.executeQuery();
-        assert(null != rset);
-        assert(rset.next());
+        assertTrue(null != rset);
+        assertTrue(rset.next());
         rset.close();
         stmt.close();
         conn.close();
@@ -110,22 +110,22 @@ public class TestJOCLed extends TestCase {
 
     public void testSimple2() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assert(null != conn);
+        assertTrue(null != conn);
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assert(null != stmt);
+            assertTrue(null != stmt);
             ResultSet rset = stmt.executeQuery();
-            assert(null != rset);
-            assert(rset.next());
+            assertTrue(null != rset);
+            assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assert(null != stmt);
+            assertTrue(null != stmt);
             ResultSet rset = stmt.executeQuery();
-            assert(null != rset);
-            assert(rset.next());
+            assertTrue(null != rset);
+            assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
@@ -138,22 +138,22 @@ public class TestJOCLed extends TestCase {
         }
 
         conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assert(null != conn);
+        assertTrue(null != conn);
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assert(null != stmt);
+            assertTrue(null != stmt);
             ResultSet rset = stmt.executeQuery();
-            assert(null != rset);
-            assert(rset.next());
+            assertTrue(null != rset);
+            assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assert(null != stmt);
+            assertTrue(null != stmt);
             ResultSet rset = stmt.executeQuery();
-            assert(null != rset);
-            assert(rset.next());
+            assertTrue(null != rset);
+            assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
@@ -163,10 +163,10 @@ public class TestJOCLed extends TestCase {
 
     public void testPooling() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assert(conn != null);
+        assertTrue(conn != null);
         Connection conn2 = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assert(conn2 != null);
-        assert(conn != conn2);
+        assertTrue(conn2 != null);
+        assertTrue(conn != conn2);
         conn2.close();
         conn.close();
         conn2 = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
