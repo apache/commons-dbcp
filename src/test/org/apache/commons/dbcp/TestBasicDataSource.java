@@ -1,7 +1,7 @@
 /*
- * $Id: TestBasicDataSource.java,v 1.3 2003/08/11 23:41:56 dirkv Exp $
- * $Revision: 1.3 $
- * $Date: 2003/08/11 23:41:56 $
+ * $Id: TestBasicDataSource.java,v 1.4 2003/08/13 15:47:17 dirkv Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/08/13 15:47:17 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,13 +61,12 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
-import java.sql.SQLWarning;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.3 $ $Date: 2003/08/11 23:41:56 $
+ * @version $Revision: 1.4 $ $Date: 2003/08/13 15:47:17 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -101,40 +100,4 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void tearDown() throws Exception {
         ds = null;
     }
-    
-    public void testClearWarnings() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
-        for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
-            assertTrue(c[i] != null);
-            if (c[i] instanceof DelegatingConnection) {
-                Connection conn = ((DelegatingConnection) c[i]).getInnermostDelegate();
-                if (conn instanceof TesterConnection){
-                    ((TesterConnection) conn).setWarnings(new SQLWarning("warn1"));
-                }
-            }
-        }
-
-        for (int i = 0; i < c.length; i++) {
-            assertNotNull(c[i].getWarnings());
-        }
-
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
-        }
-        
-        for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
-        }        
-
-        for (int i = 0; i < c.length; i++) {
-            // warnings should have been cleared by putting the connection back in the pool
-            assertNull(c[i].getWarnings());
-        }
-
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
-        }
-    }
-
 }

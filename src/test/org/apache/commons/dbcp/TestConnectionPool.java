@@ -1,7 +1,7 @@
 /*
- * $Id: TestConnectionPool.java,v 1.5 2003/08/11 23:47:03 dirkv Exp $
- * $Revision: 1.5 $
- * $Date: 2003/08/11 23:47:03 $
+ * $Id: TestConnectionPool.java,v 1.6 2003/08/13 15:47:17 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/13 15:47:17 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -79,7 +79,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * 
- * @version $Id: TestConnectionPool.java,v 1.5 2003/08/11 23:47:03 dirkv Exp $
+ * @version $Id: TestConnectionPool.java,v 1.6 2003/08/13 15:47:17 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -103,7 +103,39 @@ public abstract class TestConnectionPool extends TestCase {
     protected long getMaxWait() {
         return 100L;
     }
+
+    public void testClearWarnings() throws Exception {
+        Connection[] c = new Connection[getMaxActive()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = getConnection();
+            assertTrue(c[i] != null);
+            
+            // generate SQLWarning on connection
+            c[i].prepareCall("warning");
+        }
+
+        for (int i = 0; i < c.length; i++) {
+            assertNotNull(c[i].getWarnings());
+        }
+
+        for (int i = 0; i < c.length; i++) {
+            c[i].close();
+        }
         
+        for (int i = 0; i < c.length; i++) {
+            c[i] = getConnection();
+        }        
+
+        for (int i = 0; i < c.length; i++) {
+            // warnings should have been cleared by putting the connection back in the pool
+            assertNull(c[i].getWarnings());
+        }
+
+        for (int i = 0; i < c.length; i++) {
+            c[i].close();
+        }
+    }
+
     public void testIsClosed() throws Exception {
         for(int i=0;i<getMaxActive();i++) {
             Connection conn = getConnection();

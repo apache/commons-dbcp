@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.5 2003/08/11 23:40:40 dirkv Exp $
- * $Revision: 1.5 $
- * $Date: 2003/08/11 23:40:40 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.6 2003/08/13 15:47:17 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/13 15:47:17 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  * A dummy {@link Connection}, for testing purposes.
  * @author Rodney Waldhoff
- * @version $Id: TesterConnection.java,v 1.5 2003/08/11 23:40:40 dirkv Exp $
+ * @version $Id: TesterConnection.java,v 1.6 2003/08/13 15:47:17 dirkv Exp $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -153,6 +153,9 @@ public class TesterConnection implements Connection {
 
     public CallableStatement prepareCall(String sql) throws SQLException {
         checkOpen();
+        if ("warning".equals(sql)) {
+            setWarnings(new SQLWarning("warning in prepareCall"));
+        }
         return null;
     }
 
