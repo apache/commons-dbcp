@@ -1,13 +1,13 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.10 2003/03/06 19:25:32 rwaldhoff Exp $
- * $Revision: 1.10 $
- * $Date: 2003/03/06 19:25:32 $
+ * $Id: DelegatingPreparedStatement.java,v 1.11 2003/04/08 00:32:22 dgraham Exp $
+ * $Revision: 1.11 $
+ * $Date: 2003/04/08 00:32:22 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,7 +91,7 @@ import java.util.List;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.10 $ $Date: 2003/03/06 19:25:32 $
+ * @version $Revision: 1.11 $ $Date: 2003/04/08 00:32:22 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -245,8 +245,8 @@ public class DelegatingPreparedStatement extends AbandonedTrace
     public void setNull (int paramIndex, int sqlType, String typeName) throws SQLException { checkOpen(); _stmt.setNull(paramIndex,sqlType,typeName);}
 
     protected void checkOpen() throws SQLException {
-        if(_closed) {
-            throw new SQLException("Connection is closed.");
+        if (_closed) {
+            throw new SQLException("PreparedStatement is closed.");
         }
     }
 
