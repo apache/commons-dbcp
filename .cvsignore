@@ -5,3 +5,4 @@ dist
 target
 maven.log
 velocity.log
+eclipse_classes
