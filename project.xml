@@ -33,6 +33,12 @@
       <organization></organization>
     </developer>
     <developer>
+      <name>John McNally</name>
+      <id></id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
       <name>Rodney Waldoff</name>
       <id>rwaldof</id>
       <email></email>
@@ -51,6 +57,11 @@
     <dependency>
       <id>commons-collections</id>
       <version>2.0</version>
+    </dependency>
+
+    <dependency>
+      <id>commons-lang</id>
+      <version>1.0-b1</version>
     </dependency>
     
     <dependency>
