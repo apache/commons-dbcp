@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.37 $ $Date: 2004/06/09 18:21:23 $
+ * @version $Revision: 1.38 $ $Date: 2004/07/11 16:51:34 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -543,6 +543,8 @@ public class BasicDataSource implements DataSource {
 
     /**
      * Create (if necessary) and return a connection to the database.
+     * 
+     * <p><strong>BasicDataSource does NOT support this method.</strong></p>
      *
      * @param username Database user on whose behalf the Connection
      *   is being made
@@ -551,7 +553,10 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public Connection getConnection(String username, String password) throws SQLException {
-        return createDataSource().getConnection(username, password);
+        // This method isn't supported by the PoolingDataSource returned by
+        // the createDataSource
+        throw new UnsupportedOperationException("Not supported by BasicDataSource");
+        // return createDataSource().getConnection(username, password);
     }
 
 
