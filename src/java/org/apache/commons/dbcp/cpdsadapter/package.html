@@ -12,52 +12,49 @@ catalina servlet container.
 webapp:
 </p>
 
-<source><![CDATA[
-
- <Resource name="jdbc/bookstoreCPDS" auth="Container"
-            type="org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS"/>
-  <ResourceParams name="jdbc/bookstoreCPDS">
-    <parameter>
-      <name>factory</name>
-      <value>org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS</value>
-    </parameter>
-        <parameter><name>user</name><value>root</value></parameter>
-        <parameter><name>password</name><value></value></parameter>
-        <parameter>
-            <name>driver</name>
-            <value>org.gjt.mm.mysql.Driver</value></parameter>
-        <parameter>
-             <name>url</name>
-             <value>jdbc:mysql://localhost:3306/bookstore</value>
-        </parameter>
-
-  </ResourceParams>
-
-]]></source>
+<pre>
+ &lt;Resource name="jdbc/bookstoreCPDS" auth="Container"
+            type="org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS"/&gt;
+  &lt;ResourceParams name="jdbc/bookstoreCPDS"&gt;
+    &lt;parameter&gt;
+      &lt;name&gt;factory&lt;/name&gt;
+      &lt;value&gt;org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS&lt;/value&gt;
+    &lt;/parameter&gt;
+        &lt;parameter&gt;&lt;name&gt;user&lt;/name&gt;&lt;value&gt;root&lt;/value&gt;&lt;/parameter&gt;
+        &lt;parameter&gt;&lt;name&gt;password&lt;/name&gt;&lt;value&gt;&lt;/value&gt;&lt;/parameter&gt;
+        &lt;parameter&gt;
+            &lt;name&gt;driver&lt;/name&gt;
+            &lt;value&gt;org.gjt.mm.mysql.Driver&lt;/value&gt;&lt;/parameter&gt;
+        &lt;parameter&gt;
+             &lt;name&gt;url&lt;/name&gt;
+             &lt;value&gt;jdbc:mysql://localhost:3306/bookstore&lt;/value&gt;
+        &lt;/parameter&gt;
+  &lt;/ResourceParams&gt;
+</pre>
 
 <p>
 In web.xml.  Note that elements must be given in the order of the dtd 
 described in the servlet specification:
 </p>
 
-<source><![CDATA[
-<resource-ref>
-  <description>
+<pre>
+&lt;resource-ref&gt;
+  &lt;description&gt;
     Resource reference to a factory for java.sql.Connection
     instances that may be used for talking to a particular
     database that is configured in the server.xml file.
-  </description>
-  <res-ref-name>
+  &lt;/description&gt;
+  &lt;res-ref-name&gt;
     jdbc/bookstoreCPDS
-  </res-ref-name>
-  <res-type>
+  &lt;/res-ref-name&gt;
+  &lt;res-type&gt;
     org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS
-  </res-type>
-  <res-auth>
+  &lt;/res-type&gt;
+  &lt;res-auth&gt;
     Container
-  </res-auth>
-</resource-ref>
-]]></source>
+  &lt;/res-auth&gt;
+&lt;/resource-ref&gt;
+</pre>
 
 <p>
 Catalina deploys all objects configured similarly to above within the
