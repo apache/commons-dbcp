@@ -30,7 +30,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.22 $ $Date: 2004/05/20 13:11:56 $
+ * @version $Revision: 1.23 $ $Date: 2004/06/09 18:21:23 $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -48,7 +48,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -68,7 +68,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
@@ -99,7 +99,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -131,7 +131,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
@@ -166,7 +166,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
         _defaultCatalog = defaultCatalog;
@@ -259,7 +259,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
     public void setDefaultReadOnly(boolean defaultReadOnly) {
-        _defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**

@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.36 $ $Date: 2004/05/18 21:59:53 $
+ * @version $Revision: 1.37 $ $Date: 2004/06/09 18:21:23 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -72,7 +72,7 @@ public class BasicDataSource implements DataSource {
     }
 
     public synchronized void setDefaultReadOnly(boolean defaultReadOnly) {
-        this.defaultReadOnly = Boolean.valueOf(defaultReadOnly);
+        this.defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         this.restartNeeded = true;
     }
 
