@@ -38,7 +38,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * {*link PoolableConnection}s.
  *
  * @author John D. McNally
- * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.6 $ $Date: 2004/03/07 11:19:25 $
  */
 class KeyedCPDSConnectionFactory 
     implements KeyedPoolableObjectFactory, ConnectionEventListener {
@@ -136,7 +136,9 @@ class KeyedCPDSConnectionFactory
 
     public void destroyObject(Object key, Object obj) throws Exception {
         if (obj instanceof PooledConnectionAndInfo) {
-            ((PooledConnectionAndInfo)obj).getPooledConnection().close();
+            PooledConnection pc = ((PooledConnectionAndInfo)obj).getPooledConnection();
+            pcMap.remove(pc);
+            pc.close();
         }
     }
 

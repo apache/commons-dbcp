@@ -37,7 +37,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author John D. McNally
- * @version $Revision: 1.15 $ $Date: 2004/02/28 21:58:38 $
+ * @version $Revision: 1.16 $ $Date: 2004/03/07 11:19:25 $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -123,7 +123,11 @@ class PooledConnectionImpl
         } catch (Exception e) {
             throw new SQLNestedException("Cannot close connection (return to pool failed)", e);
         } finally {
-            connection.close();
+            try {
+                connection.close();
+            } finally {
+                connection = null;
+            }
         }
     }
 
