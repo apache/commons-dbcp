@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.13 2002/08/13 00:44:54 craigmcc Exp $ -->
+<!-- $Id: build.xml,v 1.14 2002/08/13 20:41:10 craigmcc Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -19,7 +19,6 @@
    <patternset id="patternset-javadocable-sources">
       <include name="**/*"/>
       <exclude name="**/Test*.java"/>
-      <!-- Temporarily exclude "jdbc2pool" subdirectory -->
       <exclude name="**/jdbc2pool/*.java"/>
    </patternset>
 
@@ -52,7 +51,7 @@
 
       <!-- The current version number of this component -->
       <property name="component.package" value="org.apache.commons.dbcp"/>
-      <property name="component.version" value="1.0"/>
+      <property name="component.version" value="1.1-dev"/>
       <filter  token="package"           value="${component.package}"/>
       <filter  token="version"           value="${component.version}"/>
 
@@ -198,7 +197,6 @@
             <include name="**/*.xml"/>
             <include name="**/*.properties"/>
             <include name="**/package.html"/>
-            <!-- Temporarily omit "jdbc2pool" package -->
             <exclude name="**/jdbc2pool/*.java"/>
          </fileset>
       </copy>
