@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.4 2003/04/02 00:48:49 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/04/02 00:48:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.5 2003/08/11 14:49:33 dirkv Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/11 14:49:33 $
  *
  * ====================================================================
  *
@@ -174,21 +174,17 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * {@link PreparedStatement}s.
      * @param obj the key for the {@link PreparedStatement} to be created
      */
-    public Object makeObject(Object obj) {
-        try {
-            if(null == obj || !(obj instanceof PStmtKey)) {
-                throw new IllegalArgumentException();
+    public Object makeObject(Object obj) throws Exception {
+        if(null == obj || !(obj instanceof PStmtKey)) {
+            throw new IllegalArgumentException();
+        } else {
+            // _openPstmts++;
+            PStmtKey key = (PStmtKey)obj;
+            if(null == key._resultSetType && null == key._resultSetConcurrency) {
+                return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql),key,_pstmtPool,this);
             } else {
-                // _openPstmts++;
-                PStmtKey key = (PStmtKey)obj;
-                if(null == key._resultSetType && null == key._resultSetConcurrency) {
-                    return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql),key,_pstmtPool,this);
-                } else {
-                    return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql,key._resultSetType.intValue(),key._resultSetConcurrency.intValue()),key,_pstmtPool,this);
-                }
+                return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql,key._resultSetType.intValue(),key._resultSetConcurrency.intValue()),key,_pstmtPool,this);
             }
-        } catch(Exception e) {
-            throw new DbcpException(e);
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.4 2003/08/11 14:49:33 dirkv Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/08/11 14:49:33 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.Properties;
  * @author Rodney Waldhoff
  * @author Ignacio J. Ortega
  *
- * @version $Id: DriverManagerConnectionFactory.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
+ * @version $Id: DriverManagerConnectionFactory.java,v 1.4 2003/08/11 14:49:33 dirkv Exp $
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
@@ -86,19 +86,15 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         _passwd = passwd;
     }
 
-    public Connection createConnection() {
-        try {
-            if(null == _props) {
-                if((_uname == null) || (_passwd == null)) {
-                    return DriverManager.getConnection(_connectUri);
-                } else {
-                    return DriverManager.getConnection(_connectUri,_uname,_passwd);
-                }
+    public Connection createConnection() throws SQLException {
+        if(null == _props) {
+            if((_uname == null) || (_passwd == null)) {
+                return DriverManager.getConnection(_connectUri);
             } else {
-                return DriverManager.getConnection(_connectUri,_props);
+                return DriverManager.getConnection(_connectUri,_uname,_passwd);
             }
-        } catch(SQLException e) {
-            throw new DbcpException(e);
+        } else {
+            return DriverManager.getConnection(_connectUri,_props);
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverConnectionFactory.java,v 1.3 2003/08/11 14:49:33 dirkv Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/08/11 14:49:33 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import java.util.Properties;
  * A {@link Driver}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Id: DriverConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
+ * @version $Id: DriverConnectionFactory.java,v 1.3 2003/08/11 14:49:33 dirkv Exp $
  */
 public class DriverConnectionFactory implements ConnectionFactory {
     public DriverConnectionFactory(Driver driver, String connectUri, Properties props) {
@@ -78,12 +78,8 @@ public class DriverConnectionFactory implements ConnectionFactory {
         _props = props;
     }
 
-    public Connection createConnection() {
-        try {
-            return _driver.connect(_connectUri,_props);
-        } catch(SQLException e) {
-            throw new DbcpException(e);
-        }
+    public Connection createConnection() throws SQLException {
+        return _driver.connect(_connectUri,_props);
     }
 
     protected Driver _driver = null;
