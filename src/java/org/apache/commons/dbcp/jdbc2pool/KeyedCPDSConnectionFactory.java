@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2003/04/02 00:48:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.6 2003/04/09 00:33:36 dgraham Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/04/09 00:33:36 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * {*link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: KeyedCPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
+ * @version $Id: KeyedCPDSConnectionFactory.java,v 1.6 2003/04/09 00:33:36 dgraham Exp $
  */
 class KeyedCPDSConnectionFactory 
     implements KeyedPoolableObjectFactory, ConnectionEventListener {
@@ -150,32 +150,32 @@ class KeyedCPDSConnectionFactory
         return _pool;
     }
 
-    synchronized public Object makeObject(Object key) {
+    /**
+     * @param key
+     * @throws SQLException if the connection could not be created.
+     * @see org.apache.commons.pool.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
+     */
+    public synchronized Object makeObject(Object key) throws Exception {
         Object obj = null;
         UserPassKey upkey = (UserPassKey)key;
-        try
+
+        PooledConnection pc = null;
+        String username = upkey.getUsername();
+        String password = upkey.getPassword();
+        if ( username == null ) 
         {
-            PooledConnection pc = null;
-            String username = upkey.getUsername();
-            String password = upkey.getPassword();
-            if ( username == null ) 
-            {
-                pc = _cpds.getPooledConnection();
-            }
-            else 
-            {
-                pc = _cpds.getPooledConnection(username, password);
-            }
-            // should we add this object as a listener or the pool.
-            // consider the validateObject method in decision
-            pc.addConnectionEventListener(this);
-            obj = new PooledConnectionAndInfo(pc, username, password);
-            pcMap.put(pc, obj);
+            pc = _cpds.getPooledConnection();
         }
-        catch (SQLException e)
+        else 
         {
-            throw new RuntimeException(e.getMessage());
+            pc = _cpds.getPooledConnection(username, password);
         }
+        // should we add this object as a listener or the pool.
+        // consider the validateObject method in decision
+        pc.addConnectionEventListener(this);
+        obj = new PooledConnectionAndInfo(pc, username, password);
+        pcMap.put(pc, obj);
+ 
         return obj;
     }
 
