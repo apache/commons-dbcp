@@ -33,7 +33,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2004/03/07 10:54:55 $
+ * @version $Revision: 1.13 $ $Date: 2004/03/27 17:47:34 $
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {
@@ -700,7 +700,7 @@ public class TesterResultSet implements ResultSet {
 
     protected void checkOpen() throws SQLException {
         if(!_open) {
-            throw new SQLException("Connection is closed.");
+            throw new SQLException("ResultSet is closed.");
         }
     }
 
