@@ -1,7 +1,7 @@
 /* 
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/UserPassKey.java,v 1.4 2003/04/15 01:32:42 dgraham Exp $
- * $Revision: 1.4 $
- * $Date: 2003/04/15 01:32:42 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/UserPassKey.java,v 1.5 2003/06/29 12:42:16 mpoeschl Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/06/29 12:42:16 $
  * 
  * ====================================================================
  * 
@@ -65,13 +65,11 @@ import java.io.Serializable;
 /**
  * Holds a username, password pair.
  */
-class UserPassKey implements Serializable
-{
+class UserPassKey implements Serializable {
     private String password;
     private String username;
     
-    UserPassKey(String username, String password)
-    {
+    UserPassKey(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -80,8 +78,7 @@ class UserPassKey implements Serializable
      * Get the value of password.
      * @return value of password.
      */
-    public String getPassword() 
-    {
+    public String getPassword() {
         return password;
     }
     
@@ -89,8 +86,7 @@ class UserPassKey implements Serializable
      * Get the value of username.
      * @return value of username.
      */
-    public String getUsername() 
-    {
+    public String getUsername() {
         return username;
     }
     
@@ -99,16 +95,18 @@ class UserPassKey implements Serializable
      * objects are equal.
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object obj)
-    {
-        if (obj == null)
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
+        }
 
-        if (obj == this)
+        if (obj == this) {
             return true;
+        }
         
-        if (!(obj instanceof UserPassKey))
+        if (!(obj instanceof UserPassKey)) {
             return false;
+        }
         
         UserPassKey key = (UserPassKey) obj;
         
@@ -125,13 +123,11 @@ class UserPassKey implements Serializable
         return (usersEqual && passwordsEqual);
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         return (this.username != null ? this.username.hashCode() : 0);
     }
 
-    public String toString()
-    {
+    public String toString() {
         StringBuffer sb = new StringBuffer(50);
         sb.append("UserPassKey(");
         sb.append(username).append(", ").append(password).append(')');

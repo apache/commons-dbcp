@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2003/04/02 00:48:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.6 2003/06/29 12:42:16 mpoeschl Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/06/29 12:42:16 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,15 +82,32 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * {@link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.6 2003/06/29 12:42:16 mpoeschl Exp $
  */
 class CPDSConnectionFactory 
-    implements PoolableObjectFactory, ConnectionEventListener {
+        implements PoolableObjectFactory, ConnectionEventListener {
+
+    private static final String NO_KEY_MESSAGE 
+            = "close() was called on a Connection, but " 
+            + "I have no record of the underlying PooledConnection.";
+
+    protected ConnectionPoolDataSource _cpds = null;
+    protected String _validationQuery = null;
+    protected ObjectPool _pool = null;
+    protected String _username = null;
+    protected String _password = null;
+    private Map validatingMap = new HashMap();
+    private WeakHashMap pcMap = new WeakHashMap();
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
-     * @param cpds the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param pool the {*link ObjectPool} in which to pool those {*link Connection}s
-     * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param cpds the ConnectionPoolDataSource from which to obtain 
+     *        PooledConnection's
+     * @param pool the {*link ObjectPool} in which to pool those 
+     *        {*link Connection}s
+     * @param validationQuery a query to use to {*link #validateObject validate}
+     *        {*link Connection}s. Should return at least one row. 
+     *        May be <tt>null</tt>
      * @param username 
      * @param password
      */
@@ -108,43 +125,40 @@ class CPDSConnectionFactory
     }
 
     /**
-     * Sets the {*link ConnectionFactory} from which to obtain base {*link Connection}s.
-     * @param connFactory the {*link ConnectionFactory} from which to obtain base {*link Connection}s
+     * Sets the {*link ConnectionFactory} from which to obtain base 
+     * {*link Connection}s.
+     * @param connFactory the {*link ConnectionFactory} from which to obtain 
+     *        base {*link Connection}s
      */
-    synchronized public void setCPDS(ConnectionPoolDataSource cpds) {
+    public synchronized void setCPDS(ConnectionPoolDataSource cpds) {
         _cpds = cpds;
     }
 
     /**
-     * Sets the query I use to {*link #validateObject validate} {*link Connection}s.
+     * Sets the query I use to {*link #validateObject validate} 
+     * {*link Connection}s.
      * Should return at least one row.
      * May be <tt>null</tt>
-     * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.
+     * @param validationQuery a query to use to {*link #validateObject validate} 
+     *        {*link Connection}s.
      */
-    synchronized public void setValidationQuery(String validationQuery) {
+    public synchronized void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
 
     /**
      * Sets the {*link ObjectPool} in which to pool {*link Connection}s.
-     * @param pool the {*link ObjectPool} in which to pool those {*link Connection}s
+     * @param pool the {*link ObjectPool} in which to pool those 
+     *        {*link Connection}s
      */
-    synchronized public void setPool(ObjectPool pool) 
-        throws SQLException
-    {
-        if(null != _pool && pool != _pool) {
-            try
-            {
+    public synchronized void setPool(ObjectPool pool) throws SQLException {
+        if (null != _pool && pool != _pool) {
+            try {
                 _pool.close();
-            }
-            catch (Exception e)
-            {
-                if (e instanceof RuntimeException) 
-                {
-                    throw (RuntimeException)e;
-                }
-                else 
-                {
+            } catch (Exception e) {
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                } else {
                     throw new SQLException(e.getMessage());
                 }
             }
@@ -156,18 +170,13 @@ class CPDSConnectionFactory
         return _pool;
     }
 
-
-    synchronized public Object makeObject() {
+    public synchronized Object makeObject() {
         Object obj;
-        try
-        {
+        try {
             PooledConnection pc = null;
-            if ( _username == null ) 
-            {
+            if (_username == null) {
                 pc = _cpds.getPooledConnection();
-            }
-            else 
-            {
+            } else {
                 pc = _cpds.getPooledConnection(_username, _password);
             }
             // should we add this object as a listener or the pool.
@@ -175,28 +184,25 @@ class CPDSConnectionFactory
             pc.addConnectionEventListener(this);
             obj = new PooledConnectionAndInfo(pc, _username, _password);
             pcMap.put(pc, obj);
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
         return obj;
     }
 
     public void destroyObject(Object obj) throws Exception {
-        if(obj instanceof PooledConnectionAndInfo) {
-            ((PooledConnectionAndInfo)obj)
-                .getPooledConnection().close();
+        if (obj instanceof PooledConnectionAndInfo) {
+            ((PooledConnectionAndInfo) obj).getPooledConnection().close();
         }
     }
 
     public boolean validateObject(Object obj) {
         boolean valid = false;
-        if(obj instanceof PooledConnectionAndInfo) {
+        if (obj instanceof PooledConnectionAndInfo) {
             PooledConnection pconn = 
-                ((PooledConnectionAndInfo)obj).getPooledConnection();
+                ((PooledConnectionAndInfo) obj).getPooledConnection();
             String query = _validationQuery;
-            if(null != query) {
+            if (null != query) {
                 Connection conn = null;
                 Statement stmt = null;
                 ResultSet rset = null;
@@ -209,29 +215,27 @@ class CPDSConnectionFactory
                     conn = pconn.getConnection();
                     stmt = conn.createStatement();
                     rset = stmt.executeQuery(query);
-                    if(rset.next()) {
+                    if (rset.next()) {
                         valid = true;
                     } else {
                         valid = false;
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     valid = false;
-                }
-                finally 
-                {
+                } finally {
                     try {
                         rset.close();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         // ignore
                     }
                     try {
                         stmt.close();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         // ignore
                     }
                     try {
                         conn.close();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         // ignore
                     }
                     validatingMap.remove(pconn);
@@ -261,34 +265,27 @@ class CPDSConnectionFactory
      * method of this connection object. What we need to do here is to
      * release this PooledConnection from our pool...
      */
-    public void connectionClosed(ConnectionEvent event)  
-    {
-        PooledConnection pc = (PooledConnection)event.getSource();
+    public void connectionClosed(ConnectionEvent event) {
+        PooledConnection pc = (PooledConnection) event.getSource();
         // if this event occured becase we were validating, ignore it
         // otherwise return the connection to the pool.
-        if (!validatingMap.containsKey(pc)) 
-        {
+        if (!validatingMap.containsKey(pc)) {
             Object info = pcMap.get(pc);
-            if (info == null) 
-            {
+            if (info == null) {
                 throw new IllegalStateException(NO_KEY_MESSAGE);
             }            
 
-            try
-            {
+            try {
                 _pool.returnObject(info);
-            }
-            catch (Exception e)
-            {
-                System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + 
-                                   "NOT BE RETURNED TO THE POOL");
+            } catch (Exception e) {
+                System.err.println("CLOSING DOWN CONNECTION AS IT COULD " 
+                        + "NOT BE RETURNED TO THE POOL");
                 try {
                     destroyObject(info);
-                } catch(Exception e2) {
-                    System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + 
-                                       info);
+                } catch (Exception e2) {
+                    System.err.println("EXCEPTION WHILE DESTROYING OBJECT " 
+                            + info);
                     e2.printStackTrace();
-
                 }
             }
         }
@@ -298,48 +295,31 @@ class CPDSConnectionFactory
      * If a fatal error occurs, close the underlying physical connection so as
      * not to be returned in the future
      */
-    public void connectionErrorOccurred(ConnectionEvent event) 
-    {
+    public void connectionErrorOccurred(ConnectionEvent event) {
         PooledConnection pc = (PooledConnection)event.getSource();
-        try 
-        {
-            if(null != event.getSQLException()) {
-                System.err
-                    .println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" +
-                             event.getSQLException() + ")");
+        try {
+            if (null != event.getSQLException()) {
+                System.err.println(
+                        "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" 
+                        + event.getSQLException() + ")");
             }
             //remove this from the listener list because we are no more 
             //interested in errors since we are about to close this connection
             pc.removeConnectionEventListener(this);
-        }
-        catch (Exception ignore) 
-        {
+        } catch (Exception ignore) {
             // ignore
         }
 
         Object info = pcMap.get(pc);
-        if (info == null) 
-        {
+        if (info == null) {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }            
         try {
             destroyObject(info);
-        } catch(Exception e) {
-            System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + 
-                               info);
+        } catch (Exception e) {
+            System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + info);
             e.printStackTrace();
         }
     }
 
-    private static final String NO_KEY_MESSAGE = 
-        "close() was called on a Connection, but " + 
-        "I have no record of the underlying PooledConnection.";
-
-    protected ConnectionPoolDataSource _cpds = null;
-    protected String _validationQuery = null;
-    protected ObjectPool _pool = null;
-    protected String _username = null;
-    protected String _password = null;
-    private Map validatingMap = new HashMap();
-    private WeakHashMap pcMap = new WeakHashMap();
 }

@@ -1,7 +1,7 @@
 /* 
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PooledConnectionAndInfo.java,v 1.2 2003/04/15 01:35:55 dgraham Exp $
- * $Revision: 1.2 $
- * $Date: 2003/04/15 01:35:55 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PooledConnectionAndInfo.java,v 1.3 2003/06/29 12:42:16 mpoeschl Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/06/29 12:42:16 $
  * 
  * ====================================================================
  * 
@@ -62,29 +62,25 @@ package org.apache.commons.dbcp.jdbc2pool;
 
 import javax.sql.PooledConnection;
 
-final class PooledConnectionAndInfo
-{
+final class PooledConnectionAndInfo {
     private final PooledConnection pooledConnection;
     private final String password;
     private final String username;
     private final UserPassKey upkey;
 
     PooledConnectionAndInfo(PooledConnection pc, 
-                            String username, String password)
-    {
+                            String username, String password) {
         this.pooledConnection = pc;
         this.username = username;
         this.password = password;
         upkey = new UserPassKey(username, password);
     }
 
-    final PooledConnection getPooledConnection()
-    {
+    final PooledConnection getPooledConnection() {
         return pooledConnection;
     }
 
-    final UserPassKey getUserPassKey()
-    {
+    final UserPassKey getUserPassKey() {
         return upkey;
     }
 
@@ -92,8 +88,7 @@ final class PooledConnectionAndInfo
      * Get the value of password.
      * @return value of password.
      */
-    final String getPassword() 
-    {
+    final String getPassword() {
         return password;
     }
     
@@ -101,8 +96,7 @@ final class PooledConnectionAndInfo
      * Get the value of username.
      * @return value of username.
      */
-    final String getUsername() 
-    {
+    final String getUsername() {
         return username;
     }
 }
