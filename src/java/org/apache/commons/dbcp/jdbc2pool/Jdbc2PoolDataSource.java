@@ -143,7 +143,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.4 2002/11/07 21:28:57 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.5 2002/11/07 21:31:19 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -763,7 +763,7 @@ public class Jdbc2PoolDataSource
      * it will be dropped from the pool, and we will attempt
      * to borrow another.
      *
-     * *see #setTestOnBorrow
+     * @see #setTestOnBorrow
      */
     public boolean getTestOnBorrow() {
         return _testOnBorrow;
@@ -777,7 +777,7 @@ public class Jdbc2PoolDataSource
      * it will be dropped from the pool, and we will attempt
      * to borrow another.
      *
-     * *see #getTestOnBorrow
+     * @see #getTestOnBorrow
      */
     public void setTestOnBorrow(boolean testOnBorrow) {
         assertInitializationAllowed();
@@ -798,7 +798,7 @@ public class Jdbc2PoolDataSource
      * before being returned to the pool within the
      * {*link #returnObject}.
      *
-     * *see #setTestOnReturn
+     * @see #setTestOnReturn
      */
     public boolean getTestOnReturn() {
         return _testOnReturn;
@@ -810,7 +810,7 @@ public class Jdbc2PoolDataSource
      * before being returned to the pool within the
      * {*link #returnObject}.
      *
-     * *see #getTestOnReturn
+     * @see #getTestOnReturn
      */
     public void setTestOnReturn(boolean testOnReturn) {
         assertInitializationAllowed();
@@ -824,7 +824,7 @@ public class Jdbc2PoolDataSource
      * When non-positive, no idle object evictor thread will be
      * run.
      *
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public int getTimeBetweenEvictionRunsMillis() {
         return _timeBetweenEvictionRunsMillis;
@@ -836,7 +836,7 @@ public class Jdbc2PoolDataSource
      * When non-positive, no idle object evictor thread will be
      * run.
      *
-     * *see #getTimeBetweenEvictionRunsMillis
+     * @see #getTimeBetweenEvictionRunsMillis
      */
     public void 
         setTimeBetweenEvictionRunsMillis(int timeBetweenEvictionRunsMillis) {
@@ -848,8 +848,8 @@ public class Jdbc2PoolDataSource
      * Returns the number of objects to examine during each run of the
      * idle object evictor thread (if any).
      *
-     * *see #setNumTestsPerEvictionRun
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setNumTestsPerEvictionRun
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public int getNumTestsPerEvictionRun() {
         return _numTestsPerEvictionRun;
@@ -863,8 +863,8 @@ public class Jdbc2PoolDataSource
      * tests will be run.  I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the
      * idle objects will be tested per run.
      *
-     * *see #getNumTestsPerEvictionRun
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #getNumTestsPerEvictionRun
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
         assertInitializationAllowed();
@@ -876,8 +876,8 @@ public class Jdbc2PoolDataSource
      * before it is eligable for eviction by the idle object evictor
      * (if any).
      *
-     * *see #setMinEvictableIdleTimeMillis
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setMinEvictableIdleTimeMillis
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public int getMinEvictableIdleTimeMillis() {
         return _minEvictableIdleTimeMillis;
@@ -890,8 +890,8 @@ public class Jdbc2PoolDataSource
      * When non-positive, no objects will be evicted from the pool
      * due to idle time alone.
      *
-     * *see #getMinEvictableIdleTimeMillis
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #getMinEvictableIdleTimeMillis
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public void 
         setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
@@ -911,8 +911,8 @@ public class Jdbc2PoolDataSource
      * by the idle object evictor (if any).  If an object
      * fails to validate, it will be dropped from the pool.
      *
-     * *see #setTestWhileIdle
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setTestWhileIdle
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public boolean getTestWhileIdle() {
         return _testWhileIdle;
@@ -924,8 +924,8 @@ public class Jdbc2PoolDataSource
      * by the idle object evictor (if any).  If an object
      * fails to validate, it will be dropped from the pool.
      *
-     * *see #getTestWhileIdle
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #getTestWhileIdle
+     * @see #setTimeBetweenEvictionRunsMillis
      */
     public void setTestWhileIdle(boolean testWhileIdle) {
         assertInitializationAllowed();
