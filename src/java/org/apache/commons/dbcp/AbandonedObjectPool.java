@@ -30,7 +30,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.15 $ $Date: 2004/04/25 10:36:24 $
+ * @version $Revision: 1.16 $ $Date: 2004/05/01 12:42:19 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -111,7 +111,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
         }
         super.invalidateObject(obj);        
     }
-    
+
     /**
      * Recover abandoned db connections which have been idle
      * greater than the removeAbandonedTimeout.
@@ -124,7 +124,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
         synchronized(trace) {
             Iterator it = trace.iterator();
             while (it.hasNext()) {
-                PoolableConnection pc = (PoolableConnection)it.next();
+                AbandonedTrace pc = (AbandonedTrace)it.next();
                 if (pc.getLastUsed() > timeout) {
                     continue;
                 }
@@ -137,7 +137,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
         // Now remove the abandoned connections
         Iterator it = remove.iterator();
         while (it.hasNext()) {
-            PoolableConnection pc = (PoolableConnection)it.next();
+            AbandonedTrace pc = (AbandonedTrace)it.next();
             if (config.getLogAbandoned()) {
                 pc.printStackTrace();
             }             
@@ -148,5 +148,4 @@ public class AbandonedObjectPool extends GenericObjectPool {
             }             
         }
     }
-
 }
