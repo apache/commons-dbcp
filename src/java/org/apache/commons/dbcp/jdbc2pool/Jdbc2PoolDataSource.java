@@ -143,7 +143,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.2 2002/09/05 23:38:49 jmcnally Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.3 2002/11/07 19:22:31 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -162,38 +162,47 @@ public class Jdbc2PoolDataSource
 
     private boolean getConnectionCalled = false;
 
-    private ConnectionPoolDataSource cpds;
+    private ConnectionPoolDataSource cpds = null;
     /** DataSource Name used to find the ConnectionPoolDataSource */
-    private String dataSourceName;
-    private boolean defaultAutoCommit;
-    private int defaultMaxActive = 0;
-    private int defaultMaxIdle = 0;
-    private int defaultMaxWait = -1;
-    private boolean defaultReadOnly;
+    private String dataSourceName = null;
+    private boolean defaultAutoCommit = false;
+    private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
+    private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
+    private int defaultMaxWait = 
+        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_MAX_WAIT) ?
+        (int)(GenericObjectPool.DEFAULT_MAX_WAIT) :
+        Integer.MAX_VALUE;
+    private boolean defaultReadOnly = false;
     /** Description */
-    private String description;
+    private String description = null;
     /** Environment that may be used to set up a jndi initial context. */
-    private Properties jndiEnvironment;
+    private Properties jndiEnvironment = null;
     /** Login TimeOut in seconds */
-    private int loginTimeout;
+    private int loginTimeout = 0;
     /** Log stream */
-    private PrintWriter logWriter;
-    private Map perUserDefaultAutoCommit;    
-    private Map perUserMaxActive;    
-    private Map perUserMaxIdle;    
-    private Map perUserMaxWait;
-    private Map perUserDefaultReadOnly;    
-    private boolean _testOnBorrow;
-    private boolean _testOnReturn;
-    private int _timeBetweenEvictionRunsMillis;
-    private int _numTestsPerEvictionRun;
-    private int _minEvictableIdleTimeMillis;
-    private boolean _testWhileIdle;
+    private PrintWriter logWriter = null;
+    private Map perUserDefaultAutoCommit = null;    
+    private Map perUserMaxActive = null;    
+    private Map perUserMaxIdle = null;    
+    private Map perUserMaxWait = null;
+    private Map perUserDefaultReadOnly = null;    
+    private boolean _testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
+    private boolean _testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
+    private int _timeBetweenEvictionRunsMillis = 
+        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS) ?
+        (int)(GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS) :
+        Integer.MAX_VALUE;;
+    private int _numTestsPerEvictionRun = GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+    private int _minEvictableIdleTimeMillis =
+        (((long)Integer.MAX_VALUE) < GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS) ?
+        (int)(GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS) :
+        Integer.MAX_VALUE;;    
+    private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
-    private boolean testPositionSet;
+    private boolean testPositionSet = false;
 
-    private boolean isNew;
-    private Integer instanceKey;
+    private boolean isNew = false;
+    private Integer instanceKey = null;
 
     /**
      * Default no-arg constructor for Serialization
@@ -740,6 +749,13 @@ public class Jdbc2PoolDataSource
 
 
     /**
+     * @see #getTestOnBorrow
+     */
+    final public boolean isTestOnBorrow() {
+        return getTestOnBorrow();
+    }
+    
+    /**
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
      * before being returned by the {*link #borrowObject}
@@ -769,6 +785,13 @@ public class Jdbc2PoolDataSource
         testPositionSet = true;
     }
 
+    /**
+     * @see #getTestOnReturn
+     */
+    final public boolean isTestOnReturn() {
+        return isTestOnReturn();
+    }
+    
     /**
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
@@ -876,6 +899,12 @@ public class Jdbc2PoolDataSource
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
 
+    /**
+     * @see #getTestWhileIdle
+     */
+    final public boolean isTestWhileIdle() {
+        return getTestWhileIdle();
+    }
     /**
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
