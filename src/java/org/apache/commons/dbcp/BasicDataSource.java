@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.13 2003/04/09 00:19:37 dgraham Exp $
- * $Revision: 1.13 $
- * $Date: 2003/04/09 00:19:37 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.14 2003/04/09 02:39:16 dgraham Exp $
+ * $Revision: 1.14 $
+ * $Date: 2003/04/09 02:39:16 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.13 $ $Date: 2003/04/09 00:19:37 $
+ * @version $Revision: 1.14 $ $Date: 2003/04/09 02:39:16 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -667,15 +667,15 @@ public class BasicDataSource implements DataSource {
         if (username != null) {
             connectionProperties.put("user", username);
         } else {
-            System.out.println(
-                "DBCP DataSource configured without a 'username'");
+            this.logWriter.println("DBCP DataSource configured without a 'username'");
         }
+        
         if (password != null) {
             connectionProperties.put("password", password);
         } else {
-            System.out.println(
-                "DBCP DataSource configured without a 'password'");
+            this.logWriter.println("DBCP DataSource configured without a 'password'");
         }
+        
         DriverConnectionFactory driverConnectionFactory =
             new DriverConnectionFactory(driver, url, connectionProperties);
 
