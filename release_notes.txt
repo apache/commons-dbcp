@@ -1,7 +1,7 @@
 Release notes for Commons-DBCP 1.1
 ===================================
 There were a lot changes since the 1.0 release on 12 Aug 2002.
-* All existing featueres can now be configured by JNDI Context providers (Tomcat)
+* All existing features can now be configured by JNDI Context providers (Tomcat)
 
 * The double close() of a pooled connection is more effectively blocked
   (you may experience more "Already closed" SQLExceptions)
@@ -9,7 +9,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 * Prepared statement pooling is now implemented in BasicDataSource
   (set poolPreparedStatements=true, maxOpenPreparedStatements=xxx)
 
-* Access to the undelying connection is blocked by default
+* Access to the underlying connection is blocked by default
   You can access the underlying connection by setting
   accessToUnderlyingConnectionAllowed=true and by using the following construct:
   Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();
@@ -18,9 +18,9 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 
 * New connection default properties: defaultCatalog & defaultTransactionIsolation
 
-* Missing driverClassName will now give the folowing error "No suitable driver"
+* Missing driverClassName will now give the following error "No suitable driver"
 
-* Bad validationQuery will produce a meaningfull SQLException
+* Bad validationQuery will produce a meaningful SQLException
 
 * UML Class & sequence diagrams, configuration documentation
 
