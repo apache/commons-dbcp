@@ -1,6 +1,6 @@
 /*
- * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAbandonedBasicDataSource.java,v $
- * $Revision: 1.6 $
+ * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestPStmtPoolingBasicDataSource.java,v $
+ * $Revision: 1.1 $
  * $Date: 2003/11/02 17:53:55 $
  *
  * ====================================================================
@@ -62,23 +62,25 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * TestSuite for BasicDataSource with abandoned connection trace enabled
+ * TestSuite for BasicDataSource with prepared statement pooling enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.6 $ $Date: 2003/11/02 17:53:55 $
+ * @version $Revision: 1.1 $ $Date: 2003/11/02 17:53:55 $
  */
-public class TestAbandonedBasicDataSource extends TestConnectionPool {
-    public TestAbandonedBasicDataSource(String testName) {
+public class TestPStmtPoolingBasicDataSource extends TestConnectionPool {
+    public TestPStmtPoolingBasicDataSource(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestAbandonedBasicDataSource.class);
+        return new TestSuite(TestPStmtPoolingBasicDataSource.class);
     }
 
     protected Connection getConnection() throws Exception {
@@ -100,55 +102,47 @@ public class TestAbandonedBasicDataSource extends TestConnectionPool {
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
 
-        // abandoned enabled but should not affect the basic tests
-        // (very high timeout)
-        ds.setLogAbandoned(true);
-        ds.setRemoveAbandoned(true);
-        ds.setRemoveAbandonedTimeout(10000);
+        // PoolPreparedStatements enabled, should not affect the basic tests
+        ds.setPoolPreparedStatements(true);
+        ds.setMaxOpenPreparedStatements(2);
     }
 
     public void tearDown() throws Exception {
         ds = null;
     }
 
-    public void testPooling() throws Exception {
-        // this also needs access to the undelying connection
-        ds.setAccessToUnderlyingConnectionAllowed(true);
-        super.testPooling();
-    }
+    public void testPreparedStatementPooling() throws Exception {
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        
+        PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        
+        PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        assertNotNull(stmt2);
+        
+        assertTrue(stmt1 != stmt2);
+        
+        // go over the maxOpen limit
+        PreparedStatement stmt3 = null;
+        try {
+            stmt3 = conn.prepareStatement("select 'c' from dual");
+            fail("expected SQLException");
+        } 
+        catch (SQLException e) {}
+        
+        // make idle
+        stmt2.close();
 
-    // ---------- Abandoned Test -----------
-
-    private void getConnection1() throws Exception {
-        System.err.println("BEGIN getConnection1()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection1()");
-    }
-
-    private void getConnection2() throws Exception {
-        System.err.println("BEGIN getConnection2()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection2()");
-    }
-
-    private void getConnection3() throws Exception {
-        System.err.println("BEGIN getConnection3()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection3()");
-    }
-
-    public void testAbandoned() throws Exception {
-        // force abandoned
-        ds.setRemoveAbandonedTimeout(0);
-        ds.setMaxActive(1);
-
-        System.err.println("----------------------------------------");
-        getConnection1();
-        getConnection2();
-        getConnection3();
-        System.err.println("----------------------------------------");
+        // test cleanup the 'b' statement
+        stmt3 = conn.prepareStatement("select 'c' from dual");
+        assertNotNull(stmt3);
+        assertTrue(stmt3 != stmt1);
+        assertTrue(stmt3 != stmt2);
+        
+        // normal reuse of statement
+        stmt1.close();
+        PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt4);
     }
 }

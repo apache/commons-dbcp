@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAll.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/10/26 17:18:11 $
+ * $Revision: 1.12 $
+ * $Date: 2003/11/02 17:53:55 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import org.apache.commons.dbcp.datasources.TestFactory;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.11 $ $Date: 2003/10/26 17:18:11 $
+ * @version $Revision: 1.12 $ $Date: 2003/11/02 17:53:55 $
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {
@@ -81,6 +81,7 @@ public class TestAll extends TestCase {
         suite.addTest(TestJOCLed.suite());
         suite.addTest(TestBasicDataSource.suite());
         suite.addTest(TestAbandonedBasicDataSource.suite());
+        suite.addTest(TestPStmtPoolingBasicDataSource.suite());
         suite.addTest(TestDelegatingConnection.suite());
         suite.addTest(TestDelegatingStatement.suite());
         suite.addTest(TestDelegatingPreparedStatement.suite());
