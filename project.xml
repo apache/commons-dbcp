@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project>
-  <extend>../xdocs/maven/project-base.xml</extend>
+  <extend>../commons-build/project.xml</extend>
   <name>Commons DBCP</name>
   <id>commons-dbcp</id>
   <logo>/images/dbcp-logo-blue.jpg</logo>
