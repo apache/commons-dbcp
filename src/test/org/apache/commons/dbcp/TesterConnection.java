@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.11 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.12 $ $Date: 2004/03/07 10:54:55 $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -140,6 +140,13 @@ public class TesterConnection implements Connection {
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         checkOpen();
+        if("null".equals(sql)) {
+            return null;
+        } if("invalid".equals(sql)) {
+            throw new SQLException("invalid query");
+        } if ("broken".equals(sql)) {
+            throw new SQLException("broken connection");
+        }
         return new TesterPreparedStatement(this, sql);
     }
 
