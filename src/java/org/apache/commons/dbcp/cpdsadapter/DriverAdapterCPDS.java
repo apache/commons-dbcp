@@ -113,13 +113,13 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * <p>
  * The <a href="package-summary.html">package documentation</a> contains an 
  * example using catalina and JNDI.  The <a 
- * href="../jdbc2pool/package-summary.html">jdbc2pool package documentation</a>
+ * href="../datasources/package-summary.html">jdbc2pool package documentation</a>
  * shows how to use <code>DriverAdapterCPDS</code> as a source for
  * <code>Jdbc2PoolDataSource</code> without the use of JNDI.
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DriverAdapterCPDS.java,v 1.2 2003/06/29 12:42:16 mpoeschl Exp $
+ * @version $Id: DriverAdapterCPDS.java,v 1.3 2003/08/13 12:17:36 dirkv Exp $
  */
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 
