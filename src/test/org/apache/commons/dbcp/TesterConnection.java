@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.9 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -61,13 +61,21 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.Map;
 
 /**
  * A dummy {@link Connection}, for testing purposes.
+ * 
  * @author Rodney Waldhoff
- * @version $Id: TesterConnection.java,v 1.8 2003/10/09 21:05:29 rdonkin Exp $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.9 $ $Date: 2003/10/15 19:53:30 $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -78,6 +86,17 @@ public class TesterConnection implements Connection {
     protected Map _typeMap = null;
     protected boolean _readOnly = false;
     protected SQLWarning warnings = null;
+    protected String username = null;
+    protected String password = null;
+
+    public TesterConnection(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+    
+    public String getUsername() {
+        return this.username;
+    }
 
     public void setWarnings(SQLWarning warning) {
         this.warnings = warning;

@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestDelegatingConnection.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.4 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision: 1.3 $ $Date: 2003/10/09 21:05:29 $
+ * @version $Revision: 1.4 $ $Date: 2003/10/15 19:53:30 $
  */
 public class TestDelegatingConnection extends TestCase {
     public TestDelegatingConnection(String testName) {
@@ -84,7 +84,7 @@ public class TestDelegatingConnection extends TestCase {
     private Connection delegateConn = null;
 
     public void setUp() throws Exception {
-        delegateConn = new TesterConnection();
+        delegateConn = new TesterConnection("test", "test");
         conn = new DelegatingConnection(delegateConn);
     }
 

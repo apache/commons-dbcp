@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterDriver.java,v $
- * $Revision: 1.5 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.6 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -80,6 +80,10 @@ import java.util.Properties;
  * <tr><td>u2</td><td>p2</td></tr>
  * <tr><td>username</td><td>password</td></tr>
  * </table>
+ * 
+ * @author Rodney Waldhoff
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.6 $ $Date: 2003/10/15 19:53:30 $
  */
 public class TesterDriver implements Driver {
     private static Properties validUserPasswords = new Properties();
@@ -92,6 +96,13 @@ public class TesterDriver implements Driver {
         validUserPasswords.put("u1", "p1");
         validUserPasswords.put("u2", "p2");
         validUserPasswords.put("username", "password");
+    }
+
+    /** 
+     * TesterDriver specific method to add users to the list of valid users 
+     */
+    public static void addUser(String username, String password) {
+        validUserPasswords.put(username, password);
     }
 
     public boolean acceptsURL(String url) throws SQLException {
@@ -119,13 +130,15 @@ public class TesterDriver implements Driver {
         Connection conn = null;
         if (acceptsURL(url)) 
         {
+            String username = "test";
+            String password = "test";
             if (info != null) 
             {
-                assertValidUserPassword(info.getProperty("user"), 
-                                        info.getProperty("password"));
+                username = info.getProperty("user");
+                password = info.getProperty("password");
+                assertValidUserPassword(username, password);
             }
-            
-            conn = new TesterConnection();
+            conn = new TesterConnection(username, password);
         }
         
         return conn;

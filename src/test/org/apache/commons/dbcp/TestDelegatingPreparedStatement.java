@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestDelegatingPreparedStatement.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.5 $
+ * $Date: 2003/10/15 19:53:30 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import junit.framework.TestSuite;
 /**
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.4 $ $Date: 2003/10/09 21:05:29 $
+ * @version $Revision: 1.5 $ $Date: 2003/10/15 19:53:30 $
  */
 public class TestDelegatingPreparedStatement extends TestCase {
     public TestDelegatingPreparedStatement(String testName) {
@@ -88,7 +88,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
     private PreparedStatement delegateStmt = null;
 
     public void setUp() throws Exception {
-        delegateConn = new TesterConnection();
+        delegateConn = new TesterConnection("test", "test");
         conn = new DelegatingConnection(delegateConn);
     }
 
