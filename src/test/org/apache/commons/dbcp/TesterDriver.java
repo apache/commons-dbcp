@@ -38,7 +38,7 @@ import java.util.Properties;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.7 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision$ $Date$
  */
 public class TesterDriver implements Driver {
     private static Properties validUserPasswords = new Properties();

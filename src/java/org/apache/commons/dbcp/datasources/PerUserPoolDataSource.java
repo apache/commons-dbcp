@@ -44,7 +44,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision: 1.11 $ $Date: 2004/10/20 20:46:30 $
+ * @version $Revision$ $Date$
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {

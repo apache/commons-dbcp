@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2004/05/01 12:56:26 $
+ * @version $Revision$ $Date$
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public TestAbandonedBasicDataSource(String testName) {

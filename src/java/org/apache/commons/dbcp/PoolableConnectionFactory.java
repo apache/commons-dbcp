@@ -30,7 +30,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.23 $ $Date: 2004/06/09 18:21:23 $
+ * @version $Revision$ $Date$
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**

@@ -40,7 +40,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.18 $ $Date: 2004/08/21 21:00:15 $
+ * @version $Revision$ $Date$
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */

@@ -80,7 +80,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision: 1.9 $ $Date: 2004/07/11 19:09:50 $
+ * @version $Revision$ $Date$
  */
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 

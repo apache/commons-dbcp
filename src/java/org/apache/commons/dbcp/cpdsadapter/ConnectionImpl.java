@@ -35,7 +35,7 @@ import java.sql.SQLException;
  * SQLException.
  *
  * @author John D. McNally
- * @version $Revision: 1.9 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision$ $Date$
  */
 class ConnectionImpl implements Connection {
     private static final String CLOSED 

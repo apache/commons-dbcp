@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:18 $
+ * @version $Revision$ $Date$
  */
 public class TestJOCLContentHandler extends TestCase {
     public TestJOCLContentHandler(String testName) {

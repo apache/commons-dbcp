@@ -32,7 +32,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision: 1.2 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision$ $Date$
  */
 public class TestFactory extends TestCase {
     public TestFactory(String testName) {

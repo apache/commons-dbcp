@@ -37,7 +37,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2004/02/28 12:18:18 $
+ * @version $Revision$ $Date$
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {

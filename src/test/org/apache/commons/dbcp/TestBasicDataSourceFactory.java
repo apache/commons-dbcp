@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSourceFactory
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.2 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision$ $Date$
  */
 public class TestBasicDataSourceFactory extends TestCase {
     public TestBasicDataSourceFactory(String testName) {

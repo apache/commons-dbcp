@@ -23,7 +23,7 @@ import org.apache.commons.dbcp.datasources.TestFactory;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.15 $ $Date: 2004/05/01 12:43:47 $
+ * @version $Revision$ $Date$
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {

@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.39 $ $Date: 2004/08/21 20:50:39 $
+ * @version $Revision$ $Date$
  */
 public class BasicDataSource implements DataSource {
 

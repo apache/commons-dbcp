@@ -38,7 +38,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * {*link PoolableConnection}s.
  *
  * @author John D. McNally
- * @version $Revision: 1.6 $ $Date: 2004/03/07 11:19:25 $
+ * @version $Revision$ $Date$
  */
 class KeyedCPDSConnectionFactory 
     implements KeyedPoolableObjectFactory, ConnectionEventListener {

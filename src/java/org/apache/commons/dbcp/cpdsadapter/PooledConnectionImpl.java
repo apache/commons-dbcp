@@ -37,7 +37,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author John D. McNally
- * @version $Revision: 1.16 $ $Date: 2004/03/07 11:19:25 $
+ * @version $Revision$ $Date$
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {

@@ -26,7 +26,7 @@ import junit.framework.TestSuite;
 /**
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.6 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision$ $Date$
  */
 public class TestDelegatingStatement extends TestCase {
     public TestDelegatingStatement(String testName) {

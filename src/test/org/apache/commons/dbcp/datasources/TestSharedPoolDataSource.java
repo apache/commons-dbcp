@@ -32,7 +32,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2005/01/04 23:50:10 $
+ * @version $Revision$ $Date$
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {

@@ -18,7 +18,7 @@
    <properties>
       <title>Release notes for Commons-DBCP 1.1</title>
       <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id: release-notes-1.1.xml,v 1.1 2004/05/20 15:59:44 dirkv Exp $</revision>
+      <revision>$Id$</revision>
    </properties>
 
    <body>

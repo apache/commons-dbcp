@@ -33,7 +33,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2004/03/07 15:28:36 $
+ * @version $Revision$ $Date$
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
     private ResultSetMetaData _resultSetMetaData = null;

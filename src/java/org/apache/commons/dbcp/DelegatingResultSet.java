@@ -49,7 +49,7 @@ import java.util.Calendar;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/03/06 13:35:31 $
+ * @version $Revision$ $Date$
  */
 public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 

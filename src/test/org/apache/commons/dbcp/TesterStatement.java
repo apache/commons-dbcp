@@ -27,7 +27,7 @@ import java.sql.Statement;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.15 $ $Date: 2004/03/07 10:54:55 $
+ * @version $Revision$ $Date$
  */
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {

@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.8 $ $Date: 2004/05/20 17:54:50 $
+ * @version $Revision$ $Date$
  */
 public class TestJOCLed extends TestConnectionPool {
     public TestJOCLed(String testName) {

@@ -28,7 +28,7 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * TestCase for AbandonedObjectPool
  * 
  * @author Wayne Woodfield
- * @version $Revision: 1.2 $ $Date: 2004/05/04 17:56:10 $
+ * @version $Revision$ $Date$
  */
 public class TestAbandonedObjectPool extends TestCase {
     private AbandonedObjectPool pool = null;
