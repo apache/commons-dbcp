@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/08/26 14:20:15 $
+ * $Revision: 1.8 $
+ * $Date: 2003/09/13 22:44:32 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.7 $ $Date: 2003/08/26 14:20:15 $
+ * @version $Revision: 1.8 $ $Date: 2003/09/13 22:44:32 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -159,5 +159,37 @@ public class TestBasicDataSource extends TestConnectionPool {
         stmt1.close();
         PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt4);
+    }
+    
+    public void testPooling() throws Exception {
+        // this also needs access to the undelying connection
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        super.testPooling();
+    }    
+    
+    public void testNoAccessToUnderlyingConnectionAllowed() throws Exception {
+        // default: false
+        assertEquals(false, ds.isAccessToUnderlyingConnectionAllowed());
+        
+        Connection conn = getConnection();
+        Connection dconn = ((DelegatingConnection) conn).getDelegate();
+        assertNull(dconn);
+        
+        dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        assertNull(dconn);
+    }
+
+    public void testAccessToUnderlyingConnectionAllowed() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
+        
+        Connection conn = getConnection();
+        Connection dconn = ((DelegatingConnection) conn).getDelegate();
+        assertNotNull(dconn);
+        
+        dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        assertNotNull(dconn);
+        
+        assertTrue(dconn instanceof TesterConnection);
     }
 }

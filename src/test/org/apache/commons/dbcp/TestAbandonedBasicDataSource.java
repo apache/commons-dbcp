@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAbandonedBasicDataSource.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.4 $
+ * $Date: 2003/09/13 22:44:32 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.3 $ $Date: 2003/08/22 16:08:32 $
+ * @version $Revision: 1.4 $ $Date: 2003/09/13 22:44:32 $
  */
 public class TestAbandonedBasicDataSource extends TestConnectionPool {
     public TestAbandonedBasicDataSource(String testName) {
@@ -107,6 +107,14 @@ public class TestAbandonedBasicDataSource extends TestConnectionPool {
     public void tearDown() throws Exception {
         ds = null;
     }
+
+    public void testPooling() throws Exception {
+        // this also needs access to the undelying connection
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        super.testPooling();
+    }
+
+    // ---------- Abandoned Test -----------
 
     private void getConnection1() throws Exception {
         System.err.println("BEGIN getConnection1()");
