@@ -4,3 +4,4 @@ dist
 .project
 target
 maven.log
+velocity.log
