@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.5 2003/08/11 16:01:25 dirkv Exp $
- * $Revision: 1.5 $
- * $Date: 2003/08/11 16:01:25 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.6 2003/08/11 18:35:52 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/11 18:35:52 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolingDataSource.java,v 1.5 2003/08/11 16:01:25 dirkv Exp $
+ * @version $Id: PoolingDataSource.java,v 1.6 2003/08/11 18:35:52 dirkv Exp $
  */
 public class PoolingDataSource implements DataSource {
     public PoolingDataSource() {
@@ -108,6 +108,8 @@ public class PoolingDataSource implements DataSource {
             return (Connection)(_pool.borrowObject());
         } catch(SQLException e) {
             throw e;
+        } catch(NoSuchElementException e) {
+            throw new SQLNestedException("Cannot get a connection", e);
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
