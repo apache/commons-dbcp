@@ -35,7 +35,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.21 $ $Date: 2004/07/11 19:09:50 $
+ * @version $Revision: 1.21 $ $Date$
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -155,6 +155,22 @@ public class TestManual extends TestConnectionPool {
         }
     }
     
+    public void testInvalidateConnection() throws Exception {
+        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        assertNotNull(conn);
+
+        ObjectPool pool = driver.getConnectionPool("test");
+        assertEquals(1, pool.getNumActive());
+        assertEquals(0, pool.getNumIdle());
+
+        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        driver.invalidateConnection(conn);
+
+        assertEquals(0, pool.getNumActive());
+        assertEquals(0, pool.getNumIdle());
+        assertTrue(conn.isClosed());
+    }
+
     public void testLogWriter() throws Exception {
         PrintStream ps = System.out;
         PrintWriter pw = new PrintWriter(System.err);
