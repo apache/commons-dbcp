@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestConnectionPool.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/12/22 14:58:39 $
+ * $Revision: 1.12 $
+ * $Date: 2004/02/21 13:26:30 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import junit.framework.TestCase;
  * @author John McNally
  * @author Dirk Verbeeck
  * 
- * @version $Id: TestConnectionPool.java,v 1.11 2003/12/22 14:58:39 dirkv Exp $
+ * @version $Id: TestConnectionPool.java,v 1.12 2004/02/21 13:26:30 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -521,5 +521,15 @@ public abstract class TestConnectionPool extends TestCase {
         // forget to close the resultset: rset.close();
         stmt.close();
         conn.close();
+    }
+    
+    // Bugzilla Bug 26966: Connectionpool's connections always returns same
+    public void testHashCode() throws Exception {
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        Connection conn2 = getConnection();
+        assertNotNull(conn2);
+
+        assertTrue(conn1.hashCode() != conn2.hashCode());
     }
 }
