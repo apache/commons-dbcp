@@ -71,8 +71,11 @@ testWhileIdle
 </tr>
 <tr>
    <td>defaultReadOnly</td>
-   <td>false</td>
-   <td>The default read-only state of connections created by this pool.</td>
+   <td>driver default</td>
+   <td>The default read-only state of connections created by this pool.
+       If not set then the setReadOnly method will not be called.
+       (Some drivers don't support read only mode, ex: Informix)
+   </td>
 </tr>
 <tr>
    <td>defaultTransactionIsolation</td>
