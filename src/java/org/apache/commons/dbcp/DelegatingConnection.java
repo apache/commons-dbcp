@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.4 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.4 $
- * $Date: 2002/05/16 21:25:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.5 2002/06/28 15:28:20 glenn Exp $
+ * $Revision: 1.5 $
+ * $Date: 2002/06/28 15:28:20 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.4 2002/05/16 21:25:37 glenn Exp $
+ * @version $Id: DelegatingConnection.java,v 1.5 2002/06/28 15:28:20 glenn Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -162,16 +162,6 @@ public class DelegatingConnection extends AbandonedTrace
      */
     public void close() throws SQLException
     {
-        // The JDBC spec requires that a Connection close any open  
-        // Statement's when it is closed.
-        List statements = getTrace();
-        if( statements != null) {
-            Iterator it = statements.iterator();
-            while(it.hasNext()) {
-                ((ResultSet)it.next()).close();
-            }
-            clearTrace();
-        }
         passivate();
         _conn.close();
     }
@@ -256,8 +246,19 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    protected void passivate() {
+    protected void passivate() throws SQLException {
         _closed = true;
+        // The JDBC spec requires that a Connection close any open
+        // Statement's when it is closed.
+        List statements = getTrace();
+        if( statements != null) {
+            Iterator it = statements.iterator();
+            while(it.hasNext()) {
+                ((Statement)it.next()).close();
+            }
+            clearTrace();
+        }  
+        setLastUsed(0);
         if(_conn instanceof DelegatingConnection) {
             ((DelegatingConnection)_conn).passivate();
         }

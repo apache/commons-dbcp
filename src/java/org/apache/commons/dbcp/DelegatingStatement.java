@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/05/16 21:25:38 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.4 2002/06/28 15:28:20 glenn Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/06/28 15:28:20 $
  *
  * ====================================================================
  *
@@ -147,22 +147,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * any ResultSets that were not explicitly closed.
      */
     public void close() throws SQLException {
-        if (_conn != null) {
-            _conn.removeTrace(this);
-           _conn = null;
-        }
-
-        // The JDBC spec requires that a statment close any open  
-        // ResultSet's when it is closed.
-        List resultSets = getTrace();
-        if( resultSets != null) {
-            Iterator it = resultSets.iterator();
-            while(it.hasNext()) {
-                ((ResultSet)it.next()).close();
-            }
-            clearTrace();
-        }
-
         passivate();
         _stmt.close();
     }
@@ -222,8 +206,23 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
-    protected void passivate() {
+    protected void passivate() throws SQLException {
         _closed = true;
+        if (_conn != null) {
+            _conn.removeTrace(this);
+           _conn = null;
+        }
+
+        // The JDBC spec requires that a statment close any open
+        // ResultSet's when it is closed.
+        List resultSets = getTrace();
+        if( resultSets != null) {
+            Iterator it = resultSets.iterator();
+            while(it.hasNext()) {
+                ((ResultSet)it.next()).close();
+            }
+            clearTrace();
+        }
         if(_stmt instanceof DelegatingPreparedStatement) {
             ((DelegatingPreparedStatement)_stmt).passivate();
         }
