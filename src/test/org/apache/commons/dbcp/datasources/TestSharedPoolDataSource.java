@@ -32,7 +32,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.7 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.8 $ $Date: 2004/07/11 19:09:50 $
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
@@ -412,7 +412,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn3.close();
     }     
 
-
     // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS 
     // when setPoolPreparedStatements(true)
     public void testPoolPrepareStatement() throws Exception 
@@ -429,5 +428,80 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         rset.close();
         stmt.close();
         conn.close();
+    }
+
+    public void testPoolPreparedStatements() throws Exception {
+        DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
+        DataSource myds = null;
+        mypcds.setDriver("org.apache.commons.dbcp.TesterDriver");
+        mypcds.setUrl("jdbc:apache:commons:testdriver");
+        mypcds.setUser("foo");
+        mypcds.setPassword("bar");
+        mypcds.setPoolPreparedStatements(true);
+        mypcds.setMaxPreparedStatements(10);
+
+        SharedPoolDataSource tds = new SharedPoolDataSource();
+        tds.setConnectionPoolDataSource(mypcds);
+        tds.setMaxActive(getMaxActive());
+        tds.setMaxWait((int)(getMaxWait()));
+        tds.setDefaultTransactionIsolation(
+            Connection.TRANSACTION_READ_COMMITTED);
+
+        myds = tds;
+
+        Connection conn = ds.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rset = null;
+
+        assertTrue(null != conn);
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        long l1HashCode = stmt.hashCode();
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        long l2HashCode = stmt.hashCode();
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        // statement pooling is not enabled, we should get different statements
+        assertTrue(l1HashCode != l2HashCode);
+        conn.close();
+        conn = null;
+
+        conn = myds.getConnection();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        long l3HashCode = stmt.hashCode();
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        long l4HashCode = stmt.hashCode();
+        rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        // prepared statement pooling is working
+        assertTrue(l3HashCode == l4HashCode);
+        conn.close();
+        conn = null;
+
     }
 }
