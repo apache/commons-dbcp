@@ -80,8 +80,8 @@
       <tag>DBCP_1_1</tag>
     </version>
     <version>
-      <id>1.2RC1</id>
-      <name>1.2RC1</name>
+      <id>1.2-RC1</id>
+      <name>1.2-RC1</name>
       <tag>DBCP_1_2_RC1</tag>
     </version>
   </versions>
@@ -155,7 +155,7 @@
     </dependency>
     <dependency>
       <id>commons-pool</id>
-      <version>1.2RC1</version>
+      <version>1.2-RC1</version>
     </dependency>
     <dependency>
       <id>jdbc</id>
@@ -204,11 +204,26 @@
         </resource>
       </resources>
     </unitTest>
+
+    <resources>
+      <resource>
+        <directory>${basedir}/src/test</directory>
+        <includes>
+          <include>testpool.jocl</include>
+        </includes>
+      </resource>
+      <resource>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+        </includes>
+      </resource>
+    </resources>
   </build>
   
   <reports>
-  	<report>maven-changelog-plugin</report>
-   	<report>maven-changes-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-changes-plugin</report>
     <report>maven-developer-activity-plugin</report>
     <report>maven-file-activity-plugin</report>
     <report>maven-javadoc-plugin</report>
