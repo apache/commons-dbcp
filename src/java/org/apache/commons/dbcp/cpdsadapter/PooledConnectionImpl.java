@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/PooledConnectionImpl.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/10/26 17:35:30 $
+ * $Revision: 1.11 $
+ * $Date: 2003/11/10 14:45:35 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.10 2003/10/26 17:35:30 dirkv Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.11 2003/11/10 14:45:35 dirkv Exp $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -258,7 +258,7 @@ class PooledConnectionImpl
                                        int resultSetConcurrency) 
             throws SQLException {
         if (pstmtPool == null) {
-            return connection.prepareStatement(sql);
+            return connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
         } else {
             try {
                 return (PreparedStatement) pstmtPool.borrowObject(
