@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<document>
+
+ <properties>
+  <title>Sequence Diagrams</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+<section name="createDataSource">
+<img src="../images/uml/createDataSource.gif"/>
+</section>
+
+<section name="getConnection">
+<img src="../images/uml/getConnection.gif"/>
+</section>
+
+<section name="prepareStatement">
+<img src="../images/uml/prepareStatement.gif"/>
+</section>
+
+</body>
+</document>

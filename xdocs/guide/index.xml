@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<document>
+
+ <properties>
+  <title>Developers Guide</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+<section name="BasicDataSource">
+<center><img src="../images/uml/BasicDataSource.gif"/></center>
+</section>
+
+<section name="ConnectionFactory">
+<center><img src="../images/uml/ConnectionFactory.gif"/></center>
+</section>
+
+</body>
+</document>
