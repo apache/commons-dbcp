@@ -18,7 +18,7 @@
    <properties>
       <title>Downloads</title>
       <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id: downloads.xml,v 1.7 2004/06/12 13:25:56 dirkv Exp $</revision>
+      <revision>$Id: downloads.xml,v 1.8 2005/01/09 19:16:39 dirkv Exp $</revision>
    </properties>
 
    <body>
@@ -38,6 +38,11 @@
             its source is available from 
             <a href="http://jakarta.apache.org/site/sourceindex.cgi#commons-dbcp">
             Jakarta Source Downloads page</a>.
+         </p>
+         <p>
+            Commons-DBCP depends at runtime on 
+            <a href="http://jakarta.apache.org/commons/pool/">commons-pool</a> and 
+            <a href="http://jakarta.apache.org/commons/collections/">commons-collections</a>.
          </p>
          <p>
             Older releases are retained by the Apache Software Foundation but are 
