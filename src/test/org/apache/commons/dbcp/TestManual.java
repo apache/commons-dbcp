@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.10 2002/11/01 15:42:33 rwaldhoff Exp $
- * $Revision: 1.10 $
- * $Date: 2002/11/01 15:42:33 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.11 2002/11/07 21:06:57 rwaldhoff Exp $
+ * $Revision: 1.11 $
+ * $Date: 2002/11/07 21:06:57 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import org.apache.commons.pool.impl.*;
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * 
- * @version $Id: TestManual.java,v 1.10 2002/11/01 15:42:33 rwaldhoff Exp $
+ * @version $Id: TestManual.java,v 1.11 2002/11/07 21:06:57 rwaldhoff Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -228,8 +228,8 @@ public class TestManual extends TestCase {
     }
     
     public void testAutoCommitBehavior() throws Exception {
-    	
-    	final String strDriverUrl = "jdbc:apache:commons:dbcp:test";
+        
+        final String strDriverUrl = "jdbc:apache:commons:dbcp:test";
         Connection conn = DriverManager.getConnection(strDriverUrl);
         assertTrue(conn != null);
         assertTrue(conn.getAutoCommit());
@@ -242,9 +242,44 @@ public class TestManual extends TestCase {
         Connection conn3 = DriverManager.getConnection(strDriverUrl);
         assertTrue( conn3.getAutoCommit() );
 
-		conn2.close();
-		
-		conn3.close();
+        conn2.close();
+        
+        conn3.close();
+    }
+    
+    /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
+    public void testReportedBug12400() throws Exception {
+        ObjectPool connectionPool = new GenericObjectPool(
+            null,
+            70,
+            GenericObjectPool.WHEN_EXHAUSTED_BLOCK,
+            60000,
+            10);
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+            "jdbc:apache:commons:testdriver", 
+            "username", 
+            "password");
+        PoolableConnectionFactory poolableConnectionFactory = 
+            new PoolableConnectionFactory(
+                connectionFactory,
+                connectionPool,
+                null,
+                null,
+                false,
+                true);
+        PoolingDriver driver = new PoolingDriver();
+        driver.registerPool("neusoftim",connectionPool);
+        Connection[] conn = new Connection[25];
+        for(int i=0;i<25;i++) {
+            conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
+            for(int j=0;j<i;j++) {
+                assertTrue(conn[j] != conn[i]);
+                assertTrue(!conn[j].equals(conn[i]));
+            }
+        }
+        for(int i=0;i<25;i++) {
+            conn[i].close();
+        }
     }
     
 }
