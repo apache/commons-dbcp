@@ -54,21 +54,15 @@
  
 package org.apache.commons.dbcp.datasources;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.naming.BinaryRefAddr;
 import javax.naming.Context;
 import javax.naming.Name;
-import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
-import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
 /**
