@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/09/13 22:44:32 $
+ * $Revision: 1.9 $
+ * $Date: 2003/09/14 00:19:43 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.8 $ $Date: 2003/09/13 22:44:32 $
+ * @version $Revision: 1.9 $ $Date: 2003/09/14 00:19:43 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -191,5 +191,28 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertNotNull(dconn);
         
         assertTrue(dconn instanceof TesterConnection);
+    }
+    
+    public void testEmptyValidationQuery() throws Exception {
+        assertNotNull(ds.getValidationQuery());
+        
+        ds.setValidationQuery("");
+        assertNull(ds.getValidationQuery());
+
+        ds.setValidationQuery("   ");
+        assertNull(ds.getValidationQuery());
+    }
+
+    public void testInvalidValidationQuery() {
+        try {
+            ds.setValidationQuery("invalid");
+            ds.getConnection();
+            fail("expected SQLException");
+        }
+        catch (SQLException e) {
+            if (e.toString().indexOf("invalid") < 0) {
+                fail("expected detailed error message");
+            }
+        }
     }
 }
