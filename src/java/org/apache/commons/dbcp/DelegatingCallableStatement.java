@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.4 2002/08/05 06:25:59 jmcnally Exp $
- * $Revision: 1.4 $
- * $Date: 2002/08/05 06:25:59 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.5 2002/10/30 00:46:02 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2002/10/30 00:46:02 $
  *
  * ====================================================================
  *
@@ -118,6 +118,11 @@ public class DelegatingCallableStatement extends AbandonedTrace
         super(c);
         _conn = c;
         _stmt = s;
+    }
+
+    /** Return the {@link CallableStatement} I'm wrapping. */
+    public CallableStatement getDelegate() {
+        return _stmt;
     }
 
     /**
