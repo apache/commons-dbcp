@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.26 2004/08/21 21:20:58 yoavs Exp $ -->
+<!-- $Id: build.xml,v 1.27 2004/09/02 00:13:00 yoavs Exp $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -47,6 +47,7 @@
       <property name="javac.optimize" value="false"/>
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
+      <property name="javac.source" value="1.4" />
 
       <available property="jndi.present" classname="javax.naming.Context"/>
       <available property="jdbc3.present" classname="java.sql.Savepoint"/>
@@ -123,7 +124,8 @@
              classpath="${classpath}"
              debug="${javac.debug}"
              deprecation="${javac.deprecation}"
-             optimize="${javac.optimize}">
+             optimize="${javac.optimize}"
+             source="${javac.source}">
          <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory.java"
              unless="jndi.present"/>
          <exclude name="org/apache/commons/dbcp/datasources/**"
@@ -139,7 +141,8 @@
              srcdir="${src.test.dir}"
              debug="${javac.debug}"
              deprecation="${javac.deprecation}"
-             optimize="${javac.optimize}">
+             optimize="${javac.optimize}"
+             source="${javac.source}">
         <classpath>
           <pathelement location="${build.classes.dir}" /> 
           <pathelement location="${build.test-classes.dir}" /> 
