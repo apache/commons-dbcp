@@ -1,9 +1,13 @@
-package org.apache.commons.dbcp.jdbc2pool;
-
-/* ====================================================================
+/* 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/UserPassKey.java,v 1.4 2003/04/15 01:32:42 dgraham Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/04/15 01:32:42 $
+ * 
+ * ====================================================================
+ * 
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,11 +57,15 @@ package org.apache.commons.dbcp.jdbc2pool;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
+package org.apache.commons.dbcp.jdbc2pool;
+
 import java.io.Serializable;
 
-class UserPassKey
-    implements Serializable
+/**
+ * Holds a username, password pair.
+ */
+class UserPassKey implements Serializable
 {
     private String password;
     private String username;
@@ -86,27 +94,40 @@ class UserPassKey
         return username;
     }
     
+    /**
+     * @return <code>true</code> if the username and password fields for both 
+     * objects are equal.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals(Object obj)
     {
-        if ( obj instanceof UserPassKey ) 
-        {
-            UserPassKey upk = (UserPassKey)obj;
-            return null == username ? null == upk.username : username.equals(upk.username);
-        }
-        else 
-        {
-            return false;            
-        }
+        if (obj == null)
+            return false;
+
+        if (obj == this)
+            return true;
+        
+        if (!(obj instanceof UserPassKey))
+            return false;
+        
+        UserPassKey key = (UserPassKey) obj;
+        
+        boolean usersEqual =
+            (this.username == null
+                ? key.username == null
+                : this.username.equals(key.username));
+                
+        boolean passwordsEqual =
+            (this.password == null
+                ? key.password == null
+                : this.password.equals(key.password));
+
+        return (usersEqual && passwordsEqual);
     }
 
     public int hashCode()
     {
-        int h = 0;
-        if (username != null) 
-        {
-            h = username.hashCode();
-        }
-        return h;
+        return (this.username != null ? this.username.hashCode() : 0);
     }
 
     public String toString()
