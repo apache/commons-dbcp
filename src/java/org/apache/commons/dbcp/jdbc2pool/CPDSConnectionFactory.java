@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
- * $Revision: 1.1 $
- * $Date: 2002/08/05 06:42:01 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/11/01 16:03:20 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.dbcp.*;
  * {*link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.2 2002/11/01 16:03:20 rwaldhoff Exp $
  */
 class CPDSConnectionFactory 
     implements PoolableObjectFactory, ConnectionEventListener {
@@ -286,8 +286,11 @@ class CPDSConnectionFactory
         PooledConnection pc = (PooledConnection)event.getSource();
         try 
         {
-            System.err
-                .println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR");
+            if(null != event.getSQLException()) {
+                System.err
+                    .println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" +
+                             event.getSQLException() + ")");
+            }
             //remove this from the listener list because we are no more 
             //interested in errors since we are about to close this connection
             pc.removeConnectionEventListener(this);
