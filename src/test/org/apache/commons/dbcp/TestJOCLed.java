@@ -1,7 +1,7 @@
 /*
- * $Id: TestJOCLed.java,v 1.3 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: TestJOCLed.java,v 1.4 2003/03/14 17:06:03 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/14 17:06:03 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -68,11 +68,14 @@ import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.3 $ $Date: 2002/11/08 18:51:07 $
+ * @version $Revision: 1.4 $ $Date: 2003/03/14 17:06:03 $
  */
 public class TestJOCLed extends TestConnectionPool {
     public TestJOCLed(String testName) {
         super(testName);
+        if(null == System.getProperty("org.xml.sax.driver")) {
+            System.setProperty("org.xml.sax.driver","org.apache.xerces.parsers.SAXParser");
+        }
     }
 
     public static Test suite() {
