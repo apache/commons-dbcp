@@ -43,8 +43,8 @@ import org.apache.commons.dbcp.SQLNestedException;
  * set for users with read-only connections. 
  * </p>
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.9 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.10 $ $Date: 2004/02/28 12:18:17 $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {

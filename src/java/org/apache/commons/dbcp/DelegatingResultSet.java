@@ -47,7 +47,8 @@ import java.util.Calendar;
  * close any open ResultSet's on Statement close.
  *
  * @author Glenn L. Nielsen
- * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @author James House
+ * @version $Revision: 1.12 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 

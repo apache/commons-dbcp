@@ -31,17 +31,14 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.dbcp.SQLNestedException;
 
-
 /**
- * <p>
  * A pooling <code>DataSource</code> appropriate for deployment within
  * J2EE environment.  There are many configuration options, most of which are
  * defined in the parent class. All users (based on username) share a single 
  * maximum number of Connections in this datasource.
- * </p>
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SharedPoolDataSource.java,v 1.8 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.9 $ $Date: 2004/02/28 12:18:17 $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {

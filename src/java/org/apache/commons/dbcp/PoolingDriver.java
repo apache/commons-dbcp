@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id: PoolingDriver.java,v 1.10 2004/02/28 11:48:05 dirkv Exp $
+ * @version $Revision: 1.11 $ $Date: 2004/02/28 12:18:17 $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */

@@ -42,9 +42,9 @@ import java.util.Calendar;
  *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
- * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.20 $ $Date: 2004/02/28 11:48:04 $
+ * @version $Revision: 1.21 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DelegatingPreparedStatement extends DelegatingStatement
         implements PreparedStatement {

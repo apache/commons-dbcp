@@ -78,8 +78,8 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * example using catalina and JNDI and it also contains a non-JNDI example. 
  * </p>
  *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.10 2004/02/28 11:48:06 dirkv Exp $
+ * @author John D. McNally
+ * @version $Revision: 1.11 $ $Date: 2004/02/28 12:18:17 $
  */
 public abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {

@@ -35,6 +35,8 @@ import javax.naming.spi.ObjectFactory;
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
  * or <code>PerUserPoolDataSource</code>s
+ * 
+ * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
  */
 abstract class InstanceKeyObjectFactory
     implements ObjectFactory

@@ -43,8 +43,8 @@ import java.util.Map;
  *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
- * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.17 2004/02/28 11:48:04 dirkv Exp $
+ * @author James House
+ * @version $Revision: 1.18 $ $Date: 2004/02/28 12:18:17 $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
