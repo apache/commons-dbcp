@@ -19,7 +19,7 @@
   
   <id>commons-dbcp</id>
   <inceptionYear>2001</inceptionYear>
-  <currentVersion>1.2.1</currentVersion>
+  <currentVersion>1.2.2-dev</currentVersion>
   <name>Commons DBCP</name>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
@@ -142,6 +142,12 @@
       <email></email>
       <organization></organization>
     </developer>
+    <developer>
+      <name>Yoav Shapira</name>
+      <id>yoavs</id>
+      <email>yoavs@apache.org</email>
+      <organization>Apache Software Foundation</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>
@@ -162,10 +168,17 @@
       <id>commons-pool</id>
       <version>1.2</version>
     </dependency>
+
+    <!-- Note JDBC 2.0 is a pain, because it must be manually
+         downloaded to your Maven repository, and it's not even
+         required on JDK 1.4.  Maybe we should remove it from
+         this dependency list so Maven doesn't choke?
+    -->
     <dependency>
       <id>jdbc</id>
       <version>2.0</version>
     </dependency>
+
     <dependency>
       <id>junit</id>
       <version>3.8.1</version>
