@@ -1,13 +1,13 @@
 /*
- * $Id: TestAll.java,v 1.3 2002/10/31 21:41:50 rwaldhoff Exp $
- * $Revision: 1.3 $
+ * $Id: TestDelegatingStatement.java,v 1.1 2002/10/31 21:41:50 rwaldhoff Exp $
+ * $Revision: 1.1 $
  * $Date: 2002/10/31 21:41:50 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,29 +61,44 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import org.apache.commons.dbcp.jdbc2pool.TestJdbc2PoolDataSource;
+import java.sql.Connection;
+import java.sql.Statement;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.3 $ $Date: 2002/10/31 21:41:50 $
+ * @version $Revision: 1.1 $ $Date: 2002/10/31 21:41:50 $
  */
-public class TestAll extends TestCase {
-    public TestAll(String testName) {
+public class TestDelegatingStatement extends TestCase {
+    public TestDelegatingStatement(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(TestManual.suite());
-        suite.addTest(TestDelegatingStatement.suite());
-        suite.addTest(TestDelegatingPreparedStatement.suite());
-        suite.addTest(TestJdbc2PoolDataSource.suite());
-        return suite;
+        return new TestSuite(TestDelegatingStatement.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestAll.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    private DelegatingConnection conn = null;
+    private Connection delegateConn = null;
+    private DelegatingStatement stmt = null;
+    private Statement delegateStmt = null;
+
+    public void setUp() throws Exception {
+        delegateConn = new TesterConnection();
+        delegateStmt = new TesterStatement(delegateConn);
+        conn = new DelegatingConnection(delegateConn);
+        stmt = new DelegatingStatement(conn,delegateStmt);
     }
+
+    public void testExecuteQueryReturnsNull() throws Exception {
+        assertNull(stmt.executeQuery("null"));
+    }
+
+    public void testGetDelegate() throws Exception {
+        assertEquals(delegateStmt,stmt.getDelegate());
+    }
+
 }

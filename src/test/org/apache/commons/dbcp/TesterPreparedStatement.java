@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterPreparedStatement.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/19 06:05:34 $
+ * $Id: TesterPreparedStatement.java,v 1.3 2002/10/31 21:41:50 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/10/31 21:41:50 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,8 @@ import java.io.Reader;
 import java.math.BigDecimal;
 
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
-    protected ResultSetMetaData _resultSetMetaData = null;
+    private ResultSetMetaData _resultSetMetaData = null;
+    private String _sql = null;
 
     public TesterPreparedStatement(Connection conn) {
         super(conn);
@@ -76,11 +77,16 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
     public TesterPreparedStatement(Connection conn, String sql) {
         super(conn);
+        _sql = sql;
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
-        return new TesterResultSet(this);
+        if("null".equals(sql)) {
+            return null;
+        } else {
+            return new TesterResultSet(this);
+        }
     }
 
     public int executeUpdate(String sql) throws SQLException {
@@ -90,7 +96,11 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
     public ResultSet executeQuery() throws SQLException {
         checkOpen();
-        return new TesterResultSet(this);
+        if("null".equals(_sql)) {
+            return null;
+        } else {
+            return new TesterResultSet(this);
+        }
     }
 
     public int executeUpdate() throws SQLException {
