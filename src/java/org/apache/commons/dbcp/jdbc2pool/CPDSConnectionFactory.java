@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.4 2003/03/06 19:25:38 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/03/06 19:25:38 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/CPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/04/02 00:48:49 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * {@link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.4 2003/03/06 19:25:38 rwaldhoff Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
  */
 class CPDSConnectionFactory 
     implements PoolableObjectFactory, ConnectionEventListener {
@@ -183,16 +183,10 @@ class CPDSConnectionFactory
         return obj;
     }
 
-    public void destroyObject(Object obj) {
+    public void destroyObject(Object obj) throws Exception {
         if(obj instanceof PooledConnectionAndInfo) {
-            try {
-                ((PooledConnectionAndInfo)obj)
-                    .getPooledConnection().close();
-            } catch(RuntimeException e) {
-                throw e;
-            } catch(SQLException e) {
-                ; // ignored
-            }
+            ((PooledConnectionAndInfo)obj)
+                .getPooledConnection().close();
         }
     }
 
@@ -267,7 +261,7 @@ class CPDSConnectionFactory
      * method of this connection object. What we need to do here is to
      * release this PooledConnection from our pool...
      */
-    public void connectionClosed(ConnectionEvent event) 
+    public void connectionClosed(ConnectionEvent event)  
     {
         PooledConnection pc = (PooledConnection)event.getSource();
         // if this event occured becase we were validating, ignore it
@@ -286,9 +280,16 @@ class CPDSConnectionFactory
             }
             catch (Exception e)
             {
-                destroyObject(info);
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + 
                                    "NOT BE RETURNED TO THE POOL");
+                try {
+                    destroyObject(info);
+                } catch(Exception e2) {
+                    System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + 
+                                       info);
+                    e2.printStackTrace();
+
+                }
             }
         }
     }
@@ -321,7 +322,13 @@ class CPDSConnectionFactory
         {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }            
-        destroyObject(info);
+        try {
+            destroyObject(info);
+        } catch(Exception e) {
+            System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + 
+                               info);
+            e.printStackTrace();
+        }
     }
 
     private static final String NO_KEY_MESSAGE = 

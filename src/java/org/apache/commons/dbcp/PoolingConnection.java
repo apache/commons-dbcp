@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.4 2003/04/02 00:48:49 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/04/02 00:48:49 $
  *
  * ====================================================================
  *
@@ -198,22 +198,12 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * @param key ignored
      * @param obj the {@link PreparedStatement} to be destroyed.
      */
-    public void destroyObject(Object key, Object obj) {
+    public void destroyObject(Object key, Object obj) throws Exception {
         //_openPstmts--;
-        try {
+        if(obj instanceof DelegatingPreparedStatement) {
             ((DelegatingPreparedStatement)obj).getInnermostDelegate().close();
-        } catch(SQLException e) {
-            // ignored
-        } catch(NullPointerException e) {
-            // ignored
-        } catch(ClassCastException e) {
-            try {
-                ((PreparedStatement)obj).close();
-            } catch(SQLException e2) {
-                // ignored
-            } catch(ClassCastException e2) {
-                // ignored
-            }
+        } else {
+            ((PreparedStatement)obj).close();
         }
     }
 
@@ -244,17 +234,9 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * @param key ignored
      * @param obj a {@link PreparedStatement}
      */
-    public void passivateObject(Object key, Object obj) {
-        try {
-            ((PreparedStatement)obj).clearParameters();
-            ((DelegatingPreparedStatement)obj).passivate();
-        } catch(SQLException e) {
-            // ignored
-        } catch(NullPointerException e) {
-            // ignored
-        } catch(ClassCastException e) {
-            // ignored
-        }
+    public void passivateObject(Object key, Object obj) throws Exception {
+        ((PreparedStatement)obj).clearParameters();
+        ((DelegatingPreparedStatement)obj).passivate();
     }
 
     public String toString() {
