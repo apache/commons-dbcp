@@ -143,7 +143,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.3 2002/11/07 19:22:31 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.4 2002/11/07 21:28:57 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -789,7 +789,7 @@ public class Jdbc2PoolDataSource
      * @see #getTestOnReturn
      */
     final public boolean isTestOnReturn() {
-        return isTestOnReturn();
+        return getTestOnReturn();
     }
     
     /**
