@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v $
- * $Revision: 1.15 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.16 $
+ * $Date: 2003/10/09 21:04:44 $
  *
  * ====================================================================
  *
@@ -26,8 +26,8 @@
  *    any, must include the following acknowledgement:
  *       "This product includes software developed by the
  *        Apache Software Foundation - http://www.apache.org/"
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
+ *    Alternately, this acknowledgement may appear in the software itself,
+ *    if and wherever such third-party acknowledgements normally appear.
  *
  * 4. The names "The Jakarta Project", "Commons", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
@@ -36,7 +36,7 @@
  *
  * 5. Products derived from this software may not be called "Apache"
  *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
+ *    permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -89,7 +89,7 @@ import java.util.Map;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.15 2003/08/22 16:08:31 dirkv Exp $
+ * @version $Id: DelegatingConnection.java,v 1.16 2003/10/09 21:04:44 rdonkin Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {

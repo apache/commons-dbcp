@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAbandonedBasicDataSource.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/09/13 22:44:32 $
+ * $Revision: 1.5 $
+ * $Date: 2003/10/09 21:05:29 $
  *
  * ====================================================================
  *
@@ -26,8 +26,8 @@
  *    any, must include the following acknowledgement:
  *       "This product includes software developed by the
  *        Apache Software Foundation - http://www.apache.org/"
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
+ *    Alternately, this acknowledgement may appear in the software itself,
+ *    if and wherever such third-party acknowledgements normally appear.
  *
  * 4. The names "The Jakarta Project", "Commons", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
@@ -36,7 +36,7 @@
  *
  * 5. Products derived from this software may not be called "Apache"
  *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
+ *    permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -67,7 +67,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.4 $ $Date: 2003/09/13 22:44:32 $
+ * @version $Revision: 1.5 $ $Date: 2003/10/09 21:05:29 $
  */
 public class TestAbandonedBasicDataSource extends TestConnectionPool {
     public TestAbandonedBasicDataSource(String testName) {
