@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/InstanceKeyDataSource.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/25 17:08:51 $
  *
  * ====================================================================
  *
@@ -129,13 +129,19 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.4 2003/08/22 16:08:32 dirkv Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.5 2003/08/25 17:08:51 jmcnally Exp $
  */
 abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
     private static final String GET_CONNECTION_CALLED 
             = "A Connection was already requested from this source, " 
             + "further initialization is not allowed.";
+    private static final String BAD_TRANSACTION_ISOLATION
+        = "The requested TransactionIsolation level is invalid.";
+    /**
+    * Internal constant to indicate the level is not set. 
+    */
+    protected static final int UNKNOWN_TRANSACTIONISOLATION = -1;
 
     private boolean getConnectionCalled = false;
 
@@ -143,6 +149,7 @@ abstract class InstanceKeyDataSource
     /** DataSource Name used to find the ConnectionPoolDataSource */
     private String dataSourceName = null;
     private boolean defaultAutoCommit = false;
+    private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
     private int maxWait = (int)Math.min((long)Integer.MAX_VALUE,
@@ -312,6 +319,41 @@ abstract class InstanceKeyDataSource
     public void setDefaultReadOnly(boolean v) {
         assertInitializationAllowed();
         this.defaultReadOnly = v;
+    }
+
+    /**
+     * Get the value of defaultTransactionIsolation, which defines the state of
+     * connections handed out from this pool.  The value can be changed
+     * on the Connection using Connection.setTransactionIsolation(int).
+     * If this method returns -1, the default is JDBC driver dependent.
+     * 
+     * @return value of defaultTransactionIsolation.
+     */
+    public int getDefaultTransactionIsolation() {
+            return defaultTransactionIsolation;
+    }
+
+    /**
+     * Set the value of defaultTransactionIsolation, which defines the state of
+     * connections handed out from this pool.  The value can be changed
+     * on the Connection using Connection.setTransactionIsolation(int).
+     * The default is JDBC driver dependent.
+     * 
+     * @param v  Value to assign to defaultTransactionIsolation
+     */
+    public void setDefaultTransactionIsolation(int v) {
+        assertInitializationAllowed();
+        switch (v) {
+        case Connection.TRANSACTION_NONE:
+        case Connection.TRANSACTION_READ_COMMITTED:
+        case Connection.TRANSACTION_READ_UNCOMMITTED:
+        case Connection.TRANSACTION_REPEATABLE_READ:
+        case Connection.TRANSACTION_SERIALIZABLE:
+            break;
+        default:
+            throw new IllegalArgumentException(BAD_TRANSACTION_ISOLATION);
+        }
+        this.defaultTransactionIsolation = v;
     }
     
     /**
