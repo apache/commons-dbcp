@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.22 $
- * $Date: 2003/08/26 14:19:28 $
+ * $Revision: 1.23 $
+ * $Date: 2003/08/27 15:43:55 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.22 $ $Date: 2003/08/26 14:19:28 $
+ * @version $Revision: 1.23 $ $Date: 2003/08/27 15:43:55 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -732,7 +732,7 @@ public class BasicDataSource implements DataSource {
         connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         connectionPool.setTestWhileIdle(testWhileIdle);
         
-        if (validationQuery != null) {
+        if (validationQuery != null && !testOnReturn && !testWhileIdle) {
             connectionPool.setTestOnBorrow(true);
         }
 
