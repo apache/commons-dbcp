@@ -639,7 +639,7 @@ public class TesterResultSet implements ResultSet {
     }
 
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.3 2003/03/06 00:04:59 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2003/03/06 00:04:59 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterConnection.java,v 1.4 2003/03/06 00:11:32 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 00:11:32 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  * A dummy {@link Connection}, for testing purposes.
  * @author Rodney Waldhoff
- * @version $Id: TesterConnection.java,v 1.3 2003/03/06 00:04:59 rwaldhoff Exp $
+ * @version $Id: TesterConnection.java,v 1.4 2003/03/06 00:11:32 rwaldhoff Exp $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -200,7 +200,7 @@ public class TesterConnection implements Connection {
         }
     }
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 

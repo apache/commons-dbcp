@@ -1,7 +1,7 @@
 /*
- * $Id: TesterPreparedStatement.java,v 1.4 2003/03/06 00:04:59 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/03/06 00:04:59 $
+ * $Id: TesterPreparedStatement.java,v 1.5 2003/03/06 00:11:32 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/03/06 00:11:32 $
  *
  * ====================================================================
  *
@@ -245,7 +245,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
 
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
