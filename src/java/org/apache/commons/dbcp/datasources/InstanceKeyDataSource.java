@@ -122,7 +122,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.2 2003/08/13 11:48:23 dirkv Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.3 2003/08/13 15:48:27 dirkv Exp $
  */
 abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
@@ -653,6 +653,7 @@ abstract class InstanceKeyDataSource
 
         Connection con = info.getPooledConnection().getConnection();        
         setupDefaults(con, username);
+        con.clearWarnings();
         return con;
     }
 
