@@ -2,9 +2,6 @@
 base.path=/usr/local
 commons-collections.home=${base.path}/commons-collections-2.0
 commons-collections.jar=${commons-collections.home}/commons-collections.jar
-# commons-lang.jar - Commons-Lang Classpath
-commons-lang.home=${basedir}/../../jakarta-commons-sandbox/lang/dist
-commons-lang.jar=${commons-lang.home}/commons-lang-1.0-b1.jar
 # commons-pool.jar - Commons-Pool Classpath
 commons-pool.home=${base.path}/commons-pool-1.0
 commons-pool.jar=${commons-pool.home}/commons-pool.jar

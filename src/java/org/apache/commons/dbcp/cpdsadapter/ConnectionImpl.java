@@ -1,5 +1,3 @@
-package org.apache.commons.dbcp.cpdsadapter;
-
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
@@ -53,6 +51,7 @@ package org.apache.commons.dbcp.cpdsadapter;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.commons.dbcp.cpdsadapter;
 
 import java.util.Map;
 import java.sql.Connection;
@@ -73,7 +72,7 @@ import java.sql.SQLException;
  * SQLException.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConnectionImpl.java,v 1.3 2003/03/06 00:04:58 rwaldhoff Exp $
+ * @version $Id: ConnectionImpl.java,v 1.4 2003/03/07 00:24:09 rwaldhoff Exp $
  */
 class ConnectionImpl 
     implements Connection

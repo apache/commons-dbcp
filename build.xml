@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.19 2003/03/06 00:11:33 rwaldhoff Exp $ -->
+<!-- $Id: build.xml,v 1.20 2003/03/07 00:24:08 rwaldhoff Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -42,7 +42,7 @@
       <property name="cp" value=""/>
 
       <!-- now combine the classpaths -->
-      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${commons-lang.jar}:${sax2.jar}"/>
+      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${sax2.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
       <property name="Name" value="Commons-DBCP"/>

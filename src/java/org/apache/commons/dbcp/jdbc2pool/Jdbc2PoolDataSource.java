@@ -54,8 +54,10 @@ package org.apache.commons.dbcp.jdbc2pool;
  * <http://www.apache.org/>.
  */
  
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -84,8 +86,6 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.collections.LRUMap;
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -145,7 +145,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.8 2003/03/06 18:13:37 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.9 2003/03/07 00:24:09 rwaldhoff Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -1117,7 +1117,7 @@ public class Jdbc2PoolDataSource
                 throw new SQLException(e.getMessage());
             }
         }
-        if (!ObjectUtils.equals(password, info.getPassword())) 
+        if(!(null == password ? null == info.getPassword() : password.equals(info.getPassword())))
         {
             closeDueToException(info);
             throw new SQLException("Given password did not match password used "
@@ -1601,7 +1601,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     jndiEnvironment = 
-                        (Properties)SerializationUtils.deserialize(serialized);
+                        (Properties)deserialize(serialized);
                 }
                 
                 ra = ref.get("loginTimeout");
@@ -1616,7 +1616,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     perUserDefaultAutoCommit = 
-                        (Map)SerializationUtils.deserialize(serialized);
+                        (Map)deserialize(serialized);
                 }
                 
                 ra = ref.get("perUserMaxActive");
@@ -1624,7 +1624,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     perUserMaxActive = 
-                        (Map)SerializationUtils.deserialize(serialized);
+                        (Map)deserialize(serialized);
                 }
 
                 ra = ref.get("perUserMaxIdle");
@@ -1632,7 +1632,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     perUserMaxIdle = 
-                        (Map)SerializationUtils.deserialize(serialized);
+                        (Map)deserialize(serialized);
                 }
 
                 ra = ref.get("perUserMaxWait");
@@ -1640,7 +1640,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     perUserMaxWait = 
-                        (Map)SerializationUtils.deserialize(serialized);
+                        (Map)deserialize(serialized);
                 }
                 
                 ra = ref.get("perUserDefaultReadOnly");
@@ -1648,7 +1648,7 @@ public class Jdbc2PoolDataSource
                 {
                     byte[] serialized = (byte[])ra.getContent();
                     perUserDefaultReadOnly = 
-                        (Map)SerializationUtils.deserialize(serialized);
+                        (Map)deserialize(serialized);
                 }
                 
                 ra = ref.get("testOnBorrow");
@@ -1705,4 +1705,15 @@ public class Jdbc2PoolDataSource
         
         return ds;
     }
+
+    private final Object deserialize(byte[] data) throws Exception {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new ByteArrayInputStream(data));
+            return in.readObject();
+        } finally {
+            try { in.close(); } catch (IOException ex) {}
+        }
+    }
+
 }

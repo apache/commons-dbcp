@@ -55,7 +55,6 @@ package org.apache.commons.dbcp.jdbc2pool;
  */
  
 import java.io.Serializable;
-import org.apache.commons.lang.ObjectUtils;
 
 class UserPassKey
     implements Serializable
@@ -89,14 +88,15 @@ class UserPassKey
     
     public boolean equals(Object obj)
     {
-        boolean equal = false;
         if ( obj instanceof UserPassKey ) 
         {
             UserPassKey upk = (UserPassKey)obj;
-            equal = ObjectUtils.equals(upk.username, username);
-        }            
-
-        return equal;
+            return null == username ? null == upk.username : username.equals(upk.username);
+        }
+        else 
+        {
+            return false;            
+        }
     }
 
     public int hashCode()
