@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedConfig.java,v 1.1 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.1 $
- * $Date: 2002/05/16 21:25:37 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedConfig.java,v 1.2 2003/04/09 00:19:37 dgraham Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/04/09 00:19:37 $ 
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,8 @@ package org.apache.commons.dbcp;
  * Configuration settings for handling abandoned db connections.
  *                                                            
  * @author Glenn L. Nielsen           
- * @version $Revision: 1.1 $ $Date: 2002/05/16 21:25:37 $
+ * @version $Revision: 1.2 $ $Date: 2003/04/09 00:19:37 $
+ * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedConfig {
 

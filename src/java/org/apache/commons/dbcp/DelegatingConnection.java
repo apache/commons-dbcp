@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.11 2003/03/06 19:25:34 rwaldhoff Exp $
- * $Revision: 1.11 $
- * $Date: 2003/03/06 19:25:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.12 2003/04/09 00:19:37 dgraham Exp $
+ * $Revision: 1.12 $
+ * $Date: 2003/04/09 00:19:37 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,7 +89,7 @@ import java.util.Map;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.11 2003/03/06 19:25:34 rwaldhoff Exp $
+ * @version $Id: DelegatingConnection.java,v 1.12 2003/04/09 00:19:37 dgraham Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -116,6 +116,7 @@ public class DelegatingConnection extends AbandonedTrace
      *
      * @param Connection the {@link Connection} to delegate all calls to.
      * @param AbandonedConfig the configuration for tracing abandoned objects
+     * @deprecated AbandonedConfig is now deprecated.
      */
     public DelegatingConnection(Connection c, AbandonedConfig config) {
         super(config);

@@ -1,12 +1,12 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.12 2003/03/06 14:58:42 rwaldhoff Exp $
- * $Revision: 1.12 $
- * $Date: 2003/03/06 14:58:42 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.13 2003/04/09 00:19:37 dgraham Exp $
+ * $Revision: 1.13 $
+ * $Date: 2003/04/09 00:19:37 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.12 $ $Date: 2003/03/06 14:58:42 $
+ * @version $Revision: 1.13 $ $Date: 2003/04/09 00:19:37 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -484,7 +484,8 @@ public class BasicDataSource implements DataSource {
      * If set to true a connection is considered abandoned and eligible
      * for removal if it has been idle longer than the removeAbandonedTimeout.
      * Setting this to true can recover db connections from poorly written    
-     * applications which fail to close a connection.                         
+     * applications which fail to close a connection.      
+     * @deprecated                   
      */                                                                   
     public boolean getRemoveAbandoned() {   
         if (abandonedConfig != null) {
@@ -492,7 +493,11 @@ public class BasicDataSource implements DataSource {
         }
         return false;
     }                                    
-                                      
+                                 
+    /**
+     * @deprecated
+     * @param removeAbandoned
+     */
     public void setRemoveAbandoned(boolean removeAbandoned) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
@@ -503,7 +508,8 @@ public class BasicDataSource implements DataSource {
     /**
      * Timeout in seconds before an abandoned connection can be removed.
      *
-     * Defaults to 300 seconds.                                         
+     * Defaults to 300 seconds.         
+     * @deprecated                                
      */                                                                 
     public int getRemoveAbandonedTimeout() { 
         if (abandonedConfig != null) {
@@ -511,7 +517,11 @@ public class BasicDataSource implements DataSource {
         }
         return 300;
     }                                        
-                                             
+
+    /**
+     * @deprecated
+     * @param removeAbandonedTimeout
+     */               
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
@@ -527,7 +537,8 @@ public class BasicDataSource implements DataSource {
      *                                                              
      * Logging of abandoned Statements and Connections adds overhead
      * for every Connection open or new Statement because a stack   
-     * trace has to be generated.                                   
+     * trace has to be generated.             
+     * @deprecated                      
      */                                                          
     public boolean getLogAbandoned() {   
         if (abandonedConfig != null) {
@@ -535,7 +546,11 @@ public class BasicDataSource implements DataSource {
         }
         return false;
     }                                 
-                                   
+
+    /**
+     * @deprecated
+     * @param logAbandoned
+     */
     public void setLogAbandoned(boolean logAbandoned) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
@@ -633,7 +648,7 @@ public class BasicDataSource implements DataSource {
         }
 
         // Create an object pool to contain our active connections
-        connectionPool = new AbandonedObjectPool(null,abandonedConfig);
+        connectionPool = new GenericObjectPool();
         connectionPool.setMaxActive(maxActive);
         connectionPool.setMaxIdle(maxIdle);
         connectionPool.setMaxWait(maxWait);
