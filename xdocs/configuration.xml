@@ -100,6 +100,15 @@ testWhileIdle
 <table>
 <hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
 <tr>
+   <td>initialSize</td>
+   <td>0</td>
+   <td>
+      The initial number of connections that are created when the pool
+      is started.
+      <br/>Since: 1.2
+   </td>
+</tr>
+<tr>
    <td>maxActive</td>
    <td>8</td>
    <td>
