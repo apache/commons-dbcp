@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2004/05/17 18:39:44 $
+ * @version $Revision: 1.12 $ $Date$
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -174,7 +174,7 @@ public class PoolingDriver implements Driver {
                 try {
                     Connection conn = (Connection)(pool.borrowObject());
                     if (conn != null) {
-                        conn = new PoolGuardConnectionWrapper(conn);
+                        conn = new PoolGuardConnectionWrapper(pool, conn);
                     } 
                     return conn;
                 } catch(SQLException e) {
@@ -189,6 +189,23 @@ public class PoolingDriver implements Driver {
             }
         } else {
             return null;
+        }
+    }
+
+    public void invalidateConnection(Connection conn) throws SQLException {
+        if (conn instanceof PoolGuardConnectionWrapper) { // normal case
+            PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
+            ObjectPool pool = pgconn.pool;
+            Connection delegate = pgconn.delegate;
+            try {
+                pool.invalidateObject(delegate);
+            } 
+            catch (Exception e) { 
+            }
+            pgconn.delegate = null;
+        }
+        else {
+            throw new SQLException("Invalid connection class");
         }
     }
 
@@ -222,10 +239,12 @@ public class PoolingDriver implements Driver {
      */
     private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
+        private ObjectPool pool;
         private Connection delegate;
     
-        PoolGuardConnectionWrapper(Connection delegate) {
+        PoolGuardConnectionWrapper(ObjectPool pool, Connection delegate) {
             super(delegate);
+            this.pool = pool;
             this.delegate = delegate;
         }
 
