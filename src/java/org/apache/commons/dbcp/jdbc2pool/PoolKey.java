@@ -1,7 +1,7 @@
 /* 
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PoolKey.java,v 1.4 2003/04/15 01:35:55 dgraham Exp $
- * $Revision: 1.4 $
- * $Date: 2003/04/15 01:35:55 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/PoolKey.java,v 1.5 2003/06/29 12:42:16 mpoeschl Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/06/29 12:42:16 $
  * 
  * ====================================================================
  * 
@@ -62,47 +62,37 @@ package org.apache.commons.dbcp.jdbc2pool;
  
 import java.io.Serializable;
 
-class PoolKey implements Serializable
-{
+class PoolKey implements Serializable {
     private String datasourceName;
     private String username;
     
-    PoolKey(String datasourceName, String username)
-    {
+    PoolKey(String datasourceName, String username) {
         this.datasourceName = datasourceName;
         this.username = username;
     }
     
-    public boolean equals(Object obj)
-    {
-        if ( obj instanceof PoolKey ) 
-        {
+    public boolean equals(Object obj) {
+        if (obj instanceof PoolKey) {
             PoolKey pk = (PoolKey)obj;
             return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
                 (null == username ? null == pk.username : username.equals(pk.username));
-        } 
-        else
-        {
+        } else {
             return false;   
         }
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         int h = 0;
-        if (datasourceName != null) 
-        {
+        if (datasourceName != null) {
             h += datasourceName.hashCode();
         }
-        if (username != null) 
-        {
+        if (username != null) {
             h = 29 * h + username.hashCode();
         }
         return h;
     }
 
-    public String toString()
-    {
+    public String toString() {
         StringBuffer sb = new StringBuffer(50);
         sb.append("PoolKey(");
         sb.append(username).append(", ").append(datasourceName);

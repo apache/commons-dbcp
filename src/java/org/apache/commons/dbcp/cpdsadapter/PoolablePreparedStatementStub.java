@@ -1,13 +1,13 @@
 /*
- * $Id: PoolablePreparedStatementStub.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: PoolablePreparedStatementStub.java,v 1.3 2003/06/29 12:42:16 mpoeschl Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/06/29 12:42:16 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,10 +73,9 @@ import org.apache.commons.dbcp.PoolablePreparedStatement;
  * package.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PoolablePreparedStatementStub.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
+ * @version $Id: PoolablePreparedStatementStub.java,v 1.3 2003/06/29 12:42:16 mpoeschl Exp $
  */
-class PoolablePreparedStatementStub 
-    extends PoolablePreparedStatement {
+class PoolablePreparedStatementStub extends PoolablePreparedStatement {
 
     /**
      * Constructor
@@ -86,7 +85,7 @@ class PoolablePreparedStatementStub
      * @param conn the {@link Connection} from which I was created
      */
     public PoolablePreparedStatementStub(PreparedStatement stmt, Object key, 
-        KeyedObjectPool pool, Connection conn) {
+            KeyedObjectPool pool, Connection conn) {
         super(stmt, key, pool, conn);
     }
 

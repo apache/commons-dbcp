@@ -1,7 +1,7 @@
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,27 +72,19 @@ import java.sql.SQLException;
  * SQLException.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConnectionImpl.java,v 1.4 2003/03/07 00:24:09 rwaldhoff Exp $
+ * @version $Id: ConnectionImpl.java,v 1.5 2003/06/29 12:42:16 mpoeschl Exp $
  */
-class ConnectionImpl 
-    implements Connection
-{
-    private static final String CLOSED = 
-        "Attempted to use Connection after closed() was called.";
+class ConnectionImpl implements Connection {
+    private static final String CLOSED 
+            = "Attempted to use Connection after closed() was called.";
 
-    /**
-     * The JDBC database connection.
-     */
+    /** The JDBC database connection. */
     private Connection connection;
 
-    /**
-     * The object that instantiated this object
-     */
+    /** The object that instantiated this object */
      private PooledConnectionImpl pooledConnection;
 
-    /**
-     * Marks whether is Connection is still usable.
-     */
+    /** Marks whether is Connection is still usable. */
     boolean isClosed;
 
     /**
@@ -102,40 +94,32 @@ class ConnectionImpl
      * @param connection The JDBC 1.x Connection to wrap.
      */
     ConnectionImpl(PooledConnectionImpl pooledConnection, 
-                   Connection connection)
-    {
+            Connection connection) {
         this.pooledConnection = pooledConnection;
         this.connection = connection;
         isClosed = false;
     }
 
-
     /**
      * The finalizer helps prevent <code>ConnectionPool</code> leakage.
      */
-    protected void finalize()
-        throws Throwable
-    {
-        if (!isClosed)
-        {
+    protected void finalize() throws Throwable {
+        if (!isClosed) {
             // If this DBConnection object is finalized while linked
             // to a ConnectionPool, it means that it was taken from a pool
             // and not returned.  We log this fact, close the underlying
             // Connection, and return it to the ConnectionPool.
             throw new SQLException("A ConnectionImpl was finalized "
                       + "without being closed which will cause leakage of "
-                      + " PooledConnections from the ConnectionPool." );
+                      + " PooledConnections from the ConnectionPool.");
         }
     }
 
     /**
      * Throws an SQLException, if isClosed() is true
      */
-    private void assertOpen()
-        throws SQLException 
-    {
-        if ( isClosed ) 
-        {
+    private void assertOpen() throws SQLException {
+        if (isClosed) {
             throw new SQLException(CLOSED);
         }
     }
@@ -150,9 +134,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void clearWarnings() 
-        throws SQLException 
-    {
+    public void clearWarnings() throws SQLException {
         assertOpen();
         connection.clearWarnings();
     }
@@ -166,9 +148,7 @@ class ConnectionImpl
      *
      * @exception SQLException The database connection couldn't be closed.
      */
-    public void close()
-        throws SQLException
-    {
+    public void close() throws SQLException {
         assertOpen();
         isClosed = true;
         pooledConnection.notifyListeners();
@@ -180,9 +160,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void commit()
-        throws SQLException
-    {
+    public void commit() throws SQLException {
         assertOpen();
         connection.commit();
     }
@@ -193,9 +171,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public Statement createStatement()
-        throws SQLException 
-    {
+    public Statement createStatement() throws SQLException {
         assertOpen();
         return connection.createStatement();
     }
@@ -208,8 +184,7 @@ class ConnectionImpl
      */
     public Statement createStatement(int resultSetType, 
                                      int resultSetConcurrency) 
-        throws SQLException 
-    {
+            throws SQLException {
         assertOpen();
         return connection
                 .createStatement(resultSetType, resultSetConcurrency);
@@ -221,9 +196,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public boolean getAutoCommit() 
-        throws SQLException 
-    {
+    public boolean getAutoCommit() throws SQLException {
         assertOpen();
         return connection.getAutoCommit();
     }
@@ -234,9 +207,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public String getCatalog() 
-        throws SQLException 
-    {
+    public String getCatalog() throws SQLException {
         assertOpen();
         return connection.getCatalog();
     }
@@ -247,9 +218,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public DatabaseMetaData getMetaData() 
-        throws SQLException 
-    {
+    public DatabaseMetaData getMetaData() throws SQLException {
         assertOpen();
         return connection.getMetaData();
     }
@@ -260,9 +229,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public int getTransactionIsolation() 
-        throws SQLException 
-    {
+    public int getTransactionIsolation() throws SQLException {
         assertOpen();
         return connection.getTransactionIsolation();
     }
@@ -273,9 +240,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public Map getTypeMap() 
-        throws SQLException 
-    {
+    public Map getTypeMap() throws SQLException {
         assertOpen();
         return connection.getTypeMap();
     }
@@ -286,9 +251,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public SQLWarning getWarnings() 
-        throws SQLException 
-    {
+    public SQLWarning getWarnings() throws SQLException {
         assertOpen();
         return connection.getWarnings();
     }
@@ -298,8 +261,7 @@ class ConnectionImpl
      *
      * @return a <code>boolean</code> value
      */
-    public boolean isClosed() 
-    {
+    public boolean isClosed() {
         return isClosed;
     }
 
@@ -309,9 +271,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public boolean isReadOnly() 
-        throws SQLException 
-    {
+    public boolean isReadOnly() throws SQLException {
         assertOpen();
         return connection.isReadOnly();
     }
@@ -322,9 +282,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public String nativeSQL(String sql) 
-        throws SQLException 
-    {
+    public String nativeSQL(String sql) throws SQLException {
         assertOpen();
         return connection.nativeSQL(sql);
     }    
@@ -335,9 +293,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public CallableStatement prepareCall(String sql) 
-        throws SQLException 
-    {
+    public CallableStatement prepareCall(String sql) throws SQLException {
         assertOpen();
         return connection.prepareCall(sql);
     }
@@ -350,11 +306,9 @@ class ConnectionImpl
      */
     public CallableStatement prepareCall(String sql, int resultSetType, 
                                          int resultSetConcurrency) 
-        throws SQLException 
-    {
+            throws SQLException {
         assertOpen();
-        return connection
-            .prepareCall(sql, resultSetType, resultSetConcurrency);
+        return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 
     /**
@@ -365,9 +319,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public PreparedStatement prepareStatement(String sql)
-        throws SQLException
-    {
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
         assertOpen();
         return pooledConnection.prepareStatement(sql);
     }
@@ -382,8 +334,7 @@ class ConnectionImpl
      */
     public PreparedStatement prepareStatement(String sql, int resultSetType, 
                                               int resultSetConcurrency) 
-        throws SQLException 
-    {
+            throws SQLException {
         assertOpen();
         return pooledConnection
             .prepareStatement(sql, resultSetType, resultSetConcurrency);
@@ -395,9 +346,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void rollback()
-        throws SQLException
-    {
+    public void rollback() throws SQLException {
         assertOpen();
         connection.rollback();
     }
@@ -408,9 +357,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void setAutoCommit(boolean b)
-        throws SQLException
-    {
+    public void setAutoCommit(boolean b) throws SQLException {
         assertOpen();
         connection.setAutoCommit(b);
     }
@@ -421,9 +368,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void setCatalog(String catalog) 
-        throws SQLException 
-    {
+    public void setCatalog(String catalog) throws SQLException {
         assertOpen();
         connection.setCatalog(catalog);
     }
@@ -434,9 +379,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void setReadOnly(boolean readOnly) 
-        throws SQLException 
-    {
+    public void setReadOnly(boolean readOnly) throws SQLException {
         assertOpen();
         connection.setReadOnly(readOnly);
     }
@@ -447,9 +390,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void setTransactionIsolation(int level) 
-        throws SQLException 
-    {
+    public void setTransactionIsolation(int level) throws SQLException {
         assertOpen();
         connection.setTransactionIsolation(level);
     }
@@ -460,9 +401,7 @@ class ConnectionImpl
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
-    public void setTypeMap(Map map) 
-        throws SQLException 
-    {
+    public void setTypeMap(Map map) throws SQLException {
         assertOpen();
         connection.setTypeMap(map);
     }
@@ -497,7 +436,8 @@ class ConnectionImpl
         connection.rollback(savepoint);
     }
 
-    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException {
+    public void releaseSavepoint(java.sql.Savepoint savepoint) 
+            throws SQLException {
         assertOpen();
         connection.releaseSavepoint(savepoint);
     }
@@ -505,7 +445,7 @@ class ConnectionImpl
     public Statement createStatement(int resultSetType,
                                      int resultSetConcurrency,
                                      int resultSetHoldability)
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.createStatement(resultSetType, resultSetConcurrency,
                                      resultSetHoldability);
@@ -514,7 +454,7 @@ class ConnectionImpl
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency,
                                               int resultSetHoldability)
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.prepareStatement(sql, resultSetType,
                                       resultSetConcurrency,
@@ -524,7 +464,7 @@ class ConnectionImpl
     public CallableStatement prepareCall(String sql, int resultSetType,
                                          int resultSetConcurrency,
                                          int resultSetHoldability)
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.prepareCall(sql, resultSetType,
                                  resultSetConcurrency,
@@ -532,19 +472,19 @@ class ConnectionImpl
     }
 
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.prepareStatement(sql, autoGeneratedKeys);
     }
 
     public PreparedStatement prepareStatement(String sql, int columnIndexes[])
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.prepareStatement(sql, columnIndexes);
     }
 
     public PreparedStatement prepareStatement(String sql, String columnNames[])
-        throws SQLException {
+            throws SQLException {
         assertOpen();
         return connection.prepareStatement(sql, columnNames);
     }

@@ -3,7 +3,7 @@ package org.apache.commons.dbcp.jdbc2pool;
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -145,14 +145,13 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.11 2003/04/15 01:58:54 dgraham Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.12 2003/06/29 12:42:16 mpoeschl Exp $
  */
 public class Jdbc2PoolDataSource
-    implements DataSource, Referenceable, Serializable, ObjectFactory
-{
-    private static final String GET_CONNECTION_CALLED = 
-        "A Connection was already requested from this source, " + 
-        "further initialization is not allowed.";
+        implements DataSource, Referenceable, Serializable, ObjectFactory {
+    private static final String GET_CONNECTION_CALLED 
+            = "A Connection was already requested from this source, " 
+            + "further initialization is not allowed.";
 
     private static Map dsInstanceMap = new HashMap();
 
@@ -206,8 +205,7 @@ public class Jdbc2PoolDataSource
     /**
      * Default no-arg constructor for Serialization
      */
-    public Jdbc2PoolDataSource() 
-    {
+    public Jdbc2PoolDataSource() {
         isNew = true;
         defaultAutoCommit = true;
     }
@@ -217,10 +215,8 @@ public class Jdbc2PoolDataSource
      * been requested.
      */
     private void assertInitializationAllowed()
-        throws IllegalStateException 
-    {
-        if (getConnectionCalled) 
-        {
+        throws IllegalStateException {
+        if (getConnectionCalled) {
             throw new IllegalStateException(GET_CONNECTION_CALLED);
         }
     }
@@ -228,13 +224,11 @@ public class Jdbc2PoolDataSource
     /**
      * Close all pools associated with this class.
      */
-    public static void closeAll() 
-    {
+    public static void closeAll() {
         //Get iterator to loop over all instances of this datasource.
         Iterator instanceIterator = dsInstanceMap.entrySet().iterator();
         
-        while (instanceIterator.hasNext()) 
-        {        
+        while (instanceIterator.hasNext()) {        
             Map.Entry nextInstance = (Map.Entry) instanceIterator.next();
             Map nextPoolMap = (Map) nextInstance.getValue();
             close(nextPoolMap);
@@ -245,36 +239,26 @@ public class Jdbc2PoolDataSource
     /**
      * Close all pools in the given Map.
      */
-    private static void close(Map poolMap) 
-    {
+    private static void close(Map poolMap) {
         //Get iterator to loop over all pools.
         Iterator poolIter = poolMap.entrySet().iterator();
         
-        while (poolIter.hasNext()) 
-        {    
+        while (poolIter.hasNext()) {    
             Map.Entry nextPoolEntry = (Map.Entry) poolIter.next();
             
-            if (nextPoolEntry.getValue() instanceof ObjectPool) 
-            {
+            if (nextPoolEntry.getValue() instanceof ObjectPool) {
                 ObjectPool nextPool = (ObjectPool) nextPoolEntry.getValue();
-                try 
-                {
+                try {
                     nextPool.close();
-                } 
-                catch (Exception closePoolException) 
-                {
+                } catch (Exception closePoolException) {
                     //ignore and try to close others.
                 }
-            } 
-            else 
-            {
+            } else {
                 KeyedObjectPool nextPool = 
                     (KeyedObjectPool) nextPoolEntry.getValue();
                 try {
                     nextPool.close();
-                } 
-                catch (Exception closePoolException) 
-                {
+                } catch (Exception closePoolException) {
                     //ignore and try to close others.
                 }                                               
             }
@@ -284,8 +268,7 @@ public class Jdbc2PoolDataSource
     /**
      * Close pool(s) being maintained by this datasource.
      */
-    public void close() 
-    {
+    public void close() {
         close((Map)dsInstanceMap.get(instanceKey));
     }
 
@@ -298,8 +281,7 @@ public class Jdbc2PoolDataSource
      *
      * @return value of connectionPoolDataSource.
      */
-    public ConnectionPoolDataSource getConnectionPoolDataSource() 
-    {
+    public ConnectionPoolDataSource getConnectionPoolDataSource() {
         return cpds;
     }
     
@@ -309,17 +291,14 @@ public class Jdbc2PoolDataSource
      *
      * @param v  Value to assign to connectionPoolDataSource.
      */
-    public void setConnectionPoolDataSource(ConnectionPoolDataSource  v) 
-    {
+    public void setConnectionPoolDataSource(ConnectionPoolDataSource v) {
         assertInitializationAllowed();
-        if (dataSourceName != null) 
-        {
+        if (dataSourceName != null) {
             throw new IllegalStateException(
                 "Cannot set the DataSource, if JNDI is used.");
         }
         this.cpds = v;
-        if (isNew) 
-        {
+        if (isNew) {
             registerInstance();
         }
     }
@@ -331,8 +310,7 @@ public class Jdbc2PoolDataSource
      *
      * @return value of dataSourceName.
      */
-    public String getDataSourceName() 
-    {
+    public String getDataSourceName() {
         return dataSourceName;
     }
     
@@ -343,23 +321,19 @@ public class Jdbc2PoolDataSource
      *
      * @param v  Value to assign to dataSourceName.
      */
-    public void setDataSourceName(String  v) 
-    {
+    public void setDataSourceName(String v) {
         assertInitializationAllowed();
-        if (cpds != null) 
-        {
+        if (cpds != null) {
             throw new IllegalStateException(
                 "Cannot set the JNDI name for the DataSource, if already " +
                 "set using setConnectionPoolDataSource.");
         }
         this.dataSourceName = v;
-        if (isNew) 
-        {
+        if (isNew) {
             registerInstance();
         }
     }
 
-    
     /** 
      * Get the value of defaultAutoCommit, which defines the state of 
      * connections handed out from this pool.  The value can be changed
@@ -368,8 +342,7 @@ public class Jdbc2PoolDataSource
      *
      * @return value of defaultAutoCommit.
      */
-    public boolean isDefaultAutoCommit() 
-    {
+    public boolean isDefaultAutoCommit() {
         return defaultAutoCommit;
     }
     
@@ -381,12 +354,10 @@ public class Jdbc2PoolDataSource
      *
      * @param v  Value to assign to defaultAutoCommit.
      */
-    public void setDefaultAutoCommit(boolean  v) 
-    {
+    public void setDefaultAutoCommit(boolean v) {
         assertInitializationAllowed();
         this.defaultAutoCommit = v;
     }
-
 
     /**
      * The maximum number of active connections that can be allocated from
@@ -409,7 +380,6 @@ public class Jdbc2PoolDataSource
         this.defaultMaxActive = maxActive;
     }
 
-
     /**
      * The maximum number of active connections that can remain idle in the
      * pool, without extra ones being released, or zero for no limit.
@@ -430,7 +400,6 @@ public class Jdbc2PoolDataSource
         assertInitializationAllowed();
         this.defaultMaxIdle = defaultMaxIdle;
     }
-
 
     /**
      * The maximum number of milliseconds that the pool will wait (when there
@@ -457,7 +426,6 @@ public class Jdbc2PoolDataSource
         this.defaultMaxWait = defaultMaxWait;
     }
 
-
     /**
      * Get the value of defaultReadOnly, which defines the state of 
      * connections handed out from this pool.  The value can be changed
@@ -466,8 +434,7 @@ public class Jdbc2PoolDataSource
      *
      * @return value of defaultReadOnly.
      */
-    public boolean isDefaultReadOnly() 
-    {
+    public boolean isDefaultReadOnly() {
         return defaultReadOnly;
     }
     
@@ -479,12 +446,10 @@ public class Jdbc2PoolDataSource
      *
      * @param v  Value to assign to defaultReadOnly.
      */
-    public void setDefaultReadOnly(boolean  v) 
-    {
+    public void setDefaultReadOnly(boolean v) {
         assertInitializationAllowed();
         this.defaultReadOnly = v;
     }
-
     
     /**
      * Get the description.  This property is defined by jdbc as for use with
@@ -493,8 +458,7 @@ public class Jdbc2PoolDataSource
      *
      * @return value of description.
      */
-    public String getDescription() 
-    {
+    public String getDescription() {
         return description;
     }
     
@@ -505,12 +469,10 @@ public class Jdbc2PoolDataSource
      * 
      * @param v  Value to assign to description.
      */
-    public void setDescription(String  v) 
-    {
+    public void setDescription(String v) {
         this.description = v;
     }
         
-
     /**
      * Get the value of jndiEnvironment which is used when instantiating
      * a jndi InitialContext.  This InitialContext is used to locate the
@@ -518,11 +480,9 @@ public class Jdbc2PoolDataSource
      *
      * @return value of jndiEnvironment.
      */
-    public String getJndiEnvironment(String key) 
-    {
+    public String getJndiEnvironment(String key) {
         String value = null;
-        if (jndiEnvironment != null) 
-        {
+        if (jndiEnvironment != null) {
             value = jndiEnvironment.getProperty(key);
         }
         return value;
@@ -535,22 +495,18 @@ public class Jdbc2PoolDataSource
      *
      * @param v  Value to assign to jndiEnvironment.
      */
-    public void setJndiEnvironment(String key, String value) 
-    {
-        if (jndiEnvironment == null) 
-        {
+    public void setJndiEnvironment(String key, String value) {
+        if (jndiEnvironment == null) {
             jndiEnvironment = new Properties();
         }
         jndiEnvironment.setProperty(key, value);
     }
-
     
     /**
      * Get the value of loginTimeout.
      * @return value of loginTimeout.
      */
-    public int getLoginTimeout() 
-    {
+    public int getLoginTimeout() {
         return loginTimeout;
     }
     
@@ -558,20 +514,16 @@ public class Jdbc2PoolDataSource
      * Set the value of loginTimeout.
      * @param v  Value to assign to loginTimeout.
      */
-    public void setLoginTimeout(int  v) 
-    {
+    public void setLoginTimeout(int v) {
         this.loginTimeout = v;
     }
-    
-    
+        
     /**
      * Get the value of logWriter.
      * @return value of logWriter.
      */
-    public PrintWriter getLogWriter() 
-    {
-        if (logWriter == null) 
-        {
+    public PrintWriter getLogWriter() {
+        if (logWriter == null) {
             logWriter = new PrintWriter(System.out);
         }        
         return logWriter;
@@ -581,22 +533,18 @@ public class Jdbc2PoolDataSource
      * Set the value of logWriter.
      * @param v  Value to assign to logWriter.
      */
-    public void setLogWriter(PrintWriter  v) 
-    {
+    public void setLogWriter(PrintWriter v) {
         this.logWriter = v;
     }
     
-
     /**
      * The keys are usernames and the value is the --.  Any 
      * username specified here will override the value of defaultAutoCommit.
      */
-    public Boolean getPerUserDefaultAutoCommit(String key) 
-    {
+    public Boolean getPerUserDefaultAutoCommit(String key) {
         Boolean value = null;
-        if (perUserDefaultAutoCommit != null) 
-        {
-            value = (Boolean)perUserDefaultAutoCommit.get(key);
+        if (perUserDefaultAutoCommit != null) {
+            value = (Boolean) perUserDefaultAutoCommit.get(key);
         }
         return value;
     }
@@ -605,16 +553,13 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the --.  Any 
      * username specified here will override the value of defaultAutoCommit.
      */
-    public void setPerUserDefaultAutoCommit(String username, Boolean value) 
-    {
+    public void setPerUserDefaultAutoCommit(String username, Boolean value) {
         assertInitializationAllowed();
-        if (perUserDefaultAutoCommit == null) 
-        {
+        if (perUserDefaultAutoCommit == null) {
             perUserDefaultAutoCommit = new HashMap();
         }
         perUserDefaultAutoCommit.put(username, value);
     }
-
     
     /**
      * The maximum number of active connections that can be allocated from
@@ -622,12 +567,10 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxActive.
      */
-    public Integer getPerUserMaxActive(String username) 
-    {
+    public Integer getPerUserMaxActive(String username) {
         Integer value = null;
-        if (perUserMaxActive != null) 
-        {
-            value = (Integer)perUserMaxActive.get(username);
+        if (perUserMaxActive != null) {
+            value = (Integer) perUserMaxActive.get(username);
         }
         return value;
     }
@@ -638,11 +581,9 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxActive.
      */
-    public void setPerUserMaxActive(String username, Integer value) 
-    {
+    public void setPerUserMaxActive(String username, Integer value) {
         assertInitializationAllowed();
-        if (perUserMaxActive == null) 
-        {
+        if (perUserMaxActive == null) {
             perUserMaxActive = new HashMap();
         }
         perUserMaxActive.put(username, value);
@@ -655,12 +596,10 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxIdle.
      */
-    public Integer getPerUserMaxIdle(String username) 
-    {
+    public Integer getPerUserMaxIdle(String username) {
         Integer value = null;
-        if (perUserMaxIdle != null) 
-        {
-            value = (Integer)perUserMaxIdle.get(username);
+        if (perUserMaxIdle != null) {
+            value = (Integer) perUserMaxIdle.get(username);
         }
         return value;
     }
@@ -671,11 +610,9 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxIdle.
      */
-    public void setPerUserMaxIdle(String username, Integer value) 
-    {
+    public void setPerUserMaxIdle(String username, Integer value) {
         assertInitializationAllowed();
-        if (perUserMaxIdle == null) 
-        {
+        if (perUserMaxIdle == null) {
             perUserMaxIdle = new HashMap();
         }
         perUserMaxIdle.put(username, value);
@@ -689,12 +626,10 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxWait.
      */
-    public Integer getPerUserMaxWait(String username) 
-    {
+    public Integer getPerUserMaxWait(String username) {
         Integer value = null;
-        if (perUserMaxWait != null) 
-        {
-            value = (Integer)perUserMaxWait.get(username);
+        if (perUserMaxWait != null) {
+            value = (Integer) perUserMaxWait.get(username);
         }
         return value;
     }
@@ -707,27 +642,22 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxWait.
      */
-    public void setPerUserMaxWait(String username, Integer value) 
-    {
+    public void setPerUserMaxWait(String username, Integer value) {
         assertInitializationAllowed();
-        if (perUserMaxWait == null) 
-        {
+        if (perUserMaxWait == null) {
             perUserMaxWait = new HashMap();
         }
         perUserMaxWait.put(username, value);
     }
 
-
     /**
      * The keys are usernames and the value is the --.  Any 
      * username specified here will override the value of defaultReadOnly.
      */
-    public Boolean getPerUserDefaultReadOnly(String username) 
-    {
+    public Boolean getPerUserDefaultReadOnly(String username) {
         Boolean value = null;
-        if (perUserDefaultReadOnly != null) 
-        {
-            value = (Boolean)perUserDefaultReadOnly.get(username);
+        if (perUserDefaultReadOnly != null) {
+            value = (Boolean) perUserDefaultReadOnly.get(username);
         }
         return value;
     }
@@ -736,21 +666,18 @@ public class Jdbc2PoolDataSource
      * The keys are usernames and the value is the --.  Any 
      * username specified here will override the value of defaultReadOnly.
      */
-    public void setPerUserDefaultReadOnly(String username, Boolean value) 
-    {
+    public void setPerUserDefaultReadOnly(String username, Boolean value) {
         assertInitializationAllowed();
-        if (perUserDefaultReadOnly == null) 
-        {
+        if (perUserDefaultReadOnly == null) {
             perUserDefaultReadOnly = new HashMap();
         }
         perUserDefaultReadOnly.put(username, value);
     }
 
-
     /**
      * @see #getTestOnBorrow
      */
-    final public boolean isTestOnBorrow() {
+    public final boolean isTestOnBorrow() {
         return getTestOnBorrow();
     }
     
@@ -787,7 +714,7 @@ public class Jdbc2PoolDataSource
     /**
      * @see #getTestOnReturn
      */
-    final public boolean isTestOnReturn() {
+    public final boolean isTestOnReturn() {
         return getTestOnReturn();
     }
     
@@ -892,8 +819,7 @@ public class Jdbc2PoolDataSource
      * @see #getMinEvictableIdleTimeMillis
      * @see #setTimeBetweenEvictionRunsMillis
      */
-    public void 
-        setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
+    public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
@@ -901,9 +827,10 @@ public class Jdbc2PoolDataSource
     /**
      * @see #getTestWhileIdle
      */
-    final public boolean isTestWhileIdle() {
+    public final boolean isTestWhileIdle() {
         return getTestWhileIdle();
     }
+    
     /**
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
@@ -932,7 +859,6 @@ public class Jdbc2PoolDataSource
         testPositionSet = true;
     }
 
-
     /**
      * The SQL query that will be used to validate connections from this pool
      * before returning them to the caller.  If specified, this query
@@ -953,8 +879,7 @@ public class Jdbc2PoolDataSource
     public void setValidationQuery(String validationQuery) {
         assertInitializationAllowed();
         this.validationQuery = validationQuery;
-        if (!testPositionSet) 
-        {
+        if (!testPositionSet) {
             setTestOnBorrow(true);
         }
     }
@@ -965,54 +890,44 @@ public class Jdbc2PoolDataSource
     /**
      * Get the number of active connections in the default pool.
      */
-    public int getNumActive()
-    {
-        return getNumActive( null, null );
+    public int getNumActive() {
+        return getNumActive(null, null);
     }
 
     /**
      * Get the number of active connections in the pool for a given user.
      */
-    public int getNumActive( String username, String password )
-    {
-        PoolKey key = getPoolKey( username );
+    public int getNumActive(String username, String password) {
+        PoolKey key = getPoolKey(username);
 
-        Object pool = ( ( Map ) dsInstanceMap.get( instanceKey ) ).get( key );
+        Object pool = ((Map) dsInstanceMap.get(instanceKey)).get(key);
 
-        if ( pool instanceof ObjectPool )
-        {
-            return ( ( ObjectPool ) pool ).getNumActive();
-        }
-        else
-        {
-            return ( ( KeyedObjectPool ) pool ).getNumActive();
+        if (pool instanceof ObjectPool) {
+            return ((ObjectPool) pool).getNumActive();
+        } else {
+            return ((KeyedObjectPool) pool).getNumActive();
         }
     }
 
     /**
      * Get the number of idle connections in the default pool.
      */
-    public int getNumIdle()
-    {
-        return getNumIdle( null, null );
+    public int getNumIdle() {
+        return getNumIdle(null, null);
     }
 
     /**
      * Get the number of idle connections in the pool for a given user.
      */
-    public int getNumIdle( String username, String password )
-    {
-        PoolKey key = getPoolKey( username );
+    public int getNumIdle(String username, String password) {
+        PoolKey key = getPoolKey(username);
 
-        Object pool = ( ( Map ) dsInstanceMap.get( instanceKey ) ).get( key );
+        Object pool = ((Map) dsInstanceMap.get(instanceKey)).get(key);
 
-        if ( pool instanceof ObjectPool )
-        {
-            return ( ( ObjectPool ) pool ).getNumIdle();
-        }
-        else
-        {
-            return ( ( KeyedObjectPool ) pool ).getNumIdle();
+        if (pool instanceof ObjectPool) {
+            return ((ObjectPool) pool).getNumIdle();
+        } else {
+            return ((KeyedObjectPool) pool).getNumIdle();
         }
     }
 
@@ -1022,103 +937,76 @@ public class Jdbc2PoolDataSource
     /**
      * Attempt to establish a database connection.
      */
-    public Connection getConnection() 
-        throws SQLException
-    {
+    public Connection getConnection() throws SQLException {
         return getConnection(null, null);
     }
 
     /**
      * Attempt to establish a database connection.
      */
-    synchronized public Connection getConnection(String username, String password)
-        throws SQLException
-    {
-        if (isNew) 
-        {
-            throw new SQLException("Must set the ConnectionPoolDataSource " + 
-                "through setDataSourceName or setConnectionPoolDataSource " + 
-                "before calling getConnection.");
+    public synchronized Connection getConnection(String username, 
+            String password)
+            throws SQLException {
+        if (isNew) {
+            throw new SQLException("Must set the ConnectionPoolDataSource " 
+                    + "through setDataSourceName or setConnectionPoolDataSource"
+                    + " before calling getConnection.");
         }
 
         getConnectionCalled = true;
-        Map pools = (Map)dsInstanceMap.get(instanceKey);
+        Map pools = (Map) dsInstanceMap.get(instanceKey);
         PoolKey key = getPoolKey(username);
         Object pool = pools.get(key);
-        if ( pool == null ) 
-        {
-            try
-            {
+        if (pool == null) {
+            try {
                 registerPool(username, password);
                 pool = pools.get(key);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new SQLException(e.getMessage());
             }
         }
 
         PooledConnectionAndInfo info = null;        
-        if (pool instanceof ObjectPool) 
-        {
-            try
-            {
+        if (pool instanceof ObjectPool) {
+            try {
                 info = (PooledConnectionAndInfo)
-                    ((ObjectPool)pool).borrowObject();
-            } 
-            catch(NoSuchElementException e) 
-            {
+                    ((ObjectPool) pool).borrowObject();
+            } catch (NoSuchElementException e) {
+                closeDueToException(info);
+                throw new SQLException(e.getMessage());
+            } catch (RuntimeException e) {
+                closeDueToException(info);
+                throw e;
+            } catch (SQLException e) {
+                closeDueToException(info);
+                throw e;
+            } catch (Exception e) {
                 closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
-            catch(RuntimeException e) 
-            {
-                closeDueToException(info);
-                throw e;
-            }
-            catch(SQLException e) 
-            {
-                closeDueToException(info);
-                throw e;
-            }
-            catch(Exception e) 
-            {
-                closeDueToException(info);
-                throw new SQLException(e.getMessage());
-            }
-        }
-        else // assume KeyedObjectPool
-        { 
-            try
-            {
+        } else {
+            // assume KeyedObjectPool
+            try {
                 UserPassKey upkey = getUserPassKey(username, password);
                 info = (PooledConnectionAndInfo)
-                    ((KeyedObjectPool)pool).borrowObject(upkey);
-            }
-            catch(NoSuchElementException e) 
-            {
+                    ((KeyedObjectPool) pool).borrowObject(upkey);
+            } catch (NoSuchElementException e) {
                 closeDueToException(info);
                 throw new SQLException(e.getMessage());
-            }
-            catch(RuntimeException e) 
-            {
+            } catch (RuntimeException e) {
                 closeDueToException(info);
                 throw e;
-            }
-            catch(SQLException e) 
-            {            
+            } catch (SQLException e) {            
                 closeDueToException(info);
                 throw e;
-            }
-            catch(Exception e) 
-            {
+            } catch (Exception e) {
                 closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
         }
-        if(!(null == password ? null == info.getPassword() : password.equals(info.getPassword())))
-        {
+        if (!(null == password ? null == info.getPassword() 
+                : password.equals(info.getPassword()))) {
             closeDueToException(info);
             throw new SQLException("Given password did not match password used "
                                    + "to create the PooledConnection.");
@@ -1126,23 +1014,17 @@ public class Jdbc2PoolDataSource
         PooledConnection pc = info.getPooledConnection();
 
         boolean defaultAutoCommit = isDefaultAutoCommit();
-        if ( username != null ) 
-        {
-            Boolean userMax = 
-                getPerUserDefaultAutoCommit(username);
-            if ( userMax != null ) 
-            {
+        if (username != null) {
+            Boolean userMax = getPerUserDefaultAutoCommit(username);
+            if (userMax != null) {
                 defaultAutoCommit = userMax.booleanValue();
             }
         }    
 
         boolean defaultReadOnly = isDefaultReadOnly();
-        if ( username != null ) 
-        {
-            Boolean userMax = 
-                getPerUserDefaultReadOnly(username);
-            if ( userMax != null ) 
-            {
+        if (username != null) {
+            Boolean userMax = getPerUserDefaultReadOnly(username);
+            if (userMax != null) {
                 defaultReadOnly = userMax.booleanValue();
             }
         }    
@@ -1153,16 +1035,11 @@ public class Jdbc2PoolDataSource
         return con;
     }
         
-    private void closeDueToException(PooledConnectionAndInfo info)
-    {
-        if (info != null) 
-        {
-            try 
-            {
+    private void closeDueToException(PooledConnectionAndInfo info) {
+        if (info != null) {
+            try {
                 info.getPooledConnection().getConnection().close();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // do not throw this exception because we are in the middle
                 // of handling another exception.  But record it because
                 // it potentially leaks connections from the pool.
@@ -1172,61 +1049,49 @@ public class Jdbc2PoolDataSource
         }
     }
 
-    private PoolKey getPoolKey(String username)
-    {
+    private PoolKey getPoolKey(String username) {
         PoolKey key = null;
 
-        if ( username != null && 
-             (perUserMaxActive == null 
-              || !perUserMaxActive.containsKey(username)) ) 
-        {
+        if (username != null && (perUserMaxActive == null 
+                || !perUserMaxActive.containsKey(username))) {
             username = null;
         }
 
         String dsName = getDataSourceName();
-        Map dsMap = (Map)poolKeys.get(dsName);
-        if (dsMap != null) 
-        {
-            key = (PoolKey)dsMap.get(username);
+        Map dsMap = (Map) poolKeys.get(dsName);
+        if (dsMap != null) {
+            key = (PoolKey) dsMap.get(username);
         }
         
-        if (key == null) 
-        {
+        if (key == null) {
             key = new PoolKey(dsName, username);
-            if (dsMap == null) 
-            {
+            if (dsMap == null) {
                 dsMap = new HashMap();
                 poolKeys.put(dsName, dsMap);
             }
             dsMap.put(username, key);
         }
-        
         return key;
     }
 
-    private UserPassKey getUserPassKey(String username, String password)
-    {
-        UserPassKey key = (UserPassKey)userKeys.get(username);
-        if (key == null) 
-        {
+    private UserPassKey getUserPassKey(String username, String password) {
+        UserPassKey key = (UserPassKey) userKeys.get(username);
+        if (key == null) {
             key = new UserPassKey(username, password);
             userKeys.put(username, key);
         }
         return key;
     }
         
-    synchronized private void registerInstance()
-    {
-        if (isNew) 
-        {
+    private synchronized void registerInstance() {
+        if (isNew) {
             int max = 0;
             Iterator i = dsInstanceMap.keySet().iterator();
-            while (i.hasNext()) 
-            {
-                int key = ((Integer)i.next()).intValue();
+            while (i.hasNext()) {
+                int key = ((Integer) i.next()).intValue();
                 max = Math.max(max, key);
             }
-            instanceKey = new Integer(max+1);
+            instanceKey = new Integer(max + 1);
             FastHashMap fhm = new FastHashMap();
             fhm.setFast(true);
             dsInstanceMap.put(instanceKey, fhm);
@@ -1234,50 +1099,40 @@ public class Jdbc2PoolDataSource
         }
     }
 
-    synchronized private void registerPool(String username, String password)
-         throws javax.naming.NamingException
-    {
-        Map pools = (Map)dsInstanceMap.get(instanceKey);
+    private synchronized void registerPool(String username, String password) 
+            throws javax.naming.NamingException {
+        Map pools = (Map) dsInstanceMap.get(instanceKey);
         PoolKey key = getPoolKey(username);
-        if ( !pools.containsKey(key) ) 
-        {
+        if (!pools.containsKey(key)) {
             int maxActive = getDefaultMaxActive();
             int maxIdle = getDefaultMaxIdle();
             int maxWait = getDefaultMaxWait();
 
             // The source of physical db connections
             ConnectionPoolDataSource cpds = this.cpds;
-            if ( cpds == null ) 
-            {            
+            if (cpds == null) {            
                 Context ctx = null;
-                if ( jndiEnvironment == null ) 
-                {
+                if (jndiEnvironment == null) {
                     ctx = new InitialContext();                
-                }
-                else 
-                {
+                } else {
                     ctx = new InitialContext(jndiEnvironment);
                 }
-                cpds = (ConnectionPoolDataSource)ctx.lookup(dataSourceName);
+                cpds = (ConnectionPoolDataSource) ctx.lookup(dataSourceName);
             }
 
             Object whicheverPool = null;
             if (perUserMaxActive != null 
-                && perUserMaxActive.containsKey(username)) 
-            {                
+                    && perUserMaxActive.containsKey(username)) {                
                 Integer userMax = getPerUserMaxActive(username);
-                if ( userMax != null ) 
-                {
+                if (userMax != null) {
                     maxActive = userMax.intValue();
                 }
                 userMax = getPerUserMaxIdle(username);
-                if ( userMax != null ) 
-                {
+                if (userMax != null) {
                     maxIdle = userMax.intValue();
                 }
                 userMax = getPerUserMaxWait(username);
-                if ( userMax != null ) 
-                {
+                if (userMax != null) {
                     maxWait = userMax.intValue();
                 }
 
@@ -1287,14 +1142,14 @@ public class Jdbc2PoolDataSource
                 pool.setMaxIdle(maxIdle);
                 pool.setMaxWait(maxWait);
                 pool.setWhenExhaustedAction(
-                    getWhenExhausted(maxActive, maxWait));
+                        getWhenExhausted(maxActive, maxWait));
                 pool.setTestOnBorrow(getTestOnBorrow());
                 pool.setTestOnReturn(getTestOnReturn());
                 pool.setTimeBetweenEvictionRunsMillis(
-                    getTimeBetweenEvictionRunsMillis());
+                        getTimeBetweenEvictionRunsMillis());
                 pool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
                 pool.setMinEvictableIdleTimeMillis(
-                    getMinEvictableIdleTimeMillis());
+                        getMinEvictableIdleTimeMillis());
                 pool.setTestWhileIdle(getTestWhileIdle());
                 
                 // Set up the factory we will use (passing the pool associates
@@ -1303,9 +1158,8 @@ public class Jdbc2PoolDataSource
                 new CPDSConnectionFactory(cpds, pool, validationQuery,
                                           username, password);
                 whicheverPool = pool;
-            }
-            else // use default pool
-            {
+            } else { 
+                // use default pool
                 // Create an object pool to contain our PooledConnections
                 GenericKeyedObjectPool pool = new GenericKeyedObjectPool(null);
                 pool.setMaxActive(maxActive);
@@ -1328,21 +1182,17 @@ public class Jdbc2PoolDataSource
                 new KeyedCPDSConnectionFactory(cpds, pool, validationQuery);
                 whicheverPool = pool;
             }
-            
+           
             // pools is a FastHashMap set to put the pool in a thread-safe way
             pools.put(key, whicheverPool);
         }        
     }
 
-    private byte getWhenExhausted(int maxActive, int maxWait)
-    {
+    private byte getWhenExhausted(int maxActive, int maxWait) {
         byte whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_BLOCK;
-        if (maxActive <= 0) 
-        {
+        if (maxActive <= 0) {
             whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_GROW;
-        }
-        else if (maxWait == 0) 
-        {
+        } else if (maxWait == 0) {
             whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_FAIL;
         }
         return whenExhausted;
@@ -1355,17 +1205,14 @@ public class Jdbc2PoolDataSource
      * <CODE>Referenceable</CODE> implementation prepares object for
      * binding in jndi.
      */
-    public Reference getReference() 
-        throws NamingException
-    {
+    public Reference getReference() throws NamingException {
         // this class implements its own factory
         String factory = getClass().getName();
         Reference ref = new Reference(getClass().getName(), factory, null);
 
-        ref.add(new StringRefAddr("isNew", 
-                                  String.valueOf(isNew)));
+        ref.add(new StringRefAddr("isNew", String.valueOf(isNew)));
         ref.add(new StringRefAddr("instanceKey", 
-            (instanceKey == null ? null : instanceKey.toString()) ));
+            (instanceKey == null ? null : instanceKey.toString())));
         ref.add(new StringRefAddr("dataSourceName", getDataSourceName()));
         ref.add(new StringRefAddr("defaultAutoCommit", 
                                   String.valueOf(isDefaultAutoCommit())));
@@ -1381,90 +1228,67 @@ public class Jdbc2PoolDataSource
 
         byte[] ser = null;
         // BinaryRefAddr does not allow null byte[].
-        if ( jndiEnvironment != null ) 
-        {
-            try
-            {
+        if (jndiEnvironment != null) {
+            try {
                 ser = serialize(jndiEnvironment);
                 ref.add(new BinaryRefAddr("jndiEnvironment", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the jndiEnvironment properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the jndiEnvironment properties.");
             }
         }
 
         ref.add(new StringRefAddr("loginTimeout", 
                                   String.valueOf(getLoginTimeout())));
 
-        if ( perUserDefaultAutoCommit != null ) 
-        {
-            try
-            {
-                ser = serialize((Serializable)perUserDefaultAutoCommit);
+        if (perUserDefaultAutoCommit != null) {
+            try {
+                ser = serialize((Serializable) perUserDefaultAutoCommit);
                 ref.add(new BinaryRefAddr("perUserDefaultAutoCommit", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the perUserDefaultAutoCommit properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the perUserDefaultAutoCommit "
+                        + "properties.");
             }
         }
 
-        if ( perUserMaxActive != null ) 
-        {
-            try
-            {
-                ser = serialize((Serializable)perUserMaxActive);
+        if (perUserMaxActive != null) {
+            try {
+                ser = serialize((Serializable) perUserMaxActive);
                 ref.add(new BinaryRefAddr("perUserMaxActive", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the perUserMaxActive properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the perUserMaxActive properties.");
             }
         }
 
-        if ( perUserMaxIdle != null ) 
-        {
-            try
-            {
-                ser = serialize((Serializable)perUserMaxIdle);
+        if (perUserMaxIdle != null) {
+            try {
+                ser = serialize((Serializable) perUserMaxIdle);
                 ref.add(new BinaryRefAddr("perUserMaxIdle", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the perUserMaxIdle properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the perUserMaxIdle properties.");
             }
         }
 
-        if ( perUserMaxWait != null ) 
-        {
-            try
-            {
-                ser = serialize((Serializable)perUserMaxWait);
+        if (perUserMaxWait != null) {
+            try {
+                ser = serialize((Serializable) perUserMaxWait);
                 ref.add(new BinaryRefAddr("perUserMaxWait", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the perUserMaxWait properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the perUserMaxWait properties.");
             }
         }
 
-        if ( perUserDefaultReadOnly != null ) 
-        {
-            try
-            {
-                ser = serialize((Serializable)perUserDefaultReadOnly);
+        if (perUserDefaultReadOnly != null) {
+            try {
+                ser = serialize((Serializable) perUserDefaultReadOnly);
                 ref.add(new BinaryRefAddr("perUserDefaultReadOnly", ser));
-            }
-            catch (IOException ioe)
-            {
-                throw new NamingException("An IOException prevented " + 
-                   "serializing the perUserDefaultReadOnly properties.");
+            } catch (IOException ioe) {
+                throw new NamingException("An IOException prevented " 
+                        + "serializing the perUserDefaultReadOnly properties.");
             }
         }
 
@@ -1492,25 +1316,19 @@ public class Jdbc2PoolDataSource
      * @return A byte[] with the converted Serializable.
      * @exception IOException, if conversion to a byte[] fails.
      */
-    private static byte[] serialize(Serializable obj)
-        throws IOException
-    {
+    private static byte[] serialize(Serializable obj) throws IOException {
         byte[] byteArray = null;
         ByteArrayOutputStream baos = null;
         ObjectOutputStream out = null;
-        try
-        {
+        try {
             // These objects are closed in the finally.
             baos = new ByteArrayOutputStream();
             out = new ObjectOutputStream(baos);
 
             out.writeObject(obj);
             byteArray = baos.toByteArray();
-        }
-        finally
-        {
-            if (out != null) 
-            {
+        } finally {
+            if (out != null) {
                 out.close();
             }
         }
@@ -1525,184 +1343,151 @@ public class Jdbc2PoolDataSource
      * implements ObjectFactory to create an instance of this class
      */ 
     public Object getObjectInstance(Object refObj, Name name, 
-                                    Context context, Hashtable env) 
-        throws Exception 
-    {
+            Context context, Hashtable env) 
+            throws Exception {
         // The spec says to return null if we can't create an instance 
         // of the reference
         Jdbc2PoolDataSource ds = null;
-        if (refObj instanceof Reference) 
-        {
-            Reference ref = (Reference)refObj;
-	
-            if (ref.getClassName().equals(getClass().getName())) 
-            {   
+        if (refObj instanceof Reference) {
+            Reference ref = (Reference) refObj;
+
+            if (ref.getClassName().equals(getClass().getName())) {   
                 RefAddr ra = ref.get("isNew");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    isNew = Boolean.valueOf(ra.getContent().toString()).booleanValue();
+                if (ra != null && ra.getContent() != null) {
+                    isNew = Boolean.valueOf(ra.getContent().toString())
+                            .booleanValue();
                 }
 
                 ra = ref.get("instanceKey");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     instanceKey = new Integer(ra.getContent().toString());
                 }
 
                 ra = ref.get("dataSourceName");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setDataSourceName(ra.getContent().toString());
                 }
 
                 ra = ref.get("defaultAutoCommit");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    setDefaultAutoCommit
-                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                if (ra != null && ra.getContent() != null) {
+                    setDefaultAutoCommit(Boolean.valueOf(
+                            ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("defaultMaxActive");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setDefaultMaxActive(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("defaultMaxIdle");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setDefaultMaxIdle(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("defaultMaxWait");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setDefaultMaxWait(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("defaultReadOnly");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    setDefaultReadOnly
-                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                if (ra != null && ra.getContent() != null) {
+                    setDefaultReadOnly(Boolean.valueOf(
+                            ra.getContent().toString()).booleanValue());
                 }
 
                 ra = ref.get("description");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setDescription(ra.getContent().toString());
                 }
 
                 ra = ref.get("jndiEnvironment");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    jndiEnvironment = 
-                        (Properties)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    jndiEnvironment = (Properties) deserialize(serialized);
                 }
                 
                 ra = ref.get("loginTimeout");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setLoginTimeout(
-                        Integer.parseInt(ra.getContent().toString()));
+                            Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("perUserDefaultAutoCommit");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    perUserDefaultAutoCommit = 
-                        (Map)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    perUserDefaultAutoCommit = (Map) deserialize(serialized);
                 }
                 
                 ra = ref.get("perUserMaxActive");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    perUserMaxActive = 
-                        (Map)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    perUserMaxActive = (Map) deserialize(serialized);
                 }
 
                 ra = ref.get("perUserMaxIdle");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    perUserMaxIdle = 
-                        (Map)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    perUserMaxIdle = (Map) deserialize(serialized);
                 }
 
                 ra = ref.get("perUserMaxWait");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    perUserMaxWait = 
-                        (Map)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    perUserMaxWait = (Map) deserialize(serialized);
                 }
                 
                 ra = ref.get("perUserDefaultReadOnly");
-                if (ra != null  && ra.getContent() != null) 
-                {
-                    byte[] serialized = (byte[])ra.getContent();
-                    perUserDefaultReadOnly = 
-                        (Map)deserialize(serialized);
+                if (ra != null  && ra.getContent() != null) {
+                    byte[] serialized = (byte[]) ra.getContent();
+                    perUserDefaultReadOnly = (Map) deserialize(serialized);
                 }
                 
                 ra = ref.get("testOnBorrow");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    setTestOnBorrow
-                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                if (ra != null && ra.getContent() != null) {
+                    setTestOnBorrow(Boolean.valueOf(ra.getContent().toString())
+                            .booleanValue());
                 }
 
                 ra = ref.get("testOnReturn");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    setTestOnReturn
-                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                if (ra != null && ra.getContent() != null) {
+                    setTestOnReturn(Boolean.valueOf(ra.getContent().toString())
+                            .booleanValue());
                 }
 
                 ra = ref.get("timeBetweenEvictionRunsMillis");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setTimeBetweenEvictionRunsMillis(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("numTestsPerEvictionRun");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setNumTestsPerEvictionRun(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("minEvictableIdleTimeMillis");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setMinEvictableIdleTimeMillis(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
                 ra = ref.get("testWhileIdle");
-                if (ra != null && ra.getContent() != null) 
-                {
-                    setTestWhileIdle
-                        (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                if (ra != null && ra.getContent() != null) {
+                    setTestWhileIdle(Boolean.valueOf(ra.getContent().toString())
+                            .booleanValue());
                 }
                 
                 ra = ref.get("validationQuery");
-                if (ra != null && ra.getContent() != null) 
-                {
+                if (ra != null && ra.getContent() != null) {
                     setValidationQuery(ra.getContent().toString());
                 }
-
                 ds = this;
             }            
         }
-        
         return ds;
     }
 
@@ -1712,8 +1497,10 @@ public class Jdbc2PoolDataSource
             in = new ObjectInputStream(new ByteArrayInputStream(data));
             return in.readObject();
         } finally {
-            try { in.close(); } catch (IOException ex) {}
+            try { 
+                in.close(); 
+            } catch (IOException ex) {
+            }
         }
     }
-
 }

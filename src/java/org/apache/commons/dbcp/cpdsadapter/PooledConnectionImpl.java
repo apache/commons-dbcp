@@ -3,7 +3,7 @@ package org.apache.commons.dbcp.cpdsadapter;
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,13 +73,12 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.6 2003/06/29 12:42:16 mpoeschl Exp $
  */
 class PooledConnectionImpl 
-    implements PooledConnection, KeyedPoolableObjectFactory
-{
-    private static final String CLOSED = 
-        "Attempted to use PooledConnection after closed() was called.";
+        implements PooledConnection, KeyedPoolableObjectFactory {
+    private static final String CLOSED 
+            = "Attempted to use PooledConnection after closed() was called.";
 
     /**
      * The JDBC database connection that represents the physical db connection.
@@ -108,13 +107,11 @@ class PooledConnectionImpl
     /**
      * Wrap the real connection.
      */
-    PooledConnectionImpl(Connection connection, KeyedObjectPool pool)
-    {
+    PooledConnectionImpl(Connection connection, KeyedObjectPool pool) {
         this.connection = connection;
         eventListeners = new Vector();
         isClosed = false;
-        if (pool != null) 
-        {
+        if (pool != null) {
             pstmtPool = pool;
             pstmtPool.setFactory(this);            
         }
@@ -123,10 +120,8 @@ class PooledConnectionImpl
     /**
      * Add an event listener.
      */
-    public void addConnectionEventListener(ConnectionEventListener listener)
-    {
-        if ( !eventListeners.contains(listener) )
-        {
+    public void addConnectionEventListener(ConnectionEventListener listener) {
+        if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
         }
     }
@@ -138,38 +133,24 @@ class PooledConnectionImpl
      *
      * @exception SQLException if an error occurs
      */
-    public void close()
-        throws SQLException
-    {        
+    public void close() throws SQLException {        
         assertOpen();
         isClosed = true;
-        try
-        {
-            if (pstmtPool != null) 
-            {
-                try
-                {
+        try {
+            if (pstmtPool != null) {
+                try {
                     pstmtPool.close();
-                }
-                finally
-                {
+                } finally {
                     pstmtPool = null;
                 }
             }
-        }
-        catch (Exception e)
-        {
-            if (e instanceof RuntimeException) 
-            {
+        } catch (Exception e) {
+            if (e instanceof RuntimeException) {
                 throw (RuntimeException)e;
-            }
-            else 
-            {
+            } else {
                 throw new SQLException(e.getMessage());
             }
-        }
-        finally
-        {
+        } finally {
             connection.close();
         }
     }
@@ -177,11 +158,8 @@ class PooledConnectionImpl
     /**
      * Throws an SQLException, if isClosed() is true
      */
-    private void assertOpen()
-        throws SQLException 
-    {
-        if ( isClosed ) 
-        {
+    private void assertOpen() throws SQLException {
+        if (isClosed) {
             throw new SQLException(CLOSED);
         }
     }
@@ -191,17 +169,14 @@ class PooledConnectionImpl
      *
      * @return The database connection.
      */
-    public Connection getConnection()
-        throws SQLException
-    {
+    public Connection getConnection() throws SQLException {
         assertOpen();
         // make sure the last connection is marked as closed
-        if ( logicalConnection != null && !logicalConnection.isClosed() ) 
-        {
+        if (logicalConnection != null && !logicalConnection.isClosed()) {
             // should notify pool of error so the pooled connection can
             // be removed !FIXME!
-            throw new SQLException("PooledConnection was reused, without" +
-                                   "its previous Connection being closed.");
+            throw new SQLException("PooledConnection was reused, without" 
+                    + "its previous Connection being closed.");
         }
 
         // the spec requires that this return a new Connection instance.
@@ -212,8 +187,8 @@ class PooledConnectionImpl
     /**
      * Remove an event listener.
      */
-    public void removeConnectionEventListener(ConnectionEventListener listener)
-    {
+    public void removeConnectionEventListener(
+            ConnectionEventListener listener) {
         eventListeners.remove(listener);
     }
 
@@ -221,37 +196,29 @@ class PooledConnectionImpl
      * Closes the physical connection and checks that the logical connection
      * was closed as well.
      */
-    protected void finalize()
-        throws Throwable
-    {
+    protected void finalize() throws Throwable {
         // Closing the Connection ensures that if anyone tries to use it,
         // an error will occur.
-        try
-        {
+        try {
             connection.close();
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
         }
 
         // make sure the last connection is marked as closed
-        if ( logicalConnection != null && !logicalConnection.isClosed() ) 
-        {
-            throw new SQLException("PooledConnection was gc'ed, without" +
-                                   "its last Connection being closed.");
+        if (logicalConnection != null && !logicalConnection.isClosed()) {
+            throw new SQLException("PooledConnection was gc'ed, without" 
+                    + "its last Connection being closed.");
         }        
     }
 
     /**
      * sends a connectionClosed event.
      */
-    void notifyListeners()
-    {
+    void notifyListeners() {
         ConnectionEvent event = new ConnectionEvent(this);
         Iterator i = eventListeners.iterator();
-        while ( i.hasNext() ) 
-        {
-            ((ConnectionEventListener)i.next()).connectionClosed(event);
+        while (i.hasNext()) {
+            ((ConnectionEventListener) i.next()).connectionClosed(event);
         }
     }
 
@@ -262,21 +229,16 @@ class PooledConnectionImpl
      * Create or obtain a {*link PreparedStatement} from my pool.
      * @return a {*link PoolablePreparedStatement}
      */
-    PreparedStatement prepareStatement(String sql) 
-        throws SQLException 
-    {
-        if (pstmtPool == null) 
-        {
+    PreparedStatement prepareStatement(String sql) throws SQLException {
+        if (pstmtPool == null) {
             return connection.prepareStatement(sql);
-        }
-        else 
-        {
+        } else {
             try {
-                return (PreparedStatement)
-                    pstmtPool.borrowObject(createKey(sql));
-            } catch(RuntimeException e) {
+                return (PreparedStatement) 
+                        pstmtPool.borrowObject(createKey(sql));
+            } catch (RuntimeException e) {
                 throw e;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new SQLException(e.toString());
             }
         }
@@ -288,20 +250,16 @@ class PooledConnectionImpl
      */
     PreparedStatement prepareStatement(String sql, int resultSetType, 
                                        int resultSetConcurrency) 
-        throws SQLException 
-    {
-        if (pstmtPool == null) 
-        {
+            throws SQLException {
+        if (pstmtPool == null) {
             return connection.prepareStatement(sql);
-        }
-        else 
-        {
+        } else {
             try {
                 return (PreparedStatement) pstmtPool.borrowObject(
                     createKey(sql,resultSetType,resultSetConcurrency));
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 throw e;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new SQLException(e.toString());
             }
         }
@@ -338,26 +296,25 @@ class PooledConnectionImpl
      */
     public Object makeObject(Object obj) {
         try {
-            if(null == obj || !(obj instanceof PStmtKey)) {
+            if (null == obj || !(obj instanceof PStmtKey)) {
                 throw new IllegalArgumentException();
             } else {
                 // _openPstmts++;
                 PStmtKey key = (PStmtKey)obj;
-                if(null == key._resultSetType && null == 
-                   key._resultSetConcurrency) 
-                {
+                if (null == key._resultSetType 
+                        && null == key._resultSetConcurrency) {
                     return new PoolablePreparedStatementStub(
-                        connection.prepareStatement(key._sql),
-                        key, pstmtPool, connection);
+                            connection.prepareStatement(key._sql),
+                            key, pstmtPool, connection);
                 } else {
                     return new PoolablePreparedStatementStub(
-                        connection.prepareStatement(key._sql,
-                        key._resultSetType.intValue(),
-                        key._resultSetConcurrency.intValue()),
-                        key, pstmtPool, connection);
+                            connection.prepareStatement(key._sql,
+                            key._resultSetType.intValue(),
+                            key._resultSetConcurrency.intValue()),
+                            key, pstmtPool, connection);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.toString());
         }
     }
@@ -370,10 +327,10 @@ class PooledConnectionImpl
      */
     public void destroyObject(Object key, Object obj) throws Exception {
         //_openPstmts--;
-        if(obj instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)obj).getInnermostDelegate().close();
+        if (obj instanceof DelegatingPreparedStatement) {
+            ((DelegatingPreparedStatement) obj).getInnermostDelegate().close();
         } else {
-            ((PreparedStatement)obj).close();
+            ((PreparedStatement) obj).close();
         }
     }
 
@@ -395,7 +352,7 @@ class PooledConnectionImpl
      * @param obj ignored
      */
     public void activateObject(Object key, Object obj) {
-        ((PoolablePreparedStatementStub)obj).activate();
+        ((PoolablePreparedStatementStub) obj).activate();
     }
 
     /**
@@ -405,8 +362,8 @@ class PooledConnectionImpl
      * @param obj a {*link PreparedStatement}
      */
     public void passivateObject(Object key, Object obj) throws Exception {
-        ((PreparedStatement)obj).clearParameters();
-        ((PoolablePreparedStatementStub)obj).passivate();
+        ((PreparedStatement) obj).clearParameters();
+        ((PoolablePreparedStatementStub) obj).passivate();
     }
 
     /**
@@ -429,14 +386,14 @@ class PooledConnectionImpl
 
         public boolean equals(Object that) {
             try {
-                PStmtKey key = (PStmtKey)that;
-                return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
-                        ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
-                        ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency))
+                PStmtKey key = (PStmtKey) that;
+                return(((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
+                       ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
+                       ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency))
                       );
-            } catch(ClassCastException e) {
+            } catch (ClassCastException e) {
                 return false;
-            } catch(NullPointerException e) {
+            } catch (NullPointerException e) {
                 return false;
             }
         }
