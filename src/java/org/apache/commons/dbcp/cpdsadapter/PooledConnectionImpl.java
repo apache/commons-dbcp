@@ -26,6 +26,7 @@ import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp.DelegatingConnection;
 import org.apache.commons.dbcp.DelegatingPreparedStatement;
 import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
@@ -36,7 +37,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author John D. McNally
- * @version $Revision: 1.14 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.15 $ $Date: 2004/02/28 21:58:38 $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -47,6 +48,11 @@ class PooledConnectionImpl
      * The JDBC database connection that represents the physical db connection.
      */
     private Connection connection = null;
+    
+    /**
+     * A DelegatingConnection used to create a PoolablePreparedStatementStub
+     */
+    private DelegatingConnection delegatingConnection = null;
 
     /**
      * The JDBC database logical connection.
@@ -72,6 +78,11 @@ class PooledConnectionImpl
      */
     PooledConnectionImpl(Connection connection, KeyedObjectPool pool) {
         this.connection = connection;
+        if (connection instanceof DelegatingConnection) {
+            this.delegatingConnection = (DelegatingConnection) connection;
+        } else {
+            this.delegatingConnection = new DelegatingConnection(connection);   
+        }
         eventListeners = new Vector();
         isClosed = false;
         if (pool != null) {
@@ -265,13 +276,13 @@ class PooledConnectionImpl
                     && null == key._resultSetConcurrency) {
                 return new PoolablePreparedStatementStub(
                         connection.prepareStatement(key._sql),
-                        key, pstmtPool, connection);
+                        key, pstmtPool, delegatingConnection);
             } else {
                 return new PoolablePreparedStatementStub(
                         connection.prepareStatement(key._sql,
                         key._resultSetType.intValue(),
                         key._resultSetConcurrency.intValue()),
-                        key, pstmtPool, connection);
+                        key, pstmtPool, delegatingConnection);
             }
         }
     }
