@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/08/25 17:08:52 $
+ * $Revision: 1.5 $
+ * $Date: 2003/09/29 06:01:54 $
  *
  * ====================================================================
  *
@@ -66,6 +66,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javax.sql.DataSource;
 
 import junit.framework.Test;
@@ -77,7 +83,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.4 $ $Date: 2003/08/25 17:08:52 $
+ * @version $Revision: 1.5 $ $Date: 2003/09/29 06:01:54 $
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
@@ -505,4 +511,24 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn2.close();
         conn3.close();
     }     
+
+    public void testSerialization() throws Exception {
+        // make sure the pool has initialized
+        Connection conn = ds.getConnection();
+        conn.close();
+
+        // serialize
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(baos);
+        out.writeObject((Serializable)ds);
+        byte[] b = baos.toByteArray();
+        out.close();
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        ObjectInputStream in = new ObjectInputStream(bais);
+        Object obj = in.readObject();
+        in.close();
+
+        assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
+    }
 }
