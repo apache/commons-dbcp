@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/11/10 14:26:19 $
+ * $Revision: 1.9 $
+ * $Date: 2003/12/26 13:33:33 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.jocl.JOCLContentHandler;
 import org.apache.commons.pool.ObjectPool;
@@ -83,7 +84,7 @@ import org.xml.sax.SAXException;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id: PoolingDriver.java,v 1.8 2003/11/10 14:26:19 dirkv Exp $
+ * @version $Id: PoolingDriver.java,v 1.9 2003/12/26 13:33:33 dirkv Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -164,6 +165,11 @@ public class PoolingDriver implements Driver {
                 throw new SQLNestedException("Error closing pool " + name, e);
             }
         }
+    }
+    
+    public synchronized String[] getPoolNames() throws SQLException{
+        Set names = _pools.keySet();
+        return (String[]) names.toArray(new String[names.size()]);
     }
 
     public boolean acceptsURL(String url) throws SQLException {
