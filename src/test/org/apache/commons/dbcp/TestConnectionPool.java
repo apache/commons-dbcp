@@ -1,7 +1,7 @@
 /*
- * $Id: TestConnectionPool.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/11/08 19:37:26 $
+ * $Id: TestConnectionPool.java,v 1.4 2003/03/06 21:41:47 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 21:41:47 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -79,7 +79,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * 
- * @version $Id: TestConnectionPool.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
+ * @version $Id: TestConnectionPool.java,v 1.4 2003/03/06 21:41:47 rwaldhoff Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -367,7 +367,7 @@ public abstract class TestConnectionPool extends TestCase {
         for(int i=0;i<threads.length;i++) {
             while(!(threads[i]).complete()) {
                 try {
-                    Thread.currentThread().sleep(100L);
+                    Thread.sleep(100L);
                 } catch(Exception e) {
                     // ignored
                 }
@@ -408,7 +408,7 @@ public abstract class TestConnectionPool extends TestCase {
         public void run() {
             for(int i=0;i<_iter;i++) {
                 try {
-                    Thread.currentThread().sleep((long)_random.nextInt(_delay));
+                    Thread.sleep((long)_random.nextInt(_delay));
                 } catch(Exception e) {
                     // ignored
                 }
@@ -420,7 +420,7 @@ public abstract class TestConnectionPool extends TestCase {
                     stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
                     rset = stmt.executeQuery();
                     try {
-                        Thread.currentThread().sleep((long)_random.nextInt(_delay));
+                        Thread.sleep((long)_random.nextInt(_delay));
                     } catch(Exception e) {
                         // ignored
                     }
