@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PerUserPoolDataSource.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/08/25 17:08:51 $
+ * $Revision: 1.5 $
+ * $Date: 2003/09/29 06:01:53 $
  *
  * ====================================================================
  *
@@ -61,6 +61,8 @@
 
 package org.apache.commons.dbcp.datasources;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -87,7 +89,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.4 2003/08/25 17:08:51 jmcnally Exp $
+ * @version $Id: PerUserPoolDataSource.java,v 1.5 2003/09/29 06:01:53 jmcnally Exp $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
@@ -104,7 +106,7 @@ public class PerUserPoolDataSource
     private Map perUserMaxWait = null;
     private Map perUserDefaultReadOnly = null;    
 
-    private final Map pools = new HashMap();
+    private transient Map pools = new HashMap();
 
     /**
      * Default no-arg constructor for Serialization
@@ -524,5 +526,28 @@ public class PerUserPoolDataSource
                                   username, password);
            
         pools.put(getPoolKey(username), pool);
+    }
+
+    /**
+     * Supports Serialization interface.
+     *
+     * @param in a <code>java.io.ObjectInputStream</code> value
+     * @exception IOException if an error occurs
+     * @exception ClassNotFoundException if an error occurs
+     */
+    private void readObject(ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+        try 
+        {
+            in.defaultReadObject();
+            PerUserPoolDataSource oldDS = (PerUserPoolDataSource)
+                new InstanceKeyObjectFactory()
+                    .getObjectInstance(getReference(), null, null, null);
+            this.pools = oldDS.pools;
+        }
+        catch (NamingException e)
+        {
+            throw new IOException("NamingException: " + e);
+        }
     }
 }

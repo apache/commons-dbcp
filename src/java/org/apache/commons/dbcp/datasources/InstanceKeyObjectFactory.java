@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/InstanceKeyObjectFactory.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.4 $
+ * $Date: 2003/09/29 06:01:53 $
  *
  * ====================================================================
  *
@@ -124,7 +124,7 @@ public class InstanceKeyObjectFactory
      */ 
     public Object getObjectInstance(Object refObj, Name name, 
                                     Context context, Hashtable env) 
-        throws Exception {
+        {
         // The spec says to return null if we can't create an instance 
         // of the reference
         Object obj = null;

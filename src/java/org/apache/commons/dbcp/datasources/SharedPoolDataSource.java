@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/SharedPoolDataSource.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/08/25 17:08:51 $
+ * $Revision: 1.5 $
+ * $Date: 2003/09/29 06:01:53 $
  *
  * ====================================================================
  *
@@ -61,6 +61,8 @@
 
 package org.apache.commons.dbcp.datasources;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -84,7 +86,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SharedPoolDataSource.java,v 1.4 2003/08/25 17:08:51 jmcnally Exp $
+ * @version $Id: SharedPoolDataSource.java,v 1.5 2003/09/29 06:01:53 jmcnally Exp $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
@@ -260,6 +262,29 @@ public class SharedPoolDataSource
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
+        }
+    }
+
+    /**
+     * Supports Serialization interface.
+     *
+     * @param in a <code>java.io.ObjectInputStream</code> value
+     * @exception IOException if an error occurs
+     * @exception ClassNotFoundException if an error occurs
+     */
+    private void readObject(ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+        try 
+        {
+            in.defaultReadObject();
+            SharedPoolDataSource oldDS = (SharedPoolDataSource)
+                new InstanceKeyObjectFactory()
+                    .getObjectInstance(getReference(), null, null, null);
+            this.pool = oldDS.pool;
+        }
+        catch (NamingException e)
+        {
+            throw new IOException("NamingException: " + e);
         }
     }
 }
