@@ -19,7 +19,7 @@ package org.apache.commons.dbcp.datasources;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision$ $Date$
  */
 class PoolKey implements Serializable {
     private String datasourceName;

@@ -79,7 +79,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision: 1.11 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision$ $Date$
  */
 public abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {

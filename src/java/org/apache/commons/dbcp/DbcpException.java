@@ -24,7 +24,7 @@ package org.apache.commons.dbcp;
  *
  * @author Jonathan Fuerth
  * @author Dan Fraser
- * @version $Revision: 1.5 $ $Date: 2004/02/28 11:48:04 $
+ * @version $Revision$ $Date$
  * 
  * @deprecated This will be removed in a future version of DBCP.
  **/

@@ -19,7 +19,7 @@ package org.apache.commons.jocl;
 import junit.framework.*;
 
 /**
- * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:18 $
+ * @version $Revision$ $Date$
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {

@@ -39,7 +39,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date$
+ * @version $Revision$ $Date$
  */
 public class PoolingDataSource implements DataSource {
 

@@ -38,7 +38,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * maximum number of Connections in this datasource.
  *
  * @author John D. McNally
- * @version $Revision: 1.10 $ $Date: 2004/10/20 20:46:30 $
+ * @version $Revision$ $Date$
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {

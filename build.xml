@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.28 2005/01/15 23:09:50 sullis Exp $ -->
+<!-- $Id$ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">

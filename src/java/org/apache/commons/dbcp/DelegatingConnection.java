@@ -45,7 +45,7 @@ import java.util.Map;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.20 $ $Date: 2005/01/15 23:35:32 $
+ * @version $Revision$ $Date$
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {

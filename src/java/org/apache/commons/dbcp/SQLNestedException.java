@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * A SQLException subclass containing another Throwable
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2004/09/02 00:13:00 $
+ * @version $Revision$ $Date$
  */
 public class SQLNestedException extends SQLException {
 

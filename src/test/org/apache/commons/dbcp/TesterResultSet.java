@@ -33,7 +33,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2004/03/27 17:47:34 $
+ * @version $Revision$ $Date$
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {

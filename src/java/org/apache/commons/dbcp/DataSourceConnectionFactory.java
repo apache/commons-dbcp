@@ -24,7 +24,7 @@ import javax.sql.DataSource;
  * A {@link DataSource}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Revision: 1.7 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision$ $Date$
  */
 public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(DataSource source) {

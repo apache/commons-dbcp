@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 /**
  * Holds a username, password pair.
- * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision$ $Date$
  */
 class UserPassKey implements Serializable {
     private String password;

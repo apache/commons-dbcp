@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2004/05/20 13:07:43 $
+ * @version $Revision$ $Date$
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;

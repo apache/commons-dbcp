@@ -47,7 +47,7 @@ import java.sql.SQLException;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.19 $ $Date: 2004/03/06 13:35:31 $
+ * @version $Revision$ $Date$
  */
 public class DelegatingCallableStatement extends DelegatingPreparedStatement
         implements CallableStatement {

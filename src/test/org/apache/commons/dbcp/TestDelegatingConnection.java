@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision: 1.7 $ $Date: 2005/01/15 23:34:21 $
+ * @version $Revision$ $Date$
  */
 public class TestDelegatingConnection extends TestCase {
     public TestDelegatingConnection(String testName) {

@@ -32,7 +32,7 @@ import org.apache.commons.pool.*;
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2004/03/07 15:26:38 $
+ * @version $Revision$ $Date$
  */
 public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
     /** My pool of {@link PreparedStatement}s. */

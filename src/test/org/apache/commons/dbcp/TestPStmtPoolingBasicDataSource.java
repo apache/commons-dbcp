@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.5 $ $Date: 2004/03/07 15:29:06 $
+ * @version $Revision$ $Date$
  */
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public TestPStmtPoolingBasicDataSource(String testName) {

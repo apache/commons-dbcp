@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.22 $ $Date: 2004/06/29 20:14:29 $
+ * @version $Revision$ $Date$
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {

@@ -35,7 +35,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.21 $ $Date$
+ * @version $Revision$ $Date$
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
