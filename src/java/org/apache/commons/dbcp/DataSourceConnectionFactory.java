@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DataSourceConnectionFactory.java,v 1.1 2001/04/14 17:15:14 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:14 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DataSourceConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/07/20 22:55:34 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import javax.sql.DataSource;
  * A {@link DataSource}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Id: DataSourceConnectionFactory.java,v 1.1 2001/04/14 17:15:14 rwaldhoff Exp $
+ * @version $Id: DataSourceConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
  */
 public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(DataSource source) {
@@ -90,7 +90,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
                 return _source.getConnection(_uname,_passwd);
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e.toString());
+            throw new DbcpException(e);
         }
     }
 
