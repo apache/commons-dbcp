@@ -1,7 +1,7 @@
 /*
- * $Id: TestConnectionPool.java,v 1.4 2003/03/06 21:41:47 rwaldhoff Exp $
- * $Revision: 1.4 $
- * $Date: 2003/03/06 21:41:47 $
+ * $Id: TestConnectionPool.java,v 1.5 2003/08/11 23:47:03 dirkv Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/08/11 23:47:03 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -79,7 +79,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * 
- * @version $Id: TestConnectionPool.java,v 1.4 2003/03/06 21:41:47 rwaldhoff Exp $
+ * @version $Id: TestConnectionPool.java,v 1.5 2003/08/11 23:47:03 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -101,7 +101,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
     
     protected long getMaxWait() {
-        return 50L;
+        return 100L;
     }
         
     public void testIsClosed() throws Exception {
