@@ -3,14 +3,15 @@
    <properties>
       <title>Downloads</title>
       <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id: downloads.xml,v 1.2 2003/10/11 18:01:37 dirkv Exp $</revision>
+      <revision>$Id: downloads.xml,v 1.3 2003/10/20 19:49:56 dirkv Exp $</revision>
    </properties>
 
    <body>
       <section name="Releases">
          <p>The following releases are available:</p>
          <ul>
-           <li>Version 1.0 - 12 Aug 2002</li>
+           <li>Version 1.1 - 20 October 2003</li>
+           <li>Version 1.0 - 12 August 2002</li>
          </ul>
          <br/>
          <p>
@@ -37,6 +38,7 @@
          </p>
       </section>
 
+<!--
       <section name="Release Candidate">
          <p>
             Release candidates for the upcoming 1.1 release can be downloaded 
@@ -50,5 +52,6 @@
             Final release target is 20 October 2003. 
          </p>
       </section>
+-->
    </body>
 </document>
