@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/11/08 19:17:23 $
  *
  * ====================================================================
  *
@@ -61,17 +61,18 @@
 
 package org.apache.commons.dbcp;
 
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.jocl.JOCLContentHandler;
+import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.HashMap;
-import java.util.Enumeration;
-import java.io.InputStream;
+import java.util.NoSuchElementException;
+import java.util.Properties;
+
+import org.apache.commons.jocl.JOCLContentHandler;
+import org.apache.commons.pool.ObjectPool;
 
 
 /**
@@ -80,7 +81,7 @@ import java.io.InputStream;
  * {@link ObjectPool}.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolingDriver.java,v 1.3 2002/07/20 22:55:34 craigmcc Exp $
+ * @version $Id: PoolingDriver.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -146,6 +147,8 @@ public class PoolingDriver implements Driver {
                     return (Connection)(pool.borrowObject());
                 } catch(SQLException e) {
                     throw e;
+                } catch(NoSuchElementException e) {
+                    throw new SQLException(e.toString());
                 } catch(RuntimeException e) {
                     throw e;
                 } catch(Exception e) {

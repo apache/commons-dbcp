@@ -1,7 +1,7 @@
 /*
- * $Id: TestConnectionPool.java,v 1.1 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: TestConnectionPool.java,v 1.2 2002/11/08 19:17:24 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/11/08 19:17:24 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -79,7 +79,7 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * 
- * @version $Id: TestConnectionPool.java,v 1.1 2002/11/08 18:51:07 rwaldhoff Exp $
+ * @version $Id: TestConnectionPool.java,v 1.2 2002/11/08 19:17:24 rwaldhoff Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -332,7 +332,7 @@ public abstract class TestConnectionPool extends TestCase {
         try {
             getConnection();
             fail("Allowed to open more than DefaultMaxActive connections.");
-        } catch (java.util.NoSuchElementException e) {
+        } catch (java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/05/16 21:25:38 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/11/08 19:17:23 $
  *
  * ====================================================================
  *
@@ -61,16 +61,14 @@
 
 package org.apache.commons.dbcp;
 
-import org.apache.commons.pool.ObjectPool;
-import java.util.Properties;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.NoSuchElementException;
+
 import javax.sql.DataSource;
-import java.util.Enumeration;
+
+import org.apache.commons.pool.ObjectPool;
 
 /**
  * A simple {@link DataSource} implementation that obtains
@@ -79,7 +77,7 @@ import java.util.Enumeration;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolingDataSource.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * @version $Id: PoolingDataSource.java,v 1.4 2002/11/08 19:17:23 rwaldhoff Exp $
  */
 public class PoolingDataSource implements DataSource {
     public PoolingDataSource() {
@@ -110,6 +108,8 @@ public class PoolingDataSource implements DataSource {
             return (Connection)(_pool.borrowObject());
         } catch(SQLException e) {
             throw e;
+        } catch(NoSuchElementException e) {
+            throw new SQLException(e.toString());
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
