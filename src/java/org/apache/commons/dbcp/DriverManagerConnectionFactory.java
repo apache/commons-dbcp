@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.1 2001/04/14 17:15:07 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:07 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DriverManagerConnectionFactory.java,v 1.2 2001/04/15 17:31:40 nacho Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/04/15 17:31:40 $
  *
  * ====================================================================
  *
@@ -69,7 +69,9 @@ import java.util.Properties;
  * A {@link DriverManager}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Id: DriverManagerConnectionFactory.java,v 1.1 2001/04/14 17:15:07 rwaldhoff Exp $
+ * @author Ignacio J. Ortega
+ *
+ * @version $Id: DriverManagerConnectionFactory.java,v 1.2 2001/04/15 17:31:40 nacho Exp $
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
@@ -78,10 +80,20 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         _props = props;
     }
 
+    public DriverManagerConnectionFactory(String connectUri, String uname, String passwd) {
+        _connectUri = connectUri;
+        _uname = uname;
+        _passwd = passwd;
+    }
+
     public Connection createConnection() {
         try {
             if(null == _props) {
-                return DriverManager.getConnection(_connectUri);
+                if((_uname == null) || (_passwd == null)) {
+                    return DriverManager.getConnection(_connectUri);
+                } else {
+                    return DriverManager.getConnection(_connectUri,_uname,_passwd);
+                }
             } else {
                 return DriverManager.getConnection(_connectUri,_props);
             }
@@ -91,5 +103,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     }
 
     protected String _connectUri = null;
+    protected String _uname = null;
+    protected String _passwd = null;
     protected Properties _props = null;
 }
