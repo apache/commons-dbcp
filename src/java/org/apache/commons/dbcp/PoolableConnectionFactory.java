@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v $
- * $Revision: 1.16 $
- * $Date: 2003/11/30 18:40:46 $
+ * $Revision: 1.17 $
+ * $Date: 2003/11/30 19:01:33 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Id: PoolableConnectionFactory.java,v 1.16 2003/11/30 18:40:46 dirkv Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.17 2003/11/30 19:01:33 dirkv Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -376,10 +376,10 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
             conn.setAutoCommit(_defaultAutoCommit);
-            conn.setReadOnly(_defaultReadOnly);
             if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
                 conn.setTransactionIsolation(_defaultTransactionIsolation);
             }
+            conn.setReadOnly(_defaultReadOnly);
             if (_defaultCatalog != null) {
                 conn.setCatalog(_defaultCatalog);
             }
