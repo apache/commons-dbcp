@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterStatement.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.9 $
+ * $Date: 2003/09/14 00:19:43 $
  *
  * ====================================================================
  *
@@ -89,6 +89,8 @@ public class TesterStatement implements Statement {
         checkOpen();
         if("null".equals(sql)) {
             return null;
+        } if("invalid".equals(sql)) {
+            throw new SQLException("invalid query");
         } else {
             return new TesterResultSet(this);
         }
