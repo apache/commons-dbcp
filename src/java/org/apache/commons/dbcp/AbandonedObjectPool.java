@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.5 2003/04/09 00:19:37 dgraham Exp $
- * $Revision: 1.5 $
- * $Date: 2003/04/09 00:19:37 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.6 2003/08/22 12:39:25 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/22 12:39:25 $ 
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.5 $ $Date: 2003/04/09 00:19:37 $
+ * @version $Revision: 1.6 $ $Date: 2003/08/22 12:39:25 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -178,8 +178,8 @@ public class AbandonedObjectPool extends GenericObjectPool {
                 pc.printStackTrace();
             }             
             try {
-                pc.close();
-            } catch(SQLException e) {
+                invalidateObject(pc);
+            } catch(Exception e) {
                 e.printStackTrace();
             }             
         }
