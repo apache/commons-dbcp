@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/16 13:29:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/jocl/TestJOCLContentHandler.java,v 1.3 2002/10/30 23:26:59 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/10/30 23:26:59 $
  *
  * ====================================================================
  *
@@ -189,21 +189,9 @@ public class TestJOCLContentHandler extends TestCase {
         }
         {
             AttributesImpl attr = new AttributesImpl();
-            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","3");
-            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int",attr);
-            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int");
-        }
-        {
-            AttributesImpl attr = new AttributesImpl();
-            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","4");
-            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int",attr);
-            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int");
-        }
-        {
-            AttributesImpl attr = new AttributesImpl();
-            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","5");
-            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int",attr);
-            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","int","int");
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","345");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long");
         }
         jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
         jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","jocl","jocl");
@@ -215,6 +203,6 @@ public class TestJOCLContentHandler extends TestCase {
 
         assertTrue(null == jocl.getValue(0));
         assertTrue(null != jocl.getValue(1));
-        assertEquals(new java.util.Date(3,4,5),jocl.getValue(2));
+        assertEquals(new java.util.Date(345L),jocl.getValue(2));
     }
 }

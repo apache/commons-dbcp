@@ -71,6 +71,7 @@ public class TesterResultSet implements ResultSet {
         return (double)columnIndex;
     }
 
+    /** @deprecated */
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkOpen();
         return new BigDecimal((double)columnIndex);
@@ -101,6 +102,7 @@ public class TesterResultSet implements ResultSet {
         return null;
     }
 
+    /** @deprecated */
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
         checkOpen();
         return null;
@@ -151,6 +153,7 @@ public class TesterResultSet implements ResultSet {
         return (double)(columnName.hashCode());
     }
 
+    /** @deprecated */
     public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException {
         checkOpen();
         return new BigDecimal((double)columnName.hashCode());
@@ -181,6 +184,7 @@ public class TesterResultSet implements ResultSet {
         return null;
     }
 
+    /** @deprecated */
     public java.io.InputStream getUnicodeStream(String columnName) throws SQLException {
         checkOpen();
         return null;
