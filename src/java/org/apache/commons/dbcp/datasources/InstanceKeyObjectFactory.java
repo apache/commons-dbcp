@@ -36,7 +36,7 @@ import javax.naming.spi.ObjectFactory;
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
  * or <code>PerUserPoolDataSource</code>s
  * 
- * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.9 $ $Date: 2004/02/28 21:51:59 $
  */
 abstract class InstanceKeyObjectFactory
     implements ObjectFactory
@@ -50,7 +50,12 @@ abstract class InstanceKeyObjectFactory
             Object obj = i.next();
             if (obj instanceof String) 
             {
-                max = Math.max(max, Integer.parseInt((String)obj));
+                try {
+                    max = Math.max(max, Integer.valueOf((String)obj).intValue());
+                }
+                catch (NumberFormatException e) {
+                    // no sweat, ignore those keys
+                }
             }
         }
         String instanceKey = String.valueOf(max + 1);
