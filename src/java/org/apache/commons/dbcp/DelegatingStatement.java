@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v $
- * $Revision: 1.12 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.13 $
+ * $Date: 2003/12/26 15:16:28 $
  *
  * ====================================================================
  *
@@ -84,7 +84,8 @@ import java.util.List;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.12 $ $Date: 2003/10/09 21:04:44 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.13 $ $Date: 2003/12/26 15:16:28 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -219,8 +220,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     public int[] executeBatch() throws SQLException { checkOpen(); return _stmt.executeBatch();}
 
     protected void checkOpen() throws SQLException {
-        if(_closed) {
-            throw new SQLException("Connection is closed.");
+        if(isClosed()) {
+            throw new SQLException(this.getClass().getName() + " is closed.");
         }
     }
 
@@ -254,6 +255,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
     
+    protected boolean isClosed() {
+        return _closed;
+    }
+
     protected boolean _closed = false;
 
     // ------------------- JDBC 3.0 -----------------------------------------
