@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.24 $
- * $Date: 2003/09/13 22:29:39 $
+ * $Revision: 1.25 $
+ * $Date: 2003/09/14 00:15:47 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.24 $ $Date: 2003/09/13 22:29:39 $
+ * @version $Revision: 1.25 $ $Date: 2003/09/14 00:15:47 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -416,11 +416,15 @@ public class BasicDataSource implements DataSource {
     protected String validationQuery = null;
 
     public String getValidationQuery() {
-        return (this.validationQuery);
+        return this.validationQuery;
     }
 
     public void setValidationQuery(String validationQuery) {
-        this.validationQuery = validationQuery;
+        if ((validationQuery != null) && (validationQuery.trim().length() > 0)) {
+            this.validationQuery = validationQuery;
+        } else {
+            this.validationQuery = null;
+        }
     }
 
     /** 
@@ -800,9 +804,10 @@ public class BasicDataSource implements DataSource {
             if (connectionFactory == null) {
                 throw new SQLException("Cannot create PoolableConnectionFactory");
             }
-        } catch(RuntimeException e) {
+            validateConnectionFactory(connectionFactory);
+        } catch (RuntimeException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new SQLNestedException("Cannot create PoolableConnectionFactory", e);
         }
 
@@ -811,8 +816,16 @@ public class BasicDataSource implements DataSource {
         ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         dataSource.setLogWriter(logWriter);
         return (dataSource);
-
     }
-
-
+    
+    private void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
+        Connection conn = null;
+        try {
+            conn = (Connection) connectionFactory.makeObject();
+            connectionFactory.validateConnection(conn);
+        }
+        finally {
+            connectionFactory.destroyObject(conn);
+        }
+    }
 }
