@@ -23,6 +23,7 @@
             <item name="Configuration"                 href="/configuration.html" />
             <item name="API&#xA0;Documentation"        href="/apidocs/index.html"/>
             <item name="Developers&#xA0;Guide"         href="/guide/index.html" collapse="true">
+                <item name="JNDI&#xA0;Howto"           href="/guide/jndi-howto.html"/>
                 <item name="Class&#xA0;Diagrams"       href="/guide/classdiagrams.html"/>
                 <item name="Sequence&#xA0;Diagrams"    href="/guide/sequencediagrams.html"/>
             </item>
