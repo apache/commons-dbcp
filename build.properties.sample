@@ -19,6 +19,11 @@ junit.home=${base.path}/junit3.7
 junit.lib=${junit.home}
 junit.jar=${junit.lib}/junit.jar
 
+# sax2.jar - SAX classpath
+sax2.home=${base.path}/sax
+sax2.lib=${sax2.home}
+sax2.jar=${sax2.lib}/sax2.jar
+
 # jndi.jar - Java Naming and Directory Interface (JNDI), version 1.2 or later
 # Note: Optional with JDK 1.3+
 #jndi.home=${base.path}/jndi

@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.16 2002/11/08 18:51:06 rwaldhoff Exp $ -->
+<!-- $Id: build.xml,v 1.17 2003/03/05 23:39:34 rwaldhoff Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -42,7 +42,7 @@
       <property name="cp" value=""/>
 
       <!-- now combine the classpaths -->
-      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${commons-lang.jar}"/>
+      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${commons-lang.jar}:${sax2.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
       <property name="Name" value="Commons-DBCP"/>
@@ -73,8 +73,7 @@
       <property name="dest.doc.api" value="${dest.doc}/api"/>
       <property name="dest.jardir"  value="${dest}"/>
       <property name="dest.jardir.jar" value="${dest.jardir}/${name}.jar"/>
-      <available property="available-doc" file="${source.doc}"/> <!-- does this
- module have docs? -->
+      <available property="available-doc" file="${source.doc}"/> <!-- does this module have docs? -->
       <available property="available-src-conf" file="${source.src.conf}"/> <!-- does this module have conf src? -->
       <available property="available-src-java" file="${source.src.java}"/> <!-- does this module have java src? -->
       <available property="available-src-test" file="${source.src.test}"/> <!-- does this module have test src? -->
@@ -263,6 +262,7 @@
 
       <java classname="${test.runner}" fork="yes" failonerror="${test.failonerror}">
         <arg value="${test.entry}"/>
+        <sysproperty key="org.xml.sax.driver" value="org.apache.xerces.parsers.SAXParser" />
         <classpath>
           <pathelement location="${dest.classes}" />
           <pathelement path="${classpath}" />
