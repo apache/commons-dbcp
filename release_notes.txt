@@ -107,3 +107,5 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 * The following issues were resolved since v1.1RC1:
 22776     2003-09-30   Nor    FIXE    DBCP should not be writing messages to stderr or stdout
                                       (removed unneeded logging in AbandonedObjectPool)
+23491     2003-10-13   Cri    FIXE    Can't configure PerUserPoolDataSource for use with tomcat
+http://jakarta.apache.org/commons/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html
