@@ -38,7 +38,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.35 $ $Date: 2004/02/29 20:18:25 $
+ * @version $Revision: 1.36 $ $Date: 2004/05/18 21:59:53 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -507,10 +507,6 @@ public class BasicDataSource implements DataSource {
      */
     protected GenericObjectPool connectionPool = null;
     
-    public GenericObjectPool getConnectionPool() {
-        return connectionPool;
-    }
-
     /**
      * The connection properties that will be sent to our JDBC driver when
      * establishing new connections.  <strong>NOTE</strong> - The "user" and
