@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.30 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.31 $
+ * $Date: 2003/11/10 14:51:43 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.30 $ $Date: 2003/10/09 21:04:44 $
+ * @version $Revision: 1.31 $ $Date: 2003/11/10 14:51:43 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -836,7 +836,9 @@ public class BasicDataSource implements DataSource {
         Connection conn = null;
         try {
             conn = (Connection) connectionFactory.makeObject();
+            connectionFactory.activateObject(conn);
             connectionFactory.validateConnection(conn);
+            connectionFactory.passivateObject(conn);
         }
         finally {
             connectionFactory.destroyObject(conn);
