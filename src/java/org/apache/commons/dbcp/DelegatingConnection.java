@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.5 2002/06/28 15:28:20 glenn Exp $
- * $Revision: 1.5 $
- * $Date: 2002/06/28 15:28:20 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.6 2002/06/29 16:45:08 glenn Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/06/29 16:45:08 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.5 2002/06/28 15:28:20 glenn Exp $
+ * @version $Id: DelegatingConnection.java,v 1.6 2002/06/29 16:45:08 glenn Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -223,7 +223,14 @@ public class DelegatingConnection extends AbandonedTrace
     public int getTransactionIsolation() throws SQLException { checkOpen(); return _conn.getTransactionIsolation();}
     public Map getTypeMap() throws SQLException { checkOpen(); return _conn.getTypeMap();}
     public SQLWarning getWarnings() throws SQLException { checkOpen(); return _conn.getWarnings();}
-    public boolean isClosed() throws SQLException { return _closed || _conn.isClosed();}
+
+    public boolean isClosed() throws SQLException {
+         if(_closed || _conn.isClosed()) {
+             return true;
+         }
+         return false;
+    }
+
     public boolean isReadOnly() throws SQLException { checkOpen(); return _conn.isReadOnly();}
     public String nativeSQL(String sql) throws SQLException { checkOpen(); return _conn.nativeSQL(sql);}
     public void rollback() throws SQLException { checkOpen(); _conn.rollback();}
