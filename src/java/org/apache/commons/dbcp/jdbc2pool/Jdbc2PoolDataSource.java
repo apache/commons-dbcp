@@ -145,7 +145,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.13 2003/07/26 01:23:21 jmcnally Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.14 2003/08/11 14:08:39 dirkv Exp $
  */
 public class Jdbc2PoolDataSource
         implements DataSource, Referenceable, Serializable, ObjectFactory {
@@ -958,7 +958,7 @@ public class Jdbc2PoolDataSource
             try {
                 registerPool(username, password);
                 pool = pools.get(key);
-            } catch (Exception e) {
+            } catch (NamingException e) {
                 e.printStackTrace();
                 throw new SQLException(e.getMessage());
             }
@@ -1097,7 +1097,7 @@ public class Jdbc2PoolDataSource
     }
 
     private synchronized void registerPool(String username, String password) 
-            throws javax.naming.NamingException {
+            throws javax.naming.NamingException, SQLException {
         Map pools = (Map) dsInstanceMap.get(instanceKey);
         PoolKey key = getPoolKey(username);
         if (!pools.containsKey(key)) {
@@ -1115,6 +1115,30 @@ public class Jdbc2PoolDataSource
                     ctx = new InitialContext(jndiEnvironment);
                 }
                 cpds = (ConnectionPoolDataSource) ctx.lookup(dataSourceName);
+            }
+            
+            // try to get a connection with the supplied username/password
+            PooledConnection conn = null;
+            try {
+                if (username != null) {
+                    conn = cpds.getPooledConnection(username, password);
+                }
+                else {
+                    conn = cpds.getPooledConnection();
+                }
+                if (conn == null) {
+                    throw new SQLException("Cannot connect using the supplied username/password");
+                }
+            }
+            finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    }
+                    catch (SQLException e) {
+                        // at least we could connect
+                    }
+                }
             }
 
             Object whicheverPool = null;
