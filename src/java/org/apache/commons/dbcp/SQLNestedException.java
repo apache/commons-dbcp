@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * A SQLException subclass containing another Throwable
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.9 $ $Date: 2004/09/02 00:13:00 $
  */
 public class SQLNestedException extends SQLException {
 
@@ -35,7 +35,7 @@ public class SQLNestedException extends SQLException {
     static {
         Method getCauseMethod;
         try {
-            getCauseMethod = Throwable.class.getMethod("getCause", null);
+            getCauseMethod = Throwable.class.getMethod("getCause", (Class[]) null);
         } catch (Exception e) {
             getCauseMethod = null;
         }
