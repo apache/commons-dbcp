@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.3 2002/06/29 17:36:37 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/06/29 17:36:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.4 2002/08/05 06:25:59 jmcnally Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/08/05 06:25:59 $
  *
  * ====================================================================
  *
@@ -172,6 +172,7 @@ public class DelegatingCallableStatement extends AbandonedTrace
     public long getLong(int parameterIndex) throws SQLException { return _stmt.getLong( parameterIndex);  }
     public float getFloat(int parameterIndex) throws SQLException { return _stmt.getFloat( parameterIndex);  }
     public double getDouble(int parameterIndex) throws SQLException { return _stmt.getDouble( parameterIndex);  }
+    /** @deprecated */
     public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException { return _stmt.getBigDecimal( parameterIndex,  scale);  }
     public byte[] getBytes(int parameterIndex) throws SQLException { return _stmt.getBytes( parameterIndex);  }
     public Date getDate(int parameterIndex) throws SQLException { return _stmt.getDate( parameterIndex);  }
@@ -204,6 +205,7 @@ public class DelegatingCallableStatement extends AbandonedTrace
     public void setTime(int parameterIndex, Time x) throws SQLException { _stmt.setTime( parameterIndex,  x);  }
     public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException { _stmt.setTimestamp( parameterIndex,  x);  }
     public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException { _stmt.setAsciiStream( parameterIndex,  x,  length);  }
+    /** @deprecated */
     public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException { _stmt.setUnicodeStream( parameterIndex,  x,  length);  }
     public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException { _stmt.setBinaryStream( parameterIndex,  x,  length);  }
     public void clearParameters() throws SQLException { _stmt.clearParameters();  }
