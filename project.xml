@@ -1,40 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0"?>
 <project>
-  <extend>../project.xml</extend>
+  <pomVersion>3</pomVersion>
+  <name>commons-dbcp</name>
   <id>commons-dbcp</id>
-  <name>DBCP</name>
-  <currentVersion>1.1-dev</currentVersion>
+  <currentVersion>2.0-dev</currentVersion>
+
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://jakarta.apache.org/commons</url>
+    <logo>http://jakarta.apache.org/images/jakarta-logo-blue.gif</logo>
+  </organization>
+  <!-- <logo>/images/logo.jpg</logo> -->
+
   <inceptionYear>2001</inceptionYear>
+  <package>org.apache.commons.dbcp</package>
+
   <gumpRepositoryId>jakarta</gumpRepositoryId>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
 
   <description>
     Commons Database Connection Pooling
   </description>
-  
+
+  <url>http://jakarta.apache.org/commons/dbcp/</url>
+  <issueTrackingUrl>http://issues.apache.org/bugzilla</issueTrackingUrl>
+  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/commons/dbcp</siteDirectory>
+  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/dbcp/</distributionDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons/dbcp</connection>
+    <url>http://cvs.apache.org/viewcvs/jakarta-commons/dbcp/</url>
+  </repository>
+
+  <mailingLists>
+    <mailingList>
+      <name>Commons User List</name>
+      <subscribe>commons-user-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>commons-user-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://archives.apache.org/eyebrowse/SummarizeList?listName=commons-user@jakarta.apache.org</archive>
+    </mailingList>
+    <mailingList>
+      <name>Commons Developer List</name>
+      <subscribe>commons-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>commons-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://archives.apache.org/eyebrowse/SummarizeList?listName=commons-dev@jakarta.apache.org</archive>
+    </mailingList>
+  </mailingLists>
+
   <developers>
     <developer>
       <name>Morgan Delagrange</name>
-      <id></id>
+      <id>morgand</id>
       <email></email>
       <organization></organization>
     </developer>
     <developer>
       <name>Geir Magnusson</name>
-      <id></id>
+      <id>geirm</id>
       <email></email>
       <organization></organization>
     </developer>
     <developer>
       <name>Craig McClanahan</name>
-      <id></id>
+      <id>craigmcc</id>
       <email></email>
       <organization></organization>
     </developer>
     <developer>
       <name>John McNally</name>
-      <id></id>
+      <id>jmcnally</id>
       <email></email>
       <organization></organization>
     </developer>
@@ -46,7 +80,7 @@
     </developer>
     <developer>
       <name>David Weinrich</name>
-      <id></id>
+      <id>dweinr1</id>
       <email></email>
       <organization></organization>
     </developer>
@@ -75,25 +109,27 @@
     </dependency>
   
     <dependency>
-      <id>xml-apis</id>
-      <version>1.0.b2</version>
-    </dependency>
-
-    <dependency>
       <id>junit</id>
       <version>3.8.1</version>
     </dependency>
 
+    <!-- these two are required by maven -->
+    <dependency><id>xml-apis</id><version>2.0.2</version></dependency><!-- actually dbcp's tests need this too -->
+    <dependency><id>xerces</id><version>2.0.2</version></dependency>
+    <!-- /these two are required by maven -->
+
   </dependencies>
 
   <build>
-    
+    <nagEmailAddress>commons-dev@jakarta.apache.org</nagEmailAddress>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/TestAll.java</include>
+        <include>org/apache/commons/dbcp/TestAll.java</include>
+        <include>org/apache/commons/jocl/TestAll.java</include>
       </includes>
     </unitTest>
-
   </build>
 
 </project>
