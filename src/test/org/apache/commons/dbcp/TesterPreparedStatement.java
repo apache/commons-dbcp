@@ -33,24 +33,39 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.11 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.12 $ $Date: 2004/03/07 15:28:36 $
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
     private ResultSetMetaData _resultSetMetaData = null;
     private String _sql = null;
+    private String _catalog = null;
 
     public TesterPreparedStatement(Connection conn) {
         super(conn);
+        try {
+            _catalog = conn.getCatalog();
+        } catch (SQLException e) { }
     }
 
     public TesterPreparedStatement(Connection conn, String sql) {
         super(conn);
         _sql = sql;
+        try {
+            _catalog = conn.getCatalog();
+        } catch (SQLException e) { }
     }
 
     public TesterPreparedStatement(Connection conn, String sql, int resultSetType, int resultSetConcurrency) {
         super(conn, resultSetType, resultSetConcurrency);
         _sql = sql;
+        try {
+            _catalog = conn.getCatalog();
+        } catch (SQLException e) { }
+    }
+    
+    /** for junit test only */
+    public String getCatalog() {
+        return _catalog;
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
