@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java,v $
- * $Revision: 1.5 $
- * $Date: 2003/10/09 21:05:30 $
+ * $Revision: 1.6 $
+ * $Date: 2003/10/26 15:44:27 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.5 $ $Date: 2003/10/09 21:05:30 $
+ * @version $Revision: 1.6 $ $Date: 2003/10/26 15:44:27 $
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
@@ -92,14 +92,16 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         return ds.getConnection("foo","bar");
     }
 
+    private DriverAdapterCPDS pcds;
     private DataSource ds;
 
     public void setUp() throws Exception {
-        DriverAdapterCPDS pcds = new DriverAdapterCPDS();
+        pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
         pcds.setUser("foo");
         pcds.setPassword("bar");
+        pcds.setPoolPreparedStatements(false);
 
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
@@ -454,4 +456,23 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn2.close();
         conn3.close();
     }     
+
+
+    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS 
+    // when setPoolPreparedStatements(true)
+    public void testPoolPrepareStatement() throws Exception 
+    {
+        pcds.setPoolPreparedStatements(true);
+
+        Connection conn = ds.getConnection();
+        assertTrue(null != conn);
+        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertTrue(null != stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertTrue(null != rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
 }
