@@ -180,11 +180,11 @@ public class PoolingDriver implements Driver {
                 } catch(SQLException e) {
                     throw e;
                 } catch(NoSuchElementException e) {
-                    throw new SQLNestedException("Cannot get a connection, pool exhausted", e);
+                    throw new SQLNestedException("Cannot get a connection, pool error: " + e.getMessage(), e);
                 } catch(RuntimeException e) {
                     throw e;
                 } catch(Exception e) {
-                    throw new SQLNestedException("Cannot get a connection, general error", e);
+                    throw new SQLNestedException("Cannot get a connection, general error: " + e.getMessage(), e);
                 }
             }
         } else {
