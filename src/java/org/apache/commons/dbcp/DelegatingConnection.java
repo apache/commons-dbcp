@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.12 2003/04/09 00:19:37 dgraham Exp $
- * $Revision: 1.12 $
- * $Date: 2003/04/09 00:19:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.13 2003/08/11 23:54:59 dirkv Exp $
+ * $Revision: 1.13 $
+ * $Date: 2003/08/11 23:54:59 $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ import java.util.Map;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.12 2003/04/09 00:19:37 dgraham Exp $
+ * @version $Id: DelegatingConnection.java,v 1.13 2003/08/11 23:54:59 dirkv Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -130,6 +130,29 @@ public class DelegatingConnection extends AbandonedTrace
     public Connection getDelegate() {
         return _conn;
     }
+
+    public boolean equals(Object obj) {
+        Connection delegate = getInnermostDelegate();
+        if (delegate == null) {
+            return false;
+        }
+        if (obj instanceof DelegatingConnection) {
+            DelegatingConnection c = (DelegatingConnection) obj;
+            return delegate.equals(c.getInnermostDelegate());
+        }
+        else {
+            return delegate.equals(obj);
+        }
+    }
+
+    public int hashCode() {
+        Object obj = getInnermostDelegate();
+        if (obj == null) {
+            return 0;
+        }
+        return obj.hashCode();
+    }
+
 
     /**
      * If my underlying {@link Connection} is not a

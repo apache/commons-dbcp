@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.7 2003/03/06 00:11:32 rwaldhoff Exp $
- * $Revision: 1.7 $
- * $Date: 2003/03/06 00:11:32 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.8 2003/08/11 23:54:59 dirkv Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/08/11 23:54:59 $
  *
  * ====================================================================
  *
@@ -127,6 +127,54 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         return _res;
     }
 
+    public boolean equals(Object obj) {
+        ResultSet delegate = getInnermostDelegate();
+        if (delegate == null) {
+            return false;
+        }
+        if (obj instanceof DelegatingResultSet) {
+            DelegatingResultSet s = (DelegatingResultSet) obj;
+            return delegate.equals(s.getInnermostDelegate());
+        }
+        else {
+            return delegate.equals(obj);
+        }
+    }
+
+    public int hashCode() {
+        Object obj = getInnermostDelegate();
+        if (obj == null) {
+            return 0;
+        }
+        return obj.hashCode();
+    }
+
+    /**
+     * If my underlying {@link ResultSet} is not a
+     * <tt>DelegatingResultSet</tt>, returns it,
+     * otherwise recursively invokes this method on
+     * my delegate.
+     * <p>
+     * Hence this method will return the first
+     * delegate that is not a <tt>DelegatingResultSet</tt>,
+     * or <tt>null</tt> when no non-<tt>DelegatingResultSet</tt>
+     * delegate can be found by transversing this chain.
+     * <p>
+     * This method is useful when you may have nested
+     * <tt>DelegatingResultSet</tt>s, and you want to make
+     * sure to obtain a "genuine" {@link ResultSet}.
+     */
+    public ResultSet getInnermostDelegate() {
+        ResultSet r = _res;
+        while(r != null && r instanceof DelegatingResultSet) {
+            r = ((DelegatingResultSet)r).getDelegate();
+            if(this == r) {
+                return null;
+            }
+        }
+        return r;
+    }
+    
     public Statement getStatement() throws SQLException {
         return _stmt;
     }
