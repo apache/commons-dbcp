@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/16 13:29:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/04/03 11:57:16 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import org.apache.commons.pool.impl.*;
 
 /**
  * @author Rodney Waldhoff
- * @version $Id: TestManual.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
+ * @version $Id: TestManual.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -91,7 +91,24 @@ public class TestManual extends TestCase {
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
         PoolingDriver driver = new PoolingDriver();
         driver.registerPool("test",pool);
-        DriverManager.registerDriver(driver);
+        DriverManager.registerDritestSimplever(driver);
+    }
+
+    public void testIsClosed() throws Exception {
+        for(int i=0;i<10;i++) {
+            Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+            assertTrue(null != conn);
+            assertTrue(!conn.isClosed());
+            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            assertTrue(null != stmt);
+            ResultSet rset = stmt.executeQuery();
+            assertTrue(null != rset);
+            assertTrue(rset.next());
+            rset.close();
+            stmt.close();
+            conn.close();
+            assertTrue(conn.isClosed());
+        }
     }
 
     public void testSimple() throws Exception {

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/19 06:05:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/04/03 11:57:16 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import java.util.Map;
  * provided in my constructor.
  *
  * @author Rodney Waldhoff
- * @version $Id: DelegatingConnection.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
+ * @version $Id: DelegatingConnection.java,v 1.3 2002/04/03 11:57:16 rwaldhoff Exp $
  */
 public class DelegatingConnection implements Connection {
     /** My delegate {@link Connection}. */
@@ -139,7 +139,7 @@ public class DelegatingConnection implements Connection {
     public int getTransactionIsolation() throws SQLException { checkOpen(); return _conn.getTransactionIsolation();}
     public Map getTypeMap() throws SQLException { checkOpen(); return _conn.getTypeMap();}
     public SQLWarning getWarnings() throws SQLException { checkOpen(); return _conn.getWarnings();}
-    public boolean isClosed() throws SQLException { return _conn.isClosed();}
+    public boolean isClosed() throws SQLException { return _closed || _conn.isClosed();}
     public boolean isReadOnly() throws SQLException { checkOpen(); return _conn.isReadOnly();}
     public String nativeSQL(String sql) throws SQLException { checkOpen(); return _conn.nativeSQL(sql);}
     public CallableStatement prepareCall(String sql) throws SQLException { checkOpen(); return _conn.prepareCall(sql);}
