@@ -45,7 +45,7 @@ import java.util.Map;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.19 $ $Date: 2004/03/06 13:35:31 $
+ * @version $Revision: 1.20 $ $Date: 2005/01/15 23:35:32 $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -77,6 +77,40 @@ public class DelegatingConnection extends AbandonedTrace
     public DelegatingConnection(Connection c, AbandonedConfig config) {
         super(config);
         _conn = c;
+    }
+
+    public String toString() {
+    	String s = null;
+    	
+    	Connection c = this.getInnermostDelegate();
+    	if (c != null) {
+	    	try {
+		    	if (c.isClosed()) {
+		    		s = "connection is closed";
+		    	}
+		    	else {
+		    		DatabaseMetaData meta = c.getMetaData();
+		    		if (meta != null) {
+		    			StringBuffer sb = new StringBuffer();
+			    		sb.append(meta.getURL());
+			    		sb.append(", UserName=");
+			    		sb.append(meta.getUserName());
+			    		sb.append(", ");
+			    		sb.append(meta.getDriverName());
+			    		s = sb.toString();
+		    		}
+		    	}
+	    	}
+	    	catch (SQLException ex) {
+	    		s = null;
+	    	}
+    	}
+    	
+    	if (s == null) {
+    		s = super.toString();
+    	}
+    	
+    	return s;
     }
 
     /**
