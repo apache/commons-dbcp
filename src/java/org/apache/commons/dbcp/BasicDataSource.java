@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.21 $
- * $Date: 2003/08/25 16:17:45 $
+ * $Revision: 1.22 $
+ * $Date: 2003/08/26 14:19:28 $
  *
  * ====================================================================
  *
@@ -68,9 +68,9 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import org.apache.commons.dbcp.DriverConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
+
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.21 $ $Date: 2003/08/25 16:17:45 $
+ * @version $Revision: 1.22 $ $Date: 2003/08/26 14:19:28 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -202,6 +202,45 @@ public class BasicDataSource implements DataSource {
 
     public void setMaxWait(long maxWait) {
         this.maxWait = maxWait;
+    }
+
+    /**
+     * Prepared statement pooling for this pool.
+     */
+    protected boolean poolPreparedStatements = false;
+    
+    /**
+     * Returns true if we are pooling statements.
+     * @return boolean
+     */
+    public boolean isPoolPreparedStatements()
+    {
+        return poolPreparedStatements;
+    }
+
+    /**
+     * Sets whether to pool statements or not.
+     * @param poolPreparedStatements pooling on or off
+     */
+    public void setPoolPreparedStatements(boolean poolingStatements)
+    {
+         this.poolPreparedStatements = poolingStatements;
+    }
+
+    /**
+     * The maximum number of open statements that can be allocated from
+     * the statement pool at the same time, or zero for no limit.  Since 
+     * a connection usually only uses one or two statements at a time, this is
+     * mostly used to help detect resource leaks.
+     */
+    protected int maxOpenPreparedStatements = GenericKeyedObjectPool.DEFAULT_MAX_TOTAL;
+
+    public int getMaxOpenPreparedStatements() {
+        return maxOpenPreparedStatements;
+    }
+
+    public void setMaxOpenPreparedStatements(int maxOpenStatements) {
+        this.maxOpenPreparedStatements = maxOpenStatements;
     }
 
     /**
@@ -697,6 +736,17 @@ public class BasicDataSource implements DataSource {
             connectionPool.setTestOnBorrow(true);
         }
 
+        // Set up statement pool, if desired
+        GenericKeyedObjectPoolFactory statementPoolFactory = null;
+        if (isPoolPreparedStatements()) {
+            statementPoolFactory = new GenericKeyedObjectPoolFactory(null, 
+                        -1, // unlimited maxActive (per key)
+                        GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL, 
+                        0, // maxWait
+                        1, // maxIdle (per key) 
+                        maxOpenPreparedStatements); 
+        }
+
         // Set up the driver connection factory we will use
         if (username != null) {
             connectionProperties.put("user", username);
@@ -719,7 +769,7 @@ public class BasicDataSource implements DataSource {
             connectionFactory =
                 new PoolableConnectionFactory(driverConnectionFactory,
                                               connectionPool,
-                                              null, // FIXME - stmtPoolFactory?
+                                              statementPoolFactory,
                                               validationQuery,
                                               defaultReadOnly,
                                               defaultAutoCommit,
