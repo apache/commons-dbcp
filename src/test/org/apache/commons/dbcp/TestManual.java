@@ -1,7 +1,7 @@
 /*
- * $Id: TestManual.java,v 1.12 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.12 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: TestManual.java,v 1.13 2003/08/13 15:46:22 dirkv Exp $
+ * $Revision: 1.13 $
+ * $Date: 2003/08/13 15:46:22 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -76,7 +76,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.12 $ $Date: 2002/11/08 18:51:07 $
+ * @version $Revision: 1.13 $ $Date: 2003/08/13 15:46:22 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -99,6 +99,7 @@ public class TestManual extends TestConnectionPool {
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
         GenericKeyedObjectPoolFactory opf = new GenericKeyedObjectPoolFactory(null, 10, GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK, 2000L, 10, true, true, 10000L, 5, 5000L, true);
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
+        assertNotNull(pcf);
         driver = new PoolingDriver();
         driver.registerPool("test",pool);
         DriverManager.registerDriver(driver);
@@ -128,6 +129,7 @@ public class TestManual extends TestConnectionPool {
                 null,
                 false,
                 true);
+        assertNotNull(poolableConnectionFactory);
         PoolingDriver driver = new PoolingDriver();
         driver.registerPool("neusoftim",connectionPool);
         Connection[] conn = new Connection[25];
