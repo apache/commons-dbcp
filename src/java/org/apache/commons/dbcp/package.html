@@ -1,4 +1,4 @@
-<!-- $Id: package.html,v 1.2 2003/08/22 16:59:11 dirkv Exp $ -->
+<!-- $Id: package.html,v 1.3 2004/06/24 18:57:29 dirkv Exp $ -->
 <html>
    <head>
       <title>Package Documentation for org.apache.commons.dbcp</title>
@@ -96,7 +96,7 @@
       </p><p>
          In code, that might look like this:
 <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
-DriverManagerConnectionFactory connectionFactory = new DriverConnectionFactory("jdbc:some:connect:string",null);
+ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
 PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
 PoolingDataSource dataSource = new PoolingDataSource(connectionPool);</pre>
       </p><p>
@@ -105,7 +105,7 @@ PoolingDataSource dataSource = new PoolingDataSource(connectionPool);</pre>
          we create a {@link org.apache.commons.dbcp.PoolingDriver}, and register the
          <tt>connectionPool</tt> with it.  E.g.,:
 <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
-DriverManagerConnectionFactory connectionFactory = new DriverConnectionFactory("jdbc:some:connect:string",null);
+ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
 PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
 PoolingDriver driver = new PoolingDriver();
 driver.registerPool("example",connectionPool);</pre>
