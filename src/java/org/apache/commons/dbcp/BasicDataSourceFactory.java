@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.2 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.2 $
- * $Date: 2002/05/16 21:25:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.3 2002/06/21 21:56:13 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/06/21 21:56:13 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2002/05/16 21:25:37 $
+ * @version $Revision: 1.3 $ $Date: 2002/06/21 21:56:13 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -124,13 +124,13 @@ public class BasicDataSourceFactory implements ObjectFactory {
         ra = ref.get("defaultAutoCommit");
         if (ra != null) {
             dataSource.setDefaultAutoCommit
-                (Boolean.getBoolean(ra.getContent().toString()));
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("defaultReadOnly");
         if (ra != null) {
             dataSource.setDefaultReadOnly
-                (Boolean.getBoolean(ra.getContent().toString()));
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("driverClassName");
@@ -179,7 +179,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         ra = ref.get("removeAbandoned");
         if (ra != null) {
             dataSource.setRemoveAbandoned
-                (Boolean.getBoolean(ra.getContent().toString()));
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("removeAbandonedTimeout");
@@ -189,9 +189,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         ra = ref.get("logAbandoned");
-        if (ra != null) {     
+        if (ra != null) {
             dataSource.setLogAbandoned
-                (Boolean.getBoolean(ra.getContent().toString()));
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         // Return the configured data source instance
