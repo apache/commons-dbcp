@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.12 $ $Date: 2004/03/07 10:54:55 $
+ * @version $Revision: 1.13 $ $Date: 2004/05/01 12:52:23 $
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
@@ -43,6 +43,7 @@ public class TesterConnection implements Connection {
     protected SQLWarning warnings = null;
     protected String username = null;
     protected String password = null;
+    protected Exception failure;
 
     public TesterConnection(String username, String password) {
         this.username = username;
@@ -112,6 +113,7 @@ public class TesterConnection implements Connection {
     }
 
     public boolean isClosed() throws SQLException {
+        checkFailure();
         return !_open;
     }
 
@@ -188,7 +190,19 @@ public class TesterConnection implements Connection {
         if(!_open) {
             throw new SQLException("Connection is closed.");
         }
+        checkFailure();
     }
+    
+    protected void checkFailure() throws SQLException {
+        if (failure != null) {
+            throw new SQLNestedException("TesterConnection failure", failure);
+        }
+    }
+    
+    public void setFailure(Exception failure) {
+        this.failure = failure;
+    }
+    
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
 
