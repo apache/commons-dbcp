@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.7 2002/03/19 06:05:34 craigmcc Exp $ -->
+<!-- $Id: build.xml,v 1.8 2002/05/27 13:14:57 glenn Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -196,7 +196,7 @@
       <javac destdir="${dest.classes}"
              srcdir="${dest.src}"
              classpath="${classpath}"
-             debug="false"
+             debug="true"
              deprecation="true"
              optimize="true">
         <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory"
@@ -217,7 +217,7 @@
       <javac destdir="${dest.classes}"
              srcdir="${dest.src}"
              classpath="${classpath}"
-             debug="false"
+             debug="true"
              deprecation="true"
              optimize="true"/>
    </target>
