@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.6 2003/04/09 00:19:37 dgraham Exp $
- * $Revision: 1.6 $
- * $Date: 2003/04/09 00:19:37 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.7 2003/08/11 12:21:47 dirkv Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/08/11 12:21:47 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnection.java,v 1.6 2003/04/09 00:19:37 dgraham Exp $
+ * @version $Id: PoolableConnection.java,v 1.7 2003/08/11 12:21:47 dirkv Exp $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -126,7 +126,7 @@ public class PoolableConnection extends DelegatingConnection {
      * Actually close my underlying {@link Connection}.
      */
     public void reallyClose() throws SQLException {
-        _conn.close();
+        super.close();
     }
 
 }
