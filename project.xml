@@ -106,7 +106,7 @@
     </dependency>
     <dependency>
       <id>commons-pool</id>
-      <version>20030818.195203</version>
+      <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <id>jdbc</id>
