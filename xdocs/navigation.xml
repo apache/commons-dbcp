@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE project [
-<!ENTITY commons-nav SYSTEM "../../incl_nav.xml">
-]>
-
-<project name="Commons - DBCP" href="http://jakarta.apache.org/commons/dbcp/">
+<!DOCTYPE org.apache.commons.menus SYSTEM '../../xdocs/stylesheets/menus/org-apache-commons-menus.dtd'>
+<project name="Commons DBCP">
     <title>Commons DBCP</title>
-    <logo href="http://jakarta.apache.org/commons/images/logo.jpg">
-      Jakarta-Commons
-    </logo>
     <body>
+        &top-menus;
         <menu name="Commons&#xA0;DBCP">
             <item name="Overview"                      href="/index.html" />
             <item name="Configuration"                 href="/configuration.html" />
@@ -21,7 +15,6 @@
             <item name="Examples"                      href="http://cvs.apache.org/viewcvs.cgi/jakarta-commons/dbcp/doc/"/>
             <item name="Downloads"                     href="/downloads.html"/>
         </menu>
-
-	&commons-nav;
+        &bottom-menus;
     </body>
 </project>
