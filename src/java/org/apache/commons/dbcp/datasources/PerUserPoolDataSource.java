@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PerUserPoolDataSource.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.4 $
+ * $Date: 2003/08/25 17:08:51 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.3 2003/08/22 16:08:32 dirkv Exp $
+ * @version $Id: PerUserPoolDataSource.java,v 1.4 2003/08/25 17:08:51 jmcnally Exp $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
@@ -98,6 +98,7 @@ public class PerUserPoolDataSource
     private int defaultMaxWait = (int)Math.min((long)Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
     private Map perUserDefaultAutoCommit = null;    
+    private Map perUserDefaultTransactionIsolation = null;
     private Map perUserMaxActive = null;    
     private Map perUserMaxIdle = null;    
     private Map perUserMaxWait = null;
@@ -225,7 +226,32 @@ public class PerUserPoolDataSource
         }
         perUserDefaultAutoCommit.put(username, value);
     }
-    
+
+    /**
+     * The isolation level of connections when returned from getConnection.  
+     * If null, the username will use the value of defaultTransactionIsolation.
+     */
+    public Integer getPerUserDefaultTransactionIsolation(String username) {
+        Integer value = null;
+        if (perUserDefaultTransactionIsolation != null) {
+            value = (Integer) perUserDefaultTransactionIsolation.get(username);
+        }
+        return value;
+    }
+
+    /**
+     * The isolation level of connections when returned from getConnection.  
+     * Valid values are the constants defined in Connection.
+     */
+    public void setPerUserDefaultTransactionIsolation(String username, 
+                                                      Integer value) {
+        assertInitializationAllowed();
+        if (perUserDefaultTransactionIsolation == null) {
+            perUserDefaultTransactionIsolation = new HashMap();
+        }
+        perUserDefaultTransactionIsolation.put(username, value);
+    }
+
     /**
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or zero for no limit.
@@ -421,8 +447,19 @@ public class PerUserPoolDataSource
             }
         }    
 
+        int defaultTransactionIsolation = getDefaultTransactionIsolation();
+        if (username != null) {
+            Integer userMax = getPerUserDefaultTransactionIsolation(username);
+            if (userMax != null) {
+                defaultTransactionIsolation = userMax.intValue();
+            }
+        }
+
         con.setAutoCommit(defaultAutoCommit);
         con.setReadOnly(defaultReadOnly);
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
+            con.setTransactionIsolation(defaultTransactionIsolation);
+        }
     }
 
     private PoolKey getPoolKey(String username) {

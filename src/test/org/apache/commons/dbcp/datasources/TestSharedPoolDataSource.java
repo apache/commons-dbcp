@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.4 $
+ * $Date: 2003/08/25 17:08:52 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.3 $ $Date: 2003/08/22 16:08:32 $
+ * @version $Revision: 1.4 $ $Date: 2003/08/25 17:08:52 $
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
@@ -105,6 +105,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxActive(getMaxActive());
         tds.setMaxWait((int)(getMaxWait()));
+        tds.setDefaultTransactionIsolation(
+            Connection.TRANSACTION_READ_COMMITTED);
 
         ds = tds;
     }
@@ -433,4 +435,23 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             return state;
         }
     }
+
+    public void testTransactionIsolationBehavior() throws Exception {
+        Connection conn = getConnection();
+        assertTrue(conn != null);
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+                     conn.getTransactionIsolation());
+        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        conn.close();
+        
+        Connection conn2 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+                     conn2.getTransactionIsolation());
+        
+        Connection conn3 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+                     conn3.getTransactionIsolation());
+        conn2.close();
+        conn3.close();
+    }     
 }

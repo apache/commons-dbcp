@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/SharedPoolDataSource.java,v $
- * $Revision: 1.3 $
- * $Date: 2003/08/22 16:08:32 $
+ * $Revision: 1.4 $
+ * $Date: 2003/08/25 17:08:51 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SharedPoolDataSource.java,v 1.3 2003/08/22 16:08:32 dirkv Exp $
+ * @version $Id: SharedPoolDataSource.java,v 1.4 2003/08/25 17:08:51 jmcnally Exp $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
@@ -227,7 +227,7 @@ public class SharedPoolDataSource
         return key;
     }
 
-    private synchronized void registerPool(
+    private void registerPool(
         String username, String password) 
         throws javax.naming.NamingException, SQLException {
 
@@ -257,6 +257,10 @@ public class SharedPoolDataSource
         throws SQLException {
         con.setAutoCommit(isDefaultAutoCommit());
         con.setReadOnly(isDefaultReadOnly());
+        int defaultTransactionIsolation = getDefaultTransactionIsolation();
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
+            con.setTransactionIsolation(defaultTransactionIsolation);
+        }
     }
 }
 
