@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestConnectionPool.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/11/02 17:55:42 $
+ * $Revision: 1.11 $
+ * $Date: 2003/12/22 14:58:39 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import junit.framework.TestCase;
  * @author John McNally
  * @author Dirk Verbeeck
  * 
- * @version $Id: TestConnectionPool.java,v 1.10 2003/11/02 17:55:42 dirkv Exp $
+ * @version $Id: TestConnectionPool.java,v 1.11 2003/12/22 14:58:39 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -507,5 +507,19 @@ public abstract class TestConnectionPool extends TestCase {
         rset.close();
         stmt.close();
         conn.close();
-    }    
+    }
+
+    // Bugzilla Bug 24966: NullPointer with Oracle 9 driver
+    // wrong order of passivate/close when a rset isn't closed
+    public void testNoRsetClose() throws Exception {
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        PreparedStatement stmt = conn.prepareStatement("test");
+        assertNotNull(stmt);
+        ResultSet rset = stmt.getResultSet();
+        assertNotNull(rset);
+        // forget to close the resultset: rset.close();
+        stmt.close();
+        conn.close();
+    }
 }
