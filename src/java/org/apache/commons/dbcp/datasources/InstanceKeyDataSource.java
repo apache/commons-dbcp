@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/InstanceKeyDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/10/09 21:03:57 $
+ * $Revision: 1.7 $
+ * $Date: 2003/10/13 05:06:00 $
  *
  * ====================================================================
  *
@@ -129,7 +129,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.6 2003/10/09 21:03:57 rdonkin Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.7 2003/10/13 05:06:00 jmcnally Exp $
  */
 abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
@@ -158,7 +158,7 @@ abstract class InstanceKeyDataSource
     /** Description */
     private String description = null;
     /** Environment that may be used to set up a jndi initial context. */
-    private Properties jndiEnvironment = null;
+    Properties jndiEnvironment = null;
     /** Login TimeOut in seconds */
     private int loginTimeout = 0;
     /** Log stream */
@@ -669,7 +669,7 @@ abstract class InstanceKeyDataSource
      * Attempt to establish a database connection.
      */
     public Connection getConnection(String username, String password)
-            throws SQLException {
+            throws SQLException {        
         if (instanceKey == null) {
             throw new SQLException("Must set the ConnectionPoolDataSource " 
                     + "through setDataSourceName or setConnectionPoolDataSource"

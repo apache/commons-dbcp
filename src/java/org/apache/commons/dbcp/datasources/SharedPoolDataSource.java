@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/SharedPoolDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/10/09 21:03:57 $
+ * $Revision: 1.7 $
+ * $Date: 2003/10/13 05:06:00 $
  *
  * ====================================================================
  *
@@ -86,7 +86,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SharedPoolDataSource.java,v 1.6 2003/10/09 21:03:57 rdonkin Exp $
+ * @version $Id: SharedPoolDataSource.java,v 1.7 2003/10/13 05:06:00 jmcnally Exp $
  */
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
@@ -278,7 +278,7 @@ public class SharedPoolDataSource
         {
             in.defaultReadObject();
             SharedPoolDataSource oldDS = (SharedPoolDataSource)
-                new InstanceKeyObjectFactory()
+                new SharedPoolDataSourceFactory()
                     .getObjectInstance(getReference(), null, null, null);
             this.pool = oldDS.pool;
         }

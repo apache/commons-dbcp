@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PerUserPoolDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/10/09 21:03:57 $
+ * $Revision: 1.7 $
+ * $Date: 2003/10/13 05:06:00 $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.6 2003/10/09 21:03:57 rdonkin Exp $
+ * @version $Id: PerUserPoolDataSource.java,v 1.7 2003/10/13 05:06:00 jmcnally Exp $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
@@ -99,12 +99,12 @@ public class PerUserPoolDataSource
     private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
     private int defaultMaxWait = (int)Math.min((long)Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
-    private Map perUserDefaultAutoCommit = null;    
-    private Map perUserDefaultTransactionIsolation = null;
-    private Map perUserMaxActive = null;    
-    private Map perUserMaxIdle = null;    
-    private Map perUserMaxWait = null;
-    private Map perUserDefaultReadOnly = null;    
+    Map perUserDefaultAutoCommit = null;    
+    Map perUserDefaultTransactionIsolation = null;
+    Map perUserMaxActive = null;    
+    Map perUserMaxIdle = null;    
+    Map perUserMaxWait = null;
+    Map perUserDefaultReadOnly = null;    
 
     private transient Map pools = new HashMap();
 
@@ -541,7 +541,7 @@ public class PerUserPoolDataSource
         {
             in.defaultReadObject();
             PerUserPoolDataSource oldDS = (PerUserPoolDataSource)
-                new InstanceKeyObjectFactory()
+                new PerUserPoolDataSourceFactory()
                     .getObjectInstance(getReference(), null, null, null);
             this.pools = oldDS.pools;
         }
