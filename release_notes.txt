@@ -109,3 +109,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
                                       (removed unneeded logging in AbandonedObjectPool)
 23491     2003-10-13   Cri    FIXE    Can't configure PerUserPoolDataSource for use with tomcat
 http://jakarta.apache.org/commons/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html
+
+* The following issues were resolved since v1.1RC2:
+23843     2003-10-20   Blo    FIXE    PerUserPoolDataSource.getConnection(username, pw) 
+                                      may return connection under wrong username
