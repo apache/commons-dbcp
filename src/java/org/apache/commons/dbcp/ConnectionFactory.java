@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/ConnectionFactory.java,v 1.1 2001/04/14 17:15:12 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:12 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/ConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -61,12 +61,13 @@
 
 package org.apache.commons.dbcp;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Abstract factory interface for creating {@link java.sql.Connection}s.
  *
  * @author Rodney Waldhoff
- * @version $Id: ConnectionFactory.java,v 1.1 2001/04/14 17:15:12 rwaldhoff Exp $
+ * @version $Id: ConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
  */
 public interface ConnectionFactory {
     /**
@@ -75,5 +76,5 @@ public interface ConnectionFactory {
      *
      * @return a new {@link java.sql.Connection}
      */
-    public abstract Connection createConnection();
+    public abstract Connection createConnection() throws SQLException;
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.1 2001/04/14 17:15:40 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:40 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingConnection.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -104,8 +104,17 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      */
     public synchronized void close() throws SQLException {
         if(null != _pstmtPool) {
-            _pstmtPool.close();
+            KeyedObjectPool oldpool = _pstmtPool;            
             _pstmtPool = null;
+            try {
+                oldpool.close();
+            } catch(RuntimeException e) {
+                throw e;
+            } catch(SQLException e) {
+                throw e;
+            } catch(Exception e) {
+                throw new SQLException(e.toString());
+            }
         }
         getInnermostDelegate().close();
     }

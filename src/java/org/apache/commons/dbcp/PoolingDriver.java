@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.1 2001/04/14 17:15:44 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:44 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import java.io.InputStream;
  * {@link ObjectPool}.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolingDriver.java,v 1.1 2001/04/14 17:15:44 rwaldhoff Exp $
+ * @version $Id: PoolingDriver.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -142,7 +142,15 @@ public class PoolingDriver implements Driver {
             if(null == pool) {
                 throw new SQLException("No pool found for " + url + ".");
             } else {
-                return (Connection)(pool.borrowObject());
+                try {
+                    return (Connection)(pool.borrowObject());
+                } catch(SQLException e) {
+                    throw e;
+                } catch(RuntimeException e) {
+                    throw e;
+                } catch(Exception e) {
+                    throw new SQLException(e.toString());
+                }
             }
         } else {
             return null;

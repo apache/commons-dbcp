@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.1 2001/04/14 17:15:34 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -61,7 +61,10 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.apache.commons.pool.*;
 
 /**
@@ -69,7 +72,7 @@ import org.apache.commons.pool.*;
  * {@link PoolableConnection}s.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolableConnectionFactory.java,v 1.1 2001/04/14 17:15:34 rwaldhoff Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -81,7 +84,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) throws Exception {
         _connFactory = connFactory;
         _pool = pool;
         _pool.setFactory(this);
@@ -115,7 +118,11 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     synchronized public void setPool(ObjectPool pool) {
         if(null != _pool && pool != _pool) {
-            _pool.close();
+            try {
+                _pool.close();
+            } catch(Exception e) {
+                // ignored !?!
+            }
         }
         _pool = pool;
     }
@@ -150,7 +157,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultAutoCommit = defaultAutoCommit;
     }
 
-    synchronized public Object makeObject() {
+    synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         try {
             conn.setAutoCommit(_defaultAutoCommit);
@@ -170,7 +177,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         return new PoolableConnection(conn,_pool);
     }
 
-    public void destroyObject(Object obj) {
+    public void destroyObject(Object obj) throws Exception {
         if(obj instanceof PoolableConnection) {
             try {
                 ((PoolableConnection)obj).reallyClose();
@@ -207,13 +214,13 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                 } catch(Exception e) {
                     try {
                         rset.close();
-                    } catch(Throwable t) {
-                        ;
+                    } catch(Exception t) {
+                        // ignored
                     }
                     try {
                         stmt.close();
-                    } catch(Throwable t) {
-                        ;
+                    } catch(Exception t) {
+                        // ignored
                     }
                     return false;
                 }
@@ -225,7 +232,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
     }
 
-    public void passivateObject(Object obj) {
+    public void passivateObject(Object obj) throws Exception {
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
             try {
@@ -251,7 +258,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
     }
 
-    public void activateObject(Object obj) {
+    public void activateObject(Object obj) throws Exception {
         if(obj instanceof DelegatingConnection) {
             ((DelegatingConnection)obj).activate();
         }

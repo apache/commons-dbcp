@@ -1,7 +1,6 @@
-/*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.1 2002/01/16 00:19:36 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2002/01/16 00:19:36 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -80,7 +79,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2002/01/16 00:19:36 $
+ * @version $Revision: 1.2 $ $Date: 2002/03/17 14:55:20 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -383,11 +382,18 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database error occurs
      */
     public void close() throws SQLException {
-
-        connectionPool.close();
+        GenericObjectPool oldpool = connectionPool;
         connectionPool = null;
         dataSource = null;
-
+        try {
+            oldpool.close();
+        } catch(SQLException e) {
+            throw e;
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SQLException(e.toString());
+        }
     }
 
 
@@ -451,13 +457,22 @@ public class BasicDataSource implements DataSource {
             new DriverConnectionFactory(driver, url, connectionProperties);
 
         // Set up the poolable connection factory we will use
-        PoolableConnectionFactory connectionFactory =
-            new PoolableConnectionFactory(driverConnectionFactory,
-                                          connectionPool,
-                                          null, // FIXME - stmtPoolFactory?
-                                          validationQuery,
-                                          defaultReadOnly,
-                                          defaultAutoCommit);
+        PoolableConnectionFactory connectionFactory = null;
+        try {
+            connectionFactory =
+                new PoolableConnectionFactory(driverConnectionFactory,
+                                              connectionPool,
+                                              null, // FIXME - stmtPoolFactory?
+                                              validationQuery,
+                                              defaultReadOnly,
+                                              defaultAutoCommit);
+        } catch(SQLException e) {
+            throw e;
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SQLException(e.toString());
+        }
 
         // Create and return the pooling data source to manage the connections
         dataSource = new PoolingDataSource(connectionPool);

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.1 2001/04/14 17:15:42 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:42 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import java.util.Enumeration;
  * {@link Connection}s from the specified {@link ObjectPool}.
  *
  * @author Rodney Waldhoff
- * @version $Id: PoolingDataSource.java,v 1.1 2001/04/14 17:15:42 rwaldhoff Exp $
+ * @version $Id: PoolingDataSource.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
  */
 public class PoolingDataSource implements DataSource {
     public PoolingDataSource() {
@@ -104,7 +104,15 @@ public class PoolingDataSource implements DataSource {
      * according to the contract specified by {@link ObjectPool#borrowObject}.
      */
     public synchronized Connection getConnection() throws SQLException {
-        return (Connection)(_pool.borrowObject());
+        try {
+            return (Connection)(_pool.borrowObject());
+        } catch(SQLException e) {
+            throw e;
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SQLException(e.toString());
+        }
     }
 
     /**
