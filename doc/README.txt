@@ -52,6 +52,3 @@ for an overview of how it all works.
 The test cases (the source files whose names start with "Test")
 provide some additional examples.
 
-The PROPOSAL.html and STATUS.html files provide some additional
-information.
-
