@@ -35,7 +35,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.20 $ $Date: 2004/05/20 17:54:50 $
+ * @version $Revision: 1.21 $ $Date: 2004/07/11 19:09:50 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -69,6 +69,22 @@ public class TestManual extends TestConnectionPool {
         driver.closePool("test");
         DriverManager.deregisterDriver(driver);
     }
+    
+    public void test1() {
+        GenericObjectPool connectionPool = new GenericObjectPool(null);
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        PoolingDataSource dataSource = new PoolingDataSource(connectionPool);
+    }
+
+    public void test2() {
+        GenericObjectPool connectionPool = new GenericObjectPool(null);
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        PoolingDriver driver = new PoolingDriver();
+        driver.registerPool("example",connectionPool);
+    }
+
 
     /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=28912 */
     public void testReportedBug28912() throws Exception {

@@ -80,7 +80,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.9 $ $Date: 2004/07/11 19:09:50 $
  */
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 
@@ -113,6 +113,7 @@ public class DriverAdapterCPDS
     private int _timeBetweenEvictionRunsMillis = -1;
     private int _numTestsPerEvictionRun = -1;
     private int _minEvictableIdleTimeMillis = -1;
+    private int _maxPreparedStatements = -1;
 
     private boolean getConnectionCalled = false;
 
@@ -147,13 +148,28 @@ public class DriverAdapterCPDS
         */
         KeyedObjectPool stmtPool = null;
         if (isPoolPreparedStatements()) {
-            stmtPool = new GenericKeyedObjectPool(null,
-                getMaxActive(), GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW, 0, 
-                getMaxIdle(), false, false, getTimeBetweenEvictionRunsMillis(),
-                getNumTestsPerEvictionRun(), 
-                getMinEvictableIdleTimeMillis(), false);            
+            if (getMaxPreparedStatements() == -1)
+            {
+                // since there is no limit, create a prepared statement pool with an eviction thread
+                //  evictor settings are the same as the connection pool settings.
+                stmtPool = new GenericKeyedObjectPool(null,
+                    getMaxActive(), GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW, 0,
+                    getMaxIdle(), false, false,
+                    getTimeBetweenEvictionRunsMillis(),getNumTestsPerEvictionRun(),getMinEvictableIdleTimeMillis(),
+                    false);
+            }
+            else
+            {
+                // since there is limit, create a prepared statement pool without an eviction thread
+                //  pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
+                // see org.apache.commons.pool.impl.GenericKeyedObjectPool.clearOldest method
+                stmtPool = new GenericKeyedObjectPool(null,
+                    getMaxActive(), GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW, 0,
+                    getMaxIdle(), getMaxPreparedStatements(), false, false,
+                    -1,0,0, // -1 tells the pool that there should be no eviction thread.
+                    false);
+            }
         }
-        
         // Workaround for buggy WebLogic 5.1 classloader - ignore the
         // exception upon first invocation.
         try {
@@ -201,6 +217,8 @@ public class DriverAdapterCPDS
             String.valueOf(getNumTestsPerEvictionRun())));
         ref.add(new StringRefAddr("minEvictableIdleTimeMillis", 
             String.valueOf(getMinEvictableIdleTimeMillis())));
+        ref.add(new StringRefAddr("maxPreparedStatements",
+            String.valueOf(getMaxPreparedStatements())));
 
         return ref;
     }
@@ -273,6 +291,11 @@ public class DriverAdapterCPDS
                 ra = ref.get("minEvictableIdleTimeMillis");
                 if (ra != null && ra.getContent() != null) {
                     setMinEvictableIdleTimeMillis(
+                        Integer.parseInt(ra.getContent().toString()));
+                }
+                ra = ref.get("maxPreparedStatements");
+                if (ra != null && ra.getContent() != null) {
+                    setMaxPreparedStatements(
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
@@ -552,5 +575,14 @@ public class DriverAdapterCPDS
     public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+    public int getMaxPreparedStatements()
+    {
+        return _maxPreparedStatements;
+    }
+
+    public void setMaxPreparedStatements(int maxPreparedStatements)
+    {
+        _maxPreparedStatements = maxPreparedStatements;
     }
 }
