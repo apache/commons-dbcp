@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/05/16 21:25:38 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.4 2002/11/01 15:42:32 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/11/01 15:42:32 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.commons.pool.KeyedObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolablePreparedStatement.java,v 1.3 2002/05/16 21:25:38 glenn Exp $
+ * @version $Id: PoolablePreparedStatement.java,v 1.4 2002/11/01 15:42:32 rwaldhoff Exp $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
     /**
@@ -112,15 +112,18 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
      * Return me to my pool.
      */
     public void close() throws SQLException {
-        // pool will mark me as closed
-        try {
-            _pool.returnObject(_key,this);
-        } catch(SQLException e) {
-            throw e;
-        } catch(RuntimeException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new SQLException(e.toString());
+        if(isClosed()) {
+            throw new SQLException("Already closed");
+        } else {
+            try {
+                _pool.returnObject(_key,this);
+            } catch(SQLException e) {
+                throw e;
+            } catch(RuntimeException e) {
+                throw e;
+            } catch(Exception e) {
+                throw new SQLException(e.toString());
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.9 2002/11/01 15:27:21 rwaldhoff Exp $
- * $Revision: 1.9 $
- * $Date: 2002/11/01 15:27:21 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.10 2002/11/01 15:42:33 rwaldhoff Exp $
+ * $Revision: 1.10 $
+ * $Date: 2002/11/01 15:42:33 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import org.apache.commons.pool.impl.*;
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * 
- * @version $Id: TestManual.java,v 1.9 2002/11/01 15:27:21 rwaldhoff Exp $
+ * @version $Id: TestManual.java,v 1.10 2002/11/01 15:42:33 rwaldhoff Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -114,7 +114,7 @@ public class TestManual extends TestCase {
         }
     }
 
-    public void testCantCloseTwice() throws Exception {
+    public void testCantCloseConnectionTwice() throws Exception {
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
             assertTrue(null != conn);
@@ -129,6 +129,24 @@ public class TestManual extends TestCase {
             }
             assertTrue(conn.isClosed());
         }
+    }
+
+    public void testCantCloseStatementTwice() throws Exception {
+        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        assertTrue(null != conn);
+        assertTrue(!conn.isClosed());
+        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            assertTrue(null != stmt);
+            stmt.close();
+            try {
+                stmt.close();
+                fail("Expected SQLException on second attempt to close");
+            } catch(SQLException e) {
+                // expected
+            }
+        }
+        conn.close();
     }
 
     public void testSimple() throws Exception {
