@@ -76,12 +76,12 @@
   
     <dependency>
       <id>xml-apis</id>
-      <version>2.0.2</version>
+      <version>1.0.b2</version>
     </dependency>
 
     <dependency>
       <id>junit</id>
-      <version>3.7</version>
+      <version>3.8.1</version>
     </dependency>
 
   </dependencies>
