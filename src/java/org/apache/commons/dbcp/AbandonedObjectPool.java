@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.1 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.1 $
- * $Date: 2002/05/16 21:25:37 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.2 2002/06/23 21:41:42 glenn Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/06/23 21:41:42 $ 
  *
  * ====================================================================
  *
@@ -61,11 +61,12 @@
 package org.apache.commons.dbcp;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.apache.commons.collections.FastArrayList;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
@@ -76,14 +77,14 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.1 $ $Date: 2002/05/16 21:25:37 $
+ * @version $Revision: 1.2 $ $Date: 2002/06/23 21:41:42 $
  */
 public class AbandonedObjectPool extends GenericObjectPool {
 
     // DBCP AbandonedConfig
     private AbandonedConfig config = null;
     // A list of connections in use
-    private List trace = new FastArrayList();
+    private List trace = new ArrayList();
 
     /**
      * Create an ObjectPool which tracks db connections.
@@ -95,7 +96,6 @@ public class AbandonedObjectPool extends GenericObjectPool {
                                AbandonedConfig config) {
         super(factory);
         this.config = config;
-        ((FastArrayList)trace).setFast(true);
     }
 
     /**
@@ -106,18 +106,26 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * 
      * @return Object jdbc Connection
      */
-    public Object borrowObject() throws Exception {
-        if (config != null
-                && config.getRemoveAbandoned()
-                && (getNumIdle() < 2)
-                && (getNumActive() > getMaxActive() - 3) ) {
-            removeAbandoned();
+    public synchronized Object borrowObject() throws Exception {
+        try {
+            if (config != null
+                    && config.getRemoveAbandoned()
+                    && (getNumIdle() < 2)
+                    && (getNumActive() > getMaxActive() - 3) ) {
+                removeAbandoned();
+            }
+            Object obj = super.borrowObject();
+            if (obj != null && config != null && config.getRemoveAbandoned()) {
+                trace.add(obj);
+            }
+            return obj;
+        } catch(NoSuchElementException ne) {
+            throw new SQLException(
+                "DBCP could not obtain an idle db connection, pool exhausted");
+        } catch(Exception e) {
+            System.out.println("DBCP borrowObject failed: " + e.getMessage());
+            throw e;
         }
-        Object obj = super.borrowObject();
-        if (obj != null && config != null && config.getRemoveAbandoned()) {
-            trace.add(obj);
-        }
-        return obj;
     }
 
     /**
@@ -125,7 +133,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      *
      * @param Object db Connection to return
      */
-    public void returnObject(Object obj) throws Exception {
+    public synchronized void returnObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
             trace.remove(obj);
         }
@@ -137,24 +145,32 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * greater than the removeAbandonedTimeout.
      */
     private synchronized void removeAbandoned() {
+        // Generate a list of abandoned connections to remove
         long now = new Date().getTime();
         long timeout = now - (config.getRemoveAbandonedTimeout() * 1000);
+        ArrayList remove = new ArrayList();
         Iterator it = trace.iterator();
         while (it.hasNext()) {
             PoolableConnection pc = (PoolableConnection)it.next();
             if (pc.getLastUsed() > timeout) {
-                return;
+                continue;
             }
             if (pc.getLastUsed() > 0) {
-                if (config.getLogAbandoned()) {
-                    pc.printStackTrace();
-                }
-                try {
-                    pc.close();
-                } catch(SQLException e) {
-                    e.printStackTrace();
-                }
+                remove.add(pc);
             }
+        }
+        // Now remove the abandoned connections
+        it = remove.iterator();
+        while (it.hasNext()) {
+            PoolableConnection pc = (PoolableConnection)it.next();
+            if (config.getLogAbandoned()) {
+                pc.printStackTrace();
+            }             
+            try {
+                pc.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }             
         }
     }
 
