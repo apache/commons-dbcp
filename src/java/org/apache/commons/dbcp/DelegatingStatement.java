@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingStatement.java,v 1.8 2003/03/06 00:11:32 rwaldhoff Exp $
- * $Revision: 1.8 $
- * $Date: 2003/03/06 00:11:32 $
+ * $Id: DelegatingStatement.java,v 1.9 2003/03/06 19:25:34 rwaldhoff Exp $
+ * $Revision: 1.9 $
+ * $Date: 2003/03/06 19:25:34 $
  *
  * ====================================================================
  *
@@ -61,10 +61,12 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * A base delegating implementation of {@link Statement}.
@@ -82,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.8 $ $Date: 2003/03/06 00:11:32 $
+ * @version $Revision: 1.9 $ $Date: 2003/03/06 19:25:34 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */

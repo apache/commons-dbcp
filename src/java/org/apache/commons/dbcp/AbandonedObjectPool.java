@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.3 2003/03/06 18:59:12 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2003/03/06 18:59:12 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v 1.4 2003/03/06 19:25:34 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 19:25:34 $ 
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.3 $ $Date: 2003/03/06 18:59:12 $
+ * @version $Revision: 1.4 $ $Date: 2003/03/06 19:25:34 $
  */
 public class AbandonedObjectPool extends GenericObjectPool {
 
@@ -115,6 +115,9 @@ public class AbandonedObjectPool extends GenericObjectPool {
                 removeAbandoned();
             }
             Object obj = super.borrowObject();
+            if(obj instanceof AbandonedTrace) {
+                ((AbandonedTrace)obj).setStackTrace();
+            }
             if (obj != null && config != null && config.getRemoveAbandoned()) {
                 trace.add(obj);
             }

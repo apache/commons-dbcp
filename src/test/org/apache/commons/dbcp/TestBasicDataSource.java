@@ -1,7 +1,7 @@
 /*
- * $Id: TestBasicDataSource.java,v 1.1 2002/11/08 19:17:24 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2002/11/08 19:17:24 $
+ * $Id: TestBasicDataSource.java,v 1.2 2003/03/06 19:25:36 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/03/06 19:25:36 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,18 +61,12 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
-
 /**
- * @version $Revision: 1.1 $ $Date: 2002/11/08 19:17:24 $
+ * @version $Revision: 1.2 $ $Date: 2003/03/06 19:25:36 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
