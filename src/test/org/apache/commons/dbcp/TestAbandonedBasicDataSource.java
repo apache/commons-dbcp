@@ -1,8 +1,7 @@
 /*
- * $Id: TestAll.java,v 1.8 2003/08/21 22:24:28 dirkv Exp $
- * $Revision: 1.8 $
+ * $Id: TestAbandonedBasicDataSource.java,v 1.1 2003/08/21 22:24:28 dirkv Exp $
+ * $Revision: 1.1 $
  * $Date: 2003/08/21 22:24:28 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,35 +60,80 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
-import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
+import java.sql.Connection;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
- * @author Rodney Waldhoff
- * @version $Revision: 1.8 $ $Date: 2003/08/21 22:24:28 $
+ * @version $Revision: 1.1 $ $Date: 2003/08/21 22:24:28 $
  */
-public class TestAll extends TestCase {
-    public TestAll(String testName) {
+public class TestAbandonedBasicDataSource extends TestConnectionPool {
+    public TestAbandonedBasicDataSource(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(TestManual.suite());
-        suite.addTest(TestJOCLed.suite());
-        suite.addTest(TestBasicDataSource.suite());
-        suite.addTest(TestAbandonedBasicDataSource.suite());
-        suite.addTest(TestDelegatingConnection.suite());
-        suite.addTest(TestDelegatingStatement.suite());
-        suite.addTest(TestDelegatingPreparedStatement.suite());
-        suite.addTest(TestSharedPoolDataSource.suite());
-        suite.addTest(TestPerUserPoolDataSource.suite());
-        return suite;
+        return new TestSuite(TestAbandonedBasicDataSource.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestAll.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected Connection getConnection() throws Exception {
+        return ds.getConnection();
+    }
+
+    private BasicDataSource ds = null;
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        ds = new BasicDataSource();
+        ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
+        ds.setUrl("jdbc:apache:commons:testdriver");
+        ds.setMaxActive(getMaxActive());
+        ds.setMaxWait(getMaxWait());
+        ds.setDefaultAutoCommit(true);
+        ds.setDefaultReadOnly(false);
+        ds.setUsername("username");
+        ds.setPassword("password");
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+
+        // abandoned enabled but should not affect the basic tests
+        // (very high timeout)
+        ds.setLogAbandoned(true);
+        ds.setRemoveAbandoned(true);
+        ds.setRemoveAbandonedTimeout(10000);
+    }
+
+    public void tearDown() throws Exception {
+        ds = null;
+    }
+
+    private void getConnection1() throws Exception {
+        System.err.println("BEGIN getConnection1()");
+        ds.getConnection();
+        System.err.println("END getConnection1()");
+    }
+
+    private void getConnection2() throws Exception {
+        System.err.println("BEGIN getConnection2()");
+        ds.getConnection();
+        System.err.println("END getConnection2()");
+    }
+
+    private void getConnection3() throws Exception {
+        System.err.println("BEGIN getConnection3()");
+        ds.getConnection();
+        System.err.println("END getConnection3()");
+    }
+
+    public void testAbandoned() throws Exception {
+        // force abandoned
+        ds.setRemoveAbandonedTimeout(0);
+        ds.setMaxActive(1);
+
+        System.err.println("----------------------------------------");
+        getConnection1();
+        getConnection2();
+        getConnection3();
+        System.err.println("----------------------------------------");
     }
 }
