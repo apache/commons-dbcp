@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.8 2003/06/02 04:54:12 jmcnally Exp $
- * $Revision: 1.8 $
- * $Date: 2003/06/02 04:54:12 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.9 2003/08/11 23:34:52 dirkv Exp $
+ * $Revision: 1.9 $
+ * $Date: 2003/08/11 23:34:52 $
  *
  * ====================================================================
  *
@@ -76,7 +76,8 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
 /**
  * @author John McNally
- * @version $Revision: 1.8 $ $Date: 2003/06/02 04:54:12 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.9 $ $Date: 2003/08/11 23:34:52 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -333,6 +334,55 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         {
             c[i].close();
         }
+    }
+    
+    public void testPerUserMethods() throws Exception {
+        Jdbc2PoolDataSource tds = (Jdbc2PoolDataSource) ds;
+        
+        // you need to set maxActive otherwise there is no accounting
+        tds.setPerUserMaxActive("u1", new Integer(5));
+        tds.setPerUserMaxActive("u2", new Integer(5));
+        
+        assertEquals(0, tds.getNumActive());
+        assertEquals(0, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumIdle());
+        assertEquals(0, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        
+        Connection conn = tds.getConnection();
+        assertNotNull(conn);
+        assertEquals(1, tds.getNumActive());
+        assertEquals(0, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumIdle());
+        assertEquals(0, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u2", "p2"));
+
+        conn.close();
+        assertEquals(0, tds.getNumActive());
+        assertEquals(0, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(1, tds.getNumIdle());
+        assertEquals(0, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u2", "p2"));
+
+        conn = tds.getConnection("u1", "p1");
+        assertNotNull(conn);
+        assertEquals(0, tds.getNumActive());
+        assertEquals(1, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(1, tds.getNumIdle());
+        assertEquals(0, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u2", "p2"));
+
+        conn.close();
+        assertEquals(0, tds.getNumActive());
+        assertEquals(0, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(1, tds.getNumIdle());
+        assertEquals(1, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u2", "p2"));
     }
     
     public void testMultipleThreads() throws Exception {
