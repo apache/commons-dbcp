@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.4 2002/11/16 19:18:27 jmcnally Exp $
- * $Revision: 1.4 $
- * $Date: 2002/11/16 19:18:27 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.5 2003/03/06 21:41:47 rwaldhoff Exp $
+ * $Revision: 1.5 $
+ * $Date: 2003/03/06 21:41:47 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * @author John McNally
- * @version $Revision: 1.4 $ $Date: 2002/11/16 19:18:27 $
+ * @version $Revision: 1.5 $ $Date: 2003/03/06 21:41:47 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -347,7 +347,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         for (int i = 0; i < pts.length; i++) {
             pts[i] = new PoolTest(threadGroup, holdTime);
         }
-        Thread.currentThread().sleep(10 * holdTime);
+        Thread.sleep(10 * holdTime);
         for (int i = 0; i < pts.length; i++) {
             pts[i].stop();
         }
@@ -355,7 +355,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         // - (pts.length*10*holdTime);
         System.out.println("Multithread test time = " + time + " ms");
 
-        Thread.currentThread().sleep(holdTime);
+        Thread.sleep(holdTime);
         return success[0];
     }
 
@@ -396,7 +396,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
                     assertTrue(null != rset);
                     assertTrue(rset.next());
                     state = "Holding Connection";
-                    thread.sleep(connHoldTime);
+                    Thread.sleep(connHoldTime);
                     state = "Returning Connection";
                     rset.close();
                     stmt.close();
