@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.6 2003/08/11 18:35:52 dirkv Exp $
- * $Revision: 1.6 $
- * $Date: 2003/08/11 18:35:52 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v 1.7 2003/08/13 15:54:06 dirkv Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/08/13 15:54:06 $
  *
  * ====================================================================
  *
@@ -62,8 +62,14 @@
 package org.apache.commons.dbcp;
 
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.sql.DataSource;
@@ -77,7 +83,8 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolingDataSource.java,v 1.6 2003/08/11 18:35:52 dirkv Exp $
+ * @author Dirk Verbeeck
+ * @version $Id: PoolingDataSource.java,v 1.7 2003/08/13 15:54:06 dirkv Exp $
  */
 public class PoolingDataSource implements DataSource {
     public PoolingDataSource() {
@@ -105,7 +112,11 @@ public class PoolingDataSource implements DataSource {
      */
     public Connection getConnection() throws SQLException {
         try {
-            return (Connection)(_pool.borrowObject());
+            Connection conn = (Connection)(_pool.borrowObject());
+            if (conn != null) {
+                conn = new PoolGuardConnectionWrapper(conn);
+            } 
+            return conn;
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
@@ -165,4 +176,234 @@ public class PoolingDataSource implements DataSource {
 
     protected ObjectPool _pool = null;
 
+    /**
+     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
+     * closed connection cannot be used anymore.
+     * 
+     * @author Dirk Verbeeck
+     */
+    private class PoolGuardConnectionWrapper implements Connection {
+
+        private Connection delegate;
+    
+        PoolGuardConnectionWrapper(Connection delegate) {
+            this.delegate = delegate;
+        }
+
+        protected void checkOpen() throws SQLException {
+            if(delegate == null) {
+                throw new SQLException("Connection is closed.");
+            }
+        }
+    
+        public void close() throws SQLException {
+            checkOpen();
+            delegate.close();
+        }
+
+        public boolean isClosed() throws SQLException {
+            if (delegate == null) {
+                return true;
+            }
+            return delegate.isClosed();
+        }
+
+        public void clearWarnings() throws SQLException {
+            checkOpen();
+            delegate.clearWarnings();
+        }
+
+        public void commit() throws SQLException {
+            checkOpen();
+            delegate.commit();
+        }
+
+        public Statement createStatement() throws SQLException {
+            checkOpen();
+            return delegate.createStatement();
+        }
+
+        public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+            checkOpen();
+            return delegate.createStatement(resultSetType, resultSetConcurrency);
+        }
+
+        public boolean equals(Object obj) {
+            if (delegate == null){
+                return false;
+            }
+            return delegate.equals(obj);
+        }
+
+        public boolean getAutoCommit() throws SQLException {
+            checkOpen();
+            return delegate.getAutoCommit();
+        }
+
+        public String getCatalog() throws SQLException {
+            checkOpen();
+            return delegate.getCatalog();
+        }
+
+        public DatabaseMetaData getMetaData() throws SQLException {
+            checkOpen();
+            return delegate.getMetaData();
+        }
+
+        public int getTransactionIsolation() throws SQLException {
+            checkOpen();
+            return delegate.getTransactionIsolation();
+        }
+
+        public Map getTypeMap() throws SQLException {
+            checkOpen();
+            return delegate.getTypeMap();
+        }
+
+        public SQLWarning getWarnings() throws SQLException {
+            checkOpen();
+            return delegate.getWarnings();
+        }
+
+        public int hashCode() {
+            if (delegate == null){
+                return 0;
+            }
+            return delegate.hashCode();
+        }
+
+        public boolean isReadOnly() throws SQLException {
+            checkOpen();
+            return delegate.isReadOnly();
+        }
+
+        public String nativeSQL(String sql) throws SQLException {
+            checkOpen();
+            return delegate.nativeSQL(sql);
+        }
+
+        public CallableStatement prepareCall(String sql) throws SQLException {
+            checkOpen();
+            return delegate.prepareCall(sql);
+        }
+
+        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+            checkOpen();
+            return delegate.prepareCall(sql, resultSetType, resultSetConcurrency);
+        }
+
+        public PreparedStatement prepareStatement(String sql) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql);
+        }
+
+        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql, resultSetType, resultSetConcurrency);
+        }
+
+        public void rollback() throws SQLException {
+            checkOpen();
+            delegate.rollback();
+        }
+
+        public void setAutoCommit(boolean autoCommit) throws SQLException {
+            checkOpen();
+            delegate.setAutoCommit(autoCommit);
+        }
+
+        public void setCatalog(String catalog) throws SQLException {
+            checkOpen();
+            delegate.setCatalog(catalog);
+        }
+
+        public void setReadOnly(boolean readOnly) throws SQLException {
+            checkOpen();
+            delegate.setReadOnly(readOnly);
+        }
+
+        public void setTransactionIsolation(int level) throws SQLException {
+            checkOpen();
+            delegate.setTransactionIsolation(level);
+        }
+
+        public void setTypeMap(Map map) throws SQLException {
+            checkOpen();
+            delegate.setTypeMap(map);
+        }
+
+        public String toString() {
+            if (delegate == null){
+                return null;
+            }
+            return delegate.toString();
+        }
+
+        // ------------------- JDBC 3.0 -----------------------------------------
+        // Will be commented by the build process on a JDBC 2.0 system
+
+/* JDBC_3_ANT_KEY_BEGIN */
+
+        public int getHoldability() throws SQLException {
+            checkOpen();
+            return delegate.getHoldability();
+        }
+    
+        public void setHoldability(int holdability) throws SQLException {
+            checkOpen();
+            delegate.setHoldability(holdability);
+        }
+
+        public java.sql.Savepoint setSavepoint() throws SQLException {
+            checkOpen();
+            return delegate.setSavepoint();
+        }
+
+        public java.sql.Savepoint setSavepoint(String name) throws SQLException {
+            checkOpen();
+            return delegate.setSavepoint(name);
+        }
+
+        public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException {
+            checkOpen();
+            delegate.releaseSavepoint(savepoint);
+        }
+
+        public void rollback(java.sql.Savepoint savepoint) throws SQLException {
+            checkOpen();
+            delegate.rollback(savepoint);
+        }
+
+        public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+            checkOpen();
+            return delegate.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+        }
+
+        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+            checkOpen();
+            return delegate.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        }
+
+        public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql, autoGeneratedKeys);
+        }
+
+        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        }
+
+        public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql, columnIndexes);
+        }
+
+        public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+            checkOpen();
+            return delegate.prepareStatement(sql, columnNames);
+        }
+
+/* JDBC_3_ANT_KEY_END */
+    }
 }
