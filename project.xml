@@ -2,8 +2,8 @@
 
 <project>
   <extend>../project.xml</extend>
-  <name>commons-dbcp</name>
   <id>commons-dbcp</id>
+  <name>DBCP</name>
   <currentVersion>1.0-dev</currentVersion>
   <inceptionYear>2002</inceptionYear>
   <gumpRepositoryId>jakarta</gumpRepositoryId>
