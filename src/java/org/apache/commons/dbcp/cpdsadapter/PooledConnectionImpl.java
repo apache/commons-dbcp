@@ -73,7 +73,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.4 2003/03/06 19:25:37 rwaldhoff Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.5 2003/04/02 00:48:49 rwaldhoff Exp $
  */
 class PooledConnectionImpl 
     implements PooledConnection, KeyedPoolableObjectFactory
@@ -368,22 +368,12 @@ class PooledConnectionImpl
      * @param key ignored
      * @param obj the {*link PreparedStatement} to be destroyed.
      */
-    public void destroyObject(Object key, Object obj) {
+    public void destroyObject(Object key, Object obj) throws Exception {
         //_openPstmts--;
-        try {
+        if(obj instanceof DelegatingPreparedStatement) {
             ((DelegatingPreparedStatement)obj).getInnermostDelegate().close();
-        } catch(SQLException e) {
-            // ignored
-        } catch(NullPointerException e) {
-            // ignored
-        } catch(ClassCastException e) {
-            try {
-                ((PreparedStatement)obj).close();
-            } catch(SQLException e2) {
-                // ignored
-            } catch(ClassCastException e2) {
-                // ignored
-            }
+        } else {
+            ((PreparedStatement)obj).close();
         }
     }
 
@@ -414,17 +404,9 @@ class PooledConnectionImpl
      * @param key ignored
      * @param obj a {*link PreparedStatement}
      */
-    public void passivateObject(Object key, Object obj) {
-        try {
-            ((PreparedStatement)obj).clearParameters();
-            ((PoolablePreparedStatementStub)obj).passivate();
-        } catch(SQLException e) {
-            // ignored
-        } catch(NullPointerException e) {
-            // ignored
-        } catch(ClassCastException e) {
-            // ignored
-        }
+    public void passivateObject(Object key, Object obj) throws Exception {
+        ((PreparedStatement)obj).clearParameters();
+        ((PoolablePreparedStatementStub)obj).passivate();
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.5 2003/03/06 15:26:07 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2003/03/06 15:26:07 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.6 2003/04/02 00:48:49 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/04/02 00:48:49 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.5 2003/03/06 15:26:07 rwaldhoff Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.6 2003/04/02 00:48:49 rwaldhoff Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -192,13 +192,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
 
     public void destroyObject(Object obj) throws Exception {
         if(obj instanceof PoolableConnection) {
-            try {
-                ((PoolableConnection)obj).reallyClose();
-            } catch(RuntimeException e) {
-                throw e;
-            } catch(SQLException e) {
-                ; // ignored
-            }
+            ((PoolableConnection)obj).reallyClose();
         }
     }
 
@@ -250,12 +244,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public void passivateObject(Object obj) throws Exception {
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
-            try {
-                if(!conn.getAutoCommit()) {
-                    conn.rollback();
-                }
-            } catch(SQLException e) {
-                ; // ignored
+            if(!conn.getAutoCommit()) {
+                conn.rollback();
             }
         }
         if(obj instanceof DelegatingConnection) {
@@ -269,16 +259,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
-            try {
-                conn.setAutoCommit(_defaultAutoCommit);
-            } catch(SQLException e) {
-                ; // ignored
-            }
-            try {
-                conn.setReadOnly(_defaultReadOnly);
-            } catch(SQLException e) {
-                ; // ignored
-            }
+            conn.setAutoCommit(_defaultAutoCommit);
+            conn.setReadOnly(_defaultReadOnly);
         }
     }
 
