@@ -18,7 +18,7 @@
    <properties>
       <title>Release notes for Commons-DBCP 1.2</title>
       <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id: release-notes-1.2.xml,v 1.2 2004/05/20 19:05:31 dirkv Exp $</revision>
+      <revision>$Id: release-notes-1.2.xml,v 1.3 2004/05/25 13:58:41 dirkv Exp $</revision>
    </properties>
 
    <body>
@@ -45,6 +45,9 @@ There were some new features were added since the 1.1 release on 20 October 2003
 <li>Driver specific changes/optimizations for: Oracle, Informix, DaffodilDB.</li>
 <br/>
 <li>Several fixes for PerUserPoolDataSource</li>
+<br/>
+<li>PoolingDriver uses now a PoolGuardConnectionWrapper by default. If access to the 
+underlying connection is needed, you have to enable it: PoolingDriver.setAccessToUnderlyingConnectionAllowed(true)</li>
 <br/>
 
 <li>The following issues were resolved since v1.1: (see Bugzilla for complete description)
