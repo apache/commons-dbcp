@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.8 $
+ * $Date: 2003/09/23 13:29:30 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import java.util.List;
  * extend this class.
  * 
  * @author Glenn L. Nielsen
- * @version $Revision: 1.7 $ $Date: 2003/08/22 16:08:31 $
+ * @version $Revision: 1.8 $ $Date: 2003/09/23 13:29:30 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedTrace {
@@ -90,7 +90,7 @@ public class AbandonedTrace {
     private AbandonedTrace parent;
     // A stack trace of the code that created me (if in debug mode) **/
     private Exception createdBy;
-    private Date createdDate;
+    private long createdTime;
     // A list of objects created by children of this object
     private List trace = new ArrayList();
     // Last time this connection was used
@@ -139,7 +139,7 @@ public class AbandonedTrace {
         }
         if (config.getLogAbandoned()) {
             createdBy = new Exception();
-            createdDate = new Date();
+            createdTime = System.currentTimeMillis();
         }
     }
 
@@ -172,7 +172,7 @@ public class AbandonedTrace {
         if (parent != null) {
            parent.setLastUsed();
         } else {
-           lastUsed = new Date().getTime();
+           lastUsed = System.currentTimeMillis();
         }
     }
 
@@ -200,7 +200,7 @@ public class AbandonedTrace {
         }                    
         if (config.getLogAbandoned()) {
             createdBy = new Exception();
-            createdDate = new Date();
+            createdTime = System.currentTimeMillis();
         }
         if (parent != null) {                  
             parent.addTrace(this);
@@ -213,8 +213,10 @@ public class AbandonedTrace {
      *
      * @param AbandonedTrace object to add
      */
-    protected synchronized void addTrace(AbandonedTrace trace) {
-        this.trace.add(trace);
+    protected void addTrace(AbandonedTrace trace) {
+        synchronized(this) {
+            this.trace.add(trace);
+        }
         setLastUsed();
     }
 
@@ -223,8 +225,8 @@ public class AbandonedTrace {
      * object.
      */
     protected synchronized void clearTrace() {
-        if (trace != null) {
-            trace.clear();
+        if (this.trace != null) {
+            this.trace.clear();
         }
     }
 
@@ -241,15 +243,17 @@ public class AbandonedTrace {
      * If logAbandoned=true, print a stack trace of the code that
      * created this object.
      */
-    public synchronized void printStackTrace() {
+    public void printStackTrace() {
         if (createdBy != null) {
-            System.err.println(format.format(createdDate));
+            System.out.println(format.format(new Date(createdTime)));
             createdBy.printStackTrace();
         }
-        Iterator it = trace.iterator();
-        while (it.hasNext()) {
-            AbandonedTrace at = (AbandonedTrace)it.next();
-            at.printStackTrace();
+        synchronized(this) {
+            Iterator it = this.trace.iterator();
+            while (it.hasNext()) {
+                AbandonedTrace at = (AbandonedTrace)it.next();
+                at.printStackTrace();
+            }
         }
     }
 

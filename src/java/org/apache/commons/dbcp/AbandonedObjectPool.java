@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/08/25 16:19:59 $
+ * $Revision: 1.9 $
+ * $Date: 2003/09/23 13:29:30 $
  *
  * ====================================================================
  *
@@ -63,7 +63,6 @@ package org.apache.commons.dbcp;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -78,7 +77,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.8 $ $Date: 2003/08/25 16:19:59 $
+ * @version $Revision: 1.9 $ $Date: 2003/09/23 13:29:30 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -112,7 +111,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * 
      * @return Object jdbc Connection
      */
-    public synchronized Object borrowObject() throws Exception {
+    public Object borrowObject() throws Exception {
         try {
             if (config != null
                     && config.getRemoveAbandoned()
@@ -125,7 +124,9 @@ public class AbandonedObjectPool extends GenericObjectPool {
                 ((AbandonedTrace)obj).setStackTrace();
             }
             if (obj != null && config != null && config.getRemoveAbandoned()) {
-                trace.add(obj);
+                synchronized(trace) {
+                    trace.add(obj);
+                }
             }
             return obj;
         } catch(NoSuchElementException ne) {
@@ -142,9 +143,11 @@ public class AbandonedObjectPool extends GenericObjectPool {
      *
      * @param Object db Connection to return
      */
-    public synchronized void returnObject(Object obj) throws Exception {
+    public void returnObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
-            trace.remove(obj);
+            synchronized(trace) {
+                trace.remove(obj);
+            }
         }
         super.returnObject(obj);
     }
@@ -162,7 +165,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      */
     private synchronized void removeAbandoned() {
         // Generate a list of abandoned connections to remove
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         long timeout = now - (config.getRemoveAbandonedTimeout() * 1000);
         ArrayList remove = new ArrayList();
         Iterator it = trace.iterator();
