@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Commons - DBCP" href="http://jakarta.apache.org/commons/pool">
+    <title>Commons Pool</title>
+    <logo href="http://jakarta.apache.org/commons/images/logo.jpg">Jakarta-Commons</logo>
+    <!--
+      Note: Per the .vsl file, "/site" links will be prefixed with "http://jakarta.apache.org/site"
+            Other links starting with "/" become "./...".
+    -->
+    <body>
+       <menu name="Home">
+           <item name="Jakarta&#xA0;Commons"          href="http://jakarta.apache.org/commons/index.html" />
+           <item name="Commons&#xA0;DBCP"             href="/index.html" />
+       </menu>
+       <menu name="Information">
+           <item name="API&#xA0;Documentation"        href="/apidocs/index.html"/>
+           <item name="Examples"                      href="http://cvs.apache.org/viewcvs.cgi/jakarta-commons/dbcp/doc/"/>
+       </menu>
+       <menu name="Project Files">
+           <item name="Releases"                      href="http://jakarta.apache.org/builds/jakarta-commons/release/commons-dbcp/"/>
+           <item name="Snapshots"                     href="http://cvs.apache.org/builds/jakarta-commons/nightly/commons-dbcp/"/>
+           <item name="Source (Browse)"               href="http://cvs.apache.org/viewcvs/jakarta-commons/pool/"/>
+           <item name="Source (CVS)"                  href="http://jakarta.apache.org/site/cvsindex.html"/>
+       </menu>
+       <menu name="Administrivia">
+           <item name="License"                       href="http://jakarta.apache.org/commons/license.html"/>
+           <item name="Original&#xA0;Proposal"        href="http://cvs.apache.org/viewcvs/~checkout~/jakarta-commons/dbcp/PROPOSAL.html?content-type=text/html"/>
+       </menu>
+    </body>
+</project>
