@@ -242,6 +242,7 @@ one row.
 </tr>
 </table>
 <p>
+<img src="images/icon_info_sml.gif"/>
 This component has also the ability to pool PreparedStatements.
 When enabled a statement pool will be created for each Connection
 and PreparedStatements created by one of the following methods will be pooled:
@@ -249,6 +250,9 @@ and PreparedStatements created by one of the following methods will be pooled:
    <li>public PreparedStatement prepareStatement(String sql)</li>
    <li>public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)</li>
 </ul>
+</p>
+<p>
+<img src="images/icon_warning_sml.gif"/>
 <strong>NOTE</strong> - Make sure your connection has some resources left for the other statements.
 </p>
 
@@ -268,9 +272,13 @@ and PreparedStatements created by one of the following methods will be pooled:
     conn.close()
 </source>
 <p>
+<img src="images/icon_info_sml.gif"/>
 Default is false, it is a potential dangerous operation and misbehaving programs can do harmfull things. (closing the underlying or continue using it when the guarded connection is already closed)
 Be carefull and only use when you need direct access to driver specific extentions.
-<br/><b>NOTE:</b> Do not close the underlying connection, only the original one.
+</p>
+<p>
+<img src="images/icon_warning_sml.gif"/>
+<b>NOTE:</b> Do not close the underlying connection, only the original one.
 </p>
 
 
@@ -306,8 +314,12 @@ Be carefull and only use when you need direct access to driver specific extentio
 </tr>
 </table>
 <p>
+<img src="images/icon_info_sml.gif"/>
 If you have enabled "removeAbandoned" then it is possible that a connection is reclaimed by the pool because it is considered to be abandoned.
 This mechanism is triggered when (getNumIdle() &lt; 2) and (getNumActive() &gt; getMaxActive() - 3)
+</p>
+<p>
+<img src="images/icon_info_sml.gif"/>
 For example maxActive=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
 But only the active connections that aren't used for more then "removeAbandonedTimeout" seconds are removed,
 default (300 sec). Traversing a resultset doesn't count as being used. 
