@@ -19,6 +19,7 @@ package org.apache.commons.dbcp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -27,7 +28,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.3 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.4 $ $Date: 2004/03/07 10:53:56 $
  */
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public TestPStmtPoolingBasicDataSource(String testName) {
@@ -84,5 +85,71 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         stmt1.close();
         PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt4);
+    }
+
+    public void testPStmtPoolingWithNoClose() throws Exception {
+        ds.setMaxActive(1); // only one connection in pool needed
+        ds.setMaxIdle(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+        
+        PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        
+        Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        assertNotNull(inner1);
+        
+        stmt1.close();
+
+        Connection conn2 = conn1;
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+        
+        PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt2);
+
+        Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        assertNotNull(inner2);
+        
+        assertSame(inner1, inner2);
+    }
+    
+    public void testPStmtPoolingAccrossClose() throws Exception {
+        ds.setMaxActive(1); // only one connection in pool needed
+        ds.setMaxIdle(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+        
+        PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        
+        Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        assertNotNull(inner1);
+        
+        stmt1.close();
+        conn1.close();
+
+        assertEquals(0, ds.getNumActive());
+        assertEquals(1, ds.getNumIdle());
+
+        Connection conn2 = getConnection();
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+        
+        PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt2);
+
+        Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        assertNotNull(inner2);
+        
+        assertSame(inner1, inner2);
     }
 }
