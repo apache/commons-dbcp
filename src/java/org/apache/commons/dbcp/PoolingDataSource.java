@@ -39,7 +39,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2004/08/21 20:50:39 $
+ * @version $Revision: 1.14 $ $Date$
  */
 public class PoolingDataSource implements DataSource {
 
@@ -100,7 +100,7 @@ public class PoolingDataSource implements DataSource {
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
-            throw new SQLNestedException("Cannot get a connection, pool exhausted", e);
+            throw new SQLNestedException("Cannot get a connection, pool error " + e.getMessage(), e);
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
