@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingStatement.java,v 1.5 2002/06/29 17:36:37 glenn Exp $
- * $Revision: 1.5 $
- * $Date: 2002/06/29 17:36:37 $
+ * $Id: DelegatingStatement.java,v 1.6 2002/10/31 21:14:32 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/10/31 21:14:32 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Revision: 1.6 $ $Date: 2002/10/31 21:14:32 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -106,6 +107,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Returns my underlying {@link Statement}.
      * @return my underlying {@link Statement}.
+     * @see #getInnermostDelegate
      */
     public Statement getDelegate() {
         return _stmt;
@@ -125,6 +127,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * This method is useful when you may have nested
      * <tt>DelegatingStatement</tt>s, and you want to make
      * sure to obtain a "genuine" {@link Statement}.
+     * @see #getDelegate
      */
     public Statement getInnermostDelegate() {
         Statement s = _stmt;
@@ -158,14 +161,12 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
-
-        return new DelegatingResultSet(this, _stmt.executeQuery(sql));
+        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery(sql));
     }
 
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
-
-        return new DelegatingResultSet(this, _stmt.getResultSet());
+        return DelegatingResultSet.wrapResultSet(this,_stmt.getResultSet());
     }
 
     public int executeUpdate(String sql) throws SQLException { checkOpen(); return _stmt.executeUpdate(sql);}
@@ -228,7 +229,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             ((DelegatingPreparedStatement)_stmt).passivate();
         }
     }
-
+    
     protected boolean _closed = false;
 
     // ------------------- JDBC 3.0 -----------------------------------------

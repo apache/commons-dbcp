@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.5 2002/10/30 00:46:02 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2002/10/30 00:46:02 $
+ * $Id: DelegatingCallableStatement.java,v 1.6 2002/10/31 21:14:32 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/10/31 21:14:32 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,6 +97,7 @@ import java.util.Iterator;
  *
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Revision: 1.6 $ $Date: 2002/10/31 21:14:32 $
  */
 public class DelegatingCallableStatement extends AbandonedTrace
         implements CallableStatement {
@@ -131,11 +132,11 @@ public class DelegatingCallableStatement extends AbandonedTrace
      */
     public void close() throws SQLException {
         if(_conn != null) {
-            _conn.removeTrace(this);
+           _conn.removeTrace(this);
            _conn = null;
         }
 
-        // The JDBC spec requires that a statment close any open
+        // The JDBC spec requires that a statement close any open
         // ResultSet's when it is closed.
         List resultSets = getTrace();
         if( resultSets != null) {
@@ -155,15 +156,15 @@ public class DelegatingCallableStatement extends AbandonedTrace
     }
 
     public ResultSet executeQuery() throws SQLException {
-        return new DelegatingResultSet(this, _stmt.executeQuery());
+        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery());
     }
 
     public ResultSet getResultSet() throws SQLException {
-        return new DelegatingResultSet(this, _stmt.getResultSet());
+        return DelegatingResultSet.wrapResultSet(this,_stmt.getResultSet());
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
-        return new DelegatingResultSet(this, _stmt.executeQuery(sql));
+        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery(sql));
     }
 
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException { _stmt.registerOutParameter( parameterIndex,  sqlType);  }
