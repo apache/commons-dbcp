@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterStatement.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.11 $
+ * $Date: 2003/10/15 19:52:13 $
  *
  * ====================================================================
  *
@@ -67,6 +67,13 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
+/**
+ * A dummy {@link Statement}, for testing purposes.
+ * 
+ * @author Rodney Waldhoff
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.11 $ $Date: 2003/10/15 19:52:13 $
+ */
 public class TesterStatement implements Statement {
     public TesterStatement(Connection conn) {
         _connection = conn;
@@ -91,6 +98,10 @@ public class TesterStatement implements Statement {
             return null;
         } if("invalid".equals(sql)) {
             throw new SQLException("invalid query");
+        } if("select username".equals(sql)) {
+            String username = ((TesterConnection) _connection).getUsername();
+            Object[][] data = {{username}};
+            return new TesterResultSet(this, data);
         } else {
             return new TesterResultSet(this);
         }
