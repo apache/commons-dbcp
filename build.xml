@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.27 2004/09/02 00:13:00 yoavs Exp $ -->
+<!-- $Id: build.xml,v 1.28 2005/01/15 23:09:50 sullis Exp $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -110,7 +110,7 @@
                nohelp="true"
                nonavbar="false"
                serialwarn="false">
-          <link href="http://java.sun.com/j2se/1.4.2/docs/api"/>
+          <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
           <link href="http://jakarta.apache.org/commons/pool/apidocs"/>
       </javadoc>
    </target>
