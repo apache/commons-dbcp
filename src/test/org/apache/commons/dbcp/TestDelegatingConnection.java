@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision: 1.6 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.7 $ $Date: 2005/01/15 23:34:21 $
  */
 public class TestDelegatingConnection extends TestCase {
     public TestDelegatingConnection(String testName) {
@@ -48,6 +48,12 @@ public class TestDelegatingConnection extends TestCase {
 
     public void testGetDelegate() throws Exception {
         assertEquals(delegateConn,conn.getDelegate());
+    }
+
+    public void testConnectionToString() throws Exception {
+    	String s = conn.toString();
+    	assertNotNull(s);
+    	assertTrue(s.length() > 0);
     }
 
     public void testHashCodeEqual() {
