@@ -143,7 +143,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.2 2002/09/05 23:38:49 jmcnally Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -215,6 +215,70 @@ public class Jdbc2PoolDataSource
         {
             throw new IllegalStateException(GET_CONNECTION_CALLED);
         }
+    }
+
+    /**
+     * Close all pools associated with this class.
+     */
+    public static void closeAll() 
+    {
+        //Get iterator to loop over all instances of this datasource.
+        Iterator instanceIterator = dsInstanceMap.entrySet().iterator();
+        
+        while (instanceIterator.hasNext()) 
+        {        
+            Map.Entry nextInstance = (Map.Entry) instanceIterator.next();
+            Map nextPoolMap = (Map) nextInstance.getValue();
+            close(nextPoolMap);
+        }
+        dsInstanceMap.clear();
+    }
+
+    /**
+     * Close all pools in the given Map.
+     */
+    private static void close(Map poolMap) 
+    {
+        //Get iterator to loop over all pools.
+        Iterator poolIter = poolMap.entrySet().iterator();
+        
+        while (poolIter.hasNext()) 
+        {    
+            Map.Entry nextPoolEntry = (Map.Entry) poolIter.next();
+            
+            if (nextPoolEntry.getValue() instanceof ObjectPool) 
+            {
+                ObjectPool nextPool = (ObjectPool) nextPoolEntry.getValue();
+                try 
+                {
+                    nextPool.close();
+                } 
+                catch (Exception closePoolException) 
+                {
+                    //ignore and try to close others.
+                }
+            } 
+            else 
+            {
+                KeyedObjectPool nextPool = 
+                    (KeyedObjectPool) nextPoolEntry.getValue();
+                try {
+                    nextPool.close();
+                } 
+                catch (Exception closePoolException) 
+                {
+                    //ignore and try to close others.
+                }                                               
+            }
+        }
+    }
+
+    /**
+     * Close pool(s) being maintained by this datasource.
+     */
+    public void close() 
+    {
+        close((Map)dsInstanceMap.get(instanceKey));
     }
 
     // -------------------------------------------------------------------
@@ -864,6 +928,63 @@ public class Jdbc2PoolDataSource
         if (!testPositionSet) 
         {
             setTestOnBorrow(true);
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Instrumentation Methods
+
+    /**
+     * Get the number of active connections in the default pool.
+     */
+    public int getNumActive()
+    {
+        return getNumActive( null, null );
+    }
+
+    /**
+     * Get the number of active connections in the pool for a given user.
+     */
+    public int getNumActive( String username, String password )
+    {
+        PoolKey key = getPoolKey( username );
+
+        Object pool = ( ( Map ) dsInstanceMap.get( instanceKey ) ).get( key );
+
+        if ( pool instanceof ObjectPool )
+        {
+            return ( ( ObjectPool ) pool ).getNumActive();
+        }
+        else
+        {
+            return ( ( KeyedObjectPool ) pool ).getNumActive();
+        }
+    }
+
+    /**
+     * Get the number of idle connections in the default pool.
+     */
+    public int getNumIdle()
+    {
+        return getNumIdle( null, null );
+    }
+
+    /**
+     * Get the number of idle connections in the pool for a given user.
+     */
+    public int getNumIdle( String username, String password )
+    {
+        PoolKey key = getPoolKey( username );
+
+        Object pool = ( ( Map ) dsInstanceMap.get( instanceKey ) ).get( key );
+
+        if ( pool instanceof ObjectPool )
+        {
+            return ( ( ObjectPool ) pool ).getNumIdle();
+        }
+        else
+        {
+            return ( ( KeyedObjectPool ) pool ).getNumIdle();
         }
     }
 
