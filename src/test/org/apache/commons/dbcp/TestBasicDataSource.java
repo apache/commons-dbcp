@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.21 $ $Date: 2004/05/20 13:08:32 $
+ * @version $Revision: 1.22 $ $Date: 2004/06/29 20:14:29 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -280,5 +280,22 @@ public class TestBasicDataSource extends TestConnectionPool {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
         conn.close();
+    }
+    
+    /**
+     * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxActive(0)
+     * MaxActive == 0 should throw SQLException on getConnection
+     */
+    public void testMaxActiveZero() throws Exception {
+        ds.setMaxActive(0);
+        
+        try {
+            Connection conn = ds.getConnection();
+            assertNotNull(conn);
+            fail("SQLException expected");
+            
+        } catch (SQLException e) {
+            // test OK
+        }
     }
 }
