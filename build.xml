@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.22 2003/10/08 16:52:26 dirkv Exp $ -->
+<!-- $Id: build.xml,v 1.23 2003/10/11 14:18:35 dirkv Exp $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -30,9 +30,6 @@
       <property name="version" value="Nightly-${DSTAMP}${TSTAMP}"/>
       <property name="package" value="org.apache.commons.dbcp.*"/>
 
-      <property name="src.dir" value="${basedir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
       <property name="build.dir" value="${basedir}/build"/>
       <property name="build.classes.dir" value="${build.dir}/classes"/>
       <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
@@ -45,11 +42,14 @@
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
       <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2003 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
-      <property name="javadoc.overview" value="${src.java.dir}/org/apache/commons/dbcp/overview.html" />
+      <property name="javadoc.overview" value="${basedir}/src/java/org/apache/commons/dbcp/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
+
+      <available property="jndi.present" classname="javax.naming.Context"/>
+      <available property="jdbc3.present" classname="java.sql.Savepoint"/>
    </target>
 
    <!-- ######################################################### -->
@@ -59,7 +59,36 @@
       <delete dir="${dist.dir}"/>
    </target>
 
-   <target name="javadoc" depends="init" description="generates javadocs">
+   <target name="prepare-nojdbc3" depends="init" unless="jdbc3.present">
+      <echo message="Commenting out the jdbc3 additional methods since JDBC 3 was not detected."/>
+      <property name="src.dir" value="${build.dir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+
+      <mkdir dir="${src.dir}"/>
+      <copy todir="${src.dir}" filtering="yes">
+         <fileset dir="${basedir}/src" defaultexcludes="no">
+            <include name="**/*.java"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+            <include name="**/*.jocl"/>
+            <include name="**/package.html"/>
+         </fileset>
+      </copy>
+      <replace dir="${src.dir}" token="/* JDBC_3_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${src.dir}" token="/* JDBC_3_ANT_KEY_END */" value="*/"/>
+   </target>
+
+   <target name="prepare-jdbc3" depends="init" if="jdbc3.present">
+      <echo message="JDBC 3 was detected."/>
+      <property name="src.dir" value="${basedir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+   </target>
+
+   <target name="prepare" depends="init,prepare-nojdbc3,prepare-jdbc3"/>
+
+   <target name="javadoc" depends="prepare" description="generates javadocs">
       <mkdir dir="${javadoc.dir}"/>
       <javadoc packagenames="org.*"
                sourcepath="${src.java.dir}"
@@ -81,19 +110,27 @@
                nonavbar="false"
                serialwarn="false">
           <link href="http://java.sun.com/products/jdk/1.3/docs/api"/>
+          <link href="http://jakarta.apache.org/commons/pool/apidocs"/>
       </javadoc>
    </target>
 
    <!-- ######################################################### -->
 
-   <target name="compile" depends="init" description="compiles source files">
+   <target name="compile" depends="prepare" description="compiles source files">
       <mkdir dir="${build.classes.dir}"/>
       <javac destdir="${build.classes.dir}"
              srcdir="${src.java.dir}"
              classpath="${classpath}"
              debug="${javac.debug}"
              deprecation="${javac.deprecation}"
-             optimize="${javac.optimize}"/>
+             optimize="${javac.optimize}">
+         <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory.java"
+             unless="jndi.present"/>
+         <exclude name="org/apache/commons/dbcp/datasources/**"
+             unless="jndi.present"/>
+         <exclude name="org/apache/commons/dbcp/cpdsadapter/**"
+             unless="jndi.present"/>
+      </javac>
    </target>
    
    <target name="compile-test" depends="compile">
@@ -136,7 +173,6 @@
             <attribute name="Specification-Title" value="${title}"/>
             <attribute name="Implementation-Version" value="${version}"/>
             <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
-
          </manifest>
       </jar>
    </target>
@@ -149,3 +185,4 @@
    <target name="dist" depends="build" description="gump target"/>
    
 </project>
+
