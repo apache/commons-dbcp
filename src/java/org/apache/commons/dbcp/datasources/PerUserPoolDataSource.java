@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/PerUserPoolDataSource.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/13 05:06:00 $
+ * $Revision: 1.8 $
+ * $Date: 2003/10/19 23:39:50 $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PerUserPoolDataSource.java,v 1.7 2003/10/13 05:06:00 jmcnally Exp $
+ * @version $Id: PerUserPoolDataSource.java,v 1.8 2003/10/19 23:39:50 jmcnally Exp $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
@@ -466,12 +466,6 @@ public class PerUserPoolDataSource
 
     private PoolKey getPoolKey(String username) {
         PoolKey key = null;
-
-        if (username != null && (perUserMaxActive == null 
-                || !perUserMaxActive.containsKey(username))) {
-            username = null;
-        }
-
         String dsName = getDataSourceName();
         Map dsMap = (Map) poolKeys.get(dsName);
         if (dsMap != null) {

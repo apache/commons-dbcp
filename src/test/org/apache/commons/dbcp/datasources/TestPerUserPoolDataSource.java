@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/15 19:55:57 $
+ * $Revision: 1.8 $
+ * $Date: 2003/10/19 23:39:50 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.7 $ $Date: 2003/10/15 19:55:57 $
+ * @version $Revision: 1.8 $ $Date: 2003/10/19 23:39:50 $
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
@@ -550,14 +550,18 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
 
-        conn = tds.getConnection("u1", null);
+        conn = tds.getConnection("u1", "p1");
         assertNotNull(conn);
-        assertEquals(1, tds.getNumActive());
-        assertEquals(0, tds.getNumIdle());
+        assertEquals(0, tds.getNumActive());
+        assertEquals(1, tds.getNumIdle());
+        assertEquals(1, tds.getNumActive("u1", "p1"));
+        assertEquals(0, tds.getNumIdle("u1", "p1"));
 
         conn.close();
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
+        assertEquals(0, tds.getNumActive("u1", "p1"));
+        assertEquals(1, tds.getNumIdle("u1", "p1"));
     }
 
     // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
@@ -573,12 +577,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
             c[i] = puds.getConnection(users[i], password);
+            assertEquals(users[i], getUsername(c[i]));
         }
-        System.out.println("testDefaultUser1:");
         for (int i = 0; i < users.length; i++) {
-            System.out.println(
-                "   Tried: " + users[i] + 
-                "   got: " + getUsername(c[i]));
+            c[i].close();
         }
     }
     
@@ -595,12 +597,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
             c[i] = puds.getConnection(users[i], password);
+            assertEquals(users[i], getUsername(c[i]));
         }
-        System.out.println("testDefaultUser2:");
         for (int i = 0; i < users.length; i++) {
-            System.out.println(
-                "   Tried: " + users[i] + 
-                "   got: " + getUsername(c[i]));
+            c[i].close();
         }
     }
 }
