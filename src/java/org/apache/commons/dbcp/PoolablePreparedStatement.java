@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.8 $
+ * $Date: 2003/12/26 15:43:55 $
  *
  * ====================================================================
  *
@@ -61,9 +61,12 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.PreparedStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.commons.pool.KeyedObjectPool;
 
 /**
@@ -76,14 +79,10 @@ import org.apache.commons.pool.KeyedObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolablePreparedStatement.java,v 1.7 2003/10/09 21:04:44 rdonkin Exp $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.8 $ $Date: 2003/12/26 15:43:55 $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
-    /**
-     * The {@link Connection} from which I was created.
-     */
-    protected Connection _conn = null;
-
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
@@ -105,7 +104,6 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
         super((DelegatingConnection) conn, stmt);
         _pool = pool;
         _key = key;
-        _conn = conn;
     }
 
     /**
@@ -126,11 +124,35 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
             }
         }
     }
-
-    /**
-     * Return the {@link Connection} from which I was created.
-     */
-    public Connection getConnection() throws SQLException {
-        return(null == _conn) ? _stmt.getConnection() : _conn;
+    
+    protected void activate() throws SQLException{
+        _closed = false;
+        if(_conn != null) {
+            _conn.addTrace(this);
+        }
+        super.passivate();
     }
+  
+    protected void passivate() throws SQLException {
+        _closed = true;
+        if(_conn != null) {
+            _conn.removeTrace(this);
+        }
+           
+        // The JDBC spec requires that a statment close any open
+        // ResultSet's when it is closed.
+        // FIXME The PreparedStatement we're wrapping should handle this for us.
+        // See bug 17301 for what could happen when ResultSets are closed twice.
+        List resultSets = getTrace();
+        if( resultSets != null) {
+            ResultSet[] set = (ResultSet[]) resultSets.toArray(new ResultSet[resultSets.size()]);
+            for (int i = 0; i < set.length; i++) {
+                set[i].close();
+            }
+            clearTrace();
+        }
+        
+        super.passivate();
+    }
+
 }

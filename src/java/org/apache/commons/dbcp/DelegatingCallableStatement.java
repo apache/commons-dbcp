@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v $
- * $Revision: 1.13 $
- * $Date: 2003/12/26 15:16:28 $
+ * $Revision: 1.14 $
+ * $Date: 2003/12/26 15:43:55 $
  *
  * ====================================================================
  *
@@ -80,8 +80,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLWarning;
 import java.sql.SQLException;
 
-import java.util.List;
-
 /**
  * A base delegating implementation of {@link CallableStatement}.
  * <p>
@@ -97,7 +95,7 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Revision: 1.13 $ $Date: 2003/12/26 15:16:28 $
+ * @version $Revision: 1.14 $ $Date: 2003/12/26 15:43:55 $
  */
 public class DelegatingCallableStatement extends DelegatingPreparedStatement
         implements CallableStatement {
@@ -136,31 +134,6 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
     public void setDelegate(CallableStatement s) {
         super.setDelegate(s);
         _stmt = s;
-    }
-
-    /**
-     * Close this DelegatingCallableStatement, and close
-     * any ResultSets that were not explicitly closed.
-     */
-    public void close() throws SQLException {
-        if(_conn != null) {
-           _conn.removeTrace(this);
-           _conn = null;
-        }
-
-        // The JDBC spec requires that a statement close any open
-        // ResultSet's when it is closed.
-        List resultSets = getTrace();
-        if( resultSets != null) {
-            ResultSet[] set = new ResultSet[resultSets.size()];
-            resultSets.toArray(set);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
-            }
-            clearTrace();
-        }
-
-        _stmt.close();
     }
 
     public ResultSet executeQuery() throws SQLException {
