@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/doc/ManualPoolingDriverExample.java,v $
- * $Revision: 1.4 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.5 $
+ * $Date: 2003/11/10 14:55:58 $
  *
  * ====================================================================
  *
@@ -122,7 +122,11 @@ public class ManualPoolingDriverExample {
         // system property.
         //
         System.out.println("Loading underlying JDBC driver.");
-        Class.forName("oracle.jdbc.driver.OracleDriver");
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         System.out.println("Done.");
 
         //
@@ -132,7 +136,11 @@ public class ManualPoolingDriverExample {
         // do it manually.
         //
         System.out.println("Setting up driver.");
-        setupDriver(args[0]);
+        try {
+            setupDriver(args[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("Done.");
 
         //
@@ -169,9 +177,23 @@ public class ManualPoolingDriverExample {
             try { stmt.close(); } catch(Exception e) { }
             try { conn.close(); } catch(Exception e) { }
         }
+
+        // Display some pool statistics
+        try {
+            printDriverStats();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // closes the pool
+        try {
+            shutdownDriver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void setupDriver(String connectURI) {
+    public static void setupDriver(String connectURI) throws Exception {
         //
         // First, we'll need a ObjectPool that serves as the
         // actual pool of connections.
@@ -200,7 +222,8 @@ public class ManualPoolingDriverExample {
         //
         // Finally, we create the PoolingDriver itself...
         //
-        PoolingDriver driver = new PoolingDriver();
+        Class.forName("org.apache.commons.dbcp.PoolingDriver");
+        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
 
         //
         // ...and register our pool with it.
@@ -211,5 +234,18 @@ public class ManualPoolingDriverExample {
         // Now we can just use the connect string "jdbc:apache:commons:dbcp:example"
         // to access our pool of Connections.
         //
+    }
+
+    public static void printDriverStats() throws Exception {
+        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        ObjectPool connectionPool = driver.getConnectionPool("example");
+        
+        System.out.println("NumActive: " + connectionPool.getNumActive());
+        System.out.println("NumIdle: " + connectionPool.getNumIdle());
+    }
+
+    public static void shutdownDriver() throws Exception {
+        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        driver.closePool("example");
     }
 }
