@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.9 2003/03/06 00:04:58 rwaldhoff Exp $
- * $Revision: 1.9 $
- * $Date: 2003/03/06 00:04:58 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.10 2003/03/06 00:11:33 rwaldhoff Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/03/06 00:11:33 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.9 2003/03/06 00:04:58 rwaldhoff Exp $
+ * @version $Id: DelegatingConnection.java,v 1.10 2003/03/06 00:11:33 rwaldhoff Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -274,7 +274,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 

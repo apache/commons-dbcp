@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingStatement.java,v 1.7 2003/03/06 00:04:58 rwaldhoff Exp $
- * $Revision: 1.7 $
- * $Date: 2003/03/06 00:04:58 $
+ * $Id: DelegatingStatement.java,v 1.8 2003/03/06 00:11:32 rwaldhoff Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/03/06 00:11:32 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.7 $ $Date: 2003/03/06 00:04:58 $
+ * @version $Revision: 1.8 $ $Date: 2003/03/06 00:11:32 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -233,7 +233,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     protected boolean _closed = false;
 
     // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be uncommented by the build process on a JDBC 3.0 system
+    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
 
