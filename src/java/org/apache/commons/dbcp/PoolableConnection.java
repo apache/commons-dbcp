@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.8 2003/08/11 16:01:25 dirkv Exp $
- * $Revision: 1.8 $
- * $Date: 2003/08/11 16:01:25 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.9 2003/08/12 00:10:00 dirkv Exp $
+ * $Revision: 1.9 $
+ * $Date: 2003/08/12 00:10:00 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnection.java,v 1.8 2003/08/11 16:01:25 dirkv Exp $
+ * @version $Id: PoolableConnection.java,v 1.9 2003/08/12 00:10:00 dirkv Exp $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -106,7 +106,7 @@ public class PoolableConnection extends DelegatingConnection {
     /**
      * Returns me to my pool.
      */
-    public void close() throws SQLException {
+     public synchronized void close() throws SQLException {
         if(isClosed()) {
             throw new SQLException("Already closed.");
         } else {
