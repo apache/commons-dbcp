@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.6 2002/06/29 16:45:08 glenn Exp $
- * $Revision: 1.6 $
- * $Date: 2002/06/29 16:45:08 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.7 2002/06/29 17:36:37 glenn Exp $
+ * $Revision: 1.7 $
+ * $Date: 2002/06/29 17:36:37 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.6 2002/06/29 16:45:08 glenn Exp $
+ * @version $Id: DelegatingConnection.java,v 1.7 2002/06/29 17:36:37 glenn Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -259,12 +259,13 @@ public class DelegatingConnection extends AbandonedTrace
         // Statement's when it is closed.
         List statements = getTrace();
         if( statements != null) {
-            Iterator it = statements.iterator();
-            while(it.hasNext()) {
-                ((Statement)it.next()).close();
+            Statement[] set = new Statement[statements.size()];
+            statements.toArray(set);
+            for (int i = 0; i < set.length; i++) {
+                set[i].close();
             }
             clearTrace();
-        }  
+        }
         setLastUsed(0);
         if(_conn instanceof DelegatingConnection) {
             ((DelegatingConnection)_conn).passivate();

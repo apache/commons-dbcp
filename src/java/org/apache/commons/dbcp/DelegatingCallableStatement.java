@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.2 2002/05/29 01:24:09 glenn Exp $
- * $Revision: 1.2 $
- * $Date: 2002/05/29 01:24:09 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingCallableStatement.java,v 1.3 2002/06/29 17:36:37 glenn Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/06/29 17:36:37 $
  *
  * ====================================================================
  *
@@ -134,9 +134,10 @@ public class DelegatingCallableStatement extends AbandonedTrace
         // ResultSet's when it is closed.
         List resultSets = getTrace();
         if( resultSets != null) {
-            Iterator it = resultSets.iterator();
-            while(it.hasNext()) {
-                ((ResultSet)it.next()).close();
+            ResultSet[] set = new ResultSet[resultSets.size()];
+            resultSets.toArray(set);
+            for (int i = 0; i < set.length; i++) {
+                set[i].close();
             }
             clearTrace();
         }
