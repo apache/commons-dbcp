@@ -1,0 +1,68 @@
+<html>
+<body>
+
+<p>
+This package contains one public class which is a 
+<code>ConnectionPoolDataSource</code> (CPDS) implementation that can be used to
+adapt older <code>Driver</code> based jdbc implementations. Below is an
+example of setting up the CPDS to be available via JNDI in the
+catalina servlet container. 
+
+<p>In server.xml, the following would be added to the &lt;Context&gt; for your
+webapp:
+</p>
+
+<source><![CDATA[
+
+ <Resource name="jdbc/bookstoreCPDS" auth="Container"
+            type="org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS"/>
+  <ResourceParams name="jdbc/bookstoreCPDS">
+    <parameter>
+      <name>factory</name>
+      <value>org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS</value>
+    </parameter>
+        <parameter><name>user</name><value>root</value></parameter>
+        <parameter><name>password</name><value></value></parameter>
+        <parameter>
+            <name>driver</name>
+            <value>org.gjt.mm.mysql.Driver</value></parameter>
+        <parameter>
+             <name>url</name>
+             <value>jdbc:mysql://localhost:3306/bookstore</value>
+        </parameter>
+
+  </ResourceParams>
+
+]]></source>
+
+<p>
+In web.xml.  Note that elements must be given in the order of the dtd 
+described in the servlet specification:
+</p>
+
+<source><![CDATA[
+<resource-ref>
+  <description>
+    Resource reference to a factory for java.sql.Connection
+    instances that may be used for talking to a particular
+    database that is configured in the server.xml file.
+  </description>
+  <res-ref-name>
+    jdbc/bookstoreCPDS
+  </res-ref-name>
+  <res-type>
+    org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS
+  </res-type>
+  <res-auth>
+    Container
+  </res-auth>
+</resource-ref>
+]]></source>
+
+<p>
+Catalina deploys all objects configured similarly to above within the
+<strong>java:comp/env</strong> namespace.
+</p>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAll.java,v 1.2 2002/08/05 06:42:01 jmcnally Exp $
- * $Revision: 1.2 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/PoolablePreparedStatementStub.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * $Revision: 1.1 $
  * $Date: 2002/08/05 06:42:01 $
  *
  * ====================================================================
@@ -59,29 +59,42 @@
  *
  */
 
-package org.apache.commons.dbcp;
+package org.apache.commons.dbcp.cpdsadapter;
 
-import junit.framework.*;
-import org.apache.commons.dbcp.jdbc2pool.TestJdbc2PoolDataSource;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.dbcp.PoolablePreparedStatement;
 
 /**
- * @author Rodney Waldhoff
- * @version $Id: TestAll.java,v 1.2 2002/08/05 06:42:01 jmcnally Exp $
+ * A {@link PoolablePreparedStatement} stub since activate and passivate
+ * are declared protected and we need to be able to call them within this
+ * package.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: PoolablePreparedStatementStub.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
  */
-public class TestAll extends TestCase {
-    public TestAll(String testName) {
-        super(testName);
+class PoolablePreparedStatementStub 
+    extends PoolablePreparedStatement {
+
+    /**
+     * Constructor
+     * @param stmt my underlying {*link PreparedStatement}
+     * @param key my key" as used by {*link KeyedObjectPool}
+     * @param pool the {*link KeyedObjectPool} from which I was obtained.
+     * @param conn the {*link Connection} from which I was created
+     */
+    public PoolablePreparedStatementStub(PreparedStatement stmt, Object key, 
+        KeyedObjectPool pool, Connection conn) {
+        super(stmt, key, pool, conn);
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(TestManual.suite());
-        suite.addTest(TestJdbc2PoolDataSource.suite());
-        return suite;
+    protected void activate() {
+        super.activate();
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestAll.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected void passivate() throws SQLException {
+        super.passivate();
     }
 }
