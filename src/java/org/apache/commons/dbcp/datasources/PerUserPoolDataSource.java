@@ -44,7 +44,7 @@ import org.apache.commons.dbcp.SQLNestedException;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision: 1.10 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.11 $ $Date: 2004/10/20 20:46:30 $
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
@@ -413,10 +413,10 @@ public class PerUserPoolDataSource
         }
 
         con.setAutoCommit(defaultAutoCommit);
-        con.setReadOnly(defaultReadOnly);
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
+        con.setReadOnly(defaultReadOnly);
     }
 
     private PoolKey getPoolKey(String username) {
