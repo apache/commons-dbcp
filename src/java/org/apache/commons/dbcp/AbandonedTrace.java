@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v 1.1 2002/05/16 21:25:37 glenn Exp $
- * $Revision: 1.1 $
- * $Date: 2002/05/16 21:25:37 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v 1.2 2002/06/20 00:16:51 glenn Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/06/20 00:16:51 $ 
  *
  * ====================================================================
  *
@@ -60,6 +60,7 @@
  */
 package org.apache.commons.dbcp;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -74,12 +75,13 @@ import org.apache.commons.collections.FastArrayList;
  * extend this class.
  * 
  * @author Glenn L. Nielsen
- * @version $Revision: 1.1 $ $Date: 2002/05/16 21:25:37 $
+ * @version $Revision: 1.2 $ $Date: 2002/06/20 00:16:51 $
  */
 public class AbandonedTrace {
 
-    private static String MESSAGE =
-        "DBCP object was created, but never closed by the following code: ";
+    private static SimpleDateFormat format = new SimpleDateFormat
+        ("'DBCP object created' yyyy-mm-dd HH:mm:ss " +
+         "'by the following code was never closed:'");
 
     // DBCP AbandonedConfig
     private AbandonedConfig config = null;
@@ -87,6 +89,7 @@ public class AbandonedTrace {
     private AbandonedTrace parent;
     // A stack trace of the code that created me (if in debug mode) **/
     private Exception createdBy;
+    private Date createdDate;
     // A list of objects created by children of this object
     private List trace = new FastArrayList();
     // Last time this connection was used
@@ -135,7 +138,8 @@ public class AbandonedTrace {
             return;
         }
         if (config.getLogAbandoned()) {
-            createdBy = new Exception(MESSAGE);
+            createdBy = new Exception();
+            createdDate = new Date();
         }
     }
 
@@ -195,8 +199,9 @@ public class AbandonedTrace {
             return;                           
         }                    
         if (config.getLogAbandoned()) {
-            createdBy = new Exception(MESSAGE);
-        }                                      
+            createdBy = new Exception();
+            createdDate = new Date();
+        }
         if (parent != null) {                  
             parent.addTrace(this);
         }
@@ -238,6 +243,7 @@ public class AbandonedTrace {
      */
     public void printStackTrace() {
         if (createdBy != null) {
+            System.out.println(format.format(createdDate));
             createdBy.printStackTrace();
         }
         Iterator it = trace.iterator();
