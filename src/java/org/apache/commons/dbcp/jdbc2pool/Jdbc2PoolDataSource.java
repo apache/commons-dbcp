@@ -146,7 +146,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.15 2003/08/11 16:02:10 dirkv Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.16 2003/08/11 23:30:37 dirkv Exp $
  */
 public class Jdbc2PoolDataSource
         implements DataSource, Referenceable, Serializable, ObjectFactory {
@@ -899,6 +899,10 @@ public class Jdbc2PoolDataSource
         PoolKey key = getPoolKey(username);
 
         Object pool = ((Map) dsInstanceMap.get(instanceKey)).get(key);
+        
+        if (pool == null) {
+            return 0;
+        }
 
         if (pool instanceof ObjectPool) {
             return ((ObjectPool) pool).getNumActive();
@@ -921,6 +925,10 @@ public class Jdbc2PoolDataSource
         PoolKey key = getPoolKey(username);
 
         Object pool = ((Map) dsInstanceMap.get(instanceKey)).get(key);
+
+        if (pool == null) {
+            return 0;
+        }
 
         if (pool instanceof ObjectPool) {
             return ((ObjectPool) pool).getNumIdle();
