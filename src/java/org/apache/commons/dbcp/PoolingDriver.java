@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDriver.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.8 $
+ * $Date: 2003/11/10 14:26:19 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.xml.sax.SAXException;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id: PoolingDriver.java,v 1.7 2003/10/09 21:04:44 rdonkin Exp $
+ * @version $Id: PoolingDriver.java,v 1.8 2003/11/10 14:26:19 dirkv Exp $
  */
 public class PoolingDriver implements Driver {
     /** Register an myself with the {@link DriverManager}. */
@@ -106,7 +106,7 @@ public class PoolingDriver implements Driver {
      * 
      * @deprecated This will be removed in a future version of DBCP.
      */
-    synchronized public ObjectPool getPool(String name) {
+    public synchronized ObjectPool getPool(String name) {
         try {
             return getConnectionPool(name);
         }
@@ -115,7 +115,7 @@ public class PoolingDriver implements Driver {
         }
     }
     
-    synchronized protected ObjectPool getConnectionPool(String name) throws SQLException {
+    public synchronized ObjectPool getConnectionPool(String name) throws SQLException {
         ObjectPool pool = (ObjectPool)(_pools.get(name));
         if(null == pool) {
             InputStream in = this.getClass().getResourceAsStream(String.valueOf(name) + ".jocl");
@@ -149,8 +149,21 @@ public class PoolingDriver implements Driver {
         return pool;
     }
 
-    synchronized public void registerPool(String name, ObjectPool pool) {
+    public synchronized void registerPool(String name, ObjectPool pool) {
         _pools.put(name,pool);
+    }
+
+    public synchronized void closePool(String name) throws SQLException {
+        ObjectPool pool = (ObjectPool) _pools.get(name);
+        if (pool != null) {
+            _pools.remove(name);
+            try {
+                pool.close();
+            }
+            catch (Exception e) {
+                throw new SQLNestedException("Error closing pool " + name, e);
+            }
+        }
     }
 
     public boolean acceptsURL(String url) throws SQLException {
