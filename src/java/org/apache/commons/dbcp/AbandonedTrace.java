@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v 1.3 2002/06/23 21:41:42 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/06/23 21:41:42 $ 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v 1.4 2002/09/30 13:31:12 glenn Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/09/30 13:31:12 $ 
  *
  * ====================================================================
  *
@@ -74,12 +74,12 @@ import java.util.List;
  * extend this class.
  * 
  * @author Glenn L. Nielsen
- * @version $Revision: 1.3 $ $Date: 2002/06/23 21:41:42 $
+ * @version $Revision: 1.4 $ $Date: 2002/09/30 13:31:12 $
  */
 public class AbandonedTrace {
 
     private static SimpleDateFormat format = new SimpleDateFormat
-        ("'DBCP object created' yyyy-mm-dd HH:mm:ss " +
+        ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
          "'by the following code was never closed:'");
 
     // DBCP AbandonedConfig
