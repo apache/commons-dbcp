@@ -18,11 +18,15 @@
    <properties>
       <title>Release notes for Commons-DBCP 1.2</title>
       <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id: release-notes-1.2.xml,v 1.1 2004/05/20 15:59:53 dirkv Exp $</revision>
+      <revision>$Id: release-notes-1.2.xml,v 1.2 2004/05/20 19:05:31 dirkv Exp $</revision>
    </properties>
 
    <body>
      <section name="Release notes for Commons-DBCP 1.2">
+<p>
+<b>NOTE:</b> DBCP v1.2 requires Pool v1.2, make sure you use the correct version!
+</p>
+
 <p>
 There were some new features were added since the 1.1 release on 20 October 2003.
 <ul>
