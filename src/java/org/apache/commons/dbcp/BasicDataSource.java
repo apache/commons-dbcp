@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.26 $
- * $Date: 2003/09/20 14:28:54 $
+ * $Revision: 1.27 $
+ * $Date: 2003/09/20 17:11:25 $
  *
  * ====================================================================
  *
@@ -83,14 +83,12 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.26 $ $Date: 2003/09/20 14:28:54 $
+ * @version $Revision: 1.27 $ $Date: 2003/09/20 17:11:25 $
  */
 
 public class BasicDataSource implements DataSource {
 
-
     // ------------------------------------------------------------- Properties
-
 
     /**
      * The default auto-commit state of connections created by this pool.
@@ -98,7 +96,7 @@ public class BasicDataSource implements DataSource {
     protected boolean defaultAutoCommit = true;
 
     public boolean getDefaultAutoCommit() {
-        return (this.defaultAutoCommit);
+        return this.defaultAutoCommit;
     }
 
     public void setDefaultAutoCommit(boolean defaultAutoCommit) {
@@ -112,12 +110,13 @@ public class BasicDataSource implements DataSource {
     protected boolean defaultReadOnly = false;
 
     public boolean getDefaultReadOnly() {
-        return (this.defaultReadOnly);
+        return this.defaultReadOnly;
     }
 
     public void setDefaultReadOnly(boolean defaultReadOnly) {
         this.defaultReadOnly = defaultReadOnly;
     }
+
 
     /**
      * The default TransactionIsolation state of connections created by this pool.
@@ -131,6 +130,7 @@ public class BasicDataSource implements DataSource {
     public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
+
 
     /**
      * The default "catalog" of connections created by this pool.
@@ -149,14 +149,15 @@ public class BasicDataSource implements DataSource {
             this.defaultCatalog = null;
         }
     }
-    
+
+  
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
     protected String driverClassName = null;
 
     public String getDriverClassName() {
-        return (this.driverClassName);
+        return this.driverClassName;
     }
 
     public void setDriverClassName(String driverClassName) {
@@ -171,7 +172,7 @@ public class BasicDataSource implements DataSource {
     protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
 
     public int getMaxActive() {
-        return (this.maxActive);
+        return this.maxActive;
     }
 
     public void setMaxActive(int maxActive) {
@@ -186,7 +187,7 @@ public class BasicDataSource implements DataSource {
     protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;;
 
     public int getMaxIdle() {
-        return (this.maxIdle);
+        return this.maxIdle;
     }
 
     public void setMaxIdle(int maxIdle) {
@@ -200,7 +201,7 @@ public class BasicDataSource implements DataSource {
     protected int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;;
 
     public int getMinIdle() {
-        return (this.minIdle);
+        return this.minIdle;
     }
 
     public void setMinIdle(int minIdle) {
@@ -215,7 +216,7 @@ public class BasicDataSource implements DataSource {
     protected long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
 
     public long getMaxWait() {
-        return (this.maxWait);
+        return this.maxWait;
     }
 
     public void setMaxWait(long maxWait) {
@@ -231,17 +232,15 @@ public class BasicDataSource implements DataSource {
      * Returns true if we are pooling statements.
      * @return boolean
      */
-    public boolean isPoolPreparedStatements()
-    {
-        return poolPreparedStatements;
+    public boolean isPoolPreparedStatements() {
+        return this.poolPreparedStatements;
     }
 
     /**
      * Sets whether to pool statements or not.
      * @param poolPreparedStatements pooling on or off
      */
-    public void setPoolPreparedStatements(boolean poolingStatements)
-    {
+    public void setPoolPreparedStatements(boolean poolingStatements) {
          this.poolPreparedStatements = poolingStatements;
     }
 
@@ -254,7 +253,7 @@ public class BasicDataSource implements DataSource {
     protected int maxOpenPreparedStatements = GenericKeyedObjectPool.DEFAULT_MAX_TOTAL;
 
     public int getMaxOpenPreparedStatements() {
-        return maxOpenPreparedStatements;
+        return this.maxOpenPreparedStatements;
     }
 
     public void setMaxOpenPreparedStatements(int maxOpenStatements) {
@@ -269,7 +268,7 @@ public class BasicDataSource implements DataSource {
     protected boolean testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
 
     public boolean getTestOnBorrow() {
-        return (this.testOnBorrow);
+        return this.testOnBorrow;
     }
 
     public void setTestOnBorrow(boolean testOnBorrow) {
@@ -283,7 +282,7 @@ public class BasicDataSource implements DataSource {
     protected boolean testOnReturn =  GenericObjectPool.DEFAULT_TEST_ON_RETURN;
 
     public boolean getTestOnReturn() {
-        return (this.testOnReturn);
+        return this.testOnReturn;
     }
 
     public void setTestOnReturn(boolean testOnReturn) {
@@ -300,7 +299,7 @@ public class BasicDataSource implements DataSource {
         GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
         
     public long getTimeBetweenEvictionRunsMillis() {
-        return (this.timeBetweenEvictionRunsMillis);
+        return this.timeBetweenEvictionRunsMillis;
     }
 
     public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
@@ -316,7 +315,7 @@ public class BasicDataSource implements DataSource {
         GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
     public int getNumTestsPerEvictionRun() {
-        return (this.numTestsPerEvictionRun);
+        return this.numTestsPerEvictionRun;
     }
 
     public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
@@ -332,7 +331,7 @@ public class BasicDataSource implements DataSource {
         GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
     public long getMinEvictableIdleTimeMillis() {
-        return (this.minEvictableIdleTimeMillis);
+        return this.minEvictableIdleTimeMillis;
     }
 
     public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
@@ -347,7 +346,7 @@ public class BasicDataSource implements DataSource {
     protected boolean testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
 
     public boolean getTestWhileIdle() {
-        return (this.testWhileIdle);
+        return this.testWhileIdle;
     }
 
     public void setTestWhileIdle(boolean testWhileIdle) {
@@ -360,9 +359,9 @@ public class BasicDataSource implements DataSource {
      */
     public int getNumActive() {
         if (connectionPool != null) {
-            return (connectionPool.getNumActive());
+            return connectionPool.getNumActive();
         } else {
-            return (0);
+            return 0;
         }
     }
 
@@ -373,9 +372,9 @@ public class BasicDataSource implements DataSource {
      */
     public int getNumIdle() {
         if (connectionPool != null) {
-            return (connectionPool.getNumIdle());
+            return connectionPool.getNumIdle();
         } else {
-            return (0);
+            return 0;
         }
     }
 
@@ -387,7 +386,7 @@ public class BasicDataSource implements DataSource {
     protected String password = null;
 
     public String getPassword() {
-        return (this.password);
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -402,7 +401,7 @@ public class BasicDataSource implements DataSource {
     protected String url = null;
 
     public String getUrl() {
-        return (this.url);
+        return this.url;
     }
 
     public void setUrl(String url) {
@@ -417,7 +416,7 @@ public class BasicDataSource implements DataSource {
     protected String username = null;
 
     public String getUsername() {
-        return (this.username);
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -511,9 +510,7 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public Connection getConnection() throws SQLException {
-
-        return (createDataSource().getConnection());
-
+        return createDataSource().getConnection();
     }
 
 
@@ -526,11 +523,8 @@ public class BasicDataSource implements DataSource {
      *
      * @exception SQLException if a database access error occurs
      */
-    public Connection getConnection(String username, String password)
-        throws SQLException {
-
-        return (createDataSource().getConnection(username, password));
-
+    public Connection getConnection(String username, String password) throws SQLException {
+        return createDataSource().getConnection(username, password);
     }
 
 
@@ -540,9 +534,7 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public int getLoginTimeout() throws SQLException {
-
-        return (createDataSource().getLoginTimeout());
-
+        return createDataSource().getLoginTimeout();
     }
 
 
@@ -552,9 +544,7 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public PrintWriter getLogWriter() throws SQLException {
-
-        return (createDataSource().getLogWriter());
-
+        return createDataSource().getLogWriter();
     }
 
 
@@ -566,9 +556,7 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public void setLoginTimeout(int loginTimeout) throws SQLException {
-
         createDataSource().setLoginTimeout(loginTimeout);
-
     }
 
 
@@ -580,10 +568,8 @@ public class BasicDataSource implements DataSource {
      * @exception SQLException if a database access error occurs
      */
     public void setLogWriter(PrintWriter logWriter) throws SQLException {
-
         createDataSource().setLogWriter(logWriter);
         this.logWriter = logWriter;
-
     }
 
     private AbandonedConfig abandonedConfig;
@@ -682,9 +668,7 @@ public class BasicDataSource implements DataSource {
      * @param value Value of the custom connection property
      */
     public void addConnectionProperty(String name, String value) {
-
         connectionProperties.put(name, value);
-
     }
 
 
