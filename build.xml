@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.21 2003/10/04 18:12:10 dirkv Exp $ -->
+<!-- $Id: build.xml,v 1.22 2003/10/08 16:52:26 dirkv Exp $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -126,7 +126,7 @@
    <target name="build-jar" depends="compile">
       <mkdir dir="${dist.dir}"/>
       <jar jarfile="${dist.jar}">
-         <fileset dir="${build.dir}"/>
+         <fileset dir="${build.classes.dir}"/>
          <metainf dir="${basedir}" includes="LICENSE.txt"/>
          <manifest>
             <attribute name="Built-By" value="${user.name}"/>
