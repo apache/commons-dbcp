@@ -9,7 +9,7 @@
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
 
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.2-dev</currentVersion>
   <versions>
     <version>
       <id>1.0</id>
