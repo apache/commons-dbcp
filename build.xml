@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.8 2002/05/27 13:14:57 glenn Exp $ -->
+<!-- $Id: build.xml,v 1.9 2002/06/29 17:53:28 glenn Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -42,7 +42,7 @@
       <property name="cp" value=""/>
 
       <!-- now combine the classpaths -->
-      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${sax2.jar}:${junit.jar}"/>
+      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
       <property name="Name" value="Commons-DBCP"/>
@@ -164,7 +164,6 @@
                nonavbar="false"
                serialwarn="false">
           <group title="Jakarta-commons Collections" packages="org.apache.commons.collections"/>
-          <link href="http://java.sun.com/products/jdk/1.3/docs/api"/>
       </javadoc>
       <delete dir="${workdir}"/>
    </target>
@@ -176,7 +175,7 @@
    <target name="copy-src" depends="init">
       <mkdir dir="${dest.src}"/>
       <!-- the source code directory -->
-      <copy todir="${dest.src}/org" filtering="yes">
+      <copy todir="${dest.src}" filtering="yes">
          <fileset dir="${source.src.java}" defaultexcludes="no">
             <include name="**/*.java"/>
             <include name="**/*.xml"/>
@@ -199,7 +198,7 @@
              debug="true"
              deprecation="true"
              optimize="true">
-        <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory"
+        <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory.java"
                unless="jndi.present"/>
       </javac>
    </target>
@@ -207,7 +206,7 @@
    <target name="build-test" depends="init,build-java" if="available-src-test">
       <mkdir dir="${dest.src}"/>
       <!-- the source code directory -->
-      <copy todir="${dest.src}/org" filtering="yes">
+      <copy todir="${dest.src}" filtering="yes">
         <fileset dir="${source.src.test}" defaultexcludes="no">
           <include name="**/*.java"/>
         </fileset>
