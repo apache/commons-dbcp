@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/08/22 16:08:31 $
+ * $Revision: 1.8 $
+ * $Date: 2003/08/25 16:17:45 $
  *
  * ====================================================================
  *
@@ -62,6 +62,7 @@
 package org.apache.commons.dbcp;
 
 import java.io.ByteArrayInputStream;
+import java.sql.Connection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -81,7 +82,8 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.7 $ $Date: 2003/08/22 16:08:31 $
+ * @author Dirk Verbeeck
+ * @version $Revision: 1.8 $ $Date: 2003/08/25 16:17:45 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -134,6 +136,38 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (ra != null) {
             dataSource.setDefaultReadOnly
                 (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("defaultTransactionIsolation");
+        if (ra != null) {
+            String value = ra.getContent().toString();
+            int level = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+            if ("NONE".equalsIgnoreCase(value)) {
+                level = Connection.TRANSACTION_NONE;
+            }
+            else if ("READ_COMMITTED".equalsIgnoreCase(value)) {
+                level = Connection.TRANSACTION_READ_COMMITTED;
+            }
+            else if ("READ_UNCOMMITTED".equalsIgnoreCase(value)) {
+                level = Connection.TRANSACTION_READ_UNCOMMITTED;
+            }
+            else if ("REPEATABLE_READ".equalsIgnoreCase(value)) {
+                level = Connection.TRANSACTION_REPEATABLE_READ;
+            }
+            else if ("SERIALIZABLE".equalsIgnoreCase(value)) {
+                level = Connection.TRANSACTION_SERIALIZABLE;
+            }
+            else {
+                try {
+                    level = Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    System.err.println("Could not parse defaultTransactionIsolation: " + value);
+                    System.err.println("WARNING: defaultTransactionIsolation not set");
+                    System.err.println("using default value of database driver");
+                    level = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+                }
+            }
+            dataSource.setDefaultTransactionIsolation(level);
         }
 
         ra = ref.get("driverClassName");
