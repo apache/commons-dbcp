@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterDriver.java,v 1.2 2003/04/15 23:34:34 dgraham Exp $
- * $Revision: 1.2 $
- * $Date: 2003/04/15 23:34:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterDriver.java,v 1.3 2003/06/02 04:54:11 jmcnally Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/06/02 04:54:11 $
  *
  * ====================================================================
  *
@@ -68,20 +68,67 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Mock object implementing the <code>java.sql.Driver</code> interface.
+ * Returns <code>TestConnection</code>'s from getConnection methods.  
+ * Valid username, password combinations are:
+ *
+ * <table>
+ * <tr><th>user</th><th>password</th></tr>
+ * <tr><td>foo</td><td>bar</td></tr>
+ * <tr><td>u1</td><td>p1</td></tr>
+ * <tr><td>u2</td><td>p2</td></tr>
+ * <tr><td>username</td><td>password</td></tr>
+ * </table>
+ */
 public class TesterDriver implements Driver {
+    private static Properties validUserPasswords = new Properties();
     static {
         try {
             DriverManager.registerDriver(new TesterDriver());
         } catch(Exception e) {
         }
+        validUserPasswords.put("foo", "bar");
+        validUserPasswords.put("u1", "p1");
+        validUserPasswords.put("u2", "p2");
+        validUserPasswords.put("username", "password");
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        return CONNECT_STRING.equals(url);
+        return CONNECT_STRING.startsWith(url);
+    }
+
+    private void assertValidUserPassword(String user, String password) 
+        throws SQLException {
+        String realPassword = validUserPasswords.getProperty(user);
+        if (realPassword == null) 
+        {
+            throw new SQLException(user + " is not a valid username.");
+        }
+        if (!realPassword.equals(password)) 
+        {
+            throw new SQLException(password + 
+                                   " is not the correct password for " +
+                                   user + ".  The correct password is " +
+                                   realPassword);
+        }
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        return (acceptsURL(url) ? new TesterConnection() : null);
+        //return (acceptsURL(url) ? new TesterConnection() : null);
+        Connection conn = null;
+        if (acceptsURL(url)) 
+        {
+            if (info != null) 
+            {
+                assertValidUserPassword(info.getProperty("user"), 
+                                        info.getProperty("password"));
+            }
+            
+            conn = new TesterConnection();
+        }
+        
+        return conn;
     }
 
     public int getMajorVersion() {
