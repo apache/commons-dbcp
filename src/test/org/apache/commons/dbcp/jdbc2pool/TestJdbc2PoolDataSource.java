@@ -1,7 +1,7 @@
 /*
- * $Id: TestJdbc2PoolDataSource.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/11/08 18:51:07 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.3 2002/11/08 19:37:26 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/11/08 19:37:26 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * @author John McNally
- * @version $Revision: 1.2 $ $Date: 2002/11/08 18:51:07 $
+ * @version $Revision: 1.3 $ $Date: 2002/11/08 19:37:26 $
  */
 public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
@@ -87,7 +87,7 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
     }
 
     protected Connection getConnection() throws Exception {
-        return ds.getConnection();
+        return ds.getConnection("foo","bar");
     }
 
     private DataSource ds;
@@ -97,12 +97,14 @@ public class TestJdbc2PoolDataSource extends TestConnectionPool {
         pcds.setDriver("org.apache.commons.dbcp.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
         pcds.setUser("foo");
-        pcds.setPassword(null);
+        pcds.setPassword("bar");
 
         Jdbc2PoolDataSource tds = new Jdbc2PoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxActive(getMaxActive());
-        tds.setDefaultMaxWait((int) (getMaxWait()));
+        tds.setDefaultMaxWait((int)(getMaxWait()));
+        tds.setPerUserMaxActive("foo",new Integer(getMaxActive()));
+        tds.setPerUserMaxWait("foo",new Integer((int)(getMaxWait())));
 
         ds = tds;
     }
