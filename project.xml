@@ -9,7 +9,7 @@
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
 
-  <currentVersion>1.1-RC1</currentVersion>
+  <currentVersion>1.1-RC2</currentVersion>
   <versions>
     <version>
       <id>1.0</id>
@@ -20,6 +20,11 @@
       <id>1.1-RC1</id>
       <name>1.1-RC1</name>
       <tag>DBCP_1_1_RC1</tag>
+    </version>
+    <version>
+      <id>1.1-RC2</id>
+      <name>1.1-RC2</name>
+      <tag>DBCP_1_1_RC2</tag>
     </version>
   </versions>
   <branches>
@@ -83,7 +88,7 @@
     </dependency>
     <dependency>
       <id>commons-pool</id>
-      <version>1.1-RC1</version>
+      <version>1.1-RC2</version>
     </dependency>
     <dependency>
       <id>jdbc</id>
