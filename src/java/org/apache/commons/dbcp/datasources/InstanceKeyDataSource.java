@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/InstanceKeyDataSource.java,v $
- * $Revision: 1.7 $
- * $Date: 2003/10/13 05:06:00 $
+ * $Revision: 1.8 $
+ * $Date: 2003/10/13 05:29:36 $
  *
  * ====================================================================
  *
@@ -84,7 +84,9 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and 
  * <code>PerUserPoolDataSource</code>.  Many of the configuration properties
- * are shared and defined here.
+ * are shared and defined here.  This class is declared public in order
+ * to allow particular usage with commons-beanutils; do not make direct
+ * use of it outside of commons-dbcp.
  * </p>
  *
  * <p>
@@ -108,13 +110,6 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * <p>
- * If this <code>DataSource</code> is requested via JNDI multiple times, 
- * it maintains state between lookups.  Also, multiple instances can be 
- * deployed using different backend <code>ConnectionPoolDataSource</code> 
- * sources.  
- * </p>
- *
- * <p>
  * The dbcp package contains an adapter, 
  * {@link org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS},
  * that can be used to allow the use of <code>DataSource</code>'s based on this
@@ -129,9 +124,9 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: InstanceKeyDataSource.java,v 1.7 2003/10/13 05:06:00 jmcnally Exp $
+ * @version $Id: InstanceKeyDataSource.java,v 1.8 2003/10/13 05:29:36 jmcnally Exp $
  */
-abstract class InstanceKeyDataSource
+public abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
     private static final String GET_CONNECTION_CALLED 
             = "A Connection was already requested from this source, " 
