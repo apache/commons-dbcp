@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedTrace.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/10/09 21:04:44 $
+ * $Revision: 1.10 $
+ * $Date: 2004/01/25 20:00:21 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import java.util.List;
  * extend this class.
  * 
  * @author Glenn L. Nielsen
- * @version $Revision: 1.9 $ $Date: 2003/10/09 21:04:44 $
+ * @version $Revision: 1.10 $ $Date: 2004/01/25 20:00:21 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedTrace {
@@ -245,7 +245,7 @@ public class AbandonedTrace {
      */
     public void printStackTrace() {
         if (createdBy != null) {
-            System.out.println(format.format(new Date(createdTime)));
+            System.err.println(format.format(new Date(createdTime)));
             createdBy.printStackTrace();
         }
         synchronized(this) {
