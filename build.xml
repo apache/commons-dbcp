@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.15 2002/09/05 23:38:49 jmcnally Exp $ -->
+<!-- $Id: build.xml,v 1.16 2002/11/08 18:51:06 rwaldhoff Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -239,6 +239,11 @@
              debug="true"
              deprecation="true"
              optimize="true"/>
+      <copy todir="${dest.classes}" filtering="no">
+        <fileset dir="${source.src.test}" defaultexcludes="no">
+          <include name="testpool.jocl"/>
+        </fileset>
+      </copy>
    </target>
 
    <!-- ######################################################### -->

@@ -1,13 +1,13 @@
 /*
- * $Id: TesterStatement.java,v 1.3 2002/10/31 21:41:50 rwaldhoff Exp $
- * $Revision: 1.3 $
- * $Date: 2002/10/31 21:41:50 $
+ * $Id: TesterStatement.java,v 1.4 2002/11/08 18:51:07 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/11/08 18:51:07 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,7 @@ public class TesterStatement implements Statement {
     }
 
     public void close() throws SQLException {
+        checkOpen();
         _open = false;
     }
 

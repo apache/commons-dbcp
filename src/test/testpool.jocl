@@ -19,10 +19,10 @@
    </object>
    <object class="org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory">
       <object class="org.apache.commons.pool.KeyedPoolableObjectFactory" null="true"/>
-      <int value="10"/>
+      <int value="5"/>
       <byte value="1"/>
       <long value="2000"/>
-      <int value="10"/>
+      <int value="5"/>
       <boolean value="true"/>
       <boolean value="true"/>
       <long value="10000"/>

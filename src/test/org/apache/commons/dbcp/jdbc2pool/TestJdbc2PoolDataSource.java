@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/jdbc2pool/Attic/TestJdbc2PoolDataSource.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
- * $Revision: 1.1 $
- * $Date: 2002/08/05 06:42:01 $
+ * $Id: TestJdbc2PoolDataSource.java,v 1.2 2002/11/08 18:51:07 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/11/08 18:51:07 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,26 +61,23 @@
 
 package org.apache.commons.dbcp.jdbc2pool;
 
-import junit.framework.*;
-import java.sql.*;
-import javax.sql.DataSource;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.pool.*;
-import org.apache.commons.pool.impl.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
+import javax.sql.DataSource;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.apache.commons.dbcp.TestConnectionPool;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
- * @author Rodney Waldhoff
- * @version $Id: TestJdbc2PoolDataSource.java,v 1.1 2002/08/05 06:42:01 jmcnally Exp $
+ * @author John McNally
+ * @version $Revision: 1.2 $ $Date: 2002/11/08 18:51:07 $
  */
-public class TestJdbc2PoolDataSource extends TestCase 
-{
-    private static final int MAX_ACTIVE = 10;
-    private static final int MAX_WAIT = 50;
-
-    DataSource ds;
-
+public class TestJdbc2PoolDataSource extends TestConnectionPool {
     public TestJdbc2PoolDataSource(String testName) {
         super(testName);
     }
@@ -89,13 +86,13 @@ public class TestJdbc2PoolDataSource extends TestCase
         return new TestSuite(TestJdbc2PoolDataSource.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestJdbc2PoolDataSource.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected Connection getConnection() throws Exception {
+        return ds.getConnection();
     }
 
-    public void setUp() throws Exception 
-    {
+    private DataSource ds;
+
+    public void setUp() throws Exception {
         DriverAdapterCPDS pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
@@ -104,198 +101,48 @@ public class TestJdbc2PoolDataSource extends TestCase
 
         Jdbc2PoolDataSource tds = new Jdbc2PoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
-        tds.setDefaultMaxActive(MAX_ACTIVE);
-        tds.setDefaultMaxWait(MAX_WAIT);
+        tds.setDefaultMaxActive(getMaxActive());
+        tds.setDefaultMaxWait((int) (getMaxWait()));
 
         ds = tds;
     }
-
-    public void testSimple() throws Exception 
-    {
-        Connection conn = ds.getConnection();
-        assertTrue(null != conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    public void testSimple2() 
-        throws Exception 
-    {
-        Connection conn = ds.getConnection();
-        assertTrue(null != conn);
-
-        PreparedStatement stmt = 
-            conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        
-        stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        
-        conn.close();
-        try 
-        {
-            conn.createStatement();
-            fail("Can't use closed connections");
-        } 
-        catch(SQLException e) 
-        {
-            // expected
-        }
-
-        conn = ds.getConnection();
-        assertTrue(null != conn);
-
-        stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        
-        conn.close();
-        conn = null;
-    }
-
-    public void testOpening() 
-        throws Exception 
-    {
-        Connection[] c = new Connection[MAX_ACTIVE];
-        // test that opening new connections is not closing previous
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i] = ds.getConnection();
-            assertTrue(c[i] != null);
-            for (int j=0; j<=i; j++) 
-            {
-                assertTrue(!c[j].isClosed());
-            }
-        }
-
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i].close();
-        }
-    }
-
-    public void testClosing() 
-        throws Exception 
-    {
-        Connection[] c = new Connection[MAX_ACTIVE];
-        // open the maximum connections
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i] = ds.getConnection();
-        }
-
-        // close one of the connections
-        c[0].close();
-        assertTrue(c[0].isClosed());
-        
-        // get a new connection
-        c[0] = ds.getConnection();
-
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i].close();
-        }
-    }
-
-    public void testMaxActive() 
-        throws Exception 
-    {
-        Connection[] c = new Connection[MAX_ACTIVE];
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i] = ds.getConnection();
-            assertTrue(c[i] != null);            
-        }
-
-        try
-        {
-            ds.getConnection();
-            fail("Allowed to open more than DefaultMaxActive connections.");
-        }
-        catch(java.util.NoSuchElementException e)
-        {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        }
-
-        for (int i=0; i<c.length; i++) 
-        {
-            c[i].close();
-        }
-    }
-
-    public void testMultipleThreads()
-        throws Exception
-    {
+    
+    public void testMultipleThreads() throws Exception {
         assertTrue(multipleThreads(1));
-        assertTrue(!multipleThreads(2*MAX_WAIT));
+        assertTrue(!multipleThreads(2 * (int)(getMaxWait())));
     }
 
-    private boolean multipleThreads(int holdTime)
-        throws Exception
-    {
+    private boolean multipleThreads(int holdTime) throws Exception {
         long startTime = System.currentTimeMillis();
         final boolean[] success = new boolean[1];
         success[0] = true;
-        final PoolTest[] pts = new PoolTest[2*MAX_ACTIVE];
-        ThreadGroup threadGroup = new ThreadGroup("foo")
-            {
-                public void uncaughtException(Thread t, Throwable e)
+        final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
+        ThreadGroup threadGroup = new ThreadGroup("foo") {
+            public void uncaughtException(Thread t, Throwable e) {
+                /*
+                for (int i = 0; i < pts.length; i++)
                 {
-                    /*
-                    for (int i = 0; i < pts.length; i++)
-                    {
-                        System.out.println(i + ": " + pts[i].reportState());
-                    }
-                    */
-                    for (int i = 0; i < pts.length; i++)
-                    {
-                        pts[i].stop();
-                    }
-                    
-                    //e.printStackTrace();
-                    success[0] = false;
+                    System.out.println(i + ": " + pts[i].reportState());
                 }
-            };
+                */
+                for (int i = 0; i < pts.length; i++) {
+                    pts[i].stop();
+                }
 
-        for (int i = 0; i < pts.length; i++)
-        {
+                //e.printStackTrace();
+                success[0] = false;
+            }
+        };
+
+        for (int i = 0; i < pts.length; i++) {
             pts[i] = new PoolTest(threadGroup, holdTime);
         }
-        Thread.currentThread().sleep(10*holdTime);
-        for (int i = 0; i < pts.length; i++)
-        {
+        Thread.currentThread().sleep(10 * holdTime);
+        for (int i = 0; i < pts.length; i++) {
             pts[i].stop();
         }
-        long time = System.currentTimeMillis() - startTime; // - (pts.length*10*holdTime);
+        long time = System.currentTimeMillis() - startTime;
+        // - (pts.length*10*holdTime);
         System.out.println("Multithread test time = " + time + " ms");
 
         Thread.currentThread().sleep(holdTime);
@@ -304,67 +151,59 @@ public class TestJdbc2PoolDataSource extends TestCase
 
     private static int currentThreadCount = 0;
 
-    private class PoolTest implements Runnable
-    {
+    private class PoolTest implements Runnable {
         /**
          * The number of milliseconds to hold onto a database connection
          */
         private int connHoldTime;
-        
+
         private boolean isRun;
-        
+
         private String state;
 
-        protected PoolTest(ThreadGroup threadGroup, int connHoldTime)
-        {
+        protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
             this.connHoldTime = connHoldTime;
-            Thread thread = new Thread(threadGroup, this,
-                                       "Thread+" + currentThreadCount++);
+            Thread thread =
+                new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
             thread.start();
         }
-        
-        public void run()
-        {
+
+        public void run() {
             Thread thread = Thread.currentThread();
             isRun = true;
-            while (isRun)
-            {
-                try
-                {
+            while (isRun) {
+                try {
                     Connection conn = null;
-                    state="Getting Connection";
-                    conn = ds.getConnection();
-                    state="Using Connection";
+                    state = "Getting Connection";
+                    conn = getConnection();
+                    state = "Using Connection";
                     assertTrue(null != conn);
-                    PreparedStatement stmt = 
+                    PreparedStatement stmt =
                         conn.prepareStatement("select * from dual");
                     assertTrue(null != stmt);
                     ResultSet rset = stmt.executeQuery();
                     assertTrue(null != rset);
                     assertTrue(rset.next());
-                    state="Holding Connection";
+                    state = "Holding Connection";
                     thread.sleep(connHoldTime);
-                    state="Returning Connection";
+                    state = "Returning Connection";
                     rset.close();
                     stmt.close();
                     conn.close();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new NestableRuntimeException(e);
                 }
             }
         }
-        
-        public void stop()
-        {
+
+        public void stop() {
             isRun = false;
         }
 
-        public String reportState()
-        {
+        public String reportState() {
             return state;
         }
     }
+    
 }

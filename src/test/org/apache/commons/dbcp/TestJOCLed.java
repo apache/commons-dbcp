@@ -1,13 +1,12 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestJOCLed.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/16 13:29:49 $
- *
+ * $Id: TestJOCLed.java,v 1.3 2002/11/08 18:51:07 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/11/08 18:51:07 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,23 +60,17 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import java.sql.*;
-import org.apache.commons.pool.*;
-import org.apache.commons.pool.impl.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
-// this suite requires a JOCL configuration
-// file named testpool.jocl to be in your classpath
-// see the doc directory for an example
-
-// note that depending upon the configuration of the testpool,
-// testThreaded1 might fail
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Id: TestJOCLed.java,v 1.2 2002/03/16 13:29:49 rwaldhoff Exp $
+ * @version $Revision: 1.3 $ $Date: 2002/11/08 18:51:07 $
  */
-public class TestJOCLed extends TestCase {
+public class TestJOCLed extends TestConnectionPool {
     public TestJOCLed(String testName) {
         super(testName);
     }
@@ -86,173 +79,18 @@ public class TestJOCLed extends TestCase {
         return new TestSuite(TestJOCLed.class);
     }
 
-    public static void main(String args[]) {
-        String[] testCaseName = { TestJOCLed.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+    protected Connection getConnection() throws Exception {
+        return DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
     }
 
+    private PoolingDriver driver = null;
+    
     public void setUp() throws Exception {
-        Class.forName("org.apache.commons.dbcp.PoolingDriver");
+        driver = new PoolingDriver();
     }
 
-    public void testSimple() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertTrue(null != conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
-        ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    public void testSimple2() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertTrue(null != conn);
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        try {
-            conn.createStatement();
-            fail("Can't use closed connections");
-        } catch(SQLException e) {
-            ; // expected
-        }
-
-        conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertTrue(null != conn);
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
-            ResultSet rset = stmt.executeQuery();
-            assertTrue(null != rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        conn = null;
-    }
-
-    public void testPooling() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertTrue(conn != null);
-        Connection conn2 = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertTrue(conn2 != null);
-        assertTrue(conn != conn2);
-        conn2.close();
-        conn.close();
-        conn2 = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-        assertSame(conn,conn2);
-    }
-
-    public void testThreaded1() {
-        TestThread[] threads = new TestThread[20];
-        for(int i=0;i<20;i++) {
-            threads[i] = new TestThread(100,50);
-            Thread t = new Thread(threads[i]);
-            t.start();
-        }
-        for(int i=0;i<20;i++) {
-            while(!(threads[i]).complete()) {
-                try {
-                    Thread.currentThread().sleep(500L);
-                } catch(Exception e) {
-                    // ignored
-                }
-            }
-            if(threads[i].failed()) {
-                fail();
-            }
-        }
-    }
-
-    class TestThread implements Runnable {
-        java.util.Random _random = new java.util.Random();
-        boolean _complete = false;
-        boolean _failed = false;
-        int _iter = 100;
-        int _delay = 50;
-
-        public TestThread() {
-        }
-
-        public TestThread(int iter) {
-            _iter = iter;
-        }
-
-        public TestThread(int iter, int delay) {
-            _iter = iter;
-            _delay = delay;
-        }
-
-        public boolean complete() {
-            return _complete;
-        }
-
-        public boolean failed() {
-            return _failed;
-        }
-
-        public void run() {
-            for(int i=0;i<_iter;i++) {
-                try {
-                    Thread.currentThread().sleep((long)_random.nextInt(_delay));
-                } catch(Exception e) {
-                    // ignored
-                }
-                Connection conn = null;
-                PreparedStatement stmt = null;
-                ResultSet rset = null;
-                try {
-                    conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
-                    stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
-                    rset = stmt.executeQuery();
-                    try {
-                        Thread.currentThread().sleep((long)_random.nextInt(_delay));
-                    } catch(Exception e) {
-                        // ignored
-                    }
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    _failed = true;
-                    _complete = true;
-                    break;
-                } finally {
-                    try { rset.close(); } catch(Exception e) { }
-                    try { stmt.close(); } catch(Exception e) { }
-                    try { conn.close(); } catch(Exception e) { }
-                }
-            }
-            _complete = true;
-        }
+    public void tearDown() throws Exception {
+        DriverManager.deregisterDriver(driver);
     }
 
 }
