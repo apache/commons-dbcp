@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.28 $
- * $Date: 2003/09/20 17:31:05 $
+ * $Revision: 1.29 $
+ * $Date: 2003/09/21 13:42:53 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.28 $ $Date: 2003/09/20 17:31:05 $
+ * @version $Revision: 1.29 $ $Date: 2003/09/21 13:42:53 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -161,7 +161,12 @@ public class BasicDataSource implements DataSource {
     }
 
     public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
+        if ((driverClassName != null) && (driverClassName.trim().length() > 0)) {
+            this.driverClassName = driverClassName;
+        }
+        else {
+            this.driverClassName = null;
+        }
     }
 
 
@@ -720,14 +725,16 @@ public class BasicDataSource implements DataSource {
         }
 
         // Load the JDBC driver class
-        try {
-            Class.forName(driverClassName);
-        } catch (Throwable t) {
-            String message = "Cannot load JDBC driver class '" +
-                driverClassName + "'";
-            logWriter.println(message);
-            t.printStackTrace(logWriter);
-            throw new SQLNestedException(message, t);
+        if (driverClassName != null) {
+            try {
+                Class.forName(driverClassName);
+            } catch (Throwable t) {
+                String message = "Cannot load JDBC driver class '" +
+                    driverClassName + "'";
+                logWriter.println(message);
+                t.printStackTrace(logWriter);
+                throw new SQLNestedException(message, t);
+            }
         }
 
         // Create a JDBC driver instance
@@ -736,7 +743,8 @@ public class BasicDataSource implements DataSource {
             driver = DriverManager.getDriver(url);
         } catch (Throwable t) {
             String message = "Cannot create JDBC driver of class '" +
-                driverClassName + "' for connect URL '" + url + "'";
+                (driverClassName != null ? driverClassName : "") + 
+                "' for connect URL '" + url + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
             throw new SQLNestedException(message, t);
