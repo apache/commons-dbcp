@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.7 2002/11/01 15:42:32 rwaldhoff Exp $
- * $Revision: 1.7 $
- * $Date: 2002/11/01 15:42:32 $
+ * $Id: DelegatingPreparedStatement.java,v 1.8 2003/03/06 00:04:58 rwaldhoff Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/03/06 00:04:58 $
  *
  * ====================================================================
  *
@@ -85,7 +85,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.7 $ $Date: 2002/11/01 15:42:32 $
+ * @version $Revision: 1.8 $ $Date: 2003/03/06 00:04:58 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -283,7 +283,7 @@ public class DelegatingPreparedStatement extends AbandonedTrace
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public boolean getMoreResults(int current) throws SQLException {
         checkOpen();
@@ -347,6 +347,6 @@ public class DelegatingPreparedStatement extends AbandonedTrace
         return _stmt.getParameterMetaData();
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }

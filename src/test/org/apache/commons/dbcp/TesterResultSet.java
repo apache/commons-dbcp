@@ -641,7 +641,7 @@ public class TesterResultSet implements ResultSet {
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public java.net.URL getURL(int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -691,6 +691,6 @@ public class TesterResultSet implements ResultSet {
         throw new SQLException("Not implemented.");
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingStatement.java,v 1.6 2002/10/31 21:14:32 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2002/10/31 21:14:32 $
+ * $Id: DelegatingStatement.java,v 1.7 2003/03/06 00:04:58 rwaldhoff Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/03/06 00:04:58 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.6 $ $Date: 2002/10/31 21:14:32 $
+ * @version $Revision: 1.7 $ $Date: 2003/03/06 00:04:58 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -235,7 +235,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public boolean getMoreResults(int current) throws SQLException {
         checkOpen();
@@ -288,6 +288,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _stmt.getResultSetHoldability();
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }

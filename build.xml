@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.17 2003/03/05 23:39:34 rwaldhoff Exp $ -->
+<!-- $Id: build.xml,v 1.18 2003/03/06 00:04:57 rwaldhoff Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -199,10 +199,10 @@
       </copy>
    </target>
 
-   <target name="prepare-jdbc3" if="jdbc3.present">
+   <target name="prepare-jdbc3" unless="jdbc3.present">
       <echo message="Uncommenting jdbc3 additional methods."/>
-      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY" value=""/>
-      <replace dir="${dest.src}" token="JDBC_3_ANT_KEY */" value=""/>
+      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY_END */" value="*/"/>
    </target>
 
    <target name="build-java" depends="copy-src,prepare-jdbc3" if="available-src-java">

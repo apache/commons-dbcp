@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.8 2002/11/01 15:47:05 rwaldhoff Exp $
- * $Revision: 1.8 $
- * $Date: 2002/11/01 15:47:05 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingConnection.java,v 1.9 2003/03/06 00:04:58 rwaldhoff Exp $
+ * $Revision: 1.9 $
+ * $Date: 2003/03/06 00:04:58 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: DelegatingConnection.java,v 1.8 2002/11/01 15:47:05 rwaldhoff Exp $
+ * @version $Id: DelegatingConnection.java,v 1.9 2003/03/06 00:04:58 rwaldhoff Exp $
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
@@ -276,7 +276,7 @@ public class DelegatingConnection extends AbandonedTrace
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be uncommented by the build process on a JDBC 3.0 system
 
-/* JDBC_3_ANT_KEY
+/* JDBC_3_ANT_KEY_BEGIN */
 
     public int getHoldability() throws SQLException {
         checkOpen();
@@ -355,6 +355,6 @@ public class DelegatingConnection extends AbandonedTrace
         return _conn.prepareStatement(sql, columnNames);
     }
 
-JDBC_3_ANT_KEY */
+/* JDBC_3_ANT_KEY_END */
 
 }
