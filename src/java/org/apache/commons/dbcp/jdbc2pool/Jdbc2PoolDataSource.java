@@ -83,12 +83,13 @@ import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
 import org.apache.commons.collections.FastHashMap;
+import org.apache.commons.collections.LRUMap;
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.commons.pool.impl.StackObjectPool;
 
 /**
  * <p>
@@ -144,7 +145,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.6 2002/11/08 19:17:24 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.7 2002/11/16 19:18:27 jmcnally Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -155,11 +156,8 @@ public class Jdbc2PoolDataSource
 
     private static Map dsInstanceMap = new HashMap();
 
-    private static ObjectPool userPassKeyPool = 
-        new StackObjectPool(new UserPassKey.Factory(), 256);
-
-    private static ObjectPool poolKeyPool = 
-        new StackObjectPool(new PoolKey.Factory(), 256);
+    private static final Map userKeys = new LRUMap(10);
+    private static final Map poolKeys = new HashMap();
 
     private boolean getConnectionCalled = false;
 
@@ -1042,6 +1040,7 @@ public class Jdbc2PoolDataSource
                 "through setDataSourceName or setConnectionPoolDataSource " + 
                 "before calling getConnection.");
         }
+
         getConnectionCalled = true;
         Map pools = (Map)dsInstanceMap.get(instanceKey);
         PoolKey key = getPoolKey(username);
@@ -1059,29 +1058,33 @@ public class Jdbc2PoolDataSource
                 throw new SQLException(e.getMessage());
             }
         }
-        returnPoolKey(key);
 
-        PooledConnection pc = null;
+        PooledConnectionAndInfo info = null;        
         if (pool instanceof ObjectPool) 
         {
             try
             {
-                pc = (PooledConnection)((ObjectPool)pool).borrowObject();
+                info = (PooledConnectionAndInfo)
+                    ((ObjectPool)pool).borrowObject();
             } 
             catch(NoSuchElementException e) 
             {
+                closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
             catch(RuntimeException e) 
             {
+                closeDueToException(info);
                 throw e;
             }
             catch(SQLException e) 
             {
+                closeDueToException(info);
                 throw e;
             }
             catch(Exception e) 
             {
+                closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
         }
@@ -1089,29 +1092,39 @@ public class Jdbc2PoolDataSource
         { 
             try
             {
-                UserPassKey upkey = getPCKey(username, password);
-                pc = (PooledConnection)
+                UserPassKey upkey = getUserPassKey(username, password);
+                info = (PooledConnectionAndInfo)
                     ((KeyedObjectPool)pool).borrowObject(upkey);
-                returnPCKey(upkey);
             }
             catch(NoSuchElementException e) 
             {
+                closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
             catch(RuntimeException e) 
             {
+                closeDueToException(info);
                 throw e;
             }
             catch(SQLException e) 
-            {
+            {            
+                closeDueToException(info);
                 throw e;
             }
             catch(Exception e) 
             {
+                closeDueToException(info);
                 throw new SQLException(e.getMessage());
             }
         }
-        
+        if (!ObjectUtils.equals(password, info.getPassword())) 
+        {
+            closeDueToException(info);
+            throw new SQLException("Given password did not match password used "
+                                   + "to create the PooledConnection.");
+        }
+        PooledConnection pc = info.getPooledConnection();
+
         boolean defaultAutoCommit = isDefaultAutoCommit();
         if ( username != null ) 
         {
@@ -1139,38 +1152,22 @@ public class Jdbc2PoolDataSource
         con.setReadOnly(defaultReadOnly);
         return con;
     }
-
-    private UserPassKey getPCKey(String username, String password)
+        
+    private void closeDueToException(PooledConnectionAndInfo info)
     {
-        UserPassKey upk = null;
-        try
+        if (info != null) 
         {
-            upk = (UserPassKey)userPassKeyPool.borrowObject();
-        }
-        catch (Exception e)
-        {
-            getLogWriter().println("[WARN] Jdbc2PoolDataSource::getPCKey"
-                + " could not get key from pool. Created a new instance. "
-                + e.getMessage());
-            upk = new UserPassKey();
-        }
-        upk.init(username, password);
-        return upk;
-    }
-
-    private void returnPCKey(UserPassKey key)
-    {
-        if (key.isReusable()) 
-        {
-            try
+            try 
             {
-                userPassKeyPool.returnObject(key);
+                info.getPooledConnection().getConnection().close();
             }
             catch (Exception e)
             {
-                getLogWriter().println(
-                    "[WARN] Jdbc2PoolDataSource::returnPCKey could not return"
-                    + " key to pool. " + e.getMessage());
+                // do not throw this exception because we are in the middle
+                // of handling another exception.  But record it because
+                // it potentially leaks connections from the pool.
+                getLogWriter().println("[ERROR] Could not return connection to "
+                    + "pool during exception handling. " + e.getMessage());   
             }
         }
     }
@@ -1178,41 +1175,46 @@ public class Jdbc2PoolDataSource
     private PoolKey getPoolKey(String username)
     {
         PoolKey key = null;
-        try
-        {
-            key = (PoolKey)poolKeyPool.borrowObject();
-        }
-        catch (Exception e)
-        {
-            getLogWriter().println("[WARN] Jdbc2PoolDataSource::getPoolKey"
-                + " could not get key from pool. Created a new instance. "
-                + e.getMessage());
-            key = new PoolKey();
-        }
+
         if ( username != null && 
              (perUserMaxActive == null 
               || !perUserMaxActive.containsKey(username)) ) 
         {
             username = null;
         }
-        key.init(getDataSourceName(), username);
+
+        String dsName = getDataSourceName();
+        Map dsMap = (Map)poolKeys.get(dsName);
+        if (dsMap != null) 
+        {
+            key = (PoolKey)dsMap.get(username);
+        }
+        
+        if (key == null) 
+        {
+            key = new PoolKey(dsName, username);
+            if (dsMap == null) 
+            {
+                dsMap = new HashMap();
+                poolKeys.put(dsName, dsMap);
+            }
+            dsMap.put(username, key);
+        }
+        
         return key;
     }
 
-    private void returnPoolKey(PoolKey key)
+    private UserPassKey getUserPassKey(String username, String password)
     {
-        try
+        UserPassKey key = (UserPassKey)userKeys.get(username);
+        if (key == null) 
         {
-            poolKeyPool.returnObject(key);
+            key = new UserPassKey(username, password);
+            userKeys.put(username, key);
         }
-        catch (Exception e)
-        {
-            getLogWriter().println(
-                "[WARN] Jdbc2PoolDataSource::returnPoolKey could not return"
-                + " key to pool. " + e.getMessage());
-        }
+        return key;
     }
-
+        
     synchronized private void registerInstance()
     {
         if (isNew) 

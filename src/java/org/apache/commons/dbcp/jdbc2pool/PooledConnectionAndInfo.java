@@ -54,73 +54,50 @@ package org.apache.commons.dbcp.jdbc2pool;
  * <http://www.apache.org/>.
  */
  
-import java.io.Serializable;
-import org.apache.commons.lang.ObjectUtils;
+//import org.apache.commons.lang.ObjectUtils;
+import javax.sql.PooledConnection;
 
-class PoolKey
-    implements Serializable
+final class PooledConnectionAndInfo
 {
-    private String datasourceName;
-    private String username;
-    
-    PoolKey(String datasourceName, String username)
+    private final PooledConnection pooledConnection;
+    private final String password;
+    private final String username;
+    private final UserPassKey upkey;
+
+    PooledConnectionAndInfo(PooledConnection pc, 
+                            String username, String password)
     {
-        this.datasourceName = datasourceName;
+        this.pooledConnection = pc;
         this.username = username;
+        this.password = password;
+        upkey = new UserPassKey(username, password);
     }
-        
-    /* *
-     * Get the value of datasourceName.
-     * @return value of datasourceName.
-     * /
-    public String getDatasourceName() 
+
+    final PooledConnection getPooledConnection()
     {
-        return datasourceName;
+        return pooledConnection;
+    }
+
+    final UserPassKey getUserPassKey()
+    {
+        return upkey;
+    }
+
+    /**
+     * Get the value of password.
+     * @return value of password.
+     */
+    final String getPassword() 
+    {
+        return password;
     }
     
-    /* *
+    /**
      * Get the value of username.
      * @return value of username.
-     * /
-    public String getUsername() 
+     */
+    final String getUsername() 
     {
         return username;
-    }
-    */
-    
-    public boolean equals(Object obj)
-    {
-        boolean equal = false;
-        if ( obj instanceof PoolKey ) 
-        {
-            PoolKey pk = (PoolKey)obj;
-            equal = ObjectUtils.equals(pk.datasourceName, datasourceName);
-            equal &= ObjectUtils.equals(pk.username, username);
-        }            
-
-        return equal;
-    }
-
-    public int hashCode()
-    {
-        int h = 0;
-        if (datasourceName != null) 
-        {
-            h += datasourceName.hashCode();
-        }
-        if (username != null) 
-        {
-            h = 29 * h + username.hashCode();
-        }
-        return h;
-    }
-
-    public String toString()
-    {
-        StringBuffer sb = new StringBuffer(50);
-        sb.append("PoolKey(");
-        sb.append(username).append(", ").append(datasourceName);
-        sb.append(')');
-        return sb.toString();
     }
 }
