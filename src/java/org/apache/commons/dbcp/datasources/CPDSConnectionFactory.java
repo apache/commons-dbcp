@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/CPDSConnectionFactory.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
- * $Revision: 1.1 $
- * $Date: 2003/08/12 06:09:20 $
+ * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/datasources/CPDSConnectionFactory.java,v $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/22 16:08:32 $
  *
  * ====================================================================
  *
@@ -23,9 +23,9 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
+ *    any, must include the following acknowledgement:
  *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
+ *        Apache Software Foundation - http://www.apache.org/"
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
@@ -55,7 +55,7 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
+ * http://www.apache.org/
  *
  */
 
@@ -83,7 +83,7 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * {@link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: CPDSConnectionFactory.java,v 1.1 2003/08/12 06:09:20 jmcnally Exp $
+ * @version $Id: CPDSConnectionFactory.java,v 1.2 2003/08/22 16:08:32 dirkv Exp $
  */
 class CPDSConnectionFactory 
         implements PoolableObjectFactory, ConnectionEventListener {
