@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterStatement.java,v 1.2 2002/03/19 06:05:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/03/19 06:05:34 $
+ * $Id: TesterStatement.java,v 1.3 2002/10/31 21:41:50 rwaldhoff Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/10/31 21:41:50 $
  *
  * ====================================================================
  *
@@ -87,7 +87,11 @@ public class TesterStatement implements Statement {
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
-        return new TesterResultSet(this);
+        if("null".equals(sql)) {
+            return null;
+        } else {
+            return new TesterResultSet(this);
+        }
     }
 
     public int executeUpdate(String sql) throws SQLException {
