@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/09/20 16:59:41 $
+ * $Revision: 1.12 $
+ * $Date: 2003/09/20 17:31:38 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.11 $ $Date: 2003/09/20 16:59:41 $
+ * @version $Revision: 1.12 $ $Date: 2003/09/20 17:31:38 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -216,6 +216,41 @@ public class TestBasicDataSource extends TestConnectionPool {
                 fail("expected detailed error message");
             }
         }
+    }
+
+    public void testSetValidationTestProperties() {
+        // defaults
+        assertEquals(true, ds.getTestOnBorrow());
+        assertEquals(false, ds.getTestOnReturn());
+        assertEquals(false, ds.getTestWhileIdle());
+
+        ds.setTestOnBorrow(true);
+        ds.setTestOnReturn(true);
+        ds.setTestWhileIdle(true);
+        assertEquals(true, ds.getTestOnBorrow());
+        assertEquals(true, ds.getTestOnReturn());
+        assertEquals(true, ds.getTestWhileIdle());
+
+        ds.setTestOnBorrow(false);
+        ds.setTestOnReturn(false);
+        ds.setTestWhileIdle(false);
+        assertEquals(false, ds.getTestOnBorrow());
+        assertEquals(false, ds.getTestOnReturn());
+        assertEquals(false, ds.getTestWhileIdle());
+    }
+
+    public void testNoValidationQuery() throws Exception {
+        ds.setTestOnBorrow(true);
+        ds.setTestOnReturn(true);
+        ds.setTestWhileIdle(true);
+        ds.setValidationQuery("");
+        
+        Connection conn = ds.getConnection();
+        conn.close();
+
+        assertEquals(false, ds.getTestOnBorrow());
+        assertEquals(false, ds.getTestOnReturn());
+        assertEquals(false, ds.getTestWhileIdle());
     }
     
     public void testDefaultCatalog() throws Exception {
