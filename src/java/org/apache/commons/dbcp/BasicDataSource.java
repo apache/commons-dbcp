@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.3 2002/04/20 18:31:01 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2002/04/20 18:31:01 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.4 2002/04/20 18:58:51 craigmcc Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/04/20 18:58:51 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@ import java.io.PrintWriter;
 import java.util.Properties;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp.DriverConnectionFactory;
@@ -79,7 +80,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2002/04/20 18:31:01 $
+ * @version $Revision: 1.4 $ $Date: 2002/04/20 18:58:51 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -435,7 +436,7 @@ public class BasicDataSource implements DataSource {
         // Create a JDBC driver instance
         Driver driver = null;
         try {
-            driver = (Driver) driverClass.newInstance();
+            driver = DriverManager.getDriver(url);
         } catch (Throwable t) {
             String message = "Cannot create JDBC driver of class '" +
                 driverClassName + "'";
