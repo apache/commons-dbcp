@@ -1,6 +1,6 @@
 /*
- * $Id: TestDelegatingStatement.java,v 1.2 2003/08/11 23:55:43 dirkv Exp $
- * $Revision: 1.2 $
+ * $Id: TestDelegatingConnection.java,v 1.1 2003/08/11 23:55:43 dirkv Exp $
+ * $Revision: 1.1 $
  * $Date: 2003/08/11 23:55:43 $
  *
  * ====================================================================
@@ -62,61 +62,50 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
-import java.sql.Statement;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.2 $ $Date: 2003/08/11 23:55:43 $
+ * @version $Revision: 1.1 $ $Date: 2003/08/11 23:55:43 $
  */
-public class TestDelegatingStatement extends TestCase {
-    public TestDelegatingStatement(String testName) {
+public class TestDelegatingConnection extends TestCase {
+    public TestDelegatingConnection(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestDelegatingStatement.class);
+        return new TestSuite(TestDelegatingConnection.class);
     }
 
     private DelegatingConnection conn = null;
     private Connection delegateConn = null;
-    private DelegatingStatement stmt = null;
-    private Statement delegateStmt = null;
 
     public void setUp() throws Exception {
         delegateConn = new TesterConnection();
-        delegateStmt = new TesterStatement(delegateConn);
         conn = new DelegatingConnection(delegateConn);
-        stmt = new DelegatingStatement(conn,delegateStmt);
     }
 
-    public void testExecuteQueryReturnsNull() throws Exception {
-        assertNull(stmt.executeQuery("null"));
-    }
 
     public void testGetDelegate() throws Exception {
-        assertEquals(delegateStmt,stmt.getDelegate());
+        assertEquals(delegateConn,conn.getDelegate());
     }
 
     public void testHashCode() {
-        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt = new DelegatingStatement(conn,delegateStmt);
-        DelegatingStatement stmt2 = new DelegatingStatement(conn,delegateStmt);
-        assertEquals(stmt.hashCode(), stmt2.hashCode());
+        DelegatingConnection conn = new DelegatingConnection(delegateConn);
+        DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
+        assertEquals(conn.hashCode(), conn2.hashCode());
     }
     
     public void testEquals() {
-        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt = new DelegatingStatement(conn, delegateStmt);
-        DelegatingStatement stmt2 = new DelegatingStatement(conn, delegateStmt);
-        DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
+        DelegatingConnection conn = new DelegatingConnection(delegateConn);
+        DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
+        DelegatingConnection conn3 = new DelegatingConnection(null);
         
-        assertTrue(!stmt.equals(null));
-        assertTrue(stmt.equals(stmt2));
-        assertTrue(!stmt.equals(stmt3));
+        assertTrue(!conn.equals(null));
+        assertTrue(conn.equals(conn2));
+        assertTrue(!conn.equals(conn3));
     }
 }
