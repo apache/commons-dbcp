@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DbcpException.java,v 1.1 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DbcpException.java,v 1.2 2003/08/11 14:47:31 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/11 14:47:31 $
  *
  * ====================================================================
  *
@@ -69,9 +69,10 @@ package org.apache.commons.dbcp;
  *
  * @author Jonathan Fuerth
  * @author Dan Fraser
- * @version $Revision: 1.1 $ $Date: 2002/07/20 22:55:34 $
- */
-
+ * @version $Revision: 1.2 $ $Date: 2003/08/11 14:47:31 $
+ * 
+ * @deprecated This will be removed in a future version of DBCP.
+ **/
 public class DbcpException extends RuntimeException {
 
 
