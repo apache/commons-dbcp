@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
 <project>
-  <extend>../project.xml</extend>
+  <extend>../xdocs/maven/project-base.xml</extend>
   <name>Commons DBCP</name>
   <id>commons-dbcp</id>
-  <logo></logo>
-  <currentVersion>1.1-RC1</currentVersion>
+  <logo>/images/dbcp-logo-blue.jpg</logo>
+  <url>http://jakarta.apache.org/commons/dbcp/</url>
   <inceptionYear>2001</inceptionYear>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
-  <description>
-    Commons Database Connection Pooling
-  </description>
+  <description>Commons Database Connection Pooling</description>
 
+  <currentVersion>1.1-RC1</currentVersion>
   <versions>
     <version>
       <id>1.0</id>
@@ -78,7 +77,6 @@
   </developers>
   
   <dependencies>
-    
     <dependency>
       <id>commons-collections</id>
       <version>2.1</version>
@@ -100,19 +98,22 @@
     <dependency><id>xml-apis</id><version>2.0.2</version></dependency><!-- actually dbcp's tests need this too -->
     <dependency><id>xerces</id><version>2.0.2</version></dependency>
     <!-- /these two are required by maven -->
-
   </dependencies>
 
   <build>
-    <nagEmailAddress>commons-dev@jakarta.apache.org</nagEmailAddress>
-    <sourceDirectory>src/java</sourceDirectory>
-    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
         <include>org/apache/commons/dbcp/TestAll.java</include>
         <include>org/apache/commons/jocl/TestAll.java</include>
       </includes>
+      <resources>
+        <resource>
+          <directory>${basedir}/src/test</directory>
+          <includes>
+            <include>testpool.jocl</include>
+          </includes>
+        </resource>
+      </resources>
     </unitTest>
   </build>
-
 </project>
