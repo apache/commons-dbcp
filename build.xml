@@ -1,4 +1,4 @@
-<!-- $Id: build.xml,v 1.12 2002/08/13 00:43:01 craigmcc Exp $ -->
+<!-- $Id: build.xml,v 1.13 2002/08/13 00:44:54 craigmcc Exp $ -->
 <project name="jakarta-commons-dbcp" default="test" basedir=".">
 
    <!-- patternset describing files to be copied from the doc directory -->
@@ -52,7 +52,7 @@
 
       <!-- The current version number of this component -->
       <property name="component.package" value="org.apache.commons.dbcp"/>
-      <property name="component.version" value="1.0-dev"/>
+      <property name="component.version" value="1.0"/>
       <filter  token="package"           value="${component.package}"/>
       <filter  token="version"           value="${component.version}"/>
 
