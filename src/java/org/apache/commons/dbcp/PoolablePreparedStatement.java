@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.1 2001/04/14 17:15:36 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:15:36 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolablePreparedStatement.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
+ * $Revision: 1.2 $
+ * $Date: 2002/03/17 14:55:20 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.commons.pool.KeyedObjectPool;
  *
  * @see PoolingConnection
  * @author Rodney Waldhoff
- * @version $Id: PoolablePreparedStatement.java,v 1.1 2001/04/14 17:15:36 rwaldhoff Exp $
+ * @version $Id: PoolablePreparedStatement.java,v 1.2 2002/03/17 14:55:20 rwaldhoff Exp $
  */
 public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
     /**
@@ -111,7 +111,15 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
      */
     public void close() throws SQLException {
         // pool will mark me as closed
-        _pool.returnObject(_key,this);
+        try {
+            _pool.returnObject(_key,this);
+        } catch(SQLException e) {
+            throw e;
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SQLException(e.toString());
+        }
     }
 
     /**
