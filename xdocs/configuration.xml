@@ -9,10 +9,11 @@
 
  <body>
 
+<!--
 <section name="Introduction">
 <p>TODO: add section about tomcat configuration and avoiding the resource leak when reloading tomcat webapps.</p>
 </section>
-
+-->
 
 <section name="Parameters">
 
@@ -70,6 +71,11 @@
           <li>SERIALIZABLE</li>
        </ul>
    </td>
+</tr>
+<tr>
+   <td>defaultCatalog</td>
+   <td></td>
+   <td>The default catalog of connections created by this pool.</td>
 </tr>
 </table>
 
