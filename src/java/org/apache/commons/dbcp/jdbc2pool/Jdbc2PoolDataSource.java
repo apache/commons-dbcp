@@ -1,9 +1,12 @@
-package org.apache.commons.dbcp.jdbc2pool;
-
-/* ====================================================================
+/* 
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/Jdbc2PoolDataSource.java,v 1.10 2003/04/15 01:32:42 dgraham Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/04/15 01:32:42 $
+ * 
+ * ====================================================================
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,6 +56,8 @@ package org.apache.commons.dbcp.jdbc2pool;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+ 
+package org.apache.commons.dbcp.jdbc2pool;
  
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -145,7 +150,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * </p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: Jdbc2PoolDataSource.java,v 1.9 2003/03/07 00:24:09 rwaldhoff Exp $
+ * @version $Id: Jdbc2PoolDataSource.java,v 1.10 2003/04/15 01:32:42 dgraham Exp $
  */
 public class Jdbc2PoolDataSource
     implements DataSource, Referenceable, Serializable, ObjectFactory
@@ -1117,12 +1122,6 @@ public class Jdbc2PoolDataSource
                 throw new SQLException(e.getMessage());
             }
         }
-        if(!(null == password ? null == info.getPassword() : password.equals(info.getPassword())))
-        {
-            closeDueToException(info);
-            throw new SQLException("Given password did not match password used "
-                                   + "to create the PooledConnection.");
-        }
         PooledConnection pc = info.getPooledConnection();
 
         boolean defaultAutoCommit = isDefaultAutoCommit();
@@ -1206,11 +1205,20 @@ public class Jdbc2PoolDataSource
 
     private UserPassKey getUserPassKey(String username, String password)
     {
-        UserPassKey key = (UserPassKey)userKeys.get(username);
-        if (key == null) 
-        {
+        UserPassKey key = (UserPassKey) userKeys.get(username);
+        if (key == null) {
             key = new UserPassKey(username, password);
             userKeys.put(username, key);
+            
+        } else {
+            String foundPass = key.getPassword();
+            boolean passwordsEqual =
+                (foundPass == null ? password == null : foundPass.equals(password));
+
+            if (!passwordsEqual) {
+                key = new UserPassKey(username, password);
+                userKeys.put(username, key);
+            }
         }
         return key;
     }
