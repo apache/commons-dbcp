@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.16 2003/08/11 16:01:25 dirkv Exp $
- * $Revision: 1.16 $
- * $Date: 2003/08/11 16:01:25 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.17 2003/08/11 16:11:34 dirkv Exp $
+ * $Revision: 1.17 $
+ * $Date: 2003/08/11 16:11:34 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.16 $ $Date: 2003/08/11 16:01:25 $
+ * @version $Revision: 1.17 $ $Date: 2003/08/11 16:11:34 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -626,9 +626,8 @@ public class BasicDataSource implements DataSource {
         }
 
         // Load the JDBC driver class
-        Class driverClass = null;
         try {
-            driverClass = Class.forName(driverClassName);
+            Class.forName(driverClassName);
         } catch (Throwable t) {
             String message = "Cannot load JDBC driver class '" +
                 driverClassName + "'";
@@ -692,6 +691,9 @@ public class BasicDataSource implements DataSource {
                                               defaultReadOnly,
                                               defaultAutoCommit,
                                               abandonedConfig);
+            if (connectionFactory == null) {
+                throw new SQLException("Cannot create PoolableConnectionFactory");
+            }
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
