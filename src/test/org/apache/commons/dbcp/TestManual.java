@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v $
- * $Revision: 1.15 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.16 $
+ * $Date: 2003/11/10 14:40:26 $
  *
  * ====================================================================
  *
@@ -63,6 +63,7 @@ package org.apache.commons.dbcp;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -77,7 +78,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision: 1.15 $ $Date: 2003/10/09 21:05:29 $
+ * @version $Revision: 1.16 $ $Date: 2003/11/10 14:40:26 $
  */
 public class TestManual extends TestConnectionPool {
     public TestManual(String testName) {
@@ -146,4 +147,20 @@ public class TestManual extends TestConnectionPool {
         }
     }
     
+    public void testClosePool() throws Exception {
+        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        assertNotNull(conn);
+        conn.close();
+        
+        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        driver.closePool("test");
+
+        try {
+            conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+            fail("expected SQLException");
+        }
+        catch (SQLException e) {
+            // OK
+        }
+    }
 }
