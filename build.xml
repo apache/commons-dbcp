@@ -1,27 +1,5 @@
-<!-- $Id: build.xml,v 1.20 2003/03/07 00:24:08 rwaldhoff Exp $ -->
-<project name="jakarta-commons-dbcp" default="test" basedir=".">
-
-   <!-- patternset describing files to be copied from the doc directory -->
-   <patternset id="patternset-doc"/>
-
-   <!-- patternset describing test classes -->
-   <patternset id="patternset-test-classes">
-      <include name="**/Test*.class"/>
-   </patternset>
-
-   <!-- patternset describing non test classes -->
-   <patternset id="patternset-non-test-classes">
-      <include name="**/*.class"/>
-      <exclude name="**/Test*.class"/>
-   </patternset>
-
-   <!-- patternset describing non test source files (*.java, *html, etc.) -->
-   <patternset id="patternset-javadocable-sources">
-      <include name="**/*"/>
-      <exclude name="**/Test*.java"/>
-   </patternset>
-
-   <!-- ######################################################### -->
+<!-- $Id: build.xml,v 1.21 2003/10/04 18:12:10 dirkv Exp $ -->
+<project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
       <tstamp/>
@@ -38,6 +16,9 @@
       <property name="user-propfile" value="${user.home}/build.properties"/>
       <property file="${user-propfile}"/>
 
+      <property name="commons-collections.jar" value="${basedir}/../collections/dist/commons-collections.jar"/>
+      <property name="commons-pool.jar" value="${basedir}/../pool/dist/commons-pool.jar"/>
+
       <!-- command line classpath, if any -->
       <property name="cp" value=""/>
 
@@ -45,131 +26,52 @@
       <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${sax2.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
-      <property name="Name" value="Commons-DBCP"/>
-      <property name="Name-Long" value="Jakarta Commons Database Connection Pool"/>
+      <property name="title" value="Jakarta Commons Database Pooling Package"/>
+      <property name="version" value="Nightly-${DSTAMP}${TSTAMP}"/>
+      <property name="package" value="org.apache.commons.dbcp.*"/>
 
-      <!-- The current version number of this component -->
-      <property name="component.package" value="org.apache.commons.dbcp"/>
-      <property name="component.version" value="1.1-dev"/>
-      <filter  token="package"           value="${component.package}"/>
-      <filter  token="version"           value="${component.version}"/>
+      <property name="src.dir" value="${basedir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="build.dir" value="${basedir}/build"/>
+      <property name="build.classes.dir" value="${build.dir}/classes"/>
+      <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
+      <property name="dist.dir" value="${basedir}/dist"/>
+      <property name="dist.jar" value="${dist.dir}/${name}.jar"/>
 
       <property name="test.entry" value="org.apache.commons.dbcp.TestAll"/>
-      <property name="test.failonerror" value="true" />
-      <property name="test.runner" value="junit.textui.TestRunner" />
+      <property name="test.failonerror" value="true" /> 
+      <property name="test.runner" value="junit.textui.TestRunner" /> 
+     
+      <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2003 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.overview" value="${src.java.dir}/org/apache/commons/dbcp/overview.html" />
 
-      <property name="workdir" value="${java.io.tmpdir}/buildtemp_${DSTAMP}${TSTAMP}"/>
-      <property name="source"          value="${basedir}"/>
-      <property name="source.src"      value="${basedir}/src"/>
-      <property name="source.src.conf" value="${source.src}/conf"/>
-      <property name="source.src.java" value="${source.src}/java"/>
-      <property name="source.src.test" value="${source.src}/test"/>
-      <property name="source.doc"      value="${basedir}/doc"/>
-      <property name="dest"         value="${basedir}/dist"/>
-      <property name="dest.src"     value="${dest}/src"/>
-      <property name="dest.classes" value="${dest}/classes"/>
-      <property name="dest.conf"    value="${dest}/conf"/>
-      <property name="dest.doc"     value="${dest}/docs"/>
-      <property name="dest.doc.api" value="${dest.doc}/api"/>
-      <property name="dest.jardir"  value="${dest}"/>
-      <property name="dest.jardir.jar" value="${dest.jardir}/${name}.jar"/>
-      <available property="available-doc" file="${source.doc}"/> <!-- does this module have docs? -->
-      <available property="available-src-conf" file="${source.src.conf}"/> <!-- does this module have conf src? -->
-      <available property="available-src-java" file="${source.src.java}"/> <!-- does this module have java src? -->
-      <available property="available-src-test" file="${source.src.test}"/> <!-- does this module have test src? -->
-      <available property="jndi.present" classname="javax.naming.Context"/>
-      <available property="jdbc3.present" classname="java.sql.Savepoint"/>
-
-   </target>
-
-   <!-- ######################################################### -->
-
-   <target name="copy-javadoc-source" depends="init" if="available-src-java">
-      <mkdir dir="${javadoc-source-dir}"/>
-      <copy todir="${javadoc-source-dir}" filtering="no">
-         <fileset dir="${source.src.java}">
-            <patternset refid="patternset-javadocable-sources"/>
-         </fileset>
-      </copy>
-   </target>
-
-   <target name="copy-conf" depends="init" if="available-src-conf">
-      <mkdir  dir="${dest.conf}"/>
-      <copy todir="${dest.conf}" filtering="yes">
-         <fileset dir="${source.src.conf}"/>
-      </copy>
-   </target>
-
-   <target name="copy-doc" depends="init" if="available-doc">
-      <mkdir dir="${doc-source-dir}/${name}"/>
-      <copy todir="${doc-source-dir}/${name}" filtering="no">
-         <fileset dir="${source.doc}">
-            <patternset refid="patternset-doc"/>
-         </fileset>
-      </copy>
+      <property name="javac.optimize" value="false"/>
+      <property name="javac.debug" value="true"/>
+      <property name="javac.deprecation" value="false"/>
    </target>
 
    <!-- ######################################################### -->
 
    <target name="clean" depends="init" description="removes generated files">
-      <delete dir="${dest}"/>
+      <delete dir="${build.dir}"/>
+      <delete dir="${dist.dir}"/>
    </target>
 
-   <target name="clean-doc" depends="init,clean-javadoc">
-      <delete dir="${dest.doc}"/>
-   </target>
-
-   <target name="clean-javadoc" depends="init">
-      <delete dir="${dest.doc.api}"/>
-   </target>
-
-   <target name="clean-build" depends="init">
-      <delete dir="${dest.classes}"/>
-   </target>
-
-   <target name="clean-dist" depends="init">
-      <delete file="${dest.jardir.jar}"/>
-   </target>
-
-   <!-- ######################################################### -->
-
-   <target name="doc" depends="init,doc-top,doc-copy,doc-javadoc" description="generates javadocs and other documentation">
-   </target>
-
-   <target name="doc-top" depends="init">
-      <mkdir  dir="${dest}"/>
-      <copy todir="${dest}" file="../LICENSE"/>
-   </target>
-
-   <target name="doc-copy" depends="init" if="available-doc">
-      <mkdir dir="${dest.doc}"/>
-      <copy todir="${dest.doc}">
-      <fileset dir="${source.doc}">
-         <patternset refid="patternset-doc"/>
-      </fileset>
-      </copy>
-   </target>
-
-   <target name="doc-javadoc" depends="init" if="available-src-java">
-      <!-- copy all the non-test sources out to the work directory and javadoc that -->
-      <mkdir dir="${workdir}"/>
-      <copy todir="${workdir}">
-        <fileset dir="${source.src.java}">
-          <patternset refid="patternset-javadocable-sources"/>
-        </fileset>
-      </copy>
-      <mkdir dir="${dest.doc.api}"/>
+   <target name="javadoc" depends="init" description="generates javadocs">
+      <mkdir dir="${javadoc.dir}"/>
       <javadoc packagenames="org.*"
-               sourcepath="${workdir}"
+               sourcepath="${src.java.dir}"
                classpath="${classpath}"
-               destdir="${dest.doc.api}"
-               windowtitle="${Name-Long}"
-               doctitle="${Name-Long}"
-               bottom="&lt;small&gt;Copyright &amp;copy; 2001 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."
-               protected="true"
+               destdir="${javadoc.dir}"
+               windowtitle="${title}"
+               doctitle="${title}"
+               bottom="${javadoc.bottom}"
+               overview="${javadoc.overview}"
+               public="true"
                version="true"
                author="true"
-               overview="${source.src.java}/org/apache/commons/dbcp/package.html"
                splitindex="false"
                nodeprecated="true"
                nodeprecatedlist="true"
@@ -178,117 +80,72 @@
                nohelp="true"
                nonavbar="false"
                serialwarn="false">
+          <link href="http://java.sun.com/products/jdk/1.3/docs/api"/>
       </javadoc>
-      <delete dir="${workdir}"/>
    </target>
 
    <!-- ######################################################### -->
 
-   <target name="build" depends="init,build-java" description="compiles source files"/>
-
-   <target name="copy-src" depends="init">
-      <mkdir dir="${dest.src}"/>
-      <!-- the source code directory -->
-      <copy todir="${dest.src}" filtering="yes">
-         <fileset dir="${source.src.java}" defaultexcludes="no">
-            <include name="**/*.java"/>
-            <include name="**/*.xml"/>
-            <include name="**/*.properties"/>
-            <include name="**/package.html"/>
-         </fileset>
-      </copy>
-   </target>
-
-   <target name="prepare-jdbc3" unless="jdbc3.present">
-      <echo message="Commenting out the jdbc3 additional methods since jdbc3 was not detected."/>
-      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY_BEGIN */" value="/*"/>
-      <replace dir="${dest.src}" token="/* JDBC_3_ANT_KEY_END */" value="*/"/>
-   </target>
-
-   <target name="build-java" depends="copy-src,prepare-jdbc3" if="available-src-java">
-      <mkdir dir="${dest.classes}"/>
-      <javac destdir="${dest.classes}"
-             srcdir="${dest.src}"
+   <target name="compile" depends="init" description="compiles source files">
+      <mkdir dir="${build.classes.dir}"/>
+      <javac destdir="${build.classes.dir}"
+             srcdir="${src.java.dir}"
              classpath="${classpath}"
-             debug="true"
-             deprecation="true"
-             optimize="true">
-        <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory.java"
-               unless="jndi.present"/>
-        <exclude name="org/apache/commons/dbcp/jdbc2pool/**"
-               unless="jndi.present"/>
-        <exclude name="org/apache/commons/dbcp/cpdsadapter/**"
-               unless="jndi.present"/>
-      </javac>
+             debug="${javac.debug}"
+             deprecation="${javac.deprecation}"
+             optimize="${javac.optimize}"/>
    </target>
-
-   <target name="build-test" depends="init,build-java" if="available-src-test">
-      <mkdir dir="${dest.src}"/>
-      <!-- the source code directory -->
-      <copy todir="${dest.src}" filtering="yes">
-        <fileset dir="${source.src.test}" defaultexcludes="no">
-          <include name="**/*.java"/>
-        </fileset>
-      </copy>
-      <antcall target="prepare-jdbc3"/>
-      <mkdir dir="${dest.classes}"/>
-      <javac destdir="${dest.classes}"
-             srcdir="${dest.src}"
-             classpath="${classpath}"
-             debug="true"
-             deprecation="true"
-             optimize="true"/>
-      <copy todir="${dest.classes}" filtering="no">
-        <fileset dir="${source.src.test}" defaultexcludes="no">
-          <include name="testpool.jocl"/>
-        </fileset>
-      </copy>
-   </target>
-
-   <!-- ######################################################### -->
-
-   <target name="test" depends="build-test" if="test.entry" description="runs (junit) unit tests">
-      <!--
-      <junit printsummary="yes" fork="on" haltonfailure="yes">
-        <formatter type="plain" usefile="false"/>
-        <test name="${test.entry}"/>
+   
+   <target name="compile-test" depends="compile">
+      <mkdir dir="${build.test-classes.dir}"/>
+      <javac destdir="${build.test-classes.dir}"
+             srcdir="${src.test.dir}"
+             debug="${javac.debug}"
+             deprecation="${javac.deprecation}"
+             optimize="${javac.optimize}">
         <classpath>
-            <pathelement location="${dest.classes}" />
-            <pathelement path="${classpath}" />
-            <pathelement path="${java.class.path}" />
+          <pathelement location="${build.classes.dir}" /> 
+          <pathelement location="${build.test-classes.dir}" /> 
+          <pathelement path="${classpath}" /> 
         </classpath>
-      </junit>
-      -->
+      </javac>
+      <copy todir="${build.test-classes.dir}" file="${src.test.dir}/testpool.jocl"/>
+   </target>
 
+   <target name="test" depends="compile-test" description="runs (junit) unit tests">
       <java classname="${test.runner}" fork="yes" failonerror="${test.failonerror}">
-        <arg value="${test.entry}"/>
-        <sysproperty key="org.xml.sax.driver" value="org.apache.xerces.parsers.SAXParser" />
+        <arg value="${test.entry}"/> 
         <classpath>
-          <pathelement location="${dest.classes}" />
-          <pathelement path="${classpath}" />
-          <pathelement path="${java.class.path}" />
+          <pathelement location="${build.classes.dir}" /> 
+          <pathelement location="${build.test-classes.dir}" /> 
+          <pathelement path="${classpath}" /> 
         </classpath>
       </java>
    </target>
 
-   <!-- ######################################################### -->
+   <target name="build-jar" depends="compile">
+      <mkdir dir="${dist.dir}"/>
+      <jar jarfile="${dist.jar}">
+         <fileset dir="${build.dir}"/>
+         <metainf dir="${basedir}" includes="LICENSE.txt"/>
+         <manifest>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Package" value="${package}"/>
+            <attribute name="Extension-Name" value="${name}"/>
+            <attribute name="Specification-Vendor" value="Apache Software Foundation"/>
+            <attribute name="Specification-Title" value="${title}"/>
+            <attribute name="Implementation-Version" value="${version}"/>
+            <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
 
-   <target name="dist" depends="copy-conf,dist-jar,doc" description="builds binary distribution"/>
-
-   <target name="dist-jar" depends="build">
-      <mkdir dir="${dest.jardir}"/>
-      <mkdir dir="${workdir}"/>
-      <copy todir="${workdir}">
-         <fileset dir="${dest.classes}">
-            <patternset refid="patternset-non-test-classes"/>
-         </fileset>
-      </copy>
-      <jar jarfile="${dest.jardir.jar}" manifest="${dest.conf}/MANIFEST.MF">
-         <fileset dir="${workdir}"/>
+         </manifest>
       </jar>
-      <delete dir="${workdir}"/>
    </target>
 
-   <!-- ######################################################### -->
+   <target name="build" depends="clean,build-jar,javadoc">
+      <copy todir="${dist.dir}" file="${basedir}/LICENSE.txt"/>
+      <copy todir="${dist.dir}" file="${basedir}/README.txt"/>
+   </target>
 
+   <target name="dist" depends="build" description="gump target"/>
+   
 </project>
