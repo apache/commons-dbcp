@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/doc/ManualPoolingDriverExample.java,v 1.1 2001/04/14 17:16:55 rwaldhoff Exp $
- * $Revision: 1.1 $
- * $Date: 2001/04/14 17:16:55 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/doc/ManualPoolingDriverExample.java,v 1.2 2003/08/11 14:37:12 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/11 14:37:12 $
  *
  * ====================================================================
  *
@@ -117,7 +117,16 @@ public class ManualPoolingDriverExample {
 
     public static void main(String[] args) {
         //
-        // First, we set up and register the PoolingDriver.
+        // First we load the underlying JDBC driver.
+        // You need this if you don't use the jdbc.drivers
+        // system property.
+        //
+        System.out.println("Loading underlying JDBC driver.");
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        System.out.println("Done.");
+
+        //
+        // Then we set up and register the PoolingDriver.
         // Normally this would be handled auto-magically by
         // an external configuration, but in this example we'll
         // do it manually.
