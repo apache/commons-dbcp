@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DataSourceConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2002/07/20 22:55:34 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DataSourceConnectionFactory.java,v 1.3 2003/08/11 14:49:33 dirkv Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/08/11 14:49:33 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import javax.sql.DataSource;
  * A {@link DataSource}-based implementation of {@link ConnectionFactory}.
  *
  * @author Rodney Waldhoff
- * @version $Id: DataSourceConnectionFactory.java,v 1.2 2002/07/20 22:55:34 craigmcc Exp $
+ * @version $Id: DataSourceConnectionFactory.java,v 1.3 2003/08/11 14:49:33 dirkv Exp $
  */
 public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(DataSource source) {
@@ -82,15 +82,11 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
         _passwd = passwd;
     }
 
-    public Connection createConnection() {
-        try {
-            if(null == _uname && null == _passwd) {
-                return _source.getConnection();
-            } else {
-                return _source.getConnection(_uname,_passwd);
-            }
-        } catch(SQLException e) {
-            throw new DbcpException(e);
+    public Connection createConnection() throws SQLException {
+        if(null == _uname && null == _passwd) {
+            return _source.getConnection();
+        } else {
+            return _source.getConnection(_uname,_passwd);
         }
     }
 
