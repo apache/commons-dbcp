@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolingDataSource.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/09/13 22:29:39 $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/30 20:51:03 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Id: PoolingDataSource.java,v 1.9 2003/09/13 22:29:39 dirkv Exp $
+ * @version $Id: PoolingDataSource.java,v 1.10 2003/09/30 20:51:03 dirkv Exp $
  */
 public class PoolingDataSource implements DataSource {
 
@@ -145,11 +145,11 @@ public class PoolingDataSource implements DataSource {
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
-            throw new SQLNestedException("Cannot get a connection", e);
+            throw new SQLNestedException("Cannot get a connection, pool exhausted", e);
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLNestedException("Cannot get a connection", e);
+            throw new SQLNestedException("Cannot get a connection, general error", e);
         }
     }
 
