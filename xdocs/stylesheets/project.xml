@@ -7,16 +7,14 @@
         &about-menu;
         <menu name="Commons&#xA0;DBCP">
             <item name="Overview"                      href="/index.html" />
+            <item name="Configuration"                 href="/configuration.html" />
             <item name="API&#xA0;Documentation"        href="/apidocs/index.html"/>
+            <item name="Developers&#xA0;Guide"         href="/guide/index.html" collapse="true">
+                <item name="Class&#xA0;Diagrams"       href="/guide/classdiagrams.html"/>
+                <item name="Sequence&#xA0;Diagrams"    href="/guide/sequencediagrams.html"/>
+            </item>
             <item name="Examples"                      href="http://cvs.apache.org/viewcvs.cgi/jakarta-commons/dbcp/doc/"/>
-            <item name="Downloads"                      href="/downloads.html"/>
-            <item name="Source (Browse)"               href="http://cvs.apache.org/viewcvs/jakarta-commons/dbcp/"/>
-        </menu>
-        <menu name="Project Files">
-            <item name="Releases"                      href="http://jakarta.apache.org/builds/jakarta-commons/release/commons-dbcp/"/>
-            <item name="Snapshots"                     href="http://cvs.apache.org/builds/jakarta-commons/nightly/commons-dbcp/"/>
-            <item name="Source (Browse)"               href="http://cvs.apache.org/viewcvs/jakarta-commons/pool/"/>
-            <item name="Source (CVS)"                  href="http://jakarta.apache.org/site/cvsindex.html"/>
+            <item name="Downloads"                     href="/downloads.html"/>
         </menu>
         &information-menu;
         &community-menu;
