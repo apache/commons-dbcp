@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>Status File for Jakarta Commons "DBCP" Package</title>
+<head>
+<body bgcolor="white">
+
+
+<div align="center">
+<h1>The Jakarta Commons <em>DBCP</em> Package</h1>
+$Id: STATUS.html,v 1.1 2001/04/14 17:15:00 rwaldhoff Exp $<br>
+<a href="#Introduction">[Introduction]</a>
+<a href="#Dependencies">[Dependencies]</a>
+<a href="#Release Info">[Release Info]</a>
+<a href="#Committers">[Committers]</a>
+<a href="#Action Items">[Action Items]</a>
+<br><br>
+</div>
+
+
+<a name="Introduction"></a>
+<h3>1.  INTRODUCTION</h3>
+
+<p>The <em>DBCP</em> package provides database connection pooling services.
+The following features are supported
+
+<ul>
+<li>DataSource and Driver interfaces to the pool.</li>
+<li>Support for arbitrary sources of the underlying Connections.</li>
+<li>Integration with arbitrary org.apache.commons.pool.ObjectPool implementations.</li>
+<li>Support for Connection validation, expiration, etc.</li>
+<li>Support for PreparedStatement pooling.</li>
+<li>XML configuration.</li>
+</ul>
+
+<a name="Dependencies"></a>
+<h3>2.  DEPENDENCIES</h3>
+
+<p>The <em>DBCP</em> package is dependent upon the following external
+components for development and use:</p>
+<ul>
+<li><a href="http://java.sun.com/j2se">Java Development Kit</a>
+    (Version 1.2 or later)</li>
+<li><a href="http://java.sun.com/j2ee">Java 2 Enterprise Edition</a>
+    (javax.sql packages only)</li>
+<li>Jakarta-Commons Collections package</li>
+<li>Jakarta-Commons Pool package</li>
+<li>[currently, for JOCL configuration] <a href="http://www.megginson.com/SAX">Simple API for XML</a>
+    (Version 2.0 or later)</li>
+<li>[currently, for JOCL configuration] A SAX 2.0 compliant XML parser (Xerces, XP, etc.)</li>
+<li><a href="http://www.junit.org">JUnit Testing Framework</a>
+    (Version 3.2 or later) - for unit tests only, not required
+    for deployment</li>
+</ul>
+
+
+<a name="Release Info"></a>
+<h3>3.  RELEASE INFO</h3>
+
+<p>Current Release:  <strong>Unreleased, CVS Repository Only</strong></p>
+
+<p>Planned Next Release:  TBD</p>
+
+<a name="Committers"></a>
+<h3>4.  COMMITTERS</h3>
+
+<p>The following individuals are the primary developers and maintainers of this
+component.  Developers who plan to use the <em>DBCP</em> package in their own
+projects are encouraged to collaborate on the future development of this
+component to ensure that it continues to meet a variety of needs.</p>
+<ul>
+<li>Morgan Delagrange
+<li>Geir Magnusson Jr.
+<li>Craig R. McClanahan
+<li>Rodney Waldhoff
+<li>David Weinrich
+</ul>
+
+<a name="Action Items"></a>
+<h3>5.  ACTION ITEMS</h3>
+
+<p>The following action items need to be completed prior to a Version 1.0
+release of this component:</p>
+
+<table border="1">
+  <tr>
+    <th width="80%">Action Item</th>
+    <th width="20%">Volunteer</th>
+  </tr>
+
+  <tr>
+    <td><strong>Additional Unit/Functional Tests</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Vendor specific testing</strong> - Unit tests defined and
+    executed for popular database servers</td>
+    <td align="center"> - </td>
+  </tr>
+
+  <tr>
+    <td><strong>Vendor specific testing - MySQL</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>Vendor specific testing - Postgres</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>Vendor specific testing - ODBC (SQLServer/Access)</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>Vendor specific testing - Oracle</strong></td>
+    <td align="center">Rodney</td>
+  </tr>
+  <tr>
+    <td><strong>Vendor specific testing - Sybase</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Install / Use Documentation</strong>.  Expanded examples and
+    installation documentation. </td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Integration Documentation - Avalon?</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Integration Documentation - Struts?</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Integration Documentation - Turbine?</strong></td>
+    <td align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><strong>Replace JOCL with something else?</strong></td>
+    <td align="center">Rodney<br>[Craig]</td>
+  </tr>
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<object class="org.apache.commons.dbcp.PoolableConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl">
+   <object class="org.apache.commons.dbcp.DriverConnectionFactory">
+      <object class="org.apache.commons.dbcp.TesterDriver"/>
+      <string value="jdbc:apache:commons:testdriver"/>
+      <object class="java.util.Properties" null="true"/>
+   </object>
+   <object class="org.apache.commons.pool.impl.GenericObjectPool">
+      <object class="org.apache.commons.pool.PoolableObjectFactory" null="true"/>
+      <int value="10"/>
+      <byte value="1"/>
+      <long value="2000"/>
+      <int value="10"/>
+      <boolean value="true"/>
+      <boolean value="true"/>
+      <long value="10000"/>
+      <int value="5"/>
+      <long value="5000"/>
+      <boolean value="true"/>
+   </object>
+   <object class="org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory">
+      <object class="org.apache.commons.pool.KeyedPoolableObjectFactory" null="true"/>
+      <int value="5"/>
+      <byte value="1"/>
+      <long value="2000"/>
+      <int value="5"/>
+      <boolean value="true"/>
+      <boolean value="true"/>
+      <long value="10000"/>
+      <int value="5"/>
+      <long value="5000"/>
+      <boolean value="true"/>
+   </object>
+   <string value="SELECT COUNT(*) FROM DUAL"/>
+   <boolean value="false"/>
+   <boolean value="true"/>
+</object>
