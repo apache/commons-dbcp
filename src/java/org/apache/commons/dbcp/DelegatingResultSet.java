@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.3 2002/08/05 06:25:59 jmcnally Exp $
- * $Revision: 1.3 $
- * $Date: 2002/08/05 06:25:59 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.4 2002/10/31 21:14:32 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/10/31 21:14:32 $
  *
  * ====================================================================
  *
@@ -114,6 +114,15 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         this._stmt = stmt;
         this._res = res;
     }
+    
+    public static ResultSet wrapResultSet(Statement stmt, ResultSet rset) {
+        if(null == rset) {
+            return null;
+        } else {
+            return new DelegatingResultSet(stmt,rset);
+        }
+    }
+
 
     public Statement getStatement() throws SQLException {
         return _stmt;

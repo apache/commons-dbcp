@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingPreparedStatement.java,v 1.5 2002/06/29 17:36:37 glenn Exp $
- * $Revision: 1.5 $
- * $Date: 2002/06/29 17:36:37 $
+ * $Id: DelegatingPreparedStatement.java,v 1.6 2002/10/31 21:14:32 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/10/31 21:14:32 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,7 @@ import java.util.Iterator;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
+ * @version $Revision: 1.6 $ $Date: 2002/10/31 21:14:32 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -163,20 +164,17 @@ public class DelegatingPreparedStatement extends AbandonedTrace
 
     public ResultSet executeQuery(String sql) throws SQLException {
         checkOpen();
-
-        return new DelegatingResultSet(this, _stmt.executeQuery(sql));
+        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery(sql));
     }
 
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
-
-        return new DelegatingResultSet(this, _stmt.getResultSet());
+        return DelegatingResultSet.wrapResultSet(this,_stmt.getResultSet());
     }
 
     public ResultSet executeQuery() throws SQLException {
         checkOpen();
-
-        return new DelegatingResultSet(this, _stmt.executeQuery());
+        return DelegatingResultSet.wrapResultSet(this,_stmt.executeQuery());
     }
 
     public int executeUpdate(String sql) throws SQLException { checkOpen(); return _stmt.executeUpdate(sql);}
