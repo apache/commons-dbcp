@@ -1,6 +1,6 @@
-/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.4 2002/04/20 18:58:51 craigmcc Exp $
- * $Revision: 1.4 $
- * $Date: 2002/04/20 18:58:51 $
+/** $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.5 2002/04/30 18:06:30 craigmcc Exp $
+ * $Revision: 1.5 $
+ * $Date: 2002/04/30 18:06:30 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2002/04/20 18:58:51 $
+ * @version $Revision: 1.5 $ $Date: 2002/04/30 18:06:30 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -176,6 +176,32 @@ public class BasicDataSource implements DataSource {
         this.maxWait = maxWait;
     }
 
+
+
+    /**
+     * [Read Only] The current number of active connections that have been
+     * allocated from this data source.
+     */
+    public int getNumActive() {
+        if (connectionPool != null) {
+            return (connectionPool.numActive());
+        } else {
+            return (0);
+        }
+    }
+
+
+    /**
+     * [Read Only] The current number of idle connections that are waiting
+     * to be allocated from this data source.
+     */
+    public int getNumIdle() {
+        if (connectionPool != null) {
+            return (connectionPool.numIdle());
+        } else {
+            return (0);
+        }
+    }
 
 
     /**
