@@ -25,7 +25,7 @@ import java.util.Properties;
  *
  * @author Rodney Waldhoff
  * @author Ignacio J. Ortega
- * @version $Revision: 1.8 $ $Date: 2004/02/28 12:18:17 $
+ * @version $Revision: 1.9 $ $Date: 2004/06/24 18:32:53 $
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
@@ -42,7 +42,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     public Connection createConnection() throws SQLException {
         if(null == _props) {
-            if((_uname == null) || (_passwd == null)) {
+            if((_uname == null) && (_passwd == null)) {
                 return DriverManager.getConnection(_connectUri);
             } else {
                 return DriverManager.getConnection(_connectUri,_uname,_passwd);
