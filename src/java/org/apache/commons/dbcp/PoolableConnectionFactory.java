@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.6 2003/04/02 00:48:49 rwaldhoff Exp $
- * $Revision: 1.6 $
- * $Date: 2003/04/02 00:48:49 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v 1.7 2003/04/09 00:19:37 dgraham Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/04/09 00:19:37 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +74,7 @@ import org.apache.commons.pool.*;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnectionFactory.java,v 1.6 2003/04/02 00:48:49 rwaldhoff Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.7 2003/04/09 00:19:37 dgraham Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -105,8 +105,17 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @param config the AbandonedConfig if tracing SQL objects
+     * @deprecated AbandonedConfig is now deprecated.
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit, AbandonedConfig config) {
+    public PoolableConnectionFactory(
+        ConnectionFactory connFactory,
+        ObjectPool pool,
+        KeyedObjectPoolFactory stmtPoolFactory,
+        String validationQuery,
+        boolean defaultReadOnly,
+        boolean defaultAutoCommit,
+        AbandonedConfig config) {
+            
         _connFactory = connFactory;
         _pool = pool;
         _config = config;
@@ -270,5 +279,9 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected boolean _defaultReadOnly = false;
     protected boolean _defaultAutoCommit = true;
+    
+    /**
+     * @deprecated AbandonedConfig is now deprecated.
+     */
     protected AbandonedConfig _config = null;
 }

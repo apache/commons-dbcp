@@ -1,13 +1,13 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.5 2002/11/01 15:27:21 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2002/11/01 15:27:21 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnection.java,v 1.6 2003/04/09 00:19:37 dgraham Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/04/09 00:19:37 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,7 @@ import org.apache.commons.pool.ObjectPool;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Id: PoolableConnection.java,v 1.5 2002/11/01 15:27:21 rwaldhoff Exp $
+ * @version $Id: PoolableConnection.java,v 1.6 2003/04/09 00:19:37 dgraham Exp $
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
@@ -94,6 +94,7 @@ public class PoolableConnection extends DelegatingConnection {
      * @param conn my underlying connection
      * @param pool the pool to which I should return when closed
      * @param config the abandoned configuration settings
+     * @deprecated AbandonedConfig is now deprecated.
      */
     public PoolableConnection(Connection conn, ObjectPool pool,
                               AbandonedConfig config) {
