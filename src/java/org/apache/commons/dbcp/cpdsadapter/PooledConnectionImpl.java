@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/cpdsadapter/PooledConnectionImpl.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/10/09 21:03:35 $
+ * $Revision: 1.10 $
+ * $Date: 2003/10/26 17:35:30 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * PooledConnectionDataSource.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: PooledConnectionImpl.java,v 1.9 2003/10/09 21:03:35 rdonkin Exp $
+ * @version $Id: PooledConnectionImpl.java,v 1.10 2003/10/26 17:35:30 dirkv Exp $
  */
 class PooledConnectionImpl 
         implements PooledConnection, KeyedPoolableObjectFactory {
@@ -300,28 +300,24 @@ class PooledConnectionImpl
      * {*link PreparedStatement}s.
      * @param obj the key for the {*link PreparedStatement} to be created
      */
-    public Object makeObject(Object obj) {
-        try {
-            if (null == obj || !(obj instanceof PStmtKey)) {
-                throw new IllegalArgumentException();
+    public Object makeObject(Object obj) throws Exception {
+        if (null == obj || !(obj instanceof PStmtKey)) {
+            throw new IllegalArgumentException();
+        } else {
+            // _openPstmts++;
+            PStmtKey key = (PStmtKey)obj;
+            if (null == key._resultSetType 
+                    && null == key._resultSetConcurrency) {
+                return new PoolablePreparedStatementStub(
+                        connection.prepareStatement(key._sql),
+                        key, pstmtPool, connection);
             } else {
-                // _openPstmts++;
-                PStmtKey key = (PStmtKey)obj;
-                if (null == key._resultSetType 
-                        && null == key._resultSetConcurrency) {
-                    return new PoolablePreparedStatementStub(
-                            connection.prepareStatement(key._sql),
-                            key, pstmtPool, connection);
-                } else {
-                    return new PoolablePreparedStatementStub(
-                            connection.prepareStatement(key._sql,
-                            key._resultSetType.intValue(),
-                            key._resultSetConcurrency.intValue()),
-                            key, pstmtPool, connection);
-                }
+                return new PoolablePreparedStatementStub(
+                        connection.prepareStatement(key._sql,
+                        key._resultSetType.intValue(),
+                        key._resultSetConcurrency.intValue()),
+                        key, pstmtPool, connection);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.toString());
         }
     }
 
