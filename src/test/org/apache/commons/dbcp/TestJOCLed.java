@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.7 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.8 $ $Date: 2004/05/20 17:54:50 $
  */
 public class TestJOCLed extends TestConnectionPool {
     public TestJOCLed(String testName) {
@@ -46,9 +46,11 @@ public class TestJOCLed extends TestConnectionPool {
     
     public void setUp() throws Exception {
         driver = new PoolingDriver();
+        PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
     }
 
     public void tearDown() throws Exception {
+        driver.closePool("testpool");
         DriverManager.deregisterDriver(driver);
     }
 
