@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.3 2002/06/21 21:56:13 glenn Exp $
- * $Revision: 1.3 $
- * $Date: 2002/06/21 21:56:13 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.4 2003/03/06 14:58:42 rwaldhoff Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/03/06 14:58:42 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2002/06/21 21:56:13 $
+ * @version $Revision: 1.4 $ $Date: 2003/03/06 14:58:42 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -154,6 +154,42 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (ra != null) {
             dataSource.setMaxWait
                 (Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("testOnBorrow");
+        if (ra != null) {
+            dataSource.setTestOnBorrow
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("testOnReturn");
+        if (ra != null) {
+            dataSource.setTestOnReturn
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("timeBetweenEvictionRunsMillis");
+        if (ra != null) {
+            dataSource.setTimeBetweenEvictionRunsMillis
+                (Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("numTestsPerEvictionRun");
+        if (ra != null) {
+            dataSource.setNumTestsPerEvictionRun
+                (Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("minEvictableIdleTimeMillis");
+        if (ra != null) {
+            dataSource.setMinEvictableIdleTimeMillis
+                (Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("testWhileIdle");
+        if (ra != null) {
+            dataSource.setTestWhileIdle
+                (Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("password");
