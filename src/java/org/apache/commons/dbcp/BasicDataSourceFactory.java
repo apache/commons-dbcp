@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.5 2003/03/06 15:22:25 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2003/03/06 15:22:25 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSourceFactory.java,v 1.6 2003/08/21 19:00:26 dirkv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2003/08/21 19:00:26 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import javax.naming.spi.ObjectFactory;
  * <code>BasicDataSource</code> bean properties.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2003/03/06 15:22:25 $
+ * @version $Revision: 1.6 $ $Date: 2003/08/21 19:00:26 $
  */
 
 public class BasicDataSourceFactory implements ObjectFactory {
@@ -150,6 +150,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
         ra = ref.get("maxIdle");
         if (ra != null) {
             dataSource.setMaxIdle
+                (Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("minIdle");
+        if (ra != null) {
+            dataSource.setMinIdle
                 (Integer.parseInt(ra.getContent().toString()));
         }
 
