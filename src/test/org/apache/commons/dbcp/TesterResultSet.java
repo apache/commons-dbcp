@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TesterResultSet.java,v $
- * $Revision: 1.9 $
- * $Date: 2003/11/02 17:46:12 $
+ * $Revision: 1.10 $
+ * $Date: 2003/12/22 14:59:43 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import java.util.Calendar;
  * 
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2003/11/02 17:46:12 $
+ * @version $Revision: 1.10 $ $Date: 2003/12/22 14:59:43 $
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(Statement stmt) {
@@ -123,6 +123,8 @@ public class TesterResultSet implements ResultSet {
     }
 
     public void close() throws SQLException {
+        checkOpen();
+        ((TesterStatement)_statement)._resultSet = null;
         _open = false;
     }
 
