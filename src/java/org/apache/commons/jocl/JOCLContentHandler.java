@@ -86,14 +86,14 @@ import java.io.IOException;
  * There is a special syntax available creating primative values and arguments,
  * as well as for constructing {@link java.lang.String <tt>String</tt>}s. Some examples:
  * <p>
- * <pre> &lt;byte value="3"/&gt
- * &lt;boolean value="false"/&gt
- * &lt;char value="c"/&gt
- * &lt;double value="3.14159"/&gt
- * &lt;float value="3.14"/&gt
- * &lt;int value="17"/&gt
- * &lt;long value="1700000"/&gt
- * &lt;short value="1"/&gt
+ * <pre> &lt;byte value="3"/&gt;
+ * &lt;boolean value="false"/&gt;
+ * &lt;char value="c"/&gt;
+ * &lt;double value="3.14159"/&gt;
+ * &lt;float value="3.14"/&gt;
+ * &lt;int value="17"/&gt;
+ * &lt;long value="1700000"/&gt;
+ * &lt;short value="1"/&gt;
  * &lt;string value="The quick brown fox..."/&gt;</pre>
  * <p>
  * When invoked at the "root" level (that is, with no <tt>&lt;object&gt;</tt> parent),
@@ -111,8 +111,8 @@ import java.io.IOException;
  * list of values, with types corresponding to {@link java.lang.Integer}, the fragment:
  * <p>
  * <pre> &lt;int value="5"/&gt;
- *  &lt;int value="26"/&gt;
- *  &lt;int value="100"/&gt;</pre>
+ * &lt;int value="26"/&gt;
+ * &lt;int value="100"/&gt;</pre>
  * <p>
  * results in three {@link java.lang.Integer} instances being added to the
  * list of values, with types corresponding to {@link java.lang.Integer#TYPE}.
@@ -207,7 +207,7 @@ import java.io.IOException;
  * <b>Note that this class is not synchronized.</b>
  * <p>
  * @author Rodney Waldhoff
- * @version $Revision: 1.5 $ $Date: 2004/02/28 12:18:18 $
+ * @version $Revision: 1.6 $ $Date: 2004/02/28 21:37:42 $
  */
 public class JOCLContentHandler extends DefaultHandler implements ContentHandler {
 
