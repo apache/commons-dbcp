@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.15 $
- * $Date: 2003/12/22 14:41:17 $
+ * $Revision: 1.16 $
+ * $Date: 2004/02/07 15:03:32 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.15 $ $Date: 2003/12/22 14:41:17 $
+ * @version $Revision: 1.16 $ $Date: 2004/02/07 15:03:32 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -257,5 +257,18 @@ public class TestBasicDataSource extends TestConnectionPool {
         conn.close();
 
         assertEquals(true, dconn.getAutoCommit());
+    }
+
+    public void testInitialSize() throws Exception {
+        ds.setMaxActive(20);
+        ds.setMaxIdle(20);
+        ds.setInitialSize(10);
+
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        conn.close();
+
+        assertEquals(0, ds.getNumActive());
+        assertEquals(10, ds.getNumIdle());
     }
 }
