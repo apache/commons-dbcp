@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/PoolableConnectionFactory.java,v $
- * $Revision: 1.11 $
- * $Date: 2003/08/25 16:17:45 $
+ * $Revision: 1.12 $
+ * $Date: 2003/09/14 00:12:40 $
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.apache.commons.pool.*;
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
  * @author Dirk Verbeeck
- * @version $Id: PoolableConnectionFactory.java,v 1.11 2003/08/25 16:17:45 dirkv Exp $
+ * @version $Id: PoolableConnectionFactory.java,v 1.12 2003/09/14 00:12:40 dirkv Exp $
  */
 public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
@@ -270,46 +270,44 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
 
     synchronized public boolean validateObject(Object obj) {
         if(obj instanceof Connection) {
-            String query = _validationQuery;
-            Connection conn = (Connection)obj;
             try {
-                if(conn.isClosed()) {
-                    return false;
-                }
-            } catch(SQLException e) {
-                return false;
-            }
-            if(null != query) {
-                Statement stmt = null;
-                ResultSet rset = null;
-                try {
-                    stmt = conn.createStatement();
-                    rset = stmt.executeQuery(query);
-                    if(rset.next()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } catch(Exception e) {
-                    return false;
-                } finally {
-                    try {
-                        rset.close();
-                    } catch(Exception t) {
-                        // ignored
-                    }
-                    try {
-                        stmt.close();
-                    } catch(Exception t) {
-                        // ignored
-                    }
-
-                }
-            } else {
+                validateConnection((Connection) obj);
                 return true;
-            }
+            } catch(Exception e) {
+                return false;
+            }           
         } else {
             return false;
+        }
+    }
+
+    synchronized public void validateConnection(Connection conn) throws SQLException {
+        String query = _validationQuery;
+        if(conn.isClosed()) {
+            throw new SQLException("validateConnection: connection closed");
+        }
+        if(null != query) {
+            Statement stmt = null;
+            ResultSet rset = null;
+            try {
+                stmt = conn.createStatement();
+                rset = stmt.executeQuery(query);
+                if(!rset.next()) {
+                    throw new SQLException("validationQuery didn't return a row");
+                }
+            } finally {
+                try {
+                    rset.close();
+                } catch(Exception t) {
+                    // ignored
+                }
+                try {
+                    stmt.close();
+                } catch(Exception t) {
+                    // ignored
+                }
+
+            }
         }
     }
 
