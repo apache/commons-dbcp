@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestPStmtPoolingBasicDataSource.java,v $
- * $Revision: 1.1 $
- * $Date: 2003/11/02 17:53:55 $
+ * $Revision: 1.2 $
+ * $Date: 2003/12/22 14:41:17 $
  *
  * ====================================================================
  *
@@ -72,9 +72,9 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.1 $ $Date: 2003/11/02 17:53:55 $
+ * @version $Revision: 1.2 $ $Date: 2003/12/22 14:41:17 $
  */
-public class TestPStmtPoolingBasicDataSource extends TestConnectionPool {
+public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public TestPStmtPoolingBasicDataSource(String testName) {
         super(testName);
     }
@@ -83,24 +83,8 @@ public class TestPStmtPoolingBasicDataSource extends TestConnectionPool {
         return new TestSuite(TestPStmtPoolingBasicDataSource.class);
     }
 
-    protected Connection getConnection() throws Exception {
-        return ds.getConnection();
-    }
-
-    private BasicDataSource ds = null;
-    
     public void setUp() throws Exception {
         super.setUp();
-        ds = new BasicDataSource();
-        ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
-        ds.setUrl("jdbc:apache:commons:testdriver");
-        ds.setMaxActive(getMaxActive());
-        ds.setMaxWait(getMaxWait());
-        ds.setDefaultAutoCommit(true);
-        ds.setDefaultReadOnly(false);
-        ds.setUsername("username");
-        ds.setPassword("password");
-        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
 
         // PoolPreparedStatements enabled, should not affect the basic tests
         ds.setPoolPreparedStatements(true);
@@ -108,7 +92,8 @@ public class TestPStmtPoolingBasicDataSource extends TestConnectionPool {
     }
 
     public void tearDown() throws Exception {
-        ds = null;
+        super.tearDown();
+        // nothing to do here
     }
 
     public void testPreparedStatementPooling() throws Exception {

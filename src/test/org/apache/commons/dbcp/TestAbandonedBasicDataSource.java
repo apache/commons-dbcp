@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestAbandonedBasicDataSource.java,v $
- * $Revision: 1.6 $
- * $Date: 2003/11/02 17:53:55 $
+ * $Revision: 1.7 $
+ * $Date: 2003/12/22 14:41:17 $
  *
  * ====================================================================
  *
@@ -70,9 +70,9 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.6 $ $Date: 2003/11/02 17:53:55 $
+ * @version $Revision: 1.7 $ $Date: 2003/12/22 14:41:17 $
  */
-public class TestAbandonedBasicDataSource extends TestConnectionPool {
+public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public TestAbandonedBasicDataSource(String testName) {
         super(testName);
     }
@@ -81,24 +81,8 @@ public class TestAbandonedBasicDataSource extends TestConnectionPool {
         return new TestSuite(TestAbandonedBasicDataSource.class);
     }
 
-    protected Connection getConnection() throws Exception {
-        return ds.getConnection();
-    }
-
-    private BasicDataSource ds = null;
-    
     public void setUp() throws Exception {
         super.setUp();
-        ds = new BasicDataSource();
-        ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
-        ds.setUrl("jdbc:apache:commons:testdriver");
-        ds.setMaxActive(getMaxActive());
-        ds.setMaxWait(getMaxWait());
-        ds.setDefaultAutoCommit(true);
-        ds.setDefaultReadOnly(false);
-        ds.setUsername("username");
-        ds.setPassword("password");
-        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
 
         // abandoned enabled but should not affect the basic tests
         // (very high timeout)
@@ -108,13 +92,8 @@ public class TestAbandonedBasicDataSource extends TestConnectionPool {
     }
 
     public void tearDown() throws Exception {
-        ds = null;
-    }
-
-    public void testPooling() throws Exception {
-        // this also needs access to the undelying connection
-        ds.setAccessToUnderlyingConnectionAllowed(true);
-        super.testPooling();
+        super.tearDown();
+        // nothing to do here
     }
 
     // ---------- Abandoned Test -----------

@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.14 $
- * $Date: 2003/11/02 17:53:55 $
+ * $Revision: 1.15 $
+ * $Date: 2003/12/22 14:41:17 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.14 $ $Date: 2003/11/02 17:53:55 $
+ * @version $Revision: 1.15 $ $Date: 2003/12/22 14:41:17 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -86,9 +86,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    private BasicDataSource ds = null;
+    protected BasicDataSource ds = null;
     private static String CATALOG = "test catalog";
-    
+
     public void setUp() throws Exception {
         super.setUp();
         ds = new BasicDataSource();
@@ -106,6 +106,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     public void tearDown() throws Exception {
+        super.tearDown();
         ds = null;
     }
     
