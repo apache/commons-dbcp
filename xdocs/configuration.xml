@@ -15,6 +15,22 @@
 </section>
 -->
 
+<!--
+<section name="Dynamic Properties">
+maxActive
+maxIdle
+minIdle
+maxWait
+testOnBorrow
+testOnReturn
+timeBetweenEvictionRunsMillis
+numTestsPerEvictionRun
+minEvictableIdleTimeMillis
+testWhileIdle
+
+</section>
+-->
+
 <section name="Parameters">
 
 <table>
@@ -38,6 +54,7 @@
 <tr>
    <td>connectionProperties</td>
    <td>The connection properties that will be sent to our JDBC driver when establishing new connections.
+       <br/>Format of the string must be [propertyName=property;]*
        <br/><strong>NOTE</strong> - The "user" and "password" properties will be passed explicitly, 
        so they do not need to be included here.
    </td>

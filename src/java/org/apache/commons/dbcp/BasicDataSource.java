@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.31 $
- * $Date: 2003/11/10 14:51:43 $
+ * $Revision: 1.32 $
+ * $Date: 2004/01/25 19:57:38 $
  *
  * ====================================================================
  *
@@ -83,9 +83,8 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.31 $ $Date: 2003/11/10 14:51:43 $
+ * @version $Revision: 1.32 $ $Date: 2004/01/25 19:57:38 $
  */
-
 public class BasicDataSource implements DataSource {
 
     // ------------------------------------------------------------- Properties
@@ -95,12 +94,13 @@ public class BasicDataSource implements DataSource {
      */
     protected boolean defaultAutoCommit = true;
 
-    public boolean getDefaultAutoCommit() {
+    public synchronized boolean getDefaultAutoCommit() {
         return this.defaultAutoCommit;
     }
 
-    public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    public synchronized void setDefaultAutoCommit(boolean defaultAutoCommit) {
         this.defaultAutoCommit = defaultAutoCommit;
+        this.restartNeeded = true;
     }
 
 
@@ -109,12 +109,13 @@ public class BasicDataSource implements DataSource {
      */
     protected boolean defaultReadOnly = false;
 
-    public boolean getDefaultReadOnly() {
+    public synchronized boolean getDefaultReadOnly() {
         return this.defaultReadOnly;
     }
 
-    public void setDefaultReadOnly(boolean defaultReadOnly) {
+    public synchronized void setDefaultReadOnly(boolean defaultReadOnly) {
         this.defaultReadOnly = defaultReadOnly;
+        this.restartNeeded = true;
     }
 
 
@@ -123,12 +124,13 @@ public class BasicDataSource implements DataSource {
      */
     protected int defaultTransactionIsolation = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
 
-    public int getDefaultTransactionIsolation() {
+    public synchronized int getDefaultTransactionIsolation() {
         return this.defaultTransactionIsolation;
     }
 
-    public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
+    public synchronized void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
+        this.restartNeeded = true;
     }
 
 
@@ -137,17 +139,18 @@ public class BasicDataSource implements DataSource {
      */
     protected String defaultCatalog = null;
 
-    public String getDefaultCatalog() {
+    public synchronized String getDefaultCatalog() {
         return this.defaultCatalog;
     }
 
-    public void setDefaultCatalog(String defaultCatalog) {
+    public synchronized void setDefaultCatalog(String defaultCatalog) {
         if ((defaultCatalog != null) && (defaultCatalog.trim().length() > 0)) {
             this.defaultCatalog = defaultCatalog;
         }
         else {
             this.defaultCatalog = null;
         }
+        this.restartNeeded = true;
     }
 
   
@@ -156,17 +159,18 @@ public class BasicDataSource implements DataSource {
      */
     protected String driverClassName = null;
 
-    public String getDriverClassName() {
+    public synchronized String getDriverClassName() {
         return this.driverClassName;
     }
 
-    public void setDriverClassName(String driverClassName) {
+    public synchronized void setDriverClassName(String driverClassName) {
         if ((driverClassName != null) && (driverClassName.trim().length() > 0)) {
             this.driverClassName = driverClassName;
         }
         else {
             this.driverClassName = null;
         }
+        this.restartNeeded = true;
     }
 
 
@@ -176,12 +180,15 @@ public class BasicDataSource implements DataSource {
      */
     protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
 
-    public int getMaxActive() {
+    public synchronized int getMaxActive() {
         return this.maxActive;
     }
 
-    public void setMaxActive(int maxActive) {
+    public synchronized void setMaxActive(int maxActive) {
         this.maxActive = maxActive;
+        if (connectionPool != null) {
+            connectionPool.setMaxActive(maxActive);
+        }
     }
 
 
@@ -191,12 +198,15 @@ public class BasicDataSource implements DataSource {
      */
     protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;;
 
-    public int getMaxIdle() {
+    public synchronized int getMaxIdle() {
         return this.maxIdle;
     }
 
-    public void setMaxIdle(int maxIdle) {
+    public synchronized void setMaxIdle(int maxIdle) {
         this.maxIdle = maxIdle;
+        if (connectionPool != null) {
+            connectionPool.setMaxIdle(maxIdle);
+        }
     }
 
     /**
@@ -205,12 +215,15 @@ public class BasicDataSource implements DataSource {
      */
     protected int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;;
 
-    public int getMinIdle() {
+    public synchronized int getMinIdle() {
         return this.minIdle;
     }
 
-    public void setMinIdle(int minIdle) {
+    public synchronized void setMinIdle(int minIdle) {
        this.minIdle = minIdle;
+       if (connectionPool != null) {
+           connectionPool.setMinIdle(minIdle);
+       }
     }
 
     /**
@@ -220,12 +233,15 @@ public class BasicDataSource implements DataSource {
      */
     protected long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
 
-    public long getMaxWait() {
+    public synchronized long getMaxWait() {
         return this.maxWait;
     }
 
-    public void setMaxWait(long maxWait) {
+    public synchronized void setMaxWait(long maxWait) {
         this.maxWait = maxWait;
+        if (connectionPool != null) {
+            connectionPool.setMaxWait(maxWait);
+        }
     }
 
     /**
@@ -237,7 +253,7 @@ public class BasicDataSource implements DataSource {
      * Returns true if we are pooling statements.
      * @return boolean
      */
-    public boolean isPoolPreparedStatements() {
+    public synchronized boolean isPoolPreparedStatements() {
         return this.poolPreparedStatements;
     }
 
@@ -245,8 +261,9 @@ public class BasicDataSource implements DataSource {
      * Sets whether to pool statements or not.
      * @param poolPreparedStatements pooling on or off
      */
-    public void setPoolPreparedStatements(boolean poolingStatements) {
-         this.poolPreparedStatements = poolingStatements;
+    public synchronized void setPoolPreparedStatements(boolean poolingStatements) {
+        this.poolPreparedStatements = poolingStatements;
+        this.restartNeeded = true;
     }
 
     /**
@@ -257,12 +274,13 @@ public class BasicDataSource implements DataSource {
      */
     protected int maxOpenPreparedStatements = GenericKeyedObjectPool.DEFAULT_MAX_TOTAL;
 
-    public int getMaxOpenPreparedStatements() {
+    public synchronized int getMaxOpenPreparedStatements() {
         return this.maxOpenPreparedStatements;
     }
 
-    public void setMaxOpenPreparedStatements(int maxOpenStatements) {
+    public synchronized void setMaxOpenPreparedStatements(int maxOpenStatements) {
         this.maxOpenPreparedStatements = maxOpenStatements;
+        this.restartNeeded = true;
     }
 
     /**
@@ -272,12 +290,15 @@ public class BasicDataSource implements DataSource {
      */
     protected boolean testOnBorrow = true;
 
-    public boolean getTestOnBorrow() {
+    public synchronized boolean getTestOnBorrow() {
         return this.testOnBorrow;
     }
 
-    public void setTestOnBorrow(boolean testOnBorrow) {
+    public synchronized void setTestOnBorrow(boolean testOnBorrow) {
         this.testOnBorrow = testOnBorrow;
+        if (connectionPool != null) {
+            connectionPool.setTestOnBorrow(testOnBorrow);
+        }
     }
 
     /**
@@ -286,12 +307,15 @@ public class BasicDataSource implements DataSource {
      */
     protected boolean testOnReturn = false;
 
-    public boolean getTestOnReturn() {
+    public synchronized boolean getTestOnReturn() {
         return this.testOnReturn;
     }
 
-    public void setTestOnReturn(boolean testOnReturn) {
+    public synchronized void setTestOnReturn(boolean testOnReturn) {
         this.testOnReturn = testOnReturn;
+        if (connectionPool != null) {
+            connectionPool.setTestOnReturn(testOnReturn);
+        }
     }
 
 
@@ -303,12 +327,15 @@ public class BasicDataSource implements DataSource {
     protected long timeBetweenEvictionRunsMillis =
         GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
         
-    public long getTimeBetweenEvictionRunsMillis() {
+    public synchronized long getTimeBetweenEvictionRunsMillis() {
         return this.timeBetweenEvictionRunsMillis;
     }
 
-    public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
+    public synchronized void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
         this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+        if (connectionPool != null) {
+            connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        }
     }
 
 
@@ -319,12 +346,15 @@ public class BasicDataSource implements DataSource {
     protected int numTestsPerEvictionRun =
         GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
-    public int getNumTestsPerEvictionRun() {
+    public synchronized int getNumTestsPerEvictionRun() {
         return this.numTestsPerEvictionRun;
     }
 
-    public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
+    public synchronized void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
         this.numTestsPerEvictionRun = numTestsPerEvictionRun;
+        if (connectionPool != null) {
+            connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+        }
     }
 
 
@@ -335,12 +365,15 @@ public class BasicDataSource implements DataSource {
     protected long minEvictableIdleTimeMillis =
         GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
-    public long getMinEvictableIdleTimeMillis() {
+    public synchronized long getMinEvictableIdleTimeMillis() {
         return this.minEvictableIdleTimeMillis;
     }
 
-    public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
+    public synchronized void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
         this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+        if (connectionPool != null) {
+            connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        }
     }
 
     /**
@@ -350,19 +383,22 @@ public class BasicDataSource implements DataSource {
      */
     protected boolean testWhileIdle = false;
 
-    public boolean getTestWhileIdle() {
+    public synchronized boolean getTestWhileIdle() {
         return this.testWhileIdle;
     }
 
-    public void setTestWhileIdle(boolean testWhileIdle) {
+    public synchronized void setTestWhileIdle(boolean testWhileIdle) {
         this.testWhileIdle = testWhileIdle;
+        if (connectionPool != null) {
+            connectionPool.setTestWhileIdle(testWhileIdle);
+        }
     }
 
     /**
      * [Read Only] The current number of active connections that have been
      * allocated from this data source.
      */
-    public int getNumActive() {
+    public synchronized int getNumActive() {
         if (connectionPool != null) {
             return connectionPool.getNumActive();
         } else {
@@ -375,7 +411,7 @@ public class BasicDataSource implements DataSource {
      * [Read Only] The current number of idle connections that are waiting
      * to be allocated from this data source.
      */
-    public int getNumIdle() {
+    public synchronized int getNumIdle() {
         if (connectionPool != null) {
             return connectionPool.getNumIdle();
         } else {
@@ -390,12 +426,13 @@ public class BasicDataSource implements DataSource {
      */
     protected String password = null;
 
-    public String getPassword() {
+    public synchronized String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password) {
+    public synchronized void setPassword(String password) {
         this.password = password;
+        this.restartNeeded = true;
     }
 
 
@@ -405,12 +442,13 @@ public class BasicDataSource implements DataSource {
      */
     protected String url = null;
 
-    public String getUrl() {
+    public synchronized String getUrl() {
         return this.url;
     }
 
-    public void setUrl(String url) {
+    public synchronized void setUrl(String url) {
         this.url = url;
+        this.restartNeeded = true;
     }
 
 
@@ -420,12 +458,13 @@ public class BasicDataSource implements DataSource {
      */
     protected String username = null;
 
-    public String getUsername() {
+    public synchronized String getUsername() {
         return this.username;
     }
 
-    public void setUsername(String username) {
+    public synchronized void setUsername(String username) {
         this.username = username;
+        this.restartNeeded = true;
     }
 
 
@@ -437,16 +476,17 @@ public class BasicDataSource implements DataSource {
      */
     protected String validationQuery = null;
 
-    public String getValidationQuery() {
+    public synchronized String getValidationQuery() {
         return this.validationQuery;
     }
 
-    public void setValidationQuery(String validationQuery) {
+    public synchronized void setValidationQuery(String validationQuery) {
         if ((validationQuery != null) && (validationQuery.trim().length() > 0)) {
             this.validationQuery = validationQuery;
         } else {
             this.validationQuery = null;
         }
+        this.restartNeeded = true;
     }
 
     /** 
@@ -459,7 +499,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @return true if access to the underlying is allowed, false otherwise.
      */
-    public boolean isAccessToUnderlyingConnectionAllowed() {
+    public synchronized boolean isAccessToUnderlyingConnectionAllowed() {
         return this.accessToUnderlyingConnectionAllowed;
     }
 
@@ -470,18 +510,33 @@ public class BasicDataSource implements DataSource {
      * 
      * @param allow Access to the underlying connection is granted when true.
      */
-    public void setAccessToUnderlyingConnectionAllowed(boolean allow) {
+    public synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
+        this.restartNeeded = true;
     }
 
     // ----------------------------------------------------- Instance Variables
 
+    // TODO: review & make isRestartNeeded() public, restartNeeded protected
+
+    private boolean restartNeeded = false;
+    
+    /**
+     * Returns whether or not a restart is needed.
+     * @return true if a restart is needed
+     */
+    private synchronized boolean isRestartNeeded() {
+        return restartNeeded;
+    }
 
     /**
      * The object pool that internally manages our connections.
      */
     protected GenericObjectPool connectionPool = null;
-
+    
+    public GenericObjectPool getConnectionPool() {
+        return connectionPool;
+    }
 
     /**
      * The connection properties that will be sent to our JDBC driver when
@@ -491,14 +546,12 @@ public class BasicDataSource implements DataSource {
      */
     protected Properties connectionProperties = new Properties();
 
-
     /**
      * The data source we will use to manage connections.  This object should
      * be acquired <strong>ONLY</strong> by calls to the
      * <code>createDataSource()</code> method.
      */
     protected DataSource dataSource = null;
-
 
     /**
      * The PrintWriter to which log messages should be directed.
@@ -606,6 +659,7 @@ public class BasicDataSource implements DataSource {
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandoned(removeAbandoned);
+        this.restartNeeded = true;
     }                                                        
                                                
     /**
@@ -630,6 +684,7 @@ public class BasicDataSource implements DataSource {
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+        this.restartNeeded = true;
     }                                                                  
                                                              
     /**
@@ -659,6 +714,7 @@ public class BasicDataSource implements DataSource {
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogAbandoned(logAbandoned);
+        this.restartNeeded = true;
     }
 
     // --------------------------------------------------------- Public Methods
@@ -674,8 +730,13 @@ public class BasicDataSource implements DataSource {
      */
     public void addConnectionProperty(String name, String value) {
         connectionProperties.put(name, value);
+        this.restartNeeded = true;
     }
 
+    public void removeConnectionProperty(String name) {
+        connectionProperties.remove(name);
+        this.restartNeeded = true;
+    }
 
     /**
      * Close and release all connections that are currently stored in the
@@ -683,7 +744,7 @@ public class BasicDataSource implements DataSource {
      *
      * @exception SQLException if a database error occurs
      */
-    public void close() throws SQLException {
+    public synchronized void close() throws SQLException {
         GenericObjectPool oldpool = connectionPool;
         connectionPool = null;
         dataSource = null;
@@ -790,13 +851,13 @@ public class BasicDataSource implements DataSource {
         if (username != null) {
             connectionProperties.put("user", username);
         } else {
-            this.logWriter.println("DBCP DataSource configured without a 'username'");
+            log("DBCP DataSource configured without a 'username'");
         }
         
         if (password != null) {
             connectionProperties.put("password", password);
         } else {
-            this.logWriter.println("DBCP DataSource configured without a 'password'");
+            log("DBCP DataSource configured without a 'password'");
         }
         
         DriverConnectionFactory driverConnectionFactory =
@@ -831,8 +892,8 @@ public class BasicDataSource implements DataSource {
         dataSource.setLogWriter(logWriter);
         return (dataSource);
     }
-    
-    private void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
+
+    private static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
         Connection conn = null;
         try {
             conn = (Connection) connectionFactory.makeObject();
@@ -842,6 +903,20 @@ public class BasicDataSource implements DataSource {
         }
         finally {
             connectionFactory.destroyObject(conn);
+        }
+    }
+
+    private void restart() {
+        try {
+            close();
+        } catch (SQLException e) {
+            log("Could not restart DataSource, cause: " + e.getMessage());
+        }
+    }
+
+    private void log(String message) {
+        if (logWriter != null) {
+            logWriter.println(message);
         }
     }
 }
