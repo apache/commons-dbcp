@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/AbandonedObjectPool.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/09/26 12:45:13 $
+ * $Revision: 1.11 $
+ * $Date: 2003/09/30 20:50:29 $
  *
  * ====================================================================
  *
@@ -61,11 +61,9 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -77,7 +75,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * abandoned db connections recovered.
  *                                                                        
  * @author Glenn L. Nielsen
- * @version $Revision: 1.10 $ $Date: 2003/09/26 12:45:13 $
+ * @version $Revision: 1.11 $ $Date: 2003/09/30 20:50:29 $
  * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
@@ -112,30 +110,22 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * @return Object jdbc Connection
      */
     public Object borrowObject() throws Exception {
-        try {
-            if (config != null
-                    && config.getRemoveAbandoned()
-                    && (getNumIdle() < 2)
-                    && (getNumActive() > getMaxActive() - 3) ) {
-                removeAbandoned();
-            }
-            Object obj = super.borrowObject();
-            if(obj instanceof AbandonedTrace) {
-                ((AbandonedTrace)obj).setStackTrace();
-            }
-            if (obj != null && config != null && config.getRemoveAbandoned()) {
-                synchronized(trace) {
-                    trace.add(obj);
-                }
-            }
-            return obj;
-        } catch(NoSuchElementException ne) {
-            throw new SQLException(
-                "DBCP could not obtain an idle db connection, pool exhausted");
-        } catch(Exception e) {
-            System.out.println("DBCP borrowObject failed: " + e.getMessage());
-            throw e;
+        if (config != null
+                && config.getRemoveAbandoned()
+                && (getNumIdle() < 2)
+                && (getNumActive() > getMaxActive() - 3) ) {
+            removeAbandoned();
         }
+        Object obj = super.borrowObject();
+        if(obj instanceof AbandonedTrace) {
+            ((AbandonedTrace)obj).setStackTrace();
+        }
+        if (obj != null && config != null && config.getRemoveAbandoned()) {
+            synchronized(trace) {
+                trace.add(obj);
+            }
+        }
+        return obj;
     }
 
     /**
