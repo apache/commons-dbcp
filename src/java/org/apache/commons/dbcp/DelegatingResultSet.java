@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.2 2002/05/29 01:24:09 glenn Exp $
- * $Revision: 1.2 $
- * $Date: 2002/05/29 01:24:09 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/DelegatingResultSet.java,v 1.3 2002/08/05 06:25:59 jmcnally Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/08/05 06:25:59 $
  *
  * ====================================================================
  *
@@ -142,12 +142,14 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public long getLong(int columnIndex) throws SQLException { return _res.getLong(columnIndex); }
     public float getFloat(int columnIndex) throws SQLException { return _res.getFloat(columnIndex); }
     public double getDouble(int columnIndex) throws SQLException { return _res.getDouble(columnIndex); }
+    /** @deprecated */
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException { return _res.getBigDecimal(columnIndex); }
     public byte[] getBytes(int columnIndex) throws SQLException { return _res.getBytes(columnIndex); }
     public Date getDate(int columnIndex) throws SQLException { return _res.getDate(columnIndex); }
     public Time getTime(int columnIndex) throws SQLException { return _res.getTime(columnIndex); }
     public Timestamp getTimestamp(int columnIndex) throws SQLException { return _res.getTimestamp(columnIndex); }
     public InputStream getAsciiStream(int columnIndex) throws SQLException { return _res.getAsciiStream(columnIndex); }
+    /** @deprecated */
     public InputStream getUnicodeStream(int columnIndex) throws SQLException { return _res.getUnicodeStream(columnIndex); }
     public InputStream getBinaryStream(int columnIndex) throws SQLException { return _res.getBinaryStream(columnIndex); }
     public String getString(String columnName) throws SQLException { return _res.getString(columnName); }
@@ -158,12 +160,14 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public long getLong(String columnName) throws SQLException { return _res.getLong(columnName); }
     public float getFloat(String columnName) throws SQLException { return _res.getFloat(columnName); }
     public double getDouble(String columnName) throws SQLException { return _res.getDouble(columnName); }
+    /** @deprecated */
     public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException { return _res.getBigDecimal(columnName); }
     public byte[] getBytes(String columnName) throws SQLException { return _res.getBytes(columnName); }
     public Date getDate(String columnName) throws SQLException { return _res.getDate(columnName); }
     public Time getTime(String columnName) throws SQLException { return _res.getTime(columnName); }
     public Timestamp getTimestamp(String columnName) throws SQLException { return _res.getTimestamp(columnName); }
     public InputStream getAsciiStream(String columnName) throws SQLException { return _res.getAsciiStream(columnName); }
+    /** @deprecated */
     public InputStream getUnicodeStream(String columnName) throws SQLException { return _res.getUnicodeStream(columnName); }
     public InputStream getBinaryStream(String columnName) throws SQLException { return _res.getBinaryStream(columnName); }
     public SQLWarning getWarnings() throws SQLException { return _res.getWarnings();  }
