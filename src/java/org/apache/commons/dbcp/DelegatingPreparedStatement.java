@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.11 2003/04/08 00:32:22 dgraham Exp $
- * $Revision: 1.11 $
- * $Date: 2003/04/08 00:32:22 $
+ * $Id: DelegatingPreparedStatement.java,v 1.12 2003/04/09 00:47:01 dgraham Exp $
+ * $Revision: 1.12 $
+ * $Date: 2003/04/09 00:47:01 $
  *
  * ====================================================================
  *
@@ -91,7 +91,7 @@ import java.util.List;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.11 $ $Date: 2003/04/08 00:32:22 $
+ * @version $Revision: 1.12 $ $Date: 2003/04/09 00:47:01 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -266,6 +266,8 @@ public class DelegatingPreparedStatement extends AbandonedTrace
          
         // The JDBC spec requires that a statment close any open
         // ResultSet's when it is closed.
+        // FIXME The PreparedStatement we're wrapping should handle this for us.
+        // See bug 17301 for what could happen when ResultSets are closed twice.
         List resultSets = getTrace();
         if( resultSets != null) {
             ResultSet[] set = new ResultSet[resultSets.size()];
