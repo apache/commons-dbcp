@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.32 $
- * $Date: 2004/01/25 19:57:38 $
+ * $Revision: 1.33 $
+ * $Date: 2004/02/07 14:54:33 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.32 $ $Date: 2004/01/25 19:57:38 $
+ * @version $Revision: 1.33 $ $Date: 2004/02/07 14:54:33 $
  */
 public class BasicDataSource implements DataSource {
 
@@ -224,6 +224,22 @@ public class BasicDataSource implements DataSource {
        if (connectionPool != null) {
            connectionPool.setMinIdle(minIdle);
        }
+    }
+
+    /**
+     * The initial number of connections that are created when the pool
+     * is started.
+     * @since 1.2
+     */
+    protected int initialSize = 0;
+    
+    public synchronized int getInitialSize() {
+        return this.initialSize;
+    }
+    
+    public synchronized void setInitialSize(int initialSize) {
+        this.initialSize = initialSize;
+        this.restartNeeded = true;
     }
 
     /**
@@ -883,14 +899,23 @@ public class BasicDataSource implements DataSource {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new SQLNestedException("Cannot create PoolableConnectionFactory", e);
+            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
 
         // Create and return the pooling data source to manage the connections
         dataSource = new PoolingDataSource(connectionPool);
         ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         dataSource.setLogWriter(logWriter);
-        return (dataSource);
+        
+        try {
+            for (int i = 0 ; i < initialSize ; i++) {
+                connectionPool.addObject();
+            }
+        } catch (Exception e) {
+            throw new SQLNestedException("Error preloading the connection pool", e);
+        }
+        
+        return dataSource;
     }
 
     private static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
