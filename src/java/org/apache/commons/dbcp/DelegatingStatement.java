@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingStatement.java,v 1.9 2003/03/06 19:25:34 rwaldhoff Exp $
- * $Revision: 1.9 $
- * $Date: 2003/03/06 19:25:34 $
+ * $Id: DelegatingStatement.java,v 1.10 2003/08/11 23:54:59 dirkv Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/08/11 23:54:59 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import java.util.List;
  * @author Rodney Waldhoff (<a href="mailto:rwaldhof@us.britannica.com">rwaldhof@us.britannica.com</a>)
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.9 $ $Date: 2003/03/06 19:25:34 $
+ * @version $Revision: 1.10 $ $Date: 2003/08/11 23:54:59 $
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
@@ -115,6 +115,28 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _stmt;
     }
 
+    public boolean equals(Object obj) {
+        Statement delegate = getInnermostDelegate();
+        if (delegate == null) {
+            return false;
+        }
+        if (obj instanceof DelegatingStatement) {
+            DelegatingStatement s = (DelegatingStatement) obj;
+            return delegate.equals(s.getInnermostDelegate());
+        }
+        else {
+            return delegate.equals(obj);
+        }
+    }
+
+    public int hashCode() {
+        Object obj = getInnermostDelegate();
+        if (obj == null) {
+            return 0;
+        }
+        return obj.hashCode();
+    }
+    
     /**
      * If my underlying {@link Statement} is not a
      * <tt>DelegatingStatement</tt>, returns it,

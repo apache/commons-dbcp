@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingPreparedStatement.java,v 1.12 2003/04/09 00:47:01 dgraham Exp $
- * $Revision: 1.12 $
- * $Date: 2003/04/09 00:47:01 $
+ * $Id: DelegatingPreparedStatement.java,v 1.13 2003/08/11 23:54:59 dirkv Exp $
+ * $Revision: 1.13 $
+ * $Date: 2003/08/11 23:54:59 $
  *
  * ====================================================================
  *
@@ -91,7 +91,7 @@ import java.util.List;
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.12 $ $Date: 2003/04/09 00:47:01 $
+ * @version $Revision: 1.13 $ $Date: 2003/08/11 23:54:59 $
  */
 public class DelegatingPreparedStatement extends AbandonedTrace
         implements PreparedStatement {
@@ -121,6 +121,28 @@ public class DelegatingPreparedStatement extends AbandonedTrace
      */
     public PreparedStatement getDelegate() {
         return _stmt;
+    }
+
+    public boolean equals(Object obj) {
+        PreparedStatement delegate = getInnermostDelegate();
+        if (delegate == null) {
+            return false;
+        }
+        if (obj instanceof DelegatingPreparedStatement) {
+            DelegatingPreparedStatement s = (DelegatingPreparedStatement) obj;
+            return delegate.equals(s.getInnermostDelegate());
+        }
+        else {
+            return delegate.equals(obj);
+        }
+    }
+
+    public int hashCode() {
+        Object obj = getInnermostDelegate();
+        if (obj == null) {
+            return 0;
+        }
+        return obj.hashCode();
     }
 
     /**

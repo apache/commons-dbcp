@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatingCallableStatement.java,v 1.9 2003/03/06 19:25:34 rwaldhoff Exp $
- * $Revision: 1.9 $
- * $Date: 2003/03/06 19:25:34 $
+ * $Id: DelegatingCallableStatement.java,v 1.10 2003/08/11 23:54:59 dirkv Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/08/11 23:54:59 $
  *
  * ====================================================================
  *
@@ -96,7 +96,7 @@ import java.util.List;
  *
  * @author Glenn L. Nielsen
  * @author James House (<a href="mailto:james@interobjective.com">james@interobjective.com</a>)
- * @version $Revision: 1.9 $ $Date: 2003/03/06 19:25:34 $
+ * @version $Revision: 1.10 $ $Date: 2003/08/11 23:54:59 $
  */
 public class DelegatingCallableStatement extends AbandonedTrace
         implements CallableStatement {
@@ -125,6 +125,54 @@ public class DelegatingCallableStatement extends AbandonedTrace
         return _stmt;
     }
 
+    public boolean equals(Object obj) {
+        CallableStatement delegate = getInnermostDelegate();
+        if (delegate == null) {
+            return false;
+        }
+        if (obj instanceof DelegatingCallableStatement) {
+            DelegatingCallableStatement s = (DelegatingCallableStatement) obj;
+            return delegate.equals(s.getInnermostDelegate());
+        }
+        else {
+            return delegate.equals(obj);
+        }
+    }
+
+    public int hashCode() {
+        Object obj = getInnermostDelegate();
+        if (obj == null) {
+            return 0;
+        }
+        return obj.hashCode();
+    }
+
+    /**
+     * If my underlying {@link CallableStatement} is not a
+     * <tt>DelegatingCallableStatement</tt>, returns it,
+     * otherwise recursively invokes this method on
+     * my delegate.
+     * <p>
+     * Hence this method will return the first
+     * delegate that is not a <tt>DelegatingCallableStatement</tt>,
+     * or <tt>null</tt> when no non-<tt>DelegatingCallableStatement</tt>
+     * delegate can be found by transversing this chain.
+     * <p>
+     * This method is useful when you may have nested
+     * <tt>DelegatingCallableStatement</tt>s, and you want to make
+     * sure to obtain a "genuine" {@link CallableStatement}.
+     */
+    public CallableStatement getInnermostDelegate() {
+        CallableStatement s = _stmt;
+        while(s != null && s instanceof DelegatingPreparedStatement) {
+            s = ((DelegatingCallableStatement)s).getDelegate();
+            if(this == s) {
+                return null;
+            }
+        }
+        return s;
+    }
+    
     /**
      * Close this DelegatingCallableStatement, and close
      * any ResultSets that were not explicitly closed.
@@ -557,5 +605,4 @@ public class DelegatingCallableStatement extends AbandonedTrace
     }
 
 /* JDBC_3_ANT_KEY_END */
-
 }
