@@ -39,7 +39,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.9 $ $Date: 2004/02/28 11:47:52 $
+ * @version $Revision: 1.10 $ $Date: 2005/01/04 23:50:09 $
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
@@ -78,7 +78,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in 
-     * http://nagoya.apache.org/bugzilla/show_bug.cgi?id=18905
+     * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     public void testIncorrectPassword() throws Exception 
     {
@@ -488,7 +488,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
     }
 
-    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     // unregistered user is in the same pool as without username 
     public void testUnregisteredUser() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
@@ -519,7 +519,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(1, tds.getNumIdle("u1", "p1"));
     }
 
-    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     public void testDefaultUser1() throws Exception {
         TesterDriver.addUser("mkh", "password");
         TesterDriver.addUser("hanafey", "password");
@@ -539,7 +539,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
     
-    // see issue http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     public void testDefaultUser2() throws Exception {
         TesterDriver.addUser("mkh", "password");
         TesterDriver.addUser("hanafey", "password");

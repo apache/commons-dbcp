@@ -32,7 +32,7 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision: 1.8 $ $Date: 2004/07/11 19:09:50 $
+ * @version $Revision: 1.9 $ $Date: 2005/01/04 23:50:10 $
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
@@ -71,7 +71,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in 
-     * http://nagoya.apache.org/bugzilla/show_bug.cgi?id=18905
+     * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     public void testIncorrectPassword() throws Exception 
     {
