@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.7 2003/06/29 12:42:16 mpoeschl Exp $
- * $Revision: 1.7 $
- * $Date: 2003/06/29 12:42:16 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/jdbc2pool/Attic/KeyedCPDSConnectionFactory.java,v 1.8 2003/08/11 16:02:10 dirkv Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/08/11 16:02:10 $
  *
  * ====================================================================
  *
@@ -74,6 +74,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
@@ -82,7 +83,7 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * {*link PoolableConnection}s.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: KeyedCPDSConnectionFactory.java,v 1.7 2003/06/29 12:42:16 mpoeschl Exp $
+ * @version $Id: KeyedCPDSConnectionFactory.java,v 1.8 2003/08/11 16:02:10 dirkv Exp $
  */
 class KeyedCPDSConnectionFactory 
     implements KeyedPoolableObjectFactory, ConnectionEventListener {
@@ -139,12 +140,10 @@ class KeyedCPDSConnectionFactory
         if (null != _pool && pool != _pool) {
             try {
                 _pool.close();
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
-                if (e instanceof RuntimeException) {
-                    throw (RuntimeException)e;
-                } else {
-                    throw new SQLException(e.getMessage());
-                }
+                throw new SQLNestedException("Cannot set the pool on this factory", e);
             }
         }
         _pool = pool;

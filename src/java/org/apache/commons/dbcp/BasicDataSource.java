@@ -1,6 +1,6 @@
-/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.15 2003/08/11 15:02:07 dirkv Exp $
- * $Revision: 1.15 $
- * $Date: 2003/08/11 15:02:07 $
+/* $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v 1.16 2003/08/11 16:01:25 dirkv Exp $
+ * $Revision: 1.16 $
+ * $Date: 2003/08/11 16:01:25 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
- * @version $Revision: 1.15 $ $Date: 2003/08/11 15:02:07 $
+ * @version $Revision: 1.16 $ $Date: 2003/08/11 16:01:25 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -597,7 +597,7 @@ public class BasicDataSource implements DataSource {
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLException(e.toString());
+            throw new SQLNestedException("Cannot close connection pool", e);
         }
     }
 
@@ -634,7 +634,7 @@ public class BasicDataSource implements DataSource {
                 driverClassName + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw new SQLException(message);
+            throw new SQLNestedException(message, t);
         }
 
         // Create a JDBC driver instance
@@ -646,7 +646,7 @@ public class BasicDataSource implements DataSource {
                 driverClassName + "' for connect URL '" + url + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw new SQLException(message);
+            throw new SQLNestedException(message, t);
         }
 
         // Create an object pool to contain our active connections
@@ -695,7 +695,7 @@ public class BasicDataSource implements DataSource {
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLException(e.toString());
+            throw new SQLNestedException("Cannot create PoolableConnectionFactory", e);
         }
 
         // Create and return the pooling data source to manage the connections
