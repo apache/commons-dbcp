@@ -38,10 +38,12 @@ mechanisms that it utilizes.</p>
 
 <section name="Documentation">
 
-<p>The <a href="http://jakarta.apache.org/commons/dbcp/api/index.html">
-JavaDoc API documents</a> are available online.  In particular, you should
-read the package overview of the <code>org.apache.commons.dbcp</code>
-package.</p>
+<p>The 
+<a href="apidocs/index.html">JavaDoc API documents</a> 
+are available online.  In particular, you should
+read the package overview of the 
+<code><a href="apidocs/org/apache/commons/dbcp/package-summary.html#package_description">org.apache.commons.dbcp</a></code>
+package for an overview of how to use DBCP.</p>
 
 <p>There are 
 <a href="http://cvs.apache.org/viewcvs.cgi/jakarta-commons/dbcp/doc/">several examples</a> 
