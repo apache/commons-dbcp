@@ -39,7 +39,7 @@
 </p>
 <p>
   Another source of information is 
-  <a href="http://incubator.apache.org/directory/subprojects/naming/index.html">Naming</a>.
+  <a href="http://incubator.apache.org/directory/subprojects/directory-naming/index.html">Naming</a>.
   Naming includes an in-memory JNDI service provider that was extracted from the 
   <a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat</a> JNDI implementation.
   It also contains a easy way to construct a JNDI tree from an XML file and some ResourceFactories.
