@@ -1,7 +1,7 @@
 /*
- * $Id: TestAbandonedBasicDataSource.java,v 1.1 2003/08/21 22:24:28 dirkv Exp $
- * $Revision: 1.1 $
- * $Date: 2003/08/21 22:24:28 $
+ * $Id: TestAbandonedBasicDataSource.java,v 1.2 2003/08/22 12:40:00 dirkv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/08/22 12:40:00 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.1 $ $Date: 2003/08/21 22:24:28 $
+ * @version $Revision: 1.2 $ $Date: 2003/08/22 12:40:00 $
  */
 public class TestAbandonedBasicDataSource extends TestConnectionPool {
     public TestAbandonedBasicDataSource(String testName) {
@@ -109,19 +109,22 @@ public class TestAbandonedBasicDataSource extends TestConnectionPool {
 
     private void getConnection1() throws Exception {
         System.err.println("BEGIN getConnection1()");
-        ds.getConnection();
+        Connection conn = ds.getConnection();
+        System.err.println("conn: " + conn);
         System.err.println("END getConnection1()");
     }
 
     private void getConnection2() throws Exception {
         System.err.println("BEGIN getConnection2()");
-        ds.getConnection();
+        Connection conn = ds.getConnection();
+        System.err.println("conn: " + conn);
         System.err.println("END getConnection2()");
     }
 
     private void getConnection3() throws Exception {
         System.err.println("BEGIN getConnection3()");
-        ds.getConnection();
+        Connection conn = ds.getConnection();
+        System.err.println("conn: " + conn);
         System.err.println("END getConnection3()");
     }
 
