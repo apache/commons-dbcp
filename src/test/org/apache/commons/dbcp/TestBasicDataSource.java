@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestBasicDataSource.java,v $
- * $Revision: 1.10 $
- * $Date: 2003/09/20 14:29:59 $
+ * $Revision: 1.11 $
+ * $Date: 2003/09/20 16:59:41 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.10 $ $Date: 2003/09/20 14:29:59 $
+ * @version $Revision: 1.11 $ $Date: 2003/09/20 16:59:41 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -240,5 +240,22 @@ public class TestBasicDataSource extends TestConnectionPool {
         for (int i = 0; i < c.length; i++) {
             c[i].close();
         }
+    }
+    
+    public void testSetAutoCommitTrueOnClose() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        ds.setDefaultAutoCommit(false);
+        
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        assertEquals(false, conn.getAutoCommit());
+
+        Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        assertNotNull(dconn);
+        assertEquals(false, dconn.getAutoCommit());
+
+        conn.close();
+
+        assertEquals(true, dconn.getAutoCommit());
     }
 }
