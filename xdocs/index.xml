@@ -35,6 +35,11 @@ mechanisms that it utilizes.</p>
 
 </section>
 
+<section name="Releases">
+    <p>
+       See the <a href="downloads.html">downloads</a> page for information on obtaining releases.
+    </p>
+</section>
 
 <section name="Documentation">
 
@@ -50,16 +55,6 @@ package for an overview of how to use DBCP.</p>
 of using DBCP available.</p>
 
 </section>
-
-
-<section name="Releases">
-
-<ul>
-<li><a href="http://jakarta.apache.org/builds/jakarta-commons/release/commons-dbcp/v1.0/">Version 1.0</a></li>
-</ul>
-
-</section>
-
 
 </body>
 </document>

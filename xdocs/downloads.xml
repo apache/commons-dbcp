@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<document>
+   <properties>
+      <title>Downloads</title>
+      <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+      <revision>$Id: downloads.xml,v 1.1 2003/08/25 16:25:20 dirkv Exp $</revision>
+   </properties>
+
+   <body>
+      <section name="Releases">
+         <p>The following releases are available:</p>
+         <ul>
+           <li><a href="http://jakarta.apache.org/builds/jakarta-commons/release/commons-dbcp/v1.0/">Version 1.0</a></li>
+         </ul>
+         <p>
+           <a href="http://cvs.apache.org/builds/jakarta-commons/nightly/commons-dbcp/">Nightly source and binary drops</a> are also available.
+         </p>
+         <p>
+            The CVS repository for <em>DBCP</em> can be
+            <a href="http://cvs.apache.org/viewcvs/jakarta-commons/dbcp/">browsed online</a>
+            or
+            <a href="http://jakarta.apache.org/site/cvsindex.html">downloaded using a CVS client</a>.
+         </p>
+      </section>
+   </body>
+</document>
