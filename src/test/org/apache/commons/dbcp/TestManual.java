@@ -1,7 +1,7 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.5 2002/04/03 12:41:56 rwaldhoff Exp $
- * $Revision: 1.5 $
- * $Date: 2002/04/03 12:41:56 $
+ * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestManual.java,v 1.6 2002/04/03 12:42:50 rwaldhoff Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/04/03 12:42:50 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import org.apache.commons.pool.impl.*;
 
 /**
  * @author Rodney Waldhoff
- * @version $Id: TestManual.java,v 1.5 2002/04/03 12:41:56 rwaldhoff Exp $
+ * @version $Id: TestManual.java,v 1.6 2002/04/03 12:42:50 rwaldhoff Exp $
  */
 public class TestManual extends TestCase {
     public TestManual(String testName) {
@@ -150,7 +150,7 @@ public class TestManual extends TestCase {
             conn.createStatement();
             fail("Can't use closed connections");
         } catch(SQLException e) {
-            ;testSimpleve // expected
+            ; // expected
         }testSimpleve
 
         conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
