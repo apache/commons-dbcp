@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
  * TestSuite for BasicDataSource
  * 
  * @author Dirk Verbeeck
- * @version $Revision: 1.20 $ $Date: 2004/05/18 22:01:10 $
+ * @version $Revision: 1.21 $ $Date: 2004/05/20 13:08:32 $
  */
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
@@ -266,5 +266,19 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(false, ds.connectionPool.getTestOnBorrow());
         assertEquals(false, ds.connectionPool.getTestWhileIdle());
         assertEquals(true, ds.connectionPool.getTestOnReturn());
+    }
+    
+    /**
+     * Bugzilla Bug 29055: AutoCommit and ReadOnly
+     * The DaffodilDB driver throws an SQLException if 
+     * trying to commit or rollback a readOnly connection. 
+     */
+    public void testRollbackReadOnly() throws Exception {
+        ds.setDefaultReadOnly(true);
+        ds.setDefaultAutoCommit(false);
+        
+        Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        conn.close();
     }
 }
