@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/java/org/apache/commons/dbcp/BasicDataSource.java,v $
- * $Revision: 1.27 $
- * $Date: 2003/09/20 17:11:25 $
+ * $Revision: 1.28 $
+ * $Date: 2003/09/20 17:31:05 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Revision: 1.27 $ $Date: 2003/09/20 17:11:25 $
+ * @version $Revision: 1.28 $ $Date: 2003/09/20 17:31:05 $
  */
 
 public class BasicDataSource implements DataSource {
@@ -265,7 +265,7 @@ public class BasicDataSource implements DataSource {
      * borrowed from the pool.  If the object fails to validate, it will be
      * dropped from the pool, and we will attempt to borrow another.
      */
-    protected boolean testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
+    protected boolean testOnBorrow = true;
 
     public boolean getTestOnBorrow() {
         return this.testOnBorrow;
@@ -279,7 +279,7 @@ public class BasicDataSource implements DataSource {
      * The indication of whether objects will be validated before being
      * returned to the pool.
      */
-    protected boolean testOnReturn =  GenericObjectPool.DEFAULT_TEST_ON_RETURN;
+    protected boolean testOnReturn = false;
 
     public boolean getTestOnReturn() {
         return this.testOnReturn;
@@ -343,7 +343,7 @@ public class BasicDataSource implements DataSource {
      * evictor (if any).  If an object fails to validate, it will be dropped
      * from the pool.
      */
-    protected boolean testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
+    protected boolean testWhileIdle = false;
 
     public boolean getTestWhileIdle() {
         return this.testWhileIdle;
@@ -742,6 +742,13 @@ public class BasicDataSource implements DataSource {
             throw new SQLNestedException(message, t);
         }
 
+        // Can't test without a validationQuery
+        if (validationQuery == null) {
+            setTestOnBorrow(false);
+            setTestOnReturn(false);
+            setTestWhileIdle(false);
+        }
+
         // Create an object pool to contain our active connections
         if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned() == true)) {
             connectionPool = new AbandonedObjectPool(null,abandonedConfig);
@@ -760,10 +767,6 @@ public class BasicDataSource implements DataSource {
         connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         connectionPool.setTestWhileIdle(testWhileIdle);
         
-        if (validationQuery != null && !testOnReturn && !testWhileIdle) {
-            connectionPool.setTestOnBorrow(true);
-        }
-
         // Set up statement pool, if desired
         GenericKeyedObjectPoolFactory statementPoolFactory = null;
         if (isPoolPreparedStatements()) {
