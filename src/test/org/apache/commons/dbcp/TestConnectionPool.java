@@ -1,7 +1,7 @@
 /*
  * $Source: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//dbcp/src/test/org/apache/commons/dbcp/TestConnectionPool.java,v $
- * $Revision: 1.8 $
- * $Date: 2003/10/09 21:05:29 $
+ * $Revision: 1.9 $
+ * $Date: 2003/10/15 19:52:13 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.TestCase;
 
@@ -79,8 +80,9 @@ import junit.framework.TestCase;
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * @author John McNally
+ * @author Dirk Verbeeck
  * 
- * @version $Id: TestConnectionPool.java,v 1.8 2003/10/09 21:05:29 rdonkin Exp $
+ * @version $Id: TestConnectionPool.java,v 1.9 2003/10/15 19:52:13 dirkv Exp $
  */
 public abstract class TestConnectionPool extends TestCase {
     public TestConnectionPool(String testName) {
@@ -104,6 +106,19 @@ public abstract class TestConnectionPool extends TestCase {
     protected long getMaxWait() {
         return 100L;
     }
+
+    // ----------- Utility Methods --------------------------------- 
+
+    protected String getUsername(Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select username");
+        if (rs.next()) {
+            return rs.getString(1);
+        }
+        return null;
+    }
+
+    // ----------- tests --------------------------------- 
 
     public void testClearWarnings() throws Exception {
         Connection[] c = new Connection[getMaxActive()];
