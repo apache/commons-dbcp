@@ -167,6 +167,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
+        <include>org/apache/commons/dbcp/TestAbandonedObjectPool.java</include>
         <include>org/apache/commons/jocl/TestJOCLContentHandler.java</include>
         <include>org/apache/commons/dbcp/TestDelegatingConnection.java</include>
         <include>org/apache/commons/dbcp/TestDelegatingPreparedStatement.java</include>

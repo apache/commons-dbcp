@@ -23,7 +23,7 @@ import org.apache.commons.dbcp.datasources.TestFactory;
 
 /**
  * @author Rodney Waldhoff
- * @version $Revision: 1.14 $ $Date: 2004/02/28 11:47:51 $
+ * @version $Revision: 1.15 $ $Date: 2004/05/01 12:43:47 $
  */
 public class TestAll extends TestCase {
     public TestAll(String testName) {
@@ -32,6 +32,7 @@ public class TestAll extends TestCase {
 
     public static Test suite() {
         TestSuite suite = new TestSuite();
+        suite.addTest(TestAbandonedObjectPool.suite());
         suite.addTest(TestManual.suite());
         suite.addTest(TestJOCLed.suite());
         suite.addTest(TestBasicDataSourceFactory.suite());
