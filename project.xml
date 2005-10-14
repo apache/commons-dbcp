@@ -17,7 +17,8 @@
 <project>
   <pomVersion>3</pomVersion>
   
-  <id>commons-dbcp</id>
+  <groupId>commons-dbcp</groupId>
+  <artifactId>commons-dbcp</artifactId>
   <inceptionYear>2001</inceptionYear>
   <currentVersion>1.2.2-dev</currentVersion>
   <name>Commons DBCP</name>
@@ -161,11 +162,13 @@
   
   <dependencies>
     <dependency>
-      <id>commons-collections</id>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
       <version>2.1</version>
     </dependency>
     <dependency>
-      <id>commons-pool</id>
+      <groupId>commons-pool</groupId>
+      <artifactId>commons-pool</artifactId>
       <version>1.2</version>
     </dependency>
 
@@ -175,19 +178,34 @@
          this dependency list so Maven doesn't choke?
     -->
     <dependency>
-      <id>jdbc</id>
+      <groupId>javax.sql</groupId>
+      <artifactId>jdbc-stdext</artifactId>
       <version>2.0</version>
     </dependency>
 
     <dependency>
-      <id>junit</id>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <version>3.8.1</version>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <!-- these two are required by maven -->
-    <dependency><id>xml-apis</id><version>2.0.2</version></dependency><!-- actually dbcp's tests need this too -->
-    <dependency><id>xerces</id><version>2.0.2</version></dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+    <!-- actually dbcp's tests need this too -->
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xerces</artifactId>
+      <version>2.0.2</version>
+    </dependency>
     <!-- /these two are required by maven -->
+  
   </dependencies>
 
   <build>
