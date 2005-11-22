@@ -20,7 +20,7 @@
   <groupId>commons-dbcp</groupId>
   <artifactId>commons-dbcp</artifactId>
   <inceptionYear>2001</inceptionYear>
-  <currentVersion>1.2.2-dev</currentVersion>
+  <currentVersion>1.2.2-SNAPSHOT</currentVersion>
   <name>Commons DBCP</name>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
@@ -249,6 +249,7 @@
         </includes>
       </resource>
       <resource>
+        <directory>${basedir}</directory>
         <targetPath>META-INF</targetPath>
         <includes>
           <include>NOTICE.txt</include>
