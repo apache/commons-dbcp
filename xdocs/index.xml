@@ -49,7 +49,7 @@ mechanisms that it utilizes.</p>
 
 <p>Applications can use the <code>commons-dbcp</code> component directly
 or through the existing interface of their container / supporting framework.
-For example the <a href="http://jakarta.apache.org/tomcat/">Tomcat</a> 
+For example the <a href="http://tomcat.apache.org/">Tomcat</a> 
 servlet container presents a DBCP DataSource as a JNDI Datasource.
 <a href="http://james.apache.org/">James</a> (Java Apache Mail Enterprise Server) 
 has integrated DBCP into the <a href="http://avalon.apache.org/">Avalon</a> framework.
@@ -78,7 +78,7 @@ read the package overview of the
 package for an overview of how to use DBCP.</p>
 
 <p>There are 
-<a href="http://cvs.apache.org/viewcvs.cgi/jakarta-commons/dbcp/doc/">several examples</a> 
+<a href="http://cvs.apache.org/viewcvs.cgi/jakarta/commons/proper/dbcp/trunk/doc/">several examples</a> 
 of using DBCP available.</p>
 
 </section>
