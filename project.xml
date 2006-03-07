@@ -45,7 +45,7 @@
   
   <gumpRepositoryId>jakarta</gumpRepositoryId>
   <issueTrackingUrl>http://issues.apache.org/bugzilla/</issueTrackingUrl>
-  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteAddress>cvs.apache.org</siteAddress>
   <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/${pom.artifactId.substring(8)}/</distributionDirectory>
 
@@ -176,7 +176,7 @@
          downloaded to your Maven repository, and it's not even
          required on JDK 1.4.  Maybe we should remove it from
          this dependency list so Maven doesn't choke?
-    -->
+    -->   
     <dependency>
       <groupId>javax.sql</groupId>
       <artifactId>jdbc-stdext</artifactId>
