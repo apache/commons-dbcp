@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2006 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import javax.naming.spi.ObjectFactory;
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
  * or <code>PerUserPoolDataSource</code>s
- * 
+ *
  * @version $Revision$ $Date$
  */
 abstract class InstanceKeyObjectFactory
@@ -48,7 +48,7 @@ abstract class InstanceKeyObjectFactory
         Iterator i = instanceMap.keySet().iterator();
         while (i.hasNext()) {
             Object obj = i.next();
-            if (obj instanceof String) 
+            if (obj instanceof String)
             {
                 try {
                     max = Math.max(max, Integer.valueOf((String)obj).intValue());
@@ -64,7 +64,7 @@ abstract class InstanceKeyObjectFactory
         instanceMap.put(instanceKey, ds);
         return instanceKey;
     }
-    
+
     static void removeInstance(String key)
     {
         instanceMap.remove(key);
@@ -77,7 +77,7 @@ abstract class InstanceKeyObjectFactory
         //Get iterator to loop over all instances of this datasource.
         Iterator instanceIterator = instanceMap.entrySet().iterator();
         while (instanceIterator.hasNext()) {
-            ((InstanceKeyDataSource) 
+            ((InstanceKeyDataSource)
                 ((Map.Entry) instanceIterator.next()).getValue()).close();
         }
         instanceMap.clear();
@@ -87,41 +87,41 @@ abstract class InstanceKeyObjectFactory
     /**
      * implements ObjectFactory to create an instance of SharedPoolDataSource
      * or PerUserPoolDataSource
-     */ 
-    public Object getObjectInstance(Object refObj, Name name, 
+     */
+    public Object getObjectInstance(Object refObj, Name name,
                                     Context context, Hashtable env)
         throws IOException, ClassNotFoundException {
-        // The spec says to return null if we can't create an instance 
+        // The spec says to return null if we can't create an instance
         // of the reference
         Object obj = null;
         if (refObj instanceof Reference) {
             Reference ref = (Reference) refObj;
-            if (isCorrectClass(ref.getClassName())) { 
+            if (isCorrectClass(ref.getClassName())) {
                 RefAddr ra = ref.get("instanceKey");
                 if (ra != null && ra.getContent() != null) {
                     // object was bound to jndi via Referenceable api.
                     obj = instanceMap.get(ra.getContent());
                 }
-                else 
+                else
                 {
-                    // tomcat jndi creates a Reference out of server.xml 
+                    // tomcat jndi creates a Reference out of server.xml
                     // <ResourceParam> configuration and passes it to an
                     // instance of the factory given in server.xml.
                     String key = null;
-                    if (name != null) 
+                    if (name != null)
                     {
                         key = name.toString();
-                        obj = instanceMap.get(key); 
-                    }                    
+                        obj = instanceMap.get(key);
+                    }
                     if (obj == null)
                     {
                         InstanceKeyDataSource ds = getNewInstance(ref);
                         setCommonProperties(ref, ds);
                         obj = ds;
-                        if (key != null) 
+                        if (key != null)
                         {
                             instanceMap.put(key, ds);
-                        }                        
+                        }
                     }
                 }
             }
@@ -129,81 +129,81 @@ abstract class InstanceKeyObjectFactory
         return obj;
     }
 
-    private void setCommonProperties(Reference ref, 
-                                     InstanceKeyDataSource ikds) 
+    private void setCommonProperties(Reference ref,
+                                     InstanceKeyDataSource ikds)
         throws IOException, ClassNotFoundException {
-                    
+
         RefAddr ra = ref.get("dataSourceName");
         if (ra != null && ra.getContent() != null) {
             ikds.setDataSourceName(ra.getContent().toString());
         }
-                    
+
         ra = ref.get("defaultAutoCommit");
         if (ra != null && ra.getContent() != null) {
             ikds.setDefaultAutoCommit(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
-        
+
         ra = ref.get("defaultReadOnly");
         if (ra != null && ra.getContent() != null) {
             ikds.setDefaultReadOnly(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
-        
+
         ra = ref.get("description");
         if (ra != null && ra.getContent() != null) {
             ikds.setDescription(ra.getContent().toString());
         }
-        
+
         ra = ref.get("jndiEnvironment");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            ikds.jndiEnvironment = 
+            ikds.jndiEnvironment =
                 (Properties) deserialize(serialized);
         }
-        
+
         ra = ref.get("loginTimeout");
         if (ra != null && ra.getContent() != null) {
             ikds.setLoginTimeout(
                 Integer.parseInt(ra.getContent().toString()));
         }
-        
+
         ra = ref.get("testOnBorrow");
         if (ra != null && ra.getContent() != null) {
             ikds.setTestOnBorrow(
                 Boolean.getBoolean(ra.getContent().toString()));
         }
-        
+
         ra = ref.get("testOnReturn");
         if (ra != null && ra.getContent() != null) {
             ikds.setTestOnReturn(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
-        
+
         ra = ref.get("timeBetweenEvictionRunsMillis");
         if (ra != null && ra.getContent() != null) {
             ikds.setTimeBetweenEvictionRunsMillis(
                 Integer.parseInt(ra.getContent().toString()));
         }
-        
+
         ra = ref.get("numTestsPerEvictionRun");
         if (ra != null && ra.getContent() != null) {
             ikds.setNumTestsPerEvictionRun(
                 Integer.parseInt(ra.getContent().toString()));
         }
-        
+
         ra = ref.get("minEvictableIdleTimeMillis");
         if (ra != null && ra.getContent() != null) {
             ikds.setMinEvictableIdleTimeMillis(
                 Integer.parseInt(ra.getContent().toString()));
         }
-        
+
         ra = ref.get("testWhileIdle");
         if (ra != null && ra.getContent() != null) {
             ikds.setTestWhileIdle(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
-                
+
         ra = ref.get("validationQuery");
         if (ra != null && ra.getContent() != null) {
             ikds.setValidationQuery(ra.getContent().toString());
@@ -227,16 +227,18 @@ abstract class InstanceKeyObjectFactory
     /**
      * used to set some properties saved within a Reference
      */
-    protected static final Object deserialize(byte[] data) 
+    protected static final Object deserialize(byte[] data)
         throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {
             in = new ObjectInputStream(new ByteArrayInputStream(data));
             return in.readObject();
         } finally {
-            try { 
-                in.close(); 
-            } catch (IOException ex) {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                }
             }
         }
     }
