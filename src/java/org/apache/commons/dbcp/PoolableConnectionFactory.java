@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2006 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -92,7 +92,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         boolean defaultReadOnly,
         boolean defaultAutoCommit,
         AbandonedConfig config) {
-            
+
         _connFactory = connFactory;
         _pool = pool;
         _config = config;
@@ -124,7 +124,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         boolean defaultAutoCommit,
         int defaultTransactionIsolation,
         AbandonedConfig config) {
-            
+
         _connFactory = connFactory;
         _pool = pool;
         _config = config;
@@ -159,7 +159,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         int defaultTransactionIsolation,
         String defaultCatalog,
         AbandonedConfig config) {
-            
+
         _connFactory = connFactory;
         _pool = pool;
         _config = config;
@@ -194,7 +194,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         int defaultTransactionIsolation,
         String defaultCatalog,
         AbandonedConfig config) {
-            
+
         _connFactory = connFactory;
         _pool = pool;
         _config = config;
@@ -285,7 +285,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public void setDefaultCatalog(String defaultCatalog) {
         _defaultCatalog = defaultCatalog;
     }
-    
+
     synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if(null != _stmtPoolFactory) {
@@ -309,7 +309,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                 return true;
             } catch(Exception e) {
                 return false;
-            }           
+            }
         } else {
             return false;
         }
@@ -330,17 +330,20 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                     throw new SQLException("validationQuery didn't return a row");
                 }
             } finally {
-                try {
-                    rset.close();
-                } catch(Exception t) {
-                    // ignored
+                if (rset != null) {
+                    try {
+                        rset.close();
+                    } catch(Exception t) {
+                        // ignored
+                    }
                 }
-                try {
-                    stmt.close();
-                } catch(Exception t) {
-                    // ignored
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch(Exception t) {
+                        // ignored
+                    }
                 }
-
             }
         }
     }
@@ -386,14 +389,14 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     protected String _defaultCatalog;
-    
+
     /**
      * @deprecated AbandonedConfig is now deprecated.
      */
     protected AbandonedConfig _config = null;
 
     /**
-     * Internal constant to indicate the level is not set. 
+     * Internal constant to indicate the level is not set.
      */
 	static final int UNKNOWN_TRANSACTIONISOLATION = -1;
 }
