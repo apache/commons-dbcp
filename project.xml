@@ -149,6 +149,12 @@
       <email>yoavs@apache.org</email>
       <organization>Apache Software Foundation</organization>
     </developer>
+    <developer>
+      <name>Phil Steitz</name>
+      <id>psteitz</id>
+      <email></email>
+      <organization></organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>
@@ -176,7 +182,8 @@
          downloaded to your Maven repository, and it's not even
          required on JDK 1.4.  Maybe we should remove it from
          this dependency list so Maven doesn't choke?
-    -->   
+    -->
+   
     <dependency>
       <groupId>javax.sql</groupId>
       <artifactId>jdbc-stdext</artifactId>
@@ -217,6 +224,7 @@
         <include>org/apache/commons/dbcp/TestAbandonedObjectPool.java</include>
         <include>org/apache/commons/jocl/TestJOCLContentHandler.java</include>
         <include>org/apache/commons/dbcp/TestDelegatingConnection.java</include>
+        <include>org/apache/commons/dbcp/TestPoolableConnection.java</include>
         <include>org/apache/commons/dbcp/TestDelegatingPreparedStatement.java</include>
         <include>org/apache/commons/dbcp/TestDelegatingStatement.java</include>
         <include>org/apache/commons/dbcp/TestJOCLed.java</include>
