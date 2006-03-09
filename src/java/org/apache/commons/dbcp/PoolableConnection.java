@@ -32,6 +32,7 @@ import org.apache.commons.pool.ObjectPool;
  */
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
+    // TODO: Correct use of the pool requires that this connection is only every returned to the pool once.
     protected ObjectPool _pool = null;
 
     /**
@@ -67,7 +68,7 @@ public class PoolableConnection extends DelegatingConnection {
             isClosed = isClosed();
         } catch (SQLException e) {
             try {
-                _pool.invalidateObject(this);
+                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
             } catch (Exception ie) {
                 // DO NOTHING the original exception will be rethrown
             }
@@ -75,14 +76,14 @@ public class PoolableConnection extends DelegatingConnection {
         }
         if (isClosed) {
             try {
-                _pool.invalidateObject(this);
+                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
             } catch (Exception ie) {
                 // DO NOTHING, "Already closed" exception thrown below
             }
             throw new SQLException("Already closed.");
         } else {
             try {
-                _pool.returnObject(this);
+                _pool.returnObject(this); // XXX should be guarded to happen at most once
             } catch(SQLException e) {
                 throw e;
             } catch(RuntimeException e) {
