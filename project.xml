@@ -155,6 +155,13 @@
       <email></email>
       <organization></organization>
     </developer>
+    <developer>
+      <name>J&#x00f6;rg Schaible</name>
+      <id>joehni</id>
+      <email>joerg.schaible@gmx.de</email>
+      <organization></organization>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
   <contributors>
     <contributor>
