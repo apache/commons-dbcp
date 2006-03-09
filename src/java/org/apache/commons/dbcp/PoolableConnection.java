@@ -74,6 +74,11 @@ public class PoolableConnection extends DelegatingConnection {
             throw new SQLNestedException("Cannot close connection (isClosed check failed)", e);
         }
         if (isClosed) {
+            try {
+                _pool.invalidateObject(this);
+            } catch (Exception ie) {
+                // DO NOTHING, "Already closed" exception thrown below
+            }
             throw new SQLException("Already closed.");
         } else {
             try {

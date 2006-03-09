@@ -42,6 +42,7 @@ public class TestAll extends TestCase {
         suite.addTest(TestDelegatingConnection.suite());
         suite.addTest(TestDelegatingStatement.suite());
         suite.addTest(TestDelegatingPreparedStatement.suite());
+        suite.addTest(TestPoolableConnection.suite());
         suite.addTest(TestSharedPoolDataSource.suite());
         suite.addTest(TestPerUserPoolDataSource.suite());
         suite.addTest(TestFactory.suite());
