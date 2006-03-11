@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.pool.ObjectPool;
@@ -417,6 +419,13 @@ public class PerUserPoolDataSource
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
         con.setReadOnly(defaultReadOnly);
+    }
+
+    public Reference getReference() throws NamingException {
+        Reference ref = new Reference(getClass().getName(),
+                PerUserPoolDataSourceFactory.class.getName(), null);
+        ref.add(new StringRefAddr("instanceKey", instanceKey));
+        return ref;
     }
 
     private PoolKey getPoolKey(String username) {

@@ -742,12 +742,23 @@ public abstract class InstanceKeyDataSource
     // Referenceable implementation 
 
     /**
-     * <CODE>Referenceable</CODE> implementation prepares object for
-     * binding in jndi.
+     * Retrieves the Reference of this object.
+     * <strong>Note:</strong> <code>InstanceKeyDataSource</code> subclasses
+     * should override this method. The implementaion included below
+     * is not robust and will be removed at the next major version DBCP
+     * release.
+     *
+     * @return The non-null Reference of this object.
+     * @exception NamingException If a naming exception was encountered
+     *		while retrieving the reference.
      */
+    // TODO: Remove the implementation of this method at next major
+    // version release.
+    
     public Reference getReference() throws NamingException {
-        Reference ref = new Reference(getClass().getName(), 
-            InstanceKeyObjectFactory.class.getName(), null);
+        final String className = getClass().getName();
+        final String factoryName = className + "Factory"; // XXX: not robust 
+        Reference ref = new Reference(className, factoryName, null);
         ref.add(new StringRefAddr("instanceKey", instanceKey));
         return ref;
     }
