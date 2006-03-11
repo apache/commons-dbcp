@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.collections.LRUMap;
@@ -172,6 +174,13 @@ public class SharedPoolDataSource
         return info;
     }
 
+    public Reference getReference() throws NamingException {
+        Reference ref = new Reference(getClass().getName(),
+            SharedPoolDataSourceFactory.class.getName(), null);
+        ref.add(new StringRefAddr("instanceKey", instanceKey));
+        return ref;
+    }
+    
     private UserPassKey getUserPassKey(String username, String password) {
         UserPassKey key = (UserPassKey) userKeys.get(username);
         if (key == null) {

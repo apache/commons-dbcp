@@ -196,6 +196,7 @@
       <artifactId>jdbc-stdext</artifactId>
       <version>2.0</version>
     </dependency>
+   
 
     <dependency>
       <groupId>junit</groupId>
@@ -219,6 +220,39 @@
       <version>2.0.2</version>
     </dependency>
     <!-- /these two are required by maven -->
+    
+    <!-- tomcat naming jars for jndi reference tests -->
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>naming-common</artifactId>
+      <version>5.0.28</version>
+      <properties>
+        <scope>test</scope>
+        <comment>Only required for jndi reference tests</comment>
+      </properties>
+    </dependency>
+    
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>naming-java</artifactId>
+      <version>5.0.28</version>
+      <properties>
+        <scope>test</scope>
+        <comment>Only required for jndi reference tests</comment>
+      </properties>
+    </dependency>
+    
+    <!-- dragged in by tomcat-naming jars - only for jndi tests -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+       <version>1.0.3</version>
+       <url>http://jakarta.apache.org/commons/logging</url>
+       <properties>
+         <scope>test</scope>
+         <comment>Only required for jndi reference tests</comment>
+      </properties>
+    </dependency>
   
   </dependencies>
 
@@ -241,7 +275,8 @@
         <include>org/apache/commons/dbcp/TestBasicDataSource.java</include>
         <include>org/apache/commons/dbcp/TestAbandonedBasicDataSource.java</include>
         <include>org/apache/commons/dbcp/TestPStmtPoolingBasicDataSource.java</include>
-
+        <include>org/apache/commons/dbcp/TestJndi.java</include>
+        
         <include>org/apache/commons/dbcp/datasources/TestFactory.java</include>
         <include>org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java</include>
         <include>org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java</include>
