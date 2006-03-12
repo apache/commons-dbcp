@@ -52,6 +52,10 @@ The <action> type attribute can be add,update,fix,remove.
         concrete factory and added implementations of getReference in concrete
         subclasses.
       </action>
+      <action dev="psteitz" type="fix" issue="#37359" due-to="Jindrich Vimr">
+        Inserted null check in close method of SharedPoolDataSource to avoid
+        NPE when invoked on non-initialized pool.
+      </action>
     </release>   
   </body>
 </document>

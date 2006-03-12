@@ -63,7 +63,9 @@ public class SharedPoolDataSource
      * Close pool being maintained by this datasource.
      */
     public void close() throws Exception {
-        pool.close();
+        if (pool != null) {
+            pool.close();
+        }
         InstanceKeyObjectFactory.removeInstance(instanceKey);
     }
 
