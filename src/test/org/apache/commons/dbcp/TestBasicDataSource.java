@@ -284,7 +284,8 @@ public class TestBasicDataSource extends TestConnectionPool {
     
     /**
      * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxActive(0)
-     * MaxActive == 0 should throw SQLException on getConnection
+     * MaxActive == 0 should throw SQLException on getConnection.
+     * Results from Bug 29863 in commons-pool.
      */
     public void testMaxActiveZero() throws Exception {
         ds.setMaxActive(0);
