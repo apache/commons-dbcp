@@ -265,6 +265,18 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             c[i].close();
         }
     }
+    
+    /**
+     * Test pool close.  Illustrates BZ 37359.
+     * 
+     * @throws Exception
+     */
+    public void testClosePool() throws Exception {
+      ((SharedPoolDataSource)ds).close();
+      SharedPoolDataSource tds = new SharedPoolDataSource();
+      // NPE before BZ 37359 fix 
+      tds.close();
+    }
 
     public void testMaxActive() 
         throws Exception 
