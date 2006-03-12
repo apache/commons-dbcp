@@ -16,10 +16,17 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import java.util.NoSuchElementException;
 
-import org.apache.commons.pool.*;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.KeyedPoolableObjectFactory;
+
+
+//import org.apache.commons.pool.*;
 
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
