@@ -185,19 +185,6 @@
       <version>1.2</version>
     </dependency>
 
-    <!-- Note JDBC 2.0 is a pain, because it must be manually
-         downloaded to your Maven repository, and it's not even
-         required on JDK 1.4.  Maybe we should remove it from
-         this dependency list so Maven doesn't choke?
-    -->
-   
-    <dependency>
-      <groupId>javax.sql</groupId>
-      <artifactId>jdbc-stdext</artifactId>
-      <version>2.0</version>
-    </dependency>
-   
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -207,19 +194,6 @@
       </properties>
     </dependency>
 
-    <!-- these two are required by maven -->
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <!-- actually dbcp's tests need this too -->
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xerces</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <!-- /these two are required by maven -->
     
     <!-- tomcat naming jars for jndi reference tests -->
     <dependency>
