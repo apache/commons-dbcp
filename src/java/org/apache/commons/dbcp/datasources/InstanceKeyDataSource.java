@@ -419,7 +419,9 @@ public abstract class InstanceKeyDataSource
      * before being returned by the {*link #borrowObject}
      * method.  If the object fails to validate,
      * it will be dropped from the pool, and we will attempt
-     * to borrow another.
+     * to borrow another. For a <code>true</code> value to have any effect,
+     * the <code>validationQuery</code> property must be set to a non-null
+     * string.
      *
      * @see #getTestOnBorrow
      */
@@ -452,7 +454,9 @@ public abstract class InstanceKeyDataSource
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
      * before being returned to the pool within the
-     * {*link #returnObject}.
+     * {*link #returnObject}. For a <code>true</code> value to have any effect,
+     * the <code>validationQuery</code> property must be set to a non-null
+     * string.
      *
      * @see #getTestOnReturn
      */
@@ -566,7 +570,10 @@ public abstract class InstanceKeyDataSource
      * When <tt>true</tt>, objects will be
      * {*link PoolableObjectFactory#validateObject validated}
      * by the idle object evictor (if any).  If an object
-     * fails to validate, it will be dropped from the pool.
+     * fails to validate, it will be dropped from the pool. For a
+     * <code>true</code> value to have any effect,
+     * the <code>validationQuery</code> property must be set to a non-null
+     * string.
      *
      * @see #getTestWhileIdle
      * @see #setTimeBetweenEvictionRunsMillis

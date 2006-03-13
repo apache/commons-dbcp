@@ -267,6 +267,14 @@ public class BasicDataSource implements DataSource {
         return this.testOnBorrow;
     }
 
+    /**
+     * Sets the <code>testOnBorrow</code> property. This property determines
+     * whether or not the pool will validate objects before they are borrowed
+     * from the pool. For a <code>true</code> value to have any effect, the 
+     * <code>validationQuery</code> property must be set to a non-null string.
+     * 
+     * @param testOnBorrow new value for testOnBorrow property
+     */
     public synchronized void setTestOnBorrow(boolean testOnBorrow) {
         this.testOnBorrow = testOnBorrow;
         if (connectionPool != null) {
@@ -284,6 +292,14 @@ public class BasicDataSource implements DataSource {
         return this.testOnReturn;
     }
 
+    /**
+     * Sets the <code>testOnReturn</code> property. This property determines
+     * whether or not the pool will validate objects before they are returned
+     * to the pool. For a <code>true</code> value to have any effect, the 
+     * <code>validationQuery</code> property must be set to a non-null string.
+     * 
+     * @param testOnReturn new value for testOnReturn property
+     */
     public synchronized void setTestOnReturn(boolean testOnReturn) {
         this.testOnReturn = testOnReturn;
         if (connectionPool != null) {
@@ -360,6 +376,14 @@ public class BasicDataSource implements DataSource {
         return this.testWhileIdle;
     }
 
+    /**
+     * Sets the <code>testWhileIdle</code> property. This property determines
+     * whether or not the idle object evictor will validate connections.  For a
+     * <code>true</code> value to have any effect, the 
+     * <code>validationQuery</code> property must be set to a non-null string.
+     * 
+     * @param testWhileIdle new value for testWhileIdle property
+     */
     public synchronized void setTestWhileIdle(boolean testWhileIdle) {
         this.testWhileIdle = testWhileIdle;
         if (connectionPool != null) {
