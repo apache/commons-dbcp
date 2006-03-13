@@ -179,7 +179,10 @@ one row.
    <td>
       The indication of whether objects will be validated before being
       borrowed from the pool.  If the object fails to validate, it will be
-      dropped from the pool, and we will attempt to borrow another.
+      dropped from the pool, and we will attempt to borrow another.<br/>
+      <strong>NOTE</strong> - for a <code>true</code> value to have any effect,
+      the <code>validationQuery</code> parameter must be set to a non-null
+      string.
    </td>
 </tr>
 <tr>
@@ -187,7 +190,9 @@ one row.
    <td>false</td>
    <td>
       The indication of whether objects will be validated before being
-      returned to the pool.
+      returned to the pool. <br/> <strong>NOTE</strong> - for a 
+      <code>true</code> value to have any effect, the 
+      <code>validationQuery</code> parameter must be set to a non-null string.
    </td>
 </tr>
 <tr>
@@ -196,7 +201,9 @@ one row.
    <td>
       The indication of whether objects will be validated by the idle object
       evictor (if any).  If an object fails to validate, it will be dropped
-      from the pool.
+      from the pool. <br/> <strong>NOTE</strong> - for a <code>true</code>
+      value to have any effect, the <code>validationQuery</code> parameter
+      must be set to a non-null string.
    </td>
 </tr>
 <tr>
