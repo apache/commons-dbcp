@@ -368,14 +368,20 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
-            conn.setAutoCommit(_defaultAutoCommit);
-            if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
+            if (conn.getAutoCommit() != _defaultAutoCommit) {
+                conn.setAutoCommit(_defaultAutoCommit);
+            }
+            if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) 
+                    && (conn.getTransactionIsolation() != 
+                    _defaultTransactionIsolation)) {
                 conn.setTransactionIsolation(_defaultTransactionIsolation);
             }
-            if (_defaultReadOnly != null) {
+            if ((_defaultReadOnly != null) && 
+                    (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
                 conn.setReadOnly(_defaultReadOnly.booleanValue());
             }
-            if (_defaultCatalog != null) {
+            if ((_defaultCatalog != null) &&
+                    (conn.getCatalog() != _defaultCatalog)) {
                 conn.setCatalog(_defaultCatalog);
             }
         }
