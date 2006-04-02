@@ -56,6 +56,10 @@ The <action> type attribute can be add,update,fix,remove.
         Inserted null check in close method of SharedPoolDataSource to avoid
         NPE when invoked on non-initialized pool.
       </action>
+      <action dev="psteitz" type="fix" issue="#31343">
+        Modified activateObject in PoolableConnection to test connection
+        properties before resetting to defaults.
+      </action>
     </release>   
   </body>
 </document>
