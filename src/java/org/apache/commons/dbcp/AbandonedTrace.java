@@ -62,7 +62,7 @@ public class AbandonedTrace {
     /**
      * Construct a new AbandonedTrace with no parent object.
      *
-     * @param AbandonedConfig
+     * @param config AbandonedConfig
      */
     public AbandonedTrace(AbandonedConfig config) {
         this.config = config;
@@ -72,7 +72,7 @@ public class AbandonedTrace {
     /**
      * Construct a new AbandonedTrace with a parent object.
      *
-     * @param AbandonedTrace parent object
+     * @param parent AbandonedTrace parent object
      */
     public AbandonedTrace(AbandonedTrace parent) {
         this.config = parent.getConfig();
@@ -82,7 +82,7 @@ public class AbandonedTrace {
     /**
      * Initialize abandoned tracing for this object.
      *
-     * @param AbandonedTrace parent object
+     * @param parent AbandonedTrace parent object
      */
     private void init(AbandonedTrace parent) {
         if (parent != null) {                  
@@ -134,7 +134,7 @@ public class AbandonedTrace {
     /**
      * Set the time in ms this object was last used.
      *
-     * @param long time in ms
+     * @param time time in ms
      */
     protected void setLastUsed(long time) {
         if (parent != null) {
@@ -166,7 +166,7 @@ public class AbandonedTrace {
      * Add an object to the list of objects being
      * traced.
      *
-     * @param AbandonedTrace object to add
+     * @param trace AbandonedTrace object to add
      */
     protected void addTrace(AbandonedTrace trace) {
         synchronized(this) {
@@ -215,7 +215,7 @@ public class AbandonedTrace {
     /**
      * Remove a child object this object is tracing.
      *
-     * @param AbandonedTrace object to remvoe
+     * @param trace AbandonedTrace object to remvoe
      */
     protected synchronized void removeTrace(AbandonedTrace trace) {
         if (this.trace != null) {

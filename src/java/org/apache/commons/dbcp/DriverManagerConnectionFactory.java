@@ -45,10 +45,10 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param url a database url of the form 
+     * @param connectUri a database url of the form 
      * <code>jdbc:<em>subprotocol</em>:<em>subname</em></code>
-     * @param user the database user
-     * @param password the user's password
+     * @param uname the database user
+     * @param passwd the user's password
      */
     public DriverManagerConnectionFactory(String connectUri, String uname, String passwd) {
         _connectUri = connectUri;

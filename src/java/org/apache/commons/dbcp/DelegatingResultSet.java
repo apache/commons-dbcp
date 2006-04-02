@@ -64,8 +64,8 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
      * ResultSet to the Statement which created it and the
      * code which created it.
      *
-     * @param Statement stmt which create this ResultSet
-     * @param ResultSet to wrap
+     * @param stmt Statement which created this ResultSet
+     * @param res ResultSet to wrap
      */
     public DelegatingResultSet(Statement stmt, ResultSet res) {
         super((AbandonedTrace)stmt);

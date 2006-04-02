@@ -53,7 +53,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     /**
      * Constructor.
      * @param c the underlying {@link Connection}.
-     * @param maxSleepingPerKey the maximum number of {@link PreparedStatement}s that may sit idle in my pool (per type)
+     * @param pool {@link KeyedObjectPool} of {@link PreparedStatement}s
      */
     public PoolingConnection(Connection c, KeyedObjectPool pool) {
         super(c);

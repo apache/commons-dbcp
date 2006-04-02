@@ -43,8 +43,8 @@ public class AbandonedObjectPool extends GenericObjectPool {
     /**
      * Create an ObjectPool which tracks db connections.
      *
-     * @param PoolableObjectFactory factory used to create this
-     * @param AbandonedConfig configuration for abandoned db connections
+     * @param factory PoolableObjectFactory used to create this
+     * @param config configuration for abandoned db connections
      */
     public AbandonedObjectPool(PoolableObjectFactory factory,
                                AbandonedConfig config) {
@@ -88,7 +88,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
     /**
      * Return a db connection to the pool.
      *
-     * @param Object db Connection to return
+     * @param obj db Connection to return
      */
     public void returnObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
