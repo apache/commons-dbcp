@@ -74,7 +74,7 @@ public class DbcpException extends RuntimeException {
 
     /**
      * Construct a new runtime exception with the specified cause and a
-     * detail message of <code>(cause == null ? null : cause.toString())</code>.
+     * detail message of <code>(cause == null &#63; null : cause&#46;toString())</code>.
      *
      * @param cause The root cause for this exception
      */

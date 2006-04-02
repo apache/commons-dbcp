@@ -37,7 +37,7 @@ public class AbandonedConfig {
      * Setting this to true can recover db connections from poorly written    
      * applications which fail to close a connection.
      *
-     * @return boolean
+     * @return true if abandoned connections are to be removed
      */
     public boolean getRemoveAbandoned() {
         return (this.removeAbandoned);
@@ -53,7 +53,8 @@ public class AbandonedConfig {
      * Setting this to true can recover db connections from poorly written
      * applications which fail to close a connection.
      *
-     * @param boolean
+     * @param removeAbandoned true means abandoned connections will be
+     *   removed
      */
     public void setRemoveAbandoned(boolean removeAbandoned) {
         this.removeAbandoned = removeAbandoned;
@@ -66,7 +67,7 @@ public class AbandonedConfig {
      *
      * Defaults to 300 seconds.
      *
-     * @return int remove abandoned timeout in seconds
+     * @return abandoned timeout in seconds
      */
     public int getRemoveAbandonedTimeout() {
         return (this.removeAbandonedTimeout);
@@ -77,7 +78,7 @@ public class AbandonedConfig {
      *
      * Defaults to 300 seconds.
      *
-     * @param int remove abandoned timeout in seconds
+     * @param removeAbandonedTimeout abandoned timeout in seconds
      */
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
         this.removeAbandonedTimeout = removeAbandonedTimeout;
@@ -93,8 +94,10 @@ public class AbandonedConfig {
      * Logging of abandoned Statements and Connections adds overhead
      * for every Connection open or new Statement because a stack
      * trace has to be generated.
+     * 
+     * @return boolean true if stack trace logging is turned on for abandoned
+     *  Statements or Connections
      *
-     * @return boolean
      */
     public boolean getLogAbandoned() {
         return (this.logAbandoned);
@@ -109,7 +112,6 @@ public class AbandonedConfig {
      * for every Connection open or new Statement because a stack
      * trace has to be generated.
      *
-     * @param boolean
      */
     public void setLogAbandoned(boolean logAbandoned) {
         this.logAbandoned = logAbandoned;

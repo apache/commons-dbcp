@@ -70,8 +70,8 @@ public class DelegatingConnection extends AbandonedTrace
      * the Statements created so that any unclosed Statements
      * can be closed when this Connection is closed.
      *
-     * @param Connection the {@link Connection} to delegate all calls to.
-     * @param AbandonedConfig the configuration for tracing abandoned objects
+     * @param c the {@link Connection} to delegate all calls to.
+     * @param config the configuration for tracing abandoned objects
      * @deprecated AbandonedConfig is now deprecated.
      */
     public DelegatingConnection(Connection c, AbandonedConfig config) {

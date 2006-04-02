@@ -232,7 +232,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * Sets whether to pool statements or not.
-     * @param poolPreparedStatements pooling on or off
+     * @param poolingStatements pooling on or off
      */
     public synchronized void setPoolPreparedStatements(boolean poolingStatements) {
         this.poolPreparedStatements = poolingStatements;

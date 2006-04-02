@@ -109,7 +109,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param obj The possibly null object containing location or
      *  reference information that can be used in creating an object
      * @param name The name of this object relative to <code>nameCtx</code>
-     * @param nameCts The context relative to which the <code>name</code>
+     * @param nameCtx The context relative to which the <code>name</code>
      *  parameter is specified, or <code>null</code> if <code>name</code>
      *  is relative to the default initial context
      * @param environment The possibly null environment that is used in

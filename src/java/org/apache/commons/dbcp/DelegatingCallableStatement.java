@@ -60,7 +60,8 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
      * Statement to the Connection which created it and the
      * code which created it.
      *
-     * @param cs the {@link CallableStatement} to delegate all calls to.
+     * @param c the {@link DelegatingConnection} that created this statement
+     * @param s the {@link CallableStatement} to delegate all calls to
      */
     public DelegatingCallableStatement(DelegatingConnection c,
                                        CallableStatement s) {

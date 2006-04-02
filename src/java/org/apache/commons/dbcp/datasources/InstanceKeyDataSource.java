@@ -344,11 +344,12 @@ public abstract class InstanceKeyDataSource
     }
     
     /**
-     * Set the value of jndiEnvironment which is used when instantiating
-     * a jndi InitialContext.  This InitialContext is used to locate the
-     * backend ConnectionPoolDataSource.
-     *
-     * @param v  Value to assign to jndiEnvironment.
+     * Sets the value of the given JNDI environment property to be used when
+     * instantiating a JNDI InitialContext. This InitialContext is used to
+     * locate the backend ConnectionPoolDataSource.
+     * 
+     * @param key the JNDI environment property to set.
+     * @param value the value assigned to specified JNDI environment property.
      */
     public void setJndiEnvironment(String key, String value) {
         if (jndiEnvironment == null) {
