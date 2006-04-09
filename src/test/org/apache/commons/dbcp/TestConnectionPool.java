@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Stack;
 
 import junit.framework.TestCase;
 
@@ -50,6 +51,17 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void tearDown() throws Exception {
         super.tearDown();
+        // Close any connections opened by the test
+        while (!connections.isEmpty()) {
+            Connection conn = (Connection) connections.pop();
+            try {
+                conn.close();
+            } catch (Exception ex) { 
+                // ignore
+            } finally {
+                conn = null;
+            }
+        }
     }
 
     protected abstract Connection getConnection() throws Exception;
@@ -60,6 +72,16 @@ public abstract class TestConnectionPool extends TestCase {
     
     protected long getMaxWait() {
         return 100L;
+    }
+    
+    /** Connections opened during the course of a test */
+    protected Stack connections = new Stack();
+    
+    /** Acquire a connection and push it onto the connections stack */
+    protected Connection newConnection() throws Exception {
+        Connection connection = getConnection();
+        connections.push(connection);
+        return connection;
     }
 
     // ----------- Utility Methods --------------------------------- 
@@ -78,7 +100,7 @@ public abstract class TestConnectionPool extends TestCase {
     public void testClearWarnings() throws Exception {
         Connection[] c = new Connection[getMaxActive()];
         for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
+            c[i] = newConnection();
             assertTrue(c[i] != null);
             
             // generate SQLWarning on connection
@@ -94,7 +116,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
         
         for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
+            c[i] = newConnection();
         }        
 
         for (int i = 0; i < c.length; i++) {
@@ -109,7 +131,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void testIsClosed() throws Exception {
         for(int i=0;i<getMaxActive();i++) {
-            Connection conn = getConnection();
+            Connection conn = newConnection();
             assertTrue(null != conn);
             assertTrue(!conn.isClosed());
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
@@ -126,7 +148,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void testCantCloseConnectionTwice() throws Exception {
         for(int i=0;i<getMaxActive();i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            Connection conn = getConnection();
+            Connection conn = newConnection();
             assertTrue(null != conn);
             assertTrue(!conn.isClosed());
             conn.close();
@@ -142,7 +164,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testCantCloseStatementTwice() throws Exception {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertTrue(null != conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
@@ -160,7 +182,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testSimple() throws Exception {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertTrue(null != conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertTrue(null != stmt);
@@ -174,7 +196,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void testRepeatedBorrowAndReturn() throws Exception {
         for(int i=0;i<100;i++) {
-            Connection conn = getConnection();
+            Connection conn = newConnection();
             assertTrue(null != conn);
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertTrue(null != stmt);
@@ -188,7 +210,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testSimple2() throws Exception {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertTrue(null != conn);
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
@@ -216,7 +238,7 @@ public abstract class TestConnectionPool extends TestCase {
             ; // expected
         }
 
-        conn = getConnection();
+        conn = newConnection();
         assertTrue(null != conn);
         {
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
@@ -240,48 +262,52 @@ public abstract class TestConnectionPool extends TestCase {
         conn = null;
     }
 
-    public void testPooling() throws Exception {
-        Connection conn = getConnection();
-        Connection underconn = null;
-        if(conn instanceof DelegatingConnection) {
-            underconn = ((DelegatingConnection)conn).getInnermostDelegate();
-        } else {
-            return; // skip this test
+    public void testPooling() throws Exception {  
+        // Grab a maximal set of open connections from the pool
+        Connection[] c = new Connection[getMaxActive()];
+        Connection[] u = new Connection[getMaxActive()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = newConnection();
+            if (c[i] instanceof DelegatingConnection) {
+                u[i] = ((DelegatingConnection) c[i]).getInnermostDelegate();
+            } else {
+                for (int j = 0; j <= i; j++) {
+                    c[j].close();
+                }
+                return; // skip this test   
+            }
+        }        
+        // Close connections one at a time and get new ones, making sure
+        // the new ones come from the pool
+        for (int i = 0; i < c.length; i++) {
+            c[i].close();
+            Connection con = newConnection();
+            Connection underCon = 
+                ((DelegatingConnection) con).getInnermostDelegate();
+            assertTrue("Failed to get connection", underCon != null);
+            boolean found = false;
+            for (int j = 0; j < c.length; j++) {
+                if (underCon == u[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue("New connection not from pool", found);
+            con.close();
         }
-        assertTrue(underconn != null);
-        Connection conn2 = getConnection();
-        Connection underconn2 = null;
-        if(conn2 instanceof DelegatingConnection) {
-            underconn2 = ((DelegatingConnection)conn2).getInnermostDelegate();
-        } else {
-            return; // skip this test
-        }
-        assertTrue(underconn2 != null);
-        assertTrue(underconn != underconn2);
-        conn2.close();
-        conn.close();
-        Connection conn3 = getConnection();
-        Connection underconn3 = null;
-        if(conn3 instanceof DelegatingConnection) {
-            underconn3 = ((DelegatingConnection)conn3).getInnermostDelegate();
-        } else {
-            return; // skip this test
-        }
-        assertTrue( underconn3 == underconn || underconn3 == underconn2 );
-        conn3.close();
     }
     
     public void testAutoCommitBehavior() throws Exception {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertTrue(conn != null);
         assertTrue(conn.getAutoCommit());
         conn.setAutoCommit(false);
         conn.close();
         
-        Connection conn2 = getConnection();
+        Connection conn2 = newConnection();
         assertTrue( conn2.getAutoCommit() );
         
-        Connection conn3 = getConnection();
+        Connection conn3 = newConnection();
         assertTrue( conn3.getAutoCommit() );
 
         conn2.close();
@@ -293,7 +319,7 @@ public abstract class TestConnectionPool extends TestCase {
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxActive()];
         for(int i=0;i<conn.length;i++) {
-            conn[i] = getConnection();
+            conn[i] = newConnection();
             for(int j=0;j<i;j++) {
                 assertTrue(conn[j] != conn[i]);
                 assertTrue(!conn[j].equals(conn[i]));
@@ -309,7 +335,7 @@ public abstract class TestConnectionPool extends TestCase {
         Connection[] c = new Connection[getMaxActive()];
         // test that opening new connections is not closing previous
         for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
+            c[i] = newConnection();
             assertTrue(c[i] != null);
             for (int j = 0; j <= i; j++) {
                 assertTrue(!c[j].isClosed());
@@ -325,7 +351,7 @@ public abstract class TestConnectionPool extends TestCase {
         Connection[] c = new Connection[getMaxActive()];
         // open the maximum connections
         for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
+            c[i] = newConnection();
         }
 
         // close one of the connections
@@ -333,7 +359,7 @@ public abstract class TestConnectionPool extends TestCase {
         assertTrue(c[0].isClosed());
 
         // get a new connection
-        c[0] = getConnection();
+        c[0] = newConnection();
 
         for (int i = 0; i < c.length; i++) {
             c[i].close();
@@ -343,12 +369,12 @@ public abstract class TestConnectionPool extends TestCase {
     public void testMaxActive() throws Exception {
         Connection[] c = new Connection[getMaxActive()];
         for (int i = 0; i < c.length; i++) {
-            c[i] = getConnection();
+            c[i] = newConnection();
             assertTrue(c[i] != null);
         }
 
         try {
-            getConnection();
+            newConnection();
             fail("Allowed to open more than DefaultMaxActive connections.");
         } catch (java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
@@ -419,7 +445,7 @@ public abstract class TestConnectionPool extends TestCase {
                 PreparedStatement stmt = null;
                 ResultSet rset = null;
                 try {
-                    conn = getConnection();
+                    conn = newConnection();
                     stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
                     rset = stmt.executeQuery();
                     try {
@@ -447,7 +473,7 @@ public abstract class TestConnectionPool extends TestCase {
     // http://issues.apache.org/bugzilla/show_bug.cgi?id=24328
     public void testPrepareStatementOptions() throws Exception 
     {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertTrue(null != conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual", 
             ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -467,7 +493,7 @@ public abstract class TestConnectionPool extends TestCase {
     // Bugzilla Bug 24966: NullPointer with Oracle 9 driver
     // wrong order of passivate/close when a rset isn't closed
     public void testNoRsetClose() throws Exception {
-        Connection conn = getConnection();
+        Connection conn = newConnection();
         assertNotNull(conn);
         PreparedStatement stmt = conn.prepareStatement("test");
         assertNotNull(stmt);
@@ -480,9 +506,9 @@ public abstract class TestConnectionPool extends TestCase {
     
     // Bugzilla Bug 26966: Connectionpool's connections always returns same
     public void testHashCode() throws Exception {
-        Connection conn1 = getConnection();
+        Connection conn1 = newConnection();
         assertNotNull(conn1);
-        Connection conn2 = getConnection();
+        Connection conn2 = newConnection();
         assertNotNull(conn2);
 
         assertTrue(conn1.hashCode() != conn2.hashCode());
