@@ -63,6 +63,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     public void tearDown() throws Exception {
         super.tearDown();
+        ds.close();
         ds = null;
     }
     

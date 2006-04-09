@@ -37,7 +37,7 @@ public class TestJOCLed extends TestConnectionPool {
     public static Test suite() {
         return new TestSuite(TestJOCLed.class);
     }
-
+    
     protected Connection getConnection() throws Exception {
         return DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
     }
@@ -45,6 +45,7 @@ public class TestJOCLed extends TestConnectionPool {
     private PoolingDriver driver = null;
     
     public void setUp() throws Exception {
+        super.setUp();
         driver = new PoolingDriver();
         PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
     }
@@ -52,6 +53,7 @@ public class TestJOCLed extends TestConnectionPool {
     public void tearDown() throws Exception {
         driver.closePool("testpool");
         DriverManager.deregisterDriver(driver);
+        super.tearDown();
     }
 
 }
