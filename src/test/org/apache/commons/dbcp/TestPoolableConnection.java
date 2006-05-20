@@ -16,8 +16,7 @@
 
 package org.apache.commons.dbcp;
 
-import java.sql.Connection; // 
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -27,9 +26,6 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.commons.pool.KeyedObjectPoolFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
-
 
 /**
  * @author James Ring
@@ -106,118 +102,5 @@ public class TestPoolableConnection extends TestCase {
 
         assertEquals("The pool should have no active connections", 
             0, pool.getNumActive());
-    }
-    
-    public void testDeadlock() {
-        System.out.println("Loading drivers");
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            Class.forName("org.apache.commons.dbcp.PoolingDriver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Setting up pool");
-
-        try {
-            GenericObjectPool.Config config = new GenericObjectPool.Config();
-            config.maxActive = 10;
-            config.minIdle = 2; // Idle limits are low to allow more possibility of locking.
-            config.maxIdle = 4; // Locking only occurs when there are 0 idle connections in the pool.
-            config.maxWait = 5000L;
-            config.testOnBorrow = true;
-            config.testOnReturn = false;
-            config.testWhileIdle = true;
-            // Locking still occurs whether these tests are performed or not.
-            config.whenExhaustedAction = GenericObjectPool.WHEN_EXHAUSTED_BLOCK;
-            // Locking still occurs regardless of the exhausted action.
-            config.timeBetweenEvictionRunsMillis = 3000L; // The Evictor thread is involved in the lock, so run it quite often.
-            config.minEvictableIdleTimeMillis = 6000L;
-            config.numTestsPerEvictionRun = 3;
-
-            ObjectPool op = new GenericObjectPool(null, config);
-            KeyedObjectPoolFactory kp = new GenericKeyedObjectPoolFactory(null);
-
-            ConnectionFactory cf = new DriverManagerConnectionFactory(
-                    "jdbc:hsqldb:target/hsqldb", "sa", "");
-            PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf,
-                    op, null, null, false, true);
-            // Locking still occurs whether there is a validation query or not.
-            PoolingDriver pd = (PoolingDriver) DriverManager
-                    .getDriver("jdbc:apache:commons:dbcp:");
-            pd.registerPool("PoolName", op);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Initialized");
-
-        int ACTIVE = 10;
-
-        Connection[] c = new Connection[ACTIVE];
-
-        try {
-            printPoolStatus();
-
-            int j = 0;
-            // Loop forever to create a high load.
-            while (j < 5000) {
-                // Create a number of connections.
-                for (int i = 0; i < ACTIVE; ++i) {
-                    c[i] = DriverManager
-                            .getConnection("jdbc:apache:commons:dbcp:PoolName");
-                    //printPoolStatus();
-                }
-                // Then immmediately drop them.
-                for (int i = 0; i < ACTIVE; ++i) {
-                    try {
-                        if (c[i] != null) {
-                            c[i].close();
-                            //printPoolStatus();
-                            c[i] = null;
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                j++;
-            }
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-
-        } finally {
-            // Close down any open connetions.
-            for (int i = 0; i < ACTIVE; ++i) {
-                try {
-                    if (c[i] != null)
-                        c[i].close();
-                } catch (SQLException e) {
-                }
-            }
-
-            System.out.println("Closing pool");
-            try {
-                PoolingDriver pd = (PoolingDriver) DriverManager
-                        .getDriver("jdbc:apache:commons:dbcp:");
-                pd.closePool("PoolName");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Pool closed");
-        }
-    }
-
-    /**
-     * Display pool status.  Locks still occur even if this method is never
-     called.
-     */
-    private static void printPoolStatus() throws SQLException {
-        PoolingDriver pd = (PoolingDriver) DriverManager
-                .getDriver("jdbc:apache:commons:dbcp:");
-        ObjectPool op = pd.getConnectionPool("PoolName");
-
-        System.out.println("Active / idle: " + op.getNumActive() + " / "
-                + op.getNumIdle());
     }
 }
