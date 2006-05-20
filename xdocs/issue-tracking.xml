@@ -28,14 +28,14 @@ limitations under the License.
   tracking issues.
   To open issues or add comments to existing issues in Jira, you will need to 
   <a href="http://issues.apache.org/jira/secure/Signup!default.jspa">create an
-  account if you don't already have one</a>. 
+  account</a> if you don't already have one. 
 </p>
 <p>
   If you would like to report a bug, or raise an enhancement request with
   Commons DBCP please do the following:
   <ol>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;status=1">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
   Search existing open bugs</a>.
   If you find your issue listed then please add a comment with your details.</li>
   <li>
@@ -56,20 +56,22 @@ limitations under the License.
   <li>the developers of Commons DBCP are all unpaid volunteers</li>
   </ul>
 </p>
+<!-- Need to find a way to get filters into links
 <p>
   You may also find these links useful:
   <ul>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;status=1">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
   All Open DBCP bugs</a></li>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;status=6">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
   All Closed DBCP bugs</a></li>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;pid=12310469">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
   All DBCP bugs</a></li>
   </ul>
 </p>
+-->
 </section>
 <!-- ================================================== -->
 </body>
