@@ -23,9 +23,7 @@
       <property name="cp" value=""/>
 
       <!-- now combine the classpaths -->
-      <property name="classpath" value="${cp}:${commons-pool.jar}:
-      	${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:
-      	${sax2.jar}:${naming-common.jar}:${naming-java.jar}:${hsqldb.jar}"/>
+      <property name="classpath" value="${cp}:${commons-pool.jar}:${commons-collections.jar}:${jdbc20ext.jar}:${junit.jar}:${jndi.jar}:${sax2.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
       <property name="title" value="Jakarta Commons Database Pooling Package"/>
@@ -58,7 +56,6 @@
    <!-- ######################################################### -->
 
    <target name="clean" depends="init" description="removes generated files">
-   	  <echo>${classpath}</echo>
       <delete dir="${build.dir}"/>
       <delete dir="${dist.dir}"/>
    </target>
