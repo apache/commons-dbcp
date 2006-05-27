@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2001-2004 The Apache Software Foundation
+   Copyright 2001-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 <project>
   <pomVersion>3</pomVersion>
   
-  <groupId>commons-dbcp</groupId>
+  <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp</artifactId>
   <inceptionYear>2001</inceptionYear>
   <currentVersion>1.2.2-SNAPSHOT</currentVersion>
@@ -91,8 +91,6 @@
       <tag>DBCP_1_2_1</tag>
     </version>
   </versions>
-  <branches>
-  </branches>
 
   <developers>
     <developer>
