@@ -38,25 +38,25 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.2.2-SNAPSHOT" date="TBD">
-      <action dev="psteitz" type="fix" issue="#33591" 
+      <action dev="psteitz" type="fix" issue="DBCP-28" 
         due-to="Huw Lewis, James Ring">
         Modified PoolableConnection close method to invalidate instance
         when invoked on an already closed connection.
       </action>
-      <action dev="joehni" type="fix" issue="#36685">
+      <action dev="joehni" type="fix" issue="DBCP-81">
         Inserted null checks to avoid NPE in close operations.
       </action>
-      <action dev="psteitz" type="fix" issue="#38073" 
+      <action dev="psteitz" type="fix" issue="DBCP-105" 
         due-to="Sandy McArthur, Thomas Fischer">
         Changed getReference method in InstanceKeyDataSource to return a
         concrete factory and added implementations of getReference in concrete
         subclasses.
       </action>
-      <action dev="psteitz" type="fix" issue="#37359" due-to="Jindrich Vimr">
+      <action dev="psteitz" type="fix" issue="DBCP-39" due-to="Jindrich Vimr">
         Inserted null check in close method of SharedPoolDataSource to avoid
         NPE when invoked on non-initialized pool.
       </action>
-      <action dev="psteitz" type="fix" issue="#31343">
+      <action dev="psteitz" type="fix" issue="DBCP-102">
         Modified activateObject in PoolableConnection to test connection
         properties before resetting to defaults.
       </action>
