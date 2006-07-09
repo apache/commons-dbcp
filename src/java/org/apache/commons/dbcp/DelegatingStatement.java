@@ -133,7 +133,9 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
-            throw new SQLException(this.getClass().getName() + " is closed.");
+            throw new SQLException
+                (this.getClass().getName() + " with address: \"" + 
+                this.toString() + "\" is closed.");
         }
     }
 
