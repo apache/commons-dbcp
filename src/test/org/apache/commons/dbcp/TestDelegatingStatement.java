@@ -17,6 +17,7 @@
 package org.apache.commons.dbcp;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import junit.framework.Test;
@@ -73,5 +74,16 @@ public class TestDelegatingStatement extends TestCase {
         assertTrue(!stmt.equals(null));
         assertTrue(stmt.equals(stmt2));
         assertTrue(!stmt.equals(stmt3));
+    }
+    
+    public void testCheckOpen() throws Exception {
+        stmt.checkOpen();
+        stmt.close();
+        try {
+            stmt.checkOpen();
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            // expected
+        }      
     }
 }

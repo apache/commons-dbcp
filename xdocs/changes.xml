@@ -60,6 +60,10 @@ The <action> type attribute can be add,update,fix,remove.
         Modified activateObject in PoolableConnection to test connection
         properties before resetting to defaults.
       </action>
+      <action dev="psteitz" type="update" issue="DBCP-187" due-to="Ralf Hauser">
+        Added connection info to SQLException messages when closed connections
+        (resp stmts) are accessed in DelegatingConnection, DelegatingStatement.
+      </action>
     </release>   
   </body>
 </document>
