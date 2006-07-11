@@ -38,6 +38,53 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.2.2-SNAPSHOT" date="TBD">
+      <action dev="dirkv " type="add">
+        Add a <i>JNDO How To</i> to the User Guide.
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-108" due-to="Maxwell Grender-Jones">
+        DriverManagerConnectionFactory: blank username/password handling.
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-113" due-to="Rohan Lenard">
+        Broken behaviour for BasicDataSource.setMaxActive(0).
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-36" due-to="Jonathan Whitall">
+        BasicDataSource does not work with getConnection(String, String).
+      </action>
+      <action dev="dirkv " type="update" issue="DBCP-164" due-to="Todd Carmichael">
+        Enhancements to prepared statement in DriverAdapterCPDS.
+      </action>
+      <action dev="yoavs" type="update" issue="DBCP-186" due-to="Ralf Hauser">
+        Better messages and docs for LoginTimeout UnsupportedOperationException.
+      </action>
+      <action dev="yoavs" type="fix" issue="DBCP-50" due-to="Nicky Nicolson">
+        Error in JOCL snippet in org.apache.commons.dbcp package javadoc.
+      </action>
+      <action dev="yoavs" type="update" issue="DBCP-165" due-to="QM">
+        Added toString() methods to DelegatingPreparedStatement and DelegatingStatement
+      </action>
+      <action dev="yoavs" type="fix">
+        Changes to make DBCP compile on JDK 1.5 by adding source="1.4" to compiler
+        arguments (there are compiler errors in JDK 5.0 without this source switch
+        that cannot be fixed without JDK 5.0-specific syntax).
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-20" due-to="Chris Nappin">
+        Per-user pooling with Oracle driver and default isolation settings.
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-9" due-to="Adrian Baker">
+        Error in JOCL document in javadoc.
+      </action>
+      <action dev="sullis" type="update">
+        Added toString() method to DelegatingConnection.
+      </action>
+      <action dev="dirkv " type="update" issue="DBCP-181" due-to="Meikel Bisping">
+        Add DriverManager.invalidateConnection().
+      </action>
+      <action dev="dirkv " type="fix" issue="DBCP-184" due-to="Meikel Bisping">
+        Improved Exception nesting in ConnectionPool.
+      </action>
+      <action dev="dennisl" type="fix" issue="DBCP-144" due-to="Sebb">
+        Fix broken website links for examples.
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-28" 
         due-to="Huw Lewis, James Ring">
         Modified PoolableConnection close method to invalidate instance
@@ -56,14 +103,52 @@ The <action> type attribute can be add,update,fix,remove.
         Inserted null check in close method of SharedPoolDataSource to avoid
         NPE when invoked on non-initialized pool.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-71" due-to="Douglas Squirrel">
+        Document fact that true values for testOnBorrow, testOnReturn, testWhileIdle
+        only have effect when validationQuery is set to a non-null string
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-102">
         Modified activateObject in PoolableConnection to test connection
         properties before resetting to defaults.
+      </action>
+      <action dev="bayard" type="update" issue="DBCP-68" due-to="Christoph Cenowa">
+        Upgrade dependency to Collections 3.1.
+      </action>
+      <action dev="sandymac" type="fix" issue="DBCP-188">
+        maxActive in configuration.html is documented incorrectly.
+      </action>
+      <action dev="psteitz"  type="update">
+        Upgrade dependency to Pool 1.3.
       </action>
       <action dev="psteitz" type="update" issue="DBCP-187" due-to="Ralf Hauser">
         Added connection info to SQLException messages when closed connections
         (resp stmts) are accessed in DelegatingConnection, DelegatingStatement.
       </action>
     </release>   
+
+    <release version="1.2.1" date="2004-06-12" description="Maintenance Release to restore JDK 1.3 compatibility">
+      <action type="fix">
+        See <a href="release-notes-1.2.1.html">DBCP 1.2.1 Release Notes</a> for details.
+      </action>
+    </release>   
+
+    <release version="1.2" date="2004-06-07">
+      <action type="update">
+        See <a href="release-notes-1.2.html">DBCP 1.2 Release Notes</a> for details.
+      </action>
+    </release>   
+
+    <release version="1.1" date="2003-10-20">
+      <action type="update">
+        See <a href="release-notes-1.1.html">DBCP 1.1 Release Notes</a> for details.
+      </action>
+    </release>   
+ 
+   <release version="1.0" date="2002-08-12" description="Initial Release">
+      <action type="add">
+        Initial Release
+      </action>
+    </release>   
+
   </body>
 </document>

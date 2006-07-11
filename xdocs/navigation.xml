@@ -14,10 +14,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<!DOCTYPE org.apache.commons.menus SYSTEM '../../commons-build/menus/menus.dtd'>
+<!DOCTYPE org.apache.commons.menus SYSTEM 'http://jakarta.apache.org/commons/build/maven-build.dtd'>
 <project name="Commons DBCP">
     <title>Commons DBCP</title>
     <body>
+
+        <links>
+            <item name="Apache"  href="http://www.apache.org"/>
+            <item name="Jakarta" href="http://jakarta.apache.org"/>
+            <item name="Commons" href="http://jakarta.apache.org/commons/"/>
+        </links>
+
         <menu name="Commons&#xA0;DBCP">
             <item name="Overview"                      href="/index.html" />
             <item name="Configuration"                 href="/configuration.html" />
@@ -31,6 +38,18 @@
             <item name="Downloads"                     href="/downloads.html"/>
             <item name="Wiki"                          href="http://wiki.apache.org/jakarta-commons/DBCP"/>
         </menu>
-        &common-menus;
+    
+        <menu name="Development">
+            <item name="History"              href="/changes-report.html"/>
+            <item name="Building"             href="/building.html"/>
+            <item name="Mailing lists"        href="/mail-lists.html"/>
+            <item name="Issue Tracking"       href="/issue-tracking.html"/>
+            <item name="Team"                 href="/team-list.html"/>
+            <item name="Source repository"    href="cvs-usage.html"/>
+            <item name="Javadoc (SVN latest)" href="http://jakarta.apache.org/commons/validator/apidocs/"/>
+        </menu>
+
+        &commons;
+
     </body>
 </project>

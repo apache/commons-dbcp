@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+Copyright 2006 The Apache Software Foundation.
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+ <properties>
+  <title>Building</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+<body>
+<!-- ================================================== -->
+<section name="Overview">
+<p>
+  Commons DBCP uses <a href="http://maven.apache.org">Maven</a> or
+  <a href="http://ant.apache.org">Ant</a> as a build system.
+</p>
+</section>
+<!-- ================================================== -->
+<section name="Maven Goals">
+  <p>
+    To build a jar file, change into DBCP's root directory and run 
+    <strong><code>maven jar</code></strong>.
+    The result will be in the "target" subdirectory.
+  </p>
+  <p>
+    To build the Javadocs, run <strong><code>maven javadoc</code></strong>.
+    The result will be in "target/docs/apidocs".
+  </p>
+  <p>
+    To build the full website, run <strong><code>maven site</code></strong>.
+
+    The result will be in "target/docs".
+  </p>
+  <p>
+	Further details can be found in the
+	<a href="http://jakarta.apache.org/commons/building.html">commons build instructions</a>.
+  </p>
+</section>
+<!-- ================================================== -->
+<section name="Ant Goals">
+  <p>
+    To build a jar file and the javadocs, change into DBCP's root directory
+    and run <strong><code>ant dist</code></strong>.
+    The result will be in the "dist" subdirectory.
+  </p>
+</section>
+<!-- ================================================== -->
+</body>
+</document>
