@@ -32,12 +32,9 @@
          </ul>
          <br/>
          <p>
-            The latest binary release is always available on the 
-            <a href="http://jakarta.apache.org/site/binindex.cgi#commons-dbcp">
-            Jakarta Binary Downloads page</a>,
-            its source is available from 
-            <a href="http://jakarta.apache.org/site/sourceindex.cgi#commons-dbcp">
-            Jakarta Source Downloads page</a>.
+            The latest source and binary release is always available on the 
+            <a href="http://jakarta.apache.org/site/downloads/downloads_commons-dbcp.cgi">
+            DBCP Downloads page</a>.
          </p>
          <p>
             Commons-DBCP depends at runtime on 

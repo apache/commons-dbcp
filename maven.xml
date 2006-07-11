@@ -17,23 +17,6 @@
     xmlns:j="jelly:core"
     xmlns:ant="jelly:ant">
 
-  <!-- ================================================================== -->
-  <!-- START : C O M M O N S - B U I L D                                  -->
-  <!-- ================================================================== -->
-  <!-- Required: Look and Feel for documentation within distributions     -->
-  <!-- ================================================================== -->
-  <postGoal name="xdoc:copy-resources">  
-    <copy todir="${basedir}/target/docs/style/" failonerror="false">
-      <fileset dir="${basedir}/../commons-build/xdocs/style">
-      	<include name='**/*'/>
-      	<exclude name='**/CVS/**'/>
-      </fileset>
-    </copy>
-  </postGoal>
-  <!-- ================================================================== -->
-  <!-- END: C O M M O N S - B U I L D                                     -->
-  <!-- ================================================================== -->
-  
   <!-- ============== DIST ================== -->
   <!-- Copied from Commons-Collections        -->
   <postGoal name="dist:prepare-bin-filesystem">
@@ -62,6 +45,8 @@
     <ant:copy todir="${maven.dist.src.assembly.dir}">
       <ant:fileset dir=".">
         <ant:include name="NOTICE.txt"/>
+        <ant:include name="build.properties.sample"/>
+        <ant:include name="checkstyle.xml"/>
       </ant:fileset>
     </ant:copy>
 
@@ -77,6 +62,11 @@
       <ant:fileset dir="xdocs" />
     </ant:copy>
     
+    <!-- Copy XDocs -->
+    <ant:copy todir="${maven.dist.src.assembly.dir}/doc">
+      <ant:fileset dir="doc" />
+    </ant:copy>
+
   </postGoal>
   
   <postGoal name="dist:build-bin">

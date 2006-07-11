@@ -29,22 +29,26 @@ limitations under the License.
   To open issues or add comments to existing issues in Jira, you will need to 
   <a href="http://issues.apache.org/jira/secure/Signup!default.jspa">create an
   account</a> if you don't already have one. 
+  (if you have previously created/updated Commons issues using Bugzilla an account
+  will have been automatically created and you can use the 
+  <a href="http://issues.apache.org/jira/secure/ForgotPassword!default.jspa">Forgot Password</a>
+  page to get a new password).
 </p>
 <p>
   If you would like to report a bug, or raise an enhancement request with
   Commons DBCP please do the following:
   <ol>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;sorter/field=issuekey&amp;sorter/order=DESC&amp;status=1&amp;status=4">
   Search existing open bugs</a>.
   If you find your issue listed then please add a comment with your details.</li>
   <li>
   <a href="http://mail-archives.apache.org/mod_mbox/jakarta-commons-dev/">
   Search the mailing list archive</a>.
   You may find your issue or idea has already been discussed.</li>
-  <li><a href="http://issues.apache.org/jira/secure/CreateIssue!default.jspa">
-  Submit a bug report or enhancement request</a>.
-  Please prefix all new issues with [dbcp] in the summary line.
+  <li>Decide if your issue is a bug or an enhancement.</li>
+  <li>Submit either a <a href="http://issues.apache.org/jira/secure/CreateIssueDetails!init.jspa?pid=12310469&amp;issuetype=1&amp;priority=4&amp;assignee=-1">bug report</a>
+  or <a href="http://issues.apache.org/jira/secure/CreateIssueDetails!init.jspa?pid=12310469&amp;issuetype=4&amp;priority=4&amp;assignee=-1">enhancement request</a>.
   </li>
   </ol>
 </p>
@@ -56,22 +60,20 @@ limitations under the License.
   <li>the developers of Commons DBCP are all unpaid volunteers</li>
   </ul>
 </p>
-<!-- Need to find a way to get filters into links
 <p>
   You may also find these links useful:
   <ul>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;sorter/field=issuekey&amp;sorter/order=DESC&amp;status=1&amp;status=4">
   All Open DBCP bugs</a></li>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
-  All Closed DBCP bugs</a></li>
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;sorter/field=issuekey&amp;sorter/order=DESC&amp;status=5&amp;status=6">
+  All Resolved DBCP bugs</a></li>
   <li>
-  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa">
+  <a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310469&amp;sorter/field=issuekey&amp;sorter/order=DESC">
   All DBCP bugs</a></li>
   </ul>
 </p>
--->
 </section>
 <!-- ================================================== -->
 </body>
