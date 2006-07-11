@@ -39,7 +39,7 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="1.2.2-SNAPSHOT" date="TBD">
       <action dev="dirkv " type="add">
-        Add a <i>JNDO How To</i> to the User Guide.
+        Add a <i>JNDI How To</i> to the User Guide.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-108" due-to="Maxwell Grender-Jones">
         DriverManagerConnectionFactory: blank username/password handling.
