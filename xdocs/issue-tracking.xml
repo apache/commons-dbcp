@@ -24,9 +24,12 @@ limitations under the License.
 <!-- ================================================== -->
 <section name="Issue tracking">
 <p>
-  Commons DBCP uses <a href="http://issues.apache.org/jira/">ASF Jira</a> for
+  Commons DBCP uses <a href="http://issues.apache.org/jira/">ASF JIRA</a> for
   tracking issues.
-  To open issues or add comments to existing issues in Jira, you will need to 
+  See the <a href="http://issues.apache.org/jira/browse/DBCP">DBCP JIRA project page</a>.
+</p>
+<p>
+  To open issues or add comments to existing issues in JIRA, you will need to 
   <a href="http://issues.apache.org/jira/secure/Signup!default.jspa">create an
   account</a> if you don't already have one. 
   (if you have previously created/updated Commons issues using Bugzilla an account
