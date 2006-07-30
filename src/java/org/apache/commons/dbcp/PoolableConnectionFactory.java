@@ -355,7 +355,9 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                 conn.rollback();
             }
             conn.clearWarnings();
-            conn.setAutoCommit(true);
+            if(!conn.getAutoCommit()) {
+                conn.setAutoCommit(true);
+            }
         }
         if(obj instanceof DelegatingConnection) {
             ((DelegatingConnection)obj).passivate();
