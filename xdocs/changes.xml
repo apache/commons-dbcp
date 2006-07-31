@@ -124,6 +124,12 @@ The <action> type attribute can be add,update,fix,remove.
         Added connection info to SQLException messages when closed connections
         (resp stmts) are accessed in DelegatingConnection, DelegatingStatement.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-41" due-to="Anton Tagunov">
+        Fixed errors in pool parameter documentation and made
+        0 value for _maxPreparedStatements in DriverAdapterCPDS behave
+        like a negative value, to be consistent with documentation
+        and pool behavior.
+      </action>
     </release>   
 
     <release version="1.2.1" date="2004-06-12" description="Maintenance Release to restore JDK 1.3 compatibility">

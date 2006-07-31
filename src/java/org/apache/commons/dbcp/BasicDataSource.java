@@ -133,7 +133,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      */
     protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
 
@@ -151,7 +151,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      */
     protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;;
 
@@ -241,7 +241,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The maximum number of open statements that can be allocated from
-     * the statement pool at the same time, or zero for no limit.  Since 
+     * the statement pool at the same time, or non-positive for no limit.  Since 
      * a connection usually only uses one or two statements at a time, this is
      * mostly used to help detect resource leaks.
      */

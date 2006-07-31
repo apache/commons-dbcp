@@ -97,9 +97,9 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      * This value is used for any username which is not specified
-     * in perUserMaxConnections.  The default is 0.
+     * in perUserMaxConnections.
      */
     public int getDefaultMaxActive() {
         return (this.defaultMaxActive);
@@ -107,9 +107,9 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      * This value is used for any username which is not specified
-     * in perUserMaxConnections.  The default is 0.
+     * in perUserMaxConnections.  The default is 8.
      */
     public void setDefaultMaxActive(int maxActive) {
         assertInitializationAllowed();
@@ -118,9 +118,9 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      * This value is used for any username which is not specified
-     * in perUserMaxIdle.  The default is 0.
+     * in perUserMaxIdle.
      */
     public int getDefaultMaxIdle() {
         return (this.defaultMaxIdle);
@@ -128,9 +128,9 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      * This value is used for any username which is not specified
-     * in perUserMaxIdle.  The default is 0.
+     * in perUserMaxIdle.  The default is 8.
      */
     public void setDefaultMaxIdle(int defaultMaxIdle) {
         assertInitializationAllowed();
@@ -213,7 +213,7 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxActive.
      */
@@ -227,7 +227,7 @@ public class PerUserPoolDataSource
     
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxActive.
      */
@@ -242,7 +242,7 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxIdle.
      */
@@ -256,7 +256,7 @@ public class PerUserPoolDataSource
     
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
      * username specified here will override the value of defaultMaxIdle.
      */
