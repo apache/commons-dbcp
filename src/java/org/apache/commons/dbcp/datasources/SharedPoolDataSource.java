@@ -74,8 +74,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
-     * The default is 0.
+     * this pool at the same time, or non-positive for no limit.
      */
     public int getMaxActive() {
         return (this.maxActive);
@@ -83,8 +82,8 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or zero for no limit.
-     * The default is 0.
+     * this pool at the same time, or non-positive for no limit.
+     * The default is 8.
      */
     public void setMaxActive(int maxActive) {
         assertInitializationAllowed();
@@ -93,8 +92,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
-     * The default is 0.
+     * pool, without extra ones being released, or negative for no limit.
      */
     public int getMaxIdle() {
         return (this.maxIdle);
@@ -102,8 +100,8 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
-     * The default is 0.
+     * pool, without extra ones being released, or negative for no limit.
+     * The default is 8.
      */
     public void setMaxIdle(int maxIdle) {
         assertInitializationAllowed();

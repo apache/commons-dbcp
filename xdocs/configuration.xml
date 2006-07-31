@@ -130,7 +130,7 @@ testWhileIdle
    <td>8</td>
    <td>
       The maximum number of active connections that can be allocated from
-      this pool at the same time, or negative for no limit.
+      this pool at the same time, or non-positive for no limit.
    </td>
 </tr>
 <tr>
@@ -138,7 +138,7 @@ testWhileIdle
    <td>8</td>
    <td>
       The maximum number of active connections that can remain idle in the
-      pool, without extra ones being released, or zero for no limit.
+      pool, without extra ones being released, or negative for no limit.
    </td>
 </tr>
 <tr>

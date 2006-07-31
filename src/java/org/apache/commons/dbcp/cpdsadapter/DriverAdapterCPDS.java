@@ -148,7 +148,7 @@ public class DriverAdapterCPDS
         */
         KeyedObjectPool stmtPool = null;
         if (isPoolPreparedStatements()) {
-            if (getMaxPreparedStatements() == -1)
+            if (getMaxPreparedStatements() <= 0)
             {
                 // since there is no limit, create a prepared statement pool with an eviction thread
                 //  evictor settings are the same as the connection pool settings.
@@ -465,7 +465,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      */
     public int getMaxActive() {
         return (this.maxActive);
@@ -473,7 +473,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or zero for no limit.
+     * this pool at the same time, or non-positive for no limit.
      */
     public void setMaxActive(int maxActive) {
         assertInitializationAllowed();
@@ -482,7 +482,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of statements that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      */
     public int getMaxIdle() {
         return (this.maxIdle);
@@ -490,7 +490,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of statements that can remain idle in the
-     * pool, without extra ones being released, or zero for no limit.
+     * pool, without extra ones being released, or negative for no limit.
      */
     public void setMaxIdle(int maxIdle) {
         assertInitializationAllowed();
