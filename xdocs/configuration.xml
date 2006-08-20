@@ -137,7 +137,7 @@ testWhileIdle
    <td>maxIdle</td>
    <td>8</td>
    <td>
-      The maximum number of active connections that can remain idle in the
+      The maximum number of connections that can remain idle in the
       pool, without extra ones being released, or negative for no limit.
    </td>
 </tr>
@@ -145,7 +145,7 @@ testWhileIdle
    <td>minIdle</td>
    <td>0</td>
    <td>
-      The minimum number of active connections that can remain idle in the
+      The minimum number of connections that can remain idle in the
       pool, without extra ones being created, or zero to create none.
    </td>
 </tr>
