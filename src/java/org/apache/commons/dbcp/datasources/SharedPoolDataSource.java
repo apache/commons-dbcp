@@ -45,7 +45,7 @@ import org.apache.commons.dbcp.SQLNestedException;
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
 
-    private static final Map userKeys = new LRUMap(10);
+    private final Map userKeys = new LRUMap(10);
 
     private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;

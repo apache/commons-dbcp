@@ -130,6 +130,10 @@ The <action> type attribute can be add,update,fix,remove.
         like a negative value, to be consistent with documentation
         and pool behavior.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-100">
+        Made userKeys an instance variable (i.e., not static)
+        in SharedPoolDataSource.
+      </action>
     </release>   
 
     <release version="1.2.1" date="2004-06-12" description="Maintenance Release to restore JDK 1.3 compatibility">
