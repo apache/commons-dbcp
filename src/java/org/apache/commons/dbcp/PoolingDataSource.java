@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2006 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,11 +209,23 @@ public class PoolingDataSource implements DataSource {
             return delegate.createStatement(resultSetType, resultSetConcurrency);
         }
 
+        
         public boolean equals(Object obj) {
-            if (delegate == null){
+            if (obj == null) {
                 return false;
             }
-            return delegate.equals(obj);
+            if (obj == this) {
+                return true;
+            }
+            if (delegate == null) {
+                return false;
+            }
+            if (obj instanceof PoolGuardConnectionWrapper) {
+                PoolGuardConnectionWrapper w = (PoolGuardConnectionWrapper) obj;
+                return delegate.equals(w.delegate);
+            } else {
+                return delegate.equals(obj);
+            }
         }
 
         public boolean getAutoCommit() throws SQLException {

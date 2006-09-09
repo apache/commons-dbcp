@@ -134,6 +134,12 @@ The <action> type attribute can be add,update,fix,remove.
         Made userKeys an instance variable (i.e., not static)
         in SharedPoolDataSource.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-198">
+        Changed implementation of equals in 
+        PoolingDataSource.PoolGuardConnectionWrapper
+        to ensure it is reflexive, even when wrapped connections are not
+        DelegatingConnections.
+      </action>
     </release>   
 
     <release version="1.2.1" date="2004-06-12" description="Maintenance Release to restore JDK 1.3 compatibility">
