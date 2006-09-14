@@ -300,4 +300,36 @@ public class TestBasicDataSource extends TestConnectionPool {
             // test OK
         }
     }
+    /**
+     * JIRA DBCP-93: If an SQLException occurs after the GenericObjectPool is
+     * initialized in createDataSource, the evictor task is not cleaned up.
+     */
+    public void testCreateDataSourceCleanupThreads() throws Exception {
+        ds.close();
+        ds = null;
+        ds = new BasicDataSource();
+        ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
+        ds.setUrl("jdbc:apache:commons:testdriver");
+        ds.setMaxActive(getMaxActive());
+        ds.setMaxWait(getMaxWait());
+        ds.setDefaultAutoCommit(true);
+        ds.setDefaultReadOnly(false);
+        ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ds.setDefaultCatalog(CATALOG);
+        ds.setUsername("username");
+        // Set timeBetweenEvictionRuns > 0, so evictor is created
+        ds.setTimeBetweenEvictionRunsMillis(100);
+        // Make password incorrect, so createDataSource will throw
+        ds.setPassword("wrong");
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+        int threadCount = Thread.activeCount();
+        for (int i = 0; i < 10; i++) {
+            try {
+                Connection con = ds.getConnection();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+        assertEquals(threadCount, Thread.activeCount());
+    }
 }
