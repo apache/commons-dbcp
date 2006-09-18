@@ -481,6 +481,7 @@ public class PerUserPoolDataSource
         // the factory with the pool, so we do not have to do so
         // explicitly)
         new CPDSConnectionFactory(cpds, pool, getValidationQuery(),
+                                  isRollbackAfterValidation(), 
                                   username, password);
            
         pools.put(getPoolKey(username), pool);
