@@ -49,6 +49,7 @@ class KeyedCPDSConnectionFactory
 
     protected ConnectionPoolDataSource _cpds = null;
     protected String _validationQuery = null;
+    protected boolean _rollbackAfterValidation = false;
     protected KeyedObjectPool _pool = null;
     private Map validatingMap = new HashMap();
     private WeakHashMap pcMap = new WeakHashMap();
@@ -69,8 +70,27 @@ class KeyedCPDSConnectionFactory
     }
 
     /**
-     * Sets the {*link ConnectionFactory} from which to obtain base {*link Connection}s.
-     * @param connFactory the {*link ConnectionFactory} from which to obtain base {*link Connection}s
+     * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
+     * @param cpds the ConnectionPoolDataSource from which to obtain
+     * PooledConnections
+     * @param pool the {@link ObjectPool} in which to pool those
+     * {@link Connection}s
+     * @param validationQuery a query to use to {@link #validateObject validate}
+     * {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * @param rollbackAfterValidation whether a rollback should be issued after
+     * {@link #validateObject validating} {@link Connection}s.
+     */
+    public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds, 
+                                      KeyedObjectPool pool, 
+                                      String validationQuery,
+                                      boolean rollbackAfterValidation) {
+        this(cpds , pool, validationQuery);
+        _rollbackAfterValidation = rollbackAfterValidation;
+    }
+
+    /**
+     * Sets the {@link ConnectionFactory} from which to obtain base {@link Connection}s.
+     * @param connFactory the {*link ConnectionFactory} from which to obtain base {@link Connection}s
      */
     synchronized public void setCPDS(ConnectionPoolDataSource cpds) {
         _cpds = cpds;
@@ -84,6 +104,19 @@ class KeyedCPDSConnectionFactory
      */
     synchronized public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
+    }
+
+    /**
+     * Sets whether a rollback should be issued after 
+     * {*link #validateObject validating} 
+     * {*link Connection}s.
+     * @param rollbackAfterValidation whether a rollback should be issued after
+     *        {*link #validateObject validating} 
+     *        {*link Connection}s.
+     */
+    public synchronized void setRollbackAfterValidation(
+            boolean rollbackAfterValidation) {
+        _rollbackAfterValidation = rollbackAfterValidation;
     }
 
     /**
@@ -165,6 +198,9 @@ class KeyedCPDSConnectionFactory
                         valid = true;
                     } else {
                         valid = false;
+                    }
+                    if (_rollbackAfterValidation) {
+                        conn.rollback();
                     }
                 } catch(Exception e) {
                     valid = false;

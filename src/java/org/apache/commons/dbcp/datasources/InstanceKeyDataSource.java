@@ -125,6 +125,7 @@ public abstract class InstanceKeyDataSource
              GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
     private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
+    private boolean rollbackAfterValidation = false;
     private boolean testPositionSet = false;
 
     protected String instanceKey = null;
@@ -608,6 +609,27 @@ public abstract class InstanceKeyDataSource
         if (!testPositionSet) {
             setTestOnBorrow(true);
         }
+    }
+
+    /**
+     * Whether a rollback will be issued after executing the SQL query 
+     * that will be used to validate connections from this pool
+     * before returning them to the caller.
+     */
+    public boolean isRollbackAfterValidation() {
+        return (this.rollbackAfterValidation);
+    }
+
+    /**
+     * Whether a rollback will be issued after executing the SQL query 
+     * that will be used to validate connections from this pool
+     * before returning them to the caller. Default behavior is NOT
+     * to issue a rollback. The setting will only have an effect
+     * if a validation query is set.
+     */
+    public void setRollbackAfterValidation(boolean rollbackAfterValidation) {
+        assertInitializationAllowed();
+        this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
     // ----------------------------------------------------------------------

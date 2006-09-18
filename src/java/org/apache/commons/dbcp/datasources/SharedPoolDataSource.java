@@ -213,7 +213,8 @@ public class SharedPoolDataSource
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
         // explicitly)
-        new KeyedCPDSConnectionFactory(cpds, pool, getValidationQuery());
+        new KeyedCPDSConnectionFactory(cpds, pool, getValidationQuery(),
+                                       isRollbackAfterValidation());
     }
 
     protected void setupDefaults(Connection con, String username)

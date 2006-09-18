@@ -49,6 +49,7 @@ class CPDSConnectionFactory
 
     protected ConnectionPoolDataSource _cpds = null;
     protected String _validationQuery = null;
+    protected boolean _rollbackAfterValidation = false;
     protected ObjectPool _pool = null;
     protected String _username = null;
     protected String _password = null;
@@ -57,13 +58,14 @@ class CPDSConnectionFactory
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
+     * 
      * @param cpds the ConnectionPoolDataSource from which to obtain
-     *        PooledConnection's
-     * @param pool the {*link ObjectPool} in which to pool those
-     *        {*link Connection}s
-     * @param validationQuery a query to use to {*link #validateObject validate}
-     *        {*link Connection}s. Should return at least one row.
-     *        May be <tt>null</tt>
+     * PooledConnection's
+     * @param pool the {@link ObjectPool} in which to pool those
+     * {@link Connection}s
+     * @param validationQuery a query to use to {@link #validateObject validate}
+     * {@link Connection}s. Should return at least one row. May be 
+     * <tt>null</tt>
      * @param username
      * @param password
      */
@@ -79,6 +81,32 @@ class CPDSConnectionFactory
         _username = username;
         _password = password;
     }
+    
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * 
+     * @param cpds the ConnectionPoolDataSource from which to obtain
+     * PooledConnection's
+     * @param pool the {@link ObjectPool} in which to pool those {@link
+     * Connection}s
+     * @param validationQuery a query to use to {@link #validateObject
+     * validate} {@link Connection}s. Should return at least one row.
+     * May be <tt>null</tt>
+     * @param rollbackAfterValidation whether a rollback should be issued
+     * after {@link #validateObject validating} {@link Connection}s.
+     * @param username
+     * @param password
+     */
+         public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
+                                      ObjectPool pool,
+                                      String validationQuery,
+                                      boolean rollbackAfterValidation,
+                                      String username,
+                                      String password) {
+             this(cpds, pool, validationQuery, username, password);
+             _rollbackAfterValidation = rollbackAfterValidation;
+         }
+
 
     /**
      * Sets the {*link ConnectionFactory} from which to obtain base
@@ -100,6 +128,19 @@ class CPDSConnectionFactory
      */
     public synchronized void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
+    }
+
+    /**
+     * Sets whether a rollback should be issued after 
+     * {*link #validateObject validating} 
+     * {*link Connection}s.
+     * @param rollbackAfterValidation whether a rollback should be issued after
+     *        {*link #validateObject validating} 
+     *        {*link Connection}s.
+     */
+    public synchronized void setRollbackAfterValidation(
+            boolean rollbackAfterValidation) {
+        _rollbackAfterValidation = rollbackAfterValidation;
     }
 
     /**
@@ -173,6 +214,9 @@ class CPDSConnectionFactory
                         valid = true;
                     } else {
                         valid = false;
+                    }
+                    if (_rollbackAfterValidation) {
+                        conn.rollback();
                     }
                 } catch (Exception e) {
                     valid = false;
