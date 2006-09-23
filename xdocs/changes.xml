@@ -145,6 +145,11 @@ The <action> type attribute can be add,update,fix,remove.
         connection after validation when this property is set to true to eliminate
         Oracle driver exceptions. Default property value is false.
       </action>
+      <action dev="psteitz" type="update" issue="DBCP-68">
+        Removed dependency on Commons Collections by adding collections
+        2.1 sources for LRUMap and SequencedHashMap with package scope to 
+        datasources package.
+      </action>
     </release>   
 
     <release version="1.2.1" date="2004-06-12" description="Maintenance Release to restore JDK 1.3 compatibility">
