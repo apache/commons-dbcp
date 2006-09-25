@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Hashtable;
 import java.util.Stack;
 
 import junit.framework.TestCase;
@@ -384,6 +385,21 @@ public abstract class TestConnectionPool extends TestCase {
         for (int i = 0; i < c.length; i++) {
             c[i].close();
         }
+    }
+    
+    /**
+     * DBCP-128: BasicDataSource.getConnection()
+     * Connections don't work as hashtable keys 
+     */
+    public void testHashing() throws Exception {
+        Connection con = getConnection();
+        Hashtable hash = new Hashtable();
+        hash.put(con, "test");
+        assertEquals("test", hash.get(con));
+        assertTrue(hash.containsKey(con));
+        assertTrue(hash.contains("test")); 
+        hash.clear();
+        con.close();
     }
 
     public void testThreaded() {
