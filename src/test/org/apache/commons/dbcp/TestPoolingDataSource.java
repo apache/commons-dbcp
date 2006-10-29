@@ -143,6 +143,18 @@ public class TestPoolingDataSource extends TestConnectionPool {
         con1.close();
     }
     
+    public void testestPoolGuardConnectionWrapperEqualInnermost() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        DelegatingConnection con = (DelegatingConnection) ds.getConnection();
+        Connection inner = con.getInnermostDelegate();
+        ds.setAccessToUnderlyingConnectionAllowed(false);
+        DelegatingConnection con2 = new DelegatingConnection(inner);
+        assertTrue(con2.equals(con));
+        assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
+        assertTrue(con2.innermostDelegateEquals(inner));
+        assertTrue(con.equals(con2));
+    }
+    
     /** Factory to return non-delegating connections for DBCP-198 test */
     private class NonDelegatingPoolableConnectionFactory extends
         PoolableConnectionFactory {

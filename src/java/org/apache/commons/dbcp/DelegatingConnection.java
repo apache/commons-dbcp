@@ -120,15 +120,30 @@ public class DelegatingConnection extends AbandonedTrace
     public Connection getDelegate() {
         return _conn;
     }
+    
+    public boolean innermostDelegateEquals(Connection c) {
+        Connection innerCon = getInnermostDelegate();
+        if (innerCon == null) {
+            return c == null;
+        } else {
+            return innerCon.equals(c);
+        }
+    }
 
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
         Connection delegate = getInnermostDelegate();
         if (delegate == null) {
             return false;
         }
-        if (obj instanceof DelegatingConnection) {
+        if (obj instanceof DelegatingConnection) {    
             DelegatingConnection c = (DelegatingConnection) obj;
-            return delegate.equals(c.getInnermostDelegate());
+            return c.innermostDelegateEquals(delegate);
         }
         else {
             return delegate.equals(obj);
