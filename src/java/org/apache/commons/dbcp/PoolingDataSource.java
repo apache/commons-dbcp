@@ -209,25 +209,15 @@ public class PoolingDataSource implements DataSource {
             return delegate.createStatement(resultSetType, resultSetConcurrency);
         }
 
-        
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (obj == this) {
-                return true;
-            }
-            if (delegate == null) {
-                return false;
-            }
-            if (obj instanceof PoolGuardConnectionWrapper) {
-                PoolGuardConnectionWrapper w = (PoolGuardConnectionWrapper) obj;
-                return delegate.equals(w.delegate);
+        public boolean innermostDelegateEquals(Connection c) {
+            Connection innerCon = super.getInnermostDelegate();
+            if (innerCon == null) {
+                return c == null;
             } else {
-                return delegate.equals(obj);
+                return innerCon.equals(c);
             }
         }
-
+        
         public boolean getAutoCommit() throws SQLException {
             checkOpen();
             return delegate.getAutoCommit();
@@ -263,6 +253,27 @@ public class PoolingDataSource implements DataSource {
                 return 0;
             }
             return delegate.hashCode();
+        }
+        
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj == this) {
+                return true;
+            }
+            // Use superclass accessor to skip access test
+            Connection delegate = super.getInnermostDelegate();
+            if (delegate == null) {
+                return false;
+            }
+            if (obj instanceof DelegatingConnection) {    
+                DelegatingConnection c = (DelegatingConnection) obj;
+                return c.innermostDelegateEquals(delegate);
+            }
+            else {
+                return delegate.equals(obj);
+            }
         }
 
         public boolean isReadOnly() throws SQLException {
