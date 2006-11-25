@@ -407,5 +407,5 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Internal constant to indicate the level is not set.
      */
-	static final int UNKNOWN_TRANSACTIONISOLATION = -1;
+    static final int UNKNOWN_TRANSACTIONISOLATION = -1;
 }

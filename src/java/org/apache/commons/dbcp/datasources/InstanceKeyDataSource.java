@@ -781,7 +781,7 @@ public abstract class InstanceKeyDataSource
      *
      * @return The non-null Reference of this object.
      * @exception NamingException If a naming exception was encountered
-     *		while retrieving the reference.
+     *      while retrieving the reference.
      */
     // TODO: Remove the implementation of this method at next major
     // version release.

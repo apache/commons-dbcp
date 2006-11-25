@@ -81,37 +81,37 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     public String toString() {
-    	String s = null;
-    	
-    	Connection c = this.getInnermostDelegate();
-    	if (c != null) {
-	    	try {
-		    	if (c.isClosed()) {
-		    		s = "connection is closed";
-		    	}
-		    	else {
-		    		DatabaseMetaData meta = c.getMetaData();
-		    		if (meta != null) {
-		    			StringBuffer sb = new StringBuffer();
-			    		sb.append(meta.getURL());
-			    		sb.append(", UserName=");
-			    		sb.append(meta.getUserName());
-			    		sb.append(", ");
-			    		sb.append(meta.getDriverName());
-			    		s = sb.toString();
-		    		}
-		    	}
-	    	}
-	    	catch (SQLException ex) {
-	    		s = null;
-	    	}
-    	}
-    	
-    	if (s == null) {
-    		s = super.toString();
-    	}
-    	
-    	return s;
+        String s = null;
+        
+        Connection c = this.getInnermostDelegate();
+        if (c != null) {
+            try {
+                if (c.isClosed()) {
+                    s = "connection is closed";
+                }
+                else {
+                    DatabaseMetaData meta = c.getMetaData();
+                    if (meta != null) {
+                        StringBuffer sb = new StringBuffer();
+                        sb.append(meta.getURL());
+                        sb.append(", UserName=");
+                        sb.append(meta.getUserName());
+                        sb.append(", ");
+                        sb.append(meta.getDriverName());
+                        s = sb.toString();
+                    }
+                }
+            }
+            catch (SQLException ex) {
+                s = null;
+            }
+        }
+        
+        if (s == null) {
+            s = super.toString();
+        }
+        
+        return s;
     }
 
     /**

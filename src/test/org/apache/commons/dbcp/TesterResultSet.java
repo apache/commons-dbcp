@@ -474,20 +474,20 @@ public class TesterResultSet implements ResultSet {
 
 
     public void updateAsciiStream(int columnIndex,
-			   java.io.InputStream x,
-			   int length) throws SQLException {
+               java.io.InputStream x,
+               int length) throws SQLException {
         checkOpen();
     }
 
     public void updateBinaryStream(int columnIndex,
-			    java.io.InputStream x,
-			    int length) throws SQLException {
+                java.io.InputStream x,
+                int length) throws SQLException {
         checkOpen();
     }
 
     public void updateCharacterStream(int columnIndex,
-			     java.io.Reader x,
-			     int length) throws SQLException {
+                 java.io.Reader x,
+                 int length) throws SQLException {
         checkOpen();
     }
 
@@ -558,20 +558,20 @@ public class TesterResultSet implements ResultSet {
     }
 
     public void updateAsciiStream(String columnName,
-			   java.io.InputStream x,
-			   int length) throws SQLException {
+               java.io.InputStream x,
+               int length) throws SQLException {
         checkOpen();
     }
 
     public void updateBinaryStream(String columnName,
-			    java.io.InputStream x,
-			    int length) throws SQLException {
+                java.io.InputStream x,
+                int length) throws SQLException {
         checkOpen();
     }
 
     public void updateCharacterStream(String columnName,
-			     java.io.Reader reader,
-			     int length) throws SQLException {
+                 java.io.Reader reader,
+                 int length) throws SQLException {
         checkOpen();
     }
 
