@@ -21,7 +21,10 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.commons.pool.*;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool.KeyedObjectPoolFactory;
+import org.apache.commons.pool.PoolableObjectFactory;
+import org.apache.commons.pool.ObjectPool;
 
 /**
  * A {@link PoolableObjectFactory} that creates
@@ -384,7 +387,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
                 conn.setReadOnly(_defaultReadOnly.booleanValue());
             }
             if ((_defaultCatalog != null) &&
-                    (conn.getCatalog() != _defaultCatalog)) {
+                    (!_defaultCatalog.equals(conn.getCatalog()))) {
                 conn.setCatalog(_defaultCatalog);
             }
         }
