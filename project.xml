@@ -209,6 +209,19 @@
       </properties>
     </dependency>
     
+    <!-- Dependency needed for generated ant build.  Uncomment before
+         regenerating ant build
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.8.0</version>
+      <properties>
+        <scope>test</scope>
+        <comment>Only required for jocl tests under ant</comment>
+      </properties>
+    </dependency>
+    -->
+    
     <!-- dragged in by tomcat-naming jars - only for jndi tests -->
     <dependency>
       <groupId>commons-logging</groupId>
