@@ -17,9 +17,13 @@
 
 package org.apache.commons.jocl;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import java.util.ArrayList;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -27,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 // to do:
 //  + add support for arrays
@@ -210,7 +215,7 @@ import java.io.IOException;
  * @author Rodney Waldhoff
  * @version $Revision$ $Date$
  */
-public class JOCLContentHandler extends DefaultHandler implements ContentHandler {
+public class JOCLContentHandler extends DefaultHandler {
 
     //--- Static Methods ---------------------------------------------
     /**
@@ -483,7 +488,9 @@ public class JOCLContentHandler extends DefaultHandler implements ContentHandler
                     } else {
                         _cur.addArgument(temp.getType(),temp.createObject());
                     }
-                } else if(ELT_BOOLEAN.equals(localName)) {
+                } 
+                /* 
+                else if(ELT_BOOLEAN.equals(localName)) {
                     // nothing to do here
                 } else if(ELT_BYTE.equals(localName)) {
                     // nothing to do here
@@ -504,6 +511,7 @@ public class JOCLContentHandler extends DefaultHandler implements ContentHandler
                 } else {
                     // unrecognized JOCL element warning?
                 }
+                */
             }
         } catch(Exception e) {
             throw new SAXException(e);
