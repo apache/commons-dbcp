@@ -17,7 +17,7 @@
 <project>
   <pomVersion>3</pomVersion>
   
-  <groupId>org.apache.commons</groupId>
+  <groupId>commons-dbcp</groupId>
   <artifactId>commons-dbcp</artifactId>
   <inceptionYear>2001</inceptionYear>
   <currentVersion>1.2.2-SNAPSHOT</currentVersion>
