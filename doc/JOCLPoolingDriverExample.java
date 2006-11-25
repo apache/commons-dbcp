@@ -37,9 +37,8 @@ import java.sql.SQLException;
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-collections.jar
-//  * commons-pool.jar
-//  * commons-dbcp.jar
+//  * commons-pool-1.3.jar
+//  * commons-dbcp-1.2.2.jar
 //  * the classes for your (underlying) JDBC driver
 //  * sax2.jar (the SAX 2 API)
 //  * a SAX2 friendly XML parser (jaxp.jar and parser.jar,
@@ -73,7 +72,7 @@ import java.sql.SQLException;
 // For pooling:
 //
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver:org.apache.commons.dbcp.PoolingDriver \
-//       -classpath commons-collections.jar:commons-pool.jar:commons-dbcp.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
+//       -classpath commons-pool-1.3.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
 //       JOCLPoolingDriverExample
 //       "jdbc:apache:commons:dbcp:/poolingDriverExample"
 //       "SELECT * FROM DUAL"
