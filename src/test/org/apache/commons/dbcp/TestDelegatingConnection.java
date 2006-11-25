@@ -53,9 +53,9 @@ public class TestDelegatingConnection extends TestCase {
     }
 
     public void testConnectionToString() throws Exception {
-    	String s = conn.toString();
-    	assertNotNull(s);
-    	assertTrue(s.length() > 0);
+        String s = conn.toString();
+        assertNotNull(s);
+        assertTrue(s.length() > 0);
     }
 
     public void testHashCodeEqual() {
