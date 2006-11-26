@@ -37,10 +37,11 @@ junit.home=${user.home}/junit3.8.1
 junit.lib=${junit.home}
 junit.jar=${junit.lib}/junit.jar
 
-# SAX2 implementation
-# Note: Apache Xerces supports the SAX 2 API
-sax2.home=${repository}/xerces/jars
-sax2.jar=${sax2.home}/xercesImpl-2.8.1.jar
+# XML parser
+xerces.home=${repository}/xerces/jars
+xerces-impl.jar=${xerces.home}/xerces-2.0.2.jar
+xml-apis.home=${repository}/xml-apis/jars
+xerces-api.jar=${xml-apis.home}/xml-apis-2.0.2.jar
 
 # Tomcat naming jars - needed only for JNDI tests
 naming.home=${repository}/tomcat/jars
