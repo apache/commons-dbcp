@@ -39,9 +39,9 @@ junit.jar=${junit.lib}/junit.jar
 
 # XML parser
 xerces.home=${repository}/xerces/jars
-xerces-impl.jar=${xerces.home}/xerces-2.0.2.jar
+xerces.jar=${xerces.home}/xerces-2.0.2.jar
 xml-apis.home=${repository}/xml-apis/jars
-xerces-api.jar=${xml-apis.home}/xml-apis-2.0.2.jar
+xml-apis.jar=${xml-apis.home}/xml-apis-2.0.2.jar
 
 # Tomcat naming jars - needed only for JNDI tests
 naming.home=${repository}/tomcat/jars
