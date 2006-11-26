@@ -83,4 +83,42 @@
     <ant:checksum file="${distDir}/${finalName}-src.zip"/>
   </postGoal>
   
+  <!-- Use ant to regen javadoc, since maven refuses to include more than
+       one package, and jocl is not a subpackage of dbcp. -->
+  <postGoal name="site">
+    <j:set var="destDir" value="${pom.getPluginContext('maven-javadoc-plugin').getVariable('maven.javadoc.destdir')}"/>
+    <j:set var="libDir" value="${user.home}/.maven/repository"/>
+    <ant:path id="build.classpath">
+      <ant:pathelement 
+        location="${libDir}/commons-pool/jars/commons-pool-1.3.jar">
+      </ant:pathelement>
+      <ant:pathelement 
+        location="${libdir}/xerces/jars/xercesImpl-2.8.0.jar">
+      </ant:pathelement>
+    </ant:path>
+    <ant:delete dir="${destDir}"/>
+    <ant:mkdir dir="${destDir}"/>
+    <ant:tstamp>
+      <ant:format pattern="2001-yyyy" property="year"/>
+    </ant:tstamp>
+    <ant:property name="copyright" 
+      value="Copyright &amp;copy;  The Apache Software Foundation. All Rights Reserved."/>
+    <ant:property name="title" value="${pom.name} ${pom.currentVersion} API"/>
+    <ant:javadoc use="true"  
+       destdir="${destDir}" author="true"
+       version="true"
+       protected="true"
+       sourcepath="${basedir}/src/java" 
+       windowtitle="${pom.name} ${pom.currentVersion} API"
+       doctitle="${pom.name} ${pom.currentVersion} API"
+       bottom="Copyright &amp;copy;  The Apache Software Foundation. All Rights Reserved."
+       packagenames="org.apache.commons.*">
+      <ant:classpath>
+        <ant:path refid="build.classpath"/>
+      </ant:classpath>
+      <ant:link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
+      <ant:link href="http://jakarta.apache.org/commons/pool/apidocs"/>
+    </ant:javadoc>
+  </postGoal>
+   
 </project>
