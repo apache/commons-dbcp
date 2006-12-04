@@ -36,9 +36,14 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  */
 public class AbandonedObjectPool extends GenericObjectPool {
 
-    // DBCP AbandonedConfig
+    /** 
+     * DBCP AbandonedConfig 
+     */
     private AbandonedConfig config = null;
-    // A list of connections in use
+    
+    /**
+     * A list of connections in use
+     */
     private List trace = new ArrayList();
 
     /**
@@ -66,6 +71,8 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * getNumIdle() < 2
      * 
      * @return Object jdbc Connection
+     * @throws Exception if an exception occurs retrieving a 
+     * connection from the pool
      */
     public Object borrowObject() throws Exception {
         if (config != null
@@ -75,11 +82,11 @@ public class AbandonedObjectPool extends GenericObjectPool {
             removeAbandoned();
         }
         Object obj = super.borrowObject();
-        if(obj instanceof AbandonedTrace) {
-            ((AbandonedTrace)obj).setStackTrace();
+        if (obj instanceof AbandonedTrace) {
+            ((AbandonedTrace) obj).setStackTrace();
         }
         if (obj != null && config != null && config.getRemoveAbandoned()) {
-            synchronized(trace) {
+            synchronized (trace) {
                 trace.add(obj);
             }
         }
@@ -90,10 +97,12 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * Return a db connection to the pool.
      *
      * @param obj db Connection to return
+     * @throws Exception if an exception occurs returning the connection
+     * to the pool
      */
     public void returnObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
-            synchronized(trace) {
+            synchronized (trace) {
                 boolean foundObject = trace.remove(obj);
                 if (!foundObject) {
                     return; // This connection has already been invalidated.  Stop now.
@@ -103,9 +112,15 @@ public class AbandonedObjectPool extends GenericObjectPool {
         super.returnObject(obj);
     }
 
+    /**
+     * Invalidates an object from the pool.
+     *
+     * @param obj object to be returned
+     * @throws Exception if an exception occurs invalidating the object
+     */
     public void invalidateObject(Object obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
-            synchronized(trace) {
+            synchronized (trace) {
                 boolean foundObject = trace.remove(obj);
                 if (!foundObject) {
                     return; // This connection has already been invalidated.  Stop now.
@@ -124,10 +139,10 @@ public class AbandonedObjectPool extends GenericObjectPool {
         long now = System.currentTimeMillis();
         long timeout = now - (config.getRemoveAbandonedTimeout() * 1000);
         ArrayList remove = new ArrayList();
-        synchronized(trace) {
+        synchronized (trace) {
             Iterator it = trace.iterator();
             while (it.hasNext()) {
-                AbandonedTrace pc = (AbandonedTrace)it.next();
+                AbandonedTrace pc = (AbandonedTrace) it.next();
                 if (pc.getLastUsed() > timeout) {
                     continue;
                 }
@@ -140,15 +155,17 @@ public class AbandonedObjectPool extends GenericObjectPool {
         // Now remove the abandoned connections
         Iterator it = remove.iterator();
         while (it.hasNext()) {
-            AbandonedTrace pc = (AbandonedTrace)it.next();
+            AbandonedTrace pc = (AbandonedTrace) it.next();
             if (config.getLogAbandoned()) {
                 pc.printStackTrace();
             }             
             try {
                 invalidateObject(pc);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }             
+            }
+            
         }
     }
 }
+
