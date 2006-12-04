@@ -26,6 +26,10 @@ package org.apache.commons.dbcp;
  */
 public class AbandonedConfig {
 
+    /**
+     * Whether or not a connection is considered abandoned and eligible
+     * for removal if it has been idle longer than the removeAbandonedTimeout
+     */
     private boolean removeAbandoned = false;
 
     /**
@@ -61,6 +65,9 @@ public class AbandonedConfig {
         this.removeAbandoned = removeAbandoned;
     }
 
+    /**
+     * Timeout in seconds before an abandoned connection can be removed
+     */
     private int removeAbandonedTimeout = 300;
 
     /**
@@ -85,6 +92,10 @@ public class AbandonedConfig {
         this.removeAbandonedTimeout = removeAbandonedTimeout;
     }
 
+    /**
+     * Determines whether or not to log stack traces for application code
+     * which abandoned a Statement or Connection.
+     */
     private boolean logAbandoned = false;
 
     /**
@@ -112,6 +123,7 @@ public class AbandonedConfig {
      * Logging of abandoned Statements and Connections adds overhead
      * for every Connection open or new Statement because a stack
      * trace has to be generated.
+     * @param logAbandoned true turns on abandoned stack trace logging
      *
      */
     public void setLogAbandoned(boolean logAbandoned) {

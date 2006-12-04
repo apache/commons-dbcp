@@ -36,20 +36,22 @@ import java.util.List;
  */
 public class AbandonedTrace {
 
+    /** Date format */
     private static SimpleDateFormat format = new SimpleDateFormat
         ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
          "'by the following code was never closed:'");
 
-    // DBCP AbandonedConfig
+    /** DBCP AbandonedConfig */
     private AbandonedConfig config = null;
-    // Parent object
+    /**  Parent object */
     private AbandonedTrace parent;
-    // A stack trace of the code that created me (if in debug mode) **/
+    /** A stack trace of the code that created me (if in debug mode) */
     private Exception createdBy;
+    /** Time created */
     private long createdTime;
-    // A list of objects created by children of this object
+    /** A list of objects created by children of this object */
     private List trace = new ArrayList();
-    // Last time this connection was used
+    /** Last time this connection was used */
     private long lastUsed = 0;
 
     /**
@@ -170,7 +172,7 @@ public class AbandonedTrace {
      * @param trace AbandonedTrace object to add
      */
     protected void addTrace(AbandonedTrace trace) {
-        synchronized(this) {
+        synchronized (this) {
             this.trace.add(trace);
         }
         setLastUsed();
