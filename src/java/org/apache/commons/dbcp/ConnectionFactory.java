@@ -31,6 +31,7 @@ public interface ConnectionFactory {
      * implementation specific fashion.
      *
      * @return a new {@link java.sql.Connection}
+     * @throws SQLException if a database error occurs creating the connection
      */
     public abstract Connection createConnection() throws SQLException;
 }
