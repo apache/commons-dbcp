@@ -1157,7 +1157,7 @@ public class BasicDataSource implements DataSource {
         }
 
         // Create an object pool to contain our active connections
-        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned() == true)) {
+        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
             connectionPool = new AbandonedObjectPool(null,abandonedConfig);
         }
         else {
