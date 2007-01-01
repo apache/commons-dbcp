@@ -353,7 +353,7 @@ public class JOCLContentHandler extends DefaultHandler {
 
     /**
      * Construct a JOCLContentHandler.
-     * @param emtpyEltNs when <tt>true</tt> I should assume any element with an empty namespace is within the JOCL namespace
+     * @param emptyEltNS when <tt>true</tt> I should assume any element with an empty namespace is within the JOCL namespace
      * @param joclEltPrefix when <tt>true</tt> I should assume any element who's prefix is <tt>jocl:</tt> and who's namespace is empty is within the JOCL namespace
      * @param emptyAttrNS when <tt>true</tt> I should assume any attribute with an empty namespace is within the JOCL namespace
      * @param joclAttrPrefix when <tt>true</tt> I should assume any attribute who's prefix is <tt>jocl:</tt> and who's namespace is empty is within the JOCL namespace
