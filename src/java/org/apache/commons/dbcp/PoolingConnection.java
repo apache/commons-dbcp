@@ -87,7 +87,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * Create or obtain a {@link PreparedStatement} from my pool.
      * @return a {@link PoolablePreparedStatement}
      */
-    public synchronized PreparedStatement prepareStatement(String sql) throws SQLException {
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql)));
         } catch(NoSuchElementException e) {
@@ -103,7 +103,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * Create or obtain a {@link PreparedStatement} from my pool.
      * @return a {@link PoolablePreparedStatement}
      */
-    public synchronized PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency)));
         } catch(NoSuchElementException e) {
