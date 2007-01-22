@@ -38,7 +38,9 @@ The <action> type attribute can be add,update,fix,remove.
     <title>Commons DBCP Release Notes</title>
   </properties>
   <body>
-    <release version="1.2.2-SNAPSHOT" date="TBD">
+    <release version="1.2.2-RC1" date="TBD"
+      description="This is a maintenance release containing bug fixes
+      and enhancements. All API changes are binary compatible with version 1.2.1.">
       <action dev="dirkv " type="add">
         Add a <i>JNDI How To</i> to the User Guide.
       </action>
