@@ -114,6 +114,29 @@ Changes in this version include:</j:whitespace>
         </j:forEach>
       </j:if>
 
+<j:whitespace trim="false">
+Known Issues (signicant open issues at time of release):
+  
+* Multiple issues (DBCP-3, DBCP-5, DBCP-23, DBCP-34, DBCP-61, DBCP-134,
+  DBCP-148, DBCP-180) related to DBCP connection closing semantics. Fixing
+  these issues could break existing clients, so they have been deferred to
+  a major release.
+
+* DBCP-44. Evictor thread in GenericObjectPool has potential for deadlock. 
+  The GenericObjectPool Evictor thread can potentially cause a deadlock between
+  its connection factory and java.sql.DriverManager. The deadlock occurs when
+  the Evictor thread is trying to make enough connections to bring the pool's
+  idle connections up to what's specified in minIdle, at the same time a
+  connection is being requested through DriverManager.getConnection(). The
+  suggested workaround is to either set minIdle to 0 when using the
+  PoolingDriver or access connections directly from the pool if minIdle is
+  set to a positive number. See the bug report for details.
+
+For a full list of open DBCP issues see
+http://jakarta.apache.org/commons/dbcp/issue-tracking.html
+
+
+</j:whitespace>
       <!-- Nasty hack to detect a plugin until pom.type exists -->
       <u:available file="${basedir}/plugin.jelly">
         <j:whitespace trim="false"> 
@@ -133,7 +156,6 @@ ${distributionUrl}/${pom.artifactId}-${versionVariable}.jar
 
       </j:whitespace>
     </j:if>
-
   </jsl:template>
   
   <jsl:template match="action" trim="true">
