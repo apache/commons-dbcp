@@ -115,7 +115,7 @@ Changes in this version include:</j:whitespace>
       </j:if>
 
 <j:whitespace trim="false">
-Known Issues (signicant open issues at time of release):
+Known Issues (significant open issues at time of release):
   
 * Multiple issues (DBCP-3, DBCP-5, DBCP-23, DBCP-34, DBCP-61, DBCP-134,
   DBCP-148, DBCP-180) related to DBCP connection closing semantics. Fixing
