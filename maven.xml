@@ -19,14 +19,16 @@
     xmlns:ant="jelly:ant">
 
   <!-- ============== DIST ================== -->
-  <!-- Copied from Commons-Collections        -->
   <postGoal name="dist:prepare-bin-filesystem">
-    <j:set var="maven.dist.bin.assembly.dir" value="${pom.getPluginContext('maven-dist-plugin').getVariable('maven.dist.bin.assembly.dir')}" />
+    <attainGoal name="announcement:generate" />
+    <j:set var="maven.dist.bin.assembly.dir" 
+    value="${pom.getPluginContext('maven-dist-plugin').getVariable('maven.dist.bin.assembly.dir')}" />
     
     <!-- Copy Files -->
     <ant:copy todir="${maven.dist.bin.assembly.dir}">
       <ant:fileset dir=".">
         <ant:include name="NOTICE.txt"/>
+        <ant:include name="RELEASE-NOTES.txt"/>
       </ant:fileset>
     </ant:copy>
 
@@ -47,6 +49,7 @@
       <ant:fileset dir=".">
         <ant:include name="NOTICE.txt"/>
         <ant:include name="build.properties.sample"/>
+        <ant:include name="RELEASE-NOTES.txt"/>
         <ant:include name="checkstyle.xml"/>
       </ant:fileset>
     </ant:copy>
@@ -63,7 +66,7 @@
       <ant:fileset dir="xdocs" />
     </ant:copy>
     
-    <!-- Copy XDocs -->
+    <!-- Copy doc directory -->
     <ant:copy todir="${maven.dist.src.assembly.dir}/doc">
       <ant:fileset dir="doc" />
     </ant:copy>
