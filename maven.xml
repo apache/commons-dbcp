@@ -50,6 +50,7 @@
         <ant:include name="NOTICE.txt"/>
         <ant:include name="build.properties.sample"/>
         <ant:include name="RELEASE-NOTES.txt"/>
+        <ant:include name="release-notes.jsl"/>
         <ant:include name="checkstyle.xml"/>
       </ant:fileset>
     </ant:copy>
