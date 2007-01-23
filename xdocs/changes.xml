@@ -114,9 +114,6 @@ The <action> type attribute can be add,update,fix,remove.
         Modified activateObject in PoolableConnection to test connection
         properties before resetting to defaults.
       </action>
-      <action dev="bayard" type="update" issue="DBCP-68" due-to="Christoph Cenowa">
-        Upgrade dependency to Collections 3.1.
-      </action>
       <action dev="sandymac" type="fix" issue="DBCP-188">
         maxActive in configuration.html is documented incorrectly.
       </action>
@@ -152,6 +149,13 @@ The <action> type attribute can be add,update,fix,remove.
         Removed dependency on Commons Collections by adding collections
         2.1 sources for LRUMap and SequencedHashMap with package scope to 
         datasources package.
+      </action>
+      <action dev="psteitz" type="fix" issue="DBCP-65">
+        Removed synchronization from prepareStatement methods in
+        PoolingConnection. Synchronization in these methods was causing
+        deadlocks. No resources other than the prepared statement pool are
+        accessed by these methods, and the pool methods are synchronized. 
+        Also fixes DBCP-202.
       </action>
     </release>   
 
