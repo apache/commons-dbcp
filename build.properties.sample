@@ -32,10 +32,9 @@ jdbc20ext.home=${user.home}/jdbc2_0-stdext
 jdbc20ext.lib=${jdbc20ext.home}
 jdbc20ext.jar=${jdbc20ext.lib}/jdbc2_0-stdext.jar
 
-# Junit
-junit.home=${user.home}/junit3.8.1
-junit.lib=${junit.home}
-junit.jar=${junit.lib}/junit.jar
+# JUnit
+junit.home=${repository}/junit/jars
+junit.jar=${junit.home}/junit-3.8.1.jar
 
 # XML parser
 xerces.home=${repository}/xerces/jars
