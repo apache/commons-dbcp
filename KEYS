@@ -1,0 +1,103 @@
+This file contains the PGP keys of various developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Users: pgp < KEYS
+       gpg --import KEYS
+Developers: 
+        pgp -kxa <your name> and append it to this file.
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+pub  1024D/B1313DE2 2003-01-15 Robert Burrell Donkin (CODE SIGNING KEY) <rdonkin@apache.org>
+sig 3       B1313DE2 2003-01-15   Robert Burrell Donkin (CODE SIGNING KEY) <rdonkin@apache.org>
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.0.7 (GNU/Linux)
+
+mQGiBD4lztcRBAClmlgorzoHH7IVYYerQY0e7QU0X3+4PRGGZVcbkZA3qMZV8rG3
+FSB4qp3cLX7rnco26oQbP4jSqXe1piEzYloyzYvgW9t0uFOFF7N8h9XtgA3E836v
+DE/dbrteJ6wZZvS0BR1J0u2/+3nSf4bdmzjd8JPMCIp4q4ztTMTNsWKUswCg3vRA
+NpL1bO0lTi5M013YhY+8wHcD/0Swc47PQuruwL+54ZMFFEHu+24UukU/7T6X2hos
+ERgq9HkUyqK5mOEqp4Y4AfhwPfzp/qOFbg+Jn0IIVg3XGZhTLyeBiwHpXBhJw2TT
+FXhLxm9G2PoYgkhMSgOo4wrHLCMszfvOABzCEZ4TAw3k4s3X4PSfNjHjOHUNYWhb
+1BNLA/wIVDCdOyHoUvw6R0rCTKFcHSXu7XQxjYIBKGAQkcNlCZElqNVlqa+eQTPW
+3AHXor/TUDzzd4afjkvmWaayGDZwOSWlsfqfPItvzTNzmE44wqfICa0/aMgkU6aZ
+m/k+UMFegH1YVBaAl0aj8Gx+T5B7JqA9i7+lmw3nwB1Ge0miBbQ9Um9iZXJ0IEJ1
+cnJlbGwgRG9ua2luIChDT0RFIFNJR05JTkcgS0VZKSA8cmRvbmtpbkBhcGFjaGUu
+b3JnPohZBBMRAgAZBQI+Jc7XBAsHAwIDFQIDAxYCAQIeAQIXgAAKCRDVM051sTE9
+4qflAJ9B2L8SOnFRnoJktHImJU9JO72IdwCgpM08Fi8O0dI5WuOFdz5sLobqioY=
+=nk3Z
+-----END PGP PUBLIC KEY BLOCK-----
+pub  1024D/51F881B8 2003-10-20 Dirk Verbeeck <dirkv@apache.org>
+sig 3       51F881B8 2003-10-20   Dirk Verbeeck <dirkv@apache.org>
+sub  2048g/52C3623F 2003-10-20
+sig         51F881B8 2003-10-20   Dirk Verbeeck <dirkv@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.2 (MingW32)
+
+mQGiBD+UTsIRBADCNCMgm9gVVnewQg7d4sPIQQGOQ8dTAN2Gc4U37RSZmg9z08i+
+fyHPLcTRIyf11vJCR5B1lnz8X7C/Dv4l6aLJfQfwRXxnO6YyE5bkc0kKZUacTRol
+lbP9R9AuFb+Qwkuiy4wMvyT37g8fcwY/9UwolK0RV4z7WasLiVPX6Yh0KwCguy2Q
+jRg+t6DF7G3K2o/exZD+3sED/2CbO7wowzZBkPH+XtzDbwVOSd/Ar+UX4yAuI+zO
+jlG2+7vbHXPIFuAxG9c9RoZyMHpzN9BS2BNrzlY5N/ACWv8AsxJCQQBP6Hw9ZJLR
+tehwqmGaLtCqBCA3aKHMY9mwaNOnryBgZiau3/379IL14XCMaSEbhSQrFD7pz946
+ntS/BACmlEG3pWZf2yewvj1S+eZD3KGbCCMpiZkFbTCQESbf87I9wq7M3lsH3rP4
+yayJRgy6e5754Y9K9VIRFSTHJcRtLiVjUaqYQ4ezq0fG7ysFODJgBDj0FXEmj876
+R4bZqa38VXMwr3JquZVWCzd1/FOrERPI8dIUhH8KeO++6bHY07QgRGlyayBWZXJi
+ZWVjayA8ZGlya3ZAYXBhY2hlLm9yZz6IWwQTEQIAGwUCP5ROwgYLCQgHAwIDFQID
+AxYCAQIeAQIXgAAKCRB3xahpUfiBuDoxAJsG25WS/vV7MktvN0CjL1kfNf7sBgCf
+fbWWl1IlrOLDJh3cN3lyszX5rka5Ag0EP5ROzhAIAJaq/8+mTyzV7cUxgMgeXVi2
+BeBAKws3FCXrxsptpn0PM1Y7GoKRV6TfFnJkHUt+MwRasc9VTj443OlMOFZ5qjDB
+G+B9xCpFpndEPexpp4iydCuI11QyslUNhLhGXH043OogLHHOLnxKJtSexSUxujSs
+t5rQWpKhKgd+gHXY8WuZx77osS9Rhp7mlMfULtKBd/4sWnscCCz1fweowY4tZRA7
+U9T/X4UfSm1gRJNAb/BtMItZ6GQm92+vDf2i6i196m9LBZlA+NSYUncmClvcaZ0P
+Hv0zGWa1q7PJlutbZ/ioWbGtsxRYBwj0+U/atlce1Fybpa2WJQLchChy//j6HwMA
+AwYH/A+hdybLmU2wsc1gKIG+TPK0e9qQZHKxL9jr1v4MhuZX6vCEdpKrUS16Pa4G
+9M0Lgt3Fzbv2VRHLkvfoPwgEJy5w0cn1cyAqGa9XGhJzKTR7TumOKHmKM8Zt2P1g
+zCOsrmWg0qVnZG3ax3keilihOp/EW5uuD1LfP9qvEdcAfMt0kvF01eUc+OQ7Hucz
+o/V5vvotVdY2eyv1xnUn+JW/tlBqEf0XMwOUlpEl9ZzMhG2qAnywJYtKCDCLDEnu
+0HgNqrnaVmOZv+xZ7jJdHBzJVqt7hF96zK/B0iVgjxFVnzbMo6IFzm45o40e782v
+ZMlDmMNIePtSjlun9Mj+U4ZsiSKIRgQYEQIABgUCP5ROzgAKCRB3xahpUfiBuH5H
+AKCH3PRxTxzDyFd4plgw/qtu/gUuDwCePZloKPaa9VY2bdqaVdeD58ArQuQ=
+=1aLn
+-----END PGP PUBLIC KEY BLOCK-----
+pub  1024D/F07D567E 2004-08-21 Phil Steitz (For signing Apache distributions) <psteitz@apache.org>
+sig 3       F07D567E 2006-01-14   Phil Steitz (For signing Apache distributions) <psteitz@apache.org>
+sig         7C037D42 2006-04-06   Yoav Shapira <yoavs@apache.org>
+sig 3       F07D567E 2005-12-18   Phil Steitz (For signing Apache distributions) <psteitz@apache.org>
+sig 3       F07D567E 2004-08-21   Phil Steitz (For signing Apache distributions) <psteitz@apache.org>
+sub  1024g/56EEF1D4 2004-08-21
+sig         F07D567E 2006-01-14   Phil Steitz (For signing Apache distributions) <psteitz@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.7 (GNU/Linux)
+
+mQGiBEEn15ERBADm0iBZ/KwIiEYdLWxMIIZVzwF6My1eLRX+TLvPtOO4wf8zE9zV
+fAsnMI8uCK3as3OwgqTTsKy7KQSqRyG0zd/rvCmJUEET3zHX1e5e2nYq8p1TzJzk
+mR9lXe/amtRy6687fVn5hxERSlXNioh3CZdOVv1Mum5EHuzWFQGjA3CFywCgoXKg
+dLJ9QuE4Btzf9ozvZRDcWYcEAN41LTmy3NYv0SfwvPnR5rEc+xw4T5p28qhPc1OP
+h0jGnYgHYaM3xf0QGchvWLlwLsquxvD2K41ldIJpZm+Z4RqkV9wPrjmu1k2EUqWq
+UKD2gdyyQx9pN6RH9qIN4Mh8b9x1BUrm+/KoxlmCfMxg2efLJTaPwlFgqitswZaV
+aLi1A/4+Z7l1W/sMN09ZfOvTxEmznKOscCBNQPWwu/NBFYVzCAAv2pNVFvmjU1OV
+u85pXfY8/x0lkpUlexd4bL0x1IPmrJn+H4dTI2sVFXLuKVceug1HjXW+zN/LWhT2
+08bq6V/+a9+9oVjcdYMqJldoxEe5Tac7fwExQvqRFUvteL2LTbRDUGhpbCBTdGVp
+dHogKEZvciBzaWduaW5nIEFwYWNoZSBkaXN0cmlidXRpb25zKSA8cHN0ZWl0ekBh
+cGFjaGUub3JnPohZBBMRAgAZBAsHAwIDFQIDAxYCAQIeAQIXgAUCQ8lpPQAKCRDN
+MDj+8H1WfhFHAJ9XCkzd4Vha272lA/HjfPaVn51lvQCfX10Nix32FOiOMGWwQHNQ
+HlMuinmIRgQQEQIABgUCRDUW3AAKCRAmYZHDfAN9Qs/zAJ9fxWZ/maxWACL7uSXn
+iRnZGD4ctwCgpcWSc9Bw7yALKGjlifLlnenM4TqIXAQTEQIAHAUCQ6TYBAIbAwQL
+BwMCAxUCAwMWAgECHgECF4AACgkQzTA4/vB9Vn7IJwCdHmlfu+baxwUtrox168Zf
+t4SuXesAoJMJwN50yDXl+wxqWClAfz/0L4rkiF8EExECAB8FAkEn15EFCQPCZwAE
+CwcDAgMVAgMDFgIBAh4BAheAAAoJEM0wOP7wfVZ+0l4AnR8lmqMte2cDnEeQNk25
+949k572PAJ9Ix9DE75HJp+gdwA1RspnoatvmgrkBDQRBJ9eUEAQAvAxg5za8Trgp
+vk3rx//r1H1u8F21mtMVC4DnDWEUw9Ts+Ew/oy4xTENPTaA3wVtiDBxorHoQlxZq
+uqWUNcUFnrqSSyJ7S5NDiAWKYL6ez0MgXd6lqwL8tA4rKQhDK3kPqnuF6RFUfC5a
+BrQxCbNOk5OZMS+W5/w2CiCqhjKtkHMAAwUD/04nzr26XFB0XHbbCF4bSbyiR3vQ
+TWOBOmv1qkGnausQzbFpg34T1l5KYaje0C7n7+UZSlD2uWksYTbtR3JpAWmf486M
+uAbZ5ViTshy8K5ia56k2yI/ZaSErG7HZjMxa4G8ecWyK1guHT4LMEobWUA79cs/c
+wdwqvUV83S1la3AliEYEGBECAAYFAkPJaW8ACgkQzTA4/vB9Vn6ABwCgkyd1L3p2
+o9Kp+A7OY3RqmzdKnvkAnRnhfXU0ijWlrXrpaEXqE1WcxMEM
+=k/xY
+-----END PGP PUBLIC KEY BLOCK-----
