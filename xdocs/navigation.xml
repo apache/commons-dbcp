@@ -47,7 +47,6 @@
             <item name="Issue Tracking"       href="/issue-tracking.html"/>
             <item name="Team"                 href="/team-list.html"/>
             <item name="Source repository"    href="cvs-usage.html"/>
-            <item name="Javadoc (SVN latest)" href="http://jakarta.apache.org/commons/dbcp/apidocs/"/>
         </menu>
 
         &commons;
