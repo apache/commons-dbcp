@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
- <!--
+<?xml version="1.0"?>
+<!--
    Licensed to the Apache Software Foundation (ASF) under one or more
-  contributor license agreements.  See the NOTICE file distributed with
-  this work for additional information regarding copyright ownership.
-  The ASF licenses this file to You under the Apache License, Version 2.0
-  (the "License"); you may not use this file except in compliance with
-  the License.  You may obtain a copy of the License at
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,43 +14,40 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-  -->
+-->
 <document>
    <properties>
       <title>Downloads</title>
-      <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
-      <revision>$Id$</revision>
    </properties>
 
    <body>
-      <section name="Releases">
-         <p>The following releases are available:</p>
-         <ul>
-           <li>Version 1.2.1 - 14 June 2004 - <a href="release-notes-1.2.1.html">(release notes)</a></li>
-           <li>Version 1.2 - 7 June 2004 - <a href="release-notes-1.2.html">(release notes)</a></li>
-           <li>Version 1.1 - 20 October 2003 - <a href="release-notes-1.1.html">(release notes)</a></li>
-           <li>Version 1.0 - 12 August 2002</li>
-         </ul>
-         <br/>
-         <p>
-            The latest source and binary release is always available on the 
-            <a href="http://jakarta.apache.org/site/downloads/downloads_commons-dbcp.cgi">
-            DBCP Downloads page</a>.
-         </p>
-         <p>
-            Commons-DBCP depends at runtime on 
-            <a href="http://jakarta.apache.org/commons/pool/">commons-pool</a>.
-         </p>
-         <p>
-            Older releases are retained by the Apache Software Foundation but are 
-            moved into a
-            <a href="http://archive.apache.org/dist/jakarta/commons/dbcp/">
-            special archive area</a>.
-         </p>
-         <p>
-            Access to the source tree to see the latest and greatest code is possible
-            through <a href="cvs-usage.html">anonymous SVN access</a>.
-         </p>
+      <section name="Download DBCP">
+         
+         <subsection name="Releases">
+            <p>Download the <a href="http://jakarta.apache.org/site/downloads/downloads_commons-dbcp.cgi">Latest Release</a>
+               of Commons DBCP.
+            </p>
+            <p>For details of whats new in each version see the <a href="changes-report.html">Release History</a>.</p>
+         </subsection>
+
+         <subsection name="Nightly Builds">
+            <p>
+               <a href="http://people.apache.org/builds/jakarta-commons/nightly/commons-dbcp/">Nightly Builds</a>
+               are built once a day from the current SVN HEAD. This is (nearly) the latest code and so should
+               be treated with caution.
+            </p>
+         </subsection>
+
+         <subsection name="Archived Releases">
+            <p>
+               Older releases are retained by the Apache Software Foundation but are
+               moved into a
+               <a href="http://archive.apache.org/dist/jakarta/commons/dbcp/">
+             special archive area</a>.
+            </p>
+         </subsection>
+
       </section>
+
    </body>
 </document>
