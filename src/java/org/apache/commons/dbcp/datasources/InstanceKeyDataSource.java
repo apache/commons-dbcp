@@ -616,6 +616,10 @@ public abstract class InstanceKeyDataSource
      * Whether a rollback will be issued after executing the SQL query 
      * that will be used to validate connections from this pool
      * before returning them to the caller.
+     * 
+     * @return true if a rollback will be issued after executing the
+     * validation query
+     * @since 1.2.2
      */
     public boolean isRollbackAfterValidation() {
         return (this.rollbackAfterValidation);
@@ -626,7 +630,10 @@ public abstract class InstanceKeyDataSource
      * that will be used to validate connections from this pool
      * before returning them to the caller. Default behavior is NOT
      * to issue a rollback. The setting will only have an effect
-     * if a validation query is set.
+     * if a validation query is set
+     * 
+     * @param rollbackAfterValidation new property value
+     * @since 1.2.2
      */
     public void setRollbackAfterValidation(boolean rollbackAfterValidation) {
         assertInitializationAllowed();
