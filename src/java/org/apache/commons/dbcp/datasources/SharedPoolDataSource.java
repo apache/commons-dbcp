@@ -174,6 +174,11 @@ public class SharedPoolDataSource
         return info;
     }
 
+    /**
+     * Returns a <code>SharedPoolDataSource</code> {@link Reference}.
+     * 
+     * @since 1.2.2
+     */
     public Reference getReference() throws NamingException {
         Reference ref = new Reference(getClass().getName(),
             SharedPoolDataSourceFactory.class.getName(), null);

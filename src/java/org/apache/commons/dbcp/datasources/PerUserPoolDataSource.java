@@ -422,6 +422,11 @@ public class PerUserPoolDataSource
         con.setReadOnly(defaultReadOnly);
     }
 
+    /**
+     * Returns a <code>PerUserPoolDataSource</code> {@link Reference}.
+     * 
+     * @since 1.2.2
+     */
     public Reference getReference() throws NamingException {
         Reference ref = new Reference(getClass().getName(),
                 PerUserPoolDataSourceFactory.class.getName(), null);

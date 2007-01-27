@@ -80,6 +80,12 @@ public class DelegatingConnection extends AbandonedTrace
         _conn = c;
     }
 
+    /**
+     * Returns a string representation of the metadata associated with
+     * the innnermost delegate connection.
+     * 
+     * @since 1.2.2
+     */
     public String toString() {
         String s = null;
         
@@ -122,6 +128,13 @@ public class DelegatingConnection extends AbandonedTrace
         return _conn;
     }
     
+    /**
+     * Compares innermost delegate to the given connection.
+     * 
+     * @param c connection to compare innermost delegate with
+     * @return true if innermost delegate equals <code>c</code>
+     * @since 1.2.2
+     */
     public boolean innermostDelegateEquals(Connection c) {
         Connection innerCon = getInnermostDelegate();
         if (innerCon == null) {

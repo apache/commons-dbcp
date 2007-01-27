@@ -577,11 +577,25 @@ public class DriverAdapterCPDS
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
+    
+    /**
+     * Returns the maximun number of prepared statements.
+     * 
+     * @return maxPrepartedStatements value
+     * @since 1.2.2
+     */
     public int getMaxPreparedStatements()
     {
         return _maxPreparedStatements;
     }
 
+    /**
+     * Sets the maximum number of prepared statements.
+     * @param maxPreparedStatements the new maximum number of prepared 
+     * statements
+     * 
+     * @since 1.2.2
+     */
     public void setMaxPreparedStatements(int maxPreparedStatements)
     {
         _maxPreparedStatements = maxPreparedStatements;

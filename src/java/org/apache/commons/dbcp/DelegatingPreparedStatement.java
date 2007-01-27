@@ -204,7 +204,8 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     /**
      * Returns a String representation of this object.
      *
-     * @return String
+     * @return String 
+     * @since 1.2.2
      */
     public String toString() {
     return _stmt.toString();
