@@ -882,7 +882,8 @@ public class BasicDataSource implements DataSource {
 
 
     /**
-     * <p><strong>BasicDataSource does NOT support this method.</strong></p>
+     * <strong>BasicDataSource does NOT support this method.
+     * </strong>
      *
      * @param username Database user on whose behalf the Connection
      *   is being made
