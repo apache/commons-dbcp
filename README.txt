@@ -17,7 +17,7 @@ Locations of dependent jars for the Ant build need to be specified in
 build.properties.  There is a build.properties.sample file included in the
 source distribution.
 
-The binary distribution was build using JDK 1.4.2_10. The Ant build includes
+The binary distribution was built using JDK 1.4.2_10. The Ant build includes
 conditional compilation to support building on JDK 1.3. 
 
 See http://jakarta.apache.org/commons/dbcp/ for additional and 
