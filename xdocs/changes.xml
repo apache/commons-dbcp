@@ -108,17 +108,17 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-71" due-to="Douglas Squirrel">
         Document fact that true values for testOnBorrow, testOnReturn, testWhileIdle
-        only have effect when validationQuery is set to a non-null string
+        only have effect when validationQuery is set to a non-null string.
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-102">
         Modified activateObject in PoolableConnection to test connection
         properties before resetting to defaults.
       </action>
       <action dev="sandymac" type="fix" issue="DBCP-188">
-        maxActive in configuration.html is documented incorrectly.
+        Corrected maxActive documentation in configuration.html.
       </action>
       <action dev="psteitz"  type="update">
-        Upgrade dependency to Pool 1.3.
+        Upgraded dependency to Pool 1.3.
       </action>
       <action dev="psteitz" type="update" issue="DBCP-187" due-to="Ralf Hauser">
         Added connection info to SQLException messages when closed connections
