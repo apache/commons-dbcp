@@ -131,6 +131,9 @@ Known Issues (significant open issues at time of release):
   suggested workaround is to either set minIdle to 0 when using the
   PoolingDriver or access connections directly from the pool if minIdle is
   set to a positive number. See the bug report for details.
+  
+* DBCP-191. DBCP does not compile under JDK 1.6 / JDBC 4.0.  Fixing this would
+  break backward compatibility.
 
 For a full list of open DBCP issues see
 http://jakarta.apache.org/commons/dbcp/issue-tracking.html
