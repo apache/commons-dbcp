@@ -21,7 +21,7 @@
   <groupId>commons-dbcp</groupId>
   <artifactId>commons-dbcp</artifactId>
   <inceptionYear>2001</inceptionYear>
-  <currentVersion>1.2.2</currentVersion>
+  <currentVersion>1.3-SNAPSHOT</currentVersion>
   <name>Commons DBCP</name>
   <shortDescription>Commons Database Connection Pooling</shortDescription>
   <description>Commons Database Connection Pooling</description>
