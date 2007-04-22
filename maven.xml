@@ -20,7 +20,7 @@
 
   <!-- ============== DIST ================== -->
   <postGoal name="dist:prepare-bin-filesystem">
-    <attainGoal name="announcement:generate" />
+  <!--  <attainGoal name="announcement:generate" /> -->
     <j:set var="maven.dist.bin.assembly.dir" 
     value="${pom.getPluginContext('maven-dist-plugin').getVariable('maven.dist.bin.assembly.dir')}" />
     
