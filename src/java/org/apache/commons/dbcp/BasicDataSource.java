@@ -882,8 +882,7 @@ public class BasicDataSource implements DataSource {
 
 
     /**
-     * <strong>BasicDataSource does NOT support this method.
-     * </strong>
+     * <strong>BasicDataSource does NOT support this method. </strong>
      *
      * @param username Database user on whose behalf the Connection
      *   is being made
@@ -902,6 +901,8 @@ public class BasicDataSource implements DataSource {
 
 
     /**
+     * <strong>BasicDataSource does NOT support this method. </strong>
+     *
      * <p>Returns the login timeout (in seconds) for connecting to the database.
      * </p>
      * <p>Calls {@link #createDataSource()}, so has the side effect
@@ -913,7 +914,10 @@ public class BasicDataSource implements DataSource {
      * @return login timeout in seconds
      */
     public int getLoginTimeout() throws SQLException {
-        return createDataSource().getLoginTimeout();
+        // This method isn't supported by the PoolingDataSource returned by
+        // the createDataSource
+        throw new UnsupportedOperationException("Not supported by BasicDataSource");
+        //return createDataSource().getLoginTimeout();
     }
 
 
@@ -932,6 +936,8 @@ public class BasicDataSource implements DataSource {
 
 
     /**
+     * <strong>BasicDataSource does NOT support this method. </strong>
+     *
      * <p>Set the login timeout (in seconds) for connecting to the
      * database.</p>
      * <p>
@@ -939,10 +945,15 @@ public class BasicDataSource implements DataSource {
      * of initializing the connection pool.</p>
      *
      * @param loginTimeout The new login timeout, or zero for no timeout
+     * @throws UnsupportedOperationException If the DataSource implementation
+     *   does not support the login timeout feature.
      * @throws SQLException if a database access error occurs
      */
     public void setLoginTimeout(int loginTimeout) throws SQLException {
-        createDataSource().setLoginTimeout(loginTimeout);
+        // This method isn't supported by the PoolingDataSource returned by
+        // the createDataSource
+        throw new UnsupportedOperationException("Not supported by BasicDataSource");
+        //createDataSource().setLoginTimeout(loginTimeout);
     }
 
 
