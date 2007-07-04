@@ -1,4 +1,4 @@
-Apache Jakarta Commons DBCP
+Apache Commons DBCP
 Copyright 1999-2007 The Apache Software Foundation
 
 This product includes software developed by
