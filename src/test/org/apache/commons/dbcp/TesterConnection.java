@@ -136,12 +136,12 @@ public class TesterConnection implements Connection {
         if ("warning".equals(sql)) {
             setWarnings(new SQLWarning("warning in prepareCall"));
         }
-        return null;
+        return new TesterCallableStatement(this);
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         checkOpen();
-        return null;
+        return new TesterCallableStatement(this);
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
