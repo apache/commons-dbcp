@@ -192,6 +192,24 @@
         <scope>test</scope>
       </properties>
     </dependency>
+    
+    <!-- JTA spec jar for managed connections -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+      <version>1.1</version>
+    </dependency> 
+    
+    <!-- For testing managed connections-->
+    <dependency>
+      <groupId>org.apache.geronimo.modules</groupId>
+      <artifactId>geronimo-transaction</artifactId>
+      <version>1.2-beta</version>
+      <properties>
+        <scope>test</scope>
+        <comment>Only required for managed connections tests</comment>
+      </properties>
+    </dependency>
 
     <!-- tomcat naming jars for jndi reference tests -->
     <dependency>

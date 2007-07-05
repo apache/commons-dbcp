@@ -122,6 +122,10 @@
     <contributor>
       <name>Wayne Woodfield</name>
     </contributor>
+    <contributor>
+      <name>Dain Sundstrom</name>
+      <email>dain@apache.org</email>
+    </contributor>
   </contributors>
 
   <dependencies>
@@ -136,6 +140,14 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- For managed connections -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+       <version>1.1</version>
+       <optional>true</optional>
     </dependency>
 
     <!-- tomcat naming jars for jndi reference tests -->
@@ -160,7 +172,15 @@
        <version>1.0.4</version>
        <scope>test</scope>
     </dependency>
-    
+
+    <!-- for testing of managed connections -->
+    <dependency>
+      <groupId>org.apache.geronimo.modules</groupId>
+      <artifactId>geronimo-transaction</artifactId>
+       <version>1.2-beta</version>
+       <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -215,6 +235,9 @@
                 <include>org/apache/commons/dbcp/datasources/TestFactory.java</include>
                 <include>org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java</include>
                 <include>org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java</include>
+
+                <include>org/apache/commons/dbcp/managed/TestManagedDataSource.java</include>
+                <include>org/apache/commons/dbcp/managed/TestManagedDataSourceInTx.java</include>
               </includes>
           </configuration>
         </plugin>

@@ -51,6 +51,9 @@ The <action> type attribute can be add,update,fix,remove.
         the Xerces parser manually. This was to support early JDKs. The 1.3
         version of DBCP requires JDK 1.4+.
       </action>
+      <action dev="psteitz" type="add" issue="DBCP-228" due-to="Dain Sundstrom">
+        Added support for pooling managed connections.
+      </action>
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
