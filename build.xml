@@ -176,14 +176,15 @@
    </target>
 
    <target name="test" depends="compile-test" description="runs (junit) unit tests">
-      <java classname="${test.runner}" fork="yes" failonerror="${test.failonerror}">
-        <arg value="${test.entry}"/> 
+      <echo message="${classpath}"/>
+      <junit printsummary="true" showoutput="true" fork="yes" haltonfailure="${test.failonerror}">
         <classpath>
           <pathelement location="${build.classes.dir}" /> 
           <pathelement location="${build.test-classes.dir}" /> 
           <pathelement path="${classpath}" /> 
         </classpath>
-      </java>
+        <test name="${test.entry}"/> 
+      </junit>
    </target>
 
    <target name="build-jar" depends="compile">
