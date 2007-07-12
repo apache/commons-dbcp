@@ -48,8 +48,8 @@ naming-common.jar=${naming.home}/naming-common-5.0.28.jar
 naming-java.jar=${naming.home}/naming-java-5.0.28.jar 
 
 # Commons logging - dependency of naming jars
-logging.home=${repository}/commons-logging/jars
-logging.jar=${logging.home}/commons-logging-1.0.4.jar
+commons-logging.home=${repository}/commons-logging/jars
+commons-logging.jar=${commons-logging.home}/commons-logging-1.0.4.jar
 
 # JTA - needed for managed connections
 jta-spec.jar=${repository}/org.apache.geronimo.specs/jars/geronimo-jta_1.1_spec-1.1.jar

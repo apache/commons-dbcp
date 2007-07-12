@@ -21,6 +21,7 @@ import junit.framework.*;
 import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
 import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
 import org.apache.commons.dbcp.datasources.TestFactory;
+import org.apache.commons.jocl.TestJOCLContentHandler;
 
 /**
  * @author Rodney Waldhoff
@@ -47,6 +48,9 @@ public class TestAll extends TestCase {
         suite.addTest(TestSharedPoolDataSource.suite());
         suite.addTest(TestPerUserPoolDataSource.suite());
         suite.addTest(TestFactory.suite());
+        suite.addTest(TestJOCLContentHandler.suite());
+        suite.addTest(TestPoolingDataSource.suite());
+        suite.addTest(TestJndi.suite());
         return suite;
     }
 
