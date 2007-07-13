@@ -1136,7 +1136,7 @@ public class BasicDataSource implements DataSource {
         }
 
         // create factory which returns raw physical connections
-        ConnectionFactory driverConnectionFactory = createConectionFactory();
+        ConnectionFactory driverConnectionFactory = createConnectionFactory();
 
         // create a pool for our connections
         createConnectionPool();
@@ -1193,7 +1193,7 @@ public class BasicDataSource implements DataSource {
      * Creates a connection factory for this datasource.  This method only
      * exists so subclasses can replace the implementation class.
      */
-    protected ConnectionFactory createConectionFactory() throws SQLException {
+    protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
         if (driverClassName != null) {
             try {
