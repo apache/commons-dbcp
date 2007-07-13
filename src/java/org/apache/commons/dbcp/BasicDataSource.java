@@ -1135,83 +1135,22 @@ public class BasicDataSource implements DataSource {
             return (dataSource);
         }
 
-        // Load the JDBC driver class
-        if (driverClassName != null) {
-            try {
-                Class.forName(driverClassName);
-            } catch (Throwable t) {
-                String message = "Cannot load JDBC driver class '" +
-                    driverClassName + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
-                throw new SQLNestedException(message, t);
-            }
-        }
+        // create factory which returns raw physical connections
+        ConnectionFactory driverConnectionFactory = createConectionFactory();
 
-        // Create a JDBC driver instance
-        Driver driver = null;
-        try {
-            driver = DriverManager.getDriver(url);
-        } catch (Throwable t) {
-            String message = "Cannot create JDBC driver of class '" +
-                (driverClassName != null ? driverClassName : "") + 
-                "' for connect URL '" + url + "'";
-            logWriter.println(message);
-            t.printStackTrace(logWriter);
-            throw new SQLNestedException(message, t);
-        }
+        // create a pool for our connections
+        createConnectionPool();
 
-        // Can't test without a validationQuery
-        if (validationQuery == null) {
-            setTestOnBorrow(false);
-            setTestOnReturn(false);
-            setTestWhileIdle(false);
-        }
-
-        // Create an object pool to contain our active connections
-        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
-            connectionPool = new AbandonedObjectPool(null,abandonedConfig);
-        }
-        else {
-            connectionPool = new GenericObjectPool();
-        }
-        connectionPool.setMaxActive(maxActive);
-        connectionPool.setMaxIdle(maxIdle);
-        connectionPool.setMinIdle(minIdle);
-        connectionPool.setMaxWait(maxWait);
-        connectionPool.setTestOnBorrow(testOnBorrow);
-        connectionPool.setTestOnReturn(testOnReturn);
-        connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-        connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
-        connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        connectionPool.setTestWhileIdle(testWhileIdle);
-        
         // Set up statement pool, if desired
         GenericKeyedObjectPoolFactory statementPoolFactory = null;
         if (isPoolPreparedStatements()) {
-            statementPoolFactory = new GenericKeyedObjectPoolFactory(null, 
+            statementPoolFactory = new GenericKeyedObjectPoolFactory(null,
                         -1, // unlimited maxActive (per key)
-                        GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL, 
+                        GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL,
                         0, // maxWait
-                        1, // maxIdle (per key) 
-                        maxOpenPreparedStatements); 
+                        1, // maxIdle (per key)
+                        maxOpenPreparedStatements);
         }
-
-        // Set up the driver connection factory we will use
-        if (username != null) {
-            connectionProperties.put("user", username);
-        } else {
-            log("DBCP DataSource configured without a 'username'");
-        }
-        
-        if (password != null) {
-            connectionProperties.put("password", password);
-        } else {
-            log("DBCP DataSource configured without a 'password'");
-        }
-        
-        DriverConnectionFactory driverConnectionFactory =
-            new DriverConnectionFactory(driver, url, connectionProperties);
 
         // Set up the poolable connection factory we will use
         PoolableConnectionFactory connectionFactory = null;
@@ -1237,9 +1176,7 @@ public class BasicDataSource implements DataSource {
         }
 
         // Create and return the pooling data source to manage the connections
-        dataSource = new PoolingDataSource(connectionPool);
-        ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        dataSource.setLogWriter(logWriter);
+        createDataSourceInstance();
         
         try {
             for (int i = 0 ; i < initialSize ; i++) {
@@ -1251,6 +1188,98 @@ public class BasicDataSource implements DataSource {
         
         return dataSource;
     }
+
+    /**
+     * Creates a connection factory for this datasource.  This method only
+     * exists so subclasses can replace the implementation class.
+     */
+    protected ConnectionFactory createConectionFactory() throws SQLException {
+        // Load the JDBC driver class
+        if (driverClassName != null) {
+            try {
+                Class.forName(driverClassName);
+            } catch (Throwable t) {
+                String message = "Cannot load JDBC driver class '" +
+                    driverClassName + "'";
+                logWriter.println(message);
+                t.printStackTrace(logWriter);
+                throw new SQLNestedException(message, t);
+            }
+        }
+
+        // Create a JDBC driver instance
+        Driver driver = null;
+        try {
+            driver = DriverManager.getDriver(url);
+        } catch (Throwable t) {
+            String message = "Cannot create JDBC driver of class '" +
+                (driverClassName != null ? driverClassName : "") +
+                "' for connect URL '" + url + "'";
+            logWriter.println(message);
+            t.printStackTrace(logWriter);
+            throw new SQLNestedException(message, t);
+        }
+
+        // Can't test without a validationQuery
+        if (validationQuery == null) {
+            setTestOnBorrow(false);
+            setTestOnReturn(false);
+            setTestWhileIdle(false);
+        }
+
+        // Set up the driver connection factory we will use
+        if (username != null) {
+            connectionProperties.put("user", username);
+        } else {
+            log("DBCP DataSource configured without a 'username'");
+        }
+
+        if (password != null) {
+            connectionProperties.put("password", password);
+        } else {
+            log("DBCP DataSource configured without a 'password'");
+        }
+
+        ConnectionFactory driverConnectionFactory = new DriverConnectionFactory(driver, url, connectionProperties);
+        return driverConnectionFactory;
+    }
+
+    /**
+     * Creates a connection pool for this datasource.  This method only exists
+     * so subclasses can replace the implementation class.
+     */
+    protected void createConnectionPool() {
+        // Create an object pool to contain our active connections
+        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
+            connectionPool = new AbandonedObjectPool(null,abandonedConfig);
+        }
+        else {
+            connectionPool = new GenericObjectPool();
+        }
+        connectionPool.setMaxActive(maxActive);
+        connectionPool.setMaxIdle(maxIdle);
+        connectionPool.setMinIdle(minIdle);
+        connectionPool.setMaxWait(maxWait);
+        connectionPool.setTestOnBorrow(testOnBorrow);
+        connectionPool.setTestOnReturn(testOnReturn);
+        connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+        connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        connectionPool.setTestWhileIdle(testWhileIdle);
+    }
+
+    /**
+     * Creates the actual data source instance.  This method only exists so
+     * subclasses can replace the implementation class.
+     * 
+     * @throws SQLException if unable to create a datasource instance
+     */
+    protected void createDataSourceInstance() throws SQLException {
+        dataSource = new PoolingDataSource(connectionPool);
+        ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+        dataSource.setLogWriter(logWriter);
+    }
+
 
     private static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
         Connection conn = null;
@@ -1276,7 +1305,7 @@ public class BasicDataSource implements DataSource {
         }
     }
 
-    private void log(String message) {
+    protected void log(String message) {
         if (logWriter != null) {
             logWriter.println(message);
         }
