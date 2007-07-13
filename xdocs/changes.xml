@@ -54,6 +54,12 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="add" issue="DBCP-228" due-to="Dain Sundstrom">
         Added support for pooling managed connections.
       </action>
+      <action dev="psteitz" type="add" issue="DBCP-230" due-to="Dain Sundstrom">
+        Added BasicManagedDataSource, extending BasicDataSource.
+        Also improved extensibility of BasicDataSource by encapsulating
+        methods to create object pool, connection factory and datasource
+        instance previously embedded in createDataSource.
+      </action>
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
