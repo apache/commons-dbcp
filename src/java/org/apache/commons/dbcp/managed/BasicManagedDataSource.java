@@ -89,14 +89,14 @@ public class BasicManagedDataSource extends BasicDataSource {
         this.xaDataSource = xaDataSource;
     }
 
-    protected ConnectionFactory createConectionFactory() throws SQLException {
+    protected ConnectionFactory createConnectionFactory() throws SQLException {
         if (transactionManager == null) {
             throw new SQLException("Transaction manager must be set before a connection can be created");
         }
 
         // If xa data source is not specified a DriverConnectionFactory is created and wrapped with a LocalXAConnectionFactory
         if (xaDataSource == null) {
-            ConnectionFactory connectionFactory = super.createConectionFactory();
+            ConnectionFactory connectionFactory = super.createConnectionFactory();
             XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(getTransactionManager(), connectionFactory);
             transactionRegistry = xaConnectionFactory.getTransactionRegistry();
             return xaConnectionFactory;
