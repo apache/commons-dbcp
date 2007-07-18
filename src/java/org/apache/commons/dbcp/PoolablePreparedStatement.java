@@ -72,9 +72,8 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
      * Return me to my pool.
      */
     public void close() throws SQLException {
-        if(isClosed()) {
-            throw new SQLException("Already closed");
-        } else {
+        // calling close twice should have no effect
+        if (!isClosed()) {
             try {
                 _pool.returnObject(_key,this);
             } catch(SQLException e) {

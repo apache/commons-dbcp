@@ -126,28 +126,6 @@ public class TestManagedDataSource extends TestConnectionPool {
         connectionB.close();
     }
 
-    public void testCantCloseConnectionTwice() throws Exception {
-        // this test is invalid... the JavaDoc and spec for the close method specifically
-        // state that the close method on an already closed connection is a no-op
-    }
-
-
-    /**
-     * Verify the close method can be called multiple times on a single connection without
-     * an exception being thrown.
-     */
-    public void testCanCloseConnectionTwice() throws Exception {
-        for (int i = 0; i < getMaxActive(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            Connection conn = newConnection();
-            assertTrue(null != conn);
-            assertTrue(!conn.isClosed());
-            conn.close();
-            assertTrue(conn.isClosed());
-            conn.close();
-            assertTrue(conn.isClosed());
-        }
-    }
-
     public void testManagedConnectionEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxActive()];

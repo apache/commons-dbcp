@@ -79,7 +79,9 @@ public class TesterResultSet implements ResultSet {
     }
 
     public void close() throws SQLException {
-        checkOpen();
+        if (!_open) {
+            return;
+        }
         ((TesterStatement)_statement)._resultSet = null;
         _open = false;
     }

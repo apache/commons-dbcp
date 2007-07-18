@@ -208,10 +208,17 @@ public class DelegatingConnection extends AbandonedTrace
      * Closes the underlying connection, and close
      * any Statements that were not explicitly closed.
      */
-    public void close() throws SQLException
-    {
-        passivate();
-        _conn.close();
+    public void close() throws SQLException {
+        // close can be called multiple times, but PoolableConnection improperly
+        // throws an exception when a connection is closed twice, so before calling
+        // close we aren't alreayd closed
+        if (!isClosed()) {
+            try {
+                _conn.close();
+            } finally {
+                _closed = true;
+            }
+        }
     }
 
     protected void handleException(SQLException e) throws SQLException {

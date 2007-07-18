@@ -91,16 +91,20 @@ public class TestManual extends TestConnectionPool {
     public void testReportedBug28912() throws Exception {
         Connection conn1 = getConnection();
         assertNotNull(conn1);
+        assertFalse(conn1.isClosed());
         conn1.close();        
-        
+
         Connection conn2 = getConnection();
         assertNotNull(conn2);
-        
-        try {
-            conn1.close();
-            fail("Expected SQLException");
-        }
-        catch (SQLException e) { }
+
+        assertTrue(conn1.isClosed());
+        assertFalse(conn2.isClosed());
+
+        // should be able to call close multiple times with no effect
+        conn1.close();
+
+        assertTrue(conn1.isClosed());
+        assertFalse(conn2.isClosed());
     }
     
     /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
