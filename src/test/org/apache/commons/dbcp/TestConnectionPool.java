@@ -148,37 +148,92 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
-    public void testCantCloseConnectionTwice() throws Exception {
-        for(int i=0;i<getMaxActive();i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+    /**
+     * Verify the close method can be called multiple times on a single connection without
+     * an exception being thrown.
+     */
+    public void testCanCloseConnectionTwice() throws Exception {
+        for (int i = 0; i < getMaxActive(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             Connection conn = newConnection();
             assertTrue(null != conn);
             assertTrue(!conn.isClosed());
             conn.close();
             assertTrue(conn.isClosed());
-            try {
-                conn.close();
-                fail("Expected SQLException on second attempt to close (" + conn.getClass().getName() + ")");
-            } catch(SQLException e) {
-                // expected
-            }
+            conn.close();
             assertTrue(conn.isClosed());
         }
     }
 
-    public void testCantCloseStatementTwice() throws Exception {
+    public void testCanCloseStatementTwice() throws Exception {
+        Connection conn = newConnection();
+        assertTrue(null != conn);
+        assertTrue(!conn.isClosed());
+        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+            Statement stmt = conn.createStatement();
+            assertNotNull(stmt);
+            assertFalse(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+        }
+        conn.close();
+    }
+
+    public void testCanClosePreparedStatementTwice() throws Exception {
         Connection conn = newConnection();
         assertTrue(null != conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertTrue(null != stmt);
+            assertNotNull(stmt);
+            assertFalse(isClosed(stmt));
             stmt.close();
-            try {
-                stmt.close();
-                fail("Expected SQLException on second attempt to close (" + stmt.getClass().getName() + ")");
-            } catch(SQLException e) {
-                // expected
-            }
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+        }
+        conn.close();
+    }
+
+    public void testCanCloseCallableStatementTwice() throws Exception {
+        Connection conn = newConnection();
+        assertTrue(null != conn);
+        assertTrue(!conn.isClosed());
+        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+            PreparedStatement stmt = conn.prepareCall("select * from dual");
+            assertNotNull(stmt);
+            assertFalse(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+            stmt.close();
+            assertTrue(isClosed(stmt));
+        }
+        conn.close();
+    }
+
+    public void testCanCloseResultSetTwice() throws Exception {
+        Connection conn = newConnection();
+        assertTrue(null != conn);
+        assertTrue(!conn.isClosed());
+        for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            assertNotNull(stmt);
+            ResultSet rset = stmt.executeQuery();
+            assertNotNull(rset);
+            assertFalse(isClosed(rset));
+            rset.close();
+            assertTrue(isClosed(rset));
+            rset.close();
+            assertTrue(isClosed(rset));
+            rset.close();
+            assertTrue(isClosed(rset));
         }
         conn.close();
     }
@@ -529,5 +584,31 @@ public abstract class TestConnectionPool extends TestCase {
         assertNotNull(conn2);
 
         assertTrue(conn1.hashCode() != conn2.hashCode());
+    }
+
+    protected boolean isClosed(Statement statement) {
+        try {
+            statement.getWarnings();
+            return false;
+        } catch (SQLException e) {
+            // getWarnings throws an exception if the statement is
+            // closed, but could throw an exception for other reasons
+            // in this case it is good enought to assume the statement
+            // is closed
+            return true;
+        }
+    }
+
+    protected boolean isClosed(ResultSet resultSet) {
+        try {
+            resultSet.getWarnings();
+            return false;
+        } catch (SQLException e) {
+            // getWarnings throws an exception if the statement is
+            // closed, but could throw an exception for other reasons
+            // in this case it is good enought to assume the result set
+            // is closed
+            return true;
+        }
     }
 }

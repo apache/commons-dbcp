@@ -113,9 +113,10 @@ class ConnectionImpl implements Connection {
      * @exception SQLException The database connection couldn't be closed.
      */
     public void close() throws SQLException {
-        assertOpen();
-        isClosed = true;
-        pooledConnection.notifyListeners();
+        if (!isClosed) {
+            isClosed = true;
+            pooledConnection.notifyListeners();
+        }
     }
 
     /**

@@ -263,12 +263,13 @@ public class PoolingDriver implements Driver {
                 throw new SQLException("Connection is closed.");
             }
         }
-    
+
         public void close() throws SQLException {
-            checkOpen();
-            this.delegate.close();
-            this.delegate = null;
-            super.setDelegate(null);
+            if (delegate != null) {
+                this.delegate.close();
+                this.delegate = null;
+                super.setDelegate(null);
+            }
         }
 
         public boolean isClosed() throws SQLException {

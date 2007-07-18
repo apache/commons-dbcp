@@ -79,7 +79,11 @@ public class TesterStatement implements Statement {
     }
 
     public void close() throws SQLException {
-        checkOpen();
+        // calling close twice has no effect
+        if (!_open) {
+            return;
+        }
+
         _open = false;
         if (_resultSet != null) {
             _resultSet.close();
