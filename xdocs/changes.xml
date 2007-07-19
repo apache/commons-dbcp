@@ -67,7 +67,7 @@ The <action> type attribute can be add,update,fix,remove.
         have no effect. This behavior is required as per the JavaDocs for these
         classes. Also added tests for closing all types multiple times and
         updated any tests that incorrectly assert that a resource can not be
-        closed more then once.  Fixes DBCP-134 and DBCP-3.
+        closed more then once.  Fixes DBCP-3, DBCP-5, DBCP-23 and DBCP-134.
       </action>
     </release>
     <release version="1.2.2" date="2007-04-04"
