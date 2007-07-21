@@ -211,7 +211,7 @@ public class DelegatingConnection extends AbandonedTrace
     public void close() throws SQLException {
         // close can be called multiple times, but PoolableConnection improperly
         // throws an exception when a connection is closed twice, so before calling
-        // close we aren't alreayd closed
+        // close we aren't already closed
         if (!isClosed()) {
             try {
                 _conn.close();
