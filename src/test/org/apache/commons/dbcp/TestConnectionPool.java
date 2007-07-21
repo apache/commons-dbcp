@@ -238,6 +238,81 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    public void testBackPointers() throws Exception {
+        // normal statement
+        Connection conn = newConnection();
+        assertBackPointers(conn, conn.createStatement());
+        conn = newConnection();
+        assertBackPointers(conn, conn.createStatement(0, 0));
+        conn = newConnection();
+        assertBackPointers(conn, conn.createStatement(0, 0, 0));
+
+        // prepared statement
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual"));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual", 0));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual", 0, 0));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual", 0, 0, 0));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual", new int[0]));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareStatement("select * from dual", new String[0]));
+
+        // callable statement
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareCall("select * from dual"));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareCall("select * from dual", 0, 0));
+        conn = newConnection();
+        assertBackPointers(conn, conn.prepareCall("select * from dual", 0, 0, 0));
+    }
+
+    protected void assertBackPointers(Connection conn, Statement statement) throws SQLException {
+        assertFalse(conn.isClosed());
+        assertFalse(isClosed(statement));
+
+        assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
+                conn, statement.getConnection());
+
+        ResultSet resultSet = statement.getResultSet();
+        assertFalse(isClosed(resultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, resultSet.getStatement());
+
+        ResultSet executeResultSet = statement.executeQuery("select * from dual");
+        assertFalse(isClosed(executeResultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, executeResultSet.getStatement());
+
+        ResultSet keysResultSet = statement.getGeneratedKeys();
+        assertFalse(isClosed(keysResultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, keysResultSet.getStatement());
+
+        ResultSet preparedResultSet = null;
+        if (statement instanceof PreparedStatement) {
+            PreparedStatement preparedStatement = (PreparedStatement) statement;
+            preparedResultSet = preparedStatement.executeQuery();
+            assertFalse(isClosed(preparedResultSet));
+            assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                    statement, preparedResultSet.getStatement());
+        }
+
+
+        resultSet.getStatement().getConnection().close();
+        assertTrue(conn.isClosed());
+        assertTrue(isClosed(statement));
+        assertTrue(isClosed(resultSet));
+        assertTrue(isClosed(executeResultSet));
+        assertTrue(isClosed(keysResultSet));
+        if (preparedResultSet != null) {
+            assertTrue(isClosed(preparedResultSet));
+        }
+    }
+
     public void testSimple() throws Exception {
         Connection conn = newConnection();
         assertTrue(null != conn);

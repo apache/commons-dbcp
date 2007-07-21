@@ -21,6 +21,9 @@ import org.apache.commons.dbcp.DelegatingConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -302,4 +305,41 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         // close connection
         connection.close();
     }
+
+    // can't actually test close in a transaction
+    protected void assertBackPointers(Connection conn, Statement statement) throws SQLException {
+        assertFalse(conn.isClosed());
+        assertFalse(isClosed(statement));
+
+        assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
+                conn, statement.getConnection());
+
+        ResultSet resultSet = statement.getResultSet();
+        assertFalse(isClosed(resultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, resultSet.getStatement());
+
+        ResultSet executeResultSet = statement.executeQuery("select * from dual");
+        assertFalse(isClosed(executeResultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, executeResultSet.getStatement());
+
+        ResultSet keysResultSet = statement.getGeneratedKeys();
+        assertFalse(isClosed(keysResultSet));
+        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                statement, keysResultSet.getStatement());
+
+        ResultSet preparedResultSet = null;
+        if (statement instanceof PreparedStatement) {
+            PreparedStatement preparedStatement = (PreparedStatement) statement;
+            preparedResultSet = preparedStatement.executeQuery();
+            assertFalse(isClosed(preparedResultSet));
+            assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
+                    statement, preparedResultSet.getStatement());
+        }
+
+
+        resultSet.getStatement().getConnection().close();
+    }
+
 }
