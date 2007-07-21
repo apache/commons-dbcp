@@ -305,6 +305,23 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
     
+    /**
+     * Verify that defaultMaxWait = 0 means immediate failure when
+     * pool is exhausted.
+     */
+    public void testMaxWaitZero() throws Exception {
+        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        tds.setDefaultMaxWait(0);
+        tds.setPerUserMaxActive("u1", new Integer(1));
+        Connection conn = tds.getConnection("u1", "p1");
+        try {
+            Connection conn2 = tds.getConnection("u1", "p1");
+            fail("Expecting Pool Exhausted exception");
+        } catch (SQLException ex) {
+            // expected
+        }
+    }
+    
     public void testPerUserMethods() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         
