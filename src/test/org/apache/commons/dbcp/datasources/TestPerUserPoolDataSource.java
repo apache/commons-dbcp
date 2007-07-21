@@ -320,6 +320,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         } catch (SQLException ex) {
             // expected
         }
+        conn.close();
     }
     
     public void testPerUserMethods() throws Exception {
