@@ -341,7 +341,7 @@ public class BasicDataSource implements DataSource {
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.
+     * throwing an exception, or <= 0 to wait indefinitely.
      */
     protected long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
 
@@ -349,7 +349,8 @@ public class BasicDataSource implements DataSource {
      * <p>Returns the maximum number of milliseconds that the pool will wait
      * for a connection to be returned before throwing an exception.
      * </p>
-     * <p>Returns -1 if the pool is set to wait indefinitely.</p>
+     * <p>A value less than or equal to zero means the pool is set to wait
+     * indefinitely.</p>
      * 
      * @return the maxWait property value
      */
@@ -358,7 +359,10 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Sets the maxWait property.
+     * <p>Sets the maxWait property.
+     * </p>
+     * <p>Use -1 to make the pool wait indefinitely.
+     * </p>
      * 
      * @param maxWait the new value for maxWait
      * @see #getMaxWait()
