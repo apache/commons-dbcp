@@ -1093,7 +1093,7 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Sets the connection properties passed to driver.connect(...). 
+     * Sets the connection properties passed to driver.connect(...).
      *
      * Format of the string must be [propertyName=property;]*
      *
@@ -1126,13 +1126,18 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
+    protected boolean closed;
+
     /**
      * Close and release all connections that are currently stored in the
-     * connection pool associated with our data source.
+     * connection pool associated with our data source.  All open (active)
+     * connection remain open until closed.  Once the data source has
+     * been closed, no more connections can be obtained.
      *
      * @throws SQLException if a database error occurs
      */
     public synchronized void close() throws SQLException {
+        closed = true;
         GenericObjectPool oldpool = connectionPool;
         connectionPool = null;
         dataSource = null;
@@ -1149,6 +1154,13 @@ public class BasicDataSource implements DataSource {
         }
     }
 
+    /**
+     * If true, this data source is closed and no more connections can be retrieved from this datasource.
+     * @return true, if the data source is closed; false otherwise
+     */
+    public synchronized boolean isClosed() {
+        return closed;
+    }
 
     // ------------------------------------------------------ Protected Methods
 
@@ -1167,6 +1179,9 @@ public class BasicDataSource implements DataSource {
      */
     protected synchronized DataSource createDataSource()
         throws SQLException {
+        if (closed) {
+            throw new SQLException("Data source is closed");
+        }
 
         // Return the pool if we have already created it
         if (dataSource != null) {
