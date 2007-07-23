@@ -415,11 +415,17 @@ public class PerUserPoolDataSource
             }
         }
 
-        con.setAutoCommit(defaultAutoCommit);
+        if (con.getAutoCommit() != defaultAutoCommit) {
+            con.setAutoCommit(defaultAutoCommit);
+        }
+
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
-        con.setReadOnly(defaultReadOnly);
+
+        if (con.isReadOnly() != defaultReadOnly) {
+            con.setReadOnly(defaultReadOnly);
+        }
     }
 
     /**

@@ -222,14 +222,21 @@ public class SharedPoolDataSource
                                        isRollbackAfterValidation());
     }
 
-    protected void setupDefaults(Connection con, String username)
-        throws SQLException {
-        con.setAutoCommit(isDefaultAutoCommit());
+    protected void setupDefaults(Connection con, String username) throws SQLException {
+        boolean defaultAutoCommit = isDefaultAutoCommit();
+        if (con.getAutoCommit() != defaultAutoCommit) {
+            con.setAutoCommit(defaultAutoCommit);
+        }
+
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
-        con.setReadOnly(isDefaultReadOnly());
+
+        boolean defaultReadOnly = isDefaultReadOnly();
+        if (con.isReadOnly() != defaultReadOnly) {
+            con.setReadOnly(defaultReadOnly);
+        }
     }
 
     /**
