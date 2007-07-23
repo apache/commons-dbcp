@@ -70,6 +70,10 @@ public class PoolableConnection extends DelegatingConnection {
         } catch (SQLException e) {
             try {
                 _pool.invalidateObject(this); // XXX should be guarded to happen at most once
+            } catch(IllegalStateException ise) {
+                // pool is closed, so close the connection
+                passivate();
+                getInnermostDelegate().close();
             } catch (Exception ie) {
                 // DO NOTHING the original exception will be rethrown
             }
@@ -78,6 +82,10 @@ public class PoolableConnection extends DelegatingConnection {
         if (isClosed) {
             try {
                 _pool.invalidateObject(this); // XXX should be guarded to happen at most once
+            } catch(IllegalStateException e) {
+                // pool is closed, so close the connection
+                passivate();
+                getInnermostDelegate().close();
             } catch (Exception ie) {
                 // DO NOTHING, "Already closed" exception thrown below
             }
@@ -85,6 +93,10 @@ public class PoolableConnection extends DelegatingConnection {
         } else {
             try {
                 _pool.returnObject(this); // XXX should be guarded to happen at most once
+            } catch(IllegalStateException e) {
+                // pool is closed, so close the connection
+                passivate();
+                getInnermostDelegate().close();
             } catch(SQLException e) {
                 throw e;
             } catch(RuntimeException e) {

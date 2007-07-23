@@ -48,7 +48,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     public void setUp() throws Exception {
         super.setUp();
-        ds = new BasicDataSource();
+        ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxActive(getMaxActive());
@@ -62,10 +62,51 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
     }
 
+    protected BasicDataSource createDataSource() throws Exception {
+        return new BasicDataSource();
+    }
+
     public void tearDown() throws Exception {
         super.tearDown();
         ds.close();
         ds = null;
+    }
+
+    public void testClose() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+
+        // active conneciton is held open when ds is closed
+        Connection activeConnection = getConnection();
+        Connection rawActiveConnection = ((DelegatingConnection) activeConnection).getInnermostDelegate();
+        assertFalse(activeConnection.isClosed());
+        assertFalse(rawActiveConnection.isClosed());
+
+        // idle connection is in pool but closed
+        Connection idleConnection = getConnection();
+        Connection rawIdleConnection = ((DelegatingConnection) idleConnection).getInnermostDelegate();
+        assertFalse(idleConnection.isClosed());
+        assertFalse(rawIdleConnection.isClosed());
+
+        // idle wrapper should be closed but raw conneciton should be open
+        idleConnection.close();
+        assertTrue(idleConnection.isClosed());
+        assertFalse(rawIdleConnection.isClosed());
+
+        ds.close();
+
+        // raw idle connection should now be closed
+        assertFalse(rawIdleConnection.isClosed());
+
+        // active connection should still be open
+        assertFalse(activeConnection.isClosed());
+        assertFalse(rawActiveConnection.isClosed());
+
+        // now close the active connection
+        activeConnection.close();
+
+        // both wrapper and raw active connection should be closed
+        assertTrue(activeConnection.isClosed());
+        assertTrue(rawActiveConnection.isClosed());
     }
 
     public void testSetProperties() throws Exception {
@@ -359,7 +400,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testCreateDataSourceCleanupThreads() throws Exception {
         ds.close();
         ds = null;
-        ds = new BasicDataSource();
+        ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxActive(getMaxActive());

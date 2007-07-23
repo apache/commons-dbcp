@@ -17,10 +17,15 @@
 
 package org.apache.commons.dbcp;
 
-import junit.framework.*;
-import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
-import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import org.apache.commons.dbcp.datasources.TestFactory;
+import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
+import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
+import org.apache.commons.dbcp.managed.TestBasicManagedDataSource;
+import org.apache.commons.dbcp.managed.TestManagedDataSource;
+import org.apache.commons.dbcp.managed.TestManagedDataSourceInTx;
 import org.apache.commons.jocl.TestJOCLContentHandler;
 
 /**
@@ -51,6 +56,9 @@ public class TestAll extends TestCase {
         suite.addTest(TestJOCLContentHandler.suite());
         suite.addTest(TestPoolingDataSource.suite());
         suite.addTest(TestJndi.suite());
+        suite.addTest(TestBasicManagedDataSource.suite());
+        suite.addTest(TestManagedDataSource.suite());
+        suite.addTest(TestManagedDataSourceInTx.suite());
         return suite;
     }
 

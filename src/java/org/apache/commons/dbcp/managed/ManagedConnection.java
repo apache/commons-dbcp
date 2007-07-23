@@ -139,13 +139,7 @@ public class ManagedConnection extends DelegatingConnection {
     }
 
     public void close() throws SQLException {
-        // close can be called multiple times, but PoolableConnection improperly
-        // throws an exception when a connection is closed twice, so before calling
-        // close we aren't alreayd closed
-        if (!isClosed()) {
-
-            // don't use super.close() because it calls passivate() which marks the
-            // the connection as cloased without returning it to the pool
+        if (!_closed) {
             try {
                 // don't actually close the connection if in a transaction
                 // the connection will be closed by the transactionComplete method
