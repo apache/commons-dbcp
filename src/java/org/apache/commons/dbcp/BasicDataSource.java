@@ -1093,6 +1093,40 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
+     * Sets the connection properties passed to driver.connect(...). 
+     *
+     * Format of the string must be [propertyName=property;]*
+     *
+     * NOTE - The "user" and "password" properties will be added
+     * explicitly, so they do not need to be included here.
+     *
+     * @param connectionProperties the connection properties used to
+     * create new connections
+     */
+    public void setConnectionProperties(String connectionProperties) {
+        if (connectionProperties == null) throw new NullPointerException("connectionProperties is null");
+
+        String[] entries = connectionProperties.split(";");
+        Properties properties = new Properties();
+        for (int i = 0; i < entries.length; i++) {
+            String entry = entries[i];
+            if (entry.length() > 0) {
+                int index = entry.indexOf('=');
+                if (index > 0) {
+                    String name = entry.substring(0, index);
+                    String value = entry.substring(index + 1);
+                    properties.setProperty(name, value);
+                } else {
+                    // no value is empty string which is how java.util.Properties works
+                    properties.setProperty(entry, "");
+                }
+            }
+        }
+        this.connectionProperties = properties;
+        this.restartNeeded = true;
+    }
+
+    /**
      * Close and release all connections that are currently stored in the
      * connection pool associated with our data source.
      *
