@@ -159,6 +159,11 @@ class KeyedCPDSConnectionFactory
         } else {
             pc = _cpds.getPooledConnection(username, password);
         }
+
+        if (pc == null) {
+            throw new IllegalStateException("Connection pool data source returned null from getPooledConnection");
+        }
+
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
