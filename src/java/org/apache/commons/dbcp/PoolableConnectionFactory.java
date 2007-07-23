@@ -292,6 +292,9 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
 
     synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
+        if (conn == null) {
+            throw new IllegalStateException("Connection factory returned null from createConnection");
+        }
         if(null != _stmtPoolFactory) {
             KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
             conn = new PoolingConnection(conn,stmtpool);
