@@ -78,6 +78,10 @@ The <action> type attribute can be add,update,fix,remove.
         to create the statement or result set is returned  from either 
         getConnection() or getStatement().
       </action>
+      <action dev="dain" type="update" issue="DBCP-143">
+        SQLNestedException has been deprecated and will be replaced in DBCP 1.4 with
+        SQLException and standard Java exception chaining.
+      </action>
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
