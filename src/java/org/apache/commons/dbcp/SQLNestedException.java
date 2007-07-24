@@ -28,6 +28,7 @@ import java.sql.SQLException;
  * 
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
+ * @deprecated Use '(SQLException) new SQLException(msg).initCause(e)' instead; this class will be removed in DBCP 1.4
  */
 public class SQLNestedException extends SQLException {
 
