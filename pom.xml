@@ -32,7 +32,7 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>Commons Database Connection Pooling</description>
-  <url>http://jakarta.apache.org/commons/dbcp/</url>
+  <url>http://commons.apache.org/dbcp/</url>
 
   <issueManagement>
     <system>jira</system>
@@ -40,9 +40,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/dbcp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/dbcp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/dbcp/trunk</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/trunk</url>
   </scm>
 
   <developers>
@@ -267,7 +267,7 @@
           <configuration>
             <links>
               <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-              <link>http://jakarta.apache.org/commons/pool/api-1.3</link>
+              <link>http://commons.apache.org/pool/api-1.3</link>
               <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api</link>
             </links>
           </configuration>
