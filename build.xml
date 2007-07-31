@@ -49,7 +49,7 @@
       	${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
-      <property name="title" value="Jakarta Commons Database Pooling Package"/>
+      <property name="title" value="Apache Commons Database Pooling Package"/>
       <property name="version" value="Nightly-${DSTAMP}${TSTAMP}"/>
       <property name="package" value="org.apache.commons.dbcp.*"/>
 
@@ -134,7 +134,7 @@
                nonavbar="false"
                serialwarn="false">
           <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
-          <link href="http://jakarta.apache.org/commons/pool/apidocs"/>
+          <link href="http://commons.apache.org/pool/apidocs"/>
       </javadoc>
    </target>
 

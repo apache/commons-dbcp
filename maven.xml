@@ -122,7 +122,7 @@
         <ant:path refid="build.classpath"/>
       </ant:classpath>
       <ant:link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
-      <ant:link href="http://jakarta.apache.org/commons/pool/apidocs"/>
+      <ant:link href="http://commons.apache.org/pool/apidocs"/>
     </ant:javadoc>
   </postGoal>
    

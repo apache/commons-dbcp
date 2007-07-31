@@ -138,7 +138,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <table>
 <tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22776">22776</a></td><td>2003-09-30</td><td>Nor</td><td>FIXE</td><td>DBCP should not be writing messages to stderr or stdout (removed unneeded logging in AbandonedObjectPool)</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23491">23491</a></td><td>2003-10-13</td><td>Cri</td><td>FIXE</td><td>Can't configure PerUserPoolDataSource for use with tomcat, <a href="http://jakarta.apache.org/commons/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html">more...</a></td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23491">23491</a></td><td>2003-10-13</td><td>Cri</td><td>FIXE</td><td>Can't configure PerUserPoolDataSource for use with tomcat, <a href="http://commons.apache.org/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html">more...</a></td></tr>
 </table>
 </li>
 <br/>
