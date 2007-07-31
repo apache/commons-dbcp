@@ -1,8 +1,8 @@
-Apache Jakarta Commons DBCP
+Apache Apache Commons DBCP
 ===========================
 
-Welcome to the DBCP component of the Apache Jakarta Commons
-project (http://jakarta.apache.org/commons). 
+Welcome to the DBCP component of the Apache Apache Commons
+project (http://commons.apache.org). 
 
 DBCP uses Maven 1 (http://maven.apache.org) for build 
 process management. It is known to build with Maven 1.0.2,
@@ -23,6 +23,6 @@ conditional compilation to support building on JDK 1.3.
 This release of JDBC compiles with and supports JDK 1.3 (JDBC 2.0) and
 JDK 1.4-1.5 (JDBC 3.0). JDK 1.6 (JDBC 4.0) is not supported by this release. 
 
-See http://jakarta.apache.org/commons/dbcp/ for additional and 
+See http://commons.apache.org/dbcp/ for additional and 
 up-to-date information on Commons DBCP.
 
