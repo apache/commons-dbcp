@@ -24,7 +24,7 @@
       <section name="Download DBCP">
          
          <subsection name="Releases">
-            <p>Download the <a href="http://jakarta.apache.org/site/downloads/downloads_commons-dbcp.cgi">Latest Release</a>
+            <p>Download the <a href="http://commons.apache.org/downloads/download_dbcp.cgi">Latest Release</a>
                of Commons DBCP.
             </p>
             <p>For details of whats new in each version see the <a href="changes-report.html">Release History</a>.</p>
@@ -32,7 +32,7 @@
 
          <subsection name="Nightly Builds">
             <p>
-               <a href="http://people.apache.org/builds/jakarta-commons/nightly/commons-dbcp/">Nightly Builds</a>
+               <a href="http://people.apache.org/builds/commons/nightly/commons-dbcp/">Nightly Builds</a>
                are built once a day from the current SVN HEAD. This is (nearly) the latest code and so should
                be treated with caution.
             </p>
