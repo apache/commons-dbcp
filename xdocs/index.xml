@@ -79,7 +79,7 @@ read the package overview of the
 package for an overview of how to use DBCP.</p>
 
 <p>There are 
-<a href="http://svn.apache.org/viewcvs.cgi/jakarta/commons/proper/dbcp/trunk/doc/">several examples</a> 
+<a href="http://svn.apache.org/viewvc/commons/proper/dbcp/trunk/doc/">several examples</a> 
 of using DBCP available.</p>
 
 </section>
