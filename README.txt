@@ -1,7 +1,7 @@
-Apache Apache Commons DBCP
+Apache Commons DBCP
 ===========================
 
-Welcome to the DBCP component of the Apache Apache Commons
+Welcome to the DBCP component of the Apache Commons
 project (http://commons.apache.org). 
 
 DBCP uses Maven 1 (http://maven.apache.org) for build 
