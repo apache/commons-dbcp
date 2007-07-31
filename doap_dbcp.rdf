@@ -13,8 +13,8 @@
     <description xml:lang="en">Commons Database Connection Pooling</description>
     <repository>
       <SVNRepository>
-        <browse rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/dbcp/trunk"/>
-        <location rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/dbcp"/>
+        <browse rdf:resource="http://svn.apache.org/repos/asf/commons/proper/dbcp/trunk"/>
+        <location rdf:resource="http://svn.apache.org/repos/asf/commons/proper/dbcp"/>
       </SVNRepository>
     </repository>
     <release>
