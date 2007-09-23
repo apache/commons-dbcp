@@ -24,6 +24,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+
 /**
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
@@ -90,5 +92,39 @@ public class TestDelegatingConnection extends TestCase {
         } catch (SQLException ex) {
             // expected
         }      
+    }
+    
+    /**
+     * Verify fix for DBCP-241
+     */
+    public void testCheckOpenNull() throws Exception {
+        try {
+            conn.close();
+            conn.checkOpen();
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("is closed."));
+        }
+
+        try {
+            conn = new DelegatingConnection(null);
+            conn._closed = true;  
+            conn.checkOpen();
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("is null."));
+        }
+
+        try {
+            PoolingConnection pc = new PoolingConnection
+                (delegateConn2, new GenericKeyedObjectPool());
+            conn = new DelegatingConnection(pc);
+            pc.close();
+            conn.close();
+            conn.prepareStatement("");
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
+        }   
     }
 }

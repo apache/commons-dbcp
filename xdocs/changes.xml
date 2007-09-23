@@ -88,6 +88,10 @@ The <action> type attribute can be add,update,fix,remove.
         idle connections are destroyed and the method returns.  As the remaining
         active connections are closed, they are destroyed.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-241">
+        Eliminated potential sources of NullPointerExceptions in 
+        PoolingConnection.
+      </action>
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
