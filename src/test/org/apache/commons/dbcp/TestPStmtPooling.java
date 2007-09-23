@@ -19,6 +19,7 @@ package org.apache.commons.dbcp;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -68,5 +69,35 @@ public class TestPStmtPooling extends TestCase {
         Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
         stmt2.close();
         assertSame(ustmt1, ustmt2);
+    }
+    
+    public void testClosePool() throws Exception {
+        new TesterDriver();
+        ConnectionFactory connFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver","u1","p1");
+
+        ObjectPool connPool = new GenericObjectPool();
+        KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+
+        PoolableConnectionFactory x = new PoolableConnectionFactory(
+                connFactory, connPool, stmtPoolFactory,
+                null, false, true);
+
+        DataSource ds = new PoolingDataSource(connPool);
+        ((PoolingDataSource) ds).setAccessToUnderlyingConnectionAllowed(true);
+
+        Connection conn = ds.getConnection();
+        Statement stmt = conn.prepareStatement("select 1 from dual");
+        
+        Connection poolableConnection = ((DelegatingConnection) conn).getDelegate();
+        Connection poolingConnection = 
+            ((DelegatingConnection) poolableConnection).getDelegate();
+        poolingConnection.close();
+        try {
+            stmt = conn.prepareStatement("select 1 from dual");
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
+        }     
     }
 }

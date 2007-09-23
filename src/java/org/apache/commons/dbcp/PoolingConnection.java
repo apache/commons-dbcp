@@ -88,6 +88,10 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * @return a {@link PoolablePreparedStatement}
      */
     public PreparedStatement prepareStatement(String sql) throws SQLException {
+        if (null == _pstmtPool) {
+            throw new SQLException(
+                    "Statement pool is null - closed or invalid PoolingConnection.");
+        }
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql)));
         } catch(NoSuchElementException e) {
@@ -104,6 +108,10 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * @return a {@link PoolablePreparedStatement}
      */
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+        if (null == _pstmtPool) {
+            throw new SQLException(
+                    "Statement pool is null - closed or invalid PoolingConnection.");
+        }
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency)));
         } catch(NoSuchElementException e) {
@@ -245,7 +253,11 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
 
     public String toString() {
-        return "PoolingConnection: " + _pstmtPool.toString();
+        if (_pstmtPool != null ) {
+            return "PoolingConnection: " + _pstmtPool.toString();
+        } else {
+            return "PoolingConnection: null";
+        }
     }
 
     /**

@@ -241,6 +241,7 @@
                 <include>org/apache/commons/dbcp/TestBasicDataSourceFactory.java</include>
                 <include>org/apache/commons/dbcp/TestBasicDataSource.java</include>
                 <include>org/apache/commons/dbcp/TestAbandonedBasicDataSource.java</include>
+                <include>org/apache/commons/dbcp/TestPStmtPooling.java</include>
                 <include>org/apache/commons/dbcp/TestPStmtPoolingBasicDataSource.java</include>
                 <include>org/apache/commons/dbcp/TestPoolingDataSource.java</include>
                 <include>org/apache/commons/dbcp/TestJndi.java</include>
