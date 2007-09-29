@@ -359,8 +359,14 @@ public class DelegatingConnection extends AbandonedTrace
     protected void checkOpen() throws SQLException {
         if(_closed) {
             if (null != _conn) {
+                String label = "";
+                try {
+                    label = _conn.toString();
+                } catch (Exception ex) {
+                    // ignore, leave label empty
+                }
                 throw new SQLException
-                    ("Connection " + _conn + " is closed.");
+                    ("Connection " + label + " is closed.");
             } else {
                 throw new SQLException
                     ("Connection is null.");
