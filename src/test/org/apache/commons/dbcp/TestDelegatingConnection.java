@@ -125,6 +125,29 @@ public class TestDelegatingConnection extends TestCase {
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
-        }   
+        }  
+        
+        try {
+            conn = new DelegatingConnection(new RTEGeneratingConnection());
+            conn.close();
+            conn.checkOpen();
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("is closed."));
+        }
+    }
+    
+    /**
+     * Delegate that will throw RTE on toString
+     * Used to validate fix for DBCP-241
+     */
+    class RTEGeneratingConnection extends TesterConnection {
+        public RTEGeneratingConnection() {
+            super("","");
+        }
+        public String toString() {
+            throw new RuntimeException("bang!");
+        }
+        
     }
 }
