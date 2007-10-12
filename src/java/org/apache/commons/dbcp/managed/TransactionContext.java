@@ -25,6 +25,7 @@ import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.lang.ref.WeakReference;
 
 /**
  * TransactionContext represents the association between a single XAConnectionFactory and a Transaction.
@@ -37,7 +38,7 @@ import java.sql.SQLException;
  */
 public class TransactionContext {
     private final TransactionRegistry transactionRegistry;
-    private final Transaction transaction;
+    private final WeakReference transaction;
     private Connection sharedConnection;
 
     /**
@@ -53,7 +54,7 @@ public class TransactionContext {
         if (transactionRegistry == null) throw new NullPointerException("transactionRegistry is null");
         if (transaction == null) throw new NullPointerException("transaction is null");
         this.transactionRegistry = transactionRegistry;
-        this.transaction = transaction;
+        this.transaction = new WeakReference(transaction);
     }
 
     /**
@@ -82,6 +83,7 @@ public class TransactionContext {
 
         // This is the first use of the connection in this transaction, so we must
         // enlist it in the transaction
+        Transaction transaction = getTransaction();
         try {
             XAResource xaResource = transactionRegistry.getXAResource(sharedConnection);
             transaction.enlistResource(xaResource);
@@ -102,7 +104,7 @@ public class TransactionContext {
      */
     public void addTransactionContextListener(final TransactionContextListener listener) throws SQLException {
         try {
-            transaction.registerSynchronization(new Synchronization() {
+            getTransaction().registerSynchronization(new Synchronization() {
                 public void beforeCompletion() {
                 }
 
@@ -122,10 +124,22 @@ public class TransactionContext {
      */
     public boolean isActive() throws SQLException {
         try {
+            Transaction transaction = (Transaction) this.transaction.get();
+            if (transaction == null) {
+                return false;
+            }
             int status = transaction.getStatus();
             return status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK;
         } catch (SystemException e) {
             throw (SQLException) new SQLException("Unable to get transaction status").initCause(e);
         }
+    }
+
+    private Transaction getTransaction() throws SQLException {
+        Transaction transaction = (Transaction) this.transaction.get();
+        if (transaction == null) {
+            throw new SQLException("Unable to enlist connection the transaction becuase transaction has been Garbage Collected");
+        }
+        return transaction;
     }
 }
