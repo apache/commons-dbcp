@@ -112,6 +112,9 @@ public class TransactionContext {
                     listener.afterCompletion(TransactionContext.this, status == Status.STATUS_COMMITTED);
                 }
             });
+        } catch (RollbackException e) {
+            // JTA spec doesn't let us register with a transaction marked rollback only
+            // just ignore this and the tx state will be cleared another way.
         } catch (Exception e) {
             throw (SQLException) new SQLException("Unable to register transaction context listener").initCause(e);
         }
