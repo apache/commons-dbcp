@@ -141,7 +141,7 @@ public class TransactionContext {
     private Transaction getTransaction() throws SQLException {
         Transaction transaction = (Transaction) this.transaction.get();
         if (transaction == null) {
-            throw new SQLException("Unable to enlist connection the transaction becuase transaction has been Garbage Collected");
+            throw new SQLException("Unable to enlist connection because the transaction has been garbage collected");
         }
         return transaction;
     }
