@@ -78,9 +78,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in 
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
+     * 
+     * Starting with a successful connection, then incorrect password,
+     * then correct password for same user illustrates
+     * JIRA: DBCP-245
      */
     public void testIncorrectPassword() throws Exception 
     {
+        ds.getConnection("u2", "p2").close();
         try {
             // Use bad password
             ds.getConnection("u1", "zlsafjk").close();
@@ -520,6 +525,5 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(l3HashCode == l4HashCode);
         conn.close();
         conn = null;
-
     }
 }

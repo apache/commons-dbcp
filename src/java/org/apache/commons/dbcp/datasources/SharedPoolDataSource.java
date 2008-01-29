@@ -167,6 +167,13 @@ public class SharedPoolDataSource
             info = (PooledConnectionAndInfo) pool
                 .borrowObject(getUserPassKey(username, password));
         }
+        catch (SQLException ex) {  // Remove bad UserPassKey
+            if ((userKeys != null) && (userKeys.containsKey(username))) {
+                userKeys.remove(username);
+            }
+            throw new SQLNestedException(
+                "Could not retrieve connection info from pool", ex);
+        }
         catch (Exception e) {
             throw new SQLNestedException(
                 "Could not retrieve connection info from pool", e);
