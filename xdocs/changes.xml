@@ -101,6 +101,10 @@ The <action> type attribute can be add,update,fix,remove.
         removeConnectionEventListener from connection event handlers to
         eliminate potential for ConcurrentModificationExceptions.
       </action>
+      <action dev="psteitz" type="fix" issue="DBCP-245" due-to="Michael Drechsel">
+        Fixed error in SharedPoolDataSource causing incorrect passwords to be 
+        stored under certain conditions.
+      </action>   
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
