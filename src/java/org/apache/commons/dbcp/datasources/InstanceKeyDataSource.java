@@ -688,10 +688,20 @@ public abstract class InstanceKeyDataSource
                                    + " to create the PooledConnection.");
         }
 
-        Connection con = info.getPooledConnection().getConnection();        
-        setupDefaults(con, username);
-        con.clearWarnings();
-        return con;
+        Connection con = info.getPooledConnection().getConnection();
+        try { 
+            setupDefaults(con, username);
+            con.clearWarnings();
+            return con;
+        } catch (SQLException ex) {  
+            try {
+                con.close();
+            } catch (Exception exc) { 
+                getLogWriter().println(
+                     "ignoring exception during close: " + exc);
+            }
+            throw ex;
+        }
     }
 
     protected abstract PooledConnectionAndInfo 

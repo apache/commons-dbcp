@@ -104,7 +104,12 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="fix" issue="DBCP-245" due-to="Michael Drechsel">
         Fixed error in SharedPoolDataSource causing incorrect passwords to be 
         stored under certain conditions.
-      </action>   
+      </action> 
+      <action dev="psteitz" type="fix" issue="DBCP-237" due-to="Oliver Matz">
+        Added exception handler to ensure that PooledConnections are not
+        orphaned when an exception occurs in setUpDefaults or clearWarnings in 
+        IntanceKeyDataSource.getConnection.
+      </action> 
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes

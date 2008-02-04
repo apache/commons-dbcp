@@ -366,7 +366,8 @@
         <include>org/apache/commons/dbcp/datasources/TestFactory.java</include>
         <include>org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java</include>
         <include>org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java</include>
-
+        <include>org/apache/commons/dbcp/datasources/TestInstanceKeyDataSource.java</include>
+        
         <include>org/apache/commons/dbcp/managed/TestBasicManagedDataSource.java</include>
         <include>org/apache/commons/dbcp/managed/TestManagedDataSource.java</include>
         <include>org/apache/commons/dbcp/managed/TestManagedDataSourceInTx.java</include>
