@@ -39,21 +39,9 @@
   datasources.
 </p>
 <p>
-  Another source of information is 
-  <a href="http://directory.apache.org/subprojects/naming/index.html">Naming</a>.
-  Naming includes an in-memory JNDI service provider that was extracted from the 
-  <a href="http://tomcat.apache.org/">Jakarta Tomcat</a> JNDI implementation.
-  It also contains a easy way to construct a JNDI tree from an XML file and some ResourceFactories.
-</p>
-<p>
   The following examples are using the sun filesystem JNDI service provider.
   You can download it from the 
   <a href="http://java.sun.com/products/jndi/downloads/index.html">JNDI software download</a> page.
-</p>
-<p>
-  You can of course use the apache JNDI service provider by downloading the Naming core jar.
-  The initial context factory property should be changed to:
-  org.apache.naming.java.javaURLContextFactory
 </p>
 </section>
 
