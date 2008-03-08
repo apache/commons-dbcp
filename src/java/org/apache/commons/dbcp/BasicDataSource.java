@@ -214,7 +214,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      */
     protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
 
@@ -222,7 +222,7 @@ public class BasicDataSource implements DataSource {
      * <p>Returns the maximum number of active connections that can be
      * allocated at the same time.
      * </p>
-     * <p>A non-positive number means that there is no limit.</p>
+     * <p>A negative number means that there is no limit.</p>
      * 
      * @return the maximum number of active connections
      */
@@ -232,7 +232,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * Sets the maximum number of active connections that can be
-     * allocated at the same time.
+     * allocated at the same time. Use a negative value for no limit.
      * 
      * @param maxActive the new value for maxActive
      * @see #getMaxActive()
@@ -263,7 +263,7 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Sets the maximum number of connections that can remail idle in the
+     * Sets the maximum number of connections that can remain idle in the
      * pool.
      * 
      * @see #getMaxIdle()
