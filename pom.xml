@@ -35,6 +35,14 @@
   <description>Commons Database Connection Pooling</description>
   <url>http://commons.apache.org/dbcp/</url>
 
+  <distributionManagement>
+    <site>
+      <id>people.apache.org</id>
+      <name>Commons DBCP</name>
+      <url>scp://people.apache.org/www/commons.apache.org/dbcp</url>
+    </site>
+  </distributionManagement>
+  
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/DBCP</url>
