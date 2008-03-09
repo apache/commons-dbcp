@@ -153,8 +153,8 @@ public class ManagedConnection extends DelegatingConnection {
     }
 
     protected class CompletionListener implements TransactionContextListener {
-        public void afterCompletion(TransactionContext transactionContext, boolean commited) {
-            if (transactionContext == transactionContext) {
+        public void afterCompletion(TransactionContext completedContext, boolean commited) {
+            if (completedContext == transactionContext) {
                 transactionComplete();
             }
         }
