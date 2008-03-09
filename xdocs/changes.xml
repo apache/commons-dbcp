@@ -114,6 +114,12 @@ The <action> type attribute can be add,update,fix,remove.
         Made getPool synchronized in PoolableConnectionFactory.
         Fixes inconsistent synchronization accessing _pool.
       </action> 
+      <action dev="psteitz" type="fix" issue="DBCP-252" due-to="FindBugs">
+        Fixed inconsistent synchronization on _rollbackAfterValidation,
+        _validationQuery and _pool in CPDSConnectionFactory and 
+        KeyedCPDSConnectionFactory by making the first two volatile and making
+        both getter and setter for _pool synchronized.
+      </action> 
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
