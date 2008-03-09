@@ -244,7 +244,11 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _pool = pool;
     }
 
-    public ObjectPool getPool() {
+    /**
+     * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
+     * @return the connection pool
+     */
+    synchronized public ObjectPool getPool() {
         return _pool;
     }
 
