@@ -110,6 +110,10 @@ The <action> type attribute can be add,update,fix,remove.
         orphaned when an exception occurs in setUpDefaults or clearWarnings in 
         IntanceKeyDataSource.getConnection.
       </action> 
+      <action dev="psteitz" type="fix" issue="DBCP-252" due-to="FindBugs">
+        Made getPool synchronized in PoolableConnectionFactory.
+        Fixes inconsistent synchronization accessing _pool.
+      </action> 
     </release>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
