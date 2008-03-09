@@ -49,8 +49,8 @@ class CPDSConnectionFactory
             + "I have no record of the underlying PooledConnection.";
 
     protected ConnectionPoolDataSource _cpds = null;
-    protected String _validationQuery = null;
-    protected boolean _rollbackAfterValidation = false;
+    protected volatile String _validationQuery = null;
+    protected volatile boolean _rollbackAfterValidation = false;
     protected ObjectPool _pool = null;
     protected String _username = null;
     protected String _password = null;
@@ -121,33 +121,33 @@ class CPDSConnectionFactory
 
     /**
      * Sets the query I use to {*link #validateObject validate}
-     * {*link Connection}s.
+     * {@link Connection}s.
      * Should return at least one row.
-     * May be <tt>null</tt>
-     * @param validationQuery a query to use to {*link #validateObject validate}
-     *        {*link Connection}s.
+     * May be <code>null</code>
+     * @param validationQuery a query to use to {@link #validateObject validate}
+     *        {@link Connection}s.
      */
-    public synchronized void setValidationQuery(String validationQuery) {
+    public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
 
     /**
      * Sets whether a rollback should be issued after 
-     * {*link #validateObject validating} 
-     * {*link Connection}s.
+     * {@link #validateObject validating} 
+     * {@link Connection}s.
      * @param rollbackAfterValidation whether a rollback should be issued after
-     *        {*link #validateObject validating} 
-     *        {*link Connection}s.
+     *        {@link #validateObject validating} 
+     *        {@link Connection}s.
      */
-    public synchronized void setRollbackAfterValidation(
+    public void setRollbackAfterValidation(
             boolean rollbackAfterValidation) {
         _rollbackAfterValidation = rollbackAfterValidation;
     }
 
     /**
-     * Sets the {*link ObjectPool} in which to pool {*link Connection}s.
+     * Sets the {@link ObjectPool} in which to pool {*link Connection}s.
      * @param pool the {*link ObjectPool} in which to pool those
-     *        {*link Connection}s
+     *        {@link Connection}s
      */
     public synchronized void setPool(ObjectPool pool) throws SQLException {
         if (null != _pool && pool != _pool) {
@@ -162,7 +162,11 @@ class CPDSConnectionFactory
         _pool = pool;
     }
 
-    public ObjectPool getPool() {
+    /**
+     * Gets the {@link ObjectPool} for {@link Connection}s.
+     * @return connection pool
+     */
+    public synchronized ObjectPool getPool() {
         return _pool;
     }
 

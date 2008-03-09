@@ -50,8 +50,8 @@ class KeyedCPDSConnectionFactory
             + "I have no record of the underlying PooledConnection.";
 
     protected ConnectionPoolDataSource _cpds = null;
-    protected String _validationQuery = null;
-    protected boolean _rollbackAfterValidation = false;
+    protected volatile String _validationQuery = null;
+    protected volatile boolean _rollbackAfterValidation = false;
     protected KeyedObjectPool _pool = null;
     
     /** 
@@ -118,22 +118,22 @@ class KeyedCPDSConnectionFactory
     /**
      * Sets the query I use to {*link #validateObject validate} {*link Connection}s.
      * Should return at least one row.
-     * May be <tt>null</tt>
+     * May be <code>null</code>
      * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.
      */
-    synchronized public void setValidationQuery(String validationQuery) {
+    public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
 
     /**
      * Sets whether a rollback should be issued after 
-     * {*link #validateObject validating} 
-     * {*link Connection}s.
+     * {@link #validateObject validating} 
+     * {@link Connection}s.
      * @param rollbackAfterValidation whether a rollback should be issued after
-     *        {*link #validateObject validating} 
-     *        {*link Connection}s.
+     *        {@link #validateObject validating} 
+     *        {@link Connection}s.
      */
-    public synchronized void setRollbackAfterValidation(
+    public void setRollbackAfterValidation(
             boolean rollbackAfterValidation) {
         _rollbackAfterValidation = rollbackAfterValidation;
     }
@@ -156,7 +156,7 @@ class KeyedCPDSConnectionFactory
         _pool = pool;
     }
 
-    public KeyedObjectPool getPool() {
+    public synchronized KeyedObjectPool getPool() {
         return _pool;
     }
 
