@@ -95,7 +95,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.close();
 
         // raw idle connection should now be closed
-        assertFalse(rawIdleConnection.isClosed());
+        assertTrue(rawIdleConnection.isClosed());
 
         // active connection should still be open
         assertFalse(activeConnection.isClosed());
@@ -339,7 +339,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             fail("Expected SQLException");
         }
         catch(SQLException ex) { }
-        
+
         assertEquals(0, ds.getNumActive());
     }
     

@@ -65,7 +65,7 @@ public class TesterConnection implements Connection {
     }
 
     public void close() throws SQLException {
-        checkOpen();
+        checkFailure();
         _open = false;
     }
 

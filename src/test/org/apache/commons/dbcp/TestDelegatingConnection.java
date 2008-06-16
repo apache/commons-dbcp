@@ -124,7 +124,7 @@ public class TestDelegatingConnection extends TestCase {
             conn.prepareStatement("");
             fail("Expecting SQLException");
         } catch (SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
+            assertTrue(ex.getMessage().endsWith("is closed."));
         }  
         
         try {

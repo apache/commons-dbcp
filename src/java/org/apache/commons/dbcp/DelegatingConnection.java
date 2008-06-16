@@ -209,15 +209,10 @@ public class DelegatingConnection extends AbandonedTrace
      * any Statements that were not explicitly closed.
      */
     public void close() throws SQLException {
-        // close can be called multiple times, but PoolableConnection improperly
-        // throws an exception when a connection is closed twice, so before calling
-        // close we aren't already closed
-        if (!isClosed()) {
-            try {
-                _conn.close();
-            } finally {
-                _closed = true;
-            }
+        try {
+            _conn.close();
+        } finally {
+            _closed = true;
         }
     }
 
@@ -350,10 +345,7 @@ public class DelegatingConnection extends AbandonedTrace
     { checkOpen(); try { _conn.setTypeMap(map); } catch (SQLException e) { handleException(e); } }
 
     public boolean isClosed() throws SQLException {
-         if(_closed || _conn.isClosed()) {
-             return true;
-         }
-         return false;
+        return _closed || _conn.isClosed();
     }
 
     protected void checkOpen() throws SQLException {

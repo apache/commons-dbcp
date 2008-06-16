@@ -53,8 +53,7 @@ public class PoolableConnection extends DelegatingConnection {
      * @param config the abandoned configuration settings
      * @deprecated AbandonedConfig is now deprecated.
      */
-    public PoolableConnection(Connection conn, ObjectPool pool,
-                              AbandonedConfig config) {
+    public PoolableConnection(Connection conn, ObjectPool pool, AbandonedConfig config) {
         super(conn, config);
         _pool = pool;
     }
@@ -64,9 +63,14 @@ public class PoolableConnection extends DelegatingConnection {
      * Returns me to my pool.
      */
      public synchronized void close() throws SQLException {
-        boolean isClosed = false;
+        if (_closed) {
+            // already closed
+            return;
+        }
+
+        boolean isUnderlyingConectionClosed;
         try {
-            isClosed = isClosed();
+            isUnderlyingConectionClosed = _conn.isClosed();
         } catch (SQLException e) {
             try {
                 _pool.invalidateObject(this); // XXX should be guarded to happen at most once
@@ -77,20 +81,12 @@ public class PoolableConnection extends DelegatingConnection {
             } catch (Exception ie) {
                 // DO NOTHING the original exception will be rethrown
             }
-            throw new SQLNestedException("Cannot close connection (isClosed check failed)", e);
+            throw (SQLException) new SQLException("Cannot close connection (isClosed check failed)").initCause(e);
         }
-        if (isClosed) {
-            try {
-                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
-            } catch(IllegalStateException e) {
-                // pool is closed, so close the connection
-                passivate();
-                getInnermostDelegate().close();
-            } catch (Exception ie) {
-                // DO NOTHING, "Already closed" exception thrown below
-            }
-            throw new SQLException("Already closed.");
-        } else {
+
+        if (!isUnderlyingConectionClosed) {
+            // Normal close: underlying connection is still open, so we
+            // simply need to return this proxy to the pool
             try {
                 _pool.returnObject(this); // XXX should be guarded to happen at most once
             } catch(IllegalStateException e) {
@@ -102,8 +98,21 @@ public class PoolableConnection extends DelegatingConnection {
             } catch(RuntimeException e) {
                 throw e;
             } catch(Exception e) {
-                throw new SQLNestedException("Cannot close connection (return to pool failed)", e);
+                throw (SQLException) new SQLException("Cannot close connection (return to pool failed)").initCause(e);
             }
+        } else {
+            // Abnormal close: underlying connection closed unexpectedly, so we
+            // must destroy this proxy
+            try {
+                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
+            } catch(IllegalStateException e) {
+                // pool is closed, so close the connection
+                passivate();
+                getInnermostDelegate().close();
+            } catch (Exception ie) {
+                // DO NOTHING, "Already closed" exception thrown below
+            }
+            throw new SQLException("Already closed.");
         }
     }
 
@@ -113,6 +122,5 @@ public class PoolableConnection extends DelegatingConnection {
     public void reallyClose() throws SQLException {
         super.close();
     }
-
 }
 
