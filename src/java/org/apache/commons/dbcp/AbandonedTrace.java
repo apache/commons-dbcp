@@ -172,7 +172,7 @@ public class AbandonedTrace {
      * @param trace AbandonedTrace object to add
      */
     protected void addTrace(AbandonedTrace trace) {
-        synchronized (this) {
+        synchronized (this.trace) {
             this.trace.add(trace);
         }
         setLastUsed();
@@ -182,8 +182,8 @@ public class AbandonedTrace {
      * Clear the list of objects being traced by this
      * object.
      */
-    protected synchronized void clearTrace() {
-        if (this.trace != null) {
+    protected void clearTrace() {
+        synchronized(this.trace) {
             this.trace.clear();
         }
     }
@@ -194,7 +194,9 @@ public class AbandonedTrace {
      * @return List of objects
      */
     protected List getTrace() {
-        return trace;
+        synchronized (this.trace) {
+            return new ArrayList(trace);
+    }
     }
 
     /**
@@ -206,7 +208,7 @@ public class AbandonedTrace {
             System.out.println(format.format(new Date(createdTime)));
             createdBy.printStackTrace(System.out);
         }
-        synchronized(this) {
+        synchronized(this.trace) {
             Iterator it = this.trace.iterator();
             while (it.hasNext()) {
                 AbandonedTrace at = (AbandonedTrace)it.next();
@@ -220,8 +222,8 @@ public class AbandonedTrace {
      *
      * @param trace AbandonedTrace object to remvoe
      */
-    protected synchronized void removeTrace(AbandonedTrace trace) {
-        if (this.trace != null) {
+    protected void removeTrace(AbandonedTrace trace) {
+        synchronized(this.trace) {
             this.trace.remove(trace);
         }
     }
