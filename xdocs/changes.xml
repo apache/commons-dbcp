@@ -42,6 +42,9 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="psteitz" type="fix" issue="DBCP-270" due-to="Filip Hanik">
+        Narrowed synchronization in AbandonedTrace to resolve an Evictor deadlock.
+      </action>
       <action dev="bayard" type="fix" issue="DBCP-218">
         Corrected Javadoc to state that getLoginTimeout and setLoginTimeout are
         NOT supported by BasicDataSource.
