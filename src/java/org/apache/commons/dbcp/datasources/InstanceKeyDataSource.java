@@ -101,10 +101,10 @@ public abstract class InstanceKeyDataSource
     private String dataSourceName = null;
     private boolean defaultAutoCommit = false;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
-    private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-    private int maxWait = (int)Math.min((long)Integer.MAX_VALUE,
-        GenericObjectPool.DEFAULT_MAX_WAIT);
+//    private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
+//    private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
+//    private int maxWait = (int)Math.min(Integer.MAX_VALUE,
+//        GenericObjectPool.DEFAULT_MAX_WAIT);
     private boolean defaultReadOnly = false;
     /** Description */
     private String description = null;
@@ -117,12 +117,12 @@ public abstract class InstanceKeyDataSource
     private boolean _testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
     private boolean _testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
     private int _timeBetweenEvictionRunsMillis = (int)
-        Math.min((long)Integer.MAX_VALUE,
+        Math.min(Integer.MAX_VALUE,
                  GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
     private int _numTestsPerEvictionRun = 
         GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
     private int _minEvictableIdleTimeMillis = (int)
-    Math.min((long)Integer.MAX_VALUE,
+    Math.min(Integer.MAX_VALUE,
              GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
     private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
