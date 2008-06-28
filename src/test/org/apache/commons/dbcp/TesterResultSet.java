@@ -124,23 +124,23 @@ public class TesterResultSet implements ResultSet {
 
     public long getLong(int columnIndex) throws SQLException {
         checkOpen();
-        return (long)columnIndex;
+        return columnIndex;
     }
 
     public float getFloat(int columnIndex) throws SQLException {
         checkOpen();
-        return (float)columnIndex;
+        return columnIndex;
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         checkOpen();
-        return (double)columnIndex;
+        return columnIndex;
     }
 
     /** @deprecated */
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkOpen();
-        return new BigDecimal((double)columnIndex);
+        return new BigDecimal(columnIndex);
     }
 
     public byte[] getBytes(int columnIndex) throws SQLException {
@@ -206,23 +206,23 @@ public class TesterResultSet implements ResultSet {
 
     public long getLong(String columnName) throws SQLException {
         checkOpen();
-        return (long)(columnName.hashCode());
+        return columnName.hashCode();
     }
 
     public float getFloat(String columnName) throws SQLException {
         checkOpen();
-        return (float)(columnName.hashCode());
+        return columnName.hashCode();
     }
 
     public double getDouble(String columnName) throws SQLException {
         checkOpen();
-        return (double)(columnName.hashCode());
+        return columnName.hashCode();
     }
 
     /** @deprecated */
     public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException {
         checkOpen();
-        return new BigDecimal((double)columnName.hashCode());
+        return new BigDecimal(columnName.hashCode());
     }
 
     public byte[] getBytes(String columnName) throws SQLException {
@@ -311,12 +311,12 @@ public class TesterResultSet implements ResultSet {
 
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkOpen();
-        return new BigDecimal((double)columnIndex);
+        return new BigDecimal(columnIndex);
     }
 
     public BigDecimal getBigDecimal(String columnName) throws SQLException {
         checkOpen();
-        return new BigDecimal((double)columnName.hashCode());
+        return new BigDecimal(columnName.hashCode());
     }
 
     public boolean isBeforeFirst() throws SQLException {

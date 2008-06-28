@@ -55,7 +55,7 @@ public class PerUserPoolDataSource
 
     private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-    private int defaultMaxWait = (int)Math.min((long)Integer.MAX_VALUE,
+    private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
     Map perUserDefaultAutoCommit = null;    
     Map perUserDefaultTransactionIsolation = null;

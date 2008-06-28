@@ -49,7 +49,7 @@ public class SharedPoolDataSource
 
     private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-    private int maxWait = (int)Math.min((long)Integer.MAX_VALUE,
+    private int maxWait = (int)Math.min(Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
     private KeyedObjectPool pool = null;
 
