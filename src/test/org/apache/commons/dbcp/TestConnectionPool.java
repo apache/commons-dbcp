@@ -367,7 +367,7 @@ public abstract class TestConnectionPool extends TestCase {
             conn.createStatement();
             fail("Can't use closed connections");
         } catch(SQLException e) {
-            ; // expected
+            // expected
         }
 
         conn = newConnection();
@@ -584,7 +584,7 @@ public abstract class TestConnectionPool extends TestCase {
         public void run() {
             for(int i=0;i<_iter;i++) {
                 try {
-                    Thread.sleep((long)_random.nextInt(_delay));
+                    Thread.sleep(_random.nextInt(_delay));
                 } catch(Exception e) {
                     // ignored
                 }
@@ -596,7 +596,7 @@ public abstract class TestConnectionPool extends TestCase {
                     stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
                     rset = stmt.executeQuery();
                     try {
-                        Thread.sleep((long)_random.nextInt(_delay));
+                        Thread.sleep(_random.nextInt(_delay));
                     } catch(Exception e) {
                         // ignored
                     }

@@ -499,7 +499,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // serialize
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(baos);
-        out.writeObject((Serializable)ds);
+        out.writeObject(ds);
         byte[] b = baos.toByteArray();
         out.close();
 
