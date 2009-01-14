@@ -77,7 +77,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             } catch(SQLException e) {
                 throw e;
             } catch(Exception e) {
-                throw new SQLNestedException("Cannot close connection", e);
+                throw (SQLException) new SQLException("Cannot close connection").initCause(e);
             }
         }
         getInnermostDelegate().close();
@@ -95,7 +95,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql)));
         } catch(NoSuchElementException e) {
-            throw new SQLNestedException("MaxOpenPreparedStatements limit reached", e); 
+            throw (SQLException) new SQLException("MaxOpenPreparedStatements limit reached").initCause(e); 
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
@@ -115,11 +115,11 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         try {
             return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency)));
         } catch(NoSuchElementException e) {
-            throw new SQLNestedException("MaxOpenPreparedStatements limit reached", e); 
+            throw (SQLException) new SQLException("MaxOpenPreparedStatements limit reached").initCause(e); 
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
+            throw (SQLException) new SQLException("Borrow prepareStatement from pool failed").initCause(e);
         }
     }
 
@@ -163,7 +163,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (Exception e) {}
+        } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency);
     }
 
@@ -174,7 +174,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (Exception e) {}
+        } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog);
     }
 
