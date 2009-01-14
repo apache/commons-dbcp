@@ -74,9 +74,18 @@ public class PooledConnectionProxy implements PooledConnection,
         return delegate.getConnection();
     }
 
+    /**
+     * Remove event listeners.
+     */
     public void removeConnectionEventListener(ConnectionEventListener listener) {
         eventListeners.remove(listener);
     }
+
+    /* JDBC_4_ANT_KEY_BEGIN */
+    public void removeStatementEventListener(StatementEventListener listener) {
+        eventListeners.remove(listener);
+    }
+    /* JDBC_4_ANT_KEY_END */
 
     public boolean isNotifyOnClose() {
         return notifyOnClose;
@@ -98,7 +107,7 @@ public class PooledConnectionProxy implements PooledConnection,
     }
     
     /**
-     * Add an event listener.
+     * Add event listeners.
      */
     public void addConnectionEventListener(ConnectionEventListener listener) {
         if (!eventListeners.contains(listener)) {
@@ -106,6 +115,13 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
 
+    /* JDBC_4_ANT_KEY_BEGIN */
+    public void addStatementEventListener(StatementEventListener listener) {
+        if (!eventListeners.contains(listener)) {
+            eventListeners.add(listener);
+        }
+    }
+    /* JDBC_4_ANT_KEY_END */
     
     /**
      * Pass closed events on to listeners
@@ -138,23 +154,5 @@ public class PooledConnectionProxy implements PooledConnection,
     public Collection getListeners() {
         return eventListeners;
     }
-
-    /* JDBC_4_ANT_KEY_BEGIN */
-    /**
-     * Add a statement event listener
-     */
-    public void addStatementEventListener(StatementEventListener listener) {
-        if (!eventListeners.contains(listener)) {
-            eventListeners.add(listener);
-        }
-    }
-
-    /**
-     * Remove a statement event listener
-     */
-    public void removeStatementEventListener(StatementEventListener listener) {
-        eventListeners.remove(listener);
-    }
-    /* JDBC_4_ANT_KEY_END */
 
 }
