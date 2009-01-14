@@ -26,7 +26,9 @@ import java.util.Vector;
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
+/* JDBC_4_ANT_KEY_START */
 import javax.sql.StatementEventListener;
+/* JDBC_4_ANT_KEY_END */
 
 import org.apache.commons.dbcp.DelegatingConnection;
 import org.apache.commons.dbcp.DelegatingPreparedStatement;
@@ -107,11 +109,13 @@ class PooledConnectionImpl
         }
     }
 
+    /* JDBC_4_ANT_KEY_BEGIN */
     public void addStatementEventListener(StatementEventListener listener) {
         if (!statementEventListeners.contains(listener)) {
             statementEventListeners.add(listener);
         }
     }
+    /* JDBC_4_ANT_KEY_END */
 
     /**
      * Closes the physical connection and marks this 
@@ -181,9 +185,11 @@ class PooledConnectionImpl
         eventListeners.remove(listener);
     }
 
+    /* JDBC_4_ANT_KEY_BEGIN */
     public void removeStatementEventListener(StatementEventListener listener) {
         statementEventListeners.remove(listener);
     }
+    /* JDBC_4_ANT_KEY_END */
 
     /**
      * Closes the physical connection and checks that the logical connection
