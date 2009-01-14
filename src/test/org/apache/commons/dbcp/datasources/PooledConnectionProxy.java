@@ -27,7 +27,9 @@ import java.util.Vector;
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
+/* JDBC_4_ANT_KEY_BEGIN */
 import javax.sql.StatementEventListener;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * PooledConnection implementation that wraps a driver-supplied
@@ -137,6 +139,7 @@ public class PooledConnectionProxy implements PooledConnection,
         return eventListeners;
     }
 
+    /* JDBC_4_ANT_KEY_BEGIN */
     /**
      * Add a statement event listener
      */
@@ -152,5 +155,6 @@ public class PooledConnectionProxy implements PooledConnection,
     public void removeStatementEventListener(StatementEventListener listener) {
         eventListeners.remove(listener);
     }
+    /* JDBC_4_ANT_KEY_END */
 
 }
