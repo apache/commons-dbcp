@@ -77,6 +77,57 @@
       <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
+   <target name="check_jar">
+   	   <available file="${file}" property="found"/>
+   	   <antcall target="check_message"/>
+   </target>
+
+	<target name="check_message" unless="found">
+		<!-- echo could be replaced with fail if required -->
+        <echo message="Could not find ${file}"/>
+   </target>
+
+   <!-- Check that all the dependencies exist -->
+   <target name="check_depends" depends="init">
+       <echo>Checking dependencies</echo>
+       <antcall target="check_jar">
+           <param name="file" value="${commons-pool.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${jdbc20ext.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${junit.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${naming-common.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${naming-java.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${commons-logging.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${xerces.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${xml-apis.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${jta-spec.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${jta-impl.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${backport-util-concurrent.jar}"/>
+       </antcall>
+       <antcall target="check_jar">
+           <param name="file" value="${ejb-spec.jar}"/>
+       </antcall>
+   </target>
+
    <!-- ######################################################### -->
 
    <target name="clean" depends="init" description="removes generated files">
@@ -170,7 +221,7 @@
 
    <!-- ######################################################### -->
 
-   <target name="compile" depends="prepare" description="compiles source files">
+   <target name="compile" depends="check_depends,prepare" description="compiles source files">
       <mkdir dir="${build.classes.dir}"/>
       <javac destdir="${build.classes.dir}"
              srcdir="${src.java.dir}"
