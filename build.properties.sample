@@ -54,3 +54,7 @@ commons-logging.jar=${commons-logging.home}/commons-logging-1.0.4.jar
 # JTA - needed for managed connections
 jta-spec.jar=${repository}/org.apache.geronimo.specs/jars/geronimo-jta_1.1_spec-1.1.jar
 jta-impl.jar=${repository}/org.apache.geronimo.modules/jars/geronimo-transaction-1.2-beta.jar 
+
+# JTA dependencies - required so the test cases run
+backport-util-concurrent.jar=${repository}/backport-util-concurrent/jars/backport-util-concurrent-2.2.jar
+ejb-spec.jar=${repository}/org.apache.geronimo.specs/jars/geronimo-ejb_2.1_spec-1.1.jar

@@ -46,7 +46,8 @@
       <property name="classpath" 
        value="${cp}:${commons-pool.jar}:${jdbc20ext.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}"/>
+      	${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}:
+      	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
