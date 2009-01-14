@@ -1229,14 +1229,11 @@ public class BasicDataSource implements DataSource {
                                               defaultTransactionIsolation,
                                               defaultCatalog,
                                               abandonedConfig);
-            if (connectionFactory == null) {
-                throw new SQLException("Cannot create PoolableConnectionFactory");
-            }
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
+            throw (SQLException) new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")").initCause(e);
         }
 
         // Create and return the pooling data source to manage the connections
@@ -1247,7 +1244,7 @@ public class BasicDataSource implements DataSource {
                 connectionPool.addObject();
             }
         } catch (Exception e) {
-            throw new SQLNestedException("Error preloading the connection pool", e);
+            throw (SQLException) new SQLException("Error preloading the connection pool").initCause(e);
         }
         
         return dataSource;
@@ -1267,7 +1264,7 @@ public class BasicDataSource implements DataSource {
                     driverClassName + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
-                throw new SQLNestedException(message, t);
+                throw (SQLException) new SQLException(message).initCause(t);
             }
         }
 
@@ -1281,7 +1278,7 @@ public class BasicDataSource implements DataSource {
                 "' for connect URL '" + url + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw new SQLNestedException(message, t);
+            throw (SQLException) new SQLException(message).initCause(t);
         }
 
         // Can't test without a validationQuery
