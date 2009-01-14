@@ -70,10 +70,10 @@
       <property name="javac.optimize" value="false"/>
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
-      <property name="javac.source" value="1.4" />
 
       <available property="jndi.present" classname="javax.naming.Context"/>
       <available property="jdbc3.present" classname="java.sql.Savepoint"/>
+      <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
    <!-- ######################################################### -->
@@ -110,7 +110,36 @@
       <property name="src.test.dir" value="${src.dir}/test"/>
    </target>
 
-   <target name="prepare" depends="init,prepare-nojdbc3,prepare-jdbc3"/>
+   <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
+      <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
+      <property name="src.dir" value="${build.dir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="javac.source" value="1.4" />
+
+      <mkdir dir="${src.dir}"/>
+      <copy todir="${src.dir}" filtering="yes">
+         <fileset dir="${basedir}/src" defaultexcludes="no">
+            <include name="**/*.java"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+            <include name="**/*.jocl"/>
+            <include name="**/package.html"/>
+         </fileset>
+      </copy>
+      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
+   </target>
+
+   <target name="prepare-jdbc4" depends="init" if="jdbc4.present">
+      <echo message="JDBC 4 was detected."/>
+      <property name="src.dir" value="${basedir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="javac.source" value="1.5" />
+   </target>
+
+   <target name="prepare" depends="init,prepare-nojdbc3,prepare-jdbc3,prepare-nojdbc4,prepare-jdbc4"/>
 
    <target name="javadoc" depends="prepare" description="generates javadocs">
       <mkdir dir="${javadoc.dir}"/>

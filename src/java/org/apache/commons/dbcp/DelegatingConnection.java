@@ -26,6 +26,19 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.ClientInfoStatus;
+import java.sql.Clob;
+import java.sql.NClob;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLXML;
+import java.sql.Struct;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -50,6 +63,12 @@ import java.util.Map;
  */
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
+
+/* JDBC_4_ANT_KEY_BEGIN */
+    private static final Map<String, ClientInfoStatus> EMPTY_FAILED_PROPERTIES =
+        Collections.<String, ClientInfoStatus>emptyMap();
+/* JDBC_4_ANT_KEY_END */
+
     /** My delegate {@link Connection}. */
     protected Connection _conn = null;
 
@@ -498,4 +517,139 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return _conn.isWrapperFor(iface);
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return _conn.unwrap(iface);
+    }
+
+    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createArrayOf(typeName, elements);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public Blob createBlob() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createBlob();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public Clob createClob() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createClob();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public NClob createNClob() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createNClob();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public SQLXML createSQLXML() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createSQLXML();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.createStruct(typeName, attributes);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public boolean isValid(int timeout) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.isValid(timeout);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+        try {
+            checkOpen();
+            _conn.setClientInfo(name, value);
+        }
+        catch (SQLClientInfoException e) {
+            throw e;
+        }
+        catch (SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        try {
+            checkOpen();
+            _conn.setClientInfo(properties);
+        }
+        catch (SQLClientInfoException e) {
+            throw e;
+        }
+        catch (SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    public Properties getClientInfo() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getClientInfo();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    public String getClientInfo(String name) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getClientInfo(name);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+/* JDBC_4_ANT_KEY_END */
 }

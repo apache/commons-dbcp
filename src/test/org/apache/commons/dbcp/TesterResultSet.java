@@ -28,6 +28,13 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Calendar;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.io.InputStream;
+import java.io.Reader;
+import java.sql.NClob;
+import java.sql.RowId;
+import java.sql.SQLXML;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A dummy {@link ResultSet}, for testing purposes.
@@ -759,7 +766,207 @@ public class TesterResultSet implements ResultSet {
         throws SQLException {
         throw new SQLException("Not implemented.");
     }
-
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
 
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public RowId getRowId(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public RowId getRowId(String columnLabel) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateRowId(int columnIndex, RowId value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateRowId(String columnLabel, RowId value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public int getHoldability() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public boolean isClosed() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNString(int columnIndex, String value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNString(String columnLabel, String value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(int columnIndex, NClob value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(String columnLabel, NClob value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public NClob getNClob(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public NClob getNClob(String columnLabel) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public SQLXML getSQLXML(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public SQLXML getSQLXML(String columnLabel) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateSQLXML(int columnIndex, SQLXML value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateSQLXML(String columnLabel, SQLXML value) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public String getNString(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public String getNString(String columnLabel) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Reader getNCharacterStream(int columnIndex) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Reader getNCharacterStream(String columnLabel) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateAsciiStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBinaryStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateAsciiStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBinaryStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNCharacterStream(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateAsciiStream(int columnIndex, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBinaryStream(int columnIndex, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateCharacterStream(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateAsciiStream(String columnLabel, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBinaryStream(String columnLabel, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateClob(String columnLabel, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(int columnIndex, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void updateNClob(String columnLabel, Reader reader) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+/* JDBC_4_ANT_KEY_END */
 }

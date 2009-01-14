@@ -84,6 +84,14 @@ public class PoolingDataSource implements DataSource {
     public void setAccessToUnderlyingConnectionAllowed(boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
     }
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return false;
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("PoolingDataSource is not a wrapper.");
+    }
     
     //--- DataSource methods -----------------------------------------
 

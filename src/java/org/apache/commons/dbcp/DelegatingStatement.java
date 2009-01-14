@@ -128,10 +128,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     protected boolean _closed = false;
 
-    protected boolean isClosed() {
-        return _closed;
-    }
-
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
             throw new SQLException
@@ -346,4 +342,39 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     { checkOpen(); try { return _stmt.getResultSetHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return _conn.isWrapperFor(iface);
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return _conn.unwrap(iface);
+    }
+
+    public boolean isClosed() throws SQLException {
+        return _closed;
+    }
+
+    public void setPoolable(boolean poolable) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setPoolable(poolable);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public boolean isPoolable() throws SQLException {
+        checkOpen();
+        try {
+            return _stmt.isPoolable();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+/* JDBC_4_ANT_KEY_END */
 }

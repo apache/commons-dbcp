@@ -27,6 +27,7 @@ import java.util.Vector;
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
+import javax.sql.StatementEventListener;
 
 /**
  * PooledConnection implementation that wraps a driver-supplied
@@ -134,6 +135,22 @@ public class PooledConnectionProxy implements PooledConnection,
      */
     public Collection getListeners() {
         return eventListeners;
+    }
+
+    /**
+     * Add a statement event listener
+     */
+    public void addStatementEventListener(StatementEventListener listener) {
+        if (!eventListeners.contains(listener)) {
+            eventListeners.add(listener);
+        }
+    }
+
+    /**
+     * Remove a statement event listener
+     */
+    public void removeStatementEventListener(StatementEventListener listener) {
+        eventListeners.remove(listener);
     }
 
 }

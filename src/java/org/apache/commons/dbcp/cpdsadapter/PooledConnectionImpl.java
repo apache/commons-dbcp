@@ -26,6 +26,7 @@ import java.util.Vector;
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
+import javax.sql.StatementEventListener;
 
 import org.apache.commons.dbcp.DelegatingConnection;
 import org.apache.commons.dbcp.DelegatingPreparedStatement;
@@ -66,6 +67,11 @@ class PooledConnectionImpl
     private Vector eventListeners;
 
     /**
+     * StatementEventListeners
+     */
+    private Vector statementEventListeners;
+
+    /**
      * flag set to true, once close() is called.
      */
     boolean isClosed;
@@ -98,6 +104,12 @@ class PooledConnectionImpl
     public void addConnectionEventListener(ConnectionEventListener listener) {
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
+        }
+    }
+
+    public void addStatementEventListener(StatementEventListener listener) {
+        if (!statementEventListeners.contains(listener)) {
+            statementEventListeners.add(listener);
         }
     }
 
@@ -167,6 +179,10 @@ class PooledConnectionImpl
     public void removeConnectionEventListener(
             ConnectionEventListener listener) {
         eventListeners.remove(listener);
+    }
+
+    public void removeStatementEventListener(StatementEventListener listener) {
+        statementEventListeners.remove(listener);
     }
 
     /**
