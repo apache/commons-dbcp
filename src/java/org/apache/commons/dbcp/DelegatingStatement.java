@@ -342,6 +342,16 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     { checkOpen(); try { return _stmt.getResultSetHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
 /* JDBC_3_ANT_KEY_END */
+    
+    /*
+     * Note was protected prior to JDBC 4
+     * TODO Consider adding build flags to make this protected unless we are
+     *      using JDBC 4.
+     */
+    public boolean isClosed() throws SQLException {
+        return _closed;
+    }
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -350,10 +360,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return _conn.unwrap(iface);
-    }
-
-    public boolean isClosed() throws SQLException {
-        return _closed;
     }
 
     public void setPoolable(boolean poolable) throws SQLException {
