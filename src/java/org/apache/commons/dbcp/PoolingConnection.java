@@ -99,7 +99,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
+            throw (SQLException) new SQLException("Borrow prepareStatement from pool failed").initCause(e);
         }
     }
 

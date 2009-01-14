@@ -1150,7 +1150,7 @@ public class BasicDataSource implements DataSource {
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLNestedException("Cannot close connection pool", e);
+            throw (SQLException) new SQLException("Cannot close connection pool").initCause(e);
         }
     }
 
