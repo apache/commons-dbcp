@@ -116,10 +116,10 @@ public class TesterDriver implements Driver {
         return new DriverPropertyInfo[0];
     }
 
-    protected static String CONNECT_STRING = "jdbc:apache:commons:testdriver";
+    protected static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
 
     // version numbers
-    protected static int MAJOR_VERSION = 1;
-    protected static int MINOR_VERSION = 0;
+    protected static final int MAJOR_VERSION = 1;
+    protected static final int MINOR_VERSION = 0;
 
 }

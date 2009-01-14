@@ -59,7 +59,7 @@ public class PoolingDriver implements Driver {
     }
 
     /** The map of registered pools. */
-    protected static HashMap _pools = new HashMap();
+    protected static final HashMap _pools = new HashMap();
 
     /** Controls access to the underlying connection */
     private static boolean accessToUnderlyingConnectionAllowed = false; 
@@ -112,10 +112,10 @@ public class PoolingDriver implements Driver {
                     jocl = JOCLContentHandler.parse(in);
                 }
                 catch (SAXException e) {
-                    throw new SQLNestedException("Could not parse configuration file", e);
+                    throw (SQLException) new SQLException("Could not parse configuration file").initCause(e);
                 }
                 catch (IOException e) {
-                    throw new SQLNestedException("Could not load configuration file", e);
+                    throw (SQLException) new SQLException("Could not load configuration file").initCause(e);
                 }
                 if(jocl.getType(0).equals(String.class)) {
                     pool = getPool((String)(jocl.getValue(0)));
@@ -148,7 +148,7 @@ public class PoolingDriver implements Driver {
                 pool.close();
             }
             catch (Exception e) {
-                throw new SQLNestedException("Error closing pool " + name, e);
+                throw (SQLException) new SQLException("Error closing pool " + name).initCause(e);
             }
         }
     }
@@ -181,11 +181,11 @@ public class PoolingDriver implements Driver {
                 } catch(SQLException e) {
                     throw e;
                 } catch(NoSuchElementException e) {
-                    throw new SQLNestedException("Cannot get a connection, pool error: " + e.getMessage(), e);
+                    throw (SQLException) new SQLException("Cannot get a connection, pool error: " + e.getMessage()).initCause(e);
                 } catch(RuntimeException e) {
                     throw e;
                 } catch(Exception e) {
-                    throw new SQLNestedException("Cannot get a connection, general error: " + e.getMessage(), e);
+                    throw (SQLException) new SQLException("Cannot get a connection, general error: " + e.getMessage()).initCause(e);
                 }
             }
         } else {
@@ -236,12 +236,12 @@ public class PoolingDriver implements Driver {
     }
 
     /** My URL prefix */
-    protected static String URL_PREFIX = "jdbc:apache:commons:dbcp:";
-    protected static int URL_PREFIX_LEN = URL_PREFIX.length();
+    protected static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
+    protected static final int URL_PREFIX_LEN = URL_PREFIX.length();
 
     // version numbers
-    protected static int MAJOR_VERSION = 1;
-    protected static int MINOR_VERSION = 0;
+    protected static final int MAJOR_VERSION = 1;
+    protected static final int MINOR_VERSION = 0;
 
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
