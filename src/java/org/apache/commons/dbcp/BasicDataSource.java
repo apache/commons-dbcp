@@ -1162,6 +1162,15 @@ public class BasicDataSource implements DataSource {
         return closed;
     }
 
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return false;
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("BasicDataSource is not a wrapper.");
+    }
+
+        
     // ------------------------------------------------------ Protected Methods
 
 

@@ -268,5 +268,26 @@ public class TesterStatement implements Statement {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
 
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public boolean isClosed() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void setPoolable(boolean poolable) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public boolean isPoolable() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+/* JDBC_4_ANT_KEY_END */
 }

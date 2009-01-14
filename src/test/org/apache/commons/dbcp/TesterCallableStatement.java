@@ -33,6 +33,11 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.sql.NClob;
+import java.sql.RowId;
+import java.sql.SQLXML;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * Trivial implementation of a CallableStatement to avoid null pointer exceptions in tests.
@@ -338,4 +343,114 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     public URL getURL(String parameterName) throws SQLException {
         return null;
     }
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public RowId getRowId(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public RowId getRowId(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public void setRowId(String parameterName, RowId value) throws SQLException {
+    }
+
+    public void setNString(String parameterName, String value) throws SQLException {
+    }
+
+    public void setNCharacterStream(String parameterName, Reader reader, long length) throws SQLException {
+    }
+
+    public void setNClob(String parameterName, NClob value) throws SQLException {
+    }
+
+    public void setClob(String parameterName, Reader reader, long length) throws SQLException {
+    }
+
+    public void setBlob(String parameterName, InputStream inputStream, long length) throws SQLException {
+    }
+
+    public void setNClob(String parameterName, Reader reader, long length) throws SQLException {
+    }
+
+    public NClob getNClob(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public NClob getNClob(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public void setSQLXML(String parameterName, SQLXML value) throws SQLException {
+    }
+
+    public SQLXML getSQLXML(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public SQLXML getSQLXML(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public String getNString(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public String getNString(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public Reader getNCharacterStream(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public Reader getNCharacterStream(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public Reader getCharacterStream(int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    public Reader getCharacterStream(String parameterName) throws SQLException {
+        return null;
+    }
+
+    public void setBlob(String parameterName, Blob blob) throws SQLException {
+    }
+
+    public void setClob(String parameterName, Clob clob) throws SQLException {
+    }
+
+    public void setAsciiStream(String parameterName, InputStream inputStream, long length) throws SQLException {
+    }
+
+    public void setBinaryStream(String parameterName, InputStream inputStream, long length) throws SQLException {
+    }
+
+    public void setCharacterStream(String parameterName, Reader reader, long length) throws SQLException {
+    }
+
+    public void setAsciiStream(String parameterName, InputStream inputStream) throws SQLException {
+    }
+
+    public void setBinaryStream(String parameterName, InputStream inputStream) throws SQLException {
+    }
+
+    public void setCharacterStream(String parameterName, Reader reader) throws SQLException {
+    }
+
+    public void setNCharacterStream(String parameterName, Reader reader) throws SQLException {
+    }
+
+    public void setClob(String parameterName, Reader reader) throws SQLException {
+    }
+
+    public void setBlob(String parameterName, InputStream inputStream) throws SQLException {
+    }
+
+    public void setNClob(String parameterName, Reader reader) throws SQLException {
+    }
+/* JDBC_4_ANT_KEY_END */
 }

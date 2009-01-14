@@ -154,6 +154,14 @@ public abstract class InstanceKeyDataSource
      */
     public abstract void close() throws Exception;
 
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return false;
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("InstanceKeyDataSource is not a wrapper.");
+    }
+
     // -------------------------------------------------------------------
     // Properties
 

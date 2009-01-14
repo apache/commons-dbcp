@@ -25,6 +25,19 @@ import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.SQLWarning;
 import java.sql.SQLException;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.ClientInfoStatus;
+import java.sql.Clob;
+import java.sql.NClob;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLXML;
+import java.sql.Struct;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * This class is the <code>Connection</code> that will be returned
@@ -41,6 +54,11 @@ import java.sql.SQLException;
 class ConnectionImpl implements Connection {
     private static final String CLOSED 
             = "Attempted to use Connection after closed() was called.";
+
+/* JDBC_4_ANT_KEY_BEGIN */
+    private static final Map<String, ClientInfoStatus> EMPTY_FAILED_PROPERTIES =
+        Collections.<String, ClientInfoStatus>emptyMap();
+/* JDBC_4_ANT_KEY_END */
 
     /** The JDBC database connection. */
     private Connection connection;
@@ -453,6 +471,86 @@ class ConnectionImpl implements Connection {
         assertOpen();
         return connection.prepareStatement(sql, columnNames);
     }
-
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return connection.isWrapperFor(iface);
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return connection.unwrap(iface);
+    }
+
+    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        assertOpen();
+        return connection.createArrayOf(typeName, elements);
+    }
+
+    public Blob createBlob() throws SQLException {
+        assertOpen();
+        return connection.createBlob();
+    }
+
+    public Clob createClob() throws SQLException {
+        assertOpen();
+        return connection.createClob();
+    }
+
+    public NClob createNClob() throws SQLException {
+        assertOpen();
+        return connection.createNClob();
+    }
+
+    public SQLXML createSQLXML() throws SQLException {
+        assertOpen();
+        return connection.createSQLXML();
+    }
+
+    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+        assertOpen();
+        return connection.createStruct(typeName, attributes);
+    }
+
+    public boolean isValid(int timeout) throws SQLException {
+        assertOpen();
+        return connection.isValid(timeout);
+    }
+
+    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+        try {
+            assertOpen();
+            connection.setClientInfo(name, value);
+        }
+        catch (SQLClientInfoException e) {
+            throw e;
+        }
+        catch (SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        try {
+            assertOpen();
+            connection.setClientInfo(properties);
+        }
+        catch (SQLClientInfoException e) {
+            throw e;
+        }
+        catch (SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    public Properties getClientInfo() throws SQLException {
+        assertOpen();
+        return connection.getClientInfo();
+    }
+
+    public String getClientInfo(String name) throws SQLException {
+        assertOpen();
+        return connection.getClientInfo(name);
+    }
+/* JDBC_4_ANT_KEY_END */
 }

@@ -27,6 +27,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Calendar;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.io.InputStream;
+import java.io.Reader;
+import java.sql.NClob;
+import java.sql.RowId;
+import java.sql.SQLXML;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
@@ -221,6 +228,187 @@ public class DelegatingPreparedStatement extends DelegatingStatement
 
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
     { checkOpen(); try { return _stmt.getParameterMetaData(); } catch (SQLException e) { handleException(e); return null; } }
-
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public void setRowId(int parameterIndex, RowId value) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setRowId(parameterIndex, value);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNString(int parameterIndex, String value) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNString(parameterIndex, value);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNCharacterStream(int parameterIndex, Reader value, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNCharacterStream(parameterIndex, value, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNClob(int parameterIndex, NClob value) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNClob(parameterIndex, value);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setClob(parameterIndex, reader, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setBlob(parameterIndex, inputStream, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNClob(parameterIndex, reader, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setSQLXML(int parameterIndex, SQLXML value) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setSQLXML(parameterIndex, value);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setAsciiStream(int parameterIndex, InputStream inputStream, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setAsciiStream(parameterIndex, inputStream, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setBinaryStream(int parameterIndex, InputStream inputStream, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setBinaryStream(parameterIndex, inputStream, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setCharacterStream(int parameterIndex, Reader reader, long length) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setCharacterStream(parameterIndex, reader, length);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setAsciiStream(int parameterIndex, InputStream inputStream) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setAsciiStream(parameterIndex, inputStream);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setBinaryStream(int parameterIndex, InputStream inputStream) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setBinaryStream(parameterIndex, inputStream);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setCharacterStream(parameterIndex, reader);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNCharacterStream(int parameterIndex, Reader reader) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNCharacterStream(parameterIndex, reader);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setClob(int parameterIndex, Reader reader) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setClob(parameterIndex, reader);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setBlob(parameterIndex, inputStream);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    public void setNClob(int parameterIndex, Reader reader) throws SQLException {
+        checkOpen();
+        try {
+            _stmt.setNClob(parameterIndex, reader);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+/* JDBC_4_ANT_KEY_END */
 }

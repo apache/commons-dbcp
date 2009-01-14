@@ -25,6 +25,16 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Map;
+/* JDBC_4_ANT_KEY_BEGIN */
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.NClob;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLXML;
+import java.sql.Struct;
+import java.util.Properties;
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A dummy {@link Connection}, for testing purposes.
@@ -274,6 +284,59 @@ public class TesterConnection implements Connection {
         throws SQLException {
         return prepareStatement(sql);
     }
-
 /* JDBC_3_ANT_KEY_END */
+/* JDBC_4_ANT_KEY_BEGIN */
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Blob createBlob() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Clob createClob() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public NClob createNClob() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public SQLXML createSQLXML() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public boolean isValid(int timeout) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+        throw new SQLClientInfoException();
+    }
+
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        throw new SQLClientInfoException();
+    }
+
+    public Properties getClientInfo() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    public String getClientInfo(String name) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+/* JDBC_4_ANT_KEY_END */
 }
