@@ -20,7 +20,6 @@ package org.apache.commons.dbcp.managed;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.dbcp.SQLNestedException;
 
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
@@ -110,7 +109,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             String message = "Cannot load XA data source class '" + xaDataSource + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw new SQLNestedException(message, t);
+            throw (SQLException) new SQLException(message).initCause(t);
         }
 
         // Create the xa data source instance
@@ -121,7 +120,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             String message = "Cannot create XA data source of class '" + xaDataSource + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw new SQLNestedException(message, t);
+            throw (SQLException) new SQLException(message).initCause(t);
         }
 
         // finally, create the XAConectionFactory using the XA data source

@@ -30,7 +30,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
 
@@ -156,7 +155,7 @@ class CPDSConnectionFactory
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                throw new SQLNestedException("Cannot set the pool on this factory", e);
+                throw (SQLException) new SQLException("Cannot set the pool on this factory").initCause(e);
             }
         }
         _pool = pool;

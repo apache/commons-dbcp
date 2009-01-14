@@ -34,7 +34,6 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
@@ -679,7 +678,7 @@ public abstract class InstanceKeyDataSource
             info = getPooledConnectionAndInfo(username, password);
         } catch (NoSuchElementException e) {
             closeDueToException(info);
-            throw new SQLNestedException("Cannot borrow connection from pool", e);
+            throw (SQLException) new SQLException("Cannot borrow connection from pool").initCause(e);
         } catch (RuntimeException e) {
             closeDueToException(info);
             throw e;
@@ -688,7 +687,7 @@ public abstract class InstanceKeyDataSource
             throw e;
         } catch (Exception e) {
             closeDueToException(info);
-            throw new SQLNestedException("Cannot borrow connection from pool", e);
+            throw (SQLException) new SQLException("Cannot borrow connection from pool").initCause(e);
         }
         
         if (!(null == password ? null == info.getPassword() 
