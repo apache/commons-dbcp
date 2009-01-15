@@ -152,6 +152,10 @@ public class ManagedConnection extends DelegatingConnection {
         }
     }
 
+    /**
+     * Delegates to {@link ManagedConnection#transactionComplete()} 
+     * for transaction completion events. 
+     */
     protected class CompletionListener implements TransactionContextListener {
         public void afterCompletion(TransactionContext completedContext, boolean commited) {
             if (completedContext == transactionContext) {
