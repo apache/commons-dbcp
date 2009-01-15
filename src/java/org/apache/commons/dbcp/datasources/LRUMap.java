@@ -175,7 +175,7 @@ class LRUMap extends SequencedHashMap implements Externalizable {
     public void writeExternal( ObjectOutput out ) throws IOException {
         out.writeInt( maximumSize );
         out.writeInt( size() );
-        for( Iterator iterator = keySet().iterator(); iterator.hasNext(); ) {
+        for( Iterator iterator = keySet().iterator(); iterator.hasNext();) {
             Object key = iterator.next();
             out.writeObject( key );
             // be sure to call super.get(key), or you're likely to 

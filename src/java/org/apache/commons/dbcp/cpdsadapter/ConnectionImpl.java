@@ -35,7 +35,6 @@ import java.sql.SQLClientInfoException;
 import java.sql.SQLXML;
 import java.sql.Struct;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Properties;
 /* JDBC_4_ANT_KEY_END */
 
