@@ -70,7 +70,7 @@ class PooledConnectionImpl
     /**
      * StatementEventListeners
      */
-    private Vector statementEventListeners;
+    private Vector statementEventListeners = new Vector();
 
     /**
      * flag set to true, once close() is called.
