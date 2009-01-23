@@ -1233,7 +1233,7 @@ public class BasicDataSource implements DataSource {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw (SQLException) new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")").initCause(e);
+            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
 
         // Create and return the pooling data source to manage the connections
@@ -1244,7 +1244,7 @@ public class BasicDataSource implements DataSource {
                 connectionPool.addObject();
             }
         } catch (Exception e) {
-            throw (SQLException) new SQLException("Error preloading the connection pool").initCause(e);
+            throw new SQLNestedException("Error preloading the connection pool", e);
         }
         
         return dataSource;
@@ -1264,7 +1264,7 @@ public class BasicDataSource implements DataSource {
                     driverClassName + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
-                throw (SQLException) new SQLException(message).initCause(t);
+                throw new SQLNestedException(message, t);
             }
         }
 
@@ -1278,7 +1278,7 @@ public class BasicDataSource implements DataSource {
                 "' for connect URL '" + url + "'";
             logWriter.println(message);
             t.printStackTrace(logWriter);
-            throw (SQLException) new SQLException(message).initCause(t);
+            throw new SQLNestedException(message, t);
         }
 
         // Can't test without a validationQuery
