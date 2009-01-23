@@ -32,6 +32,7 @@ import javax.sql.StatementEventListener;
 
 import org.apache.commons.dbcp.DelegatingConnection;
 import org.apache.commons.dbcp.DelegatingPreparedStatement;
+import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
@@ -137,7 +138,7 @@ class PooledConnectionImpl
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw (SQLException) new SQLException("Cannot close connection (return to pool failed)").initCause(e);
+            throw new SQLNestedException("Cannot close connection (return to pool failed)", e);
         } finally {
             try {
                 connection.close();
@@ -237,7 +238,7 @@ class PooledConnectionImpl
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                throw (SQLException) new SQLException("Borrow prepareStatement from pool failed").initCause(e);
+                throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
             }
         }
     }
@@ -258,7 +259,7 @@ class PooledConnectionImpl
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                throw (SQLException) new SQLException("Borrow prepareStatement from pool failed").initCause(e);
+                throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
             }
         }
     }

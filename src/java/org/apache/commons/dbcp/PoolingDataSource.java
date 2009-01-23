@@ -111,11 +111,11 @@ public class PoolingDataSource implements DataSource {
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
-            throw (SQLException) new SQLException("Cannot get a connection, pool error " + e.getMessage()).initCause(e);
+            throw new SQLNestedException("Cannot get a connection, pool error " + e.getMessage(), e);
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw (SQLException) new SQLException("Cannot get a connection, general error").initCause(e);
+            throw new SQLNestedException("Cannot get a connection, general error", e);
         }
     }
 

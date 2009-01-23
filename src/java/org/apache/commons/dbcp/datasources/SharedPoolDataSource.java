@@ -31,6 +31,7 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.dbcp.SQLNestedException;
 
 /**
  * A pooling <code>DataSource</code> appropriate for deployment within
@@ -157,7 +158,7 @@ public class SharedPoolDataSource
             try {
                 registerPool(username, password);
             } catch (NamingException e) {
-                throw (SQLException) new SQLException("RegisterPool failed").initCause(e);
+                throw new SQLNestedException("RegisterPool failed", e);
             }
         }
 
@@ -170,12 +171,12 @@ public class SharedPoolDataSource
             if ((userKeys != null) && (userKeys.containsKey(username))) {
                 userKeys.remove(username);
             }
-            throw (SQLException) new SQLException(
-                "Could not retrieve connection info from pool").initCause(ex);
+            throw new SQLNestedException(
+                "Could not retrieve connection info from pool", ex);
         }
         catch (Exception e) {
-            throw (SQLException) new SQLException(
-                "Could not retrieve connection info from pool").initCause(e);
+            throw new SQLNestedException(
+                "Could not retrieve connection info from pool", e);
         }
         return info;
     }
