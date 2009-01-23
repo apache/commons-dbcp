@@ -32,6 +32,7 @@ import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.dbcp.SQLNestedException;
 
 /**
  * <p>
@@ -372,7 +373,7 @@ public class PerUserPoolDataSource
                 registerPool(username, password);
                 pool = pools.get(key);
             } catch (NamingException e) {
-                throw (SQLException) new SQLException("RegisterPool failed").initCause(e);
+                throw new SQLNestedException("RegisterPool failed", e);
             }
         }
 
@@ -381,8 +382,8 @@ public class PerUserPoolDataSource
             info = (PooledConnectionAndInfo)((ObjectPool) pool).borrowObject();
         }
         catch (Exception e) {
-            throw (SQLException) new SQLException(
-                "Could not retrieve connection info from pool").initCause(e);
+            throw new SQLNestedException(
+                "Could not retrieve connection info from pool", e);
         }
         
         return info;
