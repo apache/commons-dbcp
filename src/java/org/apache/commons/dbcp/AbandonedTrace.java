@@ -44,15 +44,15 @@ public class AbandonedTrace {
     /** DBCP AbandonedConfig */
     private AbandonedConfig config = null;
     /**  Parent object */
-    private AbandonedTrace parent;
+    private volatile AbandonedTrace parent;
     /** A stack trace of the code that created me (if in debug mode) */
-    private Exception createdBy;
+    private volatile Exception createdBy;
     /** Time created */
-    private long createdTime;
+    private volatile long createdTime;
     /** A list of objects created by children of this object */
-    private List trace = new ArrayList();
+    private final List trace = new ArrayList();
     /** Last time this connection was used */
-    private long lastUsed = 0;
+    private volatile long lastUsed = 0;
 
     /**
      * Create a new AbandonedTrace without config and
