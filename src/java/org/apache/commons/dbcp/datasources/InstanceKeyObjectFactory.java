@@ -171,8 +171,8 @@ abstract class InstanceKeyObjectFactory
 
         ra = ref.get("testOnBorrow");
         if (ra != null && ra.getContent() != null) {
-            ikds.setTestOnBorrow(
-                Boolean.getBoolean(ra.getContent().toString()));
+            ikds.setTestOnBorrow(Boolean.valueOf(
+                ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("testOnReturn");
