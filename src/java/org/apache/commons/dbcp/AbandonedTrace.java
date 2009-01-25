@@ -200,7 +200,7 @@ public class AbandonedTrace {
     }
 
     /**
-     * If logAbandoned=true, print a stack trace of the code that
+     * Prints a stack trace of the code that
      * created this object.
      */
     public void printStackTrace() {
