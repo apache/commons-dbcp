@@ -42,6 +42,16 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="psteitz" type="fix" issue="DBCP-273" due-to="Mark Lin">
+        Fixed errors handling boolean-valued Reference properties in 
+        InstanceKeyObjectFactory, DriverAdapterCPDS that were causing 
+        testOnBorrow and poolPreparedStatements properties to be incorrectly
+        set when creating objects from javax.naming.Reference instances.
+      </action>
+      <action dev="psteitz" type="fix" issue="DBCP-271" due-to="Sebastian Bazley">
+        Made private instance fields of AbandonedTrace volatile (parent,
+        createdBy, lastUsed, createdTime) or final (trace).
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-270" due-to="Filip Hanik">
         Narrowed synchronization in AbandonedTrace to resolve an Evictor deadlock.
       </action>
