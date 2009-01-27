@@ -49,6 +49,8 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
      */
     protected Object _key = null;
 
+    private volatile boolean batchAdded = false;
+
     /**
      * Constructor
      * @param stmt my underlying {@link PreparedStatement}
@@ -66,6 +68,24 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
         if(_conn != null) {
             _conn.removeTrace(this);
         }
+    }
+
+    /**
+     * Add batch.
+     */
+    @Override
+    public void addBatch() throws SQLException {
+        super.addBatch();
+        batchAdded = true;
+    }
+
+    /**
+     * Clear Batch.
+     */
+    @Override
+    public void clearBatch() throws SQLException {
+        batchAdded = false;
+        super.clearBatch();
     }
 
     /**
@@ -111,6 +131,9 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
                 set[i].close();
             }
             clearTrace();
+        }
+        if (batchAdded) {
+            clearBatch();
         }
         
         super.passivate();
