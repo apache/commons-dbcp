@@ -43,8 +43,6 @@ public class AbandonedTrace {
 
     /** DBCP AbandonedConfig */
     private AbandonedConfig config = null;
-    /**  Parent object */
-    private volatile AbandonedTrace parent;
     /** A stack trace of the code that created me (if in debug mode) */
     private volatile Exception createdBy;
     /** Time created */
@@ -59,7 +57,7 @@ public class AbandonedTrace {
      * without doing abandoned tracing.
      */
     public AbandonedTrace() {
-        init(parent);
+        init(null);
     }
 
     /**
@@ -69,7 +67,7 @@ public class AbandonedTrace {
      */
     public AbandonedTrace(AbandonedConfig config) {
         this.config = config;
-        init(parent);
+        init(null);
     }
 
     /**
@@ -116,9 +114,6 @@ public class AbandonedTrace {
      * @return long time in ms
      */
     protected long getLastUsed() {
-        if (parent != null) {     
-           return parent.getLastUsed();  
-        }
         return lastUsed;
     }
 
@@ -127,11 +122,7 @@ public class AbandonedTrace {
      * current time in ms.
      */
     protected void setLastUsed() {
-        if (parent != null) {
-           parent.setLastUsed();
-        } else {
-           lastUsed = System.currentTimeMillis();
-        }
+        lastUsed = System.currentTimeMillis();
     }
 
     /**
@@ -140,11 +131,7 @@ public class AbandonedTrace {
      * @param time time in ms
      */
     protected void setLastUsed(long time) {
-        if (parent != null) {
-           parent.setLastUsed(time);
-        } else {   
-           lastUsed = time;
-        }
+        lastUsed = time;
     }
 
     /**
@@ -159,9 +146,6 @@ public class AbandonedTrace {
         if (config.getLogAbandoned()) {
             createdBy = new Exception();
             createdTime = System.currentTimeMillis();
-        }
-        if (parent != null) {                  
-            parent.addTrace(this);
         }
     }
 
