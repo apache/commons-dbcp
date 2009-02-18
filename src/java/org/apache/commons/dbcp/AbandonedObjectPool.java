@@ -56,10 +56,6 @@ public class AbandonedObjectPool extends GenericObjectPool {
                                AbandonedConfig config) {
         super(factory);
         this.config = config;
-        System.out.println("AbandonedObjectPool is used (" + this + ")");
-        System.out.println("   LogAbandoned: " + config.getLogAbandoned());
-        System.out.println("   RemoveAbandoned: " + config.getRemoveAbandoned());
-        System.out.println("   RemoveAbandonedTimeout: " + config.getRemoveAbandonedTimeout());
     }
 
     /**
