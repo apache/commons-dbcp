@@ -17,6 +17,8 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.PrintWriter;
+
 /**
  * Configuration settings for handling abandoned db connections.
  *                                                            
@@ -130,4 +132,29 @@ public class AbandonedConfig {
         this.logAbandoned = logAbandoned;
     }
 
+    /**
+     * PrintWriter to use to log information on abandoned objects.
+     */
+    private PrintWriter logWriter = new PrintWriter(System.out);
+    
+    /**
+     * Returns the log writer being used by this configuration to log
+     * information on abandoned objects. If not set, a PrintWriter based on
+     * System.out is used.
+     *
+     * @return log writer in use
+     */
+    public PrintWriter getLogWriter() {
+        return logWriter;
+    }
+    
+    /**
+     * Sets the log writer to be used by this configuration to log
+     * information on abandoned objects.
+     * 
+     * @param logWriter The new log writer
+     */
+    public void setLogWriter(PrintWriter logWriter) {
+        this.logWriter = logWriter;
+    }
 }
