@@ -42,6 +42,11 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * @version $Revision$ $Date$
  */
 public class BasicDataSource implements DataSource {
+    
+    static {
+        // Attempt to prevent deadlocks - see DBCP - 272
+        DriverManager.getDrivers();
+    }
 
     // ------------------------------------------------------------- Properties
 
