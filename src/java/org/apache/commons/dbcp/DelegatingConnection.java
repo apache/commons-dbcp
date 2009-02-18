@@ -519,11 +519,17 @@ public class DelegatingConnection extends AbandonedTrace
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return _conn.isWrapperFor(iface);
+        return iface.isAssignableFrom(getClass()) || _conn.isWrapperFor(iface);
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return _conn.unwrap(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        } else if (iface.isAssignableFrom(_conn.getClass())) {
+            return iface.cast(_conn);
+        } else {
+            return _conn.unwrap(iface);
+        }
     }
 
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {

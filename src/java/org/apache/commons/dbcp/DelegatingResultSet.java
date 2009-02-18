@@ -594,11 +594,17 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return _res.isWrapperFor(iface);
+        return iface.isAssignableFrom(getClass()) || _res.isWrapperFor(iface);
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return _res.unwrap(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        } else if (iface.isAssignableFrom(_res.getClass())) {
+            return iface.cast(_res);
+        } else {
+            return _res.unwrap(iface);
+        }
     }
 
     public RowId getRowId(int columnIndex) throws SQLException {
