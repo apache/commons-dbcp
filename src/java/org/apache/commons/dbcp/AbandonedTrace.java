@@ -188,9 +188,9 @@ public class AbandonedTrace {
      * created this object.
      */
     public void printStackTrace() {
-        if (createdBy != null) {
-            System.out.println(format.format(new Date(createdTime)));
-            createdBy.printStackTrace(System.out);
+        if (createdBy != null && config != null) {
+            config.getLogWriter().println(format.format(new Date(createdTime)));
+            createdBy.printStackTrace(config.getLogWriter());
         }
         synchronized(this.trace) {
             Iterator it = this.trace.iterator();
