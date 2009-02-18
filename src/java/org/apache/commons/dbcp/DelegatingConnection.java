@@ -127,7 +127,7 @@ public class DelegatingConnection extends AbandonedTrace
                 }
             }
             catch (SQLException ex) {
-                s = null;
+                // Ignore
             }
         }
         
