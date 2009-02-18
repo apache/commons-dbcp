@@ -118,6 +118,11 @@ public class DriverAdapterCPDS
 
     private boolean getConnectionCalled = false;
 
+    static {
+        // Attempt to prevent deadlocks - see DBCP - 272
+        DriverManager.getDrivers();
+    }
+
     /**
      * Default no-arg constructor for Serialization
      */
