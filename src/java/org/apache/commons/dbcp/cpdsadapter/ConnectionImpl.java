@@ -474,11 +474,18 @@ class ConnectionImpl implements Connection {
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return connection.isWrapperFor(iface);
+        return iface.isAssignableFrom(getClass()) ||
+                connection.isWrapperFor(iface);
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return connection.unwrap(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        } else if (iface.isAssignableFrom(connection.getClass())) {
+            return iface.cast(connection);
+        } else {
+            return connection.unwrap(iface);
+        }
     }
 
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
