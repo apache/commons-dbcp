@@ -326,8 +326,15 @@ public class DelegatingConnection extends AbandonedTrace
     public String getCatalog() throws SQLException
     { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
     
-    public DatabaseMetaData getMetaData() throws SQLException
-    { checkOpen(); try { return _conn.getMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+    public DatabaseMetaData getMetaData() throws SQLException {
+        checkOpen();
+        try {
+            return new DelegatingDatabaseMetaData(this, _conn.getMetaData());
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
     
     public int getTransactionIsolation() throws SQLException
     { checkOpen(); try { return _conn.getTransactionIsolation(); } catch (SQLException e) { handleException(e); return -1; } }

@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.io.Reader;
 import java.sql.Statement;
 import java.util.Map;
+import java.sql.Connection;
 import java.sql.Ref;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -65,6 +66,9 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     /** The Statement that created me, if any. **/
     private Statement _stmt;
 
+    /** The Connection that created me, if any. **/
+    private Connection _conn;
+
     /**
      * Create a wrapper for the ResultSet which traces this
      * ResultSet to the Statement which created it and the
@@ -79,11 +83,33 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         this._res = res;
     }
     
+    /**
+     * Create a wrapper for the ResultSet which traces this
+     * ResultSet to the Connection which created it (via, for
+     * example DatabaseMetadata, and the code which created it.
+     *
+     * @param conn Connection which created this ResultSet
+     * @param res ResultSet to wrap
+     */
+    public DelegatingResultSet(Connection conn, ResultSet res) {
+        super((AbandonedTrace)conn);
+        this._conn = conn;
+        this._res = res;
+    }
+    
     public static ResultSet wrapResultSet(Statement stmt, ResultSet rset) {
         if(null == rset) {
             return null;
         } else {
             return new DelegatingResultSet(stmt,rset);
+        }
+    }
+
+    public static ResultSet wrapResultSet(Connection conn, ResultSet rset) {
+        if(null == rset) {
+            return null;
+        } else {
+            return new DelegatingResultSet(conn,rset);
         }
     }
 
@@ -154,6 +180,10 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
                 ((AbandonedTrace)_stmt).removeTrace(this);
                 _stmt = null;
             }
+            if(_conn != null) {
+                ((AbandonedTrace)_conn).removeTrace(this);
+                _conn = null;
+            }
             _res.close();
         }
         catch (SQLException e) {
@@ -164,6 +194,9 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     protected void handleException(SQLException e) throws SQLException {
         if ((_stmt != null) && (_stmt instanceof DelegatingStatement)) {
             ((DelegatingStatement)_stmt).handleException(e);
+        }
+        else if ((_conn != null) && (_conn instanceof DelegatingConnection)) {
+            ((DelegatingConnection)_conn).handleException(e);
         }
         else {
             throw e;
