@@ -107,7 +107,7 @@ public class DelegatingConnection extends AbandonedTrace
     public String toString() {
         String s = null;
         
-        Connection c = this.getInnermostDelegate();
+        Connection c = this.getInnermostDelegateInternal();
         if (c != null) {
             try {
                 if (c.isClosed()) {
@@ -143,6 +143,13 @@ public class DelegatingConnection extends AbandonedTrace
      * @return my underlying {@link Connection}.
      */
     public Connection getDelegate() {
+        return getDelegateInternal();
+    }
+    
+    /**
+     * Should be final but can't be for compatability with previous releases.
+     */
+    protected Connection getDelegateInternal() {
         return _conn;
     }
     
@@ -154,7 +161,7 @@ public class DelegatingConnection extends AbandonedTrace
      * @since 1.2.2
      */
     public boolean innermostDelegateEquals(Connection c) {
-        Connection innerCon = getInnermostDelegate();
+        Connection innerCon = getInnermostDelegateInternal();
         if (innerCon == null) {
             return c == null;
         } else {
@@ -169,7 +176,7 @@ public class DelegatingConnection extends AbandonedTrace
         if (obj == this) {
             return true;
         }
-        Connection delegate = getInnermostDelegate();
+        Connection delegate = getInnermostDelegateInternal();
         if (delegate == null) {
             return false;
         }
@@ -183,7 +190,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     public int hashCode() {
-        Object obj = getInnermostDelegate();
+        Object obj = getInnermostDelegateInternal();
         if (obj == null) {
             return 0;
         }
@@ -207,16 +214,20 @@ public class DelegatingConnection extends AbandonedTrace
      * sure to obtain a "genuine" {@link Connection}.
      */
     public Connection getInnermostDelegate() {
+        return getInnermostDelegateInternal();
+    }
+
+    protected final Connection getInnermostDelegateInternal() {
         Connection c = _conn;
         while(c != null && c instanceof DelegatingConnection) {
-            c = ((DelegatingConnection)c).getDelegate();
+            c = ((DelegatingConnection)c).getDelegateInternal();
             if(this == c) {
                 return null;
             }
         }
         return c;
     }
-
+    
     /** Sets my delegate. */
     public void setDelegate(Connection c) {
         _conn = c;

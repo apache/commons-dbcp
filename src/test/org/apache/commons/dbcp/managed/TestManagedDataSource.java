@@ -126,6 +126,28 @@ public class TestManagedDataSource extends TestConnectionPool {
         connectionB.close();
     }
 
+    public void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
+        // Get a maximal set of connections from the pool
+        Connection[] c = new Connection[getMaxActive()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = newConnection();
+        }
+        // Close the delegate of one wrapper in the pool
+        ((DelegatingConnection) c[0]).getDelegate().close();
+
+        // Disable access for the new connection
+        ds.setAccessToUnderlyingConnectionAllowed(false);
+        // Grab a new connection - should get c[0]'s closed connection
+        // so should be delegate-equivalent, so equal
+        Connection con = newConnection();
+        assertTrue(c[0].equals(con));
+        assertTrue(con.equals(c[0]));
+        for (int i = 0; i < c.length; i++) {
+            c[i].close();
+        }
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+    }
+
     public void testManagedConnectionEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxActive()];
@@ -144,6 +166,7 @@ public class TestManagedDataSource extends TestConnectionPool {
             c[i].close();
         }
     }
+
 
     /*
     * JIRA: DBCP-198
