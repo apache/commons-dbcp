@@ -251,17 +251,9 @@ public class ManagedConnection extends DelegatingConnection {
         }
     }
 
-    /**
-     * Gets the actual delegate without checking the isAccessToUnderlyingConnectionAllowed() flag.  This method is for internal use only.
-     * @return the delegate of this connection
-     */
-    protected Connection getDelegateInternal() {
-        return super.getDelegate();
-    }
-
     public Connection getInnermostDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
-            return super.getInnermostDelegate();
+            return super.getInnermostDelegateInternal();
         } else {
             return null;
         }
