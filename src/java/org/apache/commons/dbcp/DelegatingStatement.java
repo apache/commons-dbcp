@@ -355,16 +355,16 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(getClass()) || _conn.isWrapperFor(iface);
+        return iface.isAssignableFrom(getClass()) || _stmt.isWrapperFor(iface);
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
-        } else if (iface.isAssignableFrom(_conn.getClass())) {
-            return iface.cast(_conn);
+        } else if (iface.isAssignableFrom(_stmt.getClass())) {
+            return iface.cast(_stmt);
         } else {
-            return _conn.unwrap(iface);
+            return _stmt.unwrap(iface);
         }
     }
 
