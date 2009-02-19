@@ -21,6 +21,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.commons.dbcp.datasources.TestFactory;
+import org.apache.commons.dbcp.datasources.TestInstanceKeyDataSource;
+import org.apache.commons.dbcp.datasources.TestKeyedCPDSConnectionFactory;
 import org.apache.commons.dbcp.datasources.TestPerUserPoolDataSource;
 import org.apache.commons.dbcp.datasources.TestSharedPoolDataSource;
 import org.apache.commons.dbcp.managed.TestBasicManagedDataSource;
@@ -39,26 +41,34 @@ public class TestAll extends TestCase {
 
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(TestAbandonedObjectPool.suite());
-        suite.addTest(TestManual.suite());
-        suite.addTest(TestJOCLed.suite());
-        suite.addTest(TestBasicDataSourceFactory.suite());
-        suite.addTest(TestBasicDataSource.suite());
+        // o.a.c.dbcp
         suite.addTest(TestAbandonedBasicDataSource.suite());
-        suite.addTest(TestPStmtPoolingBasicDataSource.suite());
+        suite.addTest(TestAbandonedObjectPool.suite());
+        suite.addTest(TestBasicDataSource.suite());
+        suite.addTest(TestBasicDataSourceFactory.suite());
+        // TestConnectionPool is abstract
         suite.addTest(TestDelegatingConnection.suite());
-        suite.addTest(TestDelegatingStatement.suite());
         suite.addTest(TestDelegatingPreparedStatement.suite());
-        suite.addTest(TestPoolableConnection.suite());
-        suite.addTest(TestSharedPoolDataSource.suite());
-        suite.addTest(TestPerUserPoolDataSource.suite());
-        suite.addTest(TestFactory.suite());
-        suite.addTest(TestJOCLContentHandler.suite());
-        suite.addTest(TestPoolingDataSource.suite());
+        suite.addTest(TestDelegatingStatement.suite());
         suite.addTest(TestJndi.suite());
+        suite.addTest(TestJOCLed.suite());
+        suite.addTest(TestManual.suite());
+        suite.addTest(TestPoolableConnection.suite());
+        suite.addTest(TestPoolingDataSource.suite());
+        suite.addTest(TestPStmtPooling.suite());
+        suite.addTest(TestPStmtPoolingBasicDataSource.suite());
+        // o.a.c.dbcp.datasources
+        suite.addTest(TestFactory.suite());
+        suite.addTest(TestInstanceKeyDataSource.suite());
+        suite.addTest(TestKeyedCPDSConnectionFactory.suite());
+        suite.addTest(TestPerUserPoolDataSource.suite());
+        suite.addTest(TestSharedPoolDataSource.suite());
+        // o.a.c.dbcp.managed
         suite.addTest(TestBasicManagedDataSource.suite());
         suite.addTest(TestManagedDataSource.suite());
         suite.addTest(TestManagedDataSourceInTx.suite());
+        // o.a.c.jocl
+        suite.addTest(TestJOCLContentHandler.suite());
         return suite;
     }
 
