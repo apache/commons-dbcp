@@ -73,7 +73,6 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
     /**
      * Add batch.
      */
-    @Override
     public void addBatch() throws SQLException {
         super.addBatch();
         batchAdded = true;
@@ -82,7 +81,6 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement imple
     /**
      * Clear Batch.
      */
-    @Override
     public void clearBatch() throws SQLException {
         batchAdded = false;
         super.clearBatch();
