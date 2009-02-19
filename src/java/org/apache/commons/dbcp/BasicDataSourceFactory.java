@@ -324,7 +324,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         // DBCP-215
         // Trick to make sure that initialSize connections are created
-        dataSource.getLogWriter();
+        if (dataSource.initialSize > 0) {
+            dataSource.getLogWriter();
+        }
 
         // Return the configured DataSource instance
         return dataSource;
