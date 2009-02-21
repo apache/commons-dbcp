@@ -42,6 +42,33 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="fix" issue="DBCP-215">
+        Modified BasicDataSourceFactory to complete initialization of the pool
+        by creating initialSize connections rather than leaving this to lazy
+        initialization when the pool is used.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-253">
+        Eliminated masked _stmt field in descendents of DelegatingStatement.
+       </action>
+      <action dev="markt" type="fix" issue="DBCP-191">
+        Modified DBCP sources to support compilation under JDK 1.4-1.6
+        using Ant flags to do conditional compilation.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-272">
+        Added a static initializer to BasicDatasource that calls
+        DriverManager.getDrivers() to force initialization before we ever do
+        anything that might use Class.forName() to load (and register) a JDBC
+        driver.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-4">
+        Eliminated direct System.out calls in AbandonedTrace.
+      </action>
+      <action dev="niallp" type="fix" issue="DBCP-264">
+        Modified DelegatingStatment close to clear open batches.
+      </action>
+      <action dev="psteitz" type="fix" issue="DBCP-255">
+        Eliminated unused private "parent" field in AbandonedTrace.
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-273" due-to="Mark Lin">
         Fixed errors handling boolean-valued Reference properties in 
         InstanceKeyObjectFactory, DriverAdapterCPDS that were causing 
