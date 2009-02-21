@@ -121,6 +121,12 @@
       <organization></organization>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <name>Mark Thomas</name>
+      <id>markt</id>
+      <email>markt@apache.org</email>
+      <organization>Apache Software Foundation</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>
