@@ -42,6 +42,17 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="fix">
+        Add some test cases that were missing from the TestAll test suite.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-235">
+        Refactor DelegatingConnection and ManagedConnection enable overridden
+        equals() and hashcode() to work correctly.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-265">
+        Add a DelegatingDatabaseMetaData to track ResultSets returned from
+        DatabaseMetaData objects.
+      </action>
       <action dev="markt" type="fix" issue="DBCP-215">
         Modified BasicDataSourceFactory to complete initialization of the pool
         by creating initialSize connections rather than leaving this to lazy
@@ -50,7 +61,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" type="fix" issue="DBCP-253">
         Eliminated masked _stmt field in descendents of DelegatingStatement.
        </action>
-      <action dev="markt" type="fix" issue="DBCP-191">
+      <action dev="markt" type="fix" issue="DBCP-191" due-to="Michael Heuer & J. David Beutel" >
         Modified DBCP sources to support compilation under JDK 1.4-1.6
         using Ant flags to do conditional compilation.
       </action>
