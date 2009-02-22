@@ -160,6 +160,15 @@ testWhileIdle
    </td>
 </tr>
 </table>
+<p>
+<img src="images/icon_warning_sml.gif"/>
+<strong>NOTE</strong>: If maxIdle is set too low on heavily loaded systems it is
+possible you will see connections being closed and almost immediately new
+connections being opened. This is a result of the active threads momentarily
+closing connections faster than they are opening them, causing the number of
+idle connections to rise above maxIdle. The best value for maxIdle for heavily
+loaded system will vary but the default is a good starting point.
+</p>
 
 
 <table>
