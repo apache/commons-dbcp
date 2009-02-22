@@ -41,6 +41,9 @@ public class TestAll extends TestCase {
 
     public static Test suite() {
         TestSuite suite = new TestSuite();
+        // The test *must* execute first since it tests the initialisation
+        // of DriverManager
+        suite.addTest(TestDriverManagerConnectionFactory.suite());
         // o.a.c.dbcp
         suite.addTest(TestAbandonedBasicDataSource.suite());
         suite.addTest(TestAbandonedObjectPool.suite());
