@@ -252,6 +252,12 @@ public class BasicDataSource implements DataSource {
     /**
      * The maximum number of connections that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
+     * If maxIdle is set too low on heavily loaded systems it is possible you
+     * will see connections being closed and almost immediately new connections
+     * being opened. This is a result of the active threads momentarily closing
+     * connections faster than they are opening them, causing the number of idle
+     * connections to rise above maxIdle. The best value for maxIdle for heavily
+     * loaded system will vary but the default is a good starting point.
      */
     protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
 
