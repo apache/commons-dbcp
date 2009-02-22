@@ -42,6 +42,12 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="fix">
+        PoolableConnectionFactory.makeObject() is no longer synchronized. This
+        provides improved response times when load spikes at the cost of a
+        faster rise in database server load. This change was made as a partial
+        fix for DBCP-212 although it does not fully address that issue. 
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-242">
         Reverted DelegatingConnection close to 1.2.2 version to ensure
         open statements are closed before the underlying connection is closed.
