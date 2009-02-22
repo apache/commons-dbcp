@@ -61,11 +61,16 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("username", "username");
         properties.setProperty("password", "password");
         properties.setProperty("validationQuery", "SELECT DUMMY FROM DUAL");
+        properties.setProperty("initConnectionSqls", "SELECT 1;SELECT 2");
 
         BasicDataSource ds = (BasicDataSource) BasicDataSourceFactory.createDataSource(properties);
         
         assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
         assertEquals(10, ds.getMaxActive());
         assertEquals(true, ds.getDefaultAutoCommit());
+
+        assertEquals(2, ds.connectionInitSqls.size());
+        assertEquals("SELECT 1", ds.connectionInitSqls.get(0));
+        assertEquals("SELECT 2", ds.connectionInitSqls.get(1));
     }
 }

@@ -47,6 +47,10 @@
       <boolean value="true"/>
    </object>
    <string value="SELECT COUNT(*) FROM DUAL"/>
+   <collection>
+     <string value="ALTER SESSION SET NLS_COMP=ANSI"/>
+     <string value="ALTER SESSION SET NLS_SORT=BINARY"/>
+   </collection>
    <boolean value="false"/>
    <boolean value="true"/>
 </object>

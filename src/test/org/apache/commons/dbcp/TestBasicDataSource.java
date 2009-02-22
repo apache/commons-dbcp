@@ -20,6 +20,7 @@ package org.apache.commons.dbcp;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -60,6 +61,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setUsername("username");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+        ds.setConnectionInitSqls(Arrays.asList(new String[] { "SELECT 1", "SELECT 2"}));
     }
 
     protected BasicDataSource createDataSource() throws Exception {
@@ -75,7 +77,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testClose() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
-        // active conneciton is held open when ds is closed
+        // active connection is held open when ds is closed
         Connection activeConnection = getConnection();
         Connection rawActiveConnection = ((DelegatingConnection) activeConnection).getInnermostDelegate();
         assertFalse(activeConnection.isClosed());
@@ -87,7 +89,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertFalse(idleConnection.isClosed());
         assertFalse(rawIdleConnection.isClosed());
 
-        // idle wrapper should be closed but raw conneciton should be open
+        // idle wrapper should be closed but raw connection should be open
         idleConnection.close();
         assertTrue(idleConnection.isClosed());
         assertFalse(rawIdleConnection.isClosed());
@@ -179,7 +181,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     public void testPooling() throws Exception {
-        // this also needs access to the undelying connection
+        // this also needs access to the underlying connection
         ds.setAccessToUnderlyingConnectionAllowed(true);
         super.testPooling();
     }    
@@ -223,6 +225,29 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testInvalidValidationQuery() {
         try {
             ds.setValidationQuery("invalid");
+            ds.getConnection();
+            fail("expected SQLException");
+        }
+        catch (SQLException e) {
+            if (e.toString().indexOf("invalid") < 0) {
+                fail("expected detailed error message");
+            }
+        }
+    }
+
+    public void testEmptyInitConnectionSql() throws Exception {
+        ds.setConnectionInitSqls(Arrays.asList(new String[]{"", "   "}));
+        assertNotNull(ds.getConnectionInitSqls());
+        assertEquals(0, ds.getConnectionInitSqls().size());
+
+        ds.setConnectionInitSqls(null);
+        assertNotNull(ds.getConnectionInitSqls());
+        assertEquals(0, ds.getConnectionInitSqls().size());
+    }
+
+    public void testInvalidConnectionInitSql() {
+        try {
+            ds.setConnectionInitSqls(Arrays.asList(new String[]{"SELECT 1","invalid"}));
             ds.getConnection();
             fail("expected SQLException");
         }

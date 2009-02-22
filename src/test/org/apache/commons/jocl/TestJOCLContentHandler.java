@@ -22,6 +22,13 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.SAXException;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * @version $Revision$ $Date$
@@ -46,7 +53,7 @@ public class TestJOCLContentHandler extends TestCase {
         jocl = new JOCLContentHandler();
     }
 
-    public void testPrimatives() throws Exception {
+    public void testPrimitives() throws Exception {
         jocl.startDocument();
         jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","jocl","jocl",new AttributesImpl());
         {
@@ -155,15 +162,96 @@ public class TestJOCLContentHandler extends TestCase {
             jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long");
         }
         jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+
+        // test array of 2 longs
+        {
+            AttributesImpl attr = new AttributesImpl();
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","array","array",attr);
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","12");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long");
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","34");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long");
+        }
+        jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+
+        // test collection of 2 Strings, one null
+        {
+            AttributesImpl attr = new AttributesImpl();
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","collection","collection",attr);
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","null","null","CDATA","true");
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","class","class","CDATA","java.lang.String");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","String #1");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","string","string",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","string","string");
+        }
+        jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+
+        // test list of 1 Date, one Long
+        {
+            AttributesImpl attr = new AttributesImpl();
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","list","list",attr);
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","class","class","CDATA","java.util.Date");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+        }
+        {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addAttribute("http://apache.org/xml/xmlns/jakarta/commons/jocl","value","value","CDATA","12");
+            jocl.startElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long",attr);
+            jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","long","long");
+        }
+        jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","object","object");
+
         jocl.endElement("http://apache.org/xml/xmlns/jakarta/commons/jocl","jocl","jocl");
         jocl.endDocument();
 
         assertEquals(String.class,jocl.getType(0));
         assertEquals(java.util.Date.class,jocl.getType(1));
         assertEquals(java.util.Date.class,jocl.getType(2));
+        assertTrue(jocl.getType(3).isArray());
+        assertEquals(Collection.class,jocl.getType(4));
+        assertEquals(List.class,jocl.getType(5));
 
         assertTrue(null == jocl.getValue(0));
         assertTrue(null != jocl.getValue(1));
         assertEquals(new java.util.Date(345L),jocl.getValue(2));
+
+        Object[] objects = (Object[])jocl.getValue(3);
+        assertEquals(new Long(12L), objects[0]);
+        assertEquals(new Long(34L), objects[1]);
+
+        Iterator iterator = ((Collection)jocl.getValue(4)).iterator();
+        assertNull(iterator.next());
+        assertEquals("String #1", iterator.next());
+
+        List list = (List) jocl.getValue(5);
+        assertEquals(java.util.Date.class,list.get(0).getClass());
+        assertEquals(new Long(12L),list.get(1));
+    }
+
+    public void testParse()
+        throws IOException, SAXException
+    {
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("testpool.jocl");
+        JOCLContentHandler jocl = JOCLContentHandler.parse(stream);
     }
 }

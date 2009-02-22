@@ -42,6 +42,11 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="psteitz" type="update" issue="DBCP-175" due-to="Jiri Melichna and Jerome Lacoste">
+        Added a connectionInitSqls configuration parameter to BasicDataSource
+        allowing the user to specify a collection of SQL statements to execute
+        one time when a physical database connection is first opened.
+      </action>
       <action dev="markt" type="fix">
         PoolableConnectionFactory.makeObject() is no longer synchronized. This
         provides improved response times when load spikes at the cost of a
@@ -71,7 +76,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" type="fix" issue="DBCP-253">
         Eliminated masked _stmt field in descendents of DelegatingStatement.
        </action>
-      <action dev="markt" type="fix" issue="DBCP-191" due-to="Michael Heuer & J. David Beutel" >
+      <action dev="markt" type="fix" issue="DBCP-191" due-to="Michael Heuer and J. David Beutel" >
         Modified DBCP sources to support compilation under JDK 1.4-1.6
         using Ant flags to do conditional compilation.
       </action>
