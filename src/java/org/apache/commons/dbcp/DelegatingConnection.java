@@ -238,11 +238,8 @@ public class DelegatingConnection extends AbandonedTrace
      * any Statements that were not explicitly closed.
      */
     public void close() throws SQLException {
-        try {
-            _conn.close();
-        } finally {
-            _closed = true;
-        }
+        passivate();
+        _conn.close();
     }
 
     protected void handleException(SQLException e) throws SQLException {
