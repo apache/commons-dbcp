@@ -22,6 +22,8 @@ import java.sql.Connection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.Collections;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -63,6 +65,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_URL = "url";
     private final static String PROP_USERNAME = "username";
     private final static String PROP_VALIDATIONQUERY = "validationQuery";
+    /**
+     * The property name for initConnectionSqls.
+     * The associated value String must be of the form [query;]*
+     * @since 1.3
+     */
+    private final static String PROP_INITCONNECTIONSQLS = "initConnectionSqls";
     private final static String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";
     private final static String PROP_REMOVEABANDONED = "removeAbandoned";
     private final static String PROP_REMOVEABANDONEDTIMEOUT = "removeAbandonedTimeout";
@@ -92,6 +100,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_URL,
         PROP_USERNAME,
         PROP_VALIDATIONQUERY,
+        PROP_INITCONNECTIONSQLS,
         PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED,
         PROP_REMOVEABANDONED,
         PROP_REMOVEABANDONEDTIMEOUT,
@@ -310,6 +319,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_MAXOPENPREPAREDSTATEMENTS);
         if (value != null) {
             dataSource.setMaxOpenPreparedStatements(Integer.parseInt(value));
+        }
+
+        value = properties.getProperty(PROP_INITCONNECTIONSQLS);
+        if (value != null) {
+            StringTokenizer tokenizer = new StringTokenizer(value, ";");
+            dataSource.setConnectionInitSqls(Collections.list(tokenizer));
         }
 
         value = properties.getProperty(PROP_CONNECTIONPROPERTIES);

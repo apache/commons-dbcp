@@ -19,6 +19,11 @@ package org.apache.commons.dbcp;
 
 import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Collections;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -801,6 +806,60 @@ public class BasicDataSource implements DataSource {
         }
         this.restartNeeded = true;
     }
+    
+    /**
+     * These SQL statements run once after a Connection is created.
+     * <p>
+     * This property can be used for example to run ALTER SESSION SET
+     * NLS_SORT=XCYECH in an Oracle Database only once after connection
+     * creation.
+     * </p>
+     * 
+     * @since 1.3
+     */
+    protected List connectionInitSqls;
+
+    /**
+     * Returns the list of SQL statements executed when a physical connection
+     * is first created. Returns an empty list if there are no initialization
+     * statements configured.
+     * 
+     * @return initialization SQL statements
+     * @since 1.3
+     */
+    public synchronized Collection getConnectionInitSqls() {
+        if (connectionInitSqls == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return connectionInitSqls;
+    }
+
+    /**
+     * Sets the list of SQL statements to be executed when a physical
+     * connection is first created.
+     * 
+     * @param connectionInitSqls
+     */
+    public synchronized void setConnectionInitSqls(Collection connectionInitSqls) {
+        this.connectionInitSqls = null;
+        if ((connectionInitSqls != null) && (connectionInitSqls.size() > 0)) {
+            for (Iterator iterator = connectionInitSqls.iterator();
+            iterator.hasNext();) {
+                Object o = iterator.next();
+                if (o != null) {
+                    String s = o.toString();
+                    if (s.trim().length() > 0) {
+                        if (this.connectionInitSqls == null) {
+                            this.connectionInitSqls = new ArrayList();
+                        }
+                        this.connectionInitSqls.add(s);
+                    }
+                }
+            }
+        }
+        this.restartNeeded = true;
+    }
+
 
     /** 
      * Controls access to the underlying connection.
@@ -1235,6 +1294,7 @@ public class BasicDataSource implements DataSource {
                                               connectionPool,
                                               statementPoolFactory,
                                               validationQuery,
+                                              connectionInitSqls,
                                               defaultReadOnly,
                                               defaultAutoCommit,
                                               defaultTransactionIsolation,

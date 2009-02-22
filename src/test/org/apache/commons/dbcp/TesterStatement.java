@@ -146,6 +146,9 @@ public class TesterStatement implements Statement {
 
     public boolean execute(String sql) throws SQLException {
         checkOpen();
+        if("invalid".equals(sql)) {
+            throw new SQLException("invalid query");
+        }
         return _executeResponse;
     }
 

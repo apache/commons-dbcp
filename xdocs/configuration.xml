@@ -241,6 +241,15 @@ one row.
       is eligable for eviction by the idle object evictor (if any).
    </td>
 </tr>
+  <tr>
+     <td>connectionInitSqls</td>
+     <td>null</td>
+     <td>
+  A Collection of SQL statements that will be used to initialize physical 
+  connections when they are first created.  These statements are executed
+  only once - when the configured connection factory creates the connection.
+     </td>
+  </tr>
 </table>
 
 <table>
