@@ -17,9 +17,7 @@
 
 package org.apache.commons.dbcp;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 import javax.sql.DataSource;
 
