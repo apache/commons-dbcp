@@ -294,7 +294,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultCatalog = defaultCatalog;
     }
 
-    public Object makeObject() throws Exception {
+    synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
