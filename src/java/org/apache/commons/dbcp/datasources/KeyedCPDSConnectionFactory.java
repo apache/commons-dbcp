@@ -92,7 +92,7 @@ class KeyedCPDSConnectionFactory
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnections
-     * @param pool the {@link ObjectPool} in which to pool those
+     * @param pool the {@link KeyedObjectPool} in which to pool those
      * {@link Connection}s
      * @param validationQuery a query to use to {@link #validateObject validate}
      * {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
@@ -108,8 +108,8 @@ class KeyedCPDSConnectionFactory
     }
 
     /**
-     * Sets the {@link ConnectionFactory} from which to obtain base {@link Connection}s.
-     * @param connFactory the {*link ConnectionFactory} from which to obtain base {@link Connection}s
+     * Sets the {@link ConnectionPoolDataSource} from which to obtain base {@link Connection}s.
+     * @param cpds the {@link ConnectionPoolDataSource} from which to obtain base {@link Connection}s
      */
     synchronized public void setCPDS(ConnectionPoolDataSource cpds) {
         _cpds = cpds;

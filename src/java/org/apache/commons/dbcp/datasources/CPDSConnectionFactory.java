@@ -110,10 +110,10 @@ class CPDSConnectionFactory
 
 
     /**
-     * Sets the {*link ConnectionFactory} from which to obtain base
-     * {*link Connection}s.
-     * @param connFactory the {*link ConnectionFactory} from which to obtain
-     *        base {*link Connection}s
+     * Sets the {@link ConnectionPoolDataSource} from which to obtain base
+     * {@link Connection}s.
+     * @param cpds the {@link ConnectionPoolDataSource} from which to obtain
+     *        base {@link Connection}s
      */
     public synchronized void setCPDS(ConnectionPoolDataSource cpds) {
         _cpds = cpds;
