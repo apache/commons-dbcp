@@ -87,7 +87,7 @@ public class TestManual extends TestConnectionPool {
     }
 
 
-    /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=28912 */
+    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
     public void testReportedBug28912() throws Exception {
         Connection conn1 = getConnection();
         assertNotNull(conn1);
@@ -107,7 +107,7 @@ public class TestManual extends TestConnectionPool {
         assertFalse(conn2.isClosed());
     }
     
-    /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
+    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testReportedBug12400() throws Exception {
         ObjectPool connectionPool = new GenericObjectPool(
             null,

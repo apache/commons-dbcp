@@ -447,7 +447,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn3.close();
     }
     
-    /** @see http://issues.apache.org/bugzilla/show_bug.cgi?id=12400 */
+    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxActive()];
         for(int i=0;i<conn.length;i++) {
