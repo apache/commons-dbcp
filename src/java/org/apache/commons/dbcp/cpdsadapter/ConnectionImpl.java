@@ -60,10 +60,10 @@ class ConnectionImpl implements Connection {
 /* JDBC_4_ANT_KEY_END */
 
     /** The JDBC database connection. */
-    private Connection connection;
+    private final Connection connection;
 
     /** The object that instantiated this object */
-     private PooledConnectionImpl pooledConnection;
+     private final PooledConnectionImpl pooledConnection;
 
     /** Marks whether is Connection is still usable. */
     boolean isClosed;
