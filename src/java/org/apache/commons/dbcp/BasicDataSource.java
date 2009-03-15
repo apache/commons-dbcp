@@ -40,6 +40,9 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * configured via JavaBeans properties.  This is not the only way to
  * combine the <em>commons-dbcp</em> and <em>commons-pool</em> packages,
  * but provides a "one stop shopping" solution for basic requirements.</p>
+ * 
+ * <p>Users extending this class should take care to use appropriate accessors
+ * rather than accessing protected fields directly to ensure thread-safety.</p>
  *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
