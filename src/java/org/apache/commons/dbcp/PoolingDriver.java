@@ -106,6 +106,10 @@ public class PoolingDriver implements Driver {
         ObjectPool pool = (ObjectPool)(_pools.get(name));
         if(null == pool) {
             InputStream in = this.getClass().getResourceAsStream(String.valueOf(name) + ".jocl");
+            if (in == null) {
+                in = Thread.currentThread().getContextClassLoader(
+                        ).getResourceAsStream(String.valueOf(name) + ".jocl");
+            }
             if(null != in) {
                 JOCLContentHandler jocl = null;
                 try {
