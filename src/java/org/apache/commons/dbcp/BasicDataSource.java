@@ -1330,9 +1330,16 @@ public class BasicDataSource implements DataSource {
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
+        Class driverFromCCL = null;
         if (driverClassName != null) {
             try {
-                Class.forName(driverClassName);
+                try {
+                    Class.forName(driverClassName);
+                } catch (ClassNotFoundException cnfe) {
+                    driverFromCCL = Thread.currentThread(
+                            ).getContextClassLoader().loadClass(
+                                    driverClassName);
+                }
             } catch (Throwable t) {
                 String message = "Cannot load JDBC driver class '" +
                     driverClassName + "'";
@@ -1345,7 +1352,16 @@ public class BasicDataSource implements DataSource {
         // Create a JDBC driver instance
         Driver driver = null;
         try {
-            driver = DriverManager.getDriver(url);
+            if (driverFromCCL == null) {
+                driver = DriverManager.getDriver(url);
+            } else {
+                // Usage of DriverManager is not possible, as it does not
+                // respect the ContextClassLoader
+                driver = (Driver) driverFromCCL.newInstance();
+                if (!driver.acceptsURL(url)) {
+                    new SQLException("No suitable driver", "08001"); 
+                }
+            }
         } catch (Throwable t) {
             String message = "Cannot create JDBC driver of class '" +
                 (driverClassName != null ? driverClassName : "") +
