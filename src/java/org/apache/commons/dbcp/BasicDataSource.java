@@ -840,8 +840,14 @@ public class BasicDataSource implements DataSource {
     /**
      * Sets the list of SQL statements to be executed when a physical
      * connection is first created.
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
      * 
-     * @param connectionInitSqls
+     * @param connectionInitSqls Collection of SQL statements to execute
+     * on connection creation
      */
     public synchronized void setConnectionInitSqls(Collection connectionInitSqls) {
         this.connectionInitSqls = null;
