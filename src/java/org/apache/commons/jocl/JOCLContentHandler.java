@@ -74,7 +74,7 @@ import java.util.ArrayList;
  * <pre> &lt;object class="java.util.Date"/&gt;
  * &lt;object class="java.util.Date"/&gt;</pre>
  * The {@link #getTypeArray} method
- * will return an composed
+ * will return an array composed
  * of two instances of <tt>java.util.Date</tt>.  The sequence of
  * {@link java.lang.Object <tt>Object</tt>s} in the array
  * will correspond to the sequence of <tt>&lt;object&gt;</tt> elements in the JOCL fragment.
@@ -90,7 +90,7 @@ import java.util.ArrayList;
  * will add an instance of <tt>mypackage.Foo</tt> to the object list, constructed via
  * <tt>new mypackage.Foo(new mypackage.Bar())</tt>.
  * <p>
- * There is a special syntax available creating primative values and arguments,
+ * There is a special syntax available creating primitive values and arguments,
  * as well as for constructing {@link java.lang.String <tt>String</tt>}s. Some examples:
  * <p>
  * <pre> &lt;byte value="3"/&gt;
@@ -106,7 +106,7 @@ import java.util.ArrayList;
  * When invoked at the "root" level (that is, with no <tt>&lt;object&gt;</tt> parent),
  * this will cause the corresponding "object wrapper" to be added to the list of
  * {@link java.lang.Object <tt>Object</tt>}s.  The {@link #getType type} for these
- * objects will reflect the proper primative type, however.  When invoked with an
+ * objects will reflect the proper primitive type, however.  When invoked with an
  * <tt>&lt;object&gt;</tt> parent, these will be treated as primitive arguments to the
  * specified {@link java.lang.Object <tt>Object</tt>}'s constructor.  For example, while:
  * <p>
