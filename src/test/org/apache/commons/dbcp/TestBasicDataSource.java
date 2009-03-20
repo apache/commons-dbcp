@@ -234,6 +234,43 @@ public class TestBasicDataSource extends TestConnectionPool {
             }
         }
     }
+    
+    public void testValidationQueryTimoutFail() {
+        ds.setTestOnBorrow(true);
+        ds.setValidationQueryTimeout(3); // Too fast for TesterStatement
+        try {
+            ds.getConnection();
+            fail("expected SQLException");
+        } catch (SQLException ex) {
+            if (ex.toString().indexOf("timeout") < 0) {
+                fail("expected timeout error message");
+            }
+        }
+    }
+    
+    public void testValidationQueryTimeoutZero() throws Exception {
+        ds.setTestOnBorrow(true);
+        ds.setTestOnReturn(true);
+        ds.setValidationQueryTimeout(0);
+        Connection con = ds.getConnection();
+        con.close();
+    }
+    
+    public void testValidationQueryTimeoutNegative() throws Exception {
+        ds.setTestOnBorrow(true);
+        ds.setTestOnReturn(true);
+        ds.setValidationQueryTimeout(-1);
+        Connection con = ds.getConnection();
+        con.close();
+    }
+    
+    public void testValidationQueryTimeoutSucceed() throws Exception {
+        ds.setTestOnBorrow(true);
+        ds.setTestOnReturn(true);
+        ds.setValidationQueryTimeout(100); // Works for TesterStatement
+        Connection con = ds.getConnection();
+        con.close();
+    }
 
     public void testEmptyInitConnectionSql() throws Exception {
         ds.setConnectionInitSqls(Arrays.asList(new String[]{"", "   "}));
