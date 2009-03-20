@@ -811,6 +811,42 @@ public class BasicDataSource implements DataSource {
     }
     
     /**
+     * Timeout in seconds before connection validation queries fail. 
+     * 
+     * @since 1.3
+     */
+    protected int validationQueryTimeout = -1;
+    
+    /**
+     * Returns the validation query timeout.
+     * 
+     * @return the timeout in seconds before connection validation queries fail.
+     * @since 1.3
+     */
+    public synchronized int getValidationQueryTimeout() {
+        return validationQueryTimeout;
+    }
+    
+    /**
+     * Sets the validation query timeout, the amount of time, in seconds, that
+     * connection validation will wait for a response from the database when
+     * executing a validation query.  Use a value less than or equal to 0 for
+     * no timeout.
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
+     * 
+     * @param timeout new validation query timeout value in seconds
+     * @since 1.3
+     */
+    public synchronized void setValidationQueryTimeout(int timeout) {
+        this.validationQueryTimeout = timeout;
+        restartNeeded = true;
+    }
+    
+    /**
      * These SQL statements run once after a Connection is created.
      * <p>
      * This property can be used for example to run ALTER SESSION SET
@@ -1303,6 +1339,7 @@ public class BasicDataSource implements DataSource {
                                               connectionPool,
                                               statementPoolFactory,
                                               validationQuery,
+                                              validationQueryTimeout,
                                               connectionInitSqls,
                                               defaultReadOnly,
                                               defaultAutoCommit,

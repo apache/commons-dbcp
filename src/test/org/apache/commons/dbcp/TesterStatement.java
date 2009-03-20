@@ -60,15 +60,22 @@ public class TesterStatement implements Statement {
         checkOpen();
         if("null".equals(sql)) {
             return null;
-        } if("invalid".equals(sql)) {
+        } 
+        if("invalid".equals(sql)) {
             throw new SQLException("invalid query");
-        } if ("broken".equals(sql)) {
+        }
+        if ("broken".equals(sql)) {
             throw new SQLException("broken connection");
-        } if("select username".equals(sql)) {
+        }  
+        if("select username".equals(sql)) {
             String username = ((TesterConnection) _connection).getUsername();
             Object[][] data = {{username}};
             return new TesterResultSet(this, data);
         } else {
+            // Simulate timeout if queryTimout is set to less than 5 seconds
+            if (_queryTimeout > 0 && _queryTimeout < 5) { 
+                throw new SQLException("query timeout");
+            }
             return new TesterResultSet(this);
         }
     }
