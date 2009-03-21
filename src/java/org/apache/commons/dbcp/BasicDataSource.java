@@ -1100,7 +1100,13 @@ public class BasicDataSource implements DataSource {
      * If set to true a connection is considered abandoned and eligible
      * for removal if it has been idle longer than the removeAbandonedTimeout.
      * Setting this to true can recover db connections from poorly written    
-     * applications which fail to close a connection.      
+     * applications which fail to close a connection.
+     * <p>
+     * Abandonded connections are identified and removed when 
+     * {@link #getConnection()} is invoked and the following conditions hold
+     * <ul><li>{@link #getRemoveAbandoned()} = true </li>
+     *     <li>{@link #getNumActive()} > {@link #getMaxActive()} - 3 </li>
+     *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
      * @deprecated                   
      */                                                                   
     public boolean getRemoveAbandoned() {   
@@ -1113,6 +1119,7 @@ public class BasicDataSource implements DataSource {
     /**
      * @deprecated
      * @param removeAbandoned new removeAbandoned property value
+     * @see #getRemoveAbandoned()
      */
     public void setRemoveAbandoned(boolean removeAbandoned) {
         if (abandonedConfig == null) {
