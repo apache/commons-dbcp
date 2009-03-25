@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.dbcp.TestConnectionPool;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
@@ -102,9 +103,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             ds.getConnection("u1", "x").close();
             fail("Able to retrieve connection with incorrect password");
         }
-        catch (SQLException e)
+        catch (SQLNestedException e)
         {
-            if (!e.getMessage().startsWith("Given password did not match")) 
+            Throwable t = e.getCause();
+            if (!t.getMessage().startsWith("x is not the correct password"))
             {
                 throw e;
             }
