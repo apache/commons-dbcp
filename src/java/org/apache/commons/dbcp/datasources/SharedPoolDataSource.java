@@ -194,10 +194,11 @@ public class SharedPoolDataSource
     }
     
     private UserPassKey getUserPassKey(String username, String password) {
-        UserPassKey key = (UserPassKey) userKeys.get(username);
+        String name = username + password;
+        UserPassKey key = (UserPassKey) userKeys.get(name);
         if (key == null) {
             key = new UserPassKey(username, password);
-            userKeys.put(username, key);
+            userKeys.put(name, key);
         }
         return key;
     }
