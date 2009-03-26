@@ -91,7 +91,6 @@ public class DelegatingConnection extends AbandonedTrace
      *
      * @param c the {@link Connection} to delegate all calls to.
      * @param config the configuration for tracing abandoned objects
-     * @deprecated AbandonedConfig is now deprecated.
      */
     public DelegatingConnection(Connection c, AbandonedConfig config) {
         super(config);

@@ -32,7 +32,6 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *                                                                        
  * @author Glenn L. Nielsen
  * @version $Revision$ $Date$
- * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedObjectPool extends GenericObjectPool {
 

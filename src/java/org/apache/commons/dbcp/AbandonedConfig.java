@@ -24,7 +24,6 @@ import java.io.PrintWriter;
  *                                                            
  * @author Glenn L. Nielsen           
  * @version $Revision$ $Date$
- * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedConfig {
 
