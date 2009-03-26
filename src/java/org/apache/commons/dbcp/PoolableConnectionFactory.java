@@ -230,7 +230,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @param config the AbandonedConfig if tracing SQL objects
-     * @deprecated AbandonedConfig is now deprecated.
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
@@ -261,7 +260,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @param config the AbandonedConfig if tracing SQL objects
-     * @deprecated AbandonedConfig is now deprecated.
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
@@ -295,7 +293,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @param defaultCatalog the default "catalog" setting for returned {@link Connection}s
      * @param config the AbandonedConfig if tracing SQL objects
-     * @deprecated AbandonedConfig is now deprecated.
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
@@ -734,7 +731,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected String _defaultCatalog;
 
     /**
-     * @deprecated AbandonedConfig is now deprecated.
+     * Configuration for removing abandoned connections.
      */
     protected AbandonedConfig _config = null;
 

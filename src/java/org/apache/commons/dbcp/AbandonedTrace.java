@@ -32,7 +32,6 @@ import java.util.List;
  * 
  * @author Glenn L. Nielsen
  * @version $Revision$ $Date$
- * @deprecated This will be removed in a future version of DBCP.
  */
 public class AbandonedTrace {
 

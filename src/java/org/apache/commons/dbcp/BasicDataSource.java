@@ -1107,7 +1107,6 @@ public class BasicDataSource implements DataSource {
      * <ul><li>{@link #getRemoveAbandoned()} = true </li>
      *     <li>{@link #getNumActive()} > {@link #getMaxActive()} - 3 </li>
      *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
-     * @deprecated                   
      */                                                                   
     public boolean getRemoveAbandoned() {   
         if (abandonedConfig != null) {
@@ -1117,7 +1116,6 @@ public class BasicDataSource implements DataSource {
     }                                    
                                  
     /**
-     * @deprecated
      * @param removeAbandoned new removeAbandoned property value
      * @see #getRemoveAbandoned()
      */
@@ -1134,7 +1132,6 @@ public class BasicDataSource implements DataSource {
      *
      * Defaults to 300 seconds. 
      * @return abandoned connection timeout        
-     * @deprecated                                
      */                                                                 
     public int getRemoveAbandonedTimeout() { 
         if (abandonedConfig != null) {
@@ -1144,7 +1141,6 @@ public class BasicDataSource implements DataSource {
     }                                        
 
     /**
-     * @deprecated
      * @param removeAbandonedTimeout new removeAbandonedTimeout value
      */               
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
@@ -1164,8 +1160,6 @@ public class BasicDataSource implements DataSource {
      * <p>Logging of abandoned Statements and Connections adds overhead
      * for every Connection open or new Statement because a stack   
      * trace has to be generated. </p>
-     *             
-     * @deprecated                      
      */                                                          
     public boolean getLogAbandoned() {   
         if (abandonedConfig != null) {
@@ -1175,7 +1169,6 @@ public class BasicDataSource implements DataSource {
     }                                 
 
     /**
-     * @deprecated
      * @param logAbandoned new logAbandoned property value
      */
     public void setLogAbandoned(boolean logAbandoned) {
