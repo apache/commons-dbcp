@@ -18,16 +18,16 @@
       </SVNRepository>
     </repository>
     <release>
-      <revision>
+      <Version>
         <name>commons-dbcp</name>
         <created>2007-04-04</created>
-        <version>1.2.2</version>
-      </revision>
-      <revision>
+        <revision>1.2.2</version>
+      </Version>
+      <Version>
         <name>commons-dbcp</name>
         <created>2004-06-07</created>
-        <version>1.2.1</version>
-      </revision>
+        <revision>1.2.1</version>
+      </Version>
     </release>
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
