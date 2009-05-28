@@ -21,12 +21,12 @@
       <Version>
         <name>commons-dbcp</name>
         <created>2007-04-04</created>
-        <revision>1.2.2</version>
+        <revision>1.2.2</revision>
       </Version>
       <Version>
         <name>commons-dbcp</name>
         <created>2004-06-07</created>
-        <revision>1.2.1</version>
+        <revision>1.2.1</revision>
       </Version>
     </release>
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
