@@ -146,7 +146,7 @@
     <dependency>
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
-      <version>1.4</version>
+      <version>1.5.1</version>
     </dependency>
 
     <dependency>
@@ -252,6 +252,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
+            <reportFormat>plain</reportFormat>
               <includes>
                 <include>org/apache/commons/dbcp/TestAbandonedObjectPool.java</include>
                 <include>org/apache/commons/jocl/TestJOCLContentHandler.java</include>
