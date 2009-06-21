@@ -65,8 +65,8 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 // For example:
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
 //       -classpath commons-pool-1.5.1.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:. \
-//       ManualPoolingDriverExample
-//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid"
+//       ManualPoolingDriverExample \
+//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
 //       "SELECT * FROM DUAL"
 //
 public class ManualPoolingDriverExample {
