@@ -356,18 +356,20 @@ public class PerUserPoolDataSource
     // ----------------------------------------------------------------------
     // Inherited abstract methods
 
-    protected synchronized PooledConnectionAndInfo 
+    protected PooledConnectionAndInfo 
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
 
         PoolKey key = getPoolKey(username);
         Object pool = pools.get(key);
-        if (pool == null) {
-            try {
-                registerPool(username, password);
-                pool = pools.get(key);
-            } catch (NamingException e) {
-                throw new SQLNestedException("RegisterPool failed", e);
+        synchronized(this) {
+            if (pool == null) {
+                try {
+                    registerPool(username, password);
+                    pool = pools.get(key);
+                } catch (NamingException e) {
+                    throw new SQLNestedException("RegisterPool failed", e);
+                }
             }
         }
 
