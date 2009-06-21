@@ -24,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 /* JDBC_4_ANT_KEY_BEGIN */
@@ -410,12 +411,15 @@ public class DelegatingConnection extends AbandonedTrace
         try {
             // The JDBC spec requires that a Connection close any open
             // Statement's when it is closed.
-            List statements = getTrace();
-            if( statements != null) {
-                Statement[] set = new Statement[statements.size()];
-                statements.toArray(set);
-                for (int i = 0; i < set.length; i++) {
-                    set[i].close();
+            // POOL-288. Not all the traced objects will be statements
+            List traces = getTrace();
+            if(traces != null) {
+                Iterator traceIter = traces.iterator();
+                while (traceIter.hasNext()) {
+                    Object trace = traceIter.next();
+                    if (trace instanceof Statement) {
+                        ((Statement) trace).close();
+                    }
                 }
                 clearTrace();
             }
