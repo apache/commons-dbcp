@@ -73,12 +73,6 @@ public class PerUserPoolDataSource
     }
 
     /**
-     * Close all pools in the given Map.
-     */
-    private static void close(Map poolMap) {
-    }
-
-    /**
      * Close pool(s) being maintained by this datasource.
      */
     public void close() {
