@@ -411,7 +411,7 @@ public class DelegatingConnection extends AbandonedTrace
         try {
             // The JDBC spec requires that a Connection close any open
             // Statement's when it is closed.
-            // POOL-288. Not all the traced objects will be statements
+            // DBCP-288. Not all the traced objects will be statements
             List traces = getTrace();
             if(traces != null) {
                 Iterator traceIter = traces.iterator();
