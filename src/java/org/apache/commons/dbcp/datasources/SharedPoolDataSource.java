@@ -151,14 +151,17 @@ public class SharedPoolDataSource
     // ----------------------------------------------------------------------
     // Inherited abstract methods
 
-    protected synchronized PooledConnectionAndInfo 
+    protected PooledConnectionAndInfo 
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
-        if (pool == null) {
-            try {
-                registerPool(username, password);
-            } catch (NamingException e) {
-                throw new SQLNestedException("RegisterPool failed", e);
+        
+        synchronized(this) {
+            if (pool == null) {
+                try {
+                    registerPool(username, password);
+                } catch (NamingException e) {
+                    throw new SQLNestedException("RegisterPool failed", e);
+                }
             }
         }
 
