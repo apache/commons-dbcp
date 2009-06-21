@@ -318,6 +318,53 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
     
+    public void testMaxWait() throws Exception {
+        final int maxWait = 1000;
+        final int theadCount = 20;
+        
+        ((SharedPoolDataSource)ds).setMaxWait(maxWait);
+        // Obtain all the connections from the pool
+        Connection[] c = new Connection[getMaxActive()];
+        for (int i=0; i<c.length; i++) {
+            c[i] = ds.getConnection("foo","bar");
+            assertTrue(c[i] != null);            
+        }
+
+        long start = System.currentTimeMillis();
+        
+        // Run a thread test with minimal hold time
+        // All threads should end after maxWait - DBCP-291
+        final PoolTest[] pts = new PoolTest[theadCount];
+        ThreadGroup threadGroup = new ThreadGroup("testMaxWait");
+
+        // Should take ~maxWait for threads to stop 
+        for (int i = 0; i < pts.length; i++) {
+            pts[i] = new PoolTest(threadGroup, 1, true);
+        }
+        
+        // Wait for all the threads to complete
+        boolean running = true;
+        while (running) {
+            Thread.sleep(maxWait / 2);
+            running = false;
+            for (int i = 0; i < pts.length; i++) {
+                running = running || pts[i].isRun; 
+            }
+        }
+        
+        long end = System.currentTimeMillis();
+        
+        System.out.println("testMaxWait took " + (end-start) + " ms");
+        
+        // Threads should time out in parallel - allow double that to be safe
+        assertTrue((end-start) < (2 * maxWait)); 
+
+        // Put all the connections back in the pool
+        for (int i=0; i<c.length; i++) {
+            c[i].close();
+        }
+    }
+
     public void testMultipleThreads() throws Exception {
         assertTrue(multipleThreads(1));
         assertTrue(!multipleThreads(2 * (int)(getMaxWait())));
@@ -372,8 +419,16 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         private String state;
 
+        boolean isStopOnException;
+
         protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
+            this(threadGroup, connHoldTime, false);
+        }
+            
+        protected PoolTest(ThreadGroup threadGroup, int connHoldTime,
+                boolean isStopOnException) {
             this.connHoldTime = connHoldTime;
+            this.isStopOnException = isStopOnException;
             Thread thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
@@ -402,9 +457,19 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
                     stmt.close();
                     conn.close();
                 } catch (RuntimeException e) {
-                    throw e;
+                    if (isStopOnException) {
+                        stop();
+                        e.printStackTrace();
+                    } else {
+                        throw e;
+                    }
                 } catch (Exception e) {
-                    throw new RuntimeException(e.toString());
+                    if (isStopOnException) {
+                        stop();
+                        e.printStackTrace();
+                    } else {
+                        throw new RuntimeException(e.toString());
+                    }
                 }
             }
         }
