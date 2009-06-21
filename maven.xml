@@ -95,7 +95,7 @@
     <j:set var="libDir" value="${user.home}/.maven/repository"/>
     <ant:path id="build.classpath">
       <ant:pathelement 
-        location="${libDir}/commons-pool/jars/commons-pool-1.3.jar">
+        location="${libDir}/commons-pool/jars/commons-pool-1.5.1.jar">
       </ant:pathelement>
       <ant:pathelement 
         location="${libdir}/xerces/jars/xercesImpl-2.8.0.jar">
