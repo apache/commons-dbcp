@@ -23,9 +23,9 @@
 <jsp:directive.page import="javax.naming.*"/>
 
 <!--
-  This jsp is used to test the abandoned connection feature of BaseicDataSource.
+  This jsp is used to test the abandoned connection feature of BasicDataSource.
   Add the following configuration to server.xml and load the jsp page.
-  The connections aren't closed and are logged to stdout/stderr. 
+  The connections aren't closed and are logged to stdout/stderr.
 
     <Resource name="jdbc/abandoned" auth="Container" type="javax.sql.DataSource"/>
     <ResourceParams name="jdbc/abandoned">
@@ -46,7 +46,7 @@
 <![CDATA[
     public DataSource getDataSource(JspWriter out) throws Exception {
         Context ctx = null;
-        
+
         try {
             ctx = new InitialContext();
         } catch (NamingException e) {
