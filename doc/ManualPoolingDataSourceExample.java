@@ -56,7 +56,7 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool-1.5.1.jar
+//  * commons-pool-1.5.2.jar
 //  * commons-dbcp-1.2.2.jar
 //  * j2ee.jar (for the javax.sql classes)
 //  * the classes for your (underlying) JDBC driver
