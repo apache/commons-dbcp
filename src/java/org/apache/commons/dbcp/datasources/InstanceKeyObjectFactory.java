@@ -42,7 +42,7 @@ import javax.naming.spi.ObjectFactory;
 abstract class InstanceKeyObjectFactory
     implements ObjectFactory
 {
-    private static Map instanceMap = new HashMap();
+    private static final Map instanceMap = new HashMap();
 
     synchronized static String registerNewInstance(InstanceKeyDataSource ds) {
         int max = 0;
