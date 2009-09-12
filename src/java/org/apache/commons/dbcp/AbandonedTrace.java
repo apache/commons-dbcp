@@ -36,7 +36,7 @@ import java.util.List;
 public class AbandonedTrace {
 
     /** Date format */
-    private static SimpleDateFormat format = new SimpleDateFormat
+    private static final SimpleDateFormat format = new SimpleDateFormat
         ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
          "'by the following code was never closed:'");
 
