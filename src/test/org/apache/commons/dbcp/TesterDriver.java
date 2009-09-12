@@ -42,7 +42,7 @@ import java.util.Properties;
  * @version $Revision$ $Date$
  */
 public class TesterDriver implements Driver {
-    private static Properties validUserPasswords = new Properties();
+    private static final Properties validUserPasswords = new Properties();
     static {
         try {
             DriverManager.registerDriver(new TesterDriver());

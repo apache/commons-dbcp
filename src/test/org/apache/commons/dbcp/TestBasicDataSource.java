@@ -45,7 +45,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     protected BasicDataSource ds = null;
-    private static String CATALOG = "test catalog";
+    private static final String CATALOG = "test catalog";
 
     public void setUp() throws Exception {
         super.setUp();
