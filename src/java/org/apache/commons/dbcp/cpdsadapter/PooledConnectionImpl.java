@@ -215,9 +215,9 @@ class PooledConnectionImpl
      */
     void notifyListeners() {
         ConnectionEvent event = new ConnectionEvent(this);
-        Iterator i = eventListeners.iterator();
-        while (i.hasNext()) {
-            ((ConnectionEventListener) i.next()).connectionClosed(event);
+        Object[] listeners = eventListeners.toArray();
+        for (int i = 0; i < listeners.length; i++) {
+            ((ConnectionEventListener) listeners[i]).connectionClosed(event);
         }
     }
 
