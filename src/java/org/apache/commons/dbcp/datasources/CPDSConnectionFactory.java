@@ -195,9 +195,19 @@ class CPDSConnectionFactory
         return obj;
     }
 
+    /**
+     * Closes the PooledConnection and stops listening for events from it.
+     */
     public void destroyObject(Object obj) throws Exception {
         if (obj instanceof PooledConnectionAndInfo) {
-            ((PooledConnectionAndInfo) obj).getPooledConnection().close();
+            PooledConnection pc = ((PooledConnectionAndInfo)obj).getPooledConnection();
+            try {
+                pc.removeConnectionEventListener(this);
+            } catch (Exception e) {
+                //ignore
+            }
+            pcMap.remove(pc);
+            pc.close(); 
         }
     }
 
@@ -295,6 +305,11 @@ class CPDSConnectionFactory
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD "
                         + "NOT BE RETURNED TO THE POOL");
                 try {
+                    pc.removeConnectionEventListener(this);
+                } catch (Exception e2) {
+                    //ignore
+                }
+                try {
                     destroyObject(info);
                 } catch (Exception e2) {
                     System.err.println("EXCEPTION WHILE DESTROYING OBJECT "
@@ -317,8 +332,6 @@ class CPDSConnectionFactory
                         "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR ("
                         + event.getSQLException() + ")");
             }
-            //remove this from the listener list because we are no more
-            //interested in errors since we are about to close this connection
             pc.removeConnectionEventListener(this);
         } catch (Exception ignore) {
             // ignore
@@ -329,7 +342,7 @@ class CPDSConnectionFactory
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
-            destroyObject(info);
+            _pool.invalidateObject(info);
         } catch (Exception e) {
             System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + info);
             e.printStackTrace();

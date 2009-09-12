@@ -100,9 +100,9 @@ public class PooledConnectionProxy implements PooledConnection,
      */
     void notifyListeners() {
         ConnectionEvent event = new ConnectionEvent(this);
-        Iterator i = eventListeners.iterator();
-        while (i.hasNext()) {
-            ((ConnectionEventListener) i.next()).connectionClosed(event);
+        Object[] listeners = eventListeners.toArray();
+        for (int i = 0; i < listeners.length; i++) {
+            ((ConnectionEventListener) listeners[i]).connectionClosed(event);
         }
     }
     
@@ -134,9 +134,9 @@ public class PooledConnectionProxy implements PooledConnection,
      * Pass error events on to listeners
      */ 
     public void connectionErrorOccurred(ConnectionEvent event) {
-        Iterator i = eventListeners.iterator();
-        while (i.hasNext()) {
-            ((ConnectionEventListener) i.next()).connectionErrorOccurred(event);
+        Object[] listeners = eventListeners.toArray();
+        for (int i = 0; i < listeners.length; i++) {
+            ((ConnectionEventListener) listeners[i]).connectionErrorOccurred(event);
         } 
     }
     

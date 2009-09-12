@@ -272,6 +272,7 @@
                 <include>org/apache/commons/dbcp/TestJndi.java</include>
                 
                 <include>org/apache/commons/dbcp/datasources/TestFactory.java</include>
+                <include>org/apache/commons/dbcp/datasources/TestCPDSConnectionFactory.java</include>
                 <include>org/apache/commons/dbcp/datasources/TestKeyedCPDSConnectionFactory.java</include>
                 <include>org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java</include>
                 <include>org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java</include>
