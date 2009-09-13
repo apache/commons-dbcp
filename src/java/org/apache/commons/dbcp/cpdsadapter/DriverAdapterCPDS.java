@@ -116,7 +116,8 @@ public class DriverAdapterCPDS
     private int _minEvictableIdleTimeMillis = -1;
     private int _maxPreparedStatements = -1;
 
-    private boolean getConnectionCalled = false;
+    /** Whether or not getConnection has been called */
+    private volatile boolean getConnectionCalled = false;
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
