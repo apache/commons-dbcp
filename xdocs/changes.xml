@@ -168,9 +168,7 @@ The <action> type attribute can be add,update,fix,remove.
         KeyedCPDSConnectionFactory. Substituted calls to destroyObject with
          _pool.invalidateObject on error to ensure pool active count is
         decremented on error events. Ensured that events from closed or invalid
-        connections are ignored and listeners are cleaned up. Removed calls to
-        removeConnectionEventListener from connection event handlers to
-        eliminate potential for ConcurrentModificationExceptions.
+        connections are ignored and listeners are cleaned up. 
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-245" due-to="Michael Drechsel">
         Fixed error in SharedPoolDataSource causing incorrect passwords to be 
