@@ -20,6 +20,7 @@ package org.apache.commons.dbcp;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.apache.commons.dbcp.cpdsadapter.TestDriverAdapterCPDS;
 import org.apache.commons.dbcp.datasources.TestFactory;
 import org.apache.commons.dbcp.datasources.TestInstanceKeyDataSource;
 import org.apache.commons.dbcp.datasources.TestKeyedCPDSConnectionFactory;
@@ -60,6 +61,8 @@ public class TestAll extends TestCase {
         suite.addTest(TestPoolingDataSource.suite());
         suite.addTest(TestPStmtPooling.suite());
         suite.addTest(TestPStmtPoolingBasicDataSource.suite());
+        // o.a.c.dbcp.cpdsadapter
+        suite.addTest(TestDriverAdapterCPDS.suite());
         // o.a.c.dbcp.datasources
         suite.addTest(TestFactory.suite());
         suite.addTest(TestInstanceKeyDataSource.suite());
