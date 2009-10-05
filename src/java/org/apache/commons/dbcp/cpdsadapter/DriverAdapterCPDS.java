@@ -128,6 +128,11 @@ public class DriverAdapterCPDS
         DriverManager.getDrivers();
     }
 
+    /** 
+     * Controls access to the underlying connection 
+     */
+    private boolean accessToUnderlyingConnectionAllowed = false; 
+    
     /**
      * Default no-arg constructor for Serialization
      */
@@ -184,29 +189,35 @@ public class DriverAdapterCPDS
         // Workaround for buggy WebLogic 5.1 classloader - ignore the
         // exception upon first invocation.
         try {
+            PooledConnectionImpl pci = null;
             if (connectionProperties != null) {
                 connectionProperties.put("user", username);
                 connectionProperties.put("password", password);
-                return new PooledConnectionImpl(
+                pci = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), connectionProperties), 
-                        stmtPool); 
+                        stmtPool);
             } else {
-                return new PooledConnectionImpl(
+                pci = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), username, password), 
-                        stmtPool ); 
+                        stmtPool);
             }
+            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+            return pci;
         }
         catch (ClassCircularityError e)
         {
+            PooledConnectionImpl pci = null;
             if (connectionProperties != null) {
-                return new PooledConnectionImpl(
+                pci = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), connectionProperties), 
-                        stmtPool); 
+                        stmtPool);
             } else {
-                return new PooledConnectionImpl(
+                pci = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), username, password), 
-                        stmtPool ); 
+                        stmtPool);
             }
+            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+            return pci;
         }
     }
 
@@ -642,6 +653,26 @@ public class DriverAdapterCPDS
     public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+    
+    /**
+     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * 
+     * @return true if access to the underlying is allowed, false otherwise.
+     */
+    public synchronized boolean isAccessToUnderlyingConnectionAllowed() {
+        return this.accessToUnderlyingConnectionAllowed;
+    }
+
+    /**
+     * Sets the value of the accessToUnderlyingConnectionAllowed property.
+     * It controls if the PoolGuard allows access to the underlying connection.
+     * (Default: false)
+     * 
+     * @param allow Access to the underlying connection is granted when true.
+     */
+    public synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
+        this.accessToUnderlyingConnectionAllowed = allow;
     }
     
     /**
