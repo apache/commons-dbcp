@@ -44,13 +44,13 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 
 //
 // To compile this example, you'll want:
-//  * commons-pool-1.5.2.jar
+//  * commons-pool-1.5.3.jar
 //  * commons-dbcp-1.2.2.jar
 // in your classpath.
 //
 // To run this example, you'll want:
 //  * commons-collections.jar
-//  * commons-pool-1.5.2.jar
+//  * commons-pool-1.5.3.jar
 //  * commons-dbcp-1.2.2.jar
 //  * the classes for your (underlying) JDBC driver
 // in your classpath.
@@ -64,7 +64,7 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 //
 // For example:
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-1.5.2.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:. \
+//       -classpath commons-pool-1.5.3.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:. \
 //       ManualPoolingDriverExample \
 //       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
 //       "SELECT * FROM DUAL"

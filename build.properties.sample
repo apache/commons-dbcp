@@ -23,9 +23,9 @@
 # Repository base path
 repository=${user.home}/.maven/repository
 
-# commons-pool.jar - path to commons-pool-1.5.2.jar
+# commons-pool.jar - path to commons-pool-1.5.3.jar
 commons-pool.home=${repository}/commons-pool/jars
-commons-pool.jar=${commons-pool.home}/commons-pool-1.5.2.jar
+commons-pool.jar=${commons-pool.home}/commons-pool-1.5.3.jar
 
 # JDBC Optional Package 2.0 (also included in j2ee.jar)
 jdbc20ext.home=${user.home}/jdbc2_0-stdext
