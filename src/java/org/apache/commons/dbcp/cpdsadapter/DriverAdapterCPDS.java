@@ -18,8 +18,9 @@
 package org.apache.commons.dbcp.cpdsadapter;
 
 import java.util.Hashtable;
-import  java.io.PrintWriter;
-import  java.io.Serializable;
+import java.util.Properties;
+import java.io.PrintWriter;
+import java.io.Serializable;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.sql.PooledConnection;
@@ -118,6 +119,9 @@ public class DriverAdapterCPDS
 
     /** Whether or not getConnection has been called */
     private volatile boolean getConnectionCalled = false;
+    
+    /** Connection properties passed to JDBC Driver */
+    private Properties connectionProperties = null;
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
@@ -180,15 +184,29 @@ public class DriverAdapterCPDS
         // Workaround for buggy WebLogic 5.1 classloader - ignore the
         // exception upon first invocation.
         try {
-            return new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), username, password), 
-                    stmtPool );
+            if (connectionProperties != null) {
+                connectionProperties.put("user", username);
+                connectionProperties.put("password", password);
+                return new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), connectionProperties), 
+                        stmtPool); 
+            } else {
+                return new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), username, password), 
+                        stmtPool ); 
+            }
         }
         catch (ClassCircularityError e)
         {
-            return new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), username, password), 
-                    stmtPool );
+            if (connectionProperties != null) {
+                return new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), connectionProperties), 
+                        stmtPool); 
+            } else {
+                return new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), username, password), 
+                        stmtPool ); 
+            }
         }
     }
 
@@ -326,6 +344,42 @@ public class DriverAdapterCPDS
     // Properties
     
     /**
+     * Get the connection properties passed to the JDBC driver.
+     * 
+     * @return the JDBC connection properties used when creating connections.
+     * @since 1.3
+     */
+    public Properties getConnectionProperties() {
+        return connectionProperties;
+    }
+    
+    /**
+     * <p>Set the connection properties passed to the JDBC driver.</p>
+     * 
+     * <p>If <code>props</code> contains "user" and/or "password"
+     * properties, the corresponding instance properties are set. If these
+     * properties are not present, they are filled in using
+     * {@link #getUser()}, {@link #getPassword()} when {@link #getPooledConnection()}
+     * is called, or using the actual parameters to the method call when 
+     * {@link #getPooledConnection(String, String)} is called. Calls to
+     * {@link #setUser(String)} or {@link #setPassword(String)} overwrite the values
+     * of these properties if <code>connectionProperties</code> is not null.</p>
+     * 
+     * @param props Connection properties to use when creating new connections.
+     * @since 1.3
+     */
+    public void setConnectionProperties(Properties props) {
+        assertInitializationAllowed();
+        connectionProperties = props;
+        if (connectionProperties.containsKey("user")) {
+            setUser(connectionProperties.getProperty("user"));
+        }
+        if (connectionProperties.containsKey("password")) {
+            setPassword(connectionProperties.getProperty("password"));
+        }
+    }
+    
+    /**
      * Get the value of description.  This property is here for use by
      * the code which will deploy this datasource.  It is not used
      * internally.
@@ -362,6 +416,9 @@ public class DriverAdapterCPDS
     public void setPassword(String v) {
         assertInitializationAllowed();
         this.password = v;
+        if (connectionProperties != null) {
+            connectionProperties.setProperty("password", v);
+        }
     }
 
     /**
@@ -396,6 +453,9 @@ public class DriverAdapterCPDS
     public void setUser(String v) {
         assertInitializationAllowed();
         this.user = v;
+        if (connectionProperties != null) {
+            connectionProperties.setProperty("user", v);
+        }
     }
 
     /**
