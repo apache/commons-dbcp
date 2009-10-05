@@ -61,6 +61,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         pcds.setUrl("jdbc:apache:commons:testdriver");
         pcds.setUser("foo");
         pcds.setPassword("bar");
+        pcds.setAccessToUnderlyingConnectionAllowed(true);
 
         PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);

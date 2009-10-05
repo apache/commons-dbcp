@@ -59,6 +59,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         pcds.setUser("foo");
         pcds.setPassword("bar");
         pcds.setPoolPreparedStatements(false);
+        pcds.setAccessToUnderlyingConnectionAllowed(true);
 
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
@@ -520,7 +521,47 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
-    public void testPoolPreparedStatements() throws Exception {
+    // There are 6 different prepareStatement statement methods so add a little
+    // complexity to reduce what would otherwise be lots of copy and paste
+    private static abstract class PrepareStatementCallback {
+        protected Connection conn;
+        void setConnection(Connection conn) {
+            this.conn = conn;
+        }
+        abstract PreparedStatement getPreparedStatement() throws SQLException;
+    }
+    private static class PscbString extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual");
+        }
+    }
+    private static class PscbStringIntInt extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual",0,0);
+        }
+    }
+    private static class PscbStringInt extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual",0);
+        }
+    }
+    private static class PscbStringIntArray extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual", new int[0]);
+        }
+    }
+    private static class PscbStringStringArray extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual",new String[0]);
+        }
+    }
+    private static class PscbStringIntIntInt extends PrepareStatementCallback {
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual",0,0,0);
+        }
+    }
+    private void doTestPoolPreparedStatements(PrepareStatementCallback callBack)
+    throws Exception {
         DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
         DataSource myds = null;
         mypcds.setDriver("org.apache.commons.dbcp.TesterDriver");
@@ -540,12 +581,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         myds = tds;
 
         Connection conn = ds.getConnection();
+        callBack.setConnection(conn);
         PreparedStatement stmt = null;
         ResultSet rset = null;
 
         assertTrue(null != conn);
 
-        stmt = conn.prepareStatement("select * from dual");
+        stmt = callBack.getPreparedStatement();
         assertTrue(null != stmt);
         long l1HashCode = stmt.hashCode();
         rset = stmt.executeQuery();
@@ -554,7 +596,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         rset.close();
         stmt.close();
 
-        stmt = conn.prepareStatement("select * from dual");
+        stmt = callBack.getPreparedStatement();
         assertTrue(null != stmt);
         long l2HashCode = stmt.hashCode();
         rset = stmt.executeQuery();
@@ -569,8 +611,9 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn = null;
 
         conn = myds.getConnection();
+        callBack.setConnection(conn);
 
-        stmt = conn.prepareStatement("select * from dual");
+        stmt = callBack.getPreparedStatement();
         assertTrue(null != stmt);
         long l3HashCode = stmt.hashCode();
         rset = stmt.executeQuery();
@@ -579,7 +622,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         rset.close();
         stmt.close();
 
-        stmt = conn.prepareStatement("select * from dual");
+        stmt = callBack.getPreparedStatement();
         assertTrue(null != stmt);
         long l4HashCode = stmt.hashCode();
         rset = stmt.executeQuery();
@@ -592,5 +635,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(l3HashCode == l4HashCode);
         conn.close();
         conn = null;
+    }
+    public void testPoolPreparedStatements() throws Exception {
+        doTestPoolPreparedStatements(new PscbString());
+        doTestPoolPreparedStatements(new PscbStringIntInt());
+        doTestPoolPreparedStatements(new PscbStringInt());
+        doTestPoolPreparedStatements(new PscbStringIntArray());
+        doTestPoolPreparedStatements(new PscbStringStringArray());
+        doTestPoolPreparedStatements(new PscbStringIntIntInt());
     }
 }

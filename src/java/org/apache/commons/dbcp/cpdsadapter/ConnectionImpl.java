@@ -17,56 +17,34 @@
 
 package org.apache.commons.dbcp.cpdsadapter;
 
-import java.util.Map;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
-import java.sql.CallableStatement;
-import java.sql.Statement;
-import java.sql.SQLWarning;
 import java.sql.SQLException;
-/* JDBC_4_ANT_KEY_BEGIN */
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.ClientInfoStatus;
-import java.sql.Clob;
-import java.sql.NClob;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLXML;
-import java.sql.Struct;
-import java.util.Collections;
-import java.util.Properties;
-/* JDBC_4_ANT_KEY_END */
+
+import org.apache.commons.dbcp.DelegatingConnection;
+import org.apache.commons.dbcp.DelegatingPreparedStatement;
 
 /**
  * This class is the <code>Connection</code> that will be returned
  * from <code>PooledConnectionImpl.getConnection()</code>.  
  * Most methods are wrappers around the jdbc 1.x <code>Connection</code>.  
- * A few exceptions include preparedStatement, close and isClosed.
+ * A few exceptions include preparedStatement and close.
  * In accordance with the jdbc specification this Connection cannot
  * be used after closed() is called.  Any further usage will result in an
  * SQLException.
+ * 
+ * ConnectionImpl extends DelegatingConnection to enable access to the
+ * underlying connection.
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
  */
-class ConnectionImpl implements Connection {
-    private static final String CLOSED 
-            = "Attempted to use Connection after closed() was called.";
+class ConnectionImpl extends DelegatingConnection {
 
-/* JDBC_4_ANT_KEY_BEGIN */
-    private static final Map<String, ClientInfoStatus> EMPTY_FAILED_PROPERTIES =
-        Collections.<String, ClientInfoStatus>emptyMap();
-/* JDBC_4_ANT_KEY_END */
-
-    /** The JDBC database connection. */
-    private final Connection connection;
+    private final boolean accessToUnderlyingConnectionAllowed;
 
     /** The object that instantiated this object */
      private final PooledConnectionImpl pooledConnection;
-
-    /** Marks whether is Connection is still usable. */
-    boolean isClosed;
 
     /**
      * Creates a <code>ConnectionImpl</code>. 
@@ -75,49 +53,12 @@ class ConnectionImpl implements Connection {
      * @param connection The JDBC 1.x Connection to wrap.
      */
     ConnectionImpl(PooledConnectionImpl pooledConnection, 
-            Connection connection) {
+            Connection connection,
+            boolean accessToUnderlyingConnectionAllowed) {
+        super(connection);
         this.pooledConnection = pooledConnection;
-        this.connection = connection;
-        isClosed = false;
-    }
-
-    /**
-     * The finalizer helps prevent <code>ConnectionPool</code> leakage.
-     */
-    protected void finalize() throws Throwable {
-        if (!isClosed) {
-            // If this DBConnection object is finalized while linked
-            // to a ConnectionPool, it means that it was taken from a pool
-            // and not returned.  We log this fact, close the underlying
-            // Connection, and return it to the ConnectionPool.
-            throw new SQLException("A ConnectionImpl was finalized "
-                      + "without being closed which will cause leakage of "
-                      + " PooledConnections from the ConnectionPool.");
-        }
-    }
-
-    /**
-     * Throws an SQLException, if isClosed() is true
-     */
-    private void assertOpen() throws SQLException {
-        if (isClosed) {
-            throw new SQLException(CLOSED);
-        }
-    }
-
-    // ***********************************************************************
-    // java.sql.Connection implementation using wrapped Connection
-    // ***********************************************************************
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void clearWarnings() throws SQLException {
-        assertOpen();
-        connection.clearWarnings();
+        this.accessToUnderlyingConnectionAllowed =
+            accessToUnderlyingConnectionAllowed;
     }
 
     /**
@@ -130,167 +71,11 @@ class ConnectionImpl implements Connection {
      * @exception SQLException The database connection couldn't be closed.
      */
     public void close() throws SQLException {
-        if (!isClosed) {
-            isClosed = true;
+        if (!_closed) {
+            _closed = true;
+            passivate();
             pooledConnection.notifyListeners();
         }
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void commit() throws SQLException {
-        assertOpen();
-        connection.commit();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public Statement createStatement() throws SQLException {
-        assertOpen();
-        return connection.createStatement();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public Statement createStatement(int resultSetType, 
-                                     int resultSetConcurrency) 
-            throws SQLException {
-        assertOpen();
-        return connection
-                .createStatement(resultSetType, resultSetConcurrency);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public boolean getAutoCommit() throws SQLException {
-        assertOpen();
-        return connection.getAutoCommit();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public String getCatalog() throws SQLException {
-        assertOpen();
-        return connection.getCatalog();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public DatabaseMetaData getMetaData() throws SQLException {
-        assertOpen();
-        return connection.getMetaData();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public int getTransactionIsolation() throws SQLException {
-        assertOpen();
-        return connection.getTransactionIsolation();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public Map getTypeMap() throws SQLException {
-        assertOpen();
-        return connection.getTypeMap();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public SQLWarning getWarnings() throws SQLException {
-        assertOpen();
-        return connection.getWarnings();
-    }
-
-    /**
-     * Returns true after close() is called, and false prior to that.
-     *
-     * @return a <code>boolean</code> value
-     */
-    public boolean isClosed() {
-        return isClosed;
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public boolean isReadOnly() throws SQLException {
-        assertOpen();
-        return connection.isReadOnly();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public String nativeSQL(String sql) throws SQLException {
-        assertOpen();
-        return connection.nativeSQL(sql);
-    }    
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public CallableStatement prepareCall(String sql) throws SQLException {
-        assertOpen();
-        return connection.prepareCall(sql);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public CallableStatement prepareCall(String sql, int resultSetType, 
-                                         int resultSetConcurrency) 
-            throws SQLException {
-        assertOpen();
-        return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 
     /**
@@ -302,8 +87,15 @@ class ConnectionImpl implements Connection {
      * in the wrapped connection.
      */
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        assertOpen();
-        return pooledConnection.prepareStatement(sql);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement
+                (this, pooledConnection.prepareStatement(sql));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     /**
@@ -317,246 +109,101 @@ class ConnectionImpl implements Connection {
     public PreparedStatement prepareStatement(String sql, int resultSetType, 
                                               int resultSetConcurrency) 
             throws SQLException {
-        assertOpen();
-        return pooledConnection
-            .prepareStatement(sql, resultSetType, resultSetConcurrency);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement
+                (this, pooledConnection.prepareStatement
+                    (sql,resultSetType,resultSetConcurrency));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void rollback() throws SQLException {
-        assertOpen();
-        connection.rollback();
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void setAutoCommit(boolean b) throws SQLException {
-        assertOpen();
-        connection.setAutoCommit(b);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void setCatalog(String catalog) throws SQLException {
-        assertOpen();
-        connection.setCatalog(catalog);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        assertOpen();
-        connection.setReadOnly(readOnly);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void setTransactionIsolation(int level) throws SQLException {
-        assertOpen();
-        connection.setTransactionIsolation(level);
-    }
-
-    /**
-     * Pass thru method to the wrapped jdbc 1.x {@link java.sql.Connection}.
-     *
-     * @exception SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
-     */
-    public void setTypeMap(Map map) throws SQLException {
-        assertOpen();
-        connection.setTypeMap(map);
-    }
-
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
 
 /* JDBC_3_ANT_KEY_BEGIN */
-
-    public int getHoldability() throws SQLException {
-        assertOpen();
-        return connection.getHoldability();
-    }
-
-    public void setHoldability(int holdability) throws SQLException {
-        assertOpen();
-        connection.setHoldability(holdability);
-    }
-
-    public java.sql.Savepoint setSavepoint() throws SQLException {
-        assertOpen();
-        return connection.setSavepoint();
-    }
-
-    public java.sql.Savepoint setSavepoint(String name) throws SQLException {
-        assertOpen();
-        return connection.setSavepoint(name);
-    }
-
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
-        assertOpen();
-        connection.rollback(savepoint);
-    }
-
-    public void releaseSavepoint(java.sql.Savepoint savepoint) 
-            throws SQLException {
-        assertOpen();
-        connection.releaseSavepoint(savepoint);
-    }
-
-    public Statement createStatement(int resultSetType,
-                                     int resultSetConcurrency,
-                                     int resultSetHoldability)
-            throws SQLException {
-        assertOpen();
-        return connection.createStatement(resultSetType, resultSetConcurrency,
-                                     resultSetHoldability);
-    }
-
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency,
                                               int resultSetHoldability)
             throws SQLException {
-        assertOpen();
-        return connection.prepareStatement(sql, resultSetType,
-                                      resultSetConcurrency,
-                                      resultSetHoldability);
-    }
-
-    public CallableStatement prepareCall(String sql, int resultSetType,
-                                         int resultSetConcurrency,
-                                         int resultSetHoldability)
-            throws SQLException {
-        assertOpen();
-        return connection.prepareCall(sql, resultSetType,
-                                 resultSetConcurrency,
-                                 resultSetHoldability);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement(this,
+                    pooledConnection.prepareStatement(sql, resultSetType,
+                            resultSetConcurrency, resultSetHoldability));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
             throws SQLException {
-        assertOpen();
-        return connection.prepareStatement(sql, autoGeneratedKeys);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement(this,
+                    pooledConnection.prepareStatement(sql, autoGeneratedKeys));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql, int columnIndexes[])
             throws SQLException {
-        assertOpen();
-        return connection.prepareStatement(sql, columnIndexes);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement(this,
+                    pooledConnection.prepareStatement(sql, columnIndexes));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 
     public PreparedStatement prepareStatement(String sql, String columnNames[])
             throws SQLException {
-        assertOpen();
-        return connection.prepareStatement(sql, columnNames);
+        checkOpen();
+        try {
+            return new DelegatingPreparedStatement(this,
+                    pooledConnection.prepareStatement(sql, columnNames));
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
     }
 /* JDBC_3_ANT_KEY_END */
-/* JDBC_4_ANT_KEY_BEGIN */
 
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(getClass()) ||
-                connection.isWrapperFor(iface);
+    //
+    // Methods for accessing the delegate connection
+    //
+
+    /**
+     * If false, getDelegate() and getInnermostDelegate() will return null.
+     * @return if false, getDelegate() and getInnermostDelegate() will return null
+     */
+    public boolean isAccessToUnderlyingConnectionAllowed() {
+        return accessToUnderlyingConnectionAllowed;
     }
 
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return iface.cast(this);
-        } else if (iface.isAssignableFrom(connection.getClass())) {
-            return iface.cast(connection);
+    public Connection getDelegate() {
+        if (isAccessToUnderlyingConnectionAllowed()) {
+            return getDelegateInternal();
         } else {
-            return connection.unwrap(iface);
+            return null;
         }
     }
 
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        assertOpen();
-        return connection.createArrayOf(typeName, elements);
-    }
-
-    public Blob createBlob() throws SQLException {
-        assertOpen();
-        return connection.createBlob();
-    }
-
-    public Clob createClob() throws SQLException {
-        assertOpen();
-        return connection.createClob();
-    }
-
-    public NClob createNClob() throws SQLException {
-        assertOpen();
-        return connection.createNClob();
-    }
-
-    public SQLXML createSQLXML() throws SQLException {
-        assertOpen();
-        return connection.createSQLXML();
-    }
-
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        assertOpen();
-        return connection.createStruct(typeName, attributes);
-    }
-
-    public boolean isValid(int timeout) throws SQLException {
-        assertOpen();
-        return connection.isValid(timeout);
-    }
-
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
-        try {
-            assertOpen();
-            connection.setClientInfo(name, value);
-        }
-        catch (SQLClientInfoException e) {
-            throw e;
-        }
-        catch (SQLException e) {
-            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+    public Connection getInnermostDelegate() {
+        if (isAccessToUnderlyingConnectionAllowed()) {
+            return super.getInnermostDelegateInternal();
+        } else {
+            return null;
         }
     }
 
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        try {
-            assertOpen();
-            connection.setClientInfo(properties);
-        }
-        catch (SQLClientInfoException e) {
-            throw e;
-        }
-        catch (SQLException e) {
-            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
-        }
-    }
-
-    public Properties getClientInfo() throws SQLException {
-        assertOpen();
-        return connection.getClientInfo();
-    }
-
-    public String getClientInfo(String name) throws SQLException {
-        assertOpen();
-        return connection.getClientInfo(name);
-    }
-/* JDBC_4_ANT_KEY_END */
 }
