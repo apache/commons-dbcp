@@ -280,6 +280,10 @@ and PreparedStatements created by one of the following methods will be pooled:
 <p>
 <img src="images/icon_warning_sml.gif"/>
 <strong>NOTE</strong> - Make sure your connection has some resources left for the other statements.
+Pooling PreparedStatements may keep their cursors open in the database, causing a connection to run out of cursors,
+especially if maxOpenPreparedStatements is left at the default (unlimited) and an application opens a large number
+of different PreparedStatements per connection. To avoid this problem, maxOpenPreparedStatements should be set to a
+value less than the maximum number of cursors that can be open on a Connection.
 </p>
 
 
