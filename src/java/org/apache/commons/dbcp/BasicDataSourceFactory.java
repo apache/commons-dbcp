@@ -65,6 +65,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_URL = "url";
     private final static String PROP_USERNAME = "username";
     private final static String PROP_VALIDATIONQUERY = "validationQuery";
+    private final static String PROP_VALIDATIONQUERY_TIMEOUT = "validationQueryTimeout";
     /**
      * The property name for initConnectionSqls.
      * The associated value String must be of the form [query;]*
@@ -100,6 +101,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_URL,
         PROP_USERNAME,
         PROP_VALIDATIONQUERY,
+        PROP_VALIDATIONQUERY_TIMEOUT,
         PROP_INITCONNECTIONSQLS,
         PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED,
         PROP_REMOVEABANDONED,
@@ -291,6 +293,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setValidationQuery(value);
         }
 
+        value = properties.getProperty(PROP_VALIDATIONQUERY_TIMEOUT);
+        if (value != null) {
+            dataSource.setValidationQueryTimeout(Integer.parseInt(value));
+        }
+        
         value = properties.getProperty(PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED);
         if (value != null) {
             dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.valueOf(value).booleanValue());
