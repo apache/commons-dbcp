@@ -1402,7 +1402,7 @@ public class BasicDataSource implements DataSource {
                 // respect the ContextClassLoader
                 driver = (Driver) driverFromCCL.newInstance();
                 if (!driver.acceptsURL(url)) {
-                    new SQLException("No suitable driver", "08001"); 
+                    throw new SQLException("No suitable driver", "08001"); 
                 }
             }
         } catch (Throwable t) {
