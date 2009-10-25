@@ -24,18 +24,18 @@ import java.io.Serializable;
  */
 class PoolKey implements Serializable {
     private String datasourceName;
-    private String username;
+    private String userPwd;
     
-    PoolKey(String datasourceName, String username) {
+    PoolKey(String datasourceName, String userPwd) {
         this.datasourceName = datasourceName;
-        this.username = username;
+        this.userPwd = userPwd;
     }
     
     public boolean equals(Object obj) {
         if (obj instanceof PoolKey) {
             PoolKey pk = (PoolKey)obj;
             return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
-                (null == username ? null == pk.username : username.equals(pk.username));
+                (null == userPwd ? null == pk.userPwd : userPwd.equals(pk.userPwd));
         } else {
             return false;   
         }
@@ -46,8 +46,8 @@ class PoolKey implements Serializable {
         if (datasourceName != null) {
             h += datasourceName.hashCode();
         }
-        if (username != null) {
-            h = 29 * h + username.hashCode();
+        if (userPwd != null) {
+            h = 29 * h + userPwd.hashCode();
         }
         return h;
     }
@@ -55,7 +55,7 @@ class PoolKey implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer(50);
         sb.append("PoolKey(");
-        sb.append(username).append(", ").append(datasourceName);
+        sb.append(userPwd).append(", ").append(datasourceName);
         sb.append(')');
         return sb.toString();
     }

@@ -104,7 +104,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
         catch (SQLException e)
         {
-            if (!e.getMessage().startsWith("Given password did not match")) 
+            if (!e.getMessage().startsWith("x is not the correct password")) 
             {
                 throw e;
             }
