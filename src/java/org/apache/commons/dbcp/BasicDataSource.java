@@ -225,7 +225,39 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
+    /**
+     * The class loader instance to use to load the JDBC driver. If not
+     * specified, {@link Class#forName(String)} is used to load the JDBC driver.
+     * If specified, {@link Class#forName(String, boolean, ClassLoader)} is
+     * used.
+     */
+    protected ClassLoader driverClassLoader = null;
+    
+    /**
+     * Returns the class loader specified for loading the JDBC driver. Returns
+     * <code>null</code> if no class loader has been explicitly specified.
+     */
+    public synchronized ClassLoader getDriverClassLoader() {
+        return this.driverClassLoader;
+    }
 
+    /**
+     * <p>Sets the class loader to be used to load the JDBC driver.</p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
+     * 
+     * @param driverClassLoader the class loader with which to load the JDBC
+     *                          driver
+     */
+    public synchronized void setDriverClassLoader(
+            ClassLoader driverClassLoader) {
+        this.driverClassLoader = driverClassLoader;
+        this.restartNeeded = true;
+    }
+    
     /**
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or negative for no limit.
@@ -1359,7 +1391,11 @@ public class BasicDataSource implements DataSource {
         if (driverClassName != null) {
             try {
                 try {
-                    Class.forName(driverClassName);
+                    if (driverClassLoader == null) {
+                        Class.forName(driverClassName);
+                    } else {
+                        Class.forName(driverClassName, true, driverClassLoader);
+                    }
                 } catch (ClassNotFoundException cnfe) {
                     driverFromCCL = Thread.currentThread(
                             ).getContextClassLoader().loadClass(
