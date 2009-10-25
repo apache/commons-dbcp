@@ -17,25 +17,28 @@
  */
 package org.apache.commons.dbcp.managed;
 
+import org.apache.commons.dbcp.AbandonedConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.dbcp.SQLNestedException;
+import org.apache.commons.pool.KeyedObjectPoolFactory;
 
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 import java.sql.SQLException;
 
 /**
- * BasicManagedDataSource is an extension of BasicDataSource which
+ * <p>BasicManagedDataSource is an extension of BasicDataSource which
  * creates ManagedConnections.  This data source can create either
- * create full two-phase-commit XA connections or one-phase-commit
- * local connection.  Both types of connections are committed or
+ * full two-phase-commit XA connections or one-phase-commit
+ * local connections.  Both types of connections are committed or
  * rolled back as part of the global transaction (a.k.a. XA
  * transaction or JTA Transaction), but only XA connections can be
  * recovered in the case of a system crash.
  * </p>
- * BasicManagedDataSource adds the TransactionManager and XADataSource
+ * <p>BasicManagedDataSource adds the TransactionManager and XADataSource
  * properties.  The TransactionManager property is required and is
  * used to elist connections in global transactions.  The XADataSource
  * is optional and if set is the class name of the XADataSource class
@@ -44,9 +47,6 @@ import java.sql.SQLException;
  * is created. Otherwise, a standard DriverConnectionFactory is created
  * and wrapped with a LocalXAConnectionFactory.
  * </p>
- * This is not the only way to combine the <em>commons-dbcp</em> and
- * <em>commons-pool</em> packages, but provides a "one stop shopping"
- * solution for basic requirements.</p>
  *
  * @see BasicDataSource
  * @see ManagedConnection
@@ -134,5 +134,37 @@ public class BasicManagedDataSource extends BasicDataSource {
         dataSource = new ManagedDataSource(connectionPool, transactionRegistry);
         ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         dataSource.setLogWriter(logWriter);
+    }
+    
+    /**
+     * Creates the PoolableConnectionFactory and attaches it to the connection pool.
+     *
+     * @param driverConnectionFactory JDBC connection factory created by {@link #createConnectionFactory()}
+     * @param statementPoolFactory statement pool factory (null if statement pooling is turned off)
+     * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
+     * @throws SQLException if an error occurs creating the PoolableConnectionFactory
+     */
+    protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
+            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig abandonedConfig) throws SQLException {
+        PoolableConnectionFactory connectionFactory = null;
+        try {
+            connectionFactory =
+                new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory,
+                                              connectionPool,
+                                              statementPoolFactory,
+                                              validationQuery,
+                                              validationQueryTimeout,
+                                              connectionInitSqls,
+                                              defaultReadOnly,
+                                              defaultAutoCommit,
+                                              defaultTransactionIsolation,
+                                              defaultCatalog,
+                                              abandonedConfig);
+            validateConnectionFactory(connectionFactory);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
+        }
     }
 }

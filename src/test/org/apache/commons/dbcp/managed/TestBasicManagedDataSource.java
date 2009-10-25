@@ -17,8 +17,11 @@
  */
 package org.apache.commons.dbcp.managed;
 
+import java.sql.SQLException;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp.PoolableConnection;
 import org.apache.commons.dbcp.TestBasicDataSource;
+import org.apache.commons.dbcp.managed.LocalXAConnectionFactory.LocalXAResource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -43,5 +46,35 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
 
     public void testHashCode() throws Exception {
         // TODO reenable... hashcode doesn't work when accessToUnderlyingConnectionAllowed is false
+    }
+    
+    /**
+     * JIRA: DBCP-294
+     * Verify that PoolableConnections created by BasicManagedDataSource unregister themselves
+     * when reallyClosed.
+     */
+    public void testReallyClose() throws Exception {
+        BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
+        basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+        basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp.TesterDriver");
+        basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+        basicManagedDataSource.setUsername("username");
+        basicManagedDataSource.setPassword("password");
+        basicManagedDataSource.setMaxIdle(1); 
+        // Create and register a connection
+        ManagedConnection conn = (ManagedConnection) basicManagedDataSource.getConnection();
+        basicManagedDataSource.transactionRegistry.registerConnection(conn, new LocalXAResource(conn));
+        // Create another connection and return it to the pool
+        ManagedConnection conn2 = (ManagedConnection) basicManagedDataSource.getConnection();
+        conn2.close();
+        conn.close(); // No room at the inn - this will trigger reallyClose(), which should unregister
+        try {
+            basicManagedDataSource.transactionRegistry.getXAResource(conn);
+            fail("Expecting SQLException - XAResources orphaned");
+        } catch (SQLException ex) {
+            // expected
+        }     
+        conn2.close();
+        basicManagedDataSource.close();
     }
 }

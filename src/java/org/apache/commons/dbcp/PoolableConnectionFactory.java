@@ -580,10 +580,10 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
 
     public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
-        initializeConnection(conn);
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
+        initializeConnection(conn);
         if(null != _stmtPoolFactory) {
             KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
             conn = new PoolingConnection(conn,stmtpool);
@@ -592,7 +592,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         return new PoolableConnection(conn,_pool,_config);
     }
 
-    private void initializeConnection(Connection conn) throws SQLException {
+    protected void initializeConnection(Connection conn) throws SQLException {
         Collection sqls = _connectionInitSqls;
         if(conn.isClosed()) {
             throw new SQLException("initializeConnection: connection closed");

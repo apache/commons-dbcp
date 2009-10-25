@@ -17,15 +17,17 @@
  */
 package org.apache.commons.dbcp.managed;
 
-import javax.transaction.xa.XAResource;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
-import javax.transaction.Status;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.xa.XAResource;
+
 
 /**
  * TransactionRegistry tracks Connections and XAResources in a transacted environment for a single XAConnectionFactory.
@@ -111,6 +113,14 @@ public class TransactionRegistry {
             }
             return cache;
         }
+    }
+
+    /**
+     * Unregisters a destroyed connection from {@link TransactionRegistry}
+     * @param connection
+     */
+    public synchronized void unregisterConnection(Connection connection) {
+        xaResources.remove(connection);
     }
 }
 
