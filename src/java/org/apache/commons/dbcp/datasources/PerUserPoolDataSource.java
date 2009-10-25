@@ -333,7 +333,7 @@ public class PerUserPoolDataSource
      * Get the number of active connections in the pool for a given user.
      */
     public int getNumActive(String username, String password) {
-        ObjectPool pool = (ObjectPool)pools.get(getPoolKey(username));
+        ObjectPool pool = (ObjectPool)pools.get(getPoolKey(username,password));
         return (pool == null) ? 0 : pool.getNumActive();
     }
 
@@ -348,7 +348,7 @@ public class PerUserPoolDataSource
      * Get the number of idle connections in the pool for a given user.
      */
     public int getNumIdle(String username, String password) {
-        ObjectPool pool = (ObjectPool)pools.get(getPoolKey(username));
+        ObjectPool pool = (ObjectPool)pools.get(getPoolKey(username,password));
         return (pool == null) ? 0 : pool.getNumIdle();
     }
 
@@ -360,7 +360,7 @@ public class PerUserPoolDataSource
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
 
-        PoolKey key = getPoolKey(username);
+        PoolKey key = getPoolKey(username,password);
         Object pool = pools.get(key);
         synchronized(this) {
             if (pool == null) {
@@ -436,21 +436,22 @@ public class PerUserPoolDataSource
         return ref;
     }
 
-    private PoolKey getPoolKey(String username) {
+    private PoolKey getPoolKey(String username, String password) {
         PoolKey key = null;
+        String name = username + password;
         String dsName = getDataSourceName();
         Map dsMap = (Map) poolKeys.get(dsName);
         if (dsMap != null) {
-            key = (PoolKey) dsMap.get(username);
+            key = (PoolKey) dsMap.get(name);
         }
         
         if (key == null) {
-            key = new PoolKey(dsName, username);
+            key = new PoolKey(dsName, name);
             if (dsMap == null) {
                 dsMap = new HashMap();
                 poolKeys.put(dsName, dsMap);
             }
-            dsMap.put(username, key);
+            dsMap.put(name, key);
         }
         return key;
     }
@@ -492,7 +493,7 @@ public class PerUserPoolDataSource
                                   isRollbackAfterValidation(), 
                                   username, password);
            
-        pools.put(getPoolKey(username), pool);
+        pools.put(getPoolKey(username,password), pool);
     }
 
     /**
