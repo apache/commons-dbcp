@@ -53,11 +53,11 @@ import java.sql.SQLException;
  */
 public class BasicManagedDataSource extends BasicDataSource {
     /** Transaction Registry */
-    protected TransactionRegistry transactionRegistry;
+    private TransactionRegistry transactionRegistry;
     /** Transaction Manager */
-    protected TransactionManager transactionManager;
+    private TransactionManager transactionManager;
     /** XA datasource class name */
-    protected String xaDataSource;
+    private String xaDataSource;
     /** XA datasource instance */
     private XADataSource xaDataSourceInstance;
 
@@ -89,15 +89,23 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Gets the required transaction manager property.
      * @return the transaction manager used to enlist connections
      */
-    public TransactionManager getTransactionManager() {
+    public synchronized TransactionManager getTransactionManager() {
         return transactionManager;
+    }
+    
+    /**
+     * Gets the transaction registry.
+     * @return the transaction registry associating XAResources with managed connections
+     */
+    protected synchronized TransactionRegistry getTransactionRegistry() {
+        return transactionRegistry;
     }
 
     /**
      * Sets the required transaction manager property.
      * @param transactionManager the transaction manager used to enlist connections
      */
-    public void setTransactionManager(TransactionManager transactionManager) {
+    public synchronized void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
@@ -105,7 +113,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Gets the optional XADataSource class name.
      * @return the optional XADataSource class name
      */
-    public String getXADataSource() {
+    public synchronized String getXADataSource() {
         return xaDataSource;
     }
 
@@ -113,7 +121,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Sets the optional XADataSource class name.
      * @param xaDataSource the optional XADataSource class name
      */
-    public void setXADataSource(String xaDataSource) {
+    public synchronized void setXADataSource(String xaDataSource) {
         this.xaDataSource = xaDataSource;
     }
 
