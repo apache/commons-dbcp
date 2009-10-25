@@ -140,6 +140,9 @@
       <name>Dain Sundstrom</name>
       <email>dain@apache.org</email>
     </contributor>
+    <contributor>
+      <name>Philippe Mouawad</name>
+    </contributor>
   </contributors>
 
   <dependencies>

@@ -42,6 +42,11 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="psteitz" type="fix" issue="DBCP-294" due-to="Philippe Mouawad">
+        Added PoolableManagedConnection and PoolableManagedConnectionFactory so that
+        pooled managed connections can unregister themselves from transaction registries,
+        avoiding resource leaks.
+      </action>
       <action dev="psteitz" type="update" issue="DBCP-276">
         Added connectionProperties property to DriverAdapterCPDS.
       </action>

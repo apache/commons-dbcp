@@ -30,6 +30,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
+import org.apache.commons.pool.KeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -1331,27 +1332,8 @@ public class BasicDataSource implements DataSource {
                         maxOpenPreparedStatements);
         }
 
-        // Set up the poolable connection factory we will use
-        PoolableConnectionFactory connectionFactory = null;
-        try {
-            connectionFactory =
-                new PoolableConnectionFactory(driverConnectionFactory,
-                                              connectionPool,
-                                              statementPoolFactory,
-                                              validationQuery,
-                                              validationQueryTimeout,
-                                              connectionInitSqls,
-                                              defaultReadOnly,
-                                              defaultAutoCommit,
-                                              defaultTransactionIsolation,
-                                              defaultCatalog,
-                                              abandonedConfig);
-            validateConnectionFactory(connectionFactory);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
-        }
+        // Set up the poolable connection factory
+        createPoolableConnectionFactory(driverConnectionFactory, statementPoolFactory, abandonedConfig);
 
         // Create and return the pooling data source to manage the connections
         createDataSourceInstance();
@@ -1368,7 +1350,7 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Creates a connection factory for this datasource.  This method only
+     * Creates a JDBC connection factory for this datasource.  This method only
      * exists so subclasses can replace the implementation class.
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
@@ -1474,8 +1456,40 @@ public class BasicDataSource implements DataSource {
         dataSource.setLogWriter(logWriter);
     }
 
+    /**
+     * Creates the PoolableConnectionFactory and attaches it to the connection pool.  This method only exists
+     * so subclasses can replace the default implementation.
+     * 
+     * @param driverConnectionFactory JDBC connection factory
+     * @param statementPoolFactory statement pool factory (null if statement pooling is turned off)
+     * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
+     * @throws SQLException if an error occurs creating the PoolableConnectionFactory
+     */
+    protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
+            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig abandonedConfig) throws SQLException {
+        PoolableConnectionFactory connectionFactory = null;
+        try {
+            connectionFactory =
+                new PoolableConnectionFactory(driverConnectionFactory,
+                                              connectionPool,
+                                              statementPoolFactory,
+                                              validationQuery,
+                                              validationQueryTimeout,
+                                              connectionInitSqls,
+                                              defaultReadOnly,
+                                              defaultAutoCommit,
+                                              defaultTransactionIsolation,
+                                              defaultCatalog,
+                                              abandonedConfig);
+            validateConnectionFactory(connectionFactory);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SQLNestedException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
+        }
+    }
 
-    private static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
+    protected static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
         Connection conn = null;
         try {
             conn = (Connection) connectionFactory.makeObject();
