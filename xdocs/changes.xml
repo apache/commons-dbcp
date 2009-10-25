@@ -42,6 +42,13 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="update" issue="DBCP-203" due-to="Mark Grand">
+        Make the class loader used to load the JDBC driver configurable for the
+        BasicDatasource.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-8">
+        Handle user password changes for InstanceKeyDataSources.
+      </action>
       <action dev="psteitz" type="update" issue="DBCP-289" due-to="Marc Kannegießer">
         Made XADataSource configurable in BasicManagedDataSource.
       </action>
