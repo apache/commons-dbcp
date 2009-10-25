@@ -63,13 +63,13 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         basicManagedDataSource.setMaxIdle(1); 
         // Create and register a connection
         ManagedConnection conn = (ManagedConnection) basicManagedDataSource.getConnection();
-        basicManagedDataSource.transactionRegistry.registerConnection(conn, new LocalXAResource(conn));
+        basicManagedDataSource.getTransactionRegistry().registerConnection(conn, new LocalXAResource(conn));
         // Create another connection and return it to the pool
         ManagedConnection conn2 = (ManagedConnection) basicManagedDataSource.getConnection();
         conn2.close();
         conn.close(); // No room at the inn - this will trigger reallyClose(), which should unregister
         try {
-            basicManagedDataSource.transactionRegistry.getXAResource(conn);
+            basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
             fail("Expecting SQLException - XAResources orphaned");
         } catch (SQLException ex) {
             // expected
