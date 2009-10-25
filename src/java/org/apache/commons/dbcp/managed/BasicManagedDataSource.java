@@ -52,9 +52,38 @@ import java.sql.SQLException;
  * @version $Revision$
  */
 public class BasicManagedDataSource extends BasicDataSource {
+    /** Transaction Registry */
     protected TransactionRegistry transactionRegistry;
+    /** Transaction Manager */
     protected TransactionManager transactionManager;
+    /** XA datasource class name */
     protected String xaDataSource;
+    /** XA datasource instance */
+    private XADataSource xaDataSourceInstance;
+
+    /**
+     * Gets the XADataSource instance used by the XAConnectionFactory.
+     * 
+     * @return the XADataSource
+     */
+    public synchronized XADataSource getXaDataSourceInstance() {
+        return xaDataSourceInstance;
+    }
+
+    /**
+     * <p>Sets the XADataSource instance used by the XAConnectionFactory.</p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
+     * 
+     * @param xaDataSourceInstance XADataSource instance
+     */
+    public synchronized void setXaDataSourceInstance(XADataSource xaDataSourceInstance) {
+        this.xaDataSourceInstance = xaDataSourceInstance;
+        xaDataSource = xaDataSourceInstance == null ? null : xaDataSourceInstance.getClass().getName();
+    }
 
     /**
      * Gets the required transaction manager property.
@@ -101,30 +130,30 @@ public class BasicManagedDataSource extends BasicDataSource {
             return xaConnectionFactory;
         }
 
-        // Load the XA data source class
-        Class xaDataSourceClass = null;
-        try {
-            xaDataSourceClass = Class.forName(xaDataSource);
-        } catch (Throwable t) {
-            String message = "Cannot load XA data source class '" + xaDataSource + "'";
-            logWriter.println(message);
-            t.printStackTrace(logWriter);
-            throw new SQLException(message, t);
-        }
-
-        // Create the xa data source instance
-        XADataSource xaDataSource = null;
-        try {
-            xaDataSource = (XADataSource) xaDataSourceClass.newInstance();
-        } catch (Throwable t) {
-            String message = "Cannot create XA data source of class '" + xaDataSource + "'";
-            logWriter.println(message);
-            t.printStackTrace(logWriter);
-            throw new SQLException(message, t);
+        // Create the XADataSource instance using the configured class name if it has not been set
+        if (xaDataSourceInstance == null) {
+            Class xaDataSourceClass = null;
+            try {
+                xaDataSourceClass = Class.forName(xaDataSource);
+            } catch (Throwable t) {
+                String message = "Cannot load XA data source class '" + xaDataSource + "'";
+                logWriter.println(message);
+                t.printStackTrace(logWriter);
+                throw new SQLException(message, t);
+            }
+            
+            try {
+                xaDataSourceInstance = (XADataSource) xaDataSourceClass.newInstance();
+            } catch (Throwable t) {
+                String message = "Cannot create XA data source of class '" + xaDataSource + "'";
+                logWriter.println(message);
+                t.printStackTrace(logWriter);
+                throw new SQLException(message, t);
+            }
         }
 
         // finally, create the XAConectionFactory using the XA data source
-        XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSource, username, password);
+        XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSourceInstance, username, password);
         transactionRegistry = xaConnectionFactory.getTransactionRegistry();
         return xaConnectionFactory;
     }
