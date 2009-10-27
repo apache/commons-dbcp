@@ -47,7 +47,7 @@ public class TesterConnection implements Connection {
     protected boolean _open = true;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;
-    protected DatabaseMetaData _metaData = null;
+    protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
     protected String _catalog = null;
     protected Map _typeMap = null;
     protected boolean _readOnly = false;
