@@ -480,7 +480,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         int threadCount = Thread.activeCount();
         for (int i = 0; i < 10; i++) {
             try {
-                Connection con = ds.getConnection();
+                ds.getConnection();
             } catch (SQLException ex) {
                 // ignore
             }

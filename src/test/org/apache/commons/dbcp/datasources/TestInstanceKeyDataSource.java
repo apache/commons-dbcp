@@ -59,7 +59,7 @@ public class TestInstanceKeyDataSource extends TestCase {
         tds.setConnectionPoolDataSource(pcds);
         int numConnections = tds.getNumActive();
         try {
-            Connection conn = tds.getConnection("foo", "bar");
+            tds.getConnection("foo", "bar");
             fail("Expecting SQLException");
         } catch (SQLException ex) {
            //Expected

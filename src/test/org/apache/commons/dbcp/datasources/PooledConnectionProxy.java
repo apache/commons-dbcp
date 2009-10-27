@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.sql.ConnectionEvent;

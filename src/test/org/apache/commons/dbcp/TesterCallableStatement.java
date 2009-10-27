@@ -101,6 +101,9 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
         return 0;
     }
 
+    /**
+     * @deprecated
+     */
     public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException {
         return null;
     }

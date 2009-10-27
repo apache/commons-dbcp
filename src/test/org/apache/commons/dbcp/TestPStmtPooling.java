@@ -55,8 +55,7 @@ public class TestPStmtPooling extends TestCase {
         ObjectPool connPool = new GenericObjectPool();
         KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
 
-        PoolableConnectionFactory x = new PoolableConnectionFactory(
-                connFactory, connPool, stmtPoolFactory,
+        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
                 null, false, true);
 
         DataSource ds = new PoolingDataSource(connPool);
@@ -79,22 +78,21 @@ public class TestPStmtPooling extends TestCase {
         ObjectPool connPool = new GenericObjectPool();
         KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
 
-        PoolableConnectionFactory x = new PoolableConnectionFactory(
-                connFactory, connPool, stmtPoolFactory,
+        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
                 null, false, true);
 
         DataSource ds = new PoolingDataSource(connPool);
         ((PoolingDataSource) ds).setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn = ds.getConnection();
-        Statement stmt = conn.prepareStatement("select 1 from dual");
+        conn.prepareStatement("select 1 from dual");
         
         Connection poolableConnection = ((DelegatingConnection) conn).getDelegate();
         Connection poolingConnection = 
             ((DelegatingConnection) poolableConnection).getDelegate();
         poolingConnection.close();
         try {
-            stmt = conn.prepareStatement("select 1 from dual");
+            conn.prepareStatement("select 1 from dual");
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
