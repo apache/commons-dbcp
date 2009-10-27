@@ -119,11 +119,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testSimple() throws Exception 
     {
         Connection conn = ds.getConnection();
-        assertTrue(null != conn);
+        assertNotNull(conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
@@ -133,11 +133,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testSimpleWithUsername() throws Exception 
     {
         Connection conn = ds.getConnection("u1", "p1");
-        assertTrue(null != conn);
+        assertNotNull(conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
@@ -180,21 +180,21 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         throws Exception 
     {
         Connection conn = ds.getConnection();
-        assertTrue(null != conn);
+        assertNotNull(conn);
 
         PreparedStatement stmt = 
             conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
         
         stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
@@ -211,20 +211,20 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
 
         conn = ds.getConnection();
-        assertTrue(null != conn);
+        assertNotNull(conn);
 
         stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
 
         stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
@@ -441,12 +441,12 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                     state = "Getting Connection";
                     conn = getConnection();
                     state = "Using Connection";
-                    assertTrue(null != conn);
+                    assertNotNull(conn);
                     PreparedStatement stmt =
                         conn.prepareStatement("select * from dual");
-                    assertTrue(null != stmt);
+                    assertNotNull(stmt);
                     ResultSet rset = stmt.executeQuery();
-                    assertTrue(null != rset);
+                    assertNotNull(rset);
                     assertTrue(rset.next());
                     state = "Holding Connection";
                     Thread.sleep(connHoldTime);
@@ -473,7 +473,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
-        assertTrue(conn != null);
+        assertNotNull(conn);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
                      conn.getTransactionIsolation());
         conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);

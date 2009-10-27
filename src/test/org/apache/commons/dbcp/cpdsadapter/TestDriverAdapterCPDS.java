@@ -88,11 +88,11 @@ public class TestDriverAdapterCPDS extends TestCase {
 
     public void testSimple() throws Exception {
         Connection conn = pcds.getPooledConnection().getConnection();
-        assertTrue(null != conn);
+        assertNotNull(conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
@@ -101,11 +101,11 @@ public class TestDriverAdapterCPDS extends TestCase {
 
     public void testSimpleWithUsername() throws Exception {
         Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
-        assertTrue(null != conn);
+        assertNotNull(conn);
         PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertTrue(null != stmt);
+        assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
-        assertTrue(null != rset);
+        assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
         stmt.close();
