@@ -89,7 +89,12 @@ public class TesterResultSet implements ResultSet {
         if (!_open) {
             return;
         }
-        ((TesterStatement)_statement)._resultSet = null;
+        
+        // Not all result sets are generated from statements eg DatabaseMetaData
+        if (_statement != null) {
+            ((TesterStatement)_statement)._resultSet = null;
+        }
+        
         _open = false;
     }
 
@@ -798,7 +803,7 @@ public class TesterResultSet implements ResultSet {
     }
 
     public boolean isClosed() throws SQLException {
-        throw new SQLException("Not implemented.");
+        return !_open;
     }
 
     public void updateNString(int columnIndex, String value) throws SQLException {
