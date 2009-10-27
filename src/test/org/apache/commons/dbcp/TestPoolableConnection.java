@@ -65,7 +65,7 @@ public class TestPoolableConnection extends TestCase {
 
         // Now return the connection by closing it
         try {
-            c.close();
+            c.close(); // Can't be null
         } catch (SQLException e) {
             fail("Could not close connection: " + e.getMessage());
         }
