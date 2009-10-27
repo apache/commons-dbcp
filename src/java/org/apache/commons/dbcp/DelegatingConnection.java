@@ -33,6 +33,7 @@ import java.sql.Blob;
 import java.sql.ClientInfoStatus;
 import java.sql.Clob;
 import java.sql.NClob;
+import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLXML;
 import java.sql.Struct;
@@ -419,6 +420,10 @@ public class DelegatingConnection extends AbandonedTrace
                     Object trace = traceIter.next();
                     if (trace instanceof Statement) {
                         ((Statement) trace).close();
+                    } else if (trace instanceof ResultSet) {
+                        // DBCP-265: Need to close the result sets that are
+                        // generated via DatabaseMetaData
+                        ((ResultSet) trace).close();
                     }
                 }
                 clearTrace();
