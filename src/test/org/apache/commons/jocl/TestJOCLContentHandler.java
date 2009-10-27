@@ -252,6 +252,6 @@ public class TestJOCLContentHandler extends TestCase {
         throws IOException, SAXException
     {
         InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("testpool.jocl");
-        JOCLContentHandler jocl = JOCLContentHandler.parse(stream);
+        JOCLContentHandler.parse(stream);
     }
 }

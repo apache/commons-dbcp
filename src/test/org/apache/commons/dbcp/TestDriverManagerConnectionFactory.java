@@ -80,7 +80,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
         }
     }
     
-    private static class ConnectionThread implements Runnable {
+    private static final class ConnectionThread implements Runnable {
         private DataSource ds;
         private volatile boolean result = true;
         

@@ -28,8 +28,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.dbcp.SQLNestedException;
-
 /**
  * Tests for DriverAdapterCPDS
  * 

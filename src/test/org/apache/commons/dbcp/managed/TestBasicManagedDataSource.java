@@ -19,7 +19,6 @@ package org.apache.commons.dbcp.managed;
 
 import java.sql.SQLException;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.dbcp.PoolableConnection;
 import org.apache.commons.dbcp.TestBasicDataSource;
 import org.apache.commons.dbcp.managed.LocalXAConnectionFactory.LocalXAResource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;

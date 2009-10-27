@@ -17,7 +17,10 @@
 
 package org.apache.commons.jocl;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 
 /**
  * @version $Revision$ $Date$

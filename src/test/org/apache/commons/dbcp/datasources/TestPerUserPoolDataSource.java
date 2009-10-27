@@ -314,7 +314,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setPerUserMaxActive("u1", new Integer(1));
         Connection conn = tds.getConnection("u1", "p1");
         try {
-            Connection conn2 = tds.getConnection("u1", "p1");
+            tds.getConnection("u1", "p1");
             fail("Expecting Pool Exhausted exception");
         } catch (SQLException ex) {
             // expected

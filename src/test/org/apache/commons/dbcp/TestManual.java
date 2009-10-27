@@ -74,14 +74,14 @@ public class TestManual extends TestConnectionPool {
     public void test1() {
         GenericObjectPool connectionPool = new GenericObjectPool(null);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
-        PoolingDataSource dataSource = new PoolingDataSource(connectionPool);
+        new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        new PoolingDataSource(connectionPool);
     }
 
     public void test2() {
         GenericObjectPool connectionPool = new GenericObjectPool(null);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
         PoolingDriver driver = new PoolingDriver();
         driver.registerPool("example",connectionPool);
     }
