@@ -60,7 +60,7 @@ public class TestPoolableConnection extends TestCase {
             fail("Could not fetch Connection from pool: " + e.getMessage());
         }
 
-        assertTrue("Connection should be created and should not be null", c != null);
+        assertNotNull("Connection should be created and should not be null", c);
         assertEquals("There should be exactly one active object in the pool", 1, pool.getNumActive());
 
         // Now return the connection by closing it

@@ -164,7 +164,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
-        assertTrue(conn != null);
+        assertNotNull(conn);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
         conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
         conn.close();

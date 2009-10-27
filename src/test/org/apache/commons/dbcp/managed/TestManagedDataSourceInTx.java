@@ -127,7 +127,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     public void testClearWarnings() throws Exception {
         // open a connection
         Connection connection = newConnection();
-        assertTrue(connection != null);
+        assertNotNull(connection);
 
         // generate SQLWarning on connection
         connection.prepareCall("warning");
