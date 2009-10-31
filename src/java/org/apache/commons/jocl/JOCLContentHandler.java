@@ -774,7 +774,7 @@ public class JOCLContentHandler extends DefaultHandler {
             return _parent;
         }
 
-        public Object createObject() throws InstantiationException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+        public Object createObject() throws InstantiationException, IllegalAccessException, InvocationTargetException {
             if(_isnull) {
                 return null;
             } else if( _isgroup ) {
