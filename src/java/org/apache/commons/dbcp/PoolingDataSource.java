@@ -350,7 +350,7 @@ public class PoolingDataSource implements DataSource {
 
         public String toString() {
             if (delegate == null){
-                return null;
+                return "NULL";
             }
             return delegate.toString();
         }
