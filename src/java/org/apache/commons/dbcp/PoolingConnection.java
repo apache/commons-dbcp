@@ -267,7 +267,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     /**
      * A key uniquely identifiying {@link PreparedStatement}s.
      */
-    class PStmtKey {
+    static class PStmtKey {
         protected String _sql = null;
         protected Integer _resultSetType = null;
         protected Integer _resultSetConcurrency = null;
