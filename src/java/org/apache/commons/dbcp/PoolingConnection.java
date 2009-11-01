@@ -193,14 +193,18 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      */
     public Object makeObject(Object obj) throws Exception {
         if(null == obj || !(obj instanceof PStmtKey)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         } else {
             // _openPstmts++;
             PStmtKey key = (PStmtKey)obj;
             if(null == key._resultSetType && null == key._resultSetConcurrency) {
                 return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql),key,_pstmtPool,this);
             } else {
-                return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql,key._resultSetType.intValue(),key._resultSetConcurrency.intValue()),key,_pstmtPool,this);
+                if (null == key._resultSetType || null == key._resultSetConcurrency) {
+                    throw new IllegalArgumentException("Invalid prepared statement key.");
+                }
+                return new PoolablePreparedStatement(getDelegate().prepareStatement(
+                        key._sql,key._resultSetType.intValue(),key._resultSetConcurrency.intValue()),key,_pstmtPool,this);
             }
         }
     }
