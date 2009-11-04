@@ -251,7 +251,7 @@ public class PoolingDriver implements Driver {
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
      * closed connection cannot be used anymore.
      */
-    private class PoolGuardConnectionWrapper extends DelegatingConnection {
+    static private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
         private ObjectPool pool;
         private Connection delegate;
@@ -409,7 +409,7 @@ public class PoolingDriver implements Driver {
 
         public String toString() {
             if (delegate == null){
-                return null;
+                return "NULL";
             }
             return delegate.toString();
         }
