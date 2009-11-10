@@ -42,6 +42,10 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="fix" issue="DBCP-303" due-to="Dave Oxley">
+        Ensure Statement.getGeneratedKeys() works correctly with the CPDS
+        adapter.
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-302" due-to="Sebastian Bazley">
         Removed incorrectly advertised ClassNotFoundException from
         JOCLContentHandler.ConstructorDetails.createObject().
