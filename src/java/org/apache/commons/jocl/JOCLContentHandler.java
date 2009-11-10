@@ -719,7 +719,7 @@ public class JOCLContentHandler extends DefaultHandler {
     /** The name of the "value" attribute. */
     protected static final String ATT_VALUE   = "value";
 
-    class ConstructorDetails {
+    static class ConstructorDetails {
         private ConstructorDetails _parent = null;
         private Class _type = null;
         private ArrayList _argTypes = null;
