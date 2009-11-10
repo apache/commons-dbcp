@@ -87,6 +87,61 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt4);
     }
+    
+    /**
+     * Verifies that the prepared statement pool behaves as an LRU cache,
+     * closing least-recently-used statements idle in the pool to make room
+     * for new ones if necessary.
+     */
+    public void testLRUBehavior() throws Exception {
+        ds.setMaxOpenPreparedStatements(3);
+        
+        Connection conn = getConnection();
+        assertNotNull(conn);
+        
+        // Open 3 statements and then close them into the pool
+        PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        PreparedStatement inner1 = (PreparedStatement) ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        PreparedStatement inner2 = (PreparedStatement) ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
+        PreparedStatement inner3 = (PreparedStatement) ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
+        stmt1.close();
+        Thread.sleep(100); // Make sure return timestamps are different
+        stmt2.close();
+        Thread.sleep(100); 
+        stmt3.close();
+        
+        // Pool now has three idle statements, getting another one will force oldest (stmt1) out
+        PreparedStatement stmt4 = conn.prepareStatement("select 'd' from dual");
+        assertNotNull(stmt4);
+        
+        // Verify that inner1 has been closed
+        try {
+            inner1.clearParameters(); 
+            fail("expecting SQLExcption - statement should be closed");
+        } catch (SQLException ex) {
+            //Expected
+        }
+        // But others are still open
+        inner2.clearParameters();
+        inner3.clearParameters();
+        
+        // Now make sure stmt1 does not come back from the dead
+        PreparedStatement stmt5 = conn.prepareStatement("select 'a' from dual");
+        PreparedStatement inner5 = (PreparedStatement) ((DelegatingPreparedStatement) stmt5).getInnermostDelegate();
+        assertNotSame(inner5, inner1);
+        
+        // inner2 should be closed now
+        try {
+            inner2.clearParameters(); 
+            fail("expecting SQLExcption - statement should be closed");
+        } catch (SQLException ex) {
+            //Expected
+        }
+        // But inner3 should still be open
+        inner3.clearParameters();  
+    }
 
     // Bugzilla Bug 27246
     // PreparedStatement cache should be different depending on the Catalog    
