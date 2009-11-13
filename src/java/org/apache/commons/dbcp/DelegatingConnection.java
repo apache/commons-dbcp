@@ -27,13 +27,13 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.sql.ResultSet;
 /* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.ClientInfoStatus;
 import java.sql.Clob;
 import java.sql.NClob;
-import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLXML;
 import java.sql.Struct;
