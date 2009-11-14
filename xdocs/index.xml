@@ -26,7 +26,7 @@
 
 <section name="The DBCP Component">
 
-<p>Many Jakarta projects support interaction with a relational database.
+<p>Many Apache projects support interaction with a relational database.
 Creating a new connection for each user can be time consuming (often
 requiring multiple seconds of clock time), in order to perform a database
 transaction that might take milliseconds.  Opening a connection per user
@@ -40,7 +40,7 @@ time that a database connection is required.  The application itself logs
 into the DBMS, and handles any user account issues internally.</p>
 
 <p>There are several Database Connection Pools already available, both
-within Jakarta products and elsewhere.  This Commons package provides an
+within Apache products and elsewhere.  This Commons package provides an
 opportunity to coordinate the efforts required to create and maintain an
 efficient, feature-rich package under the ASF license.</p>
 
