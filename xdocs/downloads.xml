@@ -29,15 +29,6 @@
             </p>
             <p>For details of whats new in each version see the <a href="changes-report.html">Release History</a>.</p>
          </subsection>
-
-         <subsection name="Nightly Builds">
-            <p>
-               <a href="http://people.apache.org/builds/commons/nightly/commons-dbcp/">Nightly Builds</a>
-               are built once a day from the current SVN HEAD. This is (nearly) the latest code and so should
-               be treated with caution.
-            </p>
-         </subsection>
-
          <subsection name="Archived Releases">
             <p>
                Older releases are retained by the Apache Software Foundation but are
