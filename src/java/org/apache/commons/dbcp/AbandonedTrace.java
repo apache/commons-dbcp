@@ -35,17 +35,10 @@ import java.util.List;
  */
 public class AbandonedTrace {
 
-    /** Date format */
-    private static final SimpleDateFormat format = new SimpleDateFormat
-        ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
-         "'by the following code was never closed:'");
-
     /** DBCP AbandonedConfig */
     private AbandonedConfig config = null;
     /** A stack trace of the code that created me (if in debug mode) */
     private volatile Exception createdBy;
-    /** Time created */
-    private volatile long createdTime;
     /** A list of objects created by children of this object */
     private final List trace = new ArrayList();
     /** Last time this connection was used */
@@ -93,8 +86,7 @@ public class AbandonedTrace {
             return;
         }
         if (config.getLogAbandoned()) {
-            createdBy = new Exception();
-            createdTime = System.currentTimeMillis();
+            createdBy = new AbandonedObjectException();
         }
     }
 
@@ -143,8 +135,7 @@ public class AbandonedTrace {
             return;                           
         }                    
         if (config.getLogAbandoned()) {
-            createdBy = new Exception();
-            createdTime = System.currentTimeMillis();
+            createdBy = new AbandonedObjectException();
         }
     }
 
@@ -188,7 +179,6 @@ public class AbandonedTrace {
      */
     public void printStackTrace() {
         if (createdBy != null && config != null) {
-            config.getLogWriter().println(format.format(new Date(createdTime)));
             createdBy.printStackTrace(config.getLogWriter());
         }
         synchronized(this.trace) {
@@ -203,7 +193,7 @@ public class AbandonedTrace {
     /**
      * Remove a child object this object is tracing.
      *
-     * @param trace AbandonedTrace object to remvoe
+     * @param trace AbandonedTrace object to remove
      */
     protected void removeTrace(AbandonedTrace trace) {
         synchronized(this.trace) {
@@ -211,4 +201,27 @@ public class AbandonedTrace {
         }
     }
 
+    static class AbandonedObjectException extends Exception {
+
+        /** Date format */
+        private static final SimpleDateFormat format = new SimpleDateFormat
+            ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
+             "'by the following code was never closed:'");
+
+        private long _createdTime;
+
+        public AbandonedObjectException() {
+            _createdTime = System.currentTimeMillis();
+        }
+
+        // Override getMessage to avoid creating objects and formatting
+        // dates unless the log message will actually be used.
+        public String getMessage() {
+            String msg;
+            synchronized(format) {
+                msg = format.format(new Date(_createdTime));
+            }
+            return msg;
+        }
+    }
 }

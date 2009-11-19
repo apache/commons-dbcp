@@ -42,6 +42,11 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="markt" type="update" issue="DBCP-305" due-to="Christopher Schultz">
+        Use an API specific exception for logging abandoned objects to make
+        scanning the logs for these exceptions simpler and to provide a better
+        message that includes the creation time of the abandoned object.
+      </action>
       <action dev="markt" type="fix" issue="DBCP-303" due-to="Dave Oxley">
         Ensure Statement.getGeneratedKeys() works correctly with the CPDS
         adapter.
