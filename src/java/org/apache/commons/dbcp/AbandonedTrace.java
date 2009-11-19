@@ -179,7 +179,7 @@ public class AbandonedTrace {
     protected List getTrace() {
         synchronized (this.trace) {
             return new ArrayList(trace);
-    }
+        }
     }
 
     /**
