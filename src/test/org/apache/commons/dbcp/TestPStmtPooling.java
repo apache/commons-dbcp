@@ -70,6 +70,42 @@ public class TestPStmtPooling extends TestCase {
         assertSame(ustmt1, ustmt2);
     }
     
+    public void testCallableStatementPooling() throws Exception {
+        new TesterDriver();
+        ConnectionFactory connFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver","u1","p1");
+
+        ObjectPool connPool = new GenericObjectPool();
+        KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+
+        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
+                null, false, true);
+
+        DataSource ds = new PoolingDataSource(connPool);
+
+        Connection conn = ds.getConnection();
+        Statement stmt1 = conn.prepareStatement("select 1 from dual");
+        Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
+        Statement cstmt1 = conn.prepareCall("{call home}");
+        Statement ucstmt1 = ((DelegatingStatement) cstmt1).getInnermostDelegate();
+        stmt1.close();  // Return to pool
+        cstmt1.close(); // ""
+        Statement stmt2 = conn.prepareStatement("select 1 from dual"); // Check out from pool
+        Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
+        Statement cstmt2 = conn.prepareCall("{call home}");
+        Statement ucstmt2 = ((DelegatingStatement) cstmt2).getInnermostDelegate();
+        stmt2.close();  // Return to pool
+        cstmt2.close(); // ""
+        assertSame(ustmt1, ustmt2);
+        assertSame(ucstmt1, ucstmt2);
+        // Verify key distinguishes Callable from Prepared Statements in the pool
+        Statement stmt3 = conn.prepareCall("select 1 from dual");
+        Statement ustmt3 = ((DelegatingStatement) stmt3).getInnermostDelegate();
+        stmt3.close();
+        assertNotSame(ustmt1, ustmt3);
+        assertNotSame(ustmt3, ucstmt1);
+    }
+    
     public void testClosePool() throws Exception {
         new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(

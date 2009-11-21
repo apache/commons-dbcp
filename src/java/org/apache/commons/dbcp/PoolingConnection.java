@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,10 +30,12 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
  * <p>
- * My {@link #prepareStatement} methods, rather than creating a new {@link PreparedStatement}
- * each time, may actually pull the {@link PreparedStatement} from a pool of unused statements.
- * The {@link PreparedStatement#close} method of the returned {@link PreparedStatement} doesn't
- * actually close the statement, but rather returns it to my pool. (See {@link PoolablePreparedStatement}.)
+ * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than creating a new PreparedStatement
+ * each time, may actually pull the statement from a pool of unused statements.
+ * The {@link PreparedStatement#close} method of the returned statement doesn't
+ * actually close the statement, but rather returns it to the pool. 
+ * (See {@link PoolablePreparedStatement}, {@link PoolableCallableStatement}.)
+ * 
  *
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
@@ -40,9 +43,16 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
-    /** My pool of {@link PreparedStatement}s. */
+    /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
     protected KeyedObjectPool _pstmtPool = null;
 
+    /** Prepared Statement type */
+    private static final byte STATEMENT_PREPAREDSTMT = 0;
+    
+    /** Callable Statement type */
+    private static final byte STATEMENT_CALLABLESTMT = 1;
+     
+    
     /**
      * Constructor.
      * @param c the underlying {@link Connection}.
@@ -54,7 +64,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     /**
      * Constructor.
      * @param c the underlying {@link Connection}.
-     * @param pool {@link KeyedObjectPool} of {@link PreparedStatement}s
+     * @param pool {@link KeyedObjectPool} of {@link PreparedStatement}s and {@link CallableStatement}s.
      */
     public PoolingConnection(Connection c, KeyedObjectPool pool) {
         super(c);
@@ -63,7 +73,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
 
 
     /**
-     * Close and free all {@link PreparedStatement}s from my pool, and
+     * Close and free all {@link PreparedStatement}s or {@link CallableStatement} from my pool, and
      * close my underlying connection.
      */
     public synchronized void close() throws SQLException {
@@ -122,6 +132,48 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             throw (SQLException) new SQLException("Borrow prepareStatement from pool failed").initCause(e);
         }
     }
+    
+    /**
+     * Create or obtain a {@link CallableStatement} from the pool.
+     * 
+     * @param sql the sql string used to define the CallableStatement
+     * @return a {@link PoolableCallableStatement}
+     * @throws SQLException
+     * @since 1.3
+     */
+	public CallableStatement prepareCall(String sql) throws SQLException {
+        try {
+            return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, STATEMENT_CALLABLESTMT)));
+        } catch (NoSuchElementException e) {
+            throw new SQLNestedException("MaxOpenCallableStatements limit reached", e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SQLNestedException("Borrow callableStatement from pool failed", e);
+        }
+    }
+	
+	/**
+     * Create or obtain a {@link CallableStatement} from the pool.
+     * 
+     * @param sql the sql string used to define the CallableStatement
+     * @return a {@link PoolableCallableStatement}
+     * @throws SQLException
+     * @since 1.3
+     */
+	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+        try {
+            return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, resultSetType,
+                            resultSetConcurrency, STATEMENT_CALLABLESTMT)));
+        } catch (NoSuchElementException e) {
+            throw new SQLNestedException("MaxOpenCallableStatements limit reached", e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SQLNestedException("Borrow callableStatement from pool failed", e);
+        }
+    }
+    
 
     // ------------------- JDBC 3.0 -----------------------------------------
     // Will be commented by the build process on a JDBC 2.0 system
@@ -166,6 +218,17 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency);
     }
+    
+    /**
+     * Create a PStmtKey for the given arguments.
+     */
+    protected Object createKey(String sql, int resultSetType, int resultSetConcurrency, byte stmtType) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (Exception e) {}
+        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, stmtType);
+    }
 
     /**
      * Create a PStmtKey for the given arguments.
@@ -177,6 +240,17 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog);
     }
+    
+    /**
+     * Create a PStmtKey for the given arguments.
+     */
+    protected Object createKey(String sql, byte stmtType) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (Exception e) {}
+        return new PStmtKey(normalizeSQL(sql), catalog, stmtType);
+    }
 
     /**
      * Normalize the given SQL statement, producing a
@@ -187,36 +261,42 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for creating
-     * {@link PreparedStatement}s.
+     * {@link KeyedPoolableObjectFactory} method for creating
+     * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatements}.
+     * The {@link PStmtKey#_stmtType} field in the key determines whether
+     * a PoolablePreparedStatement or PoolableCallableStatement is created.
+     * 
      * @param obj the key for the {@link PreparedStatement} to be created
      */
     public Object makeObject(Object obj) throws Exception {
         if(null == obj || !(obj instanceof PStmtKey)) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         } else {
-            // _openPstmts++;
             PStmtKey key = (PStmtKey)obj;
-            if(null == key._resultSetType && null == key._resultSetConcurrency) {
-                return new PoolablePreparedStatement(getDelegate().prepareStatement(key._sql),key,_pstmtPool,this);
-            } else {
-                if (null == key._resultSetType || null == key._resultSetConcurrency) {
-                    throw new IllegalArgumentException("Invalid prepared statement key.");
-                }
-                return new PoolablePreparedStatement(getDelegate().prepareStatement(
-                        key._sql,key._resultSetType.intValue(),key._resultSetConcurrency.intValue()),key,_pstmtPool,this);
+            if( null == key._resultSetType && null == key._resultSetConcurrency ) {
+                return key._stmtType == STATEMENT_PREPAREDSTMT ?
+                    new PoolablePreparedStatement(getDelegate().prepareStatement( key._sql), key, _pstmtPool, this) :
+                    new PoolableCallableStatement(getDelegate().prepareCall( key._sql ), key, _pstmtPool, this);
+
+            }else {
+                return key._stmtType == STATEMENT_PREPAREDSTMT ?
+                    new PoolablePreparedStatement(getDelegate().prepareStatement(
+                        key._sql, key._resultSetType.intValue(),key._resultSetConcurrency.intValue()), key, _pstmtPool, this) :
+                    new PoolableCallableStatement( getDelegate().prepareCall(
+                        key._sql,key._resultSetType.intValue(), key._resultSetConcurrency.intValue() ), key, _pstmtPool, this);
             }
         }
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for destroying
-     * {@link PreparedStatement}s.
+     * {@link KeyedPoolableObjectFactory} method for destroying
+     * PoolablePreparedStatements and PoolableCallableStatements.
+     * Closes the underlying statement.
+     * 
      * @param key ignored
-     * @param obj the {@link PreparedStatement} to be destroyed.
+     * @param obj the pooled statement to be destroyed.
      */
     public void destroyObject(Object key, Object obj) throws Exception {
-        //_openPstmts--;
         if(obj instanceof DelegatingPreparedStatement) {
             ((DelegatingPreparedStatement)obj).getInnermostDelegate().close();
         } else {
@@ -225,8 +305,9 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for validating
-     * {@link PreparedStatement}s.
+     * {@link KeyedPoolableObjectFactory} method for validating
+     * pooled statements. Currently always returns true.
+     * 
      * @param key ignored
      * @param obj ignored
      * @return <tt>true</tt>
@@ -236,18 +317,21 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for activating
-     * {@link PreparedStatement}s. (Currently a no-op.)
+     * {@link KeyedPoolableObjectFactory} method for activating
+     * pooled statements.
+     * 
      * @param key ignored
-     * @param obj ignored
+     * @param obj pooled statement to be activated
      */
     public void activateObject(Object key, Object obj) throws Exception {
         ((DelegatingPreparedStatement)obj).activate();
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for passivating
-     * {@link PreparedStatement}s.  Currently invokes {@link PreparedStatement#clearParameters}.
+     * {@link KeyedPoolableObjectFactory} method for passivating
+     * {@link PreparedStatement}s or {@link CallableStatement}s.
+     * Invokes {@link PreparedStatement#clearParameters}.
+     * 
      * @param key ignored
      * @param obj a {@link PreparedStatement}
      */
@@ -268,10 +352,24 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
      * A key uniquely identifiying {@link PreparedStatement}s.
      */
     static class PStmtKey {
+        
+        /** SQL defining Prepared or Callable Statement */
         protected String _sql = null;
+        
+        /** Result set type */
         protected Integer _resultSetType = null;
+        
+        /** Result set concurrency */
         protected Integer _resultSetConcurrency = null;
+        
+        /** Database catalog */
         protected String _catalog = null;
+        
+        /** 
+         *  Statement type. Either STATEMENT_PREPAREDSTMT (PreparedStatement)
+         *  or STATEMENT_CALLABLESTMT (CallableStatement) 
+         */
+        protected byte _stmtType = STATEMENT_PREPAREDSTMT;
         
         PStmtKey(String sql) {
             _sql = sql;
@@ -280,6 +378,12 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         PStmtKey(String sql, String catalog) {
             _sql = sql;
             _catalog = catalog;
+        }
+        
+        PStmtKey(String sql, String catalog, byte stmtType) {
+            _sql = sql;
+            _catalog = catalog;
+            _stmtType = stmtType;
         }
 
         PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
@@ -294,6 +398,14 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             _resultSetType = new Integer(resultSetType);
             _resultSetConcurrency = new Integer(resultSetConcurrency);
         }
+        
+        PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
+            _sql = sql;
+            _catalog = catalog;
+            _resultSetType = new Integer(resultSetType);
+            _resultSetConcurrency = new Integer(resultSetConcurrency);
+            _stmtType = stmtType;
+        }
 
         public boolean equals(Object that) {
             try {
@@ -301,7 +413,8 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
                 return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
                         ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
                         ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
-                        ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency))
+                        ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency)) &&
+                        (_stmtType == key._stmtType)
                       );
             } catch(ClassCastException e) {
                 return false;
@@ -327,6 +440,8 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
             buf.append(_resultSetType);
             buf.append(", resultSetConcurrency=");
             buf.append(_resultSetConcurrency);
+            buf.append(", statmentType=");
+            buf.append(_stmtType);
             return buf.toString();
         }
     }
