@@ -42,6 +42,13 @@ The <action> type attribute can be add,update,fix,remove.
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
+      <action dev="psteitz" type="fix" issue="DBCP-204" due-to="Wei Chen">
+        Made PoolingConnection pool CallableStatements. When BasicDataSource's 
+        poolPreparedStatements property is true, CallableStatements are now
+        pooled along with PreparedStatements. The maxOpenPreparedStatements
+        property limits the combined number of Callable and Prepared statements
+        that can be in use at a given time.
+      </action>
       <action dev="markt" type="update" issue="DBCP-305" due-to="Christopher Schultz">
         Use an API specific exception for logging abandoned objects to make
         scanning the logs for these exceptions simpler and to provide a better

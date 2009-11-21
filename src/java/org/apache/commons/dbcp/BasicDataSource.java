@@ -427,14 +427,15 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Prepared statement pooling for this pool.
+     * Prepared statement pooling for this pool. When this property is set to <code>true</code>
+     * both PreparedStatements and CallableStatements are pooled.
      */
     protected boolean poolPreparedStatements = false;
     
     /**
      * Returns true if we are pooling statements.
      * 
-     * @return true if prepared statements are pooled
+     * @return true if prepared and callable statements are pooled
      */
     public synchronized boolean isPoolPreparedStatements() {
         return this.poolPreparedStatements;
@@ -456,10 +457,15 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * The maximum number of open statements that can be allocated from
+     * <p>The maximum number of open statements that can be allocated from
      * the statement pool at the same time, or non-positive for no limit.  Since 
      * a connection usually only uses one or two statements at a time, this is
-     * mostly used to help detect resource leaks.
+     * mostly used to help detect resource leaks.</p>
+     * 
+     * <p>Note: As of version 1.3, CallableStatements (those produced by {@link Connection#prepareCall})
+     * are pooled along with PreparedStatements (produced by {@link Connection#prepareStatement})
+     * and <code>maxOpenPreparedStatements</code> limits the total number of prepared or callable statements
+     * that may be in use at a given time.</p>
      */
     protected int maxOpenPreparedStatements = GenericKeyedObjectPool.DEFAULT_MAX_TOTAL;
 
