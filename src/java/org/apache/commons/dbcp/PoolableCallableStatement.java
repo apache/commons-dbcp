@@ -40,15 +40,17 @@ public class PoolableCallableStatement extends DelegatingCallableStatement imple
     /**
      * The {@link KeyedObjectPool} from which this CallableStatement was obtained.
      */
-    protected KeyedObjectPool _pool = null;
+    private final KeyedObjectPool _pool;
 
     /**
      * Key for this statement in the containing {@link KeyedObjectPool}.
      */
-    protected Object _key = null;
+    private final Object _key;
 
     public PoolableCallableStatement(DelegatingConnection c, CallableStatement s) {
         super(c, s);
+        _key = null;
+        _pool = null;
     }
 
     /**
