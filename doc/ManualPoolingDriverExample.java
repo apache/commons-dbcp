@@ -44,13 +44,13 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 
 //
 // To compile this example, you'll want:
-//  * commons-pool-1.5.3.jar
+//  * commons-pool-1.5.4.jar
 //  * commons-dbcp-1.2.2.jar
 // in your classpath.
 //
 // To run this example, you'll want:
 //  * commons-collections.jar
-//  * commons-pool-1.5.3.jar
+//  * commons-pool-1.5.4.jar
 //  * commons-dbcp-1.2.2.jar
 //  * the classes for your (underlying) JDBC driver
 // in your classpath.
