@@ -41,13 +41,13 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 //
 // To compile this example, you'll want:
-//  * commons-pool-1.5.3.jar
+//  * commons-pool-1.5.4.jar
 //  * commons-dbcp-1.2.2.jar
 //  * j2ee.jar (for the javax.sql classes)
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool-1.5.3.jar
+//  * commons-pool-1.5.4.jar
 //  * commons-dbcp-1.2.2.jar
 //  * j2ee.jar (for the javax.sql classes)
 //  * the classes for your (underlying) JDBC driver
