@@ -262,7 +262,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
 
     /**
      * {@link KeyedPoolableObjectFactory} method for creating
-     * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatements}.
+     * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatement}s.
      * The {@link PStmtKey#_stmtType} field in the key determines whether
      * a PoolablePreparedStatement or PoolableCallableStatement is created.
      * 
