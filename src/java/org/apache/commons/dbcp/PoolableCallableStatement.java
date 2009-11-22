@@ -47,12 +47,6 @@ public class PoolableCallableStatement extends DelegatingCallableStatement imple
      */
     private final Object _key;
 
-    public PoolableCallableStatement(DelegatingConnection c, CallableStatement s) {
-        super(c, s);
-        _key = null;
-        _pool = null;
-    }
-
     /**
      * Constructor.
      * 
