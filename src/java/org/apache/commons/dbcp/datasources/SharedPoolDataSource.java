@@ -45,6 +45,8 @@ import org.apache.commons.dbcp.SQLNestedException;
 public class SharedPoolDataSource
     extends InstanceKeyDataSource {
 
+    private static final long serialVersionUID = -8132305535403690372L;
+
     private final Map userKeys = new LRUMap(10);
 
     private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;

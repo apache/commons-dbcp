@@ -31,6 +31,7 @@ package org.apache.commons.dbcp;
  **/
 public class DbcpException extends RuntimeException {
 
+    private static final long serialVersionUID = 2477800549022838103L;
 
     // ----------------------------------------------------------- Constructors
 

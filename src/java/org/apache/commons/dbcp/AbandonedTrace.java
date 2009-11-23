@@ -203,6 +203,8 @@ public class AbandonedTrace {
 
     static class AbandonedObjectException extends Exception {
 
+        private static final long serialVersionUID = 7398692158058772916L;
+
         /** Date format */
         private static final SimpleDateFormat format = new SimpleDateFormat
             ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
