@@ -439,7 +439,7 @@ public class JOCLContentHandler extends DefaultHandler {
                 } else if(ELT_BOOLEAN.equals(localName)) {
                     String valstr = getAttributeValue(ATT_VALUE,attr,"false");
                     boolean val = ("true".equalsIgnoreCase(valstr) || "yes".equalsIgnoreCase(valstr));
-                    addObject(Boolean.TYPE,new Boolean(val));
+                    addObject(Boolean.TYPE,Boolean.valueOf(val));
                 } else if(ELT_BYTE.equals(localName)) {
                     byte val = Byte.parseByte(getAttributeValue(ATT_VALUE,attr,"0"));
                     addObject(Byte.TYPE,new Byte(val));
@@ -478,7 +478,7 @@ public class JOCLContentHandler extends DefaultHandler {
                     // unrecognized JOCL element warning?
                 }
             }
-        } catch(Exception e) {
+        } catch(ClassNotFoundException e) {
             throw new SAXException(e);
         }
     }
