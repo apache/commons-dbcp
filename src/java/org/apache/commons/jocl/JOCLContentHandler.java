@@ -478,6 +478,8 @@ public class JOCLContentHandler extends DefaultHandler {
                     // unrecognized JOCL element warning?
                 }
             }
+        } catch(NumberFormatException e) {
+            throw new SAXException(e);
         } catch(ClassNotFoundException e) {
             throw new SAXException(e);
         }
