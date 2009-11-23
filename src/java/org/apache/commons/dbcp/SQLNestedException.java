@@ -32,6 +32,8 @@ import java.sql.SQLException;
  */
 public class SQLNestedException extends SQLException {
 
+    private static final long serialVersionUID = 1046151479543081202L;
+
     /* Throwable.getCause detection as found in commons-lang */
     private static final Method THROWABLE_CAUSE_METHOD;
     static {
@@ -52,7 +54,7 @@ public class SQLNestedException extends SQLException {
      * Holds the reference to the exception or error that caused
      * this exception to be thrown.
      */
-    private Throwable cause = null;
+    private final Throwable cause;
 
     /**
      * Constructs a new <code>SQLNestedException</code> with specified
