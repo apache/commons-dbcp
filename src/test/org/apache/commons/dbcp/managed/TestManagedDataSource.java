@@ -235,7 +235,8 @@ public class TestManagedDataSource extends TestConnectionPool {
     /**
      * Factory to return non-delegating connections for DBCP-198 test
      */
-    private class NonDelegatingPoolableConnectionFactory extends PoolableConnectionFactory {
+    private static class NonDelegatingPoolableConnectionFactory
+            extends PoolableConnectionFactory {
         public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool) {
             super(connFactory, pool, null, null, true, true);
         }
