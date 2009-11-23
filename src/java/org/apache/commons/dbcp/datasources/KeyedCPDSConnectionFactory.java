@@ -51,7 +51,7 @@ class KeyedCPDSConnectionFactory
     protected ConnectionPoolDataSource _cpds = null;
     protected volatile String _validationQuery = null;
     protected volatile boolean _rollbackAfterValidation = false;
-    protected KeyedObjectPool _pool = null;
+    protected volatile KeyedObjectPool _pool = null;
     
     /** 
      * Map of PooledConnections for which close events are ignored.
@@ -76,7 +76,7 @@ class KeyedCPDSConnectionFactory
                                       String validationQuery) {
         _cpds = cpds;
         _pool = pool;
-        _pool.setFactory(this);
+        pool.setFactory(this);
         _validationQuery = validationQuery;
     }
 

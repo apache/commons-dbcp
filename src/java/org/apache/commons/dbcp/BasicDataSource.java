@@ -986,7 +986,7 @@ public class BasicDataSource implements DataSource {
      * pool to be re-initialized. Currently, restart is not triggered, so
      * this property has no effect.
      */
-    private boolean restartNeeded = false;
+    private volatile boolean restartNeeded = false;
     
     /**
      * Returns whether or not a restart is needed. 
@@ -995,7 +995,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @return true if a restart is needed
      */
-    private synchronized boolean isRestartNeeded() {
+    private boolean isRestartNeeded() {
         return restartNeeded;
     }
 
