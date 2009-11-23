@@ -51,6 +51,9 @@ import org.apache.commons.dbcp.SQLNestedException;
  */
 public class PerUserPoolDataSource
     extends InstanceKeyDataSource {
+
+    private static final long serialVersionUID = -3104731034410444060L;
+
     private static final Map poolKeys = new HashMap();
 
     private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
