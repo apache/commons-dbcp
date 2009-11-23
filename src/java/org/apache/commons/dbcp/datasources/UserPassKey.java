@@ -24,8 +24,9 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 class UserPassKey implements Serializable {
-    private String password;
-    private String username;
+    private static final long serialVersionUID = 5142970911626584817L;
+    private final String password;
+    private final String username;
     
     UserPassKey(String username, String password) {
         this.username = username;
