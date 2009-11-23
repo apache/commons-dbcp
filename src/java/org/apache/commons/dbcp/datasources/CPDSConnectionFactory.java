@@ -51,7 +51,7 @@ class CPDSConnectionFactory
     protected ConnectionPoolDataSource _cpds = null;
     protected volatile String _validationQuery = null;
     protected volatile boolean _rollbackAfterValidation = false;
-    protected ObjectPool _pool = null;
+    protected volatile ObjectPool _pool = null;
     protected String _username = null;
     protected String _password = null;
     private Map validatingMap = new HashMap();
@@ -77,7 +77,7 @@ class CPDSConnectionFactory
                                  String password) {
         _cpds = cpds;
         _pool = pool;
-        _pool.setFactory(this);
+        pool.setFactory(this);
         _validationQuery = validationQuery;
         _username = username;
         _password = password;

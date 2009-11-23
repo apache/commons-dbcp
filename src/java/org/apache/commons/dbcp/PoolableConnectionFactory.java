@@ -542,7 +542,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Set to <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling.
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s
      */
-    synchronized public void setStatementPoolFactory(KeyedObjectPoolFactory stmtPoolFactory) {
+    public void setStatementPoolFactory(KeyedObjectPoolFactory stmtPoolFactory) {
         _stmtPoolFactory = stmtPoolFactory;
     }
 
@@ -724,7 +724,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected volatile int _validationQueryTimeout = -1;
     protected Collection _connectionInitSqls = null;
     protected volatile ObjectPool _pool = null;
-    protected KeyedObjectPoolFactory _stmtPoolFactory = null;
+    protected volatile KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;

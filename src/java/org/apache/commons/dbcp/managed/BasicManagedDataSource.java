@@ -55,7 +55,7 @@ public class BasicManagedDataSource extends BasicDataSource {
     /** Transaction Registry */
     private TransactionRegistry transactionRegistry;
     /** Transaction Manager */
-    private TransactionManager transactionManager;
+    private transient TransactionManager transactionManager;
     /** XA datasource class name */
     private String xaDataSource;
     /** XA datasource instance */
@@ -89,7 +89,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Gets the required transaction manager property.
      * @return the transaction manager used to enlist connections
      */
-    public synchronized TransactionManager getTransactionManager() {
+    public TransactionManager getTransactionManager() {
         return transactionManager;
     }
     
@@ -105,7 +105,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Sets the required transaction manager property.
      * @param transactionManager the transaction manager used to enlist connections
      */
-    public synchronized void setTransactionManager(TransactionManager transactionManager) {
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
