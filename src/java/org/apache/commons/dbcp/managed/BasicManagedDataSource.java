@@ -175,9 +175,10 @@ public class BasicManagedDataSource extends BasicDataSource {
     }
 
     protected void createDataSourceInstance() throws SQLException {
-        dataSource = new ManagedDataSource(connectionPool, transactionRegistry);
-        ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        dataSource.setLogWriter(logWriter);
+        PoolingDataSource pds = new ManagedDataSource(connectionPool, transactionRegistry);
+        pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+        pds.setLogWriter(logWriter);
+        dataSource = pds; 
     }
     
     /**

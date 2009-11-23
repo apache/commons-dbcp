@@ -62,14 +62,14 @@ public class BasicDataSource implements DataSource {
     /**
      * The default auto-commit state of connections created by this pool.
      */
-    protected boolean defaultAutoCommit = true;
+    protected volatile boolean defaultAutoCommit = true;
 
     /**
      * Returns the default auto-commit property.
      * 
      * @return true if default auto-commit is enabled
      */
-    public synchronized boolean getDefaultAutoCommit() {
+    public boolean getDefaultAutoCommit() {
         return this.defaultAutoCommit;
     }
 
@@ -84,7 +84,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param defaultAutoCommit default auto-commit value
      */
-    public synchronized void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    public void setDefaultAutoCommit(boolean defaultAutoCommit) {
         this.defaultAutoCommit = defaultAutoCommit;
         this.restartNeeded = true;
     }
@@ -93,16 +93,17 @@ public class BasicDataSource implements DataSource {
     /**
      * The default read-only state of connections created by this pool.
      */
-    protected Boolean defaultReadOnly = null;
+    protected transient Boolean defaultReadOnly = null;
 
     /**
      * Returns the default readOnly property.
      * 
      * @return true if connections are readOnly by default
      */
-    public synchronized boolean getDefaultReadOnly() {
-        if (this.defaultReadOnly != null) {
-            return this.defaultReadOnly.booleanValue();
+    public boolean getDefaultReadOnly() {
+        Boolean val = defaultReadOnly;
+        if (val != null) {
+            return val.booleanValue();
         }
         return false;
     }
@@ -117,7 +118,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param defaultReadOnly default read-only value
      */
-    public synchronized void setDefaultReadOnly(boolean defaultReadOnly) {
+    public void setDefaultReadOnly(boolean defaultReadOnly) {
         this.defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         this.restartNeeded = true;
     }
@@ -125,7 +126,8 @@ public class BasicDataSource implements DataSource {
     /**
      * The default TransactionIsolation state of connections created by this pool.
      */
-    protected int defaultTransactionIsolation = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+    protected volatile int defaultTransactionIsolation =
+        PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
 
     /**
      * Returns the default transaction isolation state of returned connections.
@@ -133,7 +135,7 @@ public class BasicDataSource implements DataSource {
      * @return the default value for transaction isolation state
      * @see Connection#getTransactionIsolation
      */
-    public synchronized int getDefaultTransactionIsolation() {
+    public int getDefaultTransactionIsolation() {
         return this.defaultTransactionIsolation;
     }
 
@@ -150,7 +152,7 @@ public class BasicDataSource implements DataSource {
      * state
      * @see Connection#getTransactionIsolation
      */
-    public synchronized void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
+    public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
         this.restartNeeded = true;
     }
@@ -159,14 +161,14 @@ public class BasicDataSource implements DataSource {
     /**
      * The default "catalog" of connections created by this pool.
      */
-    protected String defaultCatalog = null;
+    protected volatile String defaultCatalog = null;
 
     /**
      * Returns the default catalog.
      * 
      * @return the default catalog
      */
-    public synchronized String getDefaultCatalog() {
+    public String getDefaultCatalog() {
         return this.defaultCatalog;
     }
 
@@ -180,7 +182,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param defaultCatalog the default catalog
      */
-    public synchronized void setDefaultCatalog(String defaultCatalog) {
+    public void setDefaultCatalog(String defaultCatalog) {
         if ((defaultCatalog != null) && (defaultCatalog.trim().length() > 0)) {
             this.defaultCatalog = defaultCatalog;
         }
@@ -723,14 +725,14 @@ public class BasicDataSource implements DataSource {
      * The connection password to be passed to our JDBC driver to establish
      * a connection.
      */
-    protected String password = null;
+    protected volatile String password = null;
 
     /**
      * Returns the password passed to the JDBC driver to establish connections.
      * 
      * @return the connection password
      */
-    public synchronized String getPassword() {
+    public String getPassword() {
         return this.password;
     }
 
@@ -744,7 +746,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param password new value for the password
      */
-    public synchronized void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
         this.restartNeeded = true;
     }
@@ -792,7 +794,7 @@ public class BasicDataSource implements DataSource {
      * @return the {@link #username} passed to the JDBC driver to establish
      * connections
      */
-    public synchronized String getUsername() {
+    public String getUsername() {
         return this.username;
     }
 
@@ -806,7 +808,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param username the new value for the JDBC connection username
      */
-    public synchronized void setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
         this.restartNeeded = true;
     }
@@ -817,7 +819,7 @@ public class BasicDataSource implements DataSource {
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
      * one row.
      */
-    protected String validationQuery = null;
+    protected volatile String validationQuery = null;
 
     /**
      * Returns the validation query used to validate connections before
@@ -826,7 +828,7 @@ public class BasicDataSource implements DataSource {
      * @return the SQL validation query
      * @see #validationQuery
      */
-    public synchronized String getValidationQuery() {
+    public String getValidationQuery() {
         return this.validationQuery;
     }
 
@@ -840,7 +842,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @param validationQuery the new value for the validation query
      */
-    public synchronized void setValidationQuery(String validationQuery) {
+    public void setValidationQuery(String validationQuery) {
         if ((validationQuery != null) && (validationQuery.trim().length() > 0)) {
             this.validationQuery = validationQuery;
         } else {
@@ -854,7 +856,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @since 1.3
      */
-    protected int validationQueryTimeout = -1;
+    protected volatile int validationQueryTimeout = -1;
     
     /**
      * Returns the validation query timeout.
@@ -862,7 +864,7 @@ public class BasicDataSource implements DataSource {
      * @return the timeout in seconds before connection validation queries fail.
      * @since 1.3
      */
-    public synchronized int getValidationQueryTimeout() {
+    public int getValidationQueryTimeout() {
         return validationQueryTimeout;
     }
     
@@ -880,7 +882,7 @@ public class BasicDataSource implements DataSource {
      * @param timeout new validation query timeout value in seconds
      * @since 1.3
      */
-    public synchronized void setValidationQueryTimeout(int timeout) {
+    public void setValidationQueryTimeout(int timeout) {
         this.validationQueryTimeout = timeout;
         restartNeeded = true;
     }
@@ -895,7 +897,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @since 1.3
      */
-    protected List connectionInitSqls;
+    protected volatile List connectionInitSqls;
 
     /**
      * Returns the list of SQL statements executed when a physical connection
@@ -905,11 +907,12 @@ public class BasicDataSource implements DataSource {
      * @return initialization SQL statements
      * @since 1.3
      */
-    public synchronized Collection getConnectionInitSqls() {
-        if (connectionInitSqls == null) {
+    public Collection getConnectionInitSqls() {
+        Collection result = connectionInitSqls; 
+        if (result == null) {
             return Collections.EMPTY_LIST;
         }
-        return connectionInitSqls;
+        return result;
     }
 
     /**
@@ -924,22 +927,25 @@ public class BasicDataSource implements DataSource {
      * @param connectionInitSqls Collection of SQL statements to execute
      * on connection creation
      */
-    public synchronized void setConnectionInitSqls(Collection connectionInitSqls) {
-        this.connectionInitSqls = null;
+    public void setConnectionInitSqls(Collection connectionInitSqls) {
         if ((connectionInitSqls != null) && (connectionInitSqls.size() > 0)) {
+            ArrayList newVal = null;
             for (Iterator iterator = connectionInitSqls.iterator();
             iterator.hasNext();) {
                 Object o = iterator.next();
                 if (o != null) {
                     String s = o.toString();
                     if (s.trim().length() > 0) {
-                        if (this.connectionInitSqls == null) {
-                            this.connectionInitSqls = new ArrayList();
+                        if (newVal == null) {
+                            newVal = new ArrayList();
                         }
-                        this.connectionInitSqls.add(s);
+                        newVal.add(s);
                     }
                 }
             }
+            this.connectionInitSqls = newVal;
+        } else {
+            this.connectionInitSqls = null;
         }
         this.restartNeeded = true;
     }
@@ -1002,7 +1008,7 @@ public class BasicDataSource implements DataSource {
     /**
      * The object pool that internally manages our connections.
      */
-    protected GenericObjectPool connectionPool = null;
+    protected volatile GenericObjectPool connectionPool = null;
     
     /**
      * The connection properties that will be sent to our JDBC driver when
@@ -1017,7 +1023,7 @@ public class BasicDataSource implements DataSource {
      * be acquired <strong>ONLY</strong> by calls to the
      * <code>createDataSource()</code> method.
      */
-    protected DataSource dataSource = null;
+    protected volatile DataSource dataSource = null;
 
     /**
      * The PrintWriter to which log messages should be directed.
@@ -1446,14 +1452,16 @@ public class BasicDataSource implements DataSource {
         }
 
         // Set up the driver connection factory we will use
-        if (username != null) {
-            connectionProperties.put("user", username);
+        String user = username;
+        if (user != null) {
+            connectionProperties.put("user", user);
         } else {
             log("DBCP DataSource configured without a 'username'");
         }
 
-        if (password != null) {
-            connectionProperties.put("password", password);
+        String pwd = password;
+        if (pwd != null) {
+            connectionProperties.put("password", pwd);
         } else {
             log("DBCP DataSource configured without a 'password'");
         }
@@ -1468,22 +1476,24 @@ public class BasicDataSource implements DataSource {
      */
     protected void createConnectionPool() {
         // Create an object pool to contain our active connections
+        GenericObjectPool gop;
         if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
-            connectionPool = new AbandonedObjectPool(null,abandonedConfig);
+            gop = new AbandonedObjectPool(null,abandonedConfig);
         }
         else {
-            connectionPool = new GenericObjectPool();
+            gop = new GenericObjectPool();
         }
-        connectionPool.setMaxActive(maxActive);
-        connectionPool.setMaxIdle(maxIdle);
-        connectionPool.setMinIdle(minIdle);
-        connectionPool.setMaxWait(maxWait);
-        connectionPool.setTestOnBorrow(testOnBorrow);
-        connectionPool.setTestOnReturn(testOnReturn);
-        connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-        connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
-        connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        connectionPool.setTestWhileIdle(testWhileIdle);
+        gop.setMaxActive(maxActive);
+        gop.setMaxIdle(maxIdle);
+        gop.setMinIdle(minIdle);
+        gop.setMaxWait(maxWait);
+        gop.setTestOnBorrow(testOnBorrow);
+        gop.setTestOnReturn(testOnReturn);
+        gop.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+        gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        gop.setTestWhileIdle(testWhileIdle);
+        connectionPool = gop;
     }
 
     /**
@@ -1493,9 +1503,10 @@ public class BasicDataSource implements DataSource {
      * @throws SQLException if unable to create a datasource instance
      */
     protected void createDataSourceInstance() throws SQLException {
-        dataSource = new PoolingDataSource(connectionPool);
-        ((PoolingDataSource) dataSource).setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        dataSource.setLogWriter(logWriter);
+        PoolingDataSource pds = new PoolingDataSource(connectionPool);
+        pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+        pds.setLogWriter(logWriter);
+        dataSource = pds;
     }
 
     /**
