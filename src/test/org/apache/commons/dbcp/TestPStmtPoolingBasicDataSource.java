@@ -68,7 +68,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         // go over the maxOpen limit
         PreparedStatement stmt3 = null;
         try {
-            stmt3 = conn.prepareStatement("select 'c' from dual");
+            conn.prepareStatement("select 'c' from dual");
             fail("expected SQLException");
         } 
         catch (SQLException e) {}

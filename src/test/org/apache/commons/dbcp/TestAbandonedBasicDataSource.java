@@ -153,7 +153,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         Thread.sleep(500);
         conn1.prepareStatement("SELECT 1 FROM DUAL"); // reset
         Thread.sleep(800);
-        conn2 = ds.getConnection(); // trigger abandoned cleanup again
+        ds.getConnection(); // trigger abandoned cleanup again
         conn1.createStatement();         
     }
 }

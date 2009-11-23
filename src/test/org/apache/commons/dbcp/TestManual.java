@@ -153,7 +153,7 @@ public class TestManual extends TestConnectionPool {
         driver.closePool("test");
 
         try {
-            conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+            DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
             fail("expected SQLException");
         }
         catch (SQLException e) {
