@@ -141,7 +141,7 @@ public class TestDelegatingConnection extends TestCase {
      * Delegate that will throw RTE on toString
      * Used to validate fix for DBCP-241
      */
-    class RTEGeneratingConnection extends TesterConnection {
+    static class RTEGeneratingConnection extends TesterConnection {
         public RTEGeneratingConnection() {
             super("","");
         }
