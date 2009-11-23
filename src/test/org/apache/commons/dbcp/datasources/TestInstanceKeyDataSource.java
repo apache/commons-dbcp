@@ -69,6 +69,8 @@ public class TestInstanceKeyDataSource extends TestCase {
     
     private static class ThrowOnSetupDefaultsDataSource
     extends SharedPoolDataSource {
+        private static final long serialVersionUID = -448025812063133259L;
+
         ThrowOnSetupDefaultsDataSource() {
             super();
         }

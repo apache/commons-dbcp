@@ -84,6 +84,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  */
 public abstract class InstanceKeyDataSource
         implements DataSource, Referenceable, Serializable {
+    private static final long serialVersionUID = -4243533936955098795L;
     private static final String GET_CONNECTION_CALLED 
             = "A Connection was already requested from this source, " 
             + "further initialization is not allowed.";
