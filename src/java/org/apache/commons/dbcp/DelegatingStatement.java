@@ -205,7 +205,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -216,7 +216,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -248,7 +248,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     { checkOpen(); try { _stmt.cancel(); } catch (SQLException e) { handleException(e); } }
 
     public SQLWarning getWarnings() throws SQLException
-    { checkOpen(); try { return _stmt.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return _stmt.getWarnings(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
     public void clearWarnings() throws SQLException
     { checkOpen(); try { _stmt.clearWarnings(); } catch (SQLException e) { handleException(e); } }
@@ -290,7 +290,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     { checkOpen(); try { _stmt.clearBatch(); } catch (SQLException e) { handleException(e); } }
 
     public int[] executeBatch() throws SQLException
-    { checkOpen(); try { return _stmt.executeBatch(); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return _stmt.executeBatch(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
     /**
      * Returns a String representation of this object.
@@ -316,7 +316,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             return DelegatingResultSet.wrapResultSet(this, _stmt.getGeneratedKeys());
         } catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
