@@ -87,7 +87,10 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable, 
                ObjectFactory {
-                   
+  
+    private static final long serialVersionUID = -4820523787212147844L;
+
+
     private static final String GET_CONNECTION_CALLED 
             = "A PooledConnection was already requested from this source, " 
             + "further initialization is not allowed.";
