@@ -61,19 +61,16 @@ public class TestDelegatingConnection extends TestCase {
     }
 
     public void testHashCodeEqual() {
-        DelegatingConnection conn = new DelegatingConnection(delegateConn);
         DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
         assertEquals(conn.hashCode(), conn2.hashCode());
     }
 
     public void testHashCodeNotEqual() {
-        DelegatingConnection conn = new DelegatingConnection(delegateConn);
         DelegatingConnection conn2 = new DelegatingConnection(delegateConn2);
         assertTrue(conn.hashCode() != conn2.hashCode());
     }
     
     public void testEquals() {
-        DelegatingConnection conn = new DelegatingConnection(delegateConn);
         DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
         DelegatingConnection conn3 = new DelegatingConnection(null);
         
