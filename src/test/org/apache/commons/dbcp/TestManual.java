@@ -69,6 +69,7 @@ public class TestManual extends TestConnectionPool {
     public void tearDown() throws Exception {
         driver.closePool("test");
         DriverManager.deregisterDriver(driver);
+        super.tearDown();
     }
     
     public void test1() {
