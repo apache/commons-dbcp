@@ -23,8 +23,10 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 class PoolKey implements Serializable {
-    private String datasourceName;
-    private String userPwd;
+    private static final long serialVersionUID = 2252771047542484533L;
+
+    private final String datasourceName;
+    private final String userPwd;
     
     PoolKey(String datasourceName, String userPwd) {
         this.datasourceName = datasourceName;
