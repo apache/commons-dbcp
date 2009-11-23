@@ -105,8 +105,8 @@ public class DriverAdapterCPDS
 
     /** Login TimeOut in seconds */
     private int loginTimeout;
-    /** Log stream */
-    private PrintWriter logWriter = null;
+    /** Log stream. NOT USED */
+    private transient PrintWriter logWriter = null;
 
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
