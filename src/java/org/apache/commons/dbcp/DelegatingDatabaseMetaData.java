@@ -156,7 +156,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -170,18 +170,18 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getCatalogSeparator() throws SQLException {
         { try { return _meta.getCatalogSeparator(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getCatalogTerm() throws SQLException {
         { try { return _meta.getCatalogTerm(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getCatalogs() throws SQLException {
@@ -192,7 +192,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -206,7 +206,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -221,7 +221,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -241,7 +241,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -257,12 +257,12 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public String getDatabaseProductName() throws SQLException {
         { try { return _meta.getDatabaseProductName(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getDatabaseProductVersion() throws SQLException {
         { try { return _meta.getDatabaseProductVersion(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public int getDefaultTransactionIsolation() throws SQLException {
@@ -276,12 +276,12 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public String getDriverName() throws SQLException {
         { try { return _meta.getDriverName(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getDriverVersion() throws SQLException {
         { try { return _meta.getDriverVersion(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getExportedKeys(String catalog, String schema, String table)
@@ -293,18 +293,18 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getExtraNameCharacters() throws SQLException {
         { try { return _meta.getExtraNameCharacters(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getIdentifierQuoteString() throws SQLException {
         { try { return _meta.getIdentifierQuoteString(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getImportedKeys(String catalog, String schema, String table)
@@ -316,7 +316,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -330,7 +330,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -446,7 +446,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public String getNumericFunctions() throws SQLException {
         { try { return _meta.getNumericFunctions(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
@@ -458,7 +458,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -473,13 +473,13 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getProcedureTerm() throws SQLException {
         { try { return _meta.getProcedureTerm(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getProcedures(String catalog, String schemaPattern,
@@ -492,7 +492,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -503,7 +503,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public String getSQLKeywords() throws SQLException {
         { try { return _meta.getSQLKeywords(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public int getSQLStateType() throws SQLException {
@@ -513,7 +513,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public String getSchemaTerm() throws SQLException {
         { try { return _meta.getSchemaTerm(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getSchemas() throws SQLException {
@@ -524,18 +524,18 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getSearchStringEscape() throws SQLException {
         { try { return _meta.getSearchStringEscape(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getStringFunctions() throws SQLException {
         { try { return _meta.getStringFunctions(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getSuperTables(String catalog, String schemaPattern,
@@ -548,7 +548,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -562,13 +562,13 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getSystemFunctions() throws SQLException {
         { try { return _meta.getSystemFunctions(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getTablePrivileges(String catalog, String schemaPattern,
@@ -581,7 +581,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -593,7 +593,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -607,13 +607,13 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getTimeDateFunctions() throws SQLException {
         { try { return _meta.getTimeDateFunctions(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getTypeInfo() throws SQLException {
@@ -624,7 +624,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -638,18 +638,18 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
     public String getURL() throws SQLException {
         { try { return _meta.getURL(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public String getUserName() throws SQLException {
         { try { return _meta.getUserName(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getVersionColumns(String catalog, String schema,
@@ -661,7 +661,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -1139,7 +1139,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
     
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         { try { return _meta.getRowIdLifetime(); }
-        catch (SQLException e) { handleException(e); return null; } }
+        catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
     public ResultSet getSchemas(String catalog, String schemaPattern)
@@ -1151,7 +1151,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -1173,7 +1173,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -1187,7 +1187,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -1202,7 +1202,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 

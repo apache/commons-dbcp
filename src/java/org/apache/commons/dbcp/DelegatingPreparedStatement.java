@@ -97,7 +97,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
         }
         catch (SQLException e) {
             handleException(e);
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -190,7 +190,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     { checkOpen(); try { ((PreparedStatement)_stmt).setArray(i,x); } catch (SQLException e) { handleException(e); } }
 
     public ResultSetMetaData getMetaData() throws SQLException
-    { checkOpen(); try { return ((PreparedStatement)_stmt).getMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((PreparedStatement)_stmt).getMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
     public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException
     { checkOpen(); try { ((PreparedStatement)_stmt).setDate(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
@@ -223,7 +223,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     { checkOpen(); try { ((PreparedStatement)_stmt).setURL(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
 
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
-    { checkOpen(); try { return ((PreparedStatement)_stmt).getParameterMetaData(); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((PreparedStatement)_stmt).getParameterMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 /* JDBC_3_ANT_KEY_END */
 /* JDBC_4_ANT_KEY_BEGIN */
 
