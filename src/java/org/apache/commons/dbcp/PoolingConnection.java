@@ -226,7 +226,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (Exception e) {}
+        } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, stmtType);
     }
 
@@ -248,7 +248,7 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (Exception e) {}
+        } catch (SQLException e) {}
         return new PStmtKey(normalizeSQL(sql), catalog, stmtType);
     }
 
