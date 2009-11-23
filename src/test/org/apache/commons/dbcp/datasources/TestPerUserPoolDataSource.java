@@ -402,7 +402,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         for (int i = 0; i < pts.length; i++) {
             pts[i] = new PoolTest(threadGroup, holdTime);
         }
-        Thread.sleep(10 * holdTime);
+        Thread.sleep(10L * holdTime);
         for (int i = 0; i < pts.length; i++) {
             pts[i].stop();
         }
