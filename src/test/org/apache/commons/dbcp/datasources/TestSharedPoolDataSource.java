@@ -415,13 +415,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         /**
          * The number of milliseconds to hold onto a database connection
          */
-        private int connHoldTime;
+        private final int connHoldTime;
 
-        private boolean isRun;
+        private volatile boolean isRun; // shared across threads
 
-        private String state;
+        private volatile String state; // sharead across threads
 
-        boolean isStopOnException;
+        private final boolean isStopOnException;
 
         protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
             this(threadGroup, connHoldTime, false);
