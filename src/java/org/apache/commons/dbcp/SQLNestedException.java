@@ -67,9 +67,12 @@ public class SQLNestedException extends SQLException {
     public SQLNestedException(String msg, Throwable cause) {
         super(msg);
         this.cause = cause;
-        if ((cause != null) && (DriverManager.getLogWriter() != null)) {
-            DriverManager.getLogWriter().print("Caused by: ");
-            cause.printStackTrace(DriverManager.getLogWriter());
+        if (cause != null){
+            final PrintWriter logWriter = DriverManager.getLogWriter();
+            if (logWriter != null) {
+                logWriter.print("Caused by: ");
+                cause.printStackTrace(logWriter);
+            }
         }
     }
     
