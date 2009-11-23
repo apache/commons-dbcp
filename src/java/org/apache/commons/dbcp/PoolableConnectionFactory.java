@@ -476,7 +476,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Sets the {@link ConnectionFactory} from which to obtain base {@link Connection}s.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
      */
-    synchronized public void setConnectionFactory(ConnectionFactory connFactory) {
+    public void setConnectionFactory(ConnectionFactory connFactory) {
         _connFactory = connFactory;
     }
 
@@ -486,7 +486,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Using <tt>null</tt> turns off validation.
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
      */
-    synchronized public void setValidationQuery(String validationQuery) {
+    public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
     
@@ -499,7 +499,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param timeout new validation query timeout value in seconds
      * @since 1.3
      */
-    synchronized public void setValidationQueryTimeout(int timeout) {
+    public void setValidationQueryTimeout(int timeout) {
         _validationQueryTimeout = timeout;
     }
 
@@ -532,7 +532,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      * @return the connection pool
      */
-    synchronized public ObjectPool getPool() {
+    public synchronized ObjectPool getPool() {
         return _pool;
     }
 
@@ -719,11 +719,11 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         }
     }
 
-    protected ConnectionFactory _connFactory = null;
-    protected String _validationQuery = null;
-    protected int _validationQueryTimeout = -1;
+    protected volatile ConnectionFactory _connFactory = null;
+    protected volatile String _validationQuery = null;
+    protected volatile int _validationQueryTimeout = -1;
     protected Collection _connectionInitSqls = null;
-    protected ObjectPool _pool = null;
+    protected volatile ObjectPool _pool = null;
     protected KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
