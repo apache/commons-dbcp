@@ -53,6 +53,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private DataSource ds;
 
     public void setUp() throws Exception {
+        super.setUp();
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
