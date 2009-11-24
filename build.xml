@@ -73,7 +73,6 @@
       <property name="javac.deprecation" value="false"/>
 
       <available property="jndi.present" classname="javax.naming.Context"/>
-      <available property="jdbc3.present" classname="java.sql.Savepoint"/>
       <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
@@ -92,9 +91,6 @@
        <echo>Checking dependencies</echo>
        <antcall target="check_jar">
            <param name="file" value="${commons-pool.jar}"/>
-       </antcall>
-       <antcall target="check_jar">
-           <param name="file" value="${jdbc20ext.jar}"/>
        </antcall>
        <antcall target="check_jar">
            <param name="file" value="${junit.jar}"/>
