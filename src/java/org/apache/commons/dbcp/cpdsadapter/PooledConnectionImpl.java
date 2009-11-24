@@ -578,10 +578,40 @@ class PooledConnectionImpl
             buf.append(", resultSetHoldability=");
             buf.append(_resultSetHoldability);
             buf.append(", columnIndexes=");
-            buf.append(Arrays.toString(_columnIndexes));
+// JDK1.5   buf.append(Arrays.toString(_columnIndexes));
+            arrayToString(buf,_columnIndexes);
             buf.append(", columnNames=");
-            buf.append(Arrays.toString(_columnNames));
+// JDK1.5   buf.append(Arrays.toString(_columnNames));
+            arrayToString(buf,_columnNames);
             return buf.toString();
+        }
+        private void arrayToString(StringBuffer sb, int[] array){
+            if (array == null) {
+                sb.append("null");
+                return;
+            }
+            sb.append('[');
+            for(int i=0; i<array.length; i++){
+                if (i>0){
+                    sb.append(',');
+                }
+                sb.append(array[i]);
+            }
+            sb.append(']');
+        }
+        private void arrayToString(StringBuffer sb, String[] array){
+            if (array == null) {
+                sb.append("null");
+                return;
+            }
+            sb.append('[');
+            for(int i=0; i<array.length; i++){
+                if (i>0){
+                    sb.append(',');
+                }
+                sb.append(array[i]);
+            }
+            sb.append(']');
         }
     }
 }
