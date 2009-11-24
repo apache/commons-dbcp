@@ -274,16 +274,19 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
         } else {
             PStmtKey key = (PStmtKey)obj;
             if( null == key._resultSetType && null == key._resultSetConcurrency ) {
-                return key._stmtType == STATEMENT_PREPAREDSTMT ?
-                    new PoolablePreparedStatement(getDelegate().prepareStatement( key._sql), key, _pstmtPool, this) :
-                    new PoolableCallableStatement(getDelegate().prepareCall( key._sql ), key, _pstmtPool, this);
-
+                if (key._stmtType == STATEMENT_PREPAREDSTMT ) {
+                    return new PoolablePreparedStatement(getDelegate().prepareStatement( key._sql), key, _pstmtPool, this); 
+                } else {
+                    return new PoolableCallableStatement(getDelegate().prepareCall( key._sql), key, _pstmtPool, this);
+                }
             }else {
-                return key._stmtType == STATEMENT_PREPAREDSTMT ?
-                    new PoolablePreparedStatement(getDelegate().prepareStatement(
-                        key._sql, key._resultSetType.intValue(),key._resultSetConcurrency.intValue()), key, _pstmtPool, this) :
-                    new PoolableCallableStatement( getDelegate().prepareCall(
-                        key._sql,key._resultSetType.intValue(), key._resultSetConcurrency.intValue() ), key, _pstmtPool, this);
+                if(key._stmtType == STATEMENT_PREPAREDSTMT) {
+                    return new PoolablePreparedStatement(getDelegate().prepareStatement(
+                        key._sql, key._resultSetType.intValue(),key._resultSetConcurrency.intValue()), key, _pstmtPool, this);
+                } else {
+                    return new PoolableCallableStatement( getDelegate().prepareCall(
+                        key._sql,key._resultSetType.intValue(), key._resultSetConcurrency.intValue()), key, _pstmtPool, this);
+                }
             }
         }
     }
