@@ -64,9 +64,9 @@ public class TestCPDSConnectionFactory extends TestCase {
     public void testSharedPoolDSDestroyOnReturn() throws Exception {
        PerUserPoolDataSource ds = new PerUserPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
-       ds.setPerUserMaxActive("username",Integer.valueOf(10));
-       ds.setPerUserMaxWait("username",Integer.valueOf(50));
-       ds.setPerUserMaxIdle("username",Integer.valueOf(2));
+       ds.setPerUserMaxActive("username",new Integer(10));// Integer.valueOf() is Java 1.5
+       ds.setPerUserMaxWait("username",new Integer(50));
+       ds.setPerUserMaxIdle("username",new Integer(2));
        Connection conn1 = ds.getConnection("username", "password");
        Connection conn2 = ds.getConnection("username", "password");
        Connection conn3 = ds.getConnection("username", "password");

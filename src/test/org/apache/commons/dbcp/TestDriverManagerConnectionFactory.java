@@ -71,7 +71,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
             threads[i].start();
         }
         for (int i = 0; i < 10; i++) {
-            while (threads[i].getState() != Thread.State.TERMINATED) {
+            while (threads[i].isAlive()){//JDK1.5: getState() != Thread.State.TERMINATED) {
                 Thread.sleep(100);
             }
             if (!connectionThreads[i].getResult()) {
