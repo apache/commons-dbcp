@@ -461,14 +461,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
                 } catch (RuntimeException e) {
                     if (isStopOnException) {
                         stop();
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     } else {
                         throw e;
                     }
                 } catch (Exception e) {
                     if (isStopOnException) {
                         stop();
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     } else {
                         throw new RuntimeException(e.toString());
                     }
