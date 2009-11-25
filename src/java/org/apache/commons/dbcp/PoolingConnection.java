@@ -175,11 +175,6 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     }
     
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
 //    TODO: possible enhancement, cache these preparedStatements as well
 
 //    public PreparedStatement prepareStatement(String sql, int resultSetType,
@@ -204,9 +199,6 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
 //        throws SQLException {
 //        return super.prepareStatement(sql, columnNames);
 //    }
-
-/* JDBC_3_ANT_KEY_END */
-
 
     /**
      * Create a PStmtKey for the given arguments.

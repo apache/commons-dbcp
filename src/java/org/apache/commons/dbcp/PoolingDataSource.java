@@ -355,11 +355,6 @@ public class PoolingDataSource implements DataSource {
             return delegate.toString();
         }
 
-        // ------------------- JDBC 3.0 -----------------------------------------
-        // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
         public int getHoldability() throws SQLException {
             checkOpen();
             return delegate.getHoldability();
@@ -419,8 +414,6 @@ public class PoolingDataSource implements DataSource {
             checkOpen();
             return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, columnNames));
         }
-
-/* JDBC_3_ANT_KEY_END */
 
         /**
          * @see org.apache.commons.dbcp.DelegatingConnection#getDelegate()

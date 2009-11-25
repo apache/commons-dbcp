@@ -302,11 +302,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     return _stmt.toString();
     }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public boolean getMoreResults(int current) throws SQLException
     { checkOpen(); try { return _stmt.getMoreResults(current); } catch (SQLException e) { handleException(e); return false; } }
 
@@ -341,8 +336,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     public int getResultSetHoldability() throws SQLException
     { checkOpen(); try { return _stmt.getResultSetHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
-/* JDBC_3_ANT_KEY_END */
-    
     /*
      * Note was protected prior to JDBC 4
      * TODO Consider adding build flags to make this protected unless we are

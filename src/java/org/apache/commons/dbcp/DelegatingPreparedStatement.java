@@ -214,17 +214,12 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     return _stmt.toString();
     }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public void setURL(int parameterIndex, java.net.URL x) throws SQLException
     { checkOpen(); try { ((PreparedStatement)_stmt).setURL(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
 
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
     { checkOpen(); try { return ((PreparedStatement)_stmt).getParameterMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public void setRowId(int parameterIndex, RowId value) throws SQLException {
