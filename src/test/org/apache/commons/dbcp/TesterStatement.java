@@ -231,10 +231,6 @@ public class TesterStatement implements Statement {
         }
     }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -277,7 +273,7 @@ public class TesterStatement implements Statement {
         checkOpen();
         throw new SQLException("Not implemented.");
     }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
