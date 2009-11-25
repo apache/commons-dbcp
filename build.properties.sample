@@ -32,8 +32,8 @@ junit.home=${repository}/junit/junit/3.8.2
 junit.jar=${junit.home}/junit-3.8.2.jar
 
 # XML parser
-xerces.home=${repository}/xerces/xerces/2.0.2
-xerces.jar=${xerces.home}/xerces-2.0.2.jar
+xerces.home=${repository}/xerces/xercesImpl/2.4.0
+xerces.jar=${xerces.home}/xercesImpl-2.4.0.jar
 
 # Tomcat naming jars - needed only for JNDI tests
 naming.common.home=${repository}/tomcat/naming-common/5.0.28
