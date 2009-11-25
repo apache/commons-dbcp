@@ -15,7 +15,7 @@
 ##########################################################################
 # Sample Ant build.properties file
 #
-# This setup assumes dependent jars are in a local maven 1 repository.
+# This setup assumes dependent jars are in a local maven 2 repository.
 # However the jars are located, the properties ending in ".jar" need
 # expand to full paths to the jars.
 ##########################################################################
