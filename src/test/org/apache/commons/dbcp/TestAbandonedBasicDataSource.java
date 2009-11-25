@@ -133,4 +133,25 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.getConnection(); // trigger abandoned cleanup again
         conn1.createStatement();         
     }
+    
+    /**
+     * Verify that lastUsed property is updated when a connection
+     * prepares a callable statement.
+     */
+    public void testlastUsedPrepareCall() throws Exception {
+        ds.setRemoveAbandonedTimeout(1);
+        ds.setMaxActive(2);
+        Connection conn1 = ds.getConnection();
+        Thread.sleep(500);
+        conn1.prepareCall("{call home}"); // Should reset lastUsed
+        Thread.sleep(800);
+        Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+        conn1.prepareCall("{call home}"); // Should still be OK
+        conn2.close();
+        Thread.sleep(500);
+        conn1.prepareCall("{call home}"); // reset
+        Thread.sleep(800);
+        ds.getConnection(); // trigger abandoned cleanup again
+        conn1.createStatement();         
+    }
 }
