@@ -66,16 +66,16 @@ import java.sql.SQLException;
 //
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
 //       -classpath oracle-jdbc.jar:. \
-//       JOCLPoolingDriverExample
-//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid"
+//       JOCLPoolingDriverExample \
+//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
 //       "SELECT * FROM DUAL"
 //
 // For pooling:
 //
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver:org.apache.commons.dbcp.PoolingDriver \
 //       -classpath commons-pool-1.5.4.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
-//       JOCLPoolingDriverExample
-//       "jdbc:apache:commons:dbcp:/poolingDriverExample"
+//       JOCLPoolingDriverExample \
+//       "jdbc:apache:commons:dbcp:/poolingDriverExample" \
 //       "SELECT * FROM DUAL"
 //
 // The last token in DBCP connect string (when suffixed with ".jocl")
