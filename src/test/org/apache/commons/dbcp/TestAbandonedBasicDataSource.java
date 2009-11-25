@@ -70,19 +70,25 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
         ds.setMaxActive(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
         
-        Connection conn2 = getConnection();        
+        Connection conn2 = getConnection();
+        // Attempt to borrow object triggers abandoned cleanup
+        // conn1 should be closed by the pool to make room
         assertNotNull(conn2);
         assertEquals(1, ds.getNumActive());
+        // Verify that conn1 is closed
+        assertTrue(((DelegatingConnection) conn1).getInnermostDelegate().isClosed());
         
-        try { conn2.close(); } catch (SQLException ex) { }
+        conn2.close();
         assertEquals(0, ds.getNumActive());
         
-        try { conn1.close(); } catch (SQLException ex) { }
+        // Second close on conn1 is OK as of dbcp 1.3
+        conn1.close();
         assertEquals(0, ds.getNumActive());
     }
 
