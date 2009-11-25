@@ -220,11 +220,6 @@ public class TesterConnection implements Connection {
         this.failure = failure;
     }
     
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public int getHoldability() throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -284,7 +279,7 @@ public class TesterConnection implements Connection {
         throws SQLException {
         return prepareStatement(sql);
     }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {

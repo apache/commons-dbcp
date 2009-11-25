@@ -239,12 +239,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
-
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -295,7 +289,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
         throw new SQLException("Not implemented.");
     }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public void setRowId(int parameterIndex, RowId value) throws SQLException {

@@ -719,11 +719,6 @@ public class TesterResultSet implements ResultSet {
         }
     }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public java.net.URL getURL(int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -771,7 +766,7 @@ public class TesterResultSet implements ResultSet {
         throws SQLException {
         throw new SQLException("Not implemented.");
     }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
