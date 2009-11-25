@@ -44,9 +44,9 @@
 
       <!-- now combine the classpaths -->
       <property name="classpath" 
-       value="${cp}:${commons-pool.jar}:${jdbc20ext.jar}:${junit.jar}:
+       value="${cp}:${commons-pool.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}:
+      	${xerces.jar}:${jta-spec.jar}:${jta-impl.jar}:
       	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
@@ -106,9 +106,6 @@
        </antcall>
        <antcall target="check_jar">
            <param name="file" value="${xerces.jar}"/>
-       </antcall>
-       <antcall target="check_jar">
-           <param name="file" value="${xml-apis.jar}"/>
        </antcall>
        <antcall target="check_jar">
            <param name="file" value="${jta-spec.jar}"/>
