@@ -269,7 +269,6 @@ class PooledConnectionImpl
         }
     }
 
-/* JDBC_3_ANT_KEY_BEGIN */
     /**
      * Create or obtain a {*link PreparedStatement} from my pool.
      * @return a {*link PoolablePreparedStatement}
@@ -370,8 +369,6 @@ class PooledConnectionImpl
     protected Object createKey(String sql, String columnNames[]) {
         return new PStmtKey(normalizeSQL(sql), columnNames);
     }
-
-/* JDBC_3_ANT_KEY_END */
 
     /**
      * Create a {*link PooledConnectionImpl.PStmtKey} for the given arguments.

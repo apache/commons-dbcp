@@ -173,11 +173,6 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
     public void registerOutParameter(int paramIndex, int sqlType, String typeName) throws SQLException
     { checkOpen(); try { ((CallableStatement)_stmt).registerOutParameter( paramIndex,  sqlType,  typeName); } catch (SQLException e) { handleException(e); } }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public void registerOutParameter(String parameterName, int sqlType) throws SQLException
     { checkOpen(); try { ((CallableStatement)_stmt).registerOutParameter(parameterName, sqlType); } catch (SQLException e) { handleException(e); } }
 
@@ -333,7 +328,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
 
     public URL getURL(String parameterName) throws SQLException
     { checkOpen(); try { return ((CallableStatement)_stmt).getURL(parameterName); } catch (SQLException e) { handleException(e); return null; } }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public RowId getRowId(int parameterIndex) throws SQLException {

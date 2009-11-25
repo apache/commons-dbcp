@@ -121,7 +121,6 @@ class ConnectionImpl extends DelegatingConnection {
         }
     }
 
-/* JDBC_3_ANT_KEY_BEGIN */
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency,
                                               int resultSetHoldability)
@@ -176,7 +175,6 @@ class ConnectionImpl extends DelegatingConnection {
             return null;
         }
     }
-/* JDBC_3_ANT_KEY_END */
 
     //
     // Methods for accessing the delegate connection

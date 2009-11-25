@@ -589,11 +589,6 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     { try { return _res.getTimestamp(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public java.net.URL getURL(int columnIndex) throws SQLException
     { try { return _res.getURL(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
 
@@ -623,7 +618,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 
     public void updateArray(String columnName, java.sql.Array x) throws SQLException
     { try { _res.updateArray(columnName, x); } catch (SQLException e) { handleException(e); } }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
