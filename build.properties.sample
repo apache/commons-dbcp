@@ -28,8 +28,8 @@ commons-pool.home=${repository}/commons-pool/commons-pool/1.5.4
 commons-pool.jar=${commons-pool.home}/commons-pool-1.5.4.jar
 
 # JUnit
-junit.home=${repository}/junit/junit/3.8.1
-junit.jar=${junit.home}/junit-3.8.1.jar
+junit.home=${repository}/junit/junit/3.8.2
+junit.jar=${junit.home}/junit-3.8.2.jar
 
 # XML parser
 xerces.home=${repository}/xerces/xerces/2.0.2
