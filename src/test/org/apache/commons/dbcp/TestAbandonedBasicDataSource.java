@@ -56,37 +56,14 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
     // ---------- Abandoned Test -----------
 
-    private void getConnection1() throws Exception {
-        System.err.println("BEGIN getConnection1()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection1()");
-    }
-
-    private void getConnection2() throws Exception {
-        System.err.println("BEGIN getConnection2()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection2()");
-    }
-
-    private void getConnection3() throws Exception {
-        System.err.println("BEGIN getConnection3()");
-        Connection conn = ds.getConnection();
-        System.err.println("conn: " + conn);
-        System.err.println("END getConnection3()");
-    }
-
     public void testAbandoned() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
         ds.setMaxActive(1);
 
-        System.err.println("----------------------------------------");
-        getConnection1();
-        getConnection2();
-        getConnection3();
-        System.err.println("----------------------------------------");
+        for (int i = 0; i < 3; i++) {
+            assertNotNull(ds.getConnection());
+        }
     }
     
     public void testAbandonedClose() throws Exception {
