@@ -42,8 +42,8 @@ naming.java.home=${repository}/tomcat/naming-java/5.0.28
 naming-java.jar=${naming.java.home}/naming-java-5.0.28.jar
 
 # Commons logging - dependency of naming jars
-commons-logging.home=${repository}/commons-logging/commons-logging/1.0.4
-commons-logging.jar=${commons-logging.home}/commons-logging-1.0.4.jar
+commons-logging.home=${repository}/commons-logging/commons-logging/1.1.1
+commons-logging.jar=${commons-logging.home}/commons-logging-1.1.1.jar
 
 # JTA - needed for managed connections
 jta-spec.jar=${repository}/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1.jar
