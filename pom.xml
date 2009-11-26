@@ -365,11 +365,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.4</version>
           <configuration>
             <rulesets>
               <ruleset>checkstyle.xml</ruleset>
             </rulesets>
+            <targetJdk>${maven.compile.target}</targetJdk>
           </configuration>
         </plugin>
         <plugin>
