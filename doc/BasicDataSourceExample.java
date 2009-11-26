@@ -119,7 +119,7 @@ public class BasicDataSourceExample {
         return ds;
     }
 
-    public static void printDataSourceStats(DataSource ds) throws SQLException {
+    public static void printDataSourceStats(DataSource ds) {
         BasicDataSource bds = (BasicDataSource) ds;
         System.out.println("NumActive: " + bds.getNumActive());
         System.out.println("NumIdle: " + bds.getNumIdle());
