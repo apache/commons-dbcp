@@ -215,8 +215,8 @@
 
   <properties>
     <!-- Target Java versions are actually 1.4, 1.5 and 1.6 -->
-    <maven.compile.source>1.5</maven.compile.source>
-    <maven.compile.target>1.5</maven.compile.target>
+    <maven.compile.source>1.4</maven.compile.source>
+    <maven.compile.target>1.4</maven.compile.target>
     <commons.componentid>dbcp</commons.componentid>
     <commons.release.version>1.2.2</commons.release.version>
     <commons.binary.suffix></commons.binary.suffix>
