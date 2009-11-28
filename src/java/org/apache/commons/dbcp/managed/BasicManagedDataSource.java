@@ -147,11 +147,7 @@ public class BasicManagedDataSource extends BasicDataSource {
                 String message = "Cannot load XA data source class '" + xaDataSource + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
-                throw new SQLException(message
-                        /* JDBC_4_ANT_KEY_BEGIN */
-                        , t
-                        /* JDBC_4_ANT_KEY_END */
-                        );
+                throw (SQLException)new SQLException(message).initCause(t);
             }
             
             try {
@@ -160,11 +156,7 @@ public class BasicManagedDataSource extends BasicDataSource {
                 String message = "Cannot create XA data source of class '" + xaDataSource + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
-                throw new SQLException(message
-                        /* JDBC_4_ANT_KEY_BEGIN */
-                        , t
-                        /* JDBC_4_ANT_KEY_END */
-                        );
+                throw (SQLException)new SQLException(message).initCause(t);
             }
         }
 
@@ -209,11 +201,7 @@ public class BasicManagedDataSource extends BasicDataSource {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")"
-                    /* JDBC_4_ANT_KEY_BEGIN */
-                    , e
-                    /* JDBC_4_ANT_KEY_END */
-                    );
+            throw (SQLException)new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")").initCause(e);
         }
     }
 }
