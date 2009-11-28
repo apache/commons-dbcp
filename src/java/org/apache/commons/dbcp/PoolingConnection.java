@@ -255,10 +255,11 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
     /**
      * {@link KeyedPoolableObjectFactory} method for creating
      * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatement}s.
-     * The {@link PStmtKey#_stmtType} field in the key determines whether
+     * The <code>stmtType</code> field in the key determines whether 
      * a PoolablePreparedStatement or PoolableCallableStatement is created.
      * 
      * @param obj the key for the {@link PreparedStatement} to be created
+     * @see #createKey(String, int, int, byte)
      */
     public Object makeObject(Object obj) throws Exception {
         if(null == obj || !(obj instanceof PStmtKey)) {
