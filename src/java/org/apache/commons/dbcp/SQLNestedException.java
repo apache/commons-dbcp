@@ -28,33 +28,11 @@ import java.sql.SQLException;
  * 
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
- * @deprecated Use '(SQLException) new SQLException(msg).initCause(e)' instead; this class will be removed in DBCP 1.4
+ * @deprecated Use '(SQLException) new SQLException(msg).initCause(e)' instead; this class will be removed in DBCP 2.0
  */
 public class SQLNestedException extends SQLException {
 
     private static final long serialVersionUID = 1046151479543081202L;
-
-    /* Throwable.getCause detection as found in commons-lang */
-    private static final Method THROWABLE_CAUSE_METHOD;
-    static {
-        Method getCauseMethod;
-        try {
-            getCauseMethod = Throwable.class.getMethod("getCause", (Class[]) null);
-        } catch (Exception e) {
-            getCauseMethod = null;
-        }
-        THROWABLE_CAUSE_METHOD = getCauseMethod;
-    }
-    
-    private static boolean hasThrowableCauseMethod() {
-        return THROWABLE_CAUSE_METHOD != null;
-    }
-
-    /**
-     * Holds the reference to the exception or error that caused
-     * this exception to be thrown.
-     */
-    private final Throwable cause;
 
     /**
      * Constructs a new <code>SQLNestedException</code> with specified
@@ -66,33 +44,8 @@ public class SQLNestedException extends SQLException {
      */
     public SQLNestedException(String msg, Throwable cause) {
         super(msg);
-        this.cause = cause;
         if (cause != null){
-            final PrintWriter logWriter = DriverManager.getLogWriter();
-            if (logWriter != null) {
-                logWriter.print("Caused by: ");
-                cause.printStackTrace(logWriter);
-            }
-        }
-    }
-    
-    public Throwable getCause() {
-        return this.cause;
-    }
-
-    public void printStackTrace(PrintStream s) {
-        super.printStackTrace(s);
-        if ((cause != null) && !hasThrowableCauseMethod()) {
-            s.print("Caused by: ");
-            this.cause.printStackTrace(s);
-        }
-    }
-
-    public void printStackTrace(PrintWriter s) {
-        super.printStackTrace(s);
-        if ((cause != null) && !hasThrowableCauseMethod()) {
-            s.print("Caused by: ");
-            this.cause.printStackTrace(s);
+            initCause(cause);
         }
     }
 }
