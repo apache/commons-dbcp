@@ -145,8 +145,6 @@ public class BasicManagedDataSource extends BasicDataSource {
                 xaDataSourceClass = Class.forName(xaDataSource);
             } catch (Throwable t) {
                 String message = "Cannot load XA data source class '" + xaDataSource + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
                 throw (SQLException)new SQLException(message).initCause(t);
             }
             
@@ -154,8 +152,6 @@ public class BasicManagedDataSource extends BasicDataSource {
                 xaDataSourceInstance = (XADataSource) xaDataSourceClass.newInstance();
             } catch (Throwable t) {
                 String message = "Cannot create XA data source of class '" + xaDataSource + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
                 throw (SQLException)new SQLException(message).initCause(t);
             }
         }
