@@ -38,7 +38,7 @@ The <action> type attribute can be add,update,fix,remove.
     <title>Commons DBCP Release Notes</title>
   </properties>
   <body>
-    <release version="1.3" date="TBD" description="This release will include
+    <release version="1.4" date="TBD" description="This release will include
      new features as well as bug fixes and instrumentation.  Some bug fixes
      will change semantics (e.g. connection close will become idempotent).
      The minimum JDK level will be increased to 1.4">
