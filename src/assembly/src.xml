@@ -29,13 +29,10 @@
                 <include>checkstyle.xml</include>
                 <include>LICENSE.txt</include>
                 <include>LICENSE-header.txt</include>
-                <include>maven.xml</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
-                <include>project.properties</include>
-                <include>project.xml</include>
                 <include>README.txt</include>
-                <include>release-notes.jsl</include>
+                <include>RELEASE-NOTES.txt</include>
             </includes>
         </fileSet>
         <fileSet>
