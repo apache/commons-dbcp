@@ -33,6 +33,7 @@
                 <include>pom.xml</include>
                 <include>README.txt</include>
                 <include>RELEASE-NOTES.txt</include>
+                <include>test-jar.xml</include>
             </includes>
         </fileSet>
         <fileSet>
