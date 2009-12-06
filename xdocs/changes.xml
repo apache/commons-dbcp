@@ -39,9 +39,14 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4" date="TBD" description="This release includes
-     new features as well as bug fixes and instrumentation.  Some bug fixes
-     change semantics (e.g. connection close is now idempotent).
-     The minimum JDK level has been increased to 1.4">
+     new features as well as bug fixes and enhancements.  Some bug fixes
+     change semantics (e.g. connection close is now idempotent).  The 1.3
+     and 1.4 releases of DBCP are built from the same sources.  Version 1.4 
+     supports JDBC 4, so requires JDK 1.6.  Version 1.3 supports JDBC 3 and 
+     has JDK 1.4 as its minimum JDK requirement.  Other than support for the
+     added methods in JDBC 4, there is nothing new or different in DBCP 1.4
+     vs. DBCP 1.3.  Applications running under JDK 1.4-1.5 must use DBCP 1.3.
+     Applications running under JDK 1.6 may use DBCP 1.4.">
       <action dev="psteitz" type="add" issue="DBCP-204" due-to="Wei Chen">
         Made PoolingConnection pool CallableStatements. When BasicDataSource's 
         poolPreparedStatements property is true, CallableStatements are now
@@ -228,6 +233,8 @@ The <action> type attribute can be add,update,fix,remove.
         both getter and setter for _pool synchronized.
       </action> 
     </release>
+    <release version="1.3" date="TBD" description="Compatability release
+     for JDBC 3.  See version 1.4 description."/>
     <release version="1.2.2" date="2007-04-04"
       description="This is a maintenance release containing bug fixes
       and enhancements. All API changes are binary compatible with version 1.2.1.">
