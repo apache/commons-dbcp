@@ -26,7 +26,7 @@
      specified in the "commons-dbcp.jar" property.  Set this property in build.properties
      along with commons-pool.jar and execute the "test" target to run the tests.
      
-     If the jdk level is <= 1.5, JDBC 4 methods will commented out in the test 
+     If the jdk level is <= 1.5, JDBC 4 methods will be commented out in the test 
      code before compilation of the tests.
 -->
 
