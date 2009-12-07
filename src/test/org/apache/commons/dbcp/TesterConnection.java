@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Map;
-/* JDBC_4_ANT_KEY_BEGIN */
+/*
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -34,7 +34,7 @@ import java.sql.SQLClientInfoException;
 import java.sql.SQLXML;
 import java.sql.Struct;
 import java.util.Properties;
-/* JDBC_4_ANT_KEY_END */
+*/
 
 /**
  * A dummy {@link Connection}, for testing purposes.
@@ -280,7 +280,7 @@ public class TesterConnection implements Connection {
         return prepareStatement(sql);
     }
 
-/* JDBC_4_ANT_KEY_BEGIN */
+/*
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -333,5 +333,5 @@ public class TesterConnection implements Connection {
     public String getClientInfo(String name) throws SQLException {
         throw new SQLException("Not implemented.");
     }
-/* JDBC_4_ANT_KEY_END */
+*/
 }
