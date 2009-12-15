@@ -30,9 +30,6 @@ import junit.framework.TestSuite;
 public class TestJOCLed extends TestConnectionPool {
     public TestJOCLed(String testName) {
         super(testName);
-        if(null == System.getProperty("org.xml.sax.driver")) {
-           System.setProperty("org.xml.sax.driver","org.apache.xerces.parsers.SAXParser");
-        }
     }
 
     public static Test suite() {
