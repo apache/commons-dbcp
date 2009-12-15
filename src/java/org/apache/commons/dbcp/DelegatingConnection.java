@@ -17,29 +17,27 @@
 
 package org.apache.commons.dbcp;
 
+import java.sql.Array;
+import java.sql.Blob;
 import java.sql.CallableStatement;
+import java.sql.ClientInfoStatus;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.NClob;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.sql.Statement;
+import java.sql.Struct;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.sql.ResultSet;
-/* JDBC_4_ANT_KEY_BEGIN */
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.ClientInfoStatus;
-import java.sql.Clob;
-import java.sql.NClob;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLXML;
-import java.sql.Struct;
-import java.util.Collections;
 import java.util.Properties;
-/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -195,7 +193,7 @@ public class DelegatingConnection extends AbandonedTrace
         if (obj == null) {
             return 0;
         }
-        return obj.hashCode();
+        return obj.hashCode() >>> 1;
     }
 
 
