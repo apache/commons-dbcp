@@ -193,7 +193,7 @@ public class DelegatingConnection extends AbandonedTrace
         if (obj == null) {
             return 0;
         }
-        return obj.hashCode() >>> 1;
+        return obj.hashCode();
     }
 
 
