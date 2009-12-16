@@ -74,7 +74,7 @@ public class DelegatingConnection extends AbandonedTrace
     protected boolean _closed = false;
     
     /**
-     * Create a wrapper for the Connectin which traces this
+     * Create a wrapper for the Connection which traces this
      * Connection in the AbandonedObjectPool.
      *
      * @param c the {@link Connection} to delegate all calls to.
@@ -146,7 +146,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
     
     /**
-     * Should be final but can't be for compatability with previous releases.
+     * Should be final but can't be for compatibility with previous releases.
      */
     protected Connection getDelegateInternal() {
         return _conn;
@@ -206,7 +206,7 @@ public class DelegatingConnection extends AbandonedTrace
      * Hence this method will return the first
      * delegate that is not a <tt>DelegatingConnection</tt>,
      * or <tt>null</tt> when no non-<tt>DelegatingConnection</tt>
-     * delegate can be found by transversing this chain.
+     * delegate can be found by traversing this chain.
      * <p>
      * This method is useful when you may have nested
      * <tt>DelegatingConnection</tt>s, and you want to make
