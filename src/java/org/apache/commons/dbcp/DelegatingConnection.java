@@ -438,11 +438,6 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    // ------------------- JDBC 3.0 -----------------------------------------
-    // Will be commented by the build process on a JDBC 2.0 system
-
-/* JDBC_3_ANT_KEY_BEGIN */
-
     public int getHoldability() throws SQLException
     { checkOpen(); try { return _conn.getHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
@@ -538,7 +533,7 @@ public class DelegatingConnection extends AbandonedTrace
             return null;
         }
     }
-/* JDBC_3_ANT_KEY_END */
+
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
