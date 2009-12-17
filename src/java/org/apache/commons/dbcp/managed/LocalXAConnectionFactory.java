@@ -58,10 +58,10 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
     }
 
     public Connection createConnection() throws SQLException {
-        // create a new conection
+        // create a new connection
         Connection connection = connectionFactory.createConnection();
 
-        // create a XAResource to manage the connection during XA transacitons
+        // create a XAResource to manage the connection during XA transactions
         XAResource xaResource = new LocalXAResource(connection);
 
         // register the xa resource for the connection
@@ -107,7 +107,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *
          * @param xid  the id of the transaction branch for this connection
          * @param flag either XAResource.TMNOFLAGS or XAResource.TMRESUME
-         * @throws XAException if the connection is already elisted in another tranction, or if auto-commit
+         * @throws XAException if the connection is already enlisted in another transaction, or if auto-commit
          *                     could not be disabled
          */
         public synchronized void start(Xid xid, int flag) throws XAException {
@@ -149,7 +149,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *
          * @param xid  the id of the transaction branch for this connection
          * @param flag ignored
-         * @throws XAException if the connection is already elisted in another tranction
+         * @throws XAException if the connection is already enlisted in another transaction
          */
         public synchronized void end(Xid xid, int flag) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
@@ -185,7 +185,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 // no big deal
             }
 
-            // this is a local (one phase) only connectiion, so we can't prepare
+            // this is a local (one phase) only connection, so we can't prepare
             return XAResource.XA_OK;
         }
 
@@ -222,7 +222,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * Rollsback the transaction and restores the original auto commit setting.
+         * Rolls back the transaction and restores the original auto commit setting.
          *
          * @param xid the id of the transaction branch for this connection
          * @throws XAException if connection.rollback() throws a SQLException
@@ -268,7 +268,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         /**
          * Always returns a zero length Xid array.  The LocalXAConnectionFactory can not support recovery, so no xids will ever be found.
          *
-         * @param flag ignored since recoverty is not supported
+         * @param flag ignored since recovery is not supported
          * @return always a zero length Xid array.
          */
         public Xid[] recover(int flag) {
