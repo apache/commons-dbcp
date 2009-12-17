@@ -33,7 +33,7 @@ import javax.transaction.xa.XAResource;
  * TransactionRegistry tracks Connections and XAResources in a transacted environment for a single XAConnectionFactory.
  * </p>
  * The TransactionRegistry hides the details of transaction processing from the existing DBCP pooling code, and gives
- * the ManagedConnection a way to enlist connections in a tranaction, allowing for the maximal resue of DBCP.
+ * the ManagedConnection a way to enlist connections in a transaction, allowing for the maximal rescue of DBCP.
  *
  * @author Dain Sundstrom
  * @version $Revision$
@@ -52,8 +52,8 @@ public class TransactionRegistry {
     }
 
     /**
-     * Registers the association between a Connection and a XAResource.  When a conection
-     * is enlisted in a transaction, it is acutally the XAResource that is given to the transaction
+     * Registers the association between a Connection and a XAResource.  When a connection
+     * is enlisted in a transaction, it is actually the XAResource that is given to the transaction
      * manager.
      *
      * @param connection the JDBC connection
