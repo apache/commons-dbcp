@@ -19,7 +19,7 @@
  */
  -->
 
-<!-- $Id: build.xml 884734 2009-11-27 01:11:31Z niallp $ -->
+<!-- $Id: build.xml 887831 2009-12-07 03:56:29Z psteitz $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -214,6 +214,7 @@
           <pathelement location="${build.test-classes.dir}" /> 
           <pathelement path="${classpath}" /> 
         </classpath>
+        <formatter type="plain" usefile="false" />
         <test name="${test.entry}"/> 
       </junit>
    </target>
