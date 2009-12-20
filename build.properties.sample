@@ -13,10 +13,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ##########################################################################
-# Sample Ant build.properties file
+# Sample Ant build.properties file for building under JDK 1.6
 #
 # This setup assumes dependent jars are in a local maven 2 repository.
-# However the jars are located, the properties ending in ".jar" need
+# However the jars are located, the properties ending in ".jar" need to
 # expand to full paths to the jars.
 ##########################################################################
 
