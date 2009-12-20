@@ -1,0 +1,54 @@
+#   Licensed to the Apache Software Foundation (ASF) under one or more
+#   contributor license agreements.  See the NOTICE file distributed with
+#   this work for additional information regarding copyright ownership.
+#   The ASF licenses this file to You under the Apache License, Version 2.0
+#   (the "License"); you may not use this file except in compliance with
+#   the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+##########################################################################
+# Sample Ant build.properties file for building under JDK 1.4 or 1.5 
+#
+# This setup assumes dependent jars are in a local maven 2 repository.
+# However the jars are located, the properties ending in ".jar" need to
+# expand to full paths to the jars.
+##########################################################################
+
+# Repository base path
+repository=${user.home}/.m2/repository
+
+# commons-pool.jar - path to commons-pool-1.5.4.jar
+commons-pool.home=${repository}/commons-pool/commons-pool/1.5.4
+commons-pool.jar=${commons-pool.home}/commons-pool-1.5.4.jar
+
+# JUnit
+junit.home=${repository}/junit/junit/3.8.2
+junit.jar=${junit.home}/junit-3.8.2.jar
+
+# XML parser
+xerces.home=${repository}/xerces/xercesImpl/2.4.0
+xerces.jar=${xerces.home}/xercesImpl-2.4.0.jar
+
+# Tomcat naming jars - needed only for JNDI tests
+naming.common.home=${repository}/tomcat/naming-common/5.0.28
+naming-common.jar=${naming.common.home}/naming-common-5.0.28.jar
+naming.java.home=${repository}/tomcat/naming-java/5.0.28
+naming-java.jar=${naming.java.home}/naming-java-5.0.28.jar
+
+# Commons logging - dependency of naming jars
+commons-logging.home=${repository}/commons-logging/commons-logging/1.1.1
+commons-logging.jar=${commons-logging.home}/commons-logging-1.1.1.jar
+
+# JTA - needed for managed connections
+jta-spec.jar=${repository}/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1.jar
+jta-impl.jar=${repository}/org/apache/geronimo/modules/geronimo-transaction/1.2-beta/geronimo-transaction-1.2-beta.jar
+
+# JTA dependencies - required so the test cases run
+backport-util-concurrent.jar=${repository}/backport-util-concurrent/backport-util-concurrent/2.2/backport-util-concurrent-2.2.jar
+ejb-spec.jar=${repository}/org/apache/geronimo/specs/geronimo-ejb_2.1_spec/1.1/geronimo-ejb_2.1_spec-1.1.jar
