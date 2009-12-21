@@ -25,16 +25,16 @@ import java.sql.SQLException;
 
 /**
  * ManagedConnection is responsible for managing a database connection in a transactional environment
- * (typically called "Container Managed").  A managed connection opperates like any other connection
- * when no gloabal transaction (a.k.a. XA transaction or JTA Transaction) is in progress.  When a
+ * (typically called "Container Managed").  A managed connection operates like any other connection
+ * when no global transaction (a.k.a. XA transaction or JTA Transaction) is in progress.  When a
  * global transaction is active a single physical connection to the database is used by all
  * ManagedConnections accessed in the scope of the transaction.  Connection sharing means that all
  * data access during a transaction has a consistent view of the database.  When the global transaction
  * is committed or rolled back the enlisted connections are committed or rolled back.  Typically upon
  * transaction completion, a connection returns to the auto commit setting in effect before being
- * elisted in the transaction, but some vendors do not propertly implement this.
+ * enlisted in the transaction, but some vendors do not properly implement this.
  *
- * When enslisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods
+ * When enlisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods
  * throw a SQLException.  This is necessary to assure that the transaction completes as a single unit.
  *
  * @author Dain Sundstrom
@@ -76,7 +76,7 @@ public class ManagedConnection extends DelegatingConnection {
             }
         }
 
-        // the existing transction context ended (or we didn't have one), get the active transaction context
+        // the existing transaction context ended (or we didn't have one), get the active transaction context
         transactionContext = transactionRegistry.getActiveTransactionContext();
 
         // if there is an active transaction context and it already has a shared connection, use it
@@ -91,7 +91,7 @@ public class ManagedConnection extends DelegatingConnection {
                 try {
                     pool.returnObject(connection);
                 } catch (Exception ignored) {
-                    // whatever... try to invalidat the connection
+                    // whatever... try to invalidate the connection
                     try {
                         pool.invalidateObject(connection);
                     } catch (Exception ignore) {
@@ -183,12 +183,12 @@ public class ManagedConnection extends DelegatingConnection {
                 // don't actually close the connection if in a transaction
                 if (!delegate.isClosed()) {
                     // don't use super.close() because it calls passivate() which marks the
-                    // the connection as cloased without returning it to the pool
+                    // the connection as closed without returning it to the pool
                     delegate.close();
                 }
             } catch (SQLException ignored) {
                 // not a whole lot we can do here as connection is closed
-                // and this is a transaction classback so there is no
+                // and this is a transaction callback so there is no
                 // way to report the error
             } finally {
                 _closed = true;

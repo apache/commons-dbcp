@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.sql.ResultSet;
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.ClientInfoStatus;
@@ -39,7 +39,7 @@ import java.sql.SQLXML;
 import java.sql.Struct;
 import java.util.Collections;
 import java.util.Properties;
-*/
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -65,10 +65,10 @@ import java.util.Properties;
 public class DelegatingConnection extends AbandonedTrace
         implements Connection {
 
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
     private static final Map<String, ClientInfoStatus> EMPTY_FAILED_PROPERTIES =
         Collections.<String, ClientInfoStatus>emptyMap();
-*/
+/* JDBC_4_ANT_KEY_END */
 
     /** My delegate {@link Connection}. */
     protected Connection _conn = null;
@@ -76,7 +76,7 @@ public class DelegatingConnection extends AbandonedTrace
     protected boolean _closed = false;
     
     /**
-     * Create a wrapper for the Connectin which traces this
+     * Create a wrapper for the Connection which traces this
      * Connection in the AbandonedObjectPool.
      *
      * @param c the {@link Connection} to delegate all calls to.
@@ -148,7 +148,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
     
     /**
-     * Should be final but can't be for compatability with previous releases.
+     * Should be final but can't be for compatibility with previous releases.
      */
     protected Connection getDelegateInternal() {
         return _conn;
@@ -208,7 +208,7 @@ public class DelegatingConnection extends AbandonedTrace
      * Hence this method will return the first
      * delegate that is not a <tt>DelegatingConnection</tt>,
      * or <tt>null</tt> when no non-<tt>DelegatingConnection</tt>
-     * delegate can be found by transversing this chain.
+     * delegate can be found by traversing this chain.
      * <p>
      * This method is useful when you may have nested
      * <tt>DelegatingConnection</tt>s, and you want to make
@@ -534,7 +534,7 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _conn.isWrapperFor(iface);
@@ -674,5 +674,5 @@ public class DelegatingConnection extends AbandonedTrace
             return null;
         }
     }
-*/
+/* JDBC_4_ANT_KEY_END */
 }

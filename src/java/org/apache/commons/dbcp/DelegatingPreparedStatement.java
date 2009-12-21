@@ -27,13 +27,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Calendar;
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.NClob;
 import java.sql.RowId;
 import java.sql.SQLXML;
-*/
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
@@ -220,7 +220,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
     { checkOpen(); try { return ((PreparedStatement)_stmt).getParameterMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 
     public void setRowId(int parameterIndex, RowId value) throws SQLException {
         checkOpen();
@@ -401,5 +401,5 @@ public class DelegatingPreparedStatement extends DelegatingStatement
             handleException(e);
         }
     }
-*/
+/* JDBC_4_ANT_KEY_END */
 }
