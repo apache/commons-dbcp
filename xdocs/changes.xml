@@ -38,11 +38,6 @@ The <action> type attribute can be add,update,fix,remove.
     <title>Commons DBCP Release Notes</title>
   </properties>
   <body>
-    <release version="1.4.1" date="TBD">
-      <action dev="psteitz" type="update" issue="DBCP-312" due-to="Glen Mazza">
-        Clarified javadoc for BasicDataSource close() method.
-      </action>
-    </release>
     <release version="1.4" date="TBD" description="This release includes
      new features as well as bug fixes and enhancements.  Some bug fixes
      change semantics (e.g. connection close is now idempotent).  The 1.3
@@ -52,6 +47,9 @@ The <action> type attribute can be add,update,fix,remove.
      added methods in JDBC 4, there is nothing new or different in DBCP 1.4
      vs. DBCP 1.3.  Applications running under JDK 1.4-1.5 must use DBCP 1.3.
      Applications running under JDK 1.6 may use DBCP 1.4.">
+      <action dev="psteitz" type="update" issue="DBCP-312" due-to="Glen Mazza">
+        Clarified javadoc for BasicDataSource close() method.
+      </action>
       <action dev="psteitz" type="add" issue="DBCP-204" due-to="Wei Chen">
         Made PoolingConnection pool CallableStatements. When BasicDataSource's 
         poolPreparedStatements property is true, CallableStatements are now
@@ -238,8 +236,6 @@ The <action> type attribute can be add,update,fix,remove.
         both getter and setter for _pool synchronized.
       </action> 
     </release>
-    <release version="1.3.1" date="TBD" description="Compatability release"
-     for JDBC 3. See version 1.4.1 description."/>
     <release version="1.3" date="TBD" description="Compatability release
      for JDBC 3.  See version 1.4 description."/>
     <release version="1.2.2" date="2007-04-04"
