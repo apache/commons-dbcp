@@ -46,7 +46,7 @@
       <property name="classpath" 
        value="${cp}:${commons-pool.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${xerces.jar}:${jta-spec.jar}:${jta-impl.jar}:
+      	${jta-spec.jar}:${jta-impl.jar}:
       	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
       <property name="name" value="commons-dbcp"/>
@@ -103,9 +103,6 @@
        </antcall>
        <antcall target="check_jar">
            <param name="file" value="${commons-logging.jar}"/>
-       </antcall>
-       <antcall target="check_jar">
-           <param name="file" value="${xerces.jar}"/>
        </antcall>
        <antcall target="check_jar">
            <param name="file" value="${jta-spec.jar}"/>
