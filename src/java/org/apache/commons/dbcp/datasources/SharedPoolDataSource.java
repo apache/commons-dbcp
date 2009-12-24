@@ -168,20 +168,29 @@ public class SharedPoolDataSource
         }
 
         PooledConnectionAndInfo info = null;
+        
+        UserPassKey key = null;
+        synchronized (userKeys) {
+            key = getUserPassKey(username, password);
+        }
+        
         try {
-            info = (PooledConnectionAndInfo) pool
-                .borrowObject(getUserPassKey(username, password));
+            info = (PooledConnectionAndInfo) pool.borrowObject(key);
         }
         catch (SQLException ex) {  // Remove bad UserPassKey
-            if ((userKeys != null) && (userKeys.containsKey(username))) {
-                userKeys.remove(username);
+            if (userKeys != null) {
+                synchronized (userKeys) {
+                    if (userKeys.containsKey(username)) {
+                        userKeys.remove(username);
+                    }
+                }
             }
             throw new SQLNestedException(
-                "Could not retrieve connection info from pool", ex);
+                    "Could not retrieve connection info from pool", ex);
         }
         catch (Exception e) {
             throw new SQLNestedException(
-                "Could not retrieve connection info from pool", e);
+                    "Could not retrieve connection info from pool", e);
         }
         return info;
     }
