@@ -1,0 +1,70 @@
+################################################################################
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+################################################################################
+This document describes the process used to produce DBCP 1.3.x/1.4.x release
+candidates from the common source code maintained in DBCP's svn trunk.
+
+0.  Prepare and validate changes, testing with JDK 1.4 and 1.5 using Ant
+    and the code in trunk.   
+
+1.  Change the version numbers in pom.xml, build.xml,
+    pom-1.3.xml and build-1.3.xml to the new .x version.
+
+3.  Regenerate download_dbcp.xml using the commons-build plugin:
+    mvn commons:download-page
+
+4.  Regenerate RELEASE_NOTES.txt
+    mvn changes:announcement-generate
+    mv target/announcement/dbcp-release-notes.vm RELEASE-NOTES.txt
+    The formatting may need some tweaking. Check RELEASE-Notes.txt
+    in.
+
+5.  Test artifact generation from trunk:
+    mvn -Prc install
+    Inspect the 1.4.x tarballs in /target and the maven artifacts in 
+    your local maven repo.  Fix any problems.
+
+6.  Check in all changes to trunk.
+
+7.  Check out DBCP fully - i.e., trunk, branches, tags.  
+
+8.  From the top level of the checkout, execute
+    svn cp trunk branches/DBCP_1_3_x_BRANCH
+    svn commit -m "Created 1.3.x compatibility release branch."
+    (where x is the final digit of the new release number)
+
+9.  From the DBCP_1_3_x_BRANCH
+    svn rm pom.xml
+    svn rm build.xml
+    svn rm build.properties.sample
+    svn mv build-1.3.xml build.xml
+    svn mv pom-1.3.xml pom.xml
+
+10. From the DBCP_1_3_x_BRANCH, using JDK 1.4 or 1.5
+    cp build.properties.sample build.properties (make sure all referenced jars exist)
+    ant filter-sources
+    svn commit -m "Filtered sources to remove JDBC 4 methods."
+    ant clean test (verify that the build works)
+
+11. Create release tags.  From the top-level dbcp directory
+    svn cp branches/DBCP_1_3_x_BRANCH tags/DBCP_1_3_x_RCy  (where x is dot level, y is RC number)
+    svn cp trunk tags/DBCP_1_4_x_RC2
+    svn commit -m "Tagging 1.3.x RCy" tags/DBCP_1_3_x_RCy
+    svn commit -m "Tagging 1.4.x RCy" tags/DBCP_1_4_x_RCy
+
+12. From a fresh checkout of the DBCP_1_4_x_RCy tag, execute
+    mvn -Prc install
+
+13. From a fresh checkout of the DBCP_1_3_x_RCy tag using JDK 1.5,
+    mvn -Prc install
+
+14. Collect the maven released artifacts from the 1.3.x/1.4.x dbcp directories
+    in your local repo and the tarballs/zips from the /target directories
+    in trunk and the 1.3 branch.
+
