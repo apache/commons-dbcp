@@ -109,6 +109,18 @@ public class TestBasicDataSource extends TestConnectionPool {
         // both wrapper and raw active connection should be closed
         assertTrue(activeConnection.isClosed());
         assertTrue(rawActiveConnection.isClosed());
+        
+        // Verify SQLException on getConnection after close
+        try {
+            activeConnection = getConnection();
+            fail("Expecting SQLException");
+        } catch (SQLException ex) {
+            // Expected
+        }
+        
+        // Redundant close is OK
+        ds.close();
+        
     }
 
     public void testSetProperties() throws Exception {

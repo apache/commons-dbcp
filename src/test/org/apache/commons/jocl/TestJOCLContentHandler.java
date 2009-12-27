@@ -36,8 +36,11 @@ import java.io.IOException;
 public class TestJOCLContentHandler extends TestCase {
     public TestJOCLContentHandler(String testName) {
         super(testName);
-        if(null == System.getProperty("org.xml.sax.driver")) {
-           System.setProperty("org.xml.sax.driver","org.apache.xerces.parsers.SAXParser");
+        if (Float.parseFloat(System.getProperty("java.specification.version")) < 
+                1.6f) {
+            if(null == System.getProperty("org.xml.sax.driver")) {
+                System.setProperty("org.xml.sax.driver","org.apache.xerces.parsers.SAXParser");
+            }
         }
     }
 

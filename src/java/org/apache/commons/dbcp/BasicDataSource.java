@@ -1289,12 +1289,20 @@ public class BasicDataSource implements DataSource {
     protected boolean closed;
 
     /**
-     * Close and release all connections that are currently stored in the
-     * connection pool associated with our data source.  All open (active)
-     * connection remain open until closed.  Once the data source has
-     * been closed, no more connections can be obtained.
+     * <p>Closes and releases all idle connections that are currently stored in the connection pool
+     * associated with this data source.</p>
      *
-     * @throws SQLException if a database error occurs
+     * <p>Connections that are checked out to clients when this method is invoked are not affected.  
+     * When client applications subsequently invoke {@link Connection#close()} to return
+     * these connections to the pool, the underlying JDBC connections are closed.</p>
+     * 
+     * <p>Attempts to acquire connections using {@link #getConnection()} after this method has been
+     * invoked result in SQLExceptions.<p>
+     * 
+     * <p>This method is idempotent - i.e., closing an already closed BasicDataSource has no effect
+     * and does not generate exceptions.</p>
+     * 
+     * @throws SQLException if an error occurs closing idle connections
      */
     public synchronized void close() throws SQLException {
         closed = true;
@@ -1322,7 +1330,7 @@ public class BasicDataSource implements DataSource {
         return closed;
     }
 
-    /*
+    /* JDBC_4_ANT_KEY_BEGIN */
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
@@ -1330,7 +1338,7 @@ public class BasicDataSource implements DataSource {
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException("BasicDataSource is not a wrapper.");
     }
-    */
+    /* JDBC_4_ANT_KEY_END */
 
         
     // ------------------------------------------------------ Protected Methods

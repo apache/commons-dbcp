@@ -443,18 +443,20 @@ public class PerUserPoolDataSource
         PoolKey key = null;
         String name = username + password;
         String dsName = getDataSourceName();
-        Map dsMap = (Map) poolKeys.get(dsName);
-        if (dsMap != null) {
-            key = (PoolKey) dsMap.get(name);
-        }
-        
-        if (key == null) {
-            key = new PoolKey(dsName, name);
-            if (dsMap == null) {
-                dsMap = new HashMap();
-                poolKeys.put(dsName, dsMap);
+        synchronized (poolKeys) {
+            Map dsMap = (Map) poolKeys.get(dsName);
+            if (dsMap != null) {
+                key = (PoolKey) dsMap.get(name);
             }
-            dsMap.put(name, key);
+
+            if (key == null) {
+                key = new PoolKey(dsName, name);
+                if (dsMap == null) {
+                    dsMap = new HashMap();
+                    poolKeys.put(dsName, dsMap);
+                }
+                dsMap.put(name, key);
+            }
         }
         return key;
     }
