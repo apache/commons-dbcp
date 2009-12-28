@@ -19,7 +19,7 @@
  */
  -->
 
-<!-- $Id$ -->
+<!-- $Id: build.xml 887831 2009-12-07 03:56:29Z psteitz $ -->
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
@@ -51,7 +51,7 @@
 
       <property name="name" value="commons-dbcp"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
-      <property name="version" value="Nightly-${DSTAMP}${TSTAMP}"/>
+      <property name="version" value="1.3"/>
       <property name="package" value="org.apache.commons.dbcp.*"/>
 
       <property name="build.dir" value="${basedir}/build"/>
@@ -65,15 +65,15 @@
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2004 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2009 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/java/org/apache/commons/dbcp/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
+   	  <property name="javac.source" value="1.4" />
 
       <available property="jndi.present" classname="javax.naming.Context"/>
-      <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
    <target name="check_jar">
@@ -128,36 +128,20 @@
       <delete dir="${dist.dir}"/>
    </target>
 
-   <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
-      <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
-      <property name="src.dir" value="${build.dir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
-      <property name="javac.source" value="1.4" />
-
-      <mkdir dir="${src.dir}"/>
-      <copy todir="${src.dir}" filtering="yes">
-         <fileset dir="${basedir}/src" defaultexcludes="no">
-            <include name="**/*.java"/>
-            <include name="**/*.xml"/>
-            <include name="**/*.properties"/>
-            <include name="**/*.jocl"/>
-            <include name="**/package.html"/>
-         </fileset>
-      </copy>
-      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
-      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
-   </target>
-
-   <target name="prepare-jdbc4" depends="init" if="jdbc4.present">
-      <echo message="JDBC 4 was detected."/>
+   <target name="filter-sources">
+      <echo message="Comment out the jdbc4 additional methods."/>
       <property name="src.dir" value="${basedir}/src"/>
       <property name="src.java.dir" value="${src.dir}/java"/>
       <property name="src.test.dir" value="${src.dir}/test"/>
-      <property name="javac.source" value="1.5" />
+
+      <replace dir="${src.java.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${src.java.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
+
+      <replace dir="${src.test.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${src.test.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
    </target>
 
-   <target name="prepare" depends="init,prepare-nojdbc4,prepare-jdbc4"/>
+   <target name="prepare" depends="init,filter-sources"/>
 
    <target name="javadoc" depends="prepare" description="generates javadocs">
       <mkdir dir="${javadoc.dir}"/>
