@@ -48,9 +48,9 @@ candidates from the common source code maintained in DBCP's svn trunk.
 10. From the DBCP_1_3_x_BRANCH, using JDK 1.4 or 1.5
     cp build.properties.sample build.properties (make sure all referenced jars exist)
     ant filter-sources
-    ant clean test (verify that the build works)
+    ant clean test
+    mvn clean site
     svn commit -m "Filtered sources to remove JDBC 4 methods."
-    
 
 11. Create release tags.  From the top-level dbcp directory
     svn cp branches/DBCP_1_3_x_BRANCH tags/DBCP_1_3_x_RCy  (where x is dot level, y is RC number)

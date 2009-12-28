@@ -85,12 +85,12 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         assertTrue(!meta.equals(meta3));
     }
     
-    /*
+    /* JDBC_4_ANT_KEY_BEGIN */
     public void testCheckOpen() throws Exception {
         ResultSet rst = meta.getSchemas();
         assertTrue(!rst.isClosed());
         conn.close();
         assertTrue(rst.isClosed());
     }
-    */
+    /* JDBC_4_ANT_KEY_END */
 }

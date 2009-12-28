@@ -20,9 +20,9 @@ package org.apache.commons.dbcp;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.RowIdLifetime;
-*/
+/* JDBC_4_ANT_KEY_END */
 import java.sql.SQLException;
 
 /**
@@ -1121,7 +1121,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         catch (SQLException e) { handleException(e); return false; } }
     }
 
-    /*
+    /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _meta.isWrapperFor(iface);
@@ -1206,6 +1206,6 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
     }
 
-    */
+    /* JDBC_4_ANT_KEY_END */
 
 }

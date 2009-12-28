@@ -155,7 +155,7 @@ public abstract class InstanceKeyDataSource
      */
     public abstract void close() throws Exception;
 
-    /*
+    /* JDBC_4_ANT_KEY_BEGIN */
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
@@ -163,7 +163,7 @@ public abstract class InstanceKeyDataSource
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException("InstanceKeyDataSource is not a wrapper.");
     }
-    */
+    /* JDBC_4_ANT_KEY_END */
 
     // -------------------------------------------------------------------
     // Properties
