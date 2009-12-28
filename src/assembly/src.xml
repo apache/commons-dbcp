@@ -34,6 +34,7 @@
                 <include>README.txt</include>
                 <include>RELEASE-NOTES.txt</include>
                 <include>test-jar.xml</include>
+                <include>findbugs-exclude-filter.xml</include>
             </includes>
         </fileSet>
         <fileSet>
