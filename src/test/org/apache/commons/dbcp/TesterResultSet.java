@@ -28,13 +28,13 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Calendar;
-/* JDBC_4_ANT_KEY_BEGIN */
+/*
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.NClob;
 import java.sql.RowId;
 import java.sql.SQLXML;
-/* JDBC_4_ANT_KEY_END */
+*/
 
 /**
  * A dummy {@link ResultSet}, for testing purposes.
@@ -767,7 +767,7 @@ public class TesterResultSet implements ResultSet {
         throw new SQLException("Not implemented.");
     }
 
-/* JDBC_4_ANT_KEY_BEGIN */
+/*
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -968,5 +968,5 @@ public class TesterResultSet implements ResultSet {
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
-/* JDBC_4_ANT_KEY_END */
+*/
 }
