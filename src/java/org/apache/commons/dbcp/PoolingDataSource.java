@@ -85,7 +85,7 @@ public class PoolingDataSource implements DataSource {
         this.accessToUnderlyingConnectionAllowed = allow;
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
+    /*
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
@@ -93,7 +93,7 @@ public class PoolingDataSource implements DataSource {
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException("PoolingDataSource is not a wrapper.");
     }
-    /* JDBC_4_ANT_KEY_END */
+    */
     
     //--- DataSource methods -----------------------------------------
 
