@@ -345,7 +345,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _closed;
     }
 
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _stmt.isWrapperFor(iface);
@@ -381,5 +381,5 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             return false;
         }
     }
-*/
+/* JDBC_4_ANT_KEY_END */
 }

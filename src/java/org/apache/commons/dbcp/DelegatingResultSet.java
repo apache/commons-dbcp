@@ -35,11 +35,11 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Array;
 import java.util.Calendar;
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.NClob;
 import java.sql.RowId;
 import java.sql.SQLXML;
-*/
+/* JDBC_4_ANT_KEY_END */
 
 /**
  * A base delegating implementation of {@link ResultSet}.
@@ -619,7 +619,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public void updateArray(String columnName, java.sql.Array x) throws SQLException
     { try { _res.updateArray(columnName, x); } catch (SQLException e) { handleException(e); } }
 
-/*
+/* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _res.isWrapperFor(iface);
@@ -1078,5 +1078,5 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
             handleException(e);
         }
     }
-*/
+/* JDBC_4_ANT_KEY_END */
 }

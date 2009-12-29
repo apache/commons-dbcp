@@ -42,6 +42,7 @@ candidates from the common source code maintained in DBCP's svn trunk.
 9.  From the DBCP_1_3_x_BRANCH
     svn rm pom.xml
     svn rm build.xml
+    svn rm findbugs-exclude-filter.xml
     svn mv build-1.3.xml build.xml
     svn mv pom-1.3.xml pom.xml
 
@@ -58,7 +59,7 @@ candidates from the common source code maintained in DBCP's svn trunk.
     svn commit -m "Tagging 1.3.x RCy" tags/DBCP_1_3_x_RCy
     svn commit -m "Tagging 1.4.x RCy" tags/DBCP_1_4_x_RCy
 
-12. From a fresh checkout of the DBCP_1_4_x_RCy tag, execute
+12. From a fresh checkout of the DBCP_1_4_x_RCy tag, using JDK 1.6 execute
     mvn -Prc install
 
 13. From a fresh checkout of the DBCP_1_3_x_RCy tag using JDK 1.5,
