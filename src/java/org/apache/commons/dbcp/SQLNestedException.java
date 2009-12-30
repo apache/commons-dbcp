@@ -17,10 +17,6 @@
 
 package org.apache.commons.dbcp;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Method;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
