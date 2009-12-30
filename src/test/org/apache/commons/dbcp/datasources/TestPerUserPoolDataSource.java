@@ -394,7 +394,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                     pts[i].stop();
                 }
 
-                if (!expectError) e.printStackTrace();
+                if (!expectError) {
+                    System.out.println(t.getName());
+                    e.printStackTrace(System.out);
+                }
                 success[0] = false;
             }
         };
@@ -408,7 +411,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
         long time = System.currentTimeMillis() - startTime;
         // - (pts.length*10*holdTime);
-        System.out.println("Multithread test time = " + time + " ms");
+        System.out.println("Multithread test time = " + time + " ms. Threads: "+pts.length+". Hold time: "+holdTime);
 
         Thread.sleep(holdTime);
         return success[0];
