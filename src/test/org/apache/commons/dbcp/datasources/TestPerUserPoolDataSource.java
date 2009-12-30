@@ -373,11 +373,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
     
     public void testMultipleThreads() throws Exception {
-        assertTrue(multipleThreads(1));
-        assertTrue(!multipleThreads(2 * (int)(getMaxWait())));
+        assertTrue("Expected multiple threads to succeed with timeout=1",multipleThreads(1, false));
+        assertTrue("Expected multiple threads to fail with timeout=2*maxWait",!multipleThreads(2 * (int)(getMaxWait()), true));
     }
 
-    private boolean multipleThreads(int holdTime) throws Exception {
+    private boolean multipleThreads(final int holdTime,final boolean expectError) throws Exception {
         long startTime = System.currentTimeMillis();
         final boolean[] success = new boolean[1];
         success[0] = true;
@@ -394,7 +394,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                     pts[i].stop();
                 }
 
-                //e.printStackTrace();
+                if (!expectError) e.printStackTrace();
                 success[0] = false;
             }
         };
@@ -420,11 +420,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         /**
          * The number of milliseconds to hold onto a database connection
          */
-        private int connHoldTime;
+        private final int connHoldTime;
 
-        private boolean isRun;
+        private volatile boolean isRun;
 
-        private String state;
+        private volatile String state;
 
         protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
             this.connHoldTime = connHoldTime;
@@ -458,7 +458,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                 } catch (RuntimeException e) {
                     throw e;
                 } catch (Exception e) {
-                    throw new RuntimeException(e.toString());
+                    throw (RuntimeException) new RuntimeException(e.toString()).initCause(e);
                 }
             }
         }
