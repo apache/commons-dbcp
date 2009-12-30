@@ -214,7 +214,6 @@
   </dependencies>
 
   <properties>
-    <!-- Target Java versions are actually 1.4, 1.5 and 1.6 -->
     <maven.compile.source>1.4</maven.compile.source>
     <maven.compile.target>1.4</maven.compile.target>
     <commons.componentid>dbcp</commons.componentid>
