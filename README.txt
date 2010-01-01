@@ -10,7 +10,7 @@ and one to support JDBC 4.  Here is how it works:
 DBCP 1.4 compiles and runs under JDK 1.6 only (JDBC 4)
 DBCP 1.3 compiles and runs under JDK 1.4-1.5 only (JDBC 3)
 
-DBCP 1.4 binaries should be used by applications running under under JDK 1.6
+DBCP 1.4 binaries should be used by applications running under JDK 1.6
 DBCP 1.3 should be used when running under JDK 1.4 or 1.5.
 
 There is no difference in the codebase supporting these two
