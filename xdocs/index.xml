@@ -48,18 +48,19 @@ efficient, feature-rich package under the ASF license.</p>
 <code>commons-pool</code> package to provide the underlying object pool
 mechanisms that it utilizes.</p>
 
-<p>Applications can use the <code>commons-dbcp</code> component directly
-or through the existing interface of their container / supporting framework.
-For example the <a href="http://tomcat.apache.org/">Tomcat</a> 
-servlet container presents a DBCP DataSource as a JNDI Datasource.
-<a href="http://james.apache.org/">James</a> (Java Apache Mail Enterprise Server) 
-has integrated DBCP into the <a href="http://avalon.apache.org/">Avalon</a> framework.
-A Avalon-style datasource is created by 
-<a href="http://svn.apache.org/viewcvs/james/server/trunk/src/java/org/apache/james/util/dbcp/JdbcDataSource.java?view=markup">
-wrapping</a> the DBCP implementation.
-The pooling logic of DBCP and the configuration found in Avalon's excalibur 
-code is what was needed to create an integrated reliable DataSource.
+<p>DBCP now comes in two different versions, one to support JDBC 3
+and one to support JDBC 4.  Here is how it works:
+<ul>
+<li>DBCP 1.4 compiles and runs under JDK 1.6 only (JDBC 4)</li>
+<li>DBCP 1.3 compiles and runs under JDK 1.4-1.5 only (JDBC 3)</li>
+</ul>
 </p>
+<p>DBCP 1.4 binaries should be used by applications running under under JDK 1.6.</p>
+<p>DBCP 1.3 should be used when running under JDK 1.4 or 1.5.</p>
+
+<p>There is no difference in the codebase supporting these two
+versions, other than that the code implementing methods added
+to support JDBC 4 has been filtered out of the DBCP 1.3 sources.</p>
 
 </section>
 
