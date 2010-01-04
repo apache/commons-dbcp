@@ -366,8 +366,11 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    public void testMultipleThreads() throws Exception {
+    public void testMultipleThreads1() throws Exception {
         assertTrue(multipleThreads(1));
+    }
+
+    public void testMultipleThreads2() throws Exception {
         assertTrue(!multipleThreads(2 * (int)(getMaxWait())));
     }
 
