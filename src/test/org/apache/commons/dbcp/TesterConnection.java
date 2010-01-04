@@ -212,7 +212,7 @@ public class TesterConnection implements Connection {
     
     protected void checkFailure() throws SQLException {
         if (failure != null) {
-            throw new SQLNestedException("TesterConnection failure", failure);
+            throw (SQLException) new SQLException("TesterConnection failure").initCause(failure);
         }
     }
     
