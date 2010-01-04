@@ -340,22 +340,19 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         // Should take ~maxWait for threads to stop 
         for (int i = 0; i < pts.length; i++) {
-            pts[i] = new PoolTest(threadGroup, 1, true);
+            pts[i] = new PoolTest(threadGroup, 1);
         }
         
         // Wait for all the threads to complete
-        boolean running = true;
-        while (running) {
-            Thread.sleep(maxWait / 2);
-            running = false;
-            for (int i = 0; i < pts.length; i++) {
-                running = running || pts[i].isRun; 
-            }
+        for (int i = 0; i < pts.length; i++) {
+            final PoolTest poolTest = pts[i];
+            poolTest.getThread().join();
         }
+
         
         long end = System.currentTimeMillis();
         
-        System.out.println("testMaxWait took " + (end-start) + " ms");
+        System.out.println("testMaxWait took " + (end-start) + " ms. Maxwait: "+maxWait);
         
         // Threads should time out in parallel - allow double that to be safe
         assertTrue((end-start) < (2 * maxWait)); 
@@ -367,124 +364,15 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     public void testMultipleThreads1() throws Exception {
-        assertTrue(multipleThreads(1));
+        // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
+        // some JVMs, e.g. Windows.
+        final int defaultMaxWait = 430;
+        ((SharedPoolDataSource) ds).setMaxWait(defaultMaxWait);
+        multipleThreads(1, false, defaultMaxWait);
     }
 
     public void testMultipleThreads2() throws Exception {
-        assertTrue(!multipleThreads(2 * (int)(getMaxWait())));
-    }
-
-    private boolean multipleThreads(int holdTime) throws Exception {
-        long startTime = System.currentTimeMillis();
-        final boolean[] success = new boolean[1];
-        success[0] = true;
-        final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
-        ThreadGroup threadGroup = new ThreadGroup("foo") {
-            public void uncaughtException(Thread t, Throwable e) {
-                /*
-                for (int i = 0; i < pts.length; i++)
-                {
-                    System.out.println(i + ": " + pts[i].reportState());
-                }
-                */
-                for (int i = 0; i < pts.length; i++) {
-                    pts[i].stop();
-                }
-
-                //e.printStackTrace();
-                success[0] = false;
-            }
-        };
-
-        for (int i = 0; i < pts.length; i++) {
-            pts[i] = new PoolTest(threadGroup, holdTime);
-        }
-        Thread.sleep(10L * holdTime);
-        for (int i = 0; i < pts.length; i++) {
-            pts[i].stop();
-        }
-        long time = System.currentTimeMillis() - startTime;
-        // - (pts.length*10*holdTime);
-        System.out.println("Multithread test time = " + time + " ms");
-
-        Thread.sleep(holdTime);
-        return success[0];
-    }
-
-    private static int currentThreadCount = 0;
-
-    private class PoolTest implements Runnable {
-        /**
-         * The number of milliseconds to hold onto a database connection
-         */
-        private final int connHoldTime;
-
-        private volatile boolean isRun; // shared across threads
-
-        private volatile String state; // sharead across threads
-
-        private final boolean isStopOnException;
-
-        protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
-            this(threadGroup, connHoldTime, false);
-        }
-            
-        protected PoolTest(ThreadGroup threadGroup, int connHoldTime,
-                boolean isStopOnException) {
-            this.connHoldTime = connHoldTime;
-            this.isStopOnException = isStopOnException;
-            Thread thread =
-                new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
-            thread.setDaemon(false);
-            thread.start();
-        }
-
-        public void run() {
-            isRun = true;
-            while (isRun) {
-                try {
-                    Connection conn = null;
-                    state = "Getting Connection";
-                    conn = getConnection();
-                    state = "Using Connection";
-                    assertNotNull(conn);
-                    PreparedStatement stmt =
-                        conn.prepareStatement("select * from dual");
-                    assertNotNull(stmt);
-                    ResultSet rset = stmt.executeQuery();
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
-                    state = "Holding Connection";
-                    Thread.sleep(connHoldTime);
-                    state = "Returning Connection";
-                    rset.close();
-                    stmt.close();
-                    conn.close();
-                } catch (RuntimeException e) {
-                    if (isStopOnException) {
-                        stop();
-//                        e.printStackTrace();
-                    } else {
-                        throw e;
-                    }
-                } catch (Exception e) {
-                    if (isStopOnException) {
-                        stop();
-//                        e.printStackTrace();
-                    } else {
-                        throw new RuntimeException(e.toString());
-                    }
-                }
-            }
-        }
-
-        public void stop() {
-            isRun = false;
-        }
-
-        public String reportState() {
-            return state;
-        }
+        multipleThreads(2 * (int)(getMaxWait()), true, getMaxWait());
     }
 
     public void testTransactionIsolationBehavior() throws Exception {
