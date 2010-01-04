@@ -83,8 +83,8 @@ public class TestManual extends TestConnectionPool {
         GenericObjectPool connectionPool = new GenericObjectPool(null);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
-        PoolingDriver driver = new PoolingDriver();
-        driver.registerPool("example",connectionPool);
+        PoolingDriver driver2 = new PoolingDriver();
+        driver2.registerPool("example",connectionPool);
     }
 
 
@@ -129,8 +129,8 @@ public class TestManual extends TestConnectionPool {
                 false,
                 true);
         assertNotNull(poolableConnectionFactory);
-        PoolingDriver driver = new PoolingDriver();
-        driver.registerPool("neusoftim",connectionPool);
+        PoolingDriver driver2 = new PoolingDriver();
+        driver2.registerPool("neusoftim",connectionPool);
         Connection[] conn = new Connection[25];
         for(int i=0;i<25;i++) {
             conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
@@ -149,8 +149,8 @@ public class TestManual extends TestConnectionPool {
         assertNotNull(conn);
         conn.close();
         
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
-        driver.closePool("test");
+        PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        driver2.closePool("test");
 
         try {
             DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
@@ -169,8 +169,8 @@ public class TestManual extends TestConnectionPool {
         assertEquals(1, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
 
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
-        driver.invalidateConnection(conn);
+        PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        driver2.invalidateConnection(conn);
 
         assertEquals(0, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
