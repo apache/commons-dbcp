@@ -28,6 +28,9 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.apache.commons.dbcp.TestConnectionPool;
 import org.apache.commons.dbcp.TesterDriver;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
@@ -40,6 +43,10 @@ import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
         super(testName);
+    }
+
+    public static Test suite() {
+        return new TestSuite(TestPerUserPoolDataSource.class);
     }
 
     protected Connection getConnection() throws SQLException {
