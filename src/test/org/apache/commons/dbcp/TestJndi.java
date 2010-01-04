@@ -129,8 +129,8 @@ public class TestJndi extends TestCase {
      * @throws Exception if the jndi lookup fails or no DataSource is bound.
      */
     protected DataSource retrieveDataSource() throws Exception {
-        Context context = getInitialContext();
-        DataSource dataSource = (DataSource) context.lookup(JNDI_PATH);
+        Context ctx = getInitialContext();
+        DataSource dataSource = (DataSource) ctx.lookup(JNDI_PATH);
 
         if (dataSource == null) {
             fail("DataSource should not be null");
@@ -149,7 +149,7 @@ public class TestJndi extends TestCase {
         Hashtable environment = new Hashtable();
         environment.put(Context.INITIAL_CONTEXT_FACTORY,
                 org.apache.naming.java.javaURLContextFactory.class.getName());
-        InitialContext context = new InitialContext(environment);
-        return context;
+        InitialContext ctx = new InitialContext(environment);
+        return ctx;
     }
 }
