@@ -47,10 +47,6 @@ public abstract class TestConnectionPool extends TestCase {
         super(testName);
     }
 
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
     public void tearDown() throws Exception {
         super.tearDown();
         // Close any connections opened by the test
