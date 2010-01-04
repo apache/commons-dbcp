@@ -60,11 +60,11 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         } catch (SQLException e) {
             fail("No exception expected retrieving meta data");
         }
-        DelegatingDatabaseMetaData meta =
+        DelegatingDatabaseMetaData meta1 =
             new DelegatingDatabaseMetaData(conn,delegateMeta);
         DelegatingDatabaseMetaData meta2 =
             new DelegatingDatabaseMetaData(conn,delegateMeta);
-        assertEquals(meta.hashCode(), meta2.hashCode());
+        assertEquals(meta1.hashCode(), meta2.hashCode());
     }
     
     public void testEquals() {
@@ -73,16 +73,16 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         } catch (SQLException e) {
             fail("No exception expected retrieving meta data");
         }
-        DelegatingDatabaseMetaData meta =
+        DelegatingDatabaseMetaData meta1 =
             new DelegatingDatabaseMetaData(conn,delegateMeta);
         DelegatingDatabaseMetaData meta2 =
             new DelegatingDatabaseMetaData(conn,delegateMeta);
         DelegatingDatabaseMetaData meta3 =
             new DelegatingDatabaseMetaData(conn,null);
         
-        assertTrue(!meta.equals(null));
-        assertTrue(meta.equals(meta2));
-        assertTrue(!meta.equals(meta3));
+        assertTrue(!meta1.equals(null));
+        assertTrue(meta1.equals(meta2));
+        assertTrue(!meta1.equals(meta3));
     }
     
     /* JDBC_4_ANT_KEY_BEGIN */

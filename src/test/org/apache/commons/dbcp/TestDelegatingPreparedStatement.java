@@ -73,20 +73,20 @@ public class TestDelegatingPreparedStatement extends TestCase {
     
     public void testHashCode() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingPreparedStatement stmt = new DelegatingPreparedStatement(conn,delegateStmt);
+        DelegatingPreparedStatement stmt1 = new DelegatingPreparedStatement(conn,delegateStmt);
         DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn,delegateStmt);
-        assertEquals(stmt.hashCode(), stmt2.hashCode());
+        assertEquals(stmt1.hashCode(), stmt2.hashCode());
     }
     
     public void testEquals() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingPreparedStatement stmt = new DelegatingPreparedStatement(conn, delegateStmt);
+        DelegatingPreparedStatement stmt1 = new DelegatingPreparedStatement(conn, delegateStmt);
         DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn, delegateStmt);
         DelegatingPreparedStatement stmt3 = new DelegatingPreparedStatement(conn, null);
         
-        assertTrue(!stmt.equals(null));
-        assertTrue(stmt.equals(stmt2));
-        assertTrue(!stmt.equals(stmt3));
+        assertTrue(!stmt1.equals(null));
+        assertTrue(stmt1.equals(stmt2));
+        assertTrue(!stmt1.equals(stmt3));
     }
 
 }

@@ -61,20 +61,20 @@ public class TestDelegatingStatement extends TestCase {
 
     public void testHashCode() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt = new DelegatingStatement(conn,delegateStmt);
+        DelegatingStatement stmt1 = new DelegatingStatement(conn,delegateStmt);
         DelegatingStatement stmt2 = new DelegatingStatement(conn,delegateStmt);
-        assertEquals(stmt.hashCode(), stmt2.hashCode());
+        assertEquals(stmt1.hashCode(), stmt2.hashCode());
     }
     
     public void testEquals() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt = new DelegatingStatement(conn, delegateStmt);
+        DelegatingStatement stmt1 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt2 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
         
-        assertTrue(!stmt.equals(null));
-        assertTrue(stmt.equals(stmt2));
-        assertTrue(!stmt.equals(stmt3));
+        assertTrue(!stmt1.equals(null));
+        assertTrue(stmt1.equals(stmt2));
+        assertTrue(!stmt1.equals(stmt3));
     }
     
     public void testCheckOpen() throws Exception {
