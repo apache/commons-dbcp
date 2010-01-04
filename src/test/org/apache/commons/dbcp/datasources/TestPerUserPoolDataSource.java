@@ -372,8 +372,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumIdle("u2", "p2"));
     }
     
-    public void testMultipleThreads() throws Exception {
+    public void testMultipleThreads1() throws Exception {
+        // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
+        // some JVMs, e.g. Windows.
+        final int defaultMaxWait = 430;
+        ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
+        ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",Integer.valueOf(defaultMaxWait));
         assertTrue("Expected multiple threads to succeed with timeout=1",multipleThreads(1, false));
+    }
+
+    public void testMultipleThreads2() throws Exception {
         assertTrue("Expected multiple threads to fail with timeout=2*maxWait",!multipleThreads(2 * (int)(getMaxWait()), true));
     }
 
@@ -409,11 +417,20 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         for (int i = 0; i < pts.length; i++) {
             pts[i].stop();
         }
-        long time = System.currentTimeMillis() - startTime;
         // - (pts.length*10*holdTime);
-        System.out.println("Multithread test time = " + time + " ms. Threads: "+pts.length+". Hold time: "+holdTime);
 
-        Thread.sleep(holdTime);
+        /*
+         * Wait for all threads to terminate.
+         * This is essential to ensure that all threads have a chance to update success[0]
+         * and to ensure that the variable is published correctly.
+         */
+        for (int i = 0; i < pts.length; i++) {
+            pts[i].thread.join();
+        }
+
+        long time = System.currentTimeMillis() - startTime;
+        System.out.println("Multithread test time = " + time + " ms. Threads: "+pts.length+". Hold time: "+holdTime
+                +". Maxwait: "+((PerUserPoolDataSource)ds).getDefaultMaxWait());
         return success[0];
     }
 
@@ -429,16 +446,18 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         private volatile String state;
 
+        private final Thread thread;
+
         protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
             this.connHoldTime = connHoldTime;
-            Thread thread =
+            isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
+            thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
             thread.start();
         }
 
         public void run() {
-            isRun = true;
             while (isRun) {
                 try {
                     Connection conn = null;
