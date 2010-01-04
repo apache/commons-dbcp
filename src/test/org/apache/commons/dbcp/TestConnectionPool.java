@@ -727,7 +727,9 @@ public abstract class TestConnectionPool extends TestCase {
                         + ". expectError: " + expectError
                         );
                 if (expectError) {
-                    assertEquals("Expected half the threads to fail",pts.length/2,failed);
+                    // Cannot be sure that half the threads will fail, because the waiting threads
+                    // can get a connection during the shutdown sequence
+                    assertTrue("Expected some of the threads to fail",failed > 0);
                 } else {
                     assertEquals("Did not expect any threads to fail",0,failed);
                 }
