@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -177,9 +178,11 @@ public class TestManual extends TestConnectionPool {
         assertTrue(conn.isClosed());
     }
 
+    @SuppressWarnings("deprecation") // SQLNestedException
     public void testLogWriter() throws Exception {
-        PrintStream ps = System.out;
-        PrintWriter pw = new PrintWriter(System.err);
+        PrintStream ps = new PrintStream(new ByteArrayOutputStream());
+        PrintWriter pw = new PrintWriter(new ByteArrayOutputStream());
+        System.setErr(new PrintStream(new ByteArrayOutputStream()));
         SQLException ex;
         
         DriverManager.setLogWriter(pw);
