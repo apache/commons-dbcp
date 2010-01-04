@@ -17,19 +17,16 @@
 
 package org.apache.commons.dbcp.datasources;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import javax.sql.DataSource;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp.TestConnectionPool;
 import org.apache.commons.dbcp.TesterDriver;
@@ -45,11 +42,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(TestPerUserPoolDataSource.class);
-    }
-
-    protected Connection getConnection() throws Exception {
+    protected Connection getConnection() throws SQLException {
         return ds.getConnection("foo","bar");
     }
 
@@ -378,63 +371,65 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final int defaultMaxWait = 430;
         ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
         ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",Integer.valueOf(defaultMaxWait));
-        assertTrue("Expected multiple threads to succeed with timeout=1",multipleThreads(1, false));
+        multipleThreads(1, false);
     }
 
     public void testMultipleThreads2() throws Exception {
-        assertTrue("Expected multiple threads to fail with timeout=2*maxWait",!multipleThreads(2 * (int)(getMaxWait()), true));
+        multipleThreads(2 * (int)(getMaxWait()), true);
     }
 
-    private boolean multipleThreads(final int holdTime,final boolean expectError) throws Exception {
+    private void multipleThreads(final int holdTime,final boolean expectError) throws Exception {
         long startTime = System.currentTimeMillis();
-        final boolean[] success = new boolean[1];
-        success[0] = true;
         final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
-        ThreadGroup threadGroup = new ThreadGroup("foo") {
-            public void uncaughtException(Thread t, Throwable e) {
-                /*
-                for (int i = 0; i < pts.length; i++)
-                {
-                    System.out.println(i + ": " + pts[i].reportState());
-                }
-                */
-                for (int i = 0; i < pts.length; i++) {
-                    pts[i].stop();
-                }
-
-                if (!expectError) {
-                    System.out.println(t.getName());
-                    e.printStackTrace(System.out);
-                }
-                success[0] = false;
-            }
-        };
-
         for (int i = 0; i < pts.length; i++) {
-            pts[i] = new PoolTest(threadGroup, holdTime);
+            pts[i] = new PoolTest(null, holdTime);
         }
         Thread.sleep(10L * holdTime);
         for (int i = 0; i < pts.length; i++) {
             pts[i].stop();
         }
-        // - (pts.length*10*holdTime);
-
         /*
          * Wait for all threads to terminate.
          * This is essential to ensure that all threads have a chance to update success[0]
          * and to ensure that the variable is published correctly.
          */
+        int done=0;
+        int failed=0;
         for (int i = 0; i < pts.length; i++) {
-            pts[i].thread.join();
+            final PoolTest poolTest = pts[i];
+            poolTest.thread.join();
+            final String state = poolTest.state;
+            if (DONE.equals(state)){
+                done++;
+            }
+            final Throwable thrown = poolTest.thrown;
+            if (thrown != null) {
+                failed++;
+                if (!expectError || !(thrown instanceof SQLException)){
+                    System.out.println("Unexpected error: "+thrown.getMessage());
+                }
+            }
         }
 
         long time = System.currentTimeMillis() - startTime;
-        System.out.println("Multithread test time = " + time + " ms. Threads: "+pts.length+". Hold time: "+holdTime
-                +". Maxwait: "+((PerUserPoolDataSource)ds).getDefaultMaxWait());
-        return success[0];
+        System.out.println("Multithread test time = " + time
+                + " ms. Threads: " + pts.length
+                + ". Hold time: " + holdTime
+                + ". Maxwait: " + ((PerUserPoolDataSource)ds).getDefaultMaxWait()
+                + ". Done: " + done
+                + ". Failed: " + failed
+                + ". expectError: " + expectError
+                );
+        if (expectError) {
+            assertEquals("Expected half the threads to fail",pts.length/2,failed);
+        } else {
+            assertEquals("Did not expect any threads to fail",0,failed);
+        }
     }
 
     private static int currentThreadCount = 0;
+
+    private static final String DONE = "Done";
 
     private class PoolTest implements Runnable {
         /**
@@ -444,13 +439,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         private volatile boolean isRun;
 
-        private volatile String state;
+        String state; // No need to be volatile if it is read after the thread finishes
 
-        private final Thread thread;
+        final Thread thread;
 
-        protected PoolTest(ThreadGroup threadGroup, int connHoldTime) {
+        Throwable thrown;
+
+        PoolTest(ThreadGroup threadGroup, int connHoldTime) {
             this.connHoldTime = connHoldTime;
             isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
+            thrown = null;
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
@@ -458,11 +456,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
 
         public void run() {
-            while (isRun) {
-                try {
-                    Connection conn = null;
+            try {
+                while (isRun) {
                     state = "Getting Connection";
-                    conn = getConnection();
+                    Connection conn = getConnection();
                     state = "Using Connection";
                     assertNotNull(conn);
                     PreparedStatement stmt =
@@ -477,20 +474,15 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                     rset.close();
                     stmt.close();
                     conn.close();
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw (RuntimeException) new RuntimeException(e.toString()).initCause(e);
                 }
+                state = DONE;
+            } catch (Throwable t) {
+                thrown = t;
             }
         }
 
         public void stop() {
             isRun = false;
-        }
-
-        public String reportState() {
-            return state;
         }
     }
 
