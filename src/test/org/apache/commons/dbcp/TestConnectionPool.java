@@ -686,4 +686,116 @@ public abstract class TestConnectionPool extends TestCase {
             return true;
         }
     }
+
+    protected void multipleThreads(final int holdTime, final boolean expectError, long maxWait)
+            throws Exception {
+                long startTime = System.currentTimeMillis();
+                final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
+                for (int i = 0; i < pts.length; i++) {
+                    pts[i] = new PoolTest(null, holdTime);
+                }
+                Thread.sleep(10L * holdTime);
+                for (int i = 0; i < pts.length; i++) {
+                    pts[i].stop();
+                }
+                /*
+                 * Wait for all threads to terminate.
+                 * This is essential to ensure that all threads have a chance to update success[0]
+                 * and to ensure that the variable is published correctly.
+                 */
+                int done=0;
+                int failed=0;
+                for (int i = 0; i < pts.length; i++) {
+                    final PoolTest poolTest = pts[i];
+                    poolTest.getThread().join();
+                    final String state = poolTest.state;
+                    if (DONE.equals(state)){
+                        done++;
+                    }
+                    final Throwable thrown = poolTest.thrown;
+                    if (thrown != null) {
+                        failed++;
+                        if (!expectError || !(thrown instanceof SQLException)){
+                            System.out.println("Unexpected error: "+thrown.getMessage());
+                        }
+                    }
+                }
+            
+                long time = System.currentTimeMillis() - startTime;
+                System.out.println("Multithread test time = " + time
+                        + " ms. Threads: " + pts.length
+                        + ". Hold time: " + holdTime
+                        + ". Maxwait: " + maxWait
+                        + ". Done: " + done
+                        + ". Failed: " + failed
+                        + ". expectError: " + expectError
+                        );
+                if (expectError) {
+                    assertEquals("Expected half the threads to fail",pts.length/2,failed);
+                } else {
+                    assertEquals("Did not expect any threads to fail",0,failed);
+                }
+            }
+    private static int currentThreadCount = 0;
+
+    private static final String DONE = "Done";
+
+    protected class PoolTest implements Runnable {
+        /**
+         * The number of milliseconds to hold onto a database connection
+         */
+        private final int connHoldTime;
+
+        private volatile boolean isRun;
+
+        private String state; // No need to be volatile if it is read after the thread finishes
+
+        private final Thread thread;
+
+        private Throwable thrown;
+
+        public PoolTest(ThreadGroup threadGroup, int connHoldTime) {
+            this.connHoldTime = connHoldTime;
+            isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
+            thrown = null;
+            thread =
+                new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
+            getThread().setDaemon(false);
+            getThread().start();
+        }
+
+        public void run() {
+            try {
+                while (isRun) {
+                    state = "Getting Connection";
+                    Connection conn = getConnection();
+                    state = "Using Connection";
+                    assertNotNull(conn);
+                    PreparedStatement stmt =
+                        conn.prepareStatement("select * from dual");
+                    assertNotNull(stmt);
+                    ResultSet rset = stmt.executeQuery();
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                    state = "Holding Connection";
+                    Thread.sleep(connHoldTime);
+                    state = "Returning Connection";
+                    rset.close();
+                    stmt.close();
+                    conn.close();
+                }
+                state = DONE;
+            } catch (Throwable t) {
+                thrown = t;
+            }
+        }
+
+        public void stop() {
+            isRun = false;
+        }
+
+        public Thread getThread() {
+            return thread;
+        }
+    }
 }
