@@ -340,7 +340,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         // Should take ~maxWait for threads to stop 
         for (int i = 0; i < pts.length; i++) {
-            pts[i] = new PoolTest(threadGroup, 1);
+            (pts[i] = new PoolTest(threadGroup, 1, true)).start();
         }
         
         // Wait for all the threads to complete

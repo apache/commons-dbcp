@@ -687,10 +687,20 @@ public abstract class TestConnectionPool extends TestCase {
             throws Exception {
                 long startTime = System.currentTimeMillis();
                 final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
+                // Catch Exception so we can stop all threads if one fails
+                ThreadGroup threadGroup = new ThreadGroup("foo") {
+                    public void uncaughtException(Thread t, Throwable e) {
+                        for (int i = 0; i < pts.length; i++) {
+                            pts[i].stop();
+                        }
+                    }
+                };
                 for (int i = 0; i < pts.length; i++) {
-                    pts[i] = new PoolTest(null, holdTime);
+                    (pts[i] = new PoolTest(threadGroup, holdTime)).start();
                 }
-                Thread.sleep(10L * holdTime);
+
+                Thread.sleep(100L); // Wait for long enough to allow threads to start
+
                 for (int i = 0; i < pts.length; i++) {
                     pts[i].stop();
                 }
@@ -703,7 +713,7 @@ public abstract class TestConnectionPool extends TestCase {
                 int failed=0;
                 for (int i = 0; i < pts.length; i++) {
                     final PoolTest poolTest = pts[i];
-                    poolTest.getThread().join();
+                    poolTest.thread.join();
                     final String state = poolTest.state;
                     if (DONE.equals(state)){
                         done++;
@@ -727,9 +737,27 @@ public abstract class TestConnectionPool extends TestCase {
                         + ". expectError: " + expectError
                         );
                 if (expectError) {
-                    // Cannot be sure that half the threads will fail, because the waiting threads
-                    // can get a connection during the shutdown sequence
+                    // Perform initial sanity check:
                     assertTrue("Expected some of the threads to fail",failed > 0);
+                    /*
+                     * Half of the threads should fail; however currently this does not always happen for TestPerUserPoolDataSource. 
+                     * This appears to be due to the pool allowing more than max connections, rather than a test bug,
+                     * but this is not yet fully investigated, hence the extra debug below.
+                     */
+                    if (pts.length/2 != failed){
+                        for (int i = 0; i < pts.length; i++) {
+                            PoolTest pt = pts[i];
+                            System.out.println(
+                                    "StartupDelay: " + (pt.started-pt.created)
+                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.started) : "-")
+                                    + ". Runtime: " + (pt.ended-pt.started)
+                                    + ". Loops: " + pt.loops
+                                    + ". State: " + pt.state
+                                    + ". thrown: "+ pt.thrown
+                                    );
+                        }                        
+                    }
+                    assertEquals("WARNING: Expected half the threads to fail",pts.length/2,failed);
                 } else {
                     assertEquals("Did not expect any threads to fail",0,failed);
                 }
@@ -752,21 +780,40 @@ public abstract class TestConnectionPool extends TestCase {
 
         private Throwable thrown;
 
-        public PoolTest(ThreadGroup threadGroup, int connHoldTime) {
+        private final long created; // When object was created
+        private long started; // when thread started
+        private long ended; // when thread ended
+        private long connected; // when thread last connected
+        private int loops = 0;
+        private final boolean stopOnException; // If true, don't rethrow Exception
+        
+        private PoolTest(ThreadGroup threadGroup, int connHoldTime) {
+            this(threadGroup, connHoldTime, false);
+        }
+            
+        public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException) {
             this.connHoldTime = connHoldTime;
+            stopOnException = isStopOnException;
             isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
             thrown = null;
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
+            created = System.currentTimeMillis();
+        }
+
+        public void start(){
             thread.start();
         }
 
         public void run() {
+            started = System.currentTimeMillis();
             try {
                 while (isRun) {
+                    loops++;
                     state = "Getting Connection";
                     Connection conn = getConnection();
+                    connected = System.currentTimeMillis();
                     state = "Using Connection";
                     assertNotNull(conn);
                     PreparedStatement stmt =
@@ -777,14 +824,22 @@ public abstract class TestConnectionPool extends TestCase {
                     assertTrue(rset.next());
                     state = "Holding Connection";
                     Thread.sleep(connHoldTime);
-                    state = "Returning Connection";
+                    state = "Closing ResultSet";
                     rset.close();
+                    state = "Closing Statement";
                     stmt.close();
+                    state = "Closing Connection";
                     conn.close();
+                    state = "Closed";
                 }
                 state = DONE;
             } catch (Throwable t) {
                 thrown = t;
+                if (!stopOnException) {
+                    throw new RuntimeException();
+                }
+            } finally {
+                ended = System.currentTimeMillis();                
             }
         }
 
