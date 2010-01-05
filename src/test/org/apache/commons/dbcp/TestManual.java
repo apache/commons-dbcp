@@ -178,7 +178,6 @@ public class TestManual extends TestConnectionPool {
         assertTrue(conn.isClosed());
     }
 
-    @SuppressWarnings("deprecation") // SQLNestedException
     public void testLogWriter() throws Exception {
         PrintStream ps = new PrintStream(new ByteArrayOutputStream());
         PrintWriter pw = new PrintWriter(new ByteArrayOutputStream());
