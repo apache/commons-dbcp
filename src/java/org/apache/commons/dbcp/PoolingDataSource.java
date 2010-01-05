@@ -275,16 +275,16 @@ public class PoolingDataSource implements DataSource {
                 return true;
             }
             // Use superclass accessor to skip access test
-            Connection delegate = super.getInnermostDelegate();
-            if (delegate == null) {
+            Connection conn = super.getInnermostDelegate();
+            if (conn == null) {
                 return false;
             }
             if (obj instanceof DelegatingConnection) {    
                 DelegatingConnection c = (DelegatingConnection) obj;
-                return c.innermostDelegateEquals(delegate);
+                return c.innermostDelegateEquals(conn);
             }
             else {
-                return delegate.equals(obj);
+                return conn.equals(obj);
             }
         }
 

@@ -1048,15 +1048,15 @@ public class BasicDataSource implements DataSource {
     /**
      * <strong>BasicDataSource does NOT support this method. </strong>
      *
-     * @param username Database user on whose behalf the Connection
+     * @param user Database user on whose behalf the Connection
      *   is being made
-     * @param password The database user's password
+     * @param pass The database user's password
      *
      * @throws UnsupportedOperationException
      * @throws SQLException if a database access error occurs
      * @return nothing - always throws UnsupportedOperationException
      */
-    public Connection getConnection(String username, String password) throws SQLException {
+    public Connection getConnection(String user, String pass) throws SQLException {
         // This method isn't supported by the PoolingDataSource returned by
         // the createDataSource
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
@@ -1523,11 +1523,11 @@ public class BasicDataSource implements DataSource {
      * 
      * @param driverConnectionFactory JDBC connection factory
      * @param statementPoolFactory statement pool factory (null if statement pooling is turned off)
-     * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
+     * @param configuration abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
     protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
-            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig abandonedConfig) throws SQLException {
+            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig configuration) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
@@ -1541,7 +1541,7 @@ public class BasicDataSource implements DataSource {
                                               defaultAutoCommit,
                                               defaultTransactionIsolation,
                                               defaultCatalog,
-                                              abandonedConfig);
+                                              configuration);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
