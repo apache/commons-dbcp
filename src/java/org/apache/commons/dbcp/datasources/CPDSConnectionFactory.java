@@ -201,11 +201,7 @@ class CPDSConnectionFactory
     public void destroyObject(Object obj) throws Exception {
         if (obj instanceof PooledConnectionAndInfo) {
             PooledConnection pc = ((PooledConnectionAndInfo)obj).getPooledConnection();
-            try {
-                pc.removeConnectionEventListener(this);
-            } catch (Exception e) {
-                //ignore
-            }
+            pc.removeConnectionEventListener(this);
             pcMap.remove(pc);
             pc.close(); 
         }
@@ -304,11 +300,7 @@ class CPDSConnectionFactory
             } catch (Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD "
                         + "NOT BE RETURNED TO THE POOL");
-                try {
-                    pc.removeConnectionEventListener(this);
-                } catch (Exception e2) {
-                    //ignore
-                }
+                pc.removeConnectionEventListener(this);
                 try {
                     destroyObject(info);
                 } catch (Exception e2) {
@@ -326,16 +318,12 @@ class CPDSConnectionFactory
      */
     public void connectionErrorOccurred(ConnectionEvent event) {
         PooledConnection pc = (PooledConnection)event.getSource();
-        try {
-            if (null != event.getSQLException()) {
-                System.err.println(
-                        "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR ("
-                        + event.getSQLException() + ")");
-            }
-            pc.removeConnectionEventListener(this);
-        } catch (Exception ignore) {
-            // ignore
+        if (null != event.getSQLException()) {
+            System.err.println(
+                    "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR ("
+                    + event.getSQLException() + ")");
         }
+        pc.removeConnectionEventListener(this);
 
         Object info = pcMap.get(pc);
         if (info == null) {

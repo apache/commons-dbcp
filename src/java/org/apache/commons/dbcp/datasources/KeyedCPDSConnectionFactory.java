@@ -191,11 +191,7 @@ class KeyedCPDSConnectionFactory
     public void destroyObject(Object key, Object obj) throws Exception {
         if (obj instanceof PooledConnectionAndInfo) {
             PooledConnection pc = ((PooledConnectionAndInfo)obj).getPooledConnection();
-            try {
-                pc.removeConnectionEventListener(this);
-            } catch (Exception e) {
-                //ignore
-            }
+            pc.removeConnectionEventListener(this);
             pcMap.remove(pc);
             pc.close(); 
         }
@@ -302,11 +298,7 @@ class KeyedCPDSConnectionFactory
             } catch (Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " +
                 "NOT BE RETURNED TO THE POOL");
-                try {
-                    pc.removeConnectionEventListener(this);
-                } catch (Exception e2) {
-                    //ignore
-                }
+                pc.removeConnectionEventListener(this);
                 try {
                     _pool.invalidateObject(info.getUserPassKey(), info);
                 } catch (Exception e3) {
@@ -324,16 +316,12 @@ class KeyedCPDSConnectionFactory
      */
     public void connectionErrorOccurred(ConnectionEvent event) {
         PooledConnection pc = (PooledConnection)event.getSource();
-        try {
-            if (null != event.getSQLException()) {
-                System.err
-                    .println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" +
-                             event.getSQLException() + ")");
-            }
-            pc.removeConnectionEventListener(this);
-        } catch (Exception ignore) {
-            // ignore
+        if (null != event.getSQLException()) {
+            System.err
+                .println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" +
+                         event.getSQLException() + ")");
         }
+        pc.removeConnectionEventListener(this);
 
         PooledConnectionAndInfo info = (PooledConnectionAndInfo) pcMap.get(pc);
         if (info == null) {
