@@ -377,7 +377,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // some JVMs, e.g. Windows.
         final int defaultMaxWait = 430;
         ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",Integer.valueOf(defaultMaxWait));
+        ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",new Integer(defaultMaxWait));
         multipleThreads(1, false, defaultMaxWait);
     }
 
