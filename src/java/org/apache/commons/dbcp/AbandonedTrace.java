@@ -40,7 +40,7 @@ public class AbandonedTrace {
     /** A stack trace of the code that created me (if in debug mode) */
     private volatile Exception createdBy;
     /** A list of objects created by children of this object */
-    private final List trace = new ArrayList();
+    private final List traceList = new ArrayList();
     /** Last time this connection was used */
     private volatile long lastUsed = 0;
 
@@ -146,8 +146,8 @@ public class AbandonedTrace {
      * @param trace AbandonedTrace object to add
      */
     protected void addTrace(AbandonedTrace trace) {
-        synchronized (this.trace) {
-            this.trace.add(trace);
+        synchronized (this.traceList) {
+            this.traceList.add(trace);
         }
         setLastUsed();
     }
@@ -157,8 +157,8 @@ public class AbandonedTrace {
      * object.
      */
     protected void clearTrace() {
-        synchronized(this.trace) {
-            this.trace.clear();
+        synchronized(this.traceList) {
+            this.traceList.clear();
         }
     }
 
@@ -168,8 +168,8 @@ public class AbandonedTrace {
      * @return List of objects
      */
     protected List getTrace() {
-        synchronized (this.trace) {
-            return new ArrayList(trace);
+        synchronized (this.traceList) {
+            return new ArrayList(traceList);
         }
     }
 
@@ -181,8 +181,8 @@ public class AbandonedTrace {
         if (createdBy != null && config != null) {
             createdBy.printStackTrace(config.getLogWriter());
         }
-        synchronized(this.trace) {
-            Iterator it = this.trace.iterator();
+        synchronized(this.traceList) {
+            Iterator it = this.traceList.iterator();
             while (it.hasNext()) {
                 AbandonedTrace at = (AbandonedTrace)it.next();
                 at.printStackTrace();
@@ -196,8 +196,8 @@ public class AbandonedTrace {
      * @param trace AbandonedTrace object to remove
      */
     protected void removeTrace(AbandonedTrace trace) {
-        synchronized(this.trace) {
-            this.trace.remove(trace);
+        synchronized(this.traceList) {
+            this.traceList.remove(trace);
         }
     }
 

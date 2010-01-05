@@ -152,9 +152,11 @@ public class DriverAdapterCPDS
                      
     /**
      * Attempt to establish a database connection.
+     * @param username name to be used for the connection
+     * @param pass password to be used fur the connection
      */
     public PooledConnection getPooledConnection(String username, 
-                                                String password)
+                                                String pass)
             throws SQLException {
         getConnectionCalled = true;
         /*
@@ -195,13 +197,13 @@ public class DriverAdapterCPDS
             PooledConnectionImpl pci = null;
             if (connectionProperties != null) {
                 connectionProperties.put("user", username);
-                connectionProperties.put("password", password);
+                connectionProperties.put("password", pass);
                 pci = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), connectionProperties), 
                         stmtPool);
             } else {
                 pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), username, password), 
+                        DriverManager.getConnection(getUrl(), username, pass), 
                         stmtPool);
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
@@ -216,7 +218,7 @@ public class DriverAdapterCPDS
                         stmtPool);
             } else {
                 pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), username, password), 
+                        DriverManager.getConnection(getUrl(), username, pass), 
                         stmtPool);
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());

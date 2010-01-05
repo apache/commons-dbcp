@@ -97,7 +97,7 @@ public abstract class InstanceKeyDataSource
 
     private boolean getConnectionCalled = false;
 
-    private ConnectionPoolDataSource cpds = null;
+    private ConnectionPoolDataSource dataSource = null;
     /** DataSource Name used to find the ConnectionPoolDataSource */
     private String dataSourceName = null;
     private boolean defaultAutoCommit = false;
@@ -175,7 +175,7 @@ public abstract class InstanceKeyDataSource
      * @return value of connectionPoolDataSource.
      */
     public ConnectionPoolDataSource getConnectionPoolDataSource() {
-        return cpds;
+        return dataSource;
     }
     
     /**
@@ -190,12 +190,12 @@ public abstract class InstanceKeyDataSource
             throw new IllegalStateException(
                 "Cannot set the DataSource, if JNDI is used.");
         }
-        if (cpds != null) 
+        if (dataSource != null) 
         {
             throw new IllegalStateException(
                 "The CPDS has already been set. It cannot be altered.");
         }
-        cpds = v;
+        dataSource = v;
         instanceKey = InstanceKeyObjectFactory.registerNewInstance(this);
     }
 
@@ -219,7 +219,7 @@ public abstract class InstanceKeyDataSource
      */
     public void setDataSourceName(String v) {
         assertInitializationAllowed();
-        if (cpds != null) {
+        if (dataSource != null) {
             throw new IllegalStateException(
                 "Cannot set the JNDI name for the DataSource, if already " +
                 "set using setConnectionPoolDataSource.");
@@ -741,7 +741,7 @@ public abstract class InstanceKeyDataSource
         testCPDS(String username, String password)
         throws javax.naming.NamingException, SQLException {
         // The source of physical db connections
-        ConnectionPoolDataSource cpds = this.cpds;
+        ConnectionPoolDataSource cpds = this.dataSource;
         if (cpds == null) {            
             Context ctx = null;
             if (jndiEnvironment == null) {
