@@ -157,7 +157,7 @@ public class PoolingDriver implements Driver {
         }
     }
     
-    public synchronized String[] getPoolNames() throws SQLException{
+    public synchronized String[] getPoolNames(){
         Set names = _pools.keySet();
         return (String[]) names.toArray(new String[names.size()]);
     }
