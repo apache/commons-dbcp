@@ -178,11 +178,9 @@ public class SharedPoolDataSource
             info = (PooledConnectionAndInfo) pool.borrowObject(key);
         }
         catch (SQLException ex) {  // Remove bad UserPassKey
-            if (userKeys != null) {
-                synchronized (userKeys) {
-                    if (userKeys.containsKey(username)) {
-                        userKeys.remove(username);
-                    }
+            synchronized (userKeys) {
+                if (userKeys.containsKey(username)) {
+                    userKeys.remove(username);
                 }
             }
             throw new SQLNestedException(
