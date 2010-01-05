@@ -112,7 +112,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         
         // Verify SQLException on getConnection after close
         try {
-            activeConnection = getConnection();
+            getConnection();
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             // Expected
