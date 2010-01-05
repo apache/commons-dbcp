@@ -54,6 +54,9 @@ The <action> type attribute can be add,update,fix,remove.
         PooledConnection.removeConnectionEventListener(ConnectionEventListener)
         as the method does not throw any Exceptions.
       </action>
+      <action dev="sebb" type="fix" issue="DBCP-316" due-to="Sebastian Bazley">
+        Remove impossible null check.
+      </action>
       <action dev="sebb" type="update" issue="DBCP-314" due-to="Sebastian Bazley">
         Renamed variables with duplicate names in different scopes.
       </action>
