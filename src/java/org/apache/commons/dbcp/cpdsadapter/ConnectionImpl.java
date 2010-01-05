@@ -51,6 +51,7 @@ class ConnectionImpl extends DelegatingConnection {
      *
      * @param pooledConnection The PooledConnection that is calling the ctor.
      * @param connection The JDBC 1.x Connection to wrap.
+     * @param accessToUnderlyingConnectionAllowed if true, then access is allowed to the underlying connectiion
      */
     ConnectionImpl(PooledConnectionImpl pooledConnection, 
             Connection connection,
@@ -83,6 +84,8 @@ class ConnectionImpl extends DelegatingConnection {
      * {@link DriverAdapterCPDS}, a pooled object may be returned, otherwise
      * delegate to the wrapped jdbc 1.x {@link java.sql.Connection}.
      *
+     * @param sql SQL statement to be prepared
+     * @return the prepared statement
      * @exception SQLException if this connection is closed or an error occurs
      * in the wrapped connection.
      */
@@ -93,7 +96,7 @@ class ConnectionImpl extends DelegatingConnection {
                 (this, pooledConnection.prepareStatement(sql));
         }
         catch (SQLException e) {
-            handleException(e);
+            handleException(e); // Does not return
             return null;
         }
     }
@@ -182,12 +185,18 @@ class ConnectionImpl extends DelegatingConnection {
 
     /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
-     * @return if false, getDelegate() and getInnermostDelegate() will return null
+     * @return true if access is allowed to the underlying connection
+     * @see ConnectionImpl
      */
     public boolean isAccessToUnderlyingConnectionAllowed() {
         return accessToUnderlyingConnectionAllowed;
     }
 
+    /**
+     * Get the delegated connection, if allowed.
+     * @return the internal connection, or null if access is not allowed.
+     * @see #isAccessToUnderlyingConnectionAllowed()
+     */
     public Connection getDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
             return getDelegateInternal();
@@ -196,6 +205,11 @@ class ConnectionImpl extends DelegatingConnection {
         }
     }
 
+    /**
+     * Get the innermost connection, if allowed.
+     * @return the innermost internal connection, or null if access is not allowed.
+     * @see #isAccessToUnderlyingConnectionAllowed()
+     */
     public Connection getInnermostDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
             return super.getInnermostDelegateInternal();
