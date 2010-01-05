@@ -758,8 +758,8 @@ public abstract class TestConnectionPool extends TestCase {
             thrown = null;
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
-            getThread().setDaemon(false);
-            getThread().start();
+            thread.setDaemon(false);
+            thread.start();
         }
 
         public void run() {
