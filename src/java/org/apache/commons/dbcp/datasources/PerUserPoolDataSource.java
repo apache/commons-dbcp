@@ -364,8 +364,9 @@ public class PerUserPoolDataSource
         throws SQLException {
 
         PoolKey key = getPoolKey(username,password);
-        Object pool = pools.get(key);
+        Object pool;
         synchronized(this) {
+            pool = pools.get(key);
             if (pool == null) {
                 try {
                     registerPool(username, password);
@@ -498,7 +499,10 @@ public class PerUserPoolDataSource
                                   isRollbackAfterValidation(), 
                                   username, password);
            
-        pools.put(getPoolKey(username,password), pool);
+        Object old = pools.put(getPoolKey(username,password), pool);
+        if (old != null) {
+            throw new IllegalStateException("Pool already contains an entry for this user/password: "+username);
+        }
     }
 
     /**
