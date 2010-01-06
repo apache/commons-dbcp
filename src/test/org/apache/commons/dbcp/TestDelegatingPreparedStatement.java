@@ -80,13 +80,42 @@ public class TestDelegatingPreparedStatement extends TestCase {
     
     public void testEquals() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
+        PreparedStatement del = new TesterPreparedStatement(delegateConn,"select * from foo");
         DelegatingPreparedStatement stmt1 = new DelegatingPreparedStatement(conn, delegateStmt);
         DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn, delegateStmt);
         DelegatingPreparedStatement stmt3 = new DelegatingPreparedStatement(conn, null);
+        DelegatingPreparedStatement stmt4 = new DelegatingPreparedStatement(conn, del);
         
-        assertTrue(!stmt1.equals(null));
+        // Nothing is equal to null
+        assertFalse(stmt1.equals(null));
+        assertFalse(stmt2.equals(null));
+        assertFalse(stmt3.equals(null));
+        assertFalse(stmt4.equals(null));
+        
+        // 1 & 2 are equivalent
         assertTrue(stmt1.equals(stmt2));
-        assertTrue(!stmt1.equals(stmt3));
+        assertTrue(stmt2.equals(stmt1)); // reflexive
+
+        // 1 & 3 are not (different statements, one null)
+        assertFalse(stmt1.equals(stmt3));
+        assertFalse(stmt3.equals(stmt1)); // reflexive
+
+        // 1 & 4 are not (different statements)
+        assertFalse(stmt1.equals(stmt4));
+        assertFalse(stmt4.equals(stmt1)); // reflexive
+
+        // Check self-equals
+        assertTrue(stmt1.equals(stmt1));
+        assertTrue(stmt2.equals(stmt2));
+        assertFalse(stmt3.equals(stmt3)); // because underlying statement is null
+        assertTrue(stmt4.equals(stmt4));
+        
+        DelegatingStatement dstmt1 = stmt1;
+        
+        // 1 & 2 are equivalent
+        assertTrue(dstmt1.equals(stmt2));
+        assertTrue(stmt2.equals(dstmt1)); // reflexive
+
     }
 
 }
