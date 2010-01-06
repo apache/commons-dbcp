@@ -72,6 +72,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _stmt;
     }
 
+    /**
+     * This method considers two objects to be equal 
+     * if the underlying jdbc objects are equal.
+     */
     public boolean equals(Object obj) {
         Statement delegate = getInnermostDelegate();
         if (delegate == null) {
