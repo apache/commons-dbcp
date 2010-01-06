@@ -64,7 +64,6 @@ public class TestManual extends TestConnectionPool {
         driver = new PoolingDriver();
         driver.registerPool("test",pool);
         PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
-        DriverManager.registerDriver(driver);
     }
 
     public void tearDown() throws Exception {
