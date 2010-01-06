@@ -170,6 +170,10 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
+    /**
+     * This method considers two objects to be equal 
+     * if the underlying jdbc objects are equal.
+     */
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
