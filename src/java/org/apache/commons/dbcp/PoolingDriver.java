@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * @version $Revision$ $Date$
  */
 public class PoolingDriver implements Driver {
-    /** Register an myself with the {@link DriverManager}. */
+    /** Register myself with the {@link DriverManager}. */
     static {
         try {
             DriverManager.registerDriver(new PoolingDriver());
