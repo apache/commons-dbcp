@@ -740,19 +740,19 @@ public abstract class TestConnectionPool extends TestCase {
                     // Perform initial sanity check:
                     assertTrue("Expected some of the threads to fail",failed > 0);
 // DBCP-318 is now fixed, so disable extra debug
-//                    if (pts.length/2 != failed){
-//                        for (int i = 0; i < pts.length; i++) {
-//                            PoolTest pt = pts[i];
-//                            System.out.println(
-//                                    "StartupDelay: " + (pt.started-pt.created)
-//                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.started) : "-")
-//                                    + ". Runtime: " + (pt.ended-pt.started)
-//                                    + ". Loops: " + pt.loops
-//                                    + ". State: " + pt.state
-//                                    + ". thrown: "+ pt.thrown
-//                                    );
-//                        }                        
-//                    }
+                    if (pts.length/2 != failed){
+                        for (int i = 0; i < pts.length; i++) {
+                            PoolTest pt = pts[i];
+                            System.out.println(
+                                    "StartupDelay: " + (pt.started-pt.created)
+                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.started) : "-")
+                                    + ". Runtime: " + (pt.ended-pt.started)
+                                    + ". Loops: " + pt.loops
+                                    + ". State: " + pt.state
+                                    + ". thrown: "+ pt.thrown
+                                    );
+                        }                        
+                    }
                     assertEquals("WARNING: Expected half the threads to fail",pts.length/2,failed);
                 } else {
                     assertEquals("Did not expect any threads to fail",0,failed);
@@ -777,11 +777,11 @@ public abstract class TestConnectionPool extends TestCase {
         private Throwable thrown;
 
         // Debug for DBCP-318
-//        private final long created; // When object was created
-//        private long started; // when thread started
-//        private long ended; // when thread ended
-//        private long connected; // when thread last connected
-//        private int loops = 0;
+        private final long created; // When object was created
+        private long started; // when thread started
+        private long ended; // when thread ended
+        private long connected; // when thread last connected
+        private int loops = 0;
 
         private final boolean stopOnException; // If true, don't rethrow Exception
         
@@ -797,7 +797,7 @@ public abstract class TestConnectionPool extends TestCase {
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
-//            created = System.currentTimeMillis();
+            created = System.currentTimeMillis();
         }
 
         public void start(){
@@ -805,13 +805,13 @@ public abstract class TestConnectionPool extends TestCase {
         }
 
         public void run() {
-//            started = System.currentTimeMillis();
+            started = System.currentTimeMillis();
             try {
                 while (isRun) {
-//                    loops++;
+                    loops++;
                     state = "Getting Connection";
                     Connection conn = getConnection();
-//                    connected = System.currentTimeMillis();
+                    connected = System.currentTimeMillis();
                     state = "Using Connection";
                     assertNotNull(conn);
                     PreparedStatement stmt =
@@ -837,7 +837,7 @@ public abstract class TestConnectionPool extends TestCase {
                     throw new RuntimeException();
                 }
             } finally {
-//                ended = System.currentTimeMillis();                
+                ended = System.currentTimeMillis();                
             }
         }
 
