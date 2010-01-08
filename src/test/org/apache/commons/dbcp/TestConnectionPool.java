@@ -696,12 +696,11 @@ public abstract class TestConnectionPool extends TestCase {
                     }
                 };
                 for (int i = 0; i < pts.length; i++) {
-                    (pts[i] = new PoolTest(threadGroup, holdTime)).start();
+                    // If we are expecting an error, don't allow successful threads to loop
+                    (pts[i] = new PoolTest(threadGroup, holdTime, expectError)).start();
                 }
 
-                long t1 = System.currentTimeMillis();
                 Thread.sleep(100L); // Wait for long enough to allow threads to start
-                long t2 = System.currentTimeMillis();
 
                 for (int i = 0; i < pts.length; i++) {
                     pts[i].stop();
@@ -732,7 +731,7 @@ public abstract class TestConnectionPool extends TestCase {
                 long time = System.currentTimeMillis() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
-                        + ". Hold time: " + holdTime + ". Held: " + (t2-t1)
+                        + ". Hold time: " + holdTime
                         + ". Maxwait: " + maxWait
                         + ". Done: " + done
                         + ". Failed: " + failed
@@ -787,11 +786,14 @@ public abstract class TestConnectionPool extends TestCase {
 
         private final boolean stopOnException; // If true, don't rethrow Exception
         
-        private PoolTest(ThreadGroup threadGroup, int connHoldTime) {
-            this(threadGroup, connHoldTime, false);
-        }
-            
+        private final boolean loopOnce; // If true, don't repeat loop
+
         public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException) {
+            this(threadGroup, connHoldTime, isStopOnException, false);
+        }
+
+        private PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, boolean once) {
+            this.loopOnce = once;
             this.connHoldTime = connHoldTime;
             stopOnException = isStopOnException;
             isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
@@ -831,6 +833,9 @@ public abstract class TestConnectionPool extends TestCase {
                     state = "Closing Connection";
                     conn.close();
                     state = "Closed";
+                    if (loopOnce){
+                        break; // Or could set isRun=false
+                    }
                 }
                 state = DONE;
             } catch (Throwable t) {
