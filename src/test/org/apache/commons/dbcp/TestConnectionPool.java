@@ -699,7 +699,9 @@ public abstract class TestConnectionPool extends TestCase {
                     (pts[i] = new PoolTest(threadGroup, holdTime)).start();
                 }
 
+                long t1 = System.currentTimeMillis();
                 Thread.sleep(100L); // Wait for long enough to allow threads to start
+                long t2 = System.currentTimeMillis();
 
                 for (int i = 0; i < pts.length; i++) {
                     pts[i].stop();
@@ -730,7 +732,7 @@ public abstract class TestConnectionPool extends TestCase {
                 long time = System.currentTimeMillis() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
-                        + ". Hold time: " + holdTime
+                        + ". Hold time: " + holdTime + ". Held: " + (t2-t1)
                         + ". Maxwait: " + maxWait
                         + ". Done: " + done
                         + ". Failed: " + failed
