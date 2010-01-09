@@ -104,9 +104,9 @@ public class BasicDataSourceExample {
         } catch(SQLException e) {
             e.printStackTrace();
         } finally {
-            try { rset.close(); } catch(Exception e) { }
-            try { stmt.close(); } catch(Exception e) { }
-            try { conn.close(); } catch(Exception e) { }
+            try { if (rset != null) rset.close(); } catch(Exception e) { }
+            try { if (stmt != null) stmt.close(); } catch(Exception e) { }
+            try { if (conn != null) conn.close(); } catch(Exception e) { }
         }
     }
 
