@@ -751,7 +751,7 @@ public abstract class TestConnectionPool extends TestCase {
                             PoolTest pt = pts[i];
                             System.out.println(
                                     "StartupDelay: " + (pt.started-pt.created)
-                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.started) : "-")
+                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". Loops: " + pt.loops
                                     + ". State: " + pt.state
@@ -790,6 +790,7 @@ public abstract class TestConnectionPool extends TestCase {
         private final long created; // When object was created
         private long started; // when thread started
         private long ended; // when thread ended
+        private long preconnected; // just before connect
         private long connected; // when thread last connected
         private int loops = 0;
 
@@ -823,6 +824,7 @@ public abstract class TestConnectionPool extends TestCase {
                 while (isRun) {
                     loops++;
                     state = "Getting Connection";
+                    preconnected = System.currentTimeMillis();
                     Connection conn = getConnection();
                     connected = System.currentTimeMillis();
                     state = "Using Connection";
