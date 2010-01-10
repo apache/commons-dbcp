@@ -685,7 +685,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     protected void multipleThreads(final int holdTime, final boolean expectError, long maxWait)
             throws Exception {
-                long startTime = System.currentTimeMillis();
+                long startTime = timeStamp();
                 final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
                 // Catch Exception so we can stop all threads if one fails
                 ThreadGroup threadGroup = new ThreadGroup("foo") {
@@ -732,7 +732,7 @@ public abstract class TestConnectionPool extends TestCase {
                     }
                 }
             
-                long time = System.currentTimeMillis() - startTime;
+                long time = timeStamp() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
                         + ". Hold time: " + holdTime
@@ -756,6 +756,7 @@ public abstract class TestConnectionPool extends TestCase {
                                     + ". Loops: " + pt.loops
                                     + ". State: " + pt.state
                                     + ". thrown: "+ pt.thrown
+                                    + ". (using nanoTime)"
                                     );
                         }                        
                     }
@@ -811,7 +812,7 @@ public abstract class TestConnectionPool extends TestCase {
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
-            created = System.currentTimeMillis();
+            created = timeStamp();
         }
 
         public void start(){
@@ -819,14 +820,14 @@ public abstract class TestConnectionPool extends TestCase {
         }
 
         public void run() {
-            started = System.currentTimeMillis();
+            started = timeStamp();
             try {
                 while (isRun) {
                     loops++;
                     state = "Getting Connection";
-                    preconnected = System.currentTimeMillis();
+                    preconnected = timeStamp();
                     Connection conn = getConnection();
-                    connected = System.currentTimeMillis();
+                    connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);
                     PreparedStatement stmt =
@@ -855,7 +856,7 @@ public abstract class TestConnectionPool extends TestCase {
                     throw new RuntimeException();
                 }
             } finally {
-                ended = System.currentTimeMillis();                
+                ended = timeStamp();                
             }
         }
 
@@ -866,5 +867,9 @@ public abstract class TestConnectionPool extends TestCase {
         public Thread getThread() {
             return thread;
         }
+    }
+
+    long timeStamp() {
+        return System.nanoTime() / 1000000;
     }
 }
