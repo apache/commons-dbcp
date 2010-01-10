@@ -368,11 +368,11 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // some JVMs, e.g. Windows.
         final int defaultMaxWait = 430;
         ((SharedPoolDataSource) ds).setMaxWait(defaultMaxWait);
-        multipleThreads(1, false, false, defaultMaxWait);
+        multipleThreads(1, false, true, defaultMaxWait);
     }
 
     public void testMultipleThreads2() throws Exception {
-        multipleThreads(2 * (int)(getMaxWait()), true, false, getMaxWait());
+        multipleThreads(2 * (int)(getMaxWait()), true, true, getMaxWait());
     }
 
     public void testTransactionIsolationBehavior() throws Exception {
