@@ -759,8 +759,6 @@ public abstract class TestConnectionPool extends TestCase {
                         + ". expectError: " + expectError
                         );
                 if (expectError) {
-                    // Perform initial sanity check:
-                    assertTrue("Expected some of the threads to fail",failed > 0);
 // DBCP-318 is now fixed, so disable extra debug
                     if (pts.length/2 != failed){
                         for (int i = 0; i < pts.length; i++) {
@@ -779,6 +777,8 @@ public abstract class TestConnectionPool extends TestCase {
                     if (didNotRun > 0){
                         System.out.println("NOTE: some threads did not run the code: "+didNotRun);
                     }
+                    // Perform initial sanity check:
+                    assertTrue("Expected some of the threads to fail",failed > 0);
                     // Assume that threads that did not run would have timed out.
                     assertEquals("WARNING: Expected half the threads to fail",pts.length/2,failed+didNotRun);
                 } else {
