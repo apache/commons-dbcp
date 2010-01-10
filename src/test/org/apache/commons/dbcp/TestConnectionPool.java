@@ -713,11 +713,14 @@ public abstract class TestConnectionPool extends TestCase {
                     (pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce)).start();    
                 }
 
-                Thread.sleep(100L); // Wait for long enough to allow threads to start
+                // Give all threads a chance to start and succeed
+                Thread.sleep(Math.max(100l, 3 * maxWait));
 
+                // Stop threads
                 for (int i = 0; i < pts.length; i++) {
                     pts[i].stop();
-                }
+                }   
+                
                 /*
                  * Wait for all threads to terminate.
                  * This is essential to ensure that all threads have a chance to update success[0]
