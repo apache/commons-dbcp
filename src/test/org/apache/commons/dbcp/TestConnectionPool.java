@@ -683,7 +683,21 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
-    protected void multipleThreads(final int holdTime, final boolean expectError, long maxWait)
+    /**
+     * Launches a group of 2 * getMaxActive() threads, each of which will attempt to obtain a connection
+     * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
+     * threads will continue this process indefinitely.  If <expectingError> is true, exactly 1/2 of the
+     * threads are expected to either throw exceptions or fail to complete. If <expectingError> is false,
+     * all threads are expected to complete successfully.
+     * 
+     * @param holdTime time in ms that a thread holds a connection before returning it to the pool
+     * @param expectError whether or not an error is expected
+     * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
+     * @param maxWait passed in by client - has no impact on the test itself, but does get reported
+     * 
+     * @throws Exception
+     */
+    protected void multipleThreads(final int holdTime, final boolean expectError, final boolean loopOnce, final long maxWait)
             throws Exception {
                 long startTime = timeStamp();
                 final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
@@ -696,8 +710,7 @@ public abstract class TestConnectionPool extends TestCase {
                     }
                 };
                 for (int i = 0; i < pts.length; i++) {
-                    // If we are expecting an error, don't allow successful threads to loop
-                    (pts[i] = new PoolTest(threadGroup, holdTime, expectError)).start();
+                    (pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce)).start();    
                 }
 
                 Thread.sleep(100L); // Wait for long enough to allow threads to start
