@@ -729,9 +729,11 @@ public abstract class TestConnectionPool extends TestCase {
                 int done=0;
                 int failed=0;
                 int didNotRun = 0;
+                int loops=0;
                 for (int i = 0; i < pts.length; i++) {
                     final PoolTest poolTest = pts[i];
                     poolTest.thread.join();
+                    loops += poolTest.loops;
                     final String state = poolTest.state;
                     if (DONE.equals(state)){
                         done++;
@@ -751,6 +753,7 @@ public abstract class TestConnectionPool extends TestCase {
                 long time = timeStamp() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
+                        + ". Loops: " + loops
                         + ". Hold time: " + holdTime
                         + ". Maxwait: " + maxWait
                         + ". Done: " + done
