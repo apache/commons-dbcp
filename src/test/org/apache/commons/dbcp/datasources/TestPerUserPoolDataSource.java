@@ -378,7 +378,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final int defaultMaxWait = 430;
         ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
         ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",new Integer(defaultMaxWait));
-        multipleThreads(1, false, true, defaultMaxWait);
+        multipleThreads(1, false, false, defaultMaxWait);
     }
 
     public void testMultipleThreads2() throws Exception {
