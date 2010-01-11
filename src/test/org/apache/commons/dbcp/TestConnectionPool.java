@@ -768,6 +768,7 @@ public abstract class TestConnectionPool extends TestCase {
                             PoolTest pt = pts[i];
                             System.out.println(
                                     "StartupDelay: " + (pt.started-pt.created)
+                                    + ". ConnectStart: " + pt.preconnected
                                     + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". Loops: " + pt.loops
