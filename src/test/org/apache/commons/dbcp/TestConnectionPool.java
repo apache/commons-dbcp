@@ -714,7 +714,7 @@ public abstract class TestConnectionPool extends TestCase {
                 }
 
                 // Give all threads a chance to start and succeed
-                Thread.sleep(Math.max(100l, 3 * maxWait));
+                Thread.sleep(300L);
 
                 // Stop threads
                 for (int i = 0; i < pts.length; i++) {
