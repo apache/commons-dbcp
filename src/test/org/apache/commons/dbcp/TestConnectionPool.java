@@ -769,15 +769,15 @@ public abstract class TestConnectionPool extends TestCase {
                         );
                 if (expectError) {
                     if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
-                        long offset = pts[0].created; // To reduce size of output numbers
+                        long offset = pts[0].created - 1000; // To reduce size of output numbers, but ensure they have 4 digits
                         System.out.println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
                             PoolTest pt = pts[i];
                             System.out.println(
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
-                                    + ". Post: " + (pt.postconnected-offset)
+                                    + ". Post: " + (pt.connected != 0 ? Long.toString(pt.postconnected-offset): "-")
                                     + ". Startup: " + (pt.started-pt.created)
-                                    + ". getConn(): " + (pt.connected > 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
+                                    + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". IDX: " + i
                                     + ". Loops: " + pt.loops
