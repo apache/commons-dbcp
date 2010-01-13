@@ -775,7 +775,7 @@ public abstract class TestConnectionPool extends TestCase {
                             PoolTest pt = pts[i];
                             System.out.println(
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
-                                    + ". Post: " + (pt.connected != 0 ? Long.toString(pt.postconnected-offset): "-")
+                                    + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
                                     + ". Startup: " + (pt.started-pt.created)
                                     + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
