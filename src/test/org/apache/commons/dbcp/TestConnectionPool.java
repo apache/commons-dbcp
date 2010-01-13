@@ -683,6 +683,12 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    private static final boolean DISPLAY_THREAD_DETAILS=
+        Boolean.valueOf(System.getProperty("TestConnectionPool.display.thread.details", "false")).booleanValue();
+    // To pass this to a Maven test, use:
+    // mvn test -DargLine="-DTestConnectionPool.display.thread.details=true"
+    // @see http://jira.codehaus.org/browse/SUREFIRE-121
+    
     /**
      * Launches a group of 2 * getMaxActive() threads, each of which will attempt to obtain a connection
      * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
@@ -762,15 +768,18 @@ public abstract class TestConnectionPool extends TestCase {
                         + ". expectError: " + expectError
                         );
                 if (expectError) {
-// DBCP-318 is now fixed, so disable extra debug
-                    if (pts.length/2 != failed){
+                    if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
+                        long offset = pts[0].created; // To reduce size of output numbers
+                        System.out.println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
                             PoolTest pt = pts[i];
                             System.out.println(
-                                    "StartupDelay: " + (pt.started-pt.created)
-                                    + ". ConnectStart: " + pt.preconnected
-                                    + ". ConnectTime: " + (pt.connected > 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
+                                    "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
+                                    + ". Post: " + (pt.postconnected-offset)
+                                    + ". Startup: " + (pt.started-pt.created)
+                                    + ". getConn(): " + (pt.connected > 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
+                                    + ". IDX: " + i
                                     + ". Loops: " + pt.loops
                                     + ". State: " + pt.state
                                     + ". thrown: "+ pt.thrown
@@ -813,6 +822,7 @@ public abstract class TestConnectionPool extends TestCase {
         private long ended; // when thread ended
         private long preconnected; // just before connect
         private long connected; // when thread last connected
+        private long postconnected; // when thread released connection
         private int loops = 0;
 
         private final boolean stopOnException; // If true, don't rethrow Exception
@@ -864,6 +874,7 @@ public abstract class TestConnectionPool extends TestCase {
                     stmt.close();
                     state = "Closing Connection";
                     conn.close();
+                    postconnected = timeStamp();
                     state = "Closed";
                     if (loopOnce){
                         break; // Or could set isRun=false
