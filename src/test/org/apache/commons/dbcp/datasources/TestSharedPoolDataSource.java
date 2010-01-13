@@ -372,7 +372,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     public void testMultipleThreads2() throws Exception {
-        multipleThreads(2 * (int)(getMaxWait()), true, true, getMaxWait());
+        multipleThreads(3 * (int)(getMaxWait()), true, true, getMaxWait());
     }
 
     public void testTransactionIsolationBehavior() throws Exception {
