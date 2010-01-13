@@ -715,8 +715,13 @@ public abstract class TestConnectionPool extends TestCase {
                         }
                     }
                 };
+                // Create all the threads
                 for (int i = 0; i < pts.length; i++) {
-                    (pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce)).start();    
+                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce);    
+                }
+                // Start all the threads
+                for (int i = 0; i < pts.length; i++) {
+                    pts[i].start();    
                 }
 
                 // Give all threads a chance to start and succeed
