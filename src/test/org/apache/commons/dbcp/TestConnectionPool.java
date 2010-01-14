@@ -781,9 +781,9 @@ public abstract class TestConnectionPool extends TestCase {
                             System.out.println(
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
                                     + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
+                                    + ". Hash: " + pt.connHash
                                     + ". Startup: " + (pt.started-pt.created)
                                     + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
-                                    + ". Hash: " + pt.connHash
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". IDX: " + i
                                     + ". Loops: " + pt.loops
@@ -864,7 +864,7 @@ public abstract class TestConnectionPool extends TestCase {
                     state = "Getting Connection";
                     preconnected = timeStamp();
                     Connection conn = getConnection();
-                    connHash = System.identityHashCode(conn);
+                    connHash = System.identityHashCode(((DelegatingConnection)conn).getInnermostDelegate());
                     connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);
