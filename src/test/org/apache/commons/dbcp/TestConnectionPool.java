@@ -783,6 +783,7 @@ public abstract class TestConnectionPool extends TestCase {
                                     + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
                                     + ". Startup: " + (pt.started-pt.created)
                                     + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
+                                    + ". Hash: " + pt.connHash
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". IDX: " + i
                                     + ". Loops: " + pt.loops
@@ -829,6 +830,7 @@ public abstract class TestConnectionPool extends TestCase {
         private long connected; // when thread last connected
         private long postconnected; // when thread released connection
         private int loops = 0;
+        private int connHash = 0; // Connection identity hashCode (to see which one is reused)
 
         private final boolean stopOnException; // If true, don't rethrow Exception
         
@@ -862,6 +864,7 @@ public abstract class TestConnectionPool extends TestCase {
                     state = "Getting Connection";
                     preconnected = timeStamp();
                     Connection conn = getConnection();
+                    connHash = System.identityHashCode(conn);
                     connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);
