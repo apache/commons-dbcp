@@ -36,7 +36,7 @@ import java.util.List;
 public class AbandonedTrace {
 
     /** DBCP AbandonedConfig */
-    private AbandonedConfig config = null;
+    private final AbandonedConfig config;
     /** A stack trace of the code that created me (if in debug mode) */
     private volatile Exception createdBy;
     /** A list of objects created by children of this object */
@@ -49,6 +49,7 @@ public class AbandonedTrace {
      * without doing abandoned tracing.
      */
     public AbandonedTrace() {
+        this.config = null;
         init(null);
     }
 
@@ -206,11 +207,12 @@ public class AbandonedTrace {
         private static final long serialVersionUID = 7398692158058772916L;
 
         /** Date format */
+        //@GuardedBy("this")
         private static final SimpleDateFormat format = new SimpleDateFormat
             ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
              "'by the following code was never closed:'");
 
-        private long _createdTime;
+        private final long _createdTime;
 
         public AbandonedObjectException() {
             _createdTime = System.currentTimeMillis();

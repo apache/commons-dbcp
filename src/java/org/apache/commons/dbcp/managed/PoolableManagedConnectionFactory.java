@@ -34,7 +34,7 @@ import org.apache.commons.pool.ObjectPool;
 public class PoolableManagedConnectionFactory extends PoolableConnectionFactory {
 
     /** Transaction registry associated with connections created by this factory */
-    private TransactionRegistry transactionRegistry;
+    private final TransactionRegistry transactionRegistry;
     
     /**
      * Create a PoolableManagedConnectionFactory and attach it to a connection pool.

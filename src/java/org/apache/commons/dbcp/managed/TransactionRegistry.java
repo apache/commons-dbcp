@@ -39,9 +39,9 @@ import javax.transaction.xa.XAResource;
  * @version $Revision$
  */
 public class TransactionRegistry {
-    private TransactionManager transactionManager;
-    private Map caches = new WeakHashMap();
-    private Map xaResources = new WeakHashMap();
+    private final TransactionManager transactionManager;
+    private final Map caches = new WeakHashMap();
+    private final Map xaResources = new WeakHashMap();
 
     /**
      * Creates a TransactionRegistry for the specified transaction manager.
