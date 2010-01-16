@@ -54,8 +54,8 @@ class CPDSConnectionFactory
     protected volatile ObjectPool _pool = null;
     protected String _username = null;
     protected String _password = null;
-    private Map validatingMap = new HashMap();
-    private WeakHashMap pcMap = new WeakHashMap();
+    private final Map validatingMap = new HashMap();
+    private final WeakHashMap pcMap = new WeakHashMap();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.

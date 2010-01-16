@@ -56,7 +56,7 @@ class PooledConnectionImpl
     /**
      * A DelegatingConnection used to create a PoolablePreparedStatementStub
      */
-    private DelegatingConnection delegatingConnection = null;
+    private final DelegatingConnection delegatingConnection;
 
     /**
      * The JDBC database logical connection.
@@ -66,19 +66,20 @@ class PooledConnectionImpl
     /**
      * ConnectionEventListeners
      */
-    private Vector eventListeners;
+    private final Vector eventListeners;
 
     /**
      * StatementEventListeners
      */
-    private Vector statementEventListeners = new Vector();
+    private final Vector statementEventListeners = new Vector();
 
     /**
      * flag set to true, once close() is called.
      */
-    boolean isClosed;
+    boolean isClosed; // TODO - make private?
 
     /** My pool of {*link PreparedStatement}s. */
+    // TODO - make final?
     protected KeyedObjectPool pstmtPool = null;
 
     /** 

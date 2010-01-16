@@ -57,12 +57,12 @@ class KeyedCPDSConnectionFactory
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
-    private Map validatingMap = new HashMap();
+    private final Map validatingMap = new HashMap();
     
     /**
      * Map of PooledConnectionAndInfo instances
      */
-    private WeakHashMap pcMap = new WeakHashMap();
+    private final WeakHashMap pcMap = new WeakHashMap();
 
     /**
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.

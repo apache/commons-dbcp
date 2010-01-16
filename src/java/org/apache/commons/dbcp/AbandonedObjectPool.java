@@ -38,12 +38,12 @@ public class AbandonedObjectPool extends GenericObjectPool {
     /** 
      * DBCP AbandonedConfig 
      */
-    private AbandonedConfig config = null;
+    private final AbandonedConfig config;
     
     /**
      * A list of connections in use
      */
-    private List trace = new ArrayList();
+    private final List trace = new ArrayList();
 
     /**
      * Create an ObjectPool which tracks db connections.

@@ -31,7 +31,7 @@ import org.apache.commons.pool.ObjectPool;
  * @version $Revision$ $Date$
  */
 public class PoolableManagedConnection extends PoolableConnection {
-    private TransactionRegistry transactionRegistry;
+    private final TransactionRegistry transactionRegistry;
 
     /**
      * Create a PoolableManagedConnection.
