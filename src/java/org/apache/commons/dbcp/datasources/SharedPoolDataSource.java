@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -46,8 +45,6 @@ public class SharedPoolDataSource
     extends InstanceKeyDataSource {
 
     private static final long serialVersionUID = -8132305535403690372L;
-
-    private final Map userKeys = new LRUMap(10);
 
     private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
@@ -169,22 +166,10 @@ public class SharedPoolDataSource
 
         PooledConnectionAndInfo info = null;
         
-        UserPassKey key = null;
-        synchronized (userKeys) {
-            key = getUserPassKey(username, password);
-        }
+        UserPassKey key = new UserPassKey(username, password);
         
         try {
             info = (PooledConnectionAndInfo) pool.borrowObject(key);
-        }
-        catch (SQLException ex) {  // Remove bad UserPassKey
-            synchronized (userKeys) {
-                if (userKeys.containsKey(username)) {
-                    userKeys.remove(username);
-                }
-            }
-            throw new SQLNestedException(
-                    "Could not retrieve connection info from pool", ex);
         }
         catch (Exception e) {
             throw new SQLNestedException(
@@ -205,16 +190,6 @@ public class SharedPoolDataSource
         return ref;
     }
     
-    private UserPassKey getUserPassKey(String username, String password) {
-        String name = username + password;
-        UserPassKey key = (UserPassKey) userKeys.get(name);
-        if (key == null) {
-            key = new UserPassKey(username, password);
-            userKeys.put(name, key);
-        }
-        return key;
-    }
-
     private void registerPool(
         String username, String password) 
         throws javax.naming.NamingException, SQLException {
