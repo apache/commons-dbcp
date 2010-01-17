@@ -251,6 +251,7 @@
                 <include>org/apache/commons/dbcp/TestDriverManagerConnectionFactory.java</include>
                 <include>org/apache/commons/dbcp/TestAbandonedObjectPool.java</include>
                 <include>org/apache/commons/jocl/TestJOCLContentHandler.java</include>
+                <include>org/apache/commons/dbcp/TestDelegatingCallableStatement.java</include>
                 <include>org/apache/commons/dbcp/TestDelegatingConnection.java</include>
                 <include>org/apache/commons/dbcp/TestDelegatingDatabaseMetaData.java</include>
                 <include>org/apache/commons/dbcp/TestPoolableConnection.java</include>
