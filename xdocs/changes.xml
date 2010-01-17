@@ -49,6 +49,9 @@ The <action> type attribute can be add,update,fix,remove.
      changes below since 1.2.2 applies to both the 1.3 and 1.4 release.  Other than
      the one issue related to adding JDBC 4 support (DBCP-191), all bug fixes
      or new features are included in both DBCP 1.3 and 1.4 ">
+      <action dev="sebb" type="fix" issue="DBCP-321">
+        Eliminated userKeys LRUMap cache from SharedPoolDataSource.
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-319" due-to="Sebastian Bazley">
         Made private fields final where possible.
       </action>
