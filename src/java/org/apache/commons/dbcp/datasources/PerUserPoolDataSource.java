@@ -54,8 +54,6 @@ public class PerUserPoolDataSource
 
     private static final long serialVersionUID = -3104731034410444060L;
 
-    private static final Map poolKeys = new HashMap();
-
     private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
     private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
     private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
@@ -439,27 +437,9 @@ public class PerUserPoolDataSource
         ref.add(new StringRefAddr("instanceKey", instanceKey));
         return ref;
     }
-
-    private PoolKey getPoolKey(String username, String password) {
-        PoolKey key = null;
-        String name = username + password;
-        String dsName = getDataSourceName();
-        synchronized (poolKeys) {
-            Map dsMap = (Map) poolKeys.get(dsName);
-            if (dsMap != null) {
-                key = (PoolKey) dsMap.get(name);
-            }
-
-            if (key == null) {
-                key = new PoolKey(dsName, name);
-                if (dsMap == null) {
-                    dsMap = new HashMap();
-                    poolKeys.put(dsName, dsMap);
-                }
-                dsMap.put(name, key);
-            }
-        }
-        return key;
+    
+    private PoolKey getPoolKey(String username, String password) { 
+        return new PoolKey(getDataSourceName(), username+password); 
     }
 
     private synchronized void registerPool(
