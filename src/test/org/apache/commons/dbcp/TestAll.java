@@ -52,6 +52,7 @@ public class TestAll extends TestCase {
         suite.addTest(TestBasicDataSource.suite());
         suite.addTest(TestBasicDataSourceFactory.suite());
         // TestConnectionPool is abstract
+        suite.addTest(TestDelegatingCallableStatement.suite());
         suite.addTest(TestDelegatingConnection.suite());
         suite.addTest(TestDelegatingDatabaseMetaData.suite());
         suite.addTest(TestDelegatingPreparedStatement.suite());
