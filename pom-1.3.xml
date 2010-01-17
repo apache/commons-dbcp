@@ -261,37 +261,12 @@
           <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
             <reportFormat>plain</reportFormat>
-              <includes>
-                <include>org/apache/commons/dbcp/TestAbandonedObjectPool.java</include>
-                <include>org/apache/commons/jocl/TestJOCLContentHandler.java</include>
-                <include>org/apache/commons/dbcp/TestDelegatingConnection.java</include>
-                <include>org/apache/commons/dbcp/TestPoolableConnection.java</include>
-                <include>org/apache/commons/dbcp/TestDelegatingPreparedStatement.java</include>
-                <include>org/apache/commons/dbcp/TestDelegatingStatement.java</include>
-                <include>org/apache/commons/dbcp/TestJOCLed.java</include>
-                <include>org/apache/commons/dbcp/TestManual.java</include>
-        
-                <include>org/apache/commons/dbcp/TestBasicDataSourceFactory.java</include>
-                <include>org/apache/commons/dbcp/TestBasicDataSource.java</include>
-                <include>org/apache/commons/dbcp/TestAbandonedBasicDataSource.java</include>
-                <include>org/apache/commons/dbcp/TestPStmtPooling.java</include>
-                <include>org/apache/commons/dbcp/TestPStmtPoolingBasicDataSource.java</include>
-                <include>org/apache/commons/dbcp/TestPoolingDataSource.java</include>
-                <include>org/apache/commons/dbcp/TestJndi.java</include>
-                
-                <include>org/apache/commons/dbcp/cpdsadapter/TestDriverAdapterCPDS.java</include>
-                
-                <include>org/apache/commons/dbcp/datasources/TestFactory.java</include>
-                <include>org/apache/commons/dbcp/datasources/TestCPDSConnectionFactory.java</include>
-                <include>org/apache/commons/dbcp/datasources/TestKeyedCPDSConnectionFactory.java</include>
-                <include>org/apache/commons/dbcp/datasources/TestPerUserPoolDataSource.java</include>
-                <include>org/apache/commons/dbcp/datasources/TestSharedPoolDataSource.java</include>
-                <include>org/apache/commons/dbcp/datasources/TestInstanceKeyDataSource.java</include>
-
-                <include>org/apache/commons/dbcp/managed/TestBasicManagedDataSource.java</include>
-                <include>org/apache/commons/dbcp/managed/TestManagedDataSource.java</include>
-                <include>org/apache/commons/dbcp/managed/TestManagedDataSourceInTx.java</include>
-              </includes>
+              <excludes>
+                <!-- Test support files -->
+                <exclude>**/Tester*.java</exclude>
+                <!-- Exclude nested classes which Surefire cannot handle --> 
+                <exclude>**/Test*$*.java</exclude>
+              </excludes>
           </configuration>
         </plugin>
         <plugin>

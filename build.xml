@@ -224,14 +224,23 @@
 
    <target name="test" depends="compile-test" description="runs (junit) unit tests">
       <echo message="${classpath}"/>
+      <mkdir dir="${build.dir}/ant-reports"/>
       <junit printsummary="true" showoutput="true" fork="yes" haltonfailure="${test.failonerror}">
         <classpath>
           <pathelement location="${build.classes.dir}" /> 
           <pathelement location="${build.test-classes.dir}" /> 
           <pathelement path="${classpath}" /> 
         </classpath>
-        <formatter type="plain" usefile="false" />
-        <test name="${test.entry}"/> 
+        <formatter type="plain" usefile="true" />
+        <batchtest todir="${build.dir}/ant-reports">
+          <fileset dir="${src.test.dir}">
+            <include name="**/*Test*.java"/>
+            <!-- Test support files -->
+            <exclude name="**/Tester*.java"/>
+          	<!-- Ant JUnit does not handle abstract classes -->
+            <exclude name="**/TestConnectionPool.java"/>
+          </fileset>
+        </batchtest>
       </junit>
    </target>
 
