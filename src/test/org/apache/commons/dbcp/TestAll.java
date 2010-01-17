@@ -21,6 +21,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.commons.dbcp.cpdsadapter.TestDriverAdapterCPDS;
+import org.apache.commons.dbcp.datasources.TestCPDSConnectionFactory;
 import org.apache.commons.dbcp.datasources.TestFactory;
 import org.apache.commons.dbcp.datasources.TestInstanceKeyDataSource;
 import org.apache.commons.dbcp.datasources.TestKeyedCPDSConnectionFactory;
@@ -67,6 +68,7 @@ public class TestAll extends TestCase {
         // o.a.c.dbcp.datasources
         suite.addTest(TestFactory.suite());
         suite.addTest(TestInstanceKeyDataSource.suite());
+        suite.addTest(TestCPDSConnectionFactory.suite());
         suite.addTest(TestKeyedCPDSConnectionFactory.suite());
         suite.addTest(TestPerUserPoolDataSource.suite());
         suite.addTest(TestSharedPoolDataSource.suite());
