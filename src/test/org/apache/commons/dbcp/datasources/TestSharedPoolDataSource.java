@@ -28,6 +28,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp.TestConnectionPool;
+import org.apache.commons.dbcp.TesterDriver;
 import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
 
 /**
@@ -116,6 +117,19 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         
         // Make sure we can still use our good password.
         ds.getConnection("u1", "p1").close();
+        
+        // Try related users and passwords
+        ds.getConnection("foo", "bar").close();
+        try {
+            ds.getConnection("foob", "ar").close();
+            fail("Should have caused an SQLException");
+        } catch (SQLException expected) {
+        }
+        try {
+            ds.getConnection("foo", "baz").close();
+            fail("Should have generated SQLException");
+        } catch (SQLException expected) {
+        }
     }
 
 
@@ -536,5 +550,27 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         doTestPoolPreparedStatements(new PscbStringIntArray());
         doTestPoolPreparedStatements(new PscbStringStringArray());
         doTestPoolPreparedStatements(new PscbStringIntIntInt());
+    }
+
+    // See DBCP-8
+    public void testChangePassword() throws Exception {
+        try {
+            ds.getConnection("foo", "bay").close();
+            fail("Should have generated SQLException");
+        } catch (SQLException expected) {
+        }
+        ds.getConnection("foo", "bar").close();
+        TesterDriver.addUser("foo","bay"); // change the user/password setting
+        try {
+            ds.getConnection("foo", "bay").close(); // new password
+            try {
+                ds.getConnection("foo", "bar").close(); // old password
+                System.out.println("Should have generated SQLException"); // TODO should be fail()
+            } catch (SQLException expected) {
+            }
+            ds.getConnection("foo", "bay").close();
+        } finally {
+            TesterDriver.addUser("foo","bar");
+        }
     }
 }
