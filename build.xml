@@ -60,7 +60,6 @@
       <property name="dist.dir" value="${basedir}/dist"/>
       <property name="dist.jar" value="${dist.dir}/${name}.jar"/>
 
-      <property name="test.entry" value="org.apache.commons.dbcp.TestAll"/>
       <property name="test.failonerror" value="true" /> 
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
@@ -232,7 +231,9 @@
           <pathelement path="${classpath}" /> 
         </classpath>
         <formatter type="plain" usefile="true" />
-        <batchtest todir="${build.dir}/ant-reports">
+        <!-- If test.entry is defined, run a single test, otherwise run all valid tests -->
+        <test name="${test.entry}" if="test.entry"/>
+        <batchtest todir="${build.dir}/ant-reports" unless="test.entry">
           <fileset dir="${src.test.dir}">
             <include name="**/*Test*.java"/>
             <!-- Test support files -->
