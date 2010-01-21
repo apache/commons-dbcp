@@ -789,7 +789,7 @@ public abstract class TestConnectionPool extends TestCase {
                                     + ". Loops: " + pt.loops
                                     + ". State: " + pt.state
                                     + ". thrown: "+ pt.thrown
-                                    + ". (using nanoTime)"
+                                    + "."
                                     );
                         }                        
                     }
@@ -909,6 +909,6 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     long timeStamp() {
-        return System.nanoTime() / 1000000;
+        return System.currentTimeMillis();// JVM 1.5+ System.nanoTime() / 1000000; 
     }
 }
