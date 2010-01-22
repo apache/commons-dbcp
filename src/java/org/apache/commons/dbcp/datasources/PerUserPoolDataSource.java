@@ -65,7 +65,10 @@ public class PerUserPoolDataSource
     Map perUserMaxWait = null;
     Map perUserDefaultReadOnly = null;    
 
-    private transient Map pools = new HashMap();
+    /**
+     * Map to keep track of Pools for a given user
+     */
+    private transient Map /* <PoolKey, ObjectPool> */ pools = new HashMap();
 
     /**
      * Default no-arg constructor for Serialization
