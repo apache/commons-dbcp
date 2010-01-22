@@ -54,8 +54,17 @@ class CPDSConnectionFactory
     protected volatile ObjectPool _pool = null;
     protected String _username = null;
     protected String _password = null;
-    private final Map validatingMap = new HashMap();
-    private final WeakHashMap pcMap = new WeakHashMap();
+
+    /** 
+     * Map of PooledConnections for which close events are ignored.
+     * Connections are muted when they are being validated.
+     */
+    private final Map /* <PooledConnection, null> */ validatingMap = new HashMap();
+
+    /**
+     * Map of PooledConnectionAndInfo instances
+     */
+    private final WeakHashMap /* <PooledConnection, PooledConnectionAndInfo> */ pcMap = new WeakHashMap();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
