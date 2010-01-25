@@ -253,7 +253,7 @@ public class PoolingDriver implements Driver {
      */
     static private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
-        private ObjectPool pool;
+        private final ObjectPool pool;
         private Connection delegate;
     
         PoolGuardConnectionWrapper(ObjectPool pool, Connection delegate) {
