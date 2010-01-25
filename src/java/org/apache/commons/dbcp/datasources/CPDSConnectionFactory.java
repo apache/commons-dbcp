@@ -107,15 +107,15 @@ class CPDSConnectionFactory
      * @param username
      * @param password
      */
-         public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                      ObjectPool pool,
-                                      String validationQuery,
-                                      boolean rollbackAfterValidation,
-                                      String username,
-                                      String password) {
-             this(cpds, pool, validationQuery, username, password);
-             _rollbackAfterValidation = rollbackAfterValidation;
-         }
+     public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
+                                  ObjectPool pool,
+                                  String validationQuery,
+                                  boolean rollbackAfterValidation,
+                                  String username,
+                                  String password) {
+         this(cpds, pool, validationQuery, username, password);
+         _rollbackAfterValidation = rollbackAfterValidation;
+     }
 
 
     /**
