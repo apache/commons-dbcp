@@ -534,7 +534,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             assertEquals("Should be one idle connection in the pool", 
                     1, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bay"));
             try {
-                ds.getConnection("foo", "bar").close(); // old password
+                ds.getConnection("foo", "bar"); // old password
                 fail("Should have generated SQLException"); 
             } catch (SQLException expected) {
             }
