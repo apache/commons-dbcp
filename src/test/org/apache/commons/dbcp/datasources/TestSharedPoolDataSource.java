@@ -554,7 +554,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     // See DBCP-8
     public void testChangePassword() throws Exception {
         try {
-            ds.getConnection("foo", "bay").close();
+            ds.getConnection("foo", "bay");
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
