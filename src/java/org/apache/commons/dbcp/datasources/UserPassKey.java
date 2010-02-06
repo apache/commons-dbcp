@@ -20,7 +20,14 @@ package org.apache.commons.dbcp.datasources;
 import java.io.Serializable;
 
 /**
- * Holds a username, password pair.
+ * <p>Holds a username, password pair.  Serves as a poolable object key for the KeyedObjectPool
+ * backing a SharedPoolDataSource.  Two instances with the same username are considered equal.
+ * This ensures that there will be only one keyed pool for each user in the pool.  The password
+ * is used (along with the username) by the KeyedCPDSConnectionFactory when creating new connections.</p>
+ * 
+ * <p>{@link InstanceKeyDataSource#getConnection(String, String)} validates that the password used to create
+ * a connection matches the password provided by the client.</p>
+ * 
  * @version $Revision$ $Date$
  */
 class UserPassKey implements Serializable {
@@ -50,8 +57,10 @@ class UserPassKey implements Serializable {
     }
     
     /**
-     * @return <code>true</code> if the username and password fields for both 
-     * objects are equal.
+     * @return <code>true</code> if the username fields for both 
+     * objects are equal.  Two instances with the same username
+     * but different passwords are considered equal.
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
@@ -69,22 +78,17 @@ class UserPassKey implements Serializable {
         
         UserPassKey key = (UserPassKey) obj;
         
-        boolean usersEqual =
-            (this.username == null
-                ? key.username == null
-                : this.username.equals(key.username));
-                
-        boolean passwordsEqual =
-            (this.password == null
-                ? key.password == null
-                : this.password.equals(key.password));
-
-        return (usersEqual && passwordsEqual);
+        return this.username == null ?
+                key.username == null :
+                this.username.equals(key.username);       
     }
 
+    /**
+     * Returns the hash of the username. 
+     */
     public int hashCode() {
         return (this.username != null ?
-                (this.username + this.password).hashCode() : 0);
+                (this.username).hashCode() : 0);
     }
 
     public String toString() {

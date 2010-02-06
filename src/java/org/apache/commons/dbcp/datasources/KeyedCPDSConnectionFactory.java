@@ -30,7 +30,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp.SQLNestedException;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
@@ -42,16 +41,16 @@ import org.apache.commons.pool.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 class KeyedCPDSConnectionFactory
-    implements KeyedPoolableObjectFactory, ConnectionEventListener {
+    implements KeyedPoolableObjectFactory, ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE
             = "close() was called on a Connection, but "
             + "I have no record of the underlying PooledConnection.";
 
-    protected ConnectionPoolDataSource _cpds = null;
-    protected volatile String _validationQuery = null;
-    protected volatile boolean _rollbackAfterValidation = false;
-    protected volatile KeyedObjectPool _pool = null;
+    private final ConnectionPoolDataSource _cpds;
+    private final String _validationQuery;
+    private final boolean _rollbackAfterValidation;
+    private final KeyedObjectPool _pool;
     
     /** 
      * Map of PooledConnections for which close events are ignored.
@@ -74,10 +73,7 @@ class KeyedCPDSConnectionFactory
     public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
                                       KeyedObjectPool pool,
                                       String validationQuery) {
-        _cpds = cpds;
-        _pool = pool;
-        pool.setFactory(this);
-        _validationQuery = validationQuery;
+        this(cpds , pool, validationQuery, false);  
     }
 
     /**
@@ -95,60 +91,19 @@ class KeyedCPDSConnectionFactory
                                       KeyedObjectPool pool, 
                                       String validationQuery,
                                       boolean rollbackAfterValidation) {
-        this(cpds , pool, validationQuery);
-        _rollbackAfterValidation = rollbackAfterValidation;
-    }
-
-    /**
-     * Sets the {@link ConnectionPoolDataSource} from which to obtain base {@link Connection}s.
-     * @param cpds the {@link ConnectionPoolDataSource} from which to obtain base {@link Connection}s
-     */
-    synchronized public void setCPDS(ConnectionPoolDataSource cpds) {
         _cpds = cpds;
-    }
-
-    /**
-     * Sets the query I use to {*link #validateObject validate} {*link Connection}s.
-     * Should return at least one row.
-     * May be <code>null</code>
-     * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.
-     */
-    public void setValidationQuery(String validationQuery) {
+        _pool = pool;
+        pool.setFactory(this);
         _validationQuery = validationQuery;
-    }
-
-    /**
-     * Sets whether a rollback should be issued after 
-     * {@link #validateObject validating} 
-     * {@link Connection}s.
-     * @param rollbackAfterValidation whether a rollback should be issued after
-     *        {@link #validateObject validating} 
-     *        {@link Connection}s.
-     */
-    public void setRollbackAfterValidation(
-            boolean rollbackAfterValidation) {
         _rollbackAfterValidation = rollbackAfterValidation;
     }
-
+    
     /**
-     * Sets the {*link ObjectPool} in which to pool {*link Connection}s.
-     * @param pool the {*link ObjectPool} in which to pool those {*link Connection}s
+     * Returns the keyed object pool used to pool connections created by this factory.
+     * 
+     * @return KeyedObjectPool managing pooled connections
      */
-    synchronized public void setPool(KeyedObjectPool pool)
-        throws SQLException {
-        if (null != _pool && pool != _pool) {
-            try {
-                _pool.close();
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new SQLNestedException("Cannot set the pool on this factory", e);
-            }
-        }
-        _pool = pool;
-    }
-
-    public synchronized KeyedObjectPool getPool() {
+    public KeyedObjectPool getPool() {
         return _pool;
     }
 
@@ -334,4 +289,49 @@ class KeyedCPDSConnectionFactory
             e.printStackTrace();
         }
     }
+    
+    // ***********************************************************************
+    // PooledConnectionManager implementation
+    // ***********************************************************************
+    
+    /**
+     * Invalidates the PooledConnection in the pool.  The KeyedCPDSConnectionFactory
+     * closes the connection and pool counters are updated appropriately.
+     * Also clears any idle instances associated with the username that was used
+     * to create the PooledConnection.  Connections associated with this user
+     * are not affected and they will not be automatically closed on return to the pool.
+     */
+    public void invalidate(PooledConnection pc) throws SQLException {
+        PooledConnectionAndInfo info = (PooledConnectionAndInfo) pcMap.get(pc);
+        if (info == null) {
+            throw new IllegalStateException(NO_KEY_MESSAGE);
+        }
+        UserPassKey key = info.getUserPassKey();
+        try {
+            _pool.invalidateObject(key, info);  // Destroy and update pool counters
+            _pool.clear(key); // Remove any idle instances with this key
+        } catch (Exception ex) {
+            throw (SQLException) new SQLException("Error invalidating connection").initCause(ex);
+        }
+    }
+    
+    /**
+     * Does nothing.  This factory does not cache user credentials.
+     */
+    public void setPassword(String password) {
+    }
+    
+    /**
+     * This implementation does not fully close the KeyedObjectPool, as
+     * this would affect all users.  Instead, it clears the pool associated
+     * with the given user.  This method is not currently used.
+     */
+    public void closePool(String username) throws SQLException {
+        try {
+            _pool.clear(new UserPassKey(username, null));
+        } catch (Exception ex) {
+            throw (SQLException) new SQLException("Error closing connection pool").initCause(ex);
+        } 
+    }
+    
 }

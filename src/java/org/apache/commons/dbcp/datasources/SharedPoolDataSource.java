@@ -33,10 +33,18 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.dbcp.SQLNestedException;
 
 /**
- * A pooling <code>DataSource</code> appropriate for deployment within
+ * <p>A pooling <code>DataSource</code> appropriate for deployment within
  * J2EE environment.  There are many configuration options, most of which are
  * defined in the parent class. All users (based on username) share a single 
- * maximum number of Connections in this datasource.
+ * maximum number of Connections in this datasource.</p>
+ * 
+ * <p>User passwords can be changed without re-initializing the datasource.
+ * When a <code>getConnection(username, password)</code> request is processed 
+ * with a password that is different from those used to create connections in the
+ * pool associated with <code>username</code>, an attempt is made to create a
+ * new connection using the supplied password and if this succeeds, idle connections
+ * created using the old password are destroyed and new connections are created
+ * using the new password.</p>
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
@@ -50,7 +58,8 @@ public class SharedPoolDataSource
     private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
     private int maxWait = (int)Math.min(Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
-    private KeyedObjectPool pool = null;
+    private transient KeyedObjectPool pool = null;
+    private transient KeyedCPDSConnectionFactory factory = null;
 
     /**
      * Default no-arg constructor for Serialization
@@ -177,6 +186,10 @@ public class SharedPoolDataSource
         }
         return info;
     }
+    
+    protected PooledConnectionManager getConnectionManager(UserPassKey upkey)  {
+        return factory;
+    }
 
     /**
      * Returns a <code>SharedPoolDataSource</code> {@link Reference}.
@@ -213,7 +226,7 @@ public class SharedPoolDataSource
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
         // explicitly)
-        new KeyedCPDSConnectionFactory(cpds, pool, getValidationQuery(),
+        factory = new KeyedCPDSConnectionFactory(cpds, pool, getValidationQuery(),
                                        isRollbackAfterValidation());
     }
 

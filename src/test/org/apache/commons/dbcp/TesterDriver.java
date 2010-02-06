@@ -58,7 +58,9 @@ public class TesterDriver implements Driver {
      * TesterDriver specific method to add users to the list of valid users 
      */
     public static void addUser(String username, String password) {
-        validUserPasswords.put(username, password);
+        synchronized (validUserPasswords) {
+            validUserPasswords.put(username, password);
+        }
     }
 
     public boolean acceptsURL(String url) throws SQLException {
@@ -67,17 +69,15 @@ public class TesterDriver implements Driver {
 
     private void assertValidUserPassword(String user, String password) 
         throws SQLException {
-        String realPassword = validUserPasswords.getProperty(user);
-        if (realPassword == null) 
-        {
-            throw new SQLException(user + " is not a valid username.");
-        }
-        if (!realPassword.equals(password)) 
-        {
-            throw new SQLException(password + 
-                                   " is not the correct password for " +
-                                   user + ".  The correct password is " +
-                                   realPassword);
+        synchronized (validUserPasswords) {
+            String realPassword = validUserPasswords.getProperty(user);
+            if (realPassword == null) {
+                throw new SQLException(user + " is not a valid username.");
+            }
+            if (!realPassword.equals(password)) {
+                throw new SQLException(password + " is not the correct password for " + user
+                        + ".  The correct password is " + realPassword);
+            }
         }
     }
 
