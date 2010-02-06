@@ -20,6 +20,9 @@ package org.apache.commons.dbcp.datasources;
 import javax.sql.PooledConnection;
 
 /**
+ * Immutable poolable object holding a PooledConnection along with the username and password 
+ * used to create the connection.
+ * 
  * @version $Revision$ $Date$
  */
 final class PooledConnectionAndInfo {
@@ -27,9 +30,8 @@ final class PooledConnectionAndInfo {
     private final String password;
     private final String username;
     private final UserPassKey upkey;
-
-    PooledConnectionAndInfo(PooledConnection pc, 
-                            String username, String password) {
+    
+    PooledConnectionAndInfo(PooledConnection pc, String username, String password) {
         this.pooledConnection = pc;
         this.username = username;
         this.password = password;
@@ -59,4 +61,5 @@ final class PooledConnectionAndInfo {
     final String getUsername() {
         return username;
     }
+    
 }

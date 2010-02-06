@@ -105,7 +105,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
         catch (SQLException e)
         {
-            if (!e.getMessage().startsWith("x is not the correct password")) 
+            if (!e.getMessage().startsWith("Given password did not match")) 
             {
                 throw e;
             }
@@ -518,16 +518,32 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
-        ds.getConnection("foo", "bar").close();
+        Connection con1 = ds.getConnection("foo", "bar");
+        Connection con2 = ds.getConnection("foo", "bar");
+        Connection con3 = ds.getConnection("foo", "bar");
+        con1.close();
+        con2.close();
         TesterDriver.addUser("foo","bay"); // change the user/password setting
         try {
-            ds.getConnection("foo", "bay").close(); // new password
+            Connection con4 = ds.getConnection("foo", "bay"); // new password
+            // Idle instances with old password should have been cleared
+            assertEquals("Should be no idle connections in the pool", 
+                    0, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bar"));
+            con4.close();
+            // Should be one idle instance with new pwd
+            assertEquals("Should be one idle connection in the pool", 
+                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bay"));
             try {
                 ds.getConnection("foo", "bar").close(); // old password
-                System.out.println("Should have generated SQLException"); // TODO should be fail()
+                fail("Should have generated SQLException"); 
             } catch (SQLException expected) {
             }
-            ds.getConnection("foo", "bay").close();
+            Connection con5 = ds.getConnection("foo", "bay"); // take the idle one
+            con3.close(); // Return a connection with the old password
+            ds.getConnection("foo", "bay").close();  // will try bad returned connection and destroy it
+            assertEquals("Should be one idle connection in the pool", 
+                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bar"));
+            con5.close();
         } finally {
             TesterDriver.addUser("foo","bar");
         }

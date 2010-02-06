@@ -151,9 +151,11 @@ public abstract class InstanceKeyDataSource
     }
 
     /**
-     * Close pool being maintained by this datasource.
+     * Close the connection pool being maintained by this datasource.
      */
     public abstract void close() throws Exception;
+    
+    protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
 
     /* JDBC_4_ANT_KEY_BEGIN */
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -665,7 +667,16 @@ public abstract class InstanceKeyDataSource
     }
 
     /**
-     * Attempt to establish a database connection.
+     * Attempt to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)}
+     * with the provided username and password.  The password on the {@link PooledConnectionAndInfo}
+     * instance returned by <code>getPooledConnectionAndInfo</code> is compared to the <code>password</code>
+     * parameter.  If the comparison fails, a database connection using the supplied username and password
+     * is attempted.  If the connection attempt fails, an SQLException is thrown, indicating that the given password
+     * did not match the password used to create the pooled connection.  If the connection attempt succeeds, this
+     * means that the database password has been changed.  In this case, the <code>PooledConnectionAndInfo</code>
+     * instance retrieved with the old password is destroyed and the <code>getPooledConnectionAndInfo</code> is
+     * repeatedly invoked until a <code>PooledConnectionAndInfo</code> instance with the new password is returned. 
+     * 
      */
     public Connection getConnection(String username, String password)
             throws SQLException {        
@@ -693,10 +704,55 @@ public abstract class InstanceKeyDataSource
         }
         
         if (!(null == password ? null == info.getPassword() 
-                : password.equals(info.getPassword()))) {
-            closeDueToException(info);
-            throw new SQLException("Given password did not match password used"
-                                   + " to create the PooledConnection.");
+                : password.equals(info.getPassword()))) {  // Password on PooledConnectionAndInfo does not match
+            try { // See if password has changed by attempting connection
+                testCPDS(username, password);
+            } catch (SQLException ex) {
+                // Password has not changed, so refuse client, but return connection to the pool
+                closeDueToException(info);
+                throw new SQLException("Given password did not match password used"
+                                       + " to create the PooledConnection.");
+            } catch (javax.naming.NamingException ne) {
+                throw (SQLException) new SQLException(
+                        "NamingException encountered connecting to database").initCause(ne);
+            }
+            /*
+             * Password must have changed -> destroy connection and keep retrying until we get a new, good one,
+             * destroying any idle connections with the old passowrd as we pull them from the pool.
+             */
+            final UserPassKey upkey = info.getUserPassKey();
+            final PooledConnectionManager manager = getConnectionManager(upkey);
+            manager.invalidate(info.getPooledConnection()); // Destroy and remove from pool
+            manager.setPassword(upkey.getPassword()); // Reset the password on the factory if using CPDSConnectionFactory
+            info = null;
+            for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return 
+                try {
+                    info = getPooledConnectionAndInfo(username, password);
+                } catch (NoSuchElementException e) {
+                    closeDueToException(info);
+                    throw new SQLNestedException("Cannot borrow connection from pool", e);
+                } catch (RuntimeException e) {
+                    closeDueToException(info);
+                    throw e;
+                } catch (SQLException e) {            
+                    closeDueToException(info);
+                    throw e;
+                } catch (Exception e) {
+                    closeDueToException(info);
+                    throw new SQLNestedException("Cannot borrow connection from pool", e);
+                }
+                if (info != null && password.equals(info.getPassword())) {
+                    break;
+                } else {
+                    if (info != null) {
+                        manager.invalidate(info.getPooledConnection());
+                    }
+                    info = null;
+                }
+            }  
+            if (info == null) {
+                throw new SQLException("Cannot borrow connection from pool - password change failure.");
+            }
         }
 
         Connection con = info.getPooledConnection().getConnection();
