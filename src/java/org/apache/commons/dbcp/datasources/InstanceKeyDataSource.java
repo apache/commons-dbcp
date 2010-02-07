@@ -95,7 +95,8 @@ public abstract class InstanceKeyDataSource
     */
     protected static final int UNKNOWN_TRANSACTIONISOLATION = -1;
 
-    private boolean getConnectionCalled = false;
+    /** Guards property setters - once true, setters throw IllegalStateException */
+    private volatile boolean getConnectionCalled = false;
 
     private ConnectionPoolDataSource dataSource = null;
     /** DataSource Name used to find the ConnectionPoolDataSource */
