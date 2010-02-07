@@ -89,7 +89,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     {
         try {
             // Use bad password
-            ds.getConnection("u1", "zlsafjk").close();
+            ds.getConnection("u1", "zlsafjk");
             fail("Able to retrieve connection with incorrect password");
         } catch (SQLException e1) {
             // should fail
@@ -100,7 +100,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.getConnection("u1", "p1").close();
         try 
         {
-            ds.getConnection("u1", "x").close();
+            ds.getConnection("u1", "x");
             fail("Able to retrieve connection with incorrect password");
         }
         catch (SQLException e)
@@ -118,12 +118,12 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // Try related users and passwords
         ds.getConnection("foo", "bar").close();
         try {
-            ds.getConnection("foob", "ar").close();
+            ds.getConnection("foob", "ar");
             fail("Should have caused an SQLException");
         } catch (SQLException expected) {
         }
         try {
-            ds.getConnection("foo", "baz").close();
+            ds.getConnection("foo", "baz");
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
@@ -514,7 +514,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // See DBCP-8
     public void testChangePassword() throws Exception {
         try {
-            ds.getConnection("foo", "bay").close();
+            ds.getConnection("foo", "bay");
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }

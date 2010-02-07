@@ -91,7 +91,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         ds.getConnection("u2", "p2").close();
         try {
             // Use bad password
-            ds.getConnection("u1", "zlsafjk").close();
+            ds.getConnection("u1", "zlsafjk");
             fail("Able to retrieve connection with incorrect password");
         } catch (SQLException e1) {
             // should fail
@@ -102,7 +102,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         ds.getConnection("u1", "p1").close();
         try 
         {
-            ds.getConnection("u1", "x").close();
+            ds.getConnection("u1", "x");
             fail("Able to retrieve connection with incorrect password");
         }
         catch (SQLException e)
@@ -120,12 +120,12 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // Try related users and passwords
         ds.getConnection("foo", "bar").close();
         try {
-            ds.getConnection("foob", "ar").close();
+            ds.getConnection("foob", "ar");
             fail("Should have caused an SQLException");
         } catch (SQLException expected) {
         }
         try {
-            ds.getConnection("foo", "baz").close();
+            ds.getConnection("foo", "baz");
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
@@ -574,7 +574,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             assertEquals("Should be one idle connection in the pool", 
                     1, ((SharedPoolDataSource) ds).getNumIdle());
             try {
-                ds.getConnection("foo", "bar").close(); // old password
+                ds.getConnection("foo", "bar"); // old password
                 fail("Should have generated SQLException"); 
             } catch (SQLException expected) {
             }

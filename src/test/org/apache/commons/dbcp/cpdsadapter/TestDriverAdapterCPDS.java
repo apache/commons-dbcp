@@ -61,7 +61,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         pcds.getPooledConnection("u2", "p2").close();
         try {
             // Use bad password
-            pcds.getPooledConnection("u1", "zlsafjk").close();
+            pcds.getPooledConnection("u1", "zlsafjk");
             fail("Able to retrieve connection with incorrect password");
         } catch (SQLException e1) {
             // should fail
@@ -71,7 +71,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         // Use good password
         pcds.getPooledConnection("u1", "p1").close();
         try {
-            pcds.getPooledConnection("u1", "x").close();
+            pcds.getPooledConnection("u1", "x");
             fail("Able to retrieve connection with incorrect password");
         }
         catch (SQLException e) {
