@@ -76,7 +76,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * <p>
  * The <a href="package-summary.html">package documentation</a> contains an 
- * example using catalina and JNDI and it also contains a non-JNDI example. 
+ * example using Apache Tomcat and JNDI and it also contains a non-JNDI example. 
  * </p>
  *
  * @author John D. McNally
