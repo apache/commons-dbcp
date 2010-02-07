@@ -1,15 +1,15 @@
                         
 
-              commons-dbcp 1.3/1.4 RELEASE NOTES
+              commons-dbcp-1.3/1.4 RELEASE NOTES
 
-This release includes new features as well as bug fixes and enhancements.  
-Some bug fixes change semantics (e.g. connection close is now idempotent).
-The 1.3 and 1.4 releases of DBCP are built from the same sources.
-Version 1.4 supports JDBC 4, so requires JDK 1.6.  Version 1.3 supports JDBC 3
-and has JDK 1.4 as its minimum JDK requirement.  Other than support for the 
-added methods in JDBC 4, there is nothing new or different in DBCP 1.4 vs. DBCP 1.3.
-Applications running under JDK 1.4-1.5 must use DBCP 1.3.  Applications running
-under JDK 1.6 may use DBCP 1.4.
+This release includes new features as well as bug fixes and enhancements.  Some bug fixes
+change semantics (e.g. connection close is now idempotent).  The 1.3 and 1.4 releases of DBCP
+are built from the same sources.  Version 1.4 supports JDBC 4, so requires JDK 1.6. 
+Applications running under JDK 1.4-1.5 must use DBCP 1.3. Applications running under JDK 1.6
+should use DBCP 1.4. Other than support for the added methods in JDBC 4, there is nothing new
+or different in DBCP 1.4 vs. DBCP 1.3. The list of changes below since 1.2.2 applies to both
+the 1.3 and 1.4 release.  Other than the issue related to adding JDBC 4 support (DBCP-191), 
+all bug fixes or new features are included in both DBCP 1.3 and 1.4.
 
 Changes since DBCP 1.2.2 include:
 
@@ -32,6 +32,15 @@ o  DBCP-230:  Added BasicManagedDataSource, extending BasicDataSource.
         instance previously embedded in createDataSource. Thanks to Dain Sundstrom. 
 
 Fixed Bugs:
+o  DBCP-320:  Eliminated poolKeys cache from PerUserPoolDataSource. 
+o  DBCP-321:  Eliminated userKeys LRUMap cache from SharedPoolDataSource. 
+o  DBCP-319:  Made private fields final where possible. Thanks to Sebastian Bazley. 
+o  DBCP-318:  PerUserPoolDataSource.getPooledConnectionAndInfo multi-threading bug. Thanks to Sebastian Bazley. 
+o  DBCP-315:  Remove throws clause from method that does not throw an exception. Thanks to Sebastian Bazley. 
+o  DBCP-313:  Remove code that catches and ignores Exceptions when calling
+        PooledConnection.removeConnectionEventListener(ConnectionEventListener)
+        as the method does not throw any Exceptions. Thanks to Sebastian Bazley. 
+o  DBCP-316:  Remove impossible null check. Thanks to Sebastian Bazley. 
 o  DBCP-303:  Ensure Statement.getGeneratedKeys() works correctly with the CPDS
         adapter. Thanks to Dave Oxley. 
 o  DBCP-302:  Removed incorrectly advertised ClassNotFoundException from
@@ -40,13 +49,13 @@ o  DBCP-8:  Handle user password changes for InstanceKeyDataSources.
 o  DBCP-294:  Added PoolableManagedConnection and PoolableManagedConnectionFactory so that
         pooled managed connections can unregister themselves from transaction registries,
         avoiding resource leaks. Thanks to Philippe Mouawad. 
-o  PoolableConnectionFactory.makeObject() is no longer synchronized. This
+o  DBCP-212:  PoolableConnectionFactory.makeObject() is no longer synchronized. This
         provides improved response times when load spikes at the cost of a
         faster rise in database server load. This change was made as a partial
-        fix for DBCP-212 although it does not fully address that issue. 
+        fix for DBCP-212.  The synchronization changes in Commons Pool 1.5 complete
+        the fix for this issue. 
 o  DBCP-242:  Reverted DelegatingConnection close to 1.2.2 version to ensure
         open statements are closed before the underlying connection is closed. 
-o  Add some test cases that were missing from the TestAll test suite. 
 o  DBCP-235:  Refactor DelegatingConnection and ManagedConnection enable overridden
         equals() and hashcode() to work correctly. 
 o  DBCP-215:  Modified BasicDataSourceFactory to complete initialization of the pool
@@ -95,6 +104,7 @@ o  DBCP-252:  Fixed inconsistent synchronization on _rollbackAfterValidation,
         both getter and setter for _pool synchronized. Thanks to FindBugs. 
 
 Changes:
+o  DBCP-314:  Renamed variables with duplicate names in different scopes. Thanks to Sebastian Bazley. 
 o  DBCP-312:  Clarified javadoc for BasicDataSource close() method. Thanks to Glen Mazza. 
 o  DBCP-305:  Use an API specific exception for logging abandoned objects to make
         scanning the logs for these exceptions simpler and to provide a better
@@ -122,7 +132,7 @@ o  DBCP-11:  Modified PoolingDataSource, PoolingDriver and DelegatingStatement t
         Statement.  Also added tests to to assure that the *same* object used 
         to create the statement or result set is returned  from either 
         getConnection() or getStatement(). Thanks to Dain Sundstrom. 
-o  DBCP-143:  SQLNestedException has been deprecated and will be replaced in DBCP 1.4 with
+o  DBCP-143:  SQLNestedException has been deprecated and will be replaced in DBCP 2.0 with
         SQLException and standard Java exception chaining. 
 
  
@@ -130,5 +140,4 @@ For complete information on commons-dbcp, including instructions on how to submi
 patches, or suggestions for improvement, see the commons-dbcp website:
 
 http://commons.apache.org/dbcp/
-
 

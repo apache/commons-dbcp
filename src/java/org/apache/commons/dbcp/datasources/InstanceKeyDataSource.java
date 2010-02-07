@@ -76,7 +76,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  *
  * <p>
  * The <a href="package-summary.html">package documentation</a> contains an 
- * example using catalina and JNDI and it also contains a non-JNDI example. 
+ * example using Apache Tomcat and JNDI and it also contains a non-JNDI example. 
  * </p>
  *
  * @author John D. McNally
@@ -94,27 +94,34 @@ public abstract class InstanceKeyDataSource
     * Internal constant to indicate the level is not set. 
     */
     protected static final int UNKNOWN_TRANSACTIONISOLATION = -1;
+    
+    /** Guards property setters - once true, setters throw IllegalStateException */
+    private volatile boolean getConnectionCalled = false;
 
-    private boolean getConnectionCalled = false;
-
+    /** Underlying source of PooledConnections */
     private ConnectionPoolDataSource dataSource = null;
+    
     /** DataSource Name used to find the ConnectionPoolDataSource */
     private String dataSourceName = null;
+    
+    // Default connection properties
     private boolean defaultAutoCommit = false;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-//    private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
-//    private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-//    private int maxWait = (int)Math.min(Integer.MAX_VALUE,
-//        GenericObjectPool.DEFAULT_MAX_WAIT);
     private boolean defaultReadOnly = false;
+    
     /** Description */
     private String description = null;
+    
     /** Environment that may be used to set up a jndi initial context. */
     Properties jndiEnvironment = null;
+    
     /** Login TimeOut in seconds */
     private int loginTimeout = 0;
+    
     /** Log stream */
     private PrintWriter logWriter = null;
+    
+    // Pool properties
     private boolean _testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
     private boolean _testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
     private int _timeBetweenEvictionRunsMillis = (int)
@@ -128,8 +135,11 @@ public abstract class InstanceKeyDataSource
     private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
     private boolean rollbackAfterValidation = false;
+    
+    /** true iff one of the setters for testOnBorrow, testOnReturn, testWhileIdle has been called. */
     private boolean testPositionSet = false;
 
+    /** Instance key */
     protected String instanceKey = null;
 
     /**
@@ -614,8 +624,8 @@ public abstract class InstanceKeyDataSource
      * The SQL query that will be used to validate connections from this pool
      * before returning them to the caller.  If specified, this query
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
-     * one row.  Default behavior is to test the connection when it is
-     * borrowed.
+     * one row. If none of the properties, testOnBorow, testOnReturn, testWhileIdle
+     * have been previously set, calling this method sets testOnBorrow to true.
      */
     public void setValidationQuery(String validationQuery) {
         assertInitializationAllowed();
