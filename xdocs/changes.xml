@@ -126,18 +126,16 @@ The <action> type attribute can be add,update,fix,remove.
         allowing the user to specify a collection of SQL statements to execute
         one time when a physical database connection is first opened.
       </action>
-      <action dev="markt" type="fix">
+      <action dev="markt" type="fix" issue="DBCP-212">
         PoolableConnectionFactory.makeObject() is no longer synchronized. This
         provides improved response times when load spikes at the cost of a
         faster rise in database server load. This change was made as a partial
-        fix for DBCP-212 although it does not fully address that issue. 
+        fix for DBCP-212.  The synchronization changes in Commons Pool 1.5 complete
+        the fix for this issue.
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-242">
         Reverted DelegatingConnection close to 1.2.2 version to ensure
         open statements are closed before the underlying connection is closed.
-      </action>
-      <action dev="markt" type="fix">
-        Add some test cases that were missing from the TestAll test suite.
       </action>
       <action dev="markt" type="fix" issue="DBCP-235">
         Refactor DelegatingConnection and ManagedConnection enable overridden
