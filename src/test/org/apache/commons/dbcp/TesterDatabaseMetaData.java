@@ -20,9 +20,9 @@ package org.apache.commons.dbcp;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-/* JDBC_4_ANT_KEY_BEGIN */
+/*
 import java.sql.RowIdLifetime;
-/* JDBC_4_ANT_KEY_END */
+*/
 import java.sql.SQLException;
 
 /**
@@ -718,7 +718,7 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
+    /*
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
@@ -760,5 +760,5 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return null;
     }
 
-    /* JDBC_4_ANT_KEY_END */
+    */
 }
