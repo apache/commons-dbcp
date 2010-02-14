@@ -40,6 +40,16 @@
     <release>
       <Version>
         <name>commons-dbcp</name>
+        <created>2010-02-14</created>
+        <revision>1.3</revision>
+      </Version>
+      <Version>
+        <name>commons-dbcp</name>
+        <created>2010-02-14</created>
+        <revision>1.4</revision>
+      </Version>
+      <Version>
+        <name>commons-dbcp</name>
         <created>2007-04-04</created>
         <revision>1.2.2</revision>
       </Version>
