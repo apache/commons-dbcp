@@ -15,9 +15,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.1//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.1//EN" "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
 
 <!--
   Checkstyle checks configured for Maven.
