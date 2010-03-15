@@ -24,7 +24,7 @@
       <section name="Download DBCP">
          
          <subsection name="Releases">
-            <p>Download the <a href="http://commons.apache.org/downloads/download_dbcp.cgi">Latest Release</a>
+            <p>Download the <a href="http://commons.apache.org/dbcp/download_dbcp.cgi">Latest Release</a>
                of Commons DBCP.
             </p>
             <p>For details of whats new in each version see the <a href="changes-report.html">Release History</a>.</p>
