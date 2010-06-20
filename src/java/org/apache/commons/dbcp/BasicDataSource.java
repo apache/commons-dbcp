@@ -294,7 +294,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The maximum number of connections that can remain idle in the
-     * pool, without extra ones being released, or negative for no limit.
+     * pool, without extra ones being destroyed, or negative for no limit.
      * If maxIdle is set too low on heavily loaded systems it is possible you
      * will see connections being closed and almost immediately new connections
      * being opened. This is a result of the active threads momentarily closing
@@ -306,7 +306,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * <p>Returns the maximum number of connections that can remain idle in the
-     * pool.
+     * pool. Excess idle connections are destroyed on return to the pool.
      * </p>
      * <p>A negative value indicates that there is no limit</p>
      * 
@@ -318,7 +318,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * Sets the maximum number of connections that can remain idle in the
-     * pool.
+     * pool. Excess idle connections are destroyed on return to the pool.
      * 
      * @see #getMaxIdle()
      * @param maxIdle the new value for maxIdle
@@ -332,12 +332,18 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The minimum number of active connections that can remain idle in the
-     * pool, without extra ones being created, or 0 to create none.
+     * pool, without extra ones being created when the evictor runs, or 0 to create none. 
+     * The pool attempts to ensure that minIdle connections are available when the idle object evictor
+     * runs. The value of this property has no effect unless {@link #timeBetweenEvictionRunsMillis}
+     * has a positive value.
      */
     protected int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;
 
     /**
-     * Returns the minimum number of idle connections in the pool
+     * Returns the minimum number of idle connections in the pool. The pool attempts
+     * to ensure that minIdle connections are available when the idle object evictor
+     * runs. The value of this property has no effect unless {@link #timeBetweenEvictionRunsMillis}
+     * has a positive value.
      * 
      * @return the minimum number of idle connections
      * @see GenericObjectPool#getMinIdle()
@@ -347,7 +353,10 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Sets the minimum number of idle connections in the pool.
+     * Sets the minimum number of idle connections in the pool. The pool attempts
+     * to ensure that minIdle connections are available when the idle object evictor
+     * runs. The value of this property has no effect unless {@link #timeBetweenEvictionRunsMillis}
+     * has a positive value.
      * 
      * @param minIdle the new value for minIdle
      * @see GenericObjectPool#setMinIdle(int)
@@ -630,7 +639,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * The minimum amount of time an object may sit idle in the pool before it
-     * is eligable for eviction by the idle object evictor (if any).
+     * is eligible for eviction by the idle object evictor (if any).
      */
     protected long minEvictableIdleTimeMillis =
         GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
