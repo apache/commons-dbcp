@@ -69,6 +69,9 @@ public class TesterDriver implements Driver {
 
     private void assertValidUserPassword(String user, String password) 
         throws SQLException {
+        if (user == null){
+            throw new SQLException("username cannot be null.");            
+        }
         synchronized (validUserPasswords) {
             String realPassword = validUserPasswords.getProperty(user);
             if (realPassword == null) {
