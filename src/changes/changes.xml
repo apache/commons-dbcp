@@ -39,6 +39,13 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-348" due-to="Eiji Takahashi>
+        BasicDataSourceFactory incorrectly used "initConnectSqls" in versions
+        1.3 and 1.4 of DBCP as the property name for connectionInitSqls.
+        Online docs for 1.3/1/4 have been updated to reflect this inconsistency.
+        The BasicDataSourceFactory property name has been changed to "connectInitSqls"
+        to match the online docs and the BasicDataSource property name.
+      </action>
     </release>
     <release version="1.4" date="2010-02-14" description="This release includes
      new features as well as bug fixes and enhancements.  Some bug fixes

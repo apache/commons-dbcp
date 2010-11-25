@@ -242,7 +242,14 @@ one row.
    </td>
 </tr>
   <tr>
-     <td>connectionInitSqls</td>
+     <td>
+     connectionInitSqls <br/>
+     <img src="images/icon_warning_sml.gif"/>
+     <strong>NOTE</strong>: Versions 1.3 and 1.4 of DBCP incorrectly use "initConnectionSqls"
+     as the name of this property for JNDI object factory configuration.  Until 1.3.1/1.4.1
+     are released, "initConnectionSqls" must be used as the name for this property when using
+     BasicDataSoureFactory to create BasicDataSource instances via JNDI.
+     </td>
      <td>null</td>
      <td>
   A Collection of SQL statements that will be used to initialize physical 
