@@ -68,7 +68,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("password", "password");
         properties.setProperty("validationQuery", "SELECT DUMMY FROM DUAL");
         properties.setProperty("validationQueryTimeout", "100");
-        properties.setProperty("initConnectionSqls", "SELECT 1;SELECT 2");
+        properties.setProperty("connectionInitSqls", "SELECT 1;SELECT 2");
         properties.setProperty("timeBetweenEvictionRunsMillis", "1000");
         properties.setProperty("minEvictableIdleTimeMillis", "2000");
         properties.setProperty("numTestsPerEvictionRun", "2");
