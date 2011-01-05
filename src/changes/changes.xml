@@ -39,6 +39,11 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-344" due-to="Jeremy Whiting">
+        Test transitive dependencies brought in by geronimo-transaction created
+        version conflicts (commons logging and junit).  These have been explicitly
+        excluded in the POM.
+      </action>
       <action dev="psteitz" issue="DBCP-348" due-to="Eiji Takahashi>
         BasicDataSourceFactory incorrectly used "initConnectSqls" in versions
         1.3 and 1.4 of DBCP as the property name for connectionInitSqls.

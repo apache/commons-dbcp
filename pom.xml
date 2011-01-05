@@ -196,6 +196,16 @@
       <artifactId>geronimo-transaction</artifactId>
        <version>1.2-beta</version>
        <scope>test</scope>
+       <exclusions>
+         <exclusion>
+           <artifactId>junit</artifactId>
+           <groupId>junit</groupId>
+         </exclusion>
+         <exclusion>
+           <artifactId>commons-logging</artifactId>
+           <groupId>commons-logging</groupId>
+         </exclusion>
+       </exclusions>
     </dependency>
   </dependencies>
 
