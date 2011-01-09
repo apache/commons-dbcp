@@ -50,6 +50,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_DEFAULTTRANSACTIONISOLATION = "defaultTransactionIsolation";
     private final static String PROP_DEFAULTCATALOG = "defaultCatalog";
     private final static String PROP_DRIVERCLASSNAME = "driverClassName";
+    private final static String PROP_LIFO = "lifo";
     private final static String PROP_MAXACTIVE = "maxActive";
     private final static String PROP_MAXIDLE = "maxIdle";
     private final static String PROP_MINIDLE = "minIdle";
@@ -86,6 +87,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_DEFAULTTRANSACTIONISOLATION,
         PROP_DEFAULTCATALOG,
         PROP_DRIVERCLASSNAME,
+        PROP_LIFO,
         PROP_MAXACTIVE,
         PROP_MAXIDLE,
         PROP_MINIDLE,
@@ -218,6 +220,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setDriverClassName(value);
         }
 
+        value = properties.getProperty(PROP_LIFO);
+        if (value != null) {
+            dataSource.setLifo(Boolean.valueOf(value).booleanValue());
+        }
+        
         value = properties.getProperty(PROP_MAXACTIVE);
         if (value != null) {
             dataSource.setMaxActive(Integer.parseInt(value));
