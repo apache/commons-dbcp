@@ -261,6 +261,39 @@ public class BasicDataSource implements DataSource {
     }
     
     /**
+     * True means that borrowObject returns the most recently used ("last in")
+     * connection in the pool (if there are idle connections available).  False
+     * means that the pool behaves as a FIFO queue - connections are taken from
+     * the idle instance pool in the order that they are returned to the pool.
+     */
+    private boolean lifo = GenericObjectPool.DEFAULT_LIFO;
+
+    /**
+     * Returns the LIFO property. 
+     * 
+     * @return true if connection pool behaves as a LIFO queue.
+     * 
+     * @see #lifo 
+     */ 
+    public synchronized boolean getLifo() {
+        return this.lifo;
+    }
+
+    /**
+     * Sets the LIFO property. True means the pool behaves as a LIFO queue;
+     * false means FIFO.
+     *  
+     * @param lifo the new value for the LIFO property
+     *  
+     */    
+    public synchronized void setLifo(boolean lifo) {
+        this.lifo = lifo;   
+        if (connectionPool != null) {
+            connectionPool.setLifo(lifo);
+        }
+    }
+    
+    /**
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or negative for no limit.
      */
@@ -1510,6 +1543,7 @@ public class BasicDataSource implements DataSource {
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
+        gop.setLifo(lifo);
         connectionPool = gop;
     }
 

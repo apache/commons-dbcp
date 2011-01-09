@@ -250,6 +250,16 @@ one row.
   only once - when the configured connection factory creates the connection.
      </td>
   </tr>
+  <tr>
+    <td>lifo</td>
+    <td>true</td>
+    <td>
+       True means that borrowObject returns the most recently used ("last in")
+       connection in the pool (if there are idle connections available).  False
+       means that the pool behaves as a FIFO queue - connections are taken from
+       the idle instance pool in the order that they are returned to the pool.
+    </td>
+  </tr>
 </table>
 
 <table>
