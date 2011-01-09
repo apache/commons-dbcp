@@ -79,6 +79,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("logAbandoned", "true");
         properties.setProperty("poolPreparedStatements", "true");
         properties.setProperty("maxOpenPreparedStatements", "10");
+        properties.setProperty("lifo", "true");
 
         BasicDataSource ds = (BasicDataSource) BasicDataSourceFactory.createDataSource(properties);
         
@@ -113,5 +114,6 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals(true, ds.getLogAbandoned());
         assertEquals(true, ds.isPoolPreparedStatements());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
+        assertEquals(true, ds.getLifo());
     }
 }

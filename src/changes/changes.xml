@@ -39,12 +39,17 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
-      <action dev="psteitz" issue="DBCP-344" due-to="Jeremy Whiting">
+      <action dev="psteitz" issue="DBCP-346" type="update" due-to="Ken Tatsushita">
+        LIFO configuration option has been added to BasicDataSource.  When set
+        to true (the default), the pool acts as a LIFO queue; setting to false
+        causes connections to enter and exit to pool in FIFO order.
+      </action>
+      <action dev="psteitz" issue="DBCP-344" type="fix" due-to="Jeremy Whiting">
         Test transitive dependencies brought in by geronimo-transaction created
         version conflicts (commons logging and junit).  These have been explicitly
         excluded in the POM.
       </action>
-      <action dev="psteitz" issue="DBCP-348" due-to="Eiji Takahashi>
+      <action dev="psteitz" issue="DBCP-348" type="fix" due-to="Eiji Takahashi">
         BasicDataSourceFactory incorrectly used "initConnectSqls" in versions
         1.3 and 1.4 of DBCP as the property name for connectionInitSqls.
         Online docs for 1.3/1/4 have been updated to reflect this inconsistency.
