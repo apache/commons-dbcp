@@ -1444,8 +1444,20 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
-     * Creates a JDBC connection factory for this datasource.  This method only
-     * exists so subclasses can replace the implementation class.
+     * Creates a JDBC connection factory for this datasource.  The JDBC driver
+     * is loaded using the following algorithm:
+     * <ol>
+     * <li>If {@link #driverClassName} is specified that class is loaded using
+     * the {@link ClassLoader} of this class or, if {@link #driverClassLoader}
+     * is set, {@link #driverClassName} is loaded with the specified
+     * {@link ClassLoader}.</li>
+     * <li>If {@link #driverClassName} is specified and the previous attempt
+     * fails, the class is loaded using the context class loader of the current
+     * thread.</li>
+     * <li>If a driver still isn't loaded one is loaded via the
+     * {@link DriverManager} using the specified {@link #url}.
+     * </ol>
+     * This method exists so subclasses can replace the implementation class.
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
@@ -1454,9 +1466,10 @@ public class BasicDataSource implements DataSource {
             try {
                 try {
                     if (driverClassLoader == null) {
-                        Class.forName(driverClassName);
+                        driverFromCCL = Class.forName(driverClassName);
                     } else {
-                        Class.forName(driverClassName, true, driverClassLoader);
+                        driverFromCCL = Class.forName(
+                                driverClassName, true, driverClassLoader);
                     }
                 } catch (ClassNotFoundException cnfe) {
                     driverFromCCL = Thread.currentThread(
