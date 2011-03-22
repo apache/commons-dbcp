@@ -416,7 +416,7 @@ public class PerUserPoolDataSource
                 throw new SQLNestedException("RegisterPool failed", ne);
             }
             try {
-                info = (PooledConnectionAndInfo)((ObjectPool) pool).borrowObject();
+                info = (PooledConnectionAndInfo)pool.borrowObject();
             } catch (Exception ex) {
                 throw (SQLException) new SQLException(
                 "Could not retrieve connection info from pool").initCause(ex);
