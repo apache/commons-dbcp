@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>15</version>
+    <version>20</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-dbcp</groupId>
@@ -31,7 +31,7 @@
   <name>Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
-  <description>Commons Database Connection Pooling</description>
+  <description>Apache Commons DBCP software implements Database Connection Pooling</description>
   <url>http://commons.apache.org/dbcp/</url>
 
   <distributionManagement>
