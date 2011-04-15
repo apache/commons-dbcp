@@ -38,12 +38,12 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 // Here's a simple example of how to use the PoolingDataSource.
 // In this example, we'll construct the PoolingDataSource manually,
 // just to show how the pieces fit together, but you could also
-// configure it using an external conifguration file in
+// configure it using an external configuration file in
 // JOCL format (and eventually Digester).
 //
 
 //
-// Note that this example is very similiar to the PoolingDriver
+// Note that this example is very similar to the PoolingDriver
 // example.  In fact, you could use the same pool in both a
 // PoolingDriver and a PoolingDataSource
 //
@@ -56,8 +56,8 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool-1.5.4.jar
-//  * commons-dbcp-1.2.2.jar
+//  * commons-pool-1.5.6.jar
+//  * commons-dbcp-1.3.jar (JDK 1.4-1.5) or commons-dbcp-1.4 (JDK 1.6+)
 //  * j2ee.jar (for the javax.sql classes)
 //  * the classes for your (underlying) JDBC driver
 // in your classpath.
@@ -71,7 +71,7 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 //
 // For example:
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-1.5.4.jar:commons-dbcp-1.2.2.jar:j2ee.jar:oracle-jdbc.jar:. \
+//       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:j2ee.jar:oracle-jdbc.jar:. \
 //       ManualPoolingDataSourceExample \
 //       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
 //       "SELECT * FROM DUAL"
