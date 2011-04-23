@@ -39,6 +39,12 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-330" type="fix">
+        Changed DelegatingDatabaseMetaData to no longer add itself to the AbandonedTrace
+        of its parent connection.  This was causing excessive memory consumption and was
+        not necessary, as resultsets created by DelegatingDatabaseMetaData instances are
+        attached to the parent connection's trace on creation.  Also fixes DBCP-352.
+      </action>
       <action dev="psteitz" issue="DBCP-343" type="fix">
         Modified execute methods of Statement objects to ensure that whenever
         a statement is used, the lastUsed property of its parent connection is
