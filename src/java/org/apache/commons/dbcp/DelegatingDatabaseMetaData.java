@@ -26,20 +26,14 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 /**
- * A base delegating implementation of {@link DatabaseMetaData}.
- * <p>
- * Those methods that create {@link ResultSet} objects, are wrapped to
+ * <p>A base delegating implementation of {@link DatabaseMetaData}.</p>
+ * 
+ * <p>Methods that create {@link ResultSet} objects are wrapped to
  * create {@link DelegatingResultSet} objects and the remaining methods
  * simply call the corresponding method on the "delegate"
- * provided in my constructor.
- * <p>
- * Extends AbandonedTrace to implement DatabaseMetaData tracking and
- * logging of code which created the DatabaseMetaData. Tracking
- * the DatabaseMetaData ensures that the Connection which created it can
- * close any associated ResultSets on Connection close.
+ * provided in the constructor.</p>
  */
-public class DelegatingDatabaseMetaData extends AbandonedTrace
-        implements DatabaseMetaData {
+public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
     protected DatabaseMetaData _meta;
@@ -49,7 +43,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     public DelegatingDatabaseMetaData(DelegatingConnection c,
             DatabaseMetaData m) {
-        super(c);
+        super();
         _conn = c;
         _meta = m;
     }
