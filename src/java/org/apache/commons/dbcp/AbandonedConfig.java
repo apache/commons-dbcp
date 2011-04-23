@@ -34,14 +34,14 @@ public class AbandonedConfig {
     private boolean removeAbandoned = false;
 
     /**
-     * Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimeout.
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimeout.</p>
      *
-     * Set to true or false, default false.
-     * If set to true a connection is considered abandoned and eligible
-     * for removal if it has been idle longer than the removeAbandonedTimeout.
-     * Setting this to true can recover db connections from poorly written    
-     * applications which fail to close a connection.
+     * <p>The default value is false.</p>
+     * 
+     * <p>If set to true a connection is considered abandoned and eligible
+     * for removal if it has been idle longer than the
+     * {@link #getRemoveAbandoned() removeAbandonedTimeout}.</p>
      *
      * @return true if abandoned connections are to be removed
      */
@@ -50,17 +50,16 @@ public class AbandonedConfig {
     }
 
     /**
-     * Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimeout.
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimeout.</p>
      *
-     * Set to true or false, default false.
-     * If set to true a connection is considered abandoned and eligible   
-     * for removal if it has been idle longer than the removeAbandonedTimeout.
-     * Setting this to true can recover db connections from poorly written
-     * applications which fail to close a connection.
+     * <p>If set to true a connection is considered abandoned and eligible   
+     * for removal if it has been idle longer than the
+     * {@link #getRemoveAbandoned() removeAbandonedTimeout}.</p>
      *
      * @param removeAbandoned true means abandoned connections will be
      *   removed
+     * @see #getRemoveAbandoned()
      */
     public void setRemoveAbandoned(boolean removeAbandoned) {
         this.removeAbandoned = removeAbandoned;
@@ -71,23 +70,36 @@ public class AbandonedConfig {
      */
     private int removeAbandonedTimeout = 300;
 
-    /**
-     * Timeout in seconds before an abandoned connection can be removed.
-     *
-     * Defaults to 300 seconds.
-     *
-     * @return abandoned timeout in seconds
+    /** 
+     * <p>Timeout in seconds before an abandoned connection can be removed.</p>
+     * 
+     * <p>Creating a Statement, PreparedStatement or CallableStatement or using
+     * one of these to execute a query (using one of the execute methods)
+     * resets the lastUsed property of the parent connection.</p>
+     * 
+     * <p>Abandoned connection cleanup happens when
+     * <code><ul>
+     * <li><code>{@link #getRemoveAbandoned() removeAbandoned} == true</li>
+     * <li>{@link #getNumIdle() numIdle &lt; 2</li>
+     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxActive() maxActive} - 3</li>
+     * </ul></code></p>
+     * 
+     * <p>The default value is 300 seconds.</p>
      */
     public int getRemoveAbandonedTimeout() {
         return (this.removeAbandonedTimeout);
     }
 
     /**
-     * Timeout in seconds before an abandoned connection can be removed.
+     * <p>Sets the timeout in seconds before an abandoned connection can be
+     * removed.</p>
+     * 
+     * <p>Setting this property has no effect if 
+     * {@link #getRemoveAbandoned() removeAbandoned} is false.</p>
      *
-     * Defaults to 300 seconds.
-     *
-     * @param removeAbandonedTimeout abandoned timeout in seconds
+     * @param removeAbandonedTimeout new abandoned timeout in seconds
+     * @see #getRemoveAbandonedTimeout()
+     * @see #getRemoveAbandoned()
      */
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
         this.removeAbandonedTimeout = removeAbandonedTimeout;
