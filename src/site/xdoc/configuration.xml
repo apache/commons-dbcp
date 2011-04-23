@@ -331,7 +331,10 @@ Be carefull and only use when you need direct access to driver specific extentio
       Flag to remove abandoned connections if they exceed the
       removeAbandonedTimout.<br/>
       If set to true a connection is considered abandoned and eligible
-      for removal if it has been idle longer than the removeAbandonedTimeout.
+      for removal if it has not been used for longer than the removeAbandonedTimeout.<br/>
+      Creating a Statement, PreparedStatement or CallableStatement or using
+      one of these to execute a query (using one of the execute methods)
+      resets the lastUsed property of the parent connection.<br/>
       Setting this to true can recover db connections from poorly written
       applications which fail to close a connection.
    </td>
@@ -355,14 +358,17 @@ Be carefull and only use when you need direct access to driver specific extentio
 </table>
 <p>
 <img src="images/icon_info_sml.gif"/>
-If you have enabled "removeAbandoned" then it is possible that a connection is reclaimed by the pool because it is considered to be abandoned.
-This mechanism is triggered when (getNumIdle() &lt; 2) and (getNumActive() &gt; getMaxActive() - 3)
+If you have enabled "removeAbandoned" then it is possible that a connection is reclaimed by the pool because
+it is considered to be abandoned. This mechanism is triggered when (getNumIdle() &lt; 2) and
+(getNumActive() &gt; getMaxActive() - 3)
 </p>
 <p>
 <img src="images/icon_info_sml.gif"/>
-For example maxActive=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
+For example, maxActive=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
 But only the active connections that aren't used for more then "removeAbandonedTimeout" seconds are removed,
-default (300 sec). Traversing a resultset doesn't count as being used. 
+default (300 sec). Traversing a resultset doesn't count as being used. Creating a Statement, PreparedStatement
+or CallableStatement or using one of these to execute a query (using one of the execute methods) resets
+the lastUsed property of the parent connection.
 </p>
 
 </section>
