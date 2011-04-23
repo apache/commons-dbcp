@@ -39,6 +39,11 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-343" type="fix">
+        Modified execute methods of Statement objects to ensure that whenever
+        a statement is used, the lastUsed property of its parent connection is
+        updated.
+      </action>
       <action dev="psteitz" issue="DBCP-346" type="update" due-to="Ken Tatsushita">
         LIFO configuration option has been added to BasicDataSource.  When set
         to true (the default), the pool acts as a LIFO queue; setting to false

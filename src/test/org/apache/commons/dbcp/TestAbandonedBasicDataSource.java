@@ -19,7 +19,10 @@ package org.apache.commons.dbcp;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -159,5 +162,88 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         Thread.sleep(800);
         ds.getConnection(); // trigger abandoned cleanup again
         conn1.createStatement();         
+    }
+    
+    /**
+     * DBCP-343 - verify that using a DelegatingStatement updates
+     * the lastUsed on the parent connection
+     */
+    public void testLastUsedPreparedStatementUse() throws Exception {
+        ds.setRemoveAbandonedTimeout(1);
+        ds.setMaxActive(2);
+        Connection conn1 = ds.getConnection();
+        Statement st = conn1.createStatement(); 
+        String querySQL = "SELECT 1 FROM DUAL";
+        Thread.sleep(500);
+        st.executeQuery(querySQL); // Should reset lastUsed
+        Thread.sleep(800);
+        Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+        st.executeQuery(querySQL); // Should still be OK
+        conn2.close();
+        Thread.sleep(500);
+        st.executeUpdate(""); // Should also reset
+        Thread.sleep(800);
+        ds.getConnection(); // trigger abandoned cleanup again
+        conn1.createStatement();  // Connection should still be good  
+    }
+    
+    /**
+     * DBCP-343 - verify additional operations reset lastUsed on
+     * the parent connection
+     */
+    public void testLastUsedUpdate() throws Exception {
+        DelegatingConnection conn = (DelegatingConnection) ds.getConnection();
+        PreparedStatement ps = conn.prepareStatement("");
+        CallableStatement cs = conn.prepareCall("");
+        Statement st = conn.prepareStatement("");
+        checkLastUsedStatement(ps, conn);
+        checkLastUsedPreparedStatement(ps, conn);
+        checkLastUsedStatement(cs, conn);
+        checkLastUsedPreparedStatement(cs, conn);
+        checkLastUsedStatement(st, conn);    
+    }
+    
+    /**
+     * Verifies that Statement executeXxx methods update lastUsed on the parent connection
+     */
+    private void checkLastUsedStatement(Statement st, DelegatingConnection conn) throws Exception {
+        st.execute("");
+        assertAndReset(conn);
+        st.execute("", new int[] {});
+        assertAndReset(conn);
+        st.execute("", 0);
+        assertAndReset(conn);
+        st.executeBatch();
+        assertAndReset(conn);
+        st.executeQuery("");
+        assertAndReset(conn);
+        st.executeUpdate("");
+        assertAndReset(conn);
+        st.executeUpdate("", new int[] {});
+        assertAndReset(conn);
+        st.executeUpdate("", 0);
+        assertAndReset(conn);
+        st.executeUpdate("", new String[] {});
+        assertAndReset(conn);
+    }
+    
+    /**
+     * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
+     */
+    private void checkLastUsedPreparedStatement(PreparedStatement ps, DelegatingConnection conn) throws Exception {
+        ps.execute();
+        assertAndReset(conn);
+        ps.executeQuery();
+        assertAndReset(conn);
+        ps.executeUpdate();
+        assertAndReset(conn);
+    }
+      
+    /**
+     * Verifies that con.lastUsed has been updated and then resets it to 0
+     */
+    private void assertAndReset(DelegatingConnection con) {
+        assertTrue(con.getLastUsed() > 0);
+        con.setLastUsed(0); 
     }
 }

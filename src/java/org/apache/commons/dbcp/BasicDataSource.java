@@ -1180,20 +1180,22 @@ public class BasicDataSource implements DataSource {
     private AbandonedConfig abandonedConfig;
 
     /**                       
-     * Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimout.
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimout.</p>
      *
-     * Set to true or false, default false.
-     * If set to true a connection is considered abandoned and eligible
-     * for removal if it has been idle longer than the removeAbandonedTimeout.
-     * Setting this to true can recover db connections from poorly written    
-     * applications which fail to close a connection.
-     * <p>
-     * Abandonded connections are identified and removed when 
+     * <p>The default value is false.<p>
+     * 
+     * <p>If set to true a connection is considered abandoned and eligible
+     * for removal if it has not been used for more than
+     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
+     * 
+     * <p>Abandoned connections are identified and removed when 
      * {@link #getConnection()} is invoked and the following conditions hold
      * <ul><li>{@link #getRemoveAbandoned()} = true </li>
      *     <li>{@link #getNumActive()} > {@link #getMaxActive()} - 3 </li>
      *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
+     *
+     * @see #getRemoveAbandonedTimeout()
      */                                                                   
     public boolean getRemoveAbandoned() {   
         if (abandonedConfig != null) {
@@ -1203,7 +1205,18 @@ public class BasicDataSource implements DataSource {
     }                                    
                                  
     /**
-     * @param removeAbandoned new removeAbandoned property value
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimeout.</p>
+     *
+     * <p>If set to true a connection is considered abandoned and eligible   
+     * for removal if it has been idle longer than the
+     * {@link #getRemoveAbandoned() removeAbandonedTimeout}.</p>
+     * 
+     * <p>Setting this to true can recover db connections from poorly written
+     * applications which fail to close a connection.</p>
+     *
+     * @param removeAbandoned true means abandoned connections will be
+     *   removed
      * @see #getRemoveAbandoned()
      */
     public void setRemoveAbandoned(boolean removeAbandoned) {
@@ -1214,12 +1227,22 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }                                                        
                                                
-    /**
-     * Timeout in seconds before an abandoned connection can be removed.
-     *
-     * Defaults to 300 seconds. 
-     * @return abandoned connection timeout        
-     */                                                                 
+    /** 
+     * <p>Timeout in seconds before an abandoned connection can be removed.</p>
+     * 
+     * <p>Creating a Statement, PreparedStatement or CallableStatement or using
+     * one of these to execute a query (using one of the execute methods)
+     * resets the lastUsed property of the parent connection.</p>
+     * 
+     * <p>Abandoned connection cleanup happens when
+     * <code><ul>
+     * <li><code>{@link #getRemoveAbandoned() removeAbandoned} == true</li>
+     * <li>{@link #getNumIdle() numIdle &lt; 2</li>
+     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxActive() maxActive} - 3</li>
+     * </ul></code></p>
+     * 
+     * <p>The default value is 300 seconds.</p>
+     */                                                  
     public int getRemoveAbandonedTimeout() { 
         if (abandonedConfig != null) {
             return abandonedConfig.getRemoveAbandonedTimeout();
@@ -1228,7 +1251,15 @@ public class BasicDataSource implements DataSource {
     }                                        
 
     /**
-     * @param removeAbandonedTimeout new removeAbandonedTimeout value
+     * <p>Sets the timeout in seconds before an abandoned connection can be
+     * removed.</p>
+     * 
+     * <p>Setting this property has no effect if 
+     * {@link #getRemoveAbandoned() removeAbandoned} is false.</p>
+     *
+     * @param removeAbandonedTimeout new abandoned timeout in seconds
+     * @see #getRemoveAbandonedTimeout()
+     * @see #getRemoveAbandoned()
      */               
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
         if (abandonedConfig == null) {
