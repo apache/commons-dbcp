@@ -24,7 +24,7 @@ import java.sql.SQLException;
 
 //
 // Here's a simple example of how to use the PoolingDriver.
-// In this example, we'll construct the PoolingDriver implictly
+// In this example, we'll construct the PoolingDriver implicitly
 // using the JOCL configuration mechanism.
 //
 // Note that there is absolutely nothing DBCP specific about
@@ -34,12 +34,12 @@ import java.sql.SQLException;
 //
 
 //
-// To compile this example, you'll need nothing but the JDK (1.2+)
+// To compile this example, you'll need nothing but the JDK
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool-1.5.4.jar
-//  * commons-dbcp-1.2.2.jar
+//  * commons-pool-1.5.6.jar
+//  * commons-dbcp-1.3.jar (JDK 1.4-1.5) or commons-dbcp-1.4.jar (JDK 1.6+)
 //  * the classes for your (underlying) JDBC driver
 //  * sax2.jar (the SAX 2 API)
 //  * a SAX2 friendly XML parser (jaxp.jar and parser.jar,
@@ -73,7 +73,7 @@ import java.sql.SQLException;
 // For pooling:
 //
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver:org.apache.commons.dbcp.PoolingDriver \
-//       -classpath commons-pool-1.5.4.jar:commons-dbcp-1.2.2.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
+//       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
 //       JOCLPoolingDriverExample \
 //       "jdbc:apache:commons:dbcp:/poolingDriverExample" \
 //       "SELECT * FROM DUAL"
