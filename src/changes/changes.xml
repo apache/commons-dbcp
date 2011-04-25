@@ -52,6 +52,10 @@ The <action> type attribute can be add,update,fix,remove.
         a statement is used, the lastUsed property of its parent connection is
         updated.
       </action>
+      <action dev="markt" issue="DBCP-333" type="fix">
+        Correctly implemented the option to configure the class loader used to load
+        the JDBC driver.
+      </action>
       <action dev="psteitz" issue="DBCP-346" type="update" due-to="Ken Tatsushita">
         LIFO configuration option has been added to BasicDataSource.  When set
         to true (the default), the pool acts as a LIFO queue; setting to false
