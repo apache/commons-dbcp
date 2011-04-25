@@ -1237,7 +1237,7 @@ public class BasicDataSource implements DataSource {
      * <p>Abandoned connection cleanup happens when
      * <code><ul>
      * <li><code>{@link #getRemoveAbandoned() removeAbandoned} == true</li>
-     * <li>{@link #getNumIdle() numIdle &lt; 2</li>
+     * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
      * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxActive() maxActive} - 3</li>
      * </ul></code></p>
      * 
@@ -1605,7 +1605,7 @@ public class BasicDataSource implements DataSource {
      * This implementation configures all pool properties other than 
      * timeBetweenEvictionRunsMillis.  Setting that property is deferred to
      * {@link #startPoolMaintenance()}, since setting timeBetweenEvictionRunsMillis
-     * to a positive value causes {@link GenericObjectpool}'s eviction timer
+     * to a positive value causes {@link GenericObjectPool}'s eviction timer
      * to be started.
      */
     protected void createConnectionPool() {
