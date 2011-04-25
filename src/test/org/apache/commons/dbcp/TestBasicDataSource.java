@@ -62,6 +62,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
         ds.setConnectionInitSqls(Arrays.asList(new String[] { "SELECT 1", "SELECT 2"}));
+        ds.setDriverClassLoader(new TesterClassLoader());
     }
 
     protected BasicDataSource createDataSource() throws Exception {
@@ -499,5 +500,17 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
         // Allow one extra thread for JRockit compatibility
         assertTrue(Thread.activeCount() <= threadCount + 1);
+    }
+    
+    /**
+     * JIRA DBCP-333: Check that a custom class loader is used.
+     * @throws Exception 
+     */
+    public void testDriverClassLoader() throws Exception {
+        getConnection();
+        ClassLoader cl = ds.getDriverClassLoader();
+        assertNotNull(cl);
+        assertTrue(cl instanceof TesterClassLoader);
+        assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
     }
 }
