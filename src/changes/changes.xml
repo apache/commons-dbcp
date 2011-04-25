@@ -41,6 +41,14 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.0" date="TBD" description="TBD">
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-342" type="fix" due-to="Byungchol Kim">
+        Modified createDataSource method in BasicDataSource to ensure that GenericObjectPool
+        Evictor tasks are not started and orphaned when BasicDataSource encounters errors on
+        initialization.  Prior to this fix, when minIdle and timeBetweenEvictionRunsMillis
+        are both positive, Evictors orphaned by failed initialization can continue to
+        generate database connection requests.  This issue is duplicated by DBCP-339
+        and DBCP-93.
+      </action>
       <action dev="psteitz" issue="DBCP-330" type="fix">
         Changed DelegatingDatabaseMetaData to no longer add itself to the AbandonedTrace
         of its parent connection.  This was causing excessive memory consumption and was

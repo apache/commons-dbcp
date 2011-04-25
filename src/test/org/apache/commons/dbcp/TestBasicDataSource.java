@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -513,4 +516,77 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertTrue(cl instanceof TesterClassLoader);
         assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
     }
+    
+    /**
+     * JIRA: DBCP-342, DBCP-93
+     * Verify that when errors occur during BasicDataSource initialization, GenericObjectPool
+     * Evictors are cleaned up.
+     */
+    public void testCreateDataSourceCleanupEvictor() throws Exception {
+        ds.close();
+        ds = null;
+        ds = createDataSource();
+        ds.setDriverClassName("org.apache.commons.dbcp.TesterConnRequestCountDriver");
+        ds.setUrl("jdbc:apache:commons:testerConnRequestCountDriver");
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+        ds.setUsername("username");
+
+        // Make password incorrect, so createDataSource will throw
+        ds.setPassword("wrong");
+        // Set timeBetweenEvictionRuns > 0, so evictor will be created
+        ds.setTimeBetweenEvictionRunsMillis(100);
+        // Set min idle > 0, so evictor will try to make connection as many as idle count
+        ds.setMinIdle(2);
+
+        // Prevent concurrent execution of threads executing test subclasses 
+        synchronized (TesterConnRequestCountDriver.class) {
+    	    TesterConnRequestCountDriver.initConnRequestCount();
+
+    	    // user request 10 times
+    	    for (int i=0; i<10; i++) {
+    	        try {
+    	            @SuppressWarnings("unused")
+    	            DataSource ds2 = ds.createDataSource();
+    	        } catch (SQLException e) {
+    	            // Ignore
+    	        }
+    	    }
+ 
+    	    // sleep 1000ms. evictor will be invoked 10 times if running.
+    	    Thread.sleep(1000);
+
+    	    // Make sure there have been no Evictor-generated requests (count should be 10, from requests above)
+    	    assertEquals(10, TesterConnRequestCountDriver.getConnectionRequestCount());
+        }
+    	
+        // make sure cleanup is complete
+        assertNull(ds.connectionPool);
+    }
 }
+
+/**
+ * TesterDriver that keeps a static count of connection requests.
+ */
+class TesterConnRequestCountDriver extends TesterDriver {
+    protected static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
+    private static int connectionRequestCount = 0;
+
+	@Override
+    public Connection connect(String url, Properties info) throws SQLException {
+        connectionRequestCount++;
+        return super.connect(url, info);
+    }
+
+    @Override
+    public boolean acceptsURL(String url) throws SQLException {
+        return CONNECT_STRING.startsWith(url);
+    }
+
+	public static int getConnectionRequestCount() {
+	    return connectionRequestCount;
+	}
+
+    public static void initConnRequestCount() {
+	    connectionRequestCount = 0;
+    }
+};
