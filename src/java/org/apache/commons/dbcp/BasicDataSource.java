@@ -287,7 +287,7 @@ public class BasicDataSource implements DataSource {
      *  
      */    
     public synchronized void setLifo(boolean lifo) {
-        this.lifo = lifo;
+        this.lifo = lifo;   
         if (connectionPool != null) {
             connectionPool.setLifo(lifo);
         }
@@ -1458,18 +1458,52 @@ public class BasicDataSource implements DataSource {
         }
 
         // Set up the poolable connection factory
-        createPoolableConnectionFactory(driverConnectionFactory, statementPoolFactory, abandonedConfig);
-
-        // Create and return the pooling data source to manage the connections
-        createDataSourceInstance();
+        boolean success = false;
+        try {
+            createPoolableConnectionFactory(driverConnectionFactory,
+                    statementPoolFactory, abandonedConfig);
+            success = true;
+        } catch (SQLException se) {
+            throw se;
+        } catch (RuntimeException rte) {
+            throw rte; 
+        } catch (Exception ex) {
+            throw new SQLException("Error creating connection factory", ex);
+        } finally {
+            if (!success) {
+                closeConnectionPool();
+            }
+        }
         
+        // Create the pooling data source to manage connections
+        success = false;
+        try {
+            createDataSourceInstance();
+            success = true;
+        } catch (SQLException se) {
+            throw se;
+        } catch (RuntimeException rte) {
+            throw rte;
+        } catch (Exception ex) {
+            throw new SQLException("Error creating datasource", ex);
+        } finally {
+            if (!success) {
+                closeConnectionPool();
+            }  
+        }
+        
+        // If initialSize > 0, preload the pool
         try {
             for (int i = 0 ; i < initialSize ; i++) {
                 connectionPool.addObject();
             }
         } catch (Exception e) {
+            closeConnectionPool();
             throw new SQLNestedException("Error preloading the connection pool", e);
         }
+        
+        // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor task
+        startPoolMaintenance();
         
         return dataSource;
     }
@@ -1567,6 +1601,12 @@ public class BasicDataSource implements DataSource {
     /**
      * Creates a connection pool for this datasource.  This method only exists
      * so subclasses can replace the implementation class.
+     * 
+     * This implementation configures all pool properties other than 
+     * timeBetweenEvictionRunsMillis.  Setting that property is deferred to
+     * {@link #startPoolMaintenance()}, since setting timeBetweenEvictionRunsMillis
+     * to a positive value causes {@link GenericObjectpool}'s eviction timer
+     * to be started.
      */
     protected void createConnectionPool() {
         // Create an object pool to contain our active connections
@@ -1583,17 +1623,41 @@ public class BasicDataSource implements DataSource {
         gop.setMaxWait(maxWait);
         gop.setTestOnBorrow(testOnBorrow);
         gop.setTestOnReturn(testOnReturn);
-        gop.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
         connectionPool = gop;
     }
+    
+    /**
+     * Closes the connection pool, silently swallowing any exception that occurs.
+     */
+    private void closeConnectionPool() {
+        GenericObjectPool oldpool = connectionPool;
+        connectionPool = null;
+        try {
+            if (oldpool != null) {
+                oldpool.close();
+            }
+        } catch(Exception e) {
+            // Do not propagate
+        }
+    }
+    
+    /**
+     * Starts the connection pool maintenance task, if configured. 
+     */
+    protected void startPoolMaintenance() {
+        if (connectionPool != null && timeBetweenEvictionRunsMillis > 0) {
+            connectionPool.setTimeBetweenEvictionRunsMillis(
+                    timeBetweenEvictionRunsMillis);
+        }
+    }
 
     /**
      * Creates the actual data source instance.  This method only exists so
-     * subclasses can replace the implementation class.
+     * that subclasses can replace the implementation class.
      * 
      * @throws SQLException if unable to create a datasource instance
      */
