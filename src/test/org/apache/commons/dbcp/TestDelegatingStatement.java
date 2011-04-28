@@ -63,7 +63,9 @@ public class TestDelegatingStatement extends TestCase {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         DelegatingStatement stmt1 = new DelegatingStatement(conn,delegateStmt);
         DelegatingStatement stmt2 = new DelegatingStatement(conn,delegateStmt);
+        DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
         assertEquals(stmt1.hashCode(), stmt2.hashCode());
+        assertTrue(stmt1.hashCode() != stmt3.hashCode());
     }
     
     public void testEquals() {
@@ -71,10 +73,25 @@ public class TestDelegatingStatement extends TestCase {
         DelegatingStatement stmt1 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt2 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
+        DelegatingStatement stmt4 = new DelegatingStatement(conn, stmt1);
         
+        // not null
         assertTrue(!stmt1.equals(null));
+        
+        // same innermost delegate
         assertTrue(stmt1.equals(stmt2));
+        assertTrue(stmt1.equals(stmt4));
+        
+        // innermost delegate itself - bugged behavior?
+        assertTrue(stmt1.equals(delegateStmt));
+        
+        // not same delegate
         assertTrue(!stmt1.equals(stmt3));
+        
+        // reflexive
+        assertTrue(stmt1.equals(stmt1));
+        assertTrue(stmt2.equals(stmt2));
+        assertTrue(stmt3.equals(stmt3));
     }
     
     public void testCheckOpen() throws Exception {
