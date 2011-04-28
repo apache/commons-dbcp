@@ -71,6 +71,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     }
 
     public boolean equals(Object obj) {
+    	if (this == obj) return true;
         PreparedStatement delegate = (PreparedStatement) getInnermostDelegate();
         if (delegate == null) {
             return false;

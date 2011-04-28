@@ -105,7 +105,7 @@ public class TestDelegatingCallableStatement extends TestCase {
         // Check self-equals
         assertTrue(stmt1.equals(stmt1));
         assertTrue(stmt2.equals(stmt2));
-        assertFalse(stmt3.equals(stmt3)); // because underlying statement is null
+        assertTrue(stmt3.equals(stmt3)); 
         assertTrue(stmt4.equals(stmt4));
         
         DelegatingStatement dstmt1 = stmt1;
@@ -113,6 +113,9 @@ public class TestDelegatingCallableStatement extends TestCase {
         // 1 & 2 are equivalent
         assertTrue(dstmt1.equals(stmt2));
         assertTrue(stmt2.equals(dstmt1)); // reflexive
+        
+        // innermost delegate itself - bugged behavior?
+        assertTrue(stmt1.equals(delegateStmt));
 
     }
 

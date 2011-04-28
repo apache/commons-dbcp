@@ -118,6 +118,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     }
 
     public boolean equals(Object obj) {
+    	if (this == obj) return true;
         ResultSet delegate = getInnermostDelegate();
         if (delegate == null) {
             return false;
