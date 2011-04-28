@@ -78,6 +78,9 @@ public class TestDelegatingConnection extends TestCase {
         assertTrue(conn.equals(conn2));
         assertTrue(!conn.equals(conn3));
         assertTrue(conn.equals(conn));
+        assertTrue(conn3.equals(conn3));
+        assertTrue(conn.equals(conn));
+        assertTrue(conn2.equals(conn2));
     }
     
     public void testCheckOpen() throws Exception {
