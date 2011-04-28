@@ -56,6 +56,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
     }
 
     public boolean equals(Object obj) {
+    	if (this == obj) return true;
         DatabaseMetaData delegate = getInnermostDelegate();
         if (delegate == null) {
             return false;

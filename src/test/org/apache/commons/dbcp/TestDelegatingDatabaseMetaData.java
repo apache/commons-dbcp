@@ -83,6 +83,9 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         assertTrue(!meta1.equals(null));
         assertTrue(meta1.equals(meta2));
         assertTrue(!meta1.equals(meta3));
+        assertTrue(meta1.equals(meta1));
+        assertTrue(meta2.equals(meta2));
+        assertTrue(meta3.equals(meta3));
     }
     
     /* JDBC_4_ANT_KEY_BEGIN */
