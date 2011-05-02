@@ -61,6 +61,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_TIMEBETWEENEVICTIONRUNSMILLIS = "timeBetweenEvictionRunsMillis";
     private final static String PROP_NUMTESTSPEREVICTIONRUN = "numTestsPerEvictionRun";
     private final static String PROP_MINEVICTABLEIDLETIMEMILLIS = "minEvictableIdleTimeMillis";
+    private final static String PROP_SOFTMINEVICTABLEIDLETIMEMILLIS = "softMinEvictableIdleTimeMillis";
     private final static String PROP_TESTWHILEIDLE = "testWhileIdle";
     private final static String PROP_PASSWORD = "password";
     private final static String PROP_URL = "url";
@@ -98,6 +99,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_TIMEBETWEENEVICTIONRUNSMILLIS,
         PROP_NUMTESTSPEREVICTIONRUN,
         PROP_MINEVICTABLEIDLETIMEMILLIS,
+        PROP_SOFTMINEVICTABLEIDLETIMEMILLIS,
         PROP_TESTWHILEIDLE,
         PROP_PASSWORD,
         PROP_URL,
@@ -273,6 +275,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_MINEVICTABLEIDLETIMEMILLIS);
         if (value != null) {
             dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(value));
+        }
+        
+        value = properties.getProperty(PROP_SOFTMINEVICTABLEIDLETIMEMILLIS);
+        if (value != null) {
+            dataSource.setSoftMinEvictableIdleTimeMillis(Long.parseLong(value));
         }
 
         value = properties.getProperty(PROP_TESTWHILEIDLE);
