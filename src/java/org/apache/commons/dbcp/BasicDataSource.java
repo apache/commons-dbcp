@@ -618,7 +618,7 @@ public class BasicDataSource implements DataSource {
      * Returns the value of the {@link #timeBetweenEvictionRunsMillis}
      * property.
      * 
-     * @return the time (in miliseconds) between evictor runs
+     * @return the time (in milliseconds) between evictor runs
      * @see #timeBetweenEvictionRunsMillis
      */
     public synchronized long getTimeBetweenEvictionRunsMillis() {
@@ -699,6 +699,57 @@ public class BasicDataSource implements DataSource {
         if (connectionPool != null) {
             connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         }
+    }
+    
+    /**
+     * The minimum amount of time a connection may sit idle in the pool before
+     * it is eligible for eviction by the idle object evictor, with the extra
+     * condition that at least "minIdle" connections remain in the pool.
+     * Note that {@code minEvictableIdleTimeMillis} takes precedence over this
+     * parameter.  See {@link #getSoftMinEvictableIdleTimeMillis()}.
+     */
+    private long softMinEvictableIdleTimeMillis = GenericObjectPool.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+    
+    /**
+     * Sets the minimum amount of time a connection may sit idle in the pool
+     * before it is eligible for eviction by the idle object evictor, with the
+     * extra condition that at least "minIdle" connections remain in the pool.
+     *
+     * @param softMinEvictableIdleTimeMillis minimum amount of time a
+     * connection may sit idle in the pool before it is eligible for eviction,
+     * assuming there are minIdle idle connections in the pool.
+     * @since 1.4.1
+     * @see #getSoftMinEvictableIdleTimeMillis
+     */
+    public synchronized void setSoftMinEvictableIdleTimeMillis(long softMinEvictableIdleTimeMillis) {
+        this.softMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
+        if (connectionPool != null) {
+            connectionPool.setSoftMinEvictableIdleTimeMillis(softMinEvictableIdleTimeMillis);
+        }
+    }
+    
+    /**
+     * <p>Returns the minimum amount of time a connection may sit idle in the
+     * pool before it is eligible for eviction by the idle object evictor, with
+     * the extra condition that at least "minIdle" connections remain in the
+     * pool.</p>
+     * 
+     * <p>When {@link #getMinEvictableIdleTimeMillis() miniEvictableIdleTimeMillis} 
+     * is set to a positive value, miniEvictableIdleTimeMillis is examined
+     * first by the idle connection evictor - i.e. when idle connections are
+     * visited by the evictor, idle time is first compared against
+     * {@code minEvictableIdleTimeMillis} (without considering the number of idle
+     * connections in the pool) and then against 
+     * {@code softMinEvictableIdleTimeMillis}, including the {@code minIdle},
+     * constraint.</p>
+     *
+     * @return minimum amount of time a connection may sit idle in the pool before
+     * it is eligible for eviction, assuming there are minIdle idle connections
+     * in the pool
+     * @since 1.4.1
+     */
+    public synchronized long getSoftMinEvictableIdleTimeMillis() {
+        return softMinEvictableIdleTimeMillis;
     }
 
     /**

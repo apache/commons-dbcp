@@ -41,6 +41,10 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.0" date="TBD" description="TBD">
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
+        Exposed GenericObjectPool's softMinEvictableIdleTimeMillis property for
+        configuration and use by BasicDataSource.
+      </action>
       <action dev="psteitz" issue="DBCP-337" type="fix" due-to="Rob Gansevles">
         Made equals reflexive in DelegatingStatement (and subclasses), DelegatingMetaData,
         DelegatingResultSet and PoolingDriver#PoolGuardConnectionWrapper.
