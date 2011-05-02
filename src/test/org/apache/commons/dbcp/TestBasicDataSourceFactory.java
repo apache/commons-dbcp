@@ -71,6 +71,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("connectionInitSqls", "SELECT 1;SELECT 2");
         properties.setProperty("timeBetweenEvictionRunsMillis", "1000");
         properties.setProperty("minEvictableIdleTimeMillis", "2000");
+        properties.setProperty("softMinEvictableIdleTimeMillis", "3000");
         properties.setProperty("numTestsPerEvictionRun", "2");
         properties.setProperty("testWhileIdle", "true");
         properties.setProperty("accessToUnderlyingConnectionAllowed", "true");
@@ -106,6 +107,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals("SELECT 2", ds.connectionInitSqls.get(1));
         assertEquals(1000, ds.getTimeBetweenEvictionRunsMillis());
         assertEquals(2000, ds.getMinEvictableIdleTimeMillis());
+        assertEquals(3000, ds.getSoftMinEvictableIdleTimeMillis());
         assertEquals(2, ds.getNumTestsPerEvictionRun());
         assertEquals(true, ds.getTestWhileIdle());
         assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
