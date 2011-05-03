@@ -182,12 +182,10 @@ public class DelegatingConnection extends AbandonedTrace
             return true;
         }
         Connection delegate = getInnermostDelegateInternal();
-        if (delegate == null) {
-            return false;
-        }
         if (obj instanceof DelegatingConnection) {    
             DelegatingConnection c = (DelegatingConnection) obj;
-            return c.innermostDelegateEquals(delegate);
+            Connection cDelegate = c.getInnermostDelegateInternal();
+            return delegate == cDelegate || (delegate != null && delegate.equals(cDelegate));
         }
         else {
             return delegate.equals(obj);
