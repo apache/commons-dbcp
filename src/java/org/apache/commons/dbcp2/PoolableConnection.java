@@ -19,7 +19,7 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.ObjectPool;
 
 /**
  * A delegating connection that, rather than closing the underlying

@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
 
 /**
  * A {@link DelegatingPreparedStatement} that cooperates with

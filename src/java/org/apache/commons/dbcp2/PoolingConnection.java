@@ -24,8 +24,8 @@ import java.sql.SQLException;
 
 import java.util.NoSuchElementException;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.

@@ -34,8 +34,8 @@ import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import javax.naming.NamingException;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
  * <p>
@@ -183,7 +183,7 @@ public class DriverAdapterCPDS
             {
                 // since there is limit, create a prepared statement pool without an eviction thread
                 //  pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
-                // see org.apache.commons.pool.impl.GenericKeyedObjectPool.clearOldest method
+                // see org.apache.commons.pool2.impl.GenericKeyedObjectPool.clearOldest method
                 stmtPool = new GenericKeyedObjectPool(null,
                     getMaxActive(), GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW, 0,
                     getMaxIdle(), getMaxPreparedStatements(), false, false,

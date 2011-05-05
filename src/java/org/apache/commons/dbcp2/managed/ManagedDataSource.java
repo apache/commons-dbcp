@@ -17,7 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.dbcp2.PoolingDataSource;
 
 import java.sql.Connection;

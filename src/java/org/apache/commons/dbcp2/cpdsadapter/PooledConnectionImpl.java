@@ -33,8 +33,8 @@ import javax.sql.StatementEventListener;
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.commons.dbcp2.SQLNestedException;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 
 /**
  * Implementation of PooledConnection that is returned by

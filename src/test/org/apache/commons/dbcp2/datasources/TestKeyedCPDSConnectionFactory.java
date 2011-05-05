@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
  * @version $Revision$ $Date$

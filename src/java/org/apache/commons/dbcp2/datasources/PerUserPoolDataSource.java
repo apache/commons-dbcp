@@ -33,8 +33,8 @@ import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.dbcp2.SQLNestedException;
 
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within

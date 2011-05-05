@@ -36,7 +36,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.jocl2.JOCLContentHandler;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.ObjectPool;
 import org.xml.sax.SAXException;
 
 
