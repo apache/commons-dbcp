@@ -52,7 +52,7 @@ import java.sql.SQLException;
 //  * the connect string for the JDBC driver (see below)
 //  * the query you'd like to execute
 // You'll also want to ensure your both your underlying JDBC
-// driver and the org.apache.commons.dbcp.PoolingDriver
+// driver and the org.apache.commons.dbcp2.PoolingDriver
 // are registered.  You can use the "jdbc.drivers"
 // property to do this.  Note that jdbc.drivers is colon
 // seperated list, on all platforms.
@@ -72,7 +72,7 @@ import java.sql.SQLException;
 //
 // For pooling:
 //
-//  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver:org.apache.commons.dbcp.PoolingDriver \
+//  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver:org.apache.commons.dbcp2.PoolingDriver \
 //       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:oracle-jdbc.jar:jaxp.jar:parser.jar:sax2.jar:. \
 //       JOCLPoolingDriverExample \
 //       "jdbc:apache:commons:dbcp:/poolingDriverExample" \

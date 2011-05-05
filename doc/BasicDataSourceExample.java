@@ -27,7 +27,7 @@ import java.sql.SQLException;
 // method. In normal use, your classes interact
 // only with the standard JDBC API
 //
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 //
 // Here's a simple example of how to use the BasicDataSource.
