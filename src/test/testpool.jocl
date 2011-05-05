@@ -14,14 +14,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<object class="org.apache.commons.dbcp.PoolableConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl">
-   <object class="org.apache.commons.dbcp.DriverConnectionFactory">
-      <object class="org.apache.commons.dbcp.TesterDriver"/>
+<object class="org.apache.commons.dbcp2.PoolableConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl">
+   <object class="org.apache.commons.dbcp2.DriverConnectionFactory">
+      <object class="org.apache.commons.dbcp2.TesterDriver"/>
       <string value="jdbc:apache:commons:testdriver"/>
       <object class="java.util.Properties" null="true"/>
    </object>
-   <object class="org.apache.commons.pool.impl.GenericObjectPool">
-      <object class="org.apache.commons.pool.PoolableObjectFactory" null="true"/>
+   <object class="org.apache.commons.pool2.impl.GenericObjectPool">
+      <object class="org.apache.commons.pool2.PoolableObjectFactory" null="true"/>
       <int value="10"/>
       <byte value="1"/>
       <long value="2000"/>
@@ -33,8 +33,8 @@
       <long value="5000"/>
       <boolean value="true"/>
    </object>
-   <object class="org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory">
-      <object class="org.apache.commons.pool.KeyedPoolableObjectFactory" null="true"/>
+   <object class="org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory">
+      <object class="org.apache.commons.pool2.KeyedPoolableObjectFactory" null="true"/>
       <int value="5"/>
       <byte value="1"/>
       <long value="2000"/>
