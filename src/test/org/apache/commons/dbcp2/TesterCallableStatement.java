@@ -509,47 +509,61 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
         return null;
     }
 
+    @Override
     public Reader getCharacterStream(int parameterIndex) throws SQLException {
         return null;
     }
 
+    @Override
     public Reader getCharacterStream(String parameterName) throws SQLException {
         return null;
     }
 
+    @Override
     public void setBlob(String parameterName, Blob blob) throws SQLException {
     }
 
+    @Override
     public void setClob(String parameterName, Clob clob) throws SQLException {
     }
 
+    @Override
     public void setAsciiStream(String parameterName, InputStream inputStream, long length) throws SQLException {
     }
 
+    @Override
     public void setBinaryStream(String parameterName, InputStream inputStream, long length) throws SQLException {
     }
 
+    @Override
     public void setCharacterStream(String parameterName, Reader reader, long length) throws SQLException {
     }
 
+    @Override
     public void setAsciiStream(String parameterName, InputStream inputStream) throws SQLException {
     }
 
+    @Override
     public void setBinaryStream(String parameterName, InputStream inputStream) throws SQLException {
     }
 
+    @Override
     public void setCharacterStream(String parameterName, Reader reader) throws SQLException {
     }
 
+    @Override
     public void setNCharacterStream(String parameterName, Reader reader) throws SQLException {
     }
 
+    @Override
     public void setClob(String parameterName, Reader reader) throws SQLException {
     }
 
+    @Override
     public void setBlob(String parameterName, InputStream inputStream) throws SQLException {
     }
 
+    @Override
     public void setNClob(String parameterName, Reader reader) throws SQLException {
     }
 /* JDBC_4_ANT_KEY_END */

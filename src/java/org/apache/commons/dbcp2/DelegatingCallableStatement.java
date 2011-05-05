@@ -584,6 +584,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public String getNString(String parameterName) throws SQLException {
         checkOpen();
         try {
@@ -595,6 +596,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public Reader getNCharacterStream(int parameterIndex) throws SQLException {
         checkOpen();
         try {
@@ -606,6 +608,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public Reader getNCharacterStream(String parameterName) throws SQLException {
         checkOpen();
         try {
@@ -617,6 +620,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public Reader getCharacterStream(int parameterIndex) throws SQLException {
         checkOpen();
         try {
@@ -628,6 +632,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public Reader getCharacterStream(String parameterName) throws SQLException {
         checkOpen();
         try {
@@ -639,6 +644,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setBlob(String parameterName, Blob blob) throws SQLException {
         checkOpen();
         try {
@@ -649,6 +655,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setClob(String parameterName, Clob clob) throws SQLException {
         checkOpen();
         try {
@@ -659,6 +666,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setAsciiStream(String parameterName, InputStream inputStream, long length) throws SQLException {
         checkOpen();
         try {
@@ -669,6 +677,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setBinaryStream(String parameterName, InputStream inputStream, long length) throws SQLException {
         checkOpen();
         try {
@@ -679,6 +688,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setCharacterStream(String parameterName, Reader reader, long length) throws SQLException {
         checkOpen();
         try {
@@ -689,6 +699,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setAsciiStream(String parameterName, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
@@ -699,6 +710,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setBinaryStream(String parameterName, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
@@ -709,6 +721,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setCharacterStream(String parameterName, Reader reader) throws SQLException {
         checkOpen();
         try {
@@ -719,6 +732,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setNCharacterStream(String parameterName, Reader reader) throws SQLException {
         checkOpen();
         try {
@@ -729,6 +743,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 
+    @Override
     public void setClob(String parameterName, Reader reader) throws SQLException {
         checkOpen();
         try {
@@ -738,6 +753,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
             handleException(e);
         }    }
 
+    @Override
     public void setBlob(String parameterName, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
@@ -747,6 +763,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
             handleException(e);
         }    }
 
+    @Override
     public void setNClob(String parameterName, Reader reader) throws SQLException {
         checkOpen();
         try {
