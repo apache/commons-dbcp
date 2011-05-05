@@ -875,342 +875,409 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
         { try { return _meta.supportsANSI92IntermediateSQL(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
         { try { return _meta.supportsAlterTableWithAddColumn(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
         { try { return _meta.supportsAlterTableWithDropColumn(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsBatchUpdates() throws SQLException {
         { try { return _meta.supportsBatchUpdates(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
         { try { return _meta.supportsCatalogsInDataManipulation(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
         { try { return _meta.supportsCatalogsInIndexDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
         { try { return _meta.supportsCatalogsInPrivilegeDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
         { try { return _meta.supportsCatalogsInProcedureCalls(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
         { try { return _meta.supportsCatalogsInTableDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsColumnAliasing() throws SQLException {
         { try { return _meta.supportsColumnAliasing(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsConvert() throws SQLException {
         { try { return _meta.supportsConvert(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsConvert(int fromType, int toType)
             throws SQLException {
         { try { return _meta.supportsConvert(fromType, toType); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
         { try { return _meta.supportsCoreSQLGrammar(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
         { try { return _meta.supportsCorrelatedSubqueries(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions()
             throws SQLException {
         { try { return _meta.supportsDataDefinitionAndDataManipulationTransactions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsDataManipulationTransactionsOnly()
             throws SQLException {
         { try { return _meta.supportsDataManipulationTransactionsOnly(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
         { try { return _meta.supportsDifferentTableCorrelationNames(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
         { try { return _meta.supportsExpressionsInOrderBy(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
         { try { return _meta.supportsExtendedSQLGrammar(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsFullOuterJoins() throws SQLException {
         { try { return _meta.supportsFullOuterJoins(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
         { try { return _meta.supportsGetGeneratedKeys(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsGroupBy() throws SQLException {
         { try { return _meta.supportsGroupBy(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
         { try { return _meta.supportsGroupByBeyondSelect(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
         { try { return _meta.supportsGroupByUnrelated(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
         { try { return _meta.supportsIntegrityEnhancementFacility(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
         { try { return _meta.supportsLikeEscapeClause(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
         { try { return _meta.supportsLimitedOuterJoins(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
         { try { return _meta.supportsMinimumSQLGrammar(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
         { try { return _meta.supportsMixedCaseIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
         { try { return _meta.supportsMixedCaseQuotedIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
         { try { return _meta.supportsMultipleOpenResults(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMultipleResultSets() throws SQLException {
         { try { return _meta.supportsMultipleResultSets(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsMultipleTransactions() throws SQLException {
         { try { return _meta.supportsMultipleTransactions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsNamedParameters() throws SQLException {
         { try { return _meta.supportsNamedParameters(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsNonNullableColumns() throws SQLException {
         { try { return _meta.supportsNonNullableColumns(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
         { try { return _meta.supportsOpenCursorsAcrossCommit(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
         { try { return _meta.supportsOpenCursorsAcrossRollback(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
         { try { return _meta.supportsOpenStatementsAcrossCommit(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
         { try { return _meta.supportsOpenStatementsAcrossRollback(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
         { try { return _meta.supportsOrderByUnrelated(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsOuterJoins() throws SQLException {
         { try { return _meta.supportsOuterJoins(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsPositionedDelete() throws SQLException {
         { try { return _meta.supportsPositionedDelete(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsPositionedUpdate() throws SQLException {
         { try { return _meta.supportsPositionedUpdate(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency)
             throws SQLException {
         { try { return _meta.supportsResultSetConcurrency(type, concurrency); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsResultSetHoldability(int holdability)
             throws SQLException {
         { try { return _meta.supportsResultSetHoldability(holdability); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsResultSetType(int type) throws SQLException {
         { try { return _meta.supportsResultSetType(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSavepoints() throws SQLException {
         { try { return _meta.supportsSavepoints(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
         { try { return _meta.supportsSchemasInDataManipulation(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
         { try { return _meta.supportsSchemasInIndexDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
         { try { return _meta.supportsSchemasInPrivilegeDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
         { try { return _meta.supportsSchemasInProcedureCalls(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
         { try { return _meta.supportsSchemasInTableDefinitions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSelectForUpdate() throws SQLException {
         { try { return _meta.supportsSelectForUpdate(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsStatementPooling() throws SQLException {
         { try { return _meta.supportsStatementPooling(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsStoredProcedures() throws SQLException {
         { try { return _meta.supportsStoredProcedures(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
         { try { return _meta.supportsSubqueriesInComparisons(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
         { try { return _meta.supportsSubqueriesInExists(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
         { try { return _meta.supportsSubqueriesInIns(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
         { try { return _meta.supportsSubqueriesInQuantifieds(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
         { try { return _meta.supportsTableCorrelationNames(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsTransactionIsolationLevel(int level)
             throws SQLException {
         { try { return _meta.supportsTransactionIsolationLevel(level); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsTransactions() throws SQLException {
         { try { return _meta.supportsTransactions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsUnion() throws SQLException {
         { try { return _meta.supportsUnion(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsUnionAll() throws SQLException {
         { try { return _meta.supportsUnionAll(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean updatesAreDetected(int type) throws SQLException {
         { try { return _meta.updatesAreDetected(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean usesLocalFilePerTable() throws SQLException {
         { try { return _meta.usesLocalFilePerTable(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean usesLocalFiles() throws SQLException {
         { try { return _meta.usesLocalFiles(); }
         catch (SQLException e) { handleException(e); return false; } }
@@ -1218,10 +1285,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /* JDBC_4_ANT_KEY_BEGIN */
 
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _meta.isWrapperFor(iface);
     }
 
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
@@ -1232,11 +1301,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
     
+    @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         { try { return _meta.getRowIdLifetime(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getSchemas(String catalog, String schemaPattern)
     throws SQLException {
         _conn.checkOpen();
@@ -1250,16 +1321,19 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
         { try { return _meta.autoCommitFailureClosesAllResultSets(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
         { try { return _meta.supportsStoredFunctionsUsingCallSyntax(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public ResultSet getClientInfoProperties() throws SQLException {
         _conn.checkOpen();
         try {
@@ -1272,6 +1346,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getFunctions(String catalog, String schemaPattern,
             String functionNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -1286,6 +1361,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getFunctionColumns(String catalog, String schemaPattern,
             String functionNamePattern, String columnNamePattern)
             throws SQLException {

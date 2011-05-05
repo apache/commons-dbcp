@@ -580,148 +580,195 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public void updateFloat(String columnName, float x) throws SQLException
     { try { _res.updateFloat(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateDouble(String columnName, double x) throws SQLException
     { try { _res.updateDouble(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException
     { try { _res.updateBigDecimal(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateString(String columnName, String x) throws SQLException
     { try { _res.updateString(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateBytes(String columnName, byte[] x) throws SQLException
     { try { _res.updateBytes(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateDate(String columnName, Date x) throws SQLException
     { try { _res.updateDate(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateTime(String columnName, Time x) throws SQLException
     { try { _res.updateTime(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateTimestamp(String columnName, Timestamp x) throws SQLException
     { try { _res.updateTimestamp(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateAsciiStream(String columnName, InputStream x, int length) throws SQLException
     { try { _res.updateAsciiStream(columnName, x, length); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateBinaryStream(String columnName, InputStream x, int length) throws SQLException
     { try { _res.updateBinaryStream(columnName, x, length); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateCharacterStream(String columnName, Reader reader, int length) throws SQLException
     { try { _res.updateCharacterStream(columnName, reader, length); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateObject(String columnName, Object x, int scale) throws SQLException
     { try { _res.updateObject(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateObject(String columnName, Object x) throws SQLException
     { try { _res.updateObject(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void insertRow() throws SQLException
     { try { _res.insertRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateRow() throws SQLException
     { try { _res.updateRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void deleteRow() throws SQLException
     { try { _res.deleteRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void refreshRow() throws SQLException
     { try { _res.refreshRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void cancelRowUpdates() throws SQLException
     { try { _res.cancelRowUpdates(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void moveToInsertRow() throws SQLException
     { try { _res.moveToInsertRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void moveToCurrentRow() throws SQLException
     { try { _res.moveToCurrentRow(); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public Object getObject(int i, Map map) throws SQLException
     { try { return _res.getObject(i, map); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Ref getRef(int i) throws SQLException
     { try { return _res.getRef(i); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Blob getBlob(int i) throws SQLException
     { try { return _res.getBlob(i); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Clob getClob(int i) throws SQLException
     { try { return _res.getClob(i); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Array getArray(int i) throws SQLException
     { try { return _res.getArray(i); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Object getObject(String colName, Map map) throws SQLException
     { try { return _res.getObject(colName, map); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Ref getRef(String colName) throws SQLException
     { try { return _res.getRef(colName); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Blob getBlob(String colName) throws SQLException
     { try { return _res.getBlob(colName); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Clob getClob(String colName) throws SQLException
     { try { return _res.getClob(colName); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Array getArray(String colName) throws SQLException
     { try { return _res.getArray(colName); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Date getDate(int columnIndex, Calendar cal) throws SQLException
     { try { return _res.getDate(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Date getDate(String columnName, Calendar cal) throws SQLException
     { try { return _res.getDate(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Time getTime(int columnIndex, Calendar cal) throws SQLException
     { try { return _res.getTime(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Time getTime(String columnName, Calendar cal) throws SQLException
     { try { return _res.getTime(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException
     { try { return _res.getTimestamp(columnIndex, cal); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException
     { try { return _res.getTimestamp(columnName, cal); } catch (SQLException e) { handleException(e); return null; } }
 
 
+    @Override
     public java.net.URL getURL(int columnIndex) throws SQLException
     { try { return _res.getURL(columnIndex); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public java.net.URL getURL(String columnName) throws SQLException
     { try { return _res.getURL(columnName); } catch (SQLException e) { handleException(e); return null; } }
 
+    @Override
     public void updateRef(int columnIndex, java.sql.Ref x) throws SQLException
     { try { _res.updateRef(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateRef(String columnName, java.sql.Ref x) throws SQLException
     { try { _res.updateRef(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateBlob(int columnIndex, java.sql.Blob x) throws SQLException
     { try { _res.updateBlob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateBlob(String columnName, java.sql.Blob x) throws SQLException
     { try { _res.updateBlob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateClob(int columnIndex, java.sql.Clob x) throws SQLException
     { try { _res.updateClob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateClob(String columnName, java.sql.Clob x) throws SQLException
     { try { _res.updateClob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateArray(int columnIndex, java.sql.Array x) throws SQLException
     { try { _res.updateArray(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
+    @Override
     public void updateArray(String columnName, java.sql.Array x) throws SQLException
     { try { _res.updateArray(columnName, x); } catch (SQLException e) { handleException(e); } }
 
 /* JDBC_4_ANT_KEY_BEGIN */
 
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass()) || _res.isWrapperFor(iface);
     }
 
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
@@ -732,6 +779,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public RowId getRowId(int columnIndex) throws SQLException {
         try {
             return _res.getRowId(columnIndex);
@@ -742,6 +790,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public RowId getRowId(String columnLabel) throws SQLException {
         try {
             return _res.getRowId(columnLabel);
@@ -752,6 +801,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateRowId(int columnIndex, RowId value) throws SQLException {
         try {
             _res.updateRowId(columnIndex, value);
@@ -761,6 +811,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateRowId(String columnLabel, RowId value) throws SQLException {
         try {
             _res.updateRowId(columnLabel, value);
@@ -770,6 +821,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public int getHoldability() throws SQLException {
         try {
             return _res.getHoldability();
@@ -780,6 +832,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public boolean isClosed() throws SQLException {
         try {
             return _res.isClosed();
@@ -790,6 +843,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNString(int columnIndex, String value) throws SQLException {
         try {
             _res.updateNString(columnIndex, value);
@@ -799,6 +853,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNString(String columnLabel, String value) throws SQLException {
         try {
             _res.updateNString(columnLabel, value);
@@ -808,6 +863,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(int columnIndex, NClob value) throws SQLException {
         try {
             _res.updateNClob(columnIndex, value);
@@ -817,6 +873,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(String columnLabel, NClob value) throws SQLException {
         try {
             _res.updateNClob(columnLabel, value);
@@ -826,6 +883,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public NClob getNClob(int columnIndex) throws SQLException {
         try {
             return _res.getNClob(columnIndex);
@@ -836,6 +894,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public NClob getNClob(String columnLabel) throws SQLException {
         try {
             return _res.getNClob(columnLabel);
@@ -846,6 +905,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public SQLXML getSQLXML(int columnIndex) throws SQLException {
         try {
             return _res.getSQLXML(columnIndex);
@@ -856,6 +916,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public SQLXML getSQLXML(String columnLabel) throws SQLException {
         try {
             return _res.getSQLXML(columnLabel);
@@ -866,6 +927,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateSQLXML(int columnIndex, SQLXML value) throws SQLException {
         try {
             _res.updateSQLXML(columnIndex, value);
@@ -875,6 +937,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateSQLXML(String columnLabel, SQLXML value) throws SQLException {
         try {
             _res.updateSQLXML(columnLabel, value);
@@ -884,6 +947,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public String getNString(int columnIndex) throws SQLException {
         try {
             return _res.getNString(columnIndex);
@@ -894,6 +958,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public String getNString(String columnLabel) throws SQLException {
         try {
             return _res.getNString(columnLabel);
@@ -904,6 +969,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public Reader getNCharacterStream(int columnIndex) throws SQLException {
         try {
             return _res.getNCharacterStream(columnIndex);
@@ -914,6 +980,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public Reader getNCharacterStream(String columnLabel) throws SQLException {
         try {
             return _res.getNCharacterStream(columnLabel);
@@ -924,6 +991,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
         try {
             _res.updateNCharacterStream(columnIndex, reader, length);
@@ -933,6 +1001,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
         try {
             _res.updateNCharacterStream(columnLabel, reader, length);
@@ -942,6 +1011,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateAsciiStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateAsciiStream(columnIndex, inputStream, length);
@@ -951,6 +1021,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBinaryStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateBinaryStream(columnIndex, inputStream, length);
@@ -960,6 +1031,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
         try {
             _res.updateCharacterStream(columnIndex, reader, length);
@@ -969,6 +1041,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateAsciiStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateAsciiStream(columnLabel, inputStream, length);
@@ -978,6 +1051,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBinaryStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateBinaryStream(columnLabel, inputStream, length);
@@ -987,6 +1061,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
         try {
             _res.updateCharacterStream(columnLabel, reader, length);
@@ -996,6 +1071,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateBlob(columnIndex, inputStream, length);
@@ -1005,6 +1081,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
         try {
             _res.updateBlob(columnLabel, inputStream, length);
@@ -1014,6 +1091,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
         try {
             _res.updateClob(columnIndex, reader, length);
@@ -1023,6 +1101,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
         try {
             _res.updateClob(columnLabel, reader, length);
@@ -1032,6 +1111,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
         try {
             _res.updateNClob(columnIndex, reader, length);
@@ -1041,6 +1121,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
         try {
             _res.updateNClob(columnLabel, reader, length);
@@ -1050,6 +1131,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNCharacterStream(int columnIndex, Reader reader) throws SQLException {
         try {
             _res.updateNCharacterStream(columnIndex, reader);
@@ -1059,6 +1141,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
         try {
             _res.updateNCharacterStream(columnLabel, reader);
@@ -1068,6 +1151,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateAsciiStream(int columnIndex, InputStream inputStream) throws SQLException {
         try {
             _res.updateAsciiStream(columnIndex, inputStream);
@@ -1077,6 +1161,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBinaryStream(int columnIndex, InputStream inputStream) throws SQLException {
         try {
             _res.updateBinaryStream(columnIndex, inputStream);
@@ -1086,6 +1171,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateCharacterStream(int columnIndex, Reader reader) throws SQLException {
         try {
             _res.updateCharacterStream(columnIndex, reader);
@@ -1095,6 +1181,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateAsciiStream(String columnLabel, InputStream inputStream) throws SQLException {
         try {
             _res.updateAsciiStream(columnLabel, inputStream);
@@ -1104,6 +1191,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBinaryStream(String columnLabel, InputStream inputStream) throws SQLException {
         try {
             _res.updateBinaryStream(columnLabel, inputStream);
@@ -1113,6 +1201,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
         try {
             _res.updateCharacterStream(columnLabel, reader);
@@ -1122,6 +1211,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
         try {
             _res.updateBlob(columnIndex, inputStream);
@@ -1131,6 +1221,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
         try {
             _res.updateBlob(columnLabel, inputStream);
@@ -1140,6 +1231,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateClob(int columnIndex, Reader reader) throws SQLException {
         try {
             _res.updateClob(columnIndex, reader);

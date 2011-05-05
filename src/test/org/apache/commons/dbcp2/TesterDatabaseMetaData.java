@@ -552,309 +552,383 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
+    @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsBatchUpdates() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsColumnAliasing() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsConvert() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsConvert(int fromType, int toType)
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions()
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsDataManipulationTransactionsOnly()
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsFullOuterJoins() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsGroupBy() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMultipleResultSets() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsMultipleTransactions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsNamedParameters() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsNonNullableColumns() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsOuterJoins() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsPositionedDelete() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsPositionedUpdate() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency)
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsResultSetHoldability(int holdability)
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsResultSetType(int type) throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSavepoints() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSelectForUpdate() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsStatementPooling() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsStoredProcedures() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsTransactionIsolationLevel(int level)
             throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsTransactions() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsUnion() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsUnionAll() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean updatesAreDetected(int type) throws SQLException {
         return false;
     }
 
+    @Override
     public boolean usesLocalFilePerTable() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean usesLocalFiles() throws SQLException {
         return false;
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
 
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
 
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return null;
     }
 
+    @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         return null;
     }
 
+    @Override
     public ResultSet getSchemas(String catalog, String schemaPattern)
     throws SQLException {
         return null;
     }
 
+    @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
         return false;
     }
 
+    @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
         return false;
     }
 
+    @Override
     public ResultSet getClientInfoProperties() throws SQLException {
         return null;
     }
     
+    @Override
     public ResultSet getFunctionColumns(String catalog, String schemaPattern,
             String functionNamePattern, String columnNamePattern)
             throws SQLException {
         return null;
     }
 
+    @Override
     public ResultSet getFunctions(String catalog, String schemaPattern,
             String functionNamePattern) throws SQLException {
         return null;
