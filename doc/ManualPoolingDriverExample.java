@@ -29,10 +29,10 @@ import java.sql.SQLException;
 //
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.PoolingDriver;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDriver;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 
 //
 // Here's a simple example of how to use the PoolingDriver.
@@ -178,7 +178,7 @@ public class ManualPoolingDriverExample {
         //
         // Finally, we create the PoolingDriver itself...
         //
-        Class.forName("org.apache.commons.dbcp.PoolingDriver");
+        Class.forName("org.apache.commons.dbcp2.PoolingDriver");
         PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
 
         //
