@@ -42,6 +42,7 @@ public class TestPoolableConnection extends TestCase {
 
     private ObjectPool pool = null;
 
+    @Override
     public void setUp() throws Exception {
         pool = new GenericObjectPool();
         PoolableConnectionFactory factory = 

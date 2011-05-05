@@ -93,11 +93,13 @@ public class TestJndi extends TestCase {
         checkBind(dataSource);      
     }
     
+    @Override
     public void setUp() throws Exception {
         context = getInitialContext();
         context.createSubcontext(JNDI_SUBCONTEXT);  
     }
     
+    @Override
     public void tearDown() throws Exception {
         context.unbind(JNDI_PATH);
         context.destroySubcontext(JNDI_SUBCONTEXT);    

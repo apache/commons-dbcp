@@ -40,6 +40,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         return new TestSuite(TestPStmtPoolingBasicDataSource.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 
@@ -48,6 +49,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         ds.setMaxOpenPreparedStatements(2);
     }
 
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         // nothing to do here

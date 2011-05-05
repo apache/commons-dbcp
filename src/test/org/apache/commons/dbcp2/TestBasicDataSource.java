@@ -43,6 +43,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         return new TestSuite(TestBasicDataSource.class);
     }
 
+    @Override
     protected Connection getConnection() throws Exception {
         return ds.getConnection();
     }
@@ -50,6 +51,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     protected BasicDataSource ds = null;
     private static final String CATALOG = "test catalog";
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         ds = createDataSource();
@@ -72,6 +74,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         return new BasicDataSource();
     }
 
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         ds.close();
@@ -196,6 +199,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         conn3.close();
     }
 
+    @Override
     public void testPooling() throws Exception {
         // this also needs access to the underlying connection
         ds.setAccessToUnderlyingConnectionAllowed(true);

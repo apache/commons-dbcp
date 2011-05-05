@@ -105,9 +105,11 @@ public class TransactionContext {
     public void addTransactionContextListener(final TransactionContextListener listener) throws SQLException {
         try {
             getTransaction().registerSynchronization(new Synchronization() {
+                @Override
                 public void beforeCompletion() {
                 }
 
+                @Override
                 public void afterCompletion(int status) {
                     listener.afterCompletion(TransactionContext.this, status == Status.STATUS_COMMITTED);
                 }

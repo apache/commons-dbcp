@@ -43,6 +43,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
     private DelegatingDatabaseMetaData meta = null;
     private DatabaseMetaData delegateMeta = null;
 
+    @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateMeta = delegateConn.getMetaData();

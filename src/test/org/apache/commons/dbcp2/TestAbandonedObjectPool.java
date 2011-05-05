@@ -43,6 +43,7 @@ public class TestAbandonedObjectPool extends TestCase {
         return new TestSuite(TestAbandonedObjectPool.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         config = new AbandonedConfig();
@@ -55,6 +56,7 @@ public class TestAbandonedObjectPool extends TestCase {
         pool = new AbandonedObjectPool(new SimpleFactory(), config);
     }
 
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         pool.close();
@@ -114,6 +116,7 @@ public class TestAbandonedObjectPool extends TestCase {
             _borrowed = borrowed;
         }
         
+        @Override
         public void run() {
             try {
                 _borrowed.add(pool.borrowObject());
@@ -125,20 +128,25 @@ public class TestAbandonedObjectPool extends TestCase {
     
     class SimpleFactory implements PoolableObjectFactory {
 
+        @Override
         public Object makeObject() {
             return new PooledTestObject(config);
         }
         
+        @Override
         public boolean validateObject(Object obj) { return true; }
         
+        @Override
         public void activateObject(Object obj) {
             ((PooledTestObject)obj).setActive(true);
         }
         
+        @Override
         public void passivateObject(Object obj) {
             ((PooledTestObject)obj).setActive(false);
         }
 
+        @Override
         public void destroyObject(Object obj) {
             ((PooledTestObject)obj).setActive(false);
             // while destroying connections, yield control to other threads
@@ -168,6 +176,7 @@ class PooledTestObject extends AbandonedTrace {
         return active;
     }
     
+    @Override
     public int hashCode() {
         return _hash;
     }
@@ -176,6 +185,7 @@ class PooledTestObject extends AbandonedTrace {
         _abandoned = b;
     }
     
+    @Override
     protected long getLastUsed() {
         if (_abandoned) {
             // Abandoned object sweep will occur no matter what the value of removeAbandonedTimeout,
@@ -187,6 +197,7 @@ class PooledTestObject extends AbandonedTrace {
         }
     }
     
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof PooledTestObject)) return false;
         return obj.hashCode() == hashCode();

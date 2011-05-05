@@ -49,6 +49,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         return new TestSuite(TestManagedDataSource.class);
     }
 
+    @Override
     protected Connection getConnection() throws Exception {
         return ds.getConnection();
     }
@@ -57,6 +58,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     private GenericObjectPool pool = null;
     protected TransactionManager transactionManager;
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 
@@ -86,6 +88,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Override
     public void tearDown() throws Exception {
         pool.close();
         super.tearDown();
@@ -241,6 +244,7 @@ public class TestManagedDataSource extends TestConnectionPool {
             super(connFactory, pool, null, null, true, true);
         }
 
+        @Override
         synchronized public Object makeObject() throws Exception {
             return _connFactory.createConnection();
         }

@@ -36,12 +36,14 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         return new TestSuite(TestBasicManagedDataSource.class);
     }
 
+    @Override
     protected BasicDataSource createDataSource() throws Exception {
         BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
         return basicManagedDataSource;
     }
 
+    @Override
     public void testHashCode() throws Exception {
         // TODO reenable... hashcode doesn't work when accessToUnderlyingConnectionAllowed is false
     }

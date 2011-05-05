@@ -44,6 +44,7 @@ public class TestDelegatingStatement extends TestCase {
     private DelegatingStatement stmt = null;
     private Statement delegateStmt = null;
 
+    @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateStmt = new TesterStatement(delegateConn);

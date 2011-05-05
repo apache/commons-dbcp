@@ -39,6 +39,7 @@ public class TestInstanceKeyDataSource extends TestCase {
     }
 
 
+    @Override
     public void setUp() throws Exception {
     }
     
@@ -74,6 +75,7 @@ public class TestInstanceKeyDataSource extends TestCase {
         ThrowOnSetupDefaultsDataSource() {
             super();
         }
+        @Override
         protected void setupDefaults(Connection con, String username)
         throws  SQLException {
             throw new SQLException("bang!");

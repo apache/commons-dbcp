@@ -70,6 +70,7 @@ public class ManagedDataSource extends PoolingDataSource {
         this.transactionRegistry = transactionRegistry;
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         if (_pool == null) throw new IllegalStateException("Pool has not been set");
         if (transactionRegistry == null) throw new IllegalStateException("TransactionRegistry has not been set");

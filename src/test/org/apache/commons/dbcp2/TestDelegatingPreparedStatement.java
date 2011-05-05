@@ -43,6 +43,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
     private DelegatingPreparedStatement stmt = null;
     private PreparedStatement delegateStmt = null;
 
+    @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         conn = new DelegatingConnection(delegateConn);

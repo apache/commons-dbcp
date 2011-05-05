@@ -46,12 +46,14 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         return new TestSuite(TestManagedDataSourceInTx.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 
         transactionManager.begin();
     }
 
+    @Override
     public void tearDown() throws Exception {
         if (transactionManager.getTransaction() != null) {
             transactionManager.commit();
@@ -62,12 +64,14 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     /**
      * @see #testSharedConnection()
      */
+    @Override
     public void testManagedConnectionEqualsFail() throws Exception {
         // this test is invalid for managed conections since because
         // two connections to the same datasource are supposed to share
         // a single connection
     }
 
+    @Override
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxActive()];
         for(int i=0;i<conn.length;i++) {
@@ -84,6 +88,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
     }
 
+    @Override
     public void testHashCode() throws Exception {
         Connection conn1 = newConnection();
         assertNotNull(conn1);
@@ -94,6 +99,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertEquals(conn1.hashCode(), conn2.hashCode());
     }
 
+    @Override
     public void testMaxActive() throws Exception {
         Transaction[] transactions = new Transaction[getMaxActive()];
         Connection[] c = new Connection[getMaxActive()];
@@ -124,6 +130,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
     }
 
+    @Override
     public void testClearWarnings() throws Exception {
         // open a connection
         Connection connection = newConnection();
@@ -151,6 +158,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         sharedConnection.close();
     }
 
+    @Override
     public void testSharedConnection() throws Exception {
         DelegatingConnection connectionA = (DelegatingConnection) newConnection();
         DelegatingConnection connectionB = (DelegatingConnection) newConnection();
@@ -230,6 +238,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertTrue("Connection should be closed", connection.isClosed());
     }
 
+    @Override
     public void testAutoCommitBehavior() throws Exception {
         Connection connection = newConnection();
 
@@ -307,6 +316,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     // can't actually test close in a transaction
+    @Override
     protected void assertBackPointers(Connection conn, Statement statement) throws SQLException {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));

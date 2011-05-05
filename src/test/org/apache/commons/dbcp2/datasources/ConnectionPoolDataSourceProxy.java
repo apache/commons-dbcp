@@ -40,10 +40,12 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
         return delegate;
     }
     
+    @Override
     public int getLoginTimeout() throws SQLException {
         return delegate.getLoginTimeout();
     }
    
+    @Override
     public PrintWriter getLogWriter() throws SQLException {
         return delegate.getLogWriter();
     }
@@ -51,6 +53,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     /**
      * Return a TesterPooledConnection with notifyOnClose turned on
      */
+    @Override
     public PooledConnection getPooledConnection() throws SQLException {
         return wrapPooledConnection(delegate.getPooledConnection());
     }
@@ -58,15 +61,18 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     /**
      * Return a TesterPooledConnection with notifyOnClose turned on
      */
+    @Override
     public PooledConnection getPooledConnection(String user, String password)
             throws SQLException {
         return wrapPooledConnection(delegate.getPooledConnection(user, password));
     }
 
+    @Override
     public void setLoginTimeout(int seconds) throws SQLException {
         delegate.setLoginTimeout(seconds);     
     }
 
+    @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
         delegate.setLogWriter(out);     
     }
