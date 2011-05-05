@@ -45,6 +45,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         return new TestSuite(TestSharedPoolDataSource.class);
     }
 
+    @Override
     protected Connection getConnection() throws Exception {
         return ds.getConnection("foo","bar");
     }
@@ -52,6 +53,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private DriverAdapterCPDS pcds;
     private DataSource ds;
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         pcds = new DriverAdapterCPDS();
@@ -73,6 +75,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
 
+    @Override
     public void testBackPointers() throws Exception {
         // todo disabled until a wrapping issuen in SharedPoolDataSource are resolved
     }
@@ -132,6 +135,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
 
+    @Override
     public void testSimple() throws Exception 
     {
         Connection conn = ds.getConnection();
@@ -192,6 +196,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Override
     public void testSimple2() 
         throws Exception 
     {
@@ -249,6 +254,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn = null;
     }
 
+    @Override
     public void testOpening() 
         throws Exception 
     {
@@ -270,6 +276,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Override
     public void testClosing() 
         throws Exception 
     {
@@ -305,6 +312,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
       tds.close();
     }
 
+    @Override
     public void testMaxActive() 
         throws Exception 
     {
@@ -437,31 +445,37 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         abstract PreparedStatement getPreparedStatement() throws SQLException;
     }
     private static class PscbString extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual");
         }
     }
     private static class PscbStringIntInt extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0,0);
         }
     }
     private static class PscbStringInt extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0);
         }
     }
     private static class PscbStringIntArray extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", new int[0]);
         }
     }
     private static class PscbStringStringArray extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",new String[0]);
         }
     }
     private static class PscbStringIntIntInt extends PrepareStatementCallback {
+        @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0,0,0);
         }

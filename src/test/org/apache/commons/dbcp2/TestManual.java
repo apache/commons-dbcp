@@ -48,12 +48,14 @@ public class TestManual extends TestConnectionPool {
         return new TestSuite(TestManual.class);
     }
 
+    @Override
     protected Connection getConnection() throws Exception {
         return DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
     }
 
     private PoolingDriver driver = null;
     
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         GenericObjectPool pool = new GenericObjectPool(null, getMaxActive(), GenericObjectPool.WHEN_EXHAUSTED_BLOCK, getMaxWait(), 10, true, true, 10000L, 5, 5000L, true);
@@ -66,6 +68,7 @@ public class TestManual extends TestConnectionPool {
         PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Override
     public void tearDown() throws Exception {
         driver.closePool("test");
         super.tearDown();

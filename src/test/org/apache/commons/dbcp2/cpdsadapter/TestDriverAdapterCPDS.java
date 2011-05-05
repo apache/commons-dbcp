@@ -44,6 +44,7 @@ public class TestDriverAdapterCPDS extends TestCase {
 
     private DriverAdapterCPDS pcds;
 
+    @Override
     public void setUp() throws Exception {
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");

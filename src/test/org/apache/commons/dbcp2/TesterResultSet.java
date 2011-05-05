@@ -70,6 +70,7 @@ public class TesterResultSet implements ResultSet {
     protected int _rowsLeft = 2;
     protected boolean _open = true;
 
+    @Override
     public boolean next() throws SQLException {
         checkOpen();
         if (_data != null) {
@@ -85,6 +86,7 @@ public class TesterResultSet implements ResultSet {
         }
     }
 
+    @Override
     public void close() throws SQLException {
         if (!_open) {
             return;
@@ -98,11 +100,13 @@ public class TesterResultSet implements ResultSet {
         _open = false;
     }
 
+    @Override
     public boolean wasNull() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public String getString(int columnIndex) throws SQLException {
         checkOpen();
         if (columnIndex == -1) {
@@ -114,184 +118,220 @@ public class TesterResultSet implements ResultSet {
         return "String" + columnIndex;
     }
 
+    @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkOpen();
         return true;
     }
 
+    @Override
     public byte getByte(int columnIndex) throws SQLException {
         checkOpen();
         return (byte)columnIndex;
     }
 
+    @Override
     public short getShort(int columnIndex) throws SQLException {
         checkOpen();
         return (short)columnIndex;
     }
 
+    @Override
     public int getInt(int columnIndex) throws SQLException {
         checkOpen();
         return (short)columnIndex;
     }
 
+    @Override
     public long getLong(int columnIndex) throws SQLException {
         checkOpen();
         return columnIndex;
     }
 
+    @Override
     public float getFloat(int columnIndex) throws SQLException {
         checkOpen();
         return columnIndex;
     }
 
+    @Override
     public double getDouble(int columnIndex) throws SQLException {
         checkOpen();
         return columnIndex;
     }
 
     /** @deprecated */
+    @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkOpen();
         return new BigDecimal(columnIndex);
     }
 
+    @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
         checkOpen();
         return new byte[] { (byte)columnIndex };
     }
 
+    @Override
     public java.sql.Date getDate(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.sql.Time getTime(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.sql.Timestamp getTimestamp(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.io.InputStream getAsciiStream(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
     /** @deprecated */
+    @Override
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.io.InputStream getBinaryStream(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public String getString(String columnName) throws SQLException {
         checkOpen();
         return columnName;
     }
 
+    @Override
     public boolean getBoolean(String columnName) throws SQLException {
         checkOpen();
         return true;
     }
 
+    @Override
     public byte getByte(String columnName) throws SQLException {
         checkOpen();
         return (byte)(columnName.hashCode());
     }
 
+    @Override
     public short getShort(String columnName) throws SQLException {
         checkOpen();
         return (short)(columnName.hashCode());
     }
 
+    @Override
     public int getInt(String columnName) throws SQLException {
         checkOpen();
         return (columnName.hashCode());
     }
 
+    @Override
     public long getLong(String columnName) throws SQLException {
         checkOpen();
         return columnName.hashCode();
     }
 
+    @Override
     public float getFloat(String columnName) throws SQLException {
         checkOpen();
         return columnName.hashCode();
     }
 
+    @Override
     public double getDouble(String columnName) throws SQLException {
         checkOpen();
         return columnName.hashCode();
     }
 
     /** @deprecated */
+    @Override
     public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException {
         checkOpen();
         return new BigDecimal(columnName.hashCode());
     }
 
+    @Override
     public byte[] getBytes(String columnName) throws SQLException {
         checkOpen();
         return columnName.getBytes();
     }
 
+    @Override
     public java.sql.Date getDate(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.sql.Time getTime(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.sql.Timestamp getTimestamp(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.io.InputStream getAsciiStream(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
     /** @deprecated */
+    @Override
     public java.io.InputStream getUnicodeStream(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.io.InputStream getBinaryStream(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
-   public SQLWarning getWarnings() throws SQLException {
+   @Override
+public SQLWarning getWarnings() throws SQLException {
        checkOpen();
        return null;
    }
 
+    @Override
     public void clearWarnings() throws SQLException {
         checkOpen();
     }
 
+    @Override
     public String getCursorName() throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public Object getObject(int columnIndex) throws SQLException {
         checkOpen();
         if (_data != null) {
@@ -300,256 +340,312 @@ public class TesterResultSet implements ResultSet {
         return new Object();
     }
 
+    @Override
     public Object getObject(String columnName) throws SQLException {
         checkOpen();
         return columnName;
     }
 
+    @Override
     public int findColumn(String columnName) throws SQLException {
         checkOpen();
         return 1;
     }
 
 
+    @Override
     public java.io.Reader getCharacterStream(int columnIndex) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public java.io.Reader getCharacterStream(String columnName) throws SQLException {
         checkOpen();
         return null;
     }
 
+    @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkOpen();
         return new BigDecimal(columnIndex);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String columnName) throws SQLException {
         checkOpen();
         return new BigDecimal(columnName.hashCode());
     }
 
+    @Override
     public boolean isBeforeFirst() throws SQLException {
         checkOpen();
         return _rowsLeft == 2;
     }
 
+    @Override
     public boolean isAfterLast() throws SQLException {
         checkOpen();
         return _rowsLeft < 0;
     }
 
+    @Override
     public boolean isFirst() throws SQLException {
         checkOpen();
         return _rowsLeft == 1;
     }
 
+    @Override
     public boolean isLast() throws SQLException {
         checkOpen();
         return _rowsLeft == 0;
     }
 
+    @Override
     public void beforeFirst() throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void afterLast() throws SQLException {
         checkOpen();
     }
 
+    @Override
     public boolean first() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public boolean last() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public int getRow() throws SQLException {
         checkOpen();
         return 3 - _rowsLeft;
     }
 
+    @Override
     public boolean absolute( int row ) throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public boolean relative( int rows ) throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public boolean previous() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public void setFetchDirection(int direction) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public int getFetchDirection() throws SQLException {
         checkOpen();
         return 1;
     }
 
+    @Override
     public void setFetchSize(int rows) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public int getFetchSize() throws SQLException {
         checkOpen();
         return 2;
     }
 
+    @Override
     public int getType() throws SQLException {
         return this._type;
     }
 
+    @Override
     public int getConcurrency() throws SQLException {
         return this._concurrency;
     }
 
+    @Override
     public boolean rowUpdated() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public boolean rowInserted() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public boolean rowDeleted() throws SQLException {
         checkOpen();
         return false;
     }
 
+    @Override
     public void updateNull(int columnIndex) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBoolean(int columnIndex, boolean x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateByte(int columnIndex, byte x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateShort(int columnIndex, short x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateInt(int columnIndex, int x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateLong(int columnIndex, long x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateFloat(int columnIndex, float x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateDouble(int columnIndex, double x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateString(int columnIndex, String x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBytes(int columnIndex, byte x[]) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateDate(int columnIndex, java.sql.Date x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateTime(int columnIndex, java.sql.Time x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateTimestamp(int columnIndex, java.sql.Timestamp x) throws SQLException {
         checkOpen();
     }
 
 
+    @Override
     public void updateAsciiStream(int columnIndex,
                java.io.InputStream x,
                int length) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBinaryStream(int columnIndex,
                 java.io.InputStream x,
                 int length) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateCharacterStream(int columnIndex,
                  java.io.Reader x,
                  int length) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateObject(int columnIndex, Object x, int scale)
       throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateObject(int columnIndex, Object x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateNull(String columnName) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBoolean(String columnName, boolean x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateByte(String columnName, byte x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateShort(String columnName, short x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateInt(String columnName, int x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateLong(String columnName, long x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateFloat(String columnName, float x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateDouble(String columnName, double x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException {
         checkOpen();
     }
 
+    @Override
     public void updateString(String columnName, String x) throws SQLException {
         checkOpen();
     }

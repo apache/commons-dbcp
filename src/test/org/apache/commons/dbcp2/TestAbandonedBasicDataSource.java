@@ -42,6 +42,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         return new TestSuite(TestAbandonedBasicDataSource.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 
@@ -52,6 +53,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setRemoveAbandonedTimeout(10000);
     }
 
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         // nothing to do here

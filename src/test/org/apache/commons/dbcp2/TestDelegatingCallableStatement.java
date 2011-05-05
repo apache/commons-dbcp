@@ -41,6 +41,7 @@ public class TestDelegatingCallableStatement extends TestCase {
     private DelegatingCallableStatement stmt = null;
     private CallableStatement delegateStmt = null;
 
+    @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         conn = new DelegatingConnection(delegateConn);

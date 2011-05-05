@@ -45,6 +45,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
         return new TestSuite(TestKeyedCPDSConnectionFactory.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         cpds = new ConnectionPoolDataSourceProxy(new DriverAdapterCPDS());
         DriverAdapterCPDS delegate = (DriverAdapterCPDS) cpds.getDelegate();

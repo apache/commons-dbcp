@@ -55,6 +55,7 @@ public class TestJOCLContentHandler extends TestCase {
 
     private JOCLContentHandler jocl = null;
 
+    @Override
     public void setUp() {
         jocl = new JOCLContentHandler();
     }

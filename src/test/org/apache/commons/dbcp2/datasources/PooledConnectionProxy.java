@@ -62,6 +62,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /** 
      * If notifyOnClose is on, notify listeners
      */
+    @Override
     public void close() throws SQLException {
         delegate.close();
         if (isNotifyOnClose()) {
@@ -69,6 +70,7 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return delegate.getConnection();
     }
@@ -76,11 +78,13 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * Remove event listeners.
      */
+    @Override
     public void removeConnectionEventListener(ConnectionEventListener listener) {
         eventListeners.remove(listener);
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
+    @Override
     public void removeStatementEventListener(StatementEventListener listener) {
         eventListeners.remove(listener);
     }
@@ -108,6 +112,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * Add event listeners.
      */
+    @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
@@ -115,6 +120,7 @@ public class PooledConnectionProxy implements PooledConnection,
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
+    @Override
     public void addStatementEventListener(StatementEventListener listener) {
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
@@ -125,6 +131,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * Pass closed events on to listeners
      */
+    @Override
     public void connectionClosed(ConnectionEvent event) {
         notifyListeners();    
     }
@@ -132,6 +139,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * Pass error events on to listeners
      */ 
+    @Override
     public void connectionErrorOccurred(ConnectionEvent event) {
         Object[] listeners = eventListeners.toArray();
         for (int i = 0; i < listeners.length; i++) {

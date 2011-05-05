@@ -62,6 +62,7 @@ public class PoolableManagedConnection extends PoolableConnection {
     /**
      * Actually close the underlying connection.
      */
+    @Override
     public void reallyClose() throws SQLException {
         try {
             super.reallyClose();

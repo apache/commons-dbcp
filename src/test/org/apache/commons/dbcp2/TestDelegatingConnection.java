@@ -43,6 +43,7 @@ public class TestDelegatingConnection extends TestCase {
     private Connection delegateConn = null;
     private Connection delegateConn2 = null;
 
+    @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateConn2 = new TesterConnection("test", "test");
@@ -146,6 +147,7 @@ public class TestDelegatingConnection extends TestCase {
         public RTEGeneratingConnection() {
             super("","");
         }
+        @Override
         public String toString() {
             throw new RuntimeException("bang!");
         }

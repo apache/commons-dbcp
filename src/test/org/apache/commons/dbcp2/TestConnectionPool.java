@@ -47,6 +47,7 @@ public abstract class TestConnectionPool extends TestCase {
         super(testName);
     }
 
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         // Close any connections opened by the test
@@ -577,6 +578,7 @@ public abstract class TestConnectionPool extends TestCase {
             return _failed;
         }
 
+        @Override
         public void run() {
             for(int i=0;i<_iter;i++) {
                 try {
@@ -709,6 +711,7 @@ public abstract class TestConnectionPool extends TestCase {
                 final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
                 // Catch Exception so we can stop all threads if one fails
                 ThreadGroup threadGroup = new ThreadGroup("foo") {
+                    @Override
                     public void uncaughtException(Thread t, Throwable e) {
                         for (int i = 0; i < pts.length; i++) {
                             pts[i].stop();
@@ -856,6 +859,7 @@ public abstract class TestConnectionPool extends TestCase {
             thread.start();
         }
 
+        @Override
         public void run() {
             started = timeStamp();
             try {

@@ -99,6 +99,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * and sets up a prepared statement pool associated with the PoolableManagedConnection
      * if statement pooling is enabled.
      */
+    @Override
     synchronized public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {

@@ -49,12 +49,14 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         return new TestSuite(TestPerUserPoolDataSource.class);
     }
 
+    @Override
     protected Connection getConnection() throws SQLException {
         return ds.getConnection("foo","bar");
     }
 
     private DataSource ds;
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         DriverAdapterCPDS pcds = new DriverAdapterCPDS();
@@ -76,6 +78,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds = tds;
     }
 
+    @Override
     public void testBackPointers() throws Exception {
         // todo disabled until a wrapping issuen in PerUserPoolDataSource are resolved
     }
@@ -130,6 +133,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
 
+    @Override
     public void testSimple() throws Exception 
     {
         Connection conn = ds.getConnection();
@@ -190,6 +194,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Override
     public void testSimple2() 
         throws Exception 
     {
@@ -247,6 +252,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn = null;
     }
 
+    @Override
     public void testOpening() 
         throws Exception 
     {
@@ -268,6 +274,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Override
     public void testClosing() 
         throws Exception 
     {
@@ -291,6 +298,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Override
     public void testMaxActive() 
         throws Exception 
     {

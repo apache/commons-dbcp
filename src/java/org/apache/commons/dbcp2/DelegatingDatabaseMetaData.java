@@ -52,6 +52,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         return _meta;
     }
 
+    @Override
     public boolean equals(Object obj) {
     	if (this == obj) return true;
         DatabaseMetaData delegate = getInnermostDelegate();
@@ -67,6 +68,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public int hashCode() {
         Object obj = getInnermostDelegate();
         if (obj == null) {
@@ -110,36 +112,43 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public boolean allProceduresAreCallable() throws SQLException {
         { try { return _meta.allProceduresAreCallable(); }
           catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean allTablesAreSelectable() throws SQLException {
         { try { return _meta.allTablesAreSelectable(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
         { try { return _meta.dataDefinitionCausesTransactionCommit(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
         { try { return _meta.dataDefinitionIgnoredInTransactions(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean deletesAreDetected(int type) throws SQLException {
         { try { return _meta.deletesAreDetected(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
         { try { return _meta.doesMaxRowSizeIncludeBlobs(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public ResultSet getAttributes(String catalog, String schemaPattern,
             String typeNamePattern, String attributeNamePattern)
             throws SQLException {
@@ -155,6 +164,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getBestRowIdentifier(String catalog, String schema,
             String table, int scope, boolean nullable) throws SQLException {
         _conn.checkOpen();
@@ -169,16 +179,19 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getCatalogSeparator() throws SQLException {
         { try { return _meta.getCatalogSeparator(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getCatalogTerm() throws SQLException {
         { try { return _meta.getCatalogTerm(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getCatalogs() throws SQLException {
         _conn.checkOpen();
         try {
@@ -191,6 +204,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getColumnPrivileges(String catalog, String schema,
             String table, String columnNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -205,6 +219,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getColumns(String catalog, String schemaPattern,
             String tableNamePattern, String columnNamePattern)
             throws SQLException {
@@ -220,10 +235,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return _conn;
     }
 
+    @Override
     public ResultSet getCrossReference(String parentCatalog,
             String parentSchema, String parentTable, String foreignCatalog,
             String foreignSchema, String foreignTable) throws SQLException {
@@ -240,45 +257,55 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public int getDatabaseMajorVersion() throws SQLException {
         { try { return _meta.getDatabaseMajorVersion(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getDatabaseMinorVersion() throws SQLException {
         { try { return _meta.getDatabaseMinorVersion(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public String getDatabaseProductName() throws SQLException {
         { try { return _meta.getDatabaseProductName(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getDatabaseProductVersion() throws SQLException {
         { try { return _meta.getDatabaseProductVersion(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public int getDefaultTransactionIsolation() throws SQLException {
         { try { return _meta.getDefaultTransactionIsolation(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getDriverMajorVersion() {return _meta.getDriverMajorVersion();}
 
+    @Override
     public int getDriverMinorVersion() {return _meta.getDriverMinorVersion();}
 
+    @Override
     public String getDriverName() throws SQLException {
         { try { return _meta.getDriverName(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getDriverVersion() throws SQLException {
         { try { return _meta.getDriverVersion(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
         _conn.checkOpen();
@@ -292,16 +319,19 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getExtraNameCharacters() throws SQLException {
         { try { return _meta.getExtraNameCharacters(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getIdentifierQuoteString() throws SQLException {
         { try { return _meta.getIdentifierQuoteString(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
         _conn.checkOpen();
@@ -315,6 +345,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getIndexInfo(String catalog, String schema, String table,
             boolean unique, boolean approximate) throws SQLException {
         _conn.checkOpen();
@@ -329,121 +360,145 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public int getJDBCMajorVersion() throws SQLException {
         { try { return _meta.getJDBCMajorVersion(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getJDBCMinorVersion() throws SQLException {
         { try { return _meta.getJDBCMinorVersion(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxBinaryLiteralLength() throws SQLException {
         { try { return _meta.getMaxBinaryLiteralLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxCatalogNameLength() throws SQLException {
         { try { return _meta.getMaxCatalogNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxCharLiteralLength() throws SQLException {
         { try { return _meta.getMaxCharLiteralLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnNameLength() throws SQLException {
         { try { return _meta.getMaxColumnNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
         { try { return _meta.getMaxColumnsInGroupBy(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnsInIndex() throws SQLException {
         { try { return _meta.getMaxColumnsInIndex(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
         { try { return _meta.getMaxColumnsInOrderBy(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnsInSelect() throws SQLException {
         { try { return _meta.getMaxColumnsInSelect(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxColumnsInTable() throws SQLException {
         { try { return _meta.getMaxColumnsInTable(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxConnections() throws SQLException {
         { try { return _meta.getMaxConnections(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxCursorNameLength() throws SQLException {
         { try { return _meta.getMaxCursorNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxIndexLength() throws SQLException {
         { try { return _meta.getMaxIndexLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxProcedureNameLength() throws SQLException {
         { try { return _meta.getMaxProcedureNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxRowSize() throws SQLException {
         { try { return _meta.getMaxRowSize(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxSchemaNameLength() throws SQLException {
         { try { return _meta.getMaxSchemaNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxStatementLength() throws SQLException {
         { try { return _meta.getMaxStatementLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxStatements() throws SQLException {
         { try { return _meta.getMaxStatements(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxTableNameLength() throws SQLException {
         { try { return _meta.getMaxTableNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxTablesInSelect() throws SQLException {
         { try { return _meta.getMaxTablesInSelect(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public int getMaxUserNameLength() throws SQLException {
         { try { return _meta.getMaxUserNameLength(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public String getNumericFunctions() throws SQLException {
         { try { return _meta.getNumericFunctions(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
         _conn.checkOpen();
@@ -457,6 +512,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getProcedureColumns(String catalog, String schemaPattern,
             String procedureNamePattern, String columnNamePattern)
             throws SQLException {
@@ -472,11 +528,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getProcedureTerm() throws SQLException {
         { try { return _meta.getProcedureTerm(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getProcedures(String catalog, String schemaPattern,
             String procedureNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -491,26 +549,31 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public int getResultSetHoldability() throws SQLException {
         { try { return _meta.getResultSetHoldability(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public String getSQLKeywords() throws SQLException {
         { try { return _meta.getSQLKeywords(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public int getSQLStateType() throws SQLException {
         { try { return _meta.getSQLStateType(); }
         catch (SQLException e) { handleException(e); return 0; } }
     }
 
+    @Override
     public String getSchemaTerm() throws SQLException {
         { try { return _meta.getSchemaTerm(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getSchemas() throws SQLException {
         _conn.checkOpen();
         try {
@@ -523,16 +586,19 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getSearchStringEscape() throws SQLException {
         { try { return _meta.getSearchStringEscape(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getStringFunctions() throws SQLException {
         { try { return _meta.getStringFunctions(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern,
             String tableNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -547,6 +613,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern,
             String typeNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -561,11 +628,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getSystemFunctions() throws SQLException {
         { try { return _meta.getSystemFunctions(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getTablePrivileges(String catalog, String schemaPattern,
             String tableNamePattern) throws SQLException {
         _conn.checkOpen();
@@ -580,6 +649,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getTableTypes() throws SQLException {
         _conn.checkOpen();
         try {
@@ -592,6 +662,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getTables(String catalog, String schemaPattern,
             String tableNamePattern, String[] types) throws SQLException {
         _conn.checkOpen();
@@ -606,11 +677,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getTimeDateFunctions() throws SQLException {
         { try { return _meta.getTimeDateFunctions(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getTypeInfo() throws SQLException {
         _conn.checkOpen();
         try {
@@ -623,6 +696,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public ResultSet getUDTs(String catalog, String schemaPattern,
             String typeNamePattern, int[] types) throws SQLException {
         _conn.checkOpen();
@@ -637,16 +711,19 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public String getURL() throws SQLException {
         { try { return _meta.getURL(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public String getUserName() throws SQLException {
         { try { return _meta.getUserName(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
     }
 
+    @Override
     public ResultSet getVersionColumns(String catalog, String schema,
             String table) throws SQLException {
         _conn.checkOpen();
@@ -660,116 +737,139 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    @Override
     public boolean insertsAreDetected(int type) throws SQLException {
         { try { return _meta.insertsAreDetected(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean isCatalogAtStart() throws SQLException {
         { try { return _meta.isCatalogAtStart(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean isReadOnly() throws SQLException {
         { try { return _meta.isReadOnly(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean locatorsUpdateCopy() throws SQLException {
         { try { return _meta.locatorsUpdateCopy(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
         { try { return _meta.nullPlusNonNullIsNull(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
         { try { return _meta.nullsAreSortedAtEnd(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
         { try { return _meta.nullsAreSortedAtStart(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean nullsAreSortedHigh() throws SQLException {
         { try { return _meta.nullsAreSortedHigh(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean nullsAreSortedLow() throws SQLException {
         { try { return _meta.nullsAreSortedLow(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
         { try { return _meta.othersDeletesAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
         { try { return _meta.othersInsertsAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
         { try { return _meta.othersUpdatesAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
         { try { return _meta.ownDeletesAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
         { try { return _meta.ownInsertsAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
         { try { return _meta.ownUpdatesAreVisible(type); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
         { try { return _meta.storesLowerCaseIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
         { try { return _meta.storesLowerCaseQuotedIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
         { try { return _meta.storesMixedCaseIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
         { try { return _meta.storesMixedCaseQuotedIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
         { try { return _meta.storesUpperCaseIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
         { try { return _meta.storesUpperCaseQuotedIdentifiers(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
         { try { return _meta.supportsANSI92EntryLevelSQL(); }
         catch (SQLException e) { handleException(e); return false; } }
     }
 
+    @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
         { try { return _meta.supportsANSI92FullSQL(); }
         catch (SQLException e) { handleException(e); return false; } }

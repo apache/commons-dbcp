@@ -40,6 +40,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         return new TestSuite(TestPoolingDataSource.class);
     }
 
+    @Override
     protected Connection getConnection() throws Exception {
         return ds.getConnection();
     }
@@ -47,6 +48,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     protected PoolingDataSource ds = null;
     private GenericObjectPool pool = null;
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         pool = new GenericObjectPool();
@@ -65,6 +67,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Override
     public void tearDown() throws Exception {
         pool.close();
         super.tearDown();
@@ -163,6 +166,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
             super(connFactory, pool, null, null, true, true);
         }
     
+        @Override
         synchronized public Object makeObject() throws Exception {
             return _connFactory.createConnection();
         }

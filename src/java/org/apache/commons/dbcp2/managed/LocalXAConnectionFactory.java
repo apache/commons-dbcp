@@ -53,10 +53,12 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         this.connectionFactory = connectionFactory;
     }
 
+    @Override
     public TransactionRegistry getTransactionRegistry() {
         return transactionRegistry;
     }
 
+    @Override
     public Connection createConnection() throws SQLException {
         // create a new connection
         Connection connection = connectionFactory.createConnection();
@@ -110,6 +112,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @throws XAException if the connection is already enlisted in another transaction, or if auto-commit
          *                     could not be disabled
          */
+        @Override
         public synchronized void start(Xid xid, int flag) throws XAException {
             if (flag == XAResource.TMNOFLAGS) {
                 // first time in this transaction
@@ -151,6 +154,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param flag ignored
          * @throws XAException if the connection is already enlisted in another transaction
          */
+        @Override
         public synchronized void end(Xid xid, int flag) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.currentXid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
@@ -169,6 +173,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param xid the id of the transaction branch for this connection
          * @return XAResource.XA_RDONLY if the connection.isReadOnly(); XAResource.XA_OK otherwise
          */
+        @Override
         public synchronized int prepare(Xid xid) {
             // if the connection is read-only, then the resource is read-only
             // NOTE: this assumes that the outer proxy throws an exception when application code
@@ -196,6 +201,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param flag ignored
          * @throws XAException if connection.commit() throws a SQLException
          */
+        @Override
         public synchronized void commit(Xid xid, boolean flag) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.currentXid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
@@ -227,6 +233,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param xid the id of the transaction branch for this connection
          * @throws XAException if connection.rollback() throws a SQLException
          */
+        @Override
         public synchronized void rollback(Xid xid) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.currentXid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
@@ -250,6 +257,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param xaResource the XAResource to test
          * @return true if the specified XAResource == this XAResource; false otherwise
          */
+        @Override
         public boolean isSameRM(XAResource xaResource) {
             return this == xaResource;
         }
@@ -259,6 +267,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *
          * @param xid the id of the transaction to forget
          */
+        @Override
         public synchronized void forget(Xid xid) {
             if (xid != null && this.currentXid.equals(xid)) {
                 this.currentXid = null;
@@ -271,6 +280,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param flag ignored since recovery is not supported
          * @return always a zero length Xid array.
          */
+        @Override
         public Xid[] recover(int flag) {
             return new Xid[0];
         }
@@ -280,6 +290,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *
          * @return always 0
          */
+        @Override
         public int getTransactionTimeout() {
             return 0;
         }
@@ -290,6 +301,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @param transactionTimeout ignored since we have no way to set a transaction timeout on a JDBC connection
          * @return always false
          */
+        @Override
         public boolean setTransactionTimeout(int transactionTimeout) {
             return false;
         }

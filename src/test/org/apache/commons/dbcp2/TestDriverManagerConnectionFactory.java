@@ -88,6 +88,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
             this.ds = ds;
         }
 
+        @Override
         public void run() {
             Connection conn = null;
             try {

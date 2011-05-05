@@ -125,6 +125,7 @@ public class BasicManagedDataSource extends BasicDataSource {
         this.xaDataSource = xaDataSource;
     }
 
+    @Override
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         if (transactionManager == null) {
             throw new SQLException("Transaction manager must be set before a connection can be created");
@@ -162,6 +163,7 @@ public class BasicManagedDataSource extends BasicDataSource {
         return xaConnectionFactory;
     }
 
+    @Override
     protected void createDataSourceInstance() throws SQLException {
         PoolingDataSource pds = new ManagedDataSource(connectionPool, transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
@@ -177,6 +179,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
+    @Override
     protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
             KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig abandonedConfig) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;

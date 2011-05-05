@@ -42,18 +42,21 @@ public class TestJOCLed extends TestConnectionPool {
         return new TestSuite(TestJOCLed.class);
     }
     
+    @Override
     protected Connection getConnection() throws Exception {
         return DriverManager.getConnection("jdbc:apache:commons:dbcp:/testpool");
     }
 
     private PoolingDriver driver = null;
     
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         driver = new PoolingDriver();
         PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Override
     public void tearDown() throws Exception {
         driver.closePool("testpool");
         DriverManager.deregisterDriver(driver);

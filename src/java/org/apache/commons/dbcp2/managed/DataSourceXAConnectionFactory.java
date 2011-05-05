@@ -90,10 +90,12 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         this.password = password;
     }
 
+    @Override
     public TransactionRegistry getTransactionRegistry() {
         return transactionRegistry;
     }
 
+    @Override
     public Connection createConnection() throws SQLException {
         // create a new XAConection
         XAConnection xaConnection;
