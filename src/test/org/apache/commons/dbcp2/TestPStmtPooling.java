@@ -27,10 +27,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.pool.KeyedObjectPoolFactory;
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.KeyedObjectPoolFactory;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled

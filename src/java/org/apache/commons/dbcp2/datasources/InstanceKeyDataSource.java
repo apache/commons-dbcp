@@ -35,7 +35,7 @@ import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.SQLNestedException;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and 

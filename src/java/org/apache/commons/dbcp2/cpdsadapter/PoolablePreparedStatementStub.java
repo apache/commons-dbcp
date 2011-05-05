@@ -20,7 +20,7 @@ package org.apache.commons.dbcp2.cpdsadapter;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.apache.commons.pool.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
 
 /**

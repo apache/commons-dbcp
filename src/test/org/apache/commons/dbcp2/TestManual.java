@@ -27,10 +27,10 @@ import java.sql.SQLException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * Tests for a "manually configured", {@link GenericObjectPool}

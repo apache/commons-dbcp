@@ -22,9 +22,9 @@ import java.util.Collection;
 import org.apache.commons.dbcp2.AbandonedConfig;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.KeyedObjectPoolFactory;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPoolFactory;
+import org.apache.commons.pool2.ObjectPool;
 
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.

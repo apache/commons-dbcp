@@ -23,10 +23,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.KeyedObjectPoolFactory;
-import org.apache.commons.pool.PoolableObjectFactory;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPoolFactory;
+import org.apache.commons.pool2.PoolableObjectFactory;
+import org.apache.commons.pool2.ObjectPool;
 
 /**
  * A {@link PoolableObjectFactory} that creates

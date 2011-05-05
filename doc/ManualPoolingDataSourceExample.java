@@ -27,8 +27,8 @@ import java.sql.SQLException;
 // method. In normal use, your classes interact
 // only with the standard JDBC API
 //
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;

@@ -21,7 +21,7 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

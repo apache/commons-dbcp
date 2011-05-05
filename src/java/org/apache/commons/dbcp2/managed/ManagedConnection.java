@@ -18,7 +18,7 @@
 package org.apache.commons.dbcp2.managed;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.ObjectPool;
 
 import java.sql.Connection;
 import java.sql.SQLException;

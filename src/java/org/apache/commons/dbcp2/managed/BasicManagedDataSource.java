@@ -22,7 +22,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
-import org.apache.commons.pool.KeyedObjectPoolFactory;
+import org.apache.commons.pool2.KeyedObjectPoolFactory;
 
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;

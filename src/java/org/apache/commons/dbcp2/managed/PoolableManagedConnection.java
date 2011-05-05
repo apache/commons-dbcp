@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.dbcp2.AbandonedConfig;
 import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool2.ObjectPool;
 
 /**
  * PoolableConnection that unregisters from TransactionRegistry on Connection real destroy.
