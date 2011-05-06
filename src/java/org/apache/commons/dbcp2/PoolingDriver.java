@@ -35,7 +35,6 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.jocl2.JOCLContentHandler;
 import org.apache.commons.pool2.ObjectPool;
 import org.xml.sax.SAXException;
 
@@ -104,38 +103,8 @@ public class PoolingDriver implements Driver {
     
     public synchronized ObjectPool getConnectionPool(String name) throws SQLException {
         ObjectPool pool = (ObjectPool)(_pools.get(name));
-        if(null == pool) {
-            InputStream in = this.getClass().getResourceAsStream(String.valueOf(name) + ".jocl");
-            if (in == null) {
-                in = Thread.currentThread().getContextClassLoader(
-                        ).getResourceAsStream(String.valueOf(name) + ".jocl");
-            }
-            if(null != in) {
-                JOCLContentHandler jocl = null;
-                try {
-                    jocl = JOCLContentHandler.parse(in);
-                }
-                catch (SAXException e) {
-                    throw (SQLException) new SQLException("Could not parse configuration file").initCause(e);
-                }
-                catch (IOException e) {
-                    throw (SQLException) new SQLException("Could not load configuration file").initCause(e);
-                }
-                if(jocl.getType(0).equals(String.class)) {
-                    pool = getPool((String)(jocl.getValue(0)));
-                    if(null != pool) {
-                        registerPool(name,pool);
-                    }
-                } else {
-                    pool = ((PoolableConnectionFactory)(jocl.getValue(0))).getPool();
-                    if(null != pool) {
-                        registerPool(name,pool);
-                    }
-                }
-            }
-            else {
-                throw new SQLException("Configuration file not found");
-            }
+        if (null == pool) {
+            throw new SQLException("Pool not registered.");
         }
         return pool;
     }
