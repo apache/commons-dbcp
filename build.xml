@@ -20,7 +20,7 @@
  -->
 
 <!-- $Id$ -->
-<project name="commons-dbcp" default="test" basedir=".">
+<project name="commons-dbcp2" default="test" basedir=".">
 
    <target name="init">
       <tstamp/>
@@ -29,15 +29,9 @@
       <property name="component-propfile" value="${basedir}/build.properties"/>
       <property file="${component-propfile}"/>
 
-      <!-- read properties from the commons build.properties, if any -->
-      <property name="commons-propfile" value="${basedir}/../build.properties"/>
-      <property file="${commons-propfile}"/>
-
       <!-- read properties from the ${user.home}/propfile, if any -->
       <property name="user-propfile" value="${user.home}/build.properties"/>
       <property file="${user-propfile}"/>
-
-      <property name="commons-pool.jar" value="${basedir}/../pool/dist/commons-pool.jar"/>
 
       <!-- command line classpath, if any -->
       <property name="cp" value=""/>
@@ -46,33 +40,35 @@
       <property name="classpath" 
        value="${cp}:${commons-pool.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${xerces.jar}:${jta-spec.jar}:${jta-impl.jar}:
+      	${jta-spec.jar}:${jta-impl.jar}:
       	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
-      <property name="name" value="commons-dbcp"/>
+      <property name="name" value="commons-dbcp2"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
-      <property name="version" value="Nightly-${DSTAMP}${TSTAMP}"/>
-      <property name="package" value="org.apache.commons.dbcp.*"/>
+      <property name="version" value="2.0-SNAPSHOT"/>
+      <property name="package" value="org.apache.commons.dbcp2.*"/>
 
       <property name="build.dir" value="${basedir}/build"/>
       <property name="build.classes.dir" value="${build.dir}/classes"/>
       <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
       <property name="dist.dir" value="${basedir}/dist"/>
-      <property name="dist.jar" value="${dist.dir}/${name}.jar"/>
+   	  <property name="dist.jar" value="${dist.dir}/${name}-${version}.jar"/>
+   	
+   	  <property name="src.dir" value="${basedir}/src"/>
+   	  <property name="src.java.dir" value="${src.dir}/java"/>
+   	  <property name="src.test.dir" value="${src.dir}/test"/>
+   	  <property name="javac.source" value="1.5" />
 
       <property name="test.failonerror" value="true" /> 
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2004 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2011 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/java/org/apache/commons/dbcp/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
-
-      <available property="jndi.present" classname="javax.naming.Context"/>
-      <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
    <target name="check_jar">
@@ -104,9 +100,6 @@
            <param name="file" value="${commons-logging.jar}"/>
        </antcall>
        <antcall target="check_jar">
-           <param name="file" value="${xerces.jar}"/>
-       </antcall>
-       <antcall target="check_jar">
            <param name="file" value="${jta-spec.jar}"/>
        </antcall>
        <antcall target="check_jar">
@@ -125,38 +118,10 @@
    <target name="clean" depends="init" description="removes generated files">
       <delete dir="${build.dir}"/>
       <delete dir="${dist.dir}"/>
+   	  <echo>${classpath}</echo>
    </target>
 
-   <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
-      <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
-      <property name="src.dir" value="${build.dir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
-      <property name="javac.source" value="1.4" />
-
-      <mkdir dir="${src.dir}"/>
-      <copy todir="${src.dir}" filtering="yes">
-         <fileset dir="${basedir}/src" defaultexcludes="no">
-            <include name="**/*.java"/>
-            <include name="**/*.xml"/>
-            <include name="**/*.properties"/>
-            <include name="**/*.jocl"/>
-            <include name="**/package.html"/>
-         </fileset>
-      </copy>
-      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
-      <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
-   </target>
-
-   <target name="prepare-jdbc4" depends="init" if="jdbc4.present">
-      <echo message="JDBC 4 was detected."/>
-      <property name="src.dir" value="${basedir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
-      <property name="javac.source" value="1.5" />
-   </target>
-
-   <target name="prepare" depends="init,prepare-nojdbc4,prepare-jdbc4"/>
+   <target name="prepare" depends="init"/>
 
    <target name="javadoc" depends="prepare" description="generates javadocs">
       <mkdir dir="${javadoc.dir}"/>
@@ -195,12 +160,6 @@
              deprecation="${javac.deprecation}"
              optimize="${javac.optimize}"
              source="${javac.source}">
-         <exclude name="org/apache/commons/dbcp/BasicDataSourceFactory.java"
-             unless="jndi.present"/>
-         <exclude name="org/apache/commons/dbcp/datasources/**"
-             unless="jndi.present"/>
-         <exclude name="org/apache/commons/dbcp/cpdsadapter/**"
-             unless="jndi.present"/>
       </javac>
    </target>
    
@@ -218,7 +177,6 @@
           <pathelement path="${classpath}" /> 
         </classpath>
       </javac>
-      <copy todir="${build.test-classes.dir}" file="${src.test.dir}/testpool.jocl"/>
    </target>
 
    <target name="test" depends="compile-test" description="runs (junit) unit tests">
