@@ -132,69 +132,6 @@ driver.registerPool("example",connectionPool);</pre>
          like you normally would:
 <pre>Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:example");</pre>
       </p>
-      <p>
-         Q: Sounds complicated, is there an easier way?
-      </p><p>
-         A: If you're using the {@link org.apache.commons.dbcp.PoolingDriver}, you
-         don't need to do this configuration in code.  Instead, you can provide
-         a JOCL document that describes the connection pool,
-         and let the {@link org.apache.commons.dbcp.PoolingDriver} discover it at
-         runtime.
-      </p><p>
-         Specifically, if the {@link org.apache.commons.dbcp.PoolingDriver} is asked for
-         a {@link java.sql.Connection} from a pool that has not yet been registered,
-         it will look for a named resource from which to read the pool's configuration,
-         and create that pool.
-      </p><p>
-         For example, suppose you create a pool named "<tt>/eg</tt>" from a JOCL
-         document.  The "connect string" for this pool will be
-         "<tt>jdbc:apache:commons:dbcp:/eg</tt>".  To do this, you'll need a create
-         a <i>resource</i> (just a file in your classpath) containing a JOCL description
-         of the pool.  Specifically, this JOCL document should define a
-         {@link org.apache.commons.dbcp.PoolableConnectionFactory} from which the
-         pool will be obtained.  For example:
-<pre>&lt;object class="org.apache.commons.dbcp.PoolableConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl"&gt;
-   &lt;!-- the first argument is the ConnectionFactory --&gt;
-   &lt;object class="org.apache.commons.dbcp.DriverManagerConnectionFactory"&gt;
-      &lt;string value="jdbc:some:connect:string"/&gt;
-      &lt;object class="java.util.Properties" null="true"/&gt;
-   &lt;/object&gt;
-   &lt;!-- the next argument is the ObjectPool --&gt;
-   &lt;object class="org.apache.commons.pool.impl.GenericObjectPool"&gt;
-      &lt;object class="org.apache.commons.pool.PoolableObjectFactory" null="true"/&gt;
-      &lt;int value="10"/&gt; &lt;!-- max active --&gt;
-      &lt;byte value="1"/&gt; &lt;!-- when exhausted action, 0 = fail, 1 = block, 2 = grow --&gt;
-      &lt;long value="2000"/&gt; &lt;!-- max wait --&gt;
-      &lt;int value="10"/&gt; &lt;!-- max idle --&gt;
-      &lt;boolean value="false"/&gt; &lt;!-- test on borrow --&gt;
-      &lt;boolean value="false"/&gt; &lt;!-- test on return --&gt;
-      &lt;long value="10000"/&gt; &lt;!-- time between eviction runs --&gt;
-      &lt;int value="5"/&gt; &lt;!-- number of connections to test per eviction run --&gt;
-      &lt;long value="5000"/&gt; &lt;!-- min evictable idle time --&gt;
-      &lt;boolean value="true"/&gt; &lt;!-- test while idle --&gt;
-   &lt;/object&gt;
-   &lt;!-- the next argument is the KeyedObjectPoolFactory --&gt;
-   &lt;object class="org.apache.commons.pool.impl.StackKeyedObjectPoolFactory"&gt;
-      &lt;int value="5"/&gt; &lt;!-- max idle --&gt;
-   &lt;/object&gt;
-   &lt;string value="SELECT COUNT(*) FROM DUAL"/&gt; &lt;!-- validation query --&gt;
-   &lt;boolean value="false"/&gt; &lt;!-- default read only --&gt;
-   &lt;boolean value="true"/&gt; &lt;!-- default auto commit --&gt;
-&lt;/object&gt;</pre>
-      </p><p>
-         Simply save that file somewhere in your classpath as <tt>eg.jocl</tt>,
-         and the {@link org.apache.commons.dbcp.PoolingDriver} will find it
-         automatically.  You need only register the {@link org.apache.commons.dbcp.PoolingDriver}
-         (for example, using the <tt>jdbc.drivers</tt> property), and use the
-         the {@link java.sql.DriverManager} to create your {@link java.sql.Connection}s,
-         like you normally would:
-<pre>Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/eg");</pre>
-      </p><p>
-         (Note that without the leading slash, the pool must be located at
-         <tt>org/apache/commons/dbcp/PoolingDriver/eg.jocl</tt> within your classpath.
-         See {@link java.lang.Class#getResource} for details.)
-      </p>
-
    </body>
 </html>
 

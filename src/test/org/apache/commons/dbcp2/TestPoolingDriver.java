@@ -33,19 +33,18 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
- * Tests for a "manually configured", {@link GenericObjectPool}
- * based {@link PoolingDriver}.
+ * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * @version $Revision$ $Date$
  */
-public class TestManual extends TestConnectionPool {
-    public TestManual(String testName) {
+public class TestPoolingDriver extends TestConnectionPool {
+    public TestPoolingDriver(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestManual.class);
+        return new TestSuite(TestPoolingDriver.class);
     }
 
     @Override

@@ -18,31 +18,20 @@ example, the my.sql.Driver is loaded with the following statement:
 
 ===================================================================================
 
-ManualPoolingDriverExample.java
+PoolingDriverExample.java
 
  Provides a simple example of how to use the DBCP package with a
- manually configured PoolingDriver.
+ PoolingDriver.
 
  Look at the comments with that file for instructions on how to
  build and run it.
 
-ManualPoolingDataSource.java
+PoolingDataSource.java
 
  Provides a simple example of how to use the DBCP package with a
- manually configured PoolingDataSource.
+ PoolingDataSource.
 
  Look at the comments with that file for instructions on how to
- build and run it.
-
-JOCLPoolingDriverExample.java
-poolingDriverExample.jocl.sample
-
- Provides an example JOCL configuration and JDBC client that
- shows how to use the DBCP PoolingDriver with an external
- configuration. (JOCL will be replaced by Digester when it
- is available in jakarta-commons.)
-
- Look at the comments with those files for instructions on how to
  build and run it.
 
 See also the JavaDoc documentation (use "ant doc" to generate it),

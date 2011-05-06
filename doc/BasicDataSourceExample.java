@@ -31,8 +31,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 //
 // Here's a simple example of how to use the BasicDataSource.
-// In this example, we'll construct the BasicDataSource manually,
-// but you could also configure it using an external conifguration file.
 //
 
 //
@@ -63,7 +61,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 // For example:
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
 //       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:j2ee.jar:oracle-jdbc.jar:. \
-//       ManualPoolingDataSourceExample
+//       PoolingDataSourceExample
 //       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid"
 //       "SELECT * FROM DUAL"
 //
