@@ -75,6 +75,10 @@ public class DelegatingConnection extends AbandonedTrace
 
     protected boolean _closed = false;
     
+    
+    private Boolean _autoCommitCached = null;
+    private Boolean _readOnlyCached = null;
+
     /**
      * Create a wrapper for the Connection which traces this
      * Connection in the AbandonedObjectPool.
@@ -344,9 +348,20 @@ public class DelegatingConnection extends AbandonedTrace
     { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
     
     @Override
-    public boolean getAutoCommit() throws SQLException
-    { checkOpen(); try { return _conn.getAutoCommit(); } catch (SQLException e) { handleException(e); return false; } 
+    public boolean getAutoCommit() throws SQLException {
+        checkOpen();
+        if (_autoCommitCached != null) {
+            return _autoCommitCached.booleanValue();
+        }
+        try {
+            _autoCommitCached = Boolean.valueOf(_conn.getAutoCommit());
+            return _autoCommitCached.booleanValue();
+        } catch (SQLException e) {
+            handleException(e);
+            return false;
+        } 
     }
+
     @Override
     public String getCatalog() throws SQLException
     { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
@@ -375,9 +390,20 @@ public class DelegatingConnection extends AbandonedTrace
     { checkOpen(); try { return _conn.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
     
     @Override
-    public boolean isReadOnly() throws SQLException
-    { checkOpen(); try { return _conn.isReadOnly(); } catch (SQLException e) { handleException(e); return false; } }
-    
+    public boolean isReadOnly() throws SQLException {
+        checkOpen();
+        if (_readOnlyCached != null) {
+            return _readOnlyCached.booleanValue();
+        }
+        try {
+            _readOnlyCached = Boolean.valueOf(_conn.isReadOnly());
+            return _readOnlyCached.booleanValue();
+        } catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
     @Override
     public String nativeSQL(String sql) throws SQLException
     { checkOpen(); try { return _conn.nativeSQL(sql); } catch (SQLException e) { handleException(e); return null; } }
@@ -387,16 +413,32 @@ public class DelegatingConnection extends AbandonedTrace
     { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
     
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException
-    { checkOpen(); try { _conn.setAutoCommit(autoCommit); } catch (SQLException e) { handleException(e); } }
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setAutoCommit(autoCommit);
+            _autoCommitCached = Boolean.valueOf(autoCommit);
+        } catch (SQLException e) {
+            _autoCommitCached = null;
+            handleException(e);
+        }
+    }
 
     @Override
     public void setCatalog(String catalog) throws SQLException
     { checkOpen(); try { _conn.setCatalog(catalog); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException
-    { checkOpen(); try { _conn.setReadOnly(readOnly); } catch (SQLException e) { handleException(e); } }
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setReadOnly(readOnly);
+            _readOnlyCached = Boolean.valueOf(readOnly);
+        } catch (SQLException e) {
+            _readOnlyCached = null;
+            handleException(e);
+        }
+    }
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException
