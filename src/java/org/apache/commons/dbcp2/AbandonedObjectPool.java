@@ -97,7 +97,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * to the pool
      */
     @Override
-    public void returnObject(Object obj) throws Exception {
+    public void returnObject(Object obj) {
         if (config != null && config.getRemoveAbandoned()) {
             synchronized (trace) {
                 boolean foundObject = trace.remove(obj);
