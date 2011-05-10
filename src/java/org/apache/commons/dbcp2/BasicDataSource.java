@@ -1480,91 +1480,92 @@ public class BasicDataSource implements DataSource {
      * <p>Create (if necessary) and return the internal data source we are
      * using to manage our connections.</p>
      *
-     * <p><strong>IMPLEMENTATION NOTE</strong> - It is tempting to use the
-     * "double checked locking" idiom in an attempt to avoid synchronizing
-     * on every single call to this method.  However, this idiom fails to
-     * work correctly in the face of some optimizations that are legal for
-     * a JVM to perform.</p>
-     *
      * @throws SQLException if the object pool cannot be created.
      */
-    protected synchronized DataSource createDataSource()
+    protected DataSource createDataSource()
         throws SQLException {
         if (closed) {
             throw new SQLException("Data source is closed");
         }
 
         // Return the pool if we have already created it
+        // This is double-checked locking. This is safe since dataSource is
+        // volatile and the code is targeted at Java 5 onwards.
         if (dataSource != null) {
             return (dataSource);
         }
-
-        // create factory which returns raw physical connections
-        ConnectionFactory driverConnectionFactory = createConnectionFactory();
-
-        // create a pool for our connections
-        createConnectionPool();
-
-        // Set up statement pool, if desired
-        GenericKeyedObjectPoolFactory statementPoolFactory = null;
-        if (isPoolPreparedStatements()) {
-            statementPoolFactory = new GenericKeyedObjectPoolFactory(null,
-                        -1, // unlimited maxActive (per key)
-                        GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL,
-                        0, // maxWait
-                        1, // maxIdle (per key)
-                        maxOpenPreparedStatements);
-        }
-
-        // Set up the poolable connection factory
-        boolean success = false;
-        try {
-            createPoolableConnectionFactory(driverConnectionFactory,
-                    statementPoolFactory, abandonedConfig);
-            success = true;
-        } catch (SQLException se) {
-            throw se;
-        } catch (RuntimeException rte) {
-            throw rte; 
-        } catch (Exception ex) {
-            throw new SQLException("Error creating connection factory", ex);
-        } finally {
-            if (!success) {
-                closeConnectionPool();
+        synchronized (this) {
+            if (dataSource != null) {
+                return (dataSource);
             }
-        }
-        
-        // Create the pooling data source to manage connections
-        success = false;
-        try {
-            createDataSourceInstance();
-            success = true;
-        } catch (SQLException se) {
-            throw se;
-        } catch (RuntimeException rte) {
-            throw rte;
-        } catch (Exception ex) {
-            throw new SQLException("Error creating datasource", ex);
-        } finally {
-            if (!success) {
-                closeConnectionPool();
-            }  
-        }
-        
-        // If initialSize > 0, preload the pool
-        try {
-            for (int i = 0 ; i < initialSize ; i++) {
-                connectionPool.addObject();
+
+            // create factory which returns raw physical connections
+            ConnectionFactory driverConnectionFactory = createConnectionFactory();
+    
+            // create a pool for our connections
+            createConnectionPool();
+    
+            // Set up statement pool, if desired
+            GenericKeyedObjectPoolFactory statementPoolFactory = null;
+            if (isPoolPreparedStatements()) {
+                statementPoolFactory = new GenericKeyedObjectPoolFactory(null,
+                            -1, // unlimited maxActive (per key)
+                            GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL,
+                            0, // maxWait
+                            1, // maxIdle (per key)
+                            maxOpenPreparedStatements);
             }
-        } catch (Exception e) {
-            closeConnectionPool();
-            throw new SQLNestedException("Error preloading the connection pool", e);
+    
+            // Set up the poolable connection factory
+            boolean success = false;
+            try {
+                createPoolableConnectionFactory(driverConnectionFactory,
+                        statementPoolFactory, abandonedConfig);
+                success = true;
+            } catch (SQLException se) {
+                throw se;
+            } catch (RuntimeException rte) {
+                throw rte; 
+            } catch (Exception ex) {
+                throw new SQLException("Error creating connection factory", ex);
+            } finally {
+                if (!success) {
+                    closeConnectionPool();
+                }
+            }
+            
+            // Create the pooling data source to manage connections
+            success = false;
+            try {
+                createDataSourceInstance();
+                success = true;
+            } catch (SQLException se) {
+                throw se;
+            } catch (RuntimeException rte) {
+                throw rte;
+            } catch (Exception ex) {
+                throw new SQLException("Error creating datasource", ex);
+            } finally {
+                if (!success) {
+                    closeConnectionPool();
+                }  
+            }
+            
+            // If initialSize > 0, preload the pool
+            try {
+                for (int i = 0 ; i < initialSize ; i++) {
+                    connectionPool.addObject();
+                }
+            } catch (Exception e) {
+                closeConnectionPool();
+                throw new SQLNestedException("Error preloading the connection pool", e);
+            }
+            
+            // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor task
+            startPoolMaintenance();
+            
+            return dataSource;
         }
-        
-        // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor task
-        startPoolMaintenance();
-        
-        return dataSource;
     }
 
     /**
