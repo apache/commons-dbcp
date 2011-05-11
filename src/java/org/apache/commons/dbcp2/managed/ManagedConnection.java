@@ -137,6 +137,9 @@ public class ManagedConnection extends DelegatingConnection {
                 }
             }
         }
+        // autoCommit may have been changed directly on the underlying
+        // connection
+        clearCachedState();
     }
 
     @Override

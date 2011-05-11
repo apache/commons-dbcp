@@ -430,6 +430,18 @@ public class DelegatingConnection extends AbandonedTrace
         this._cacheState = cacheState;
     }
 
+    /**
+     * Can be used to clear cached state when it is known that the underlying
+     * connection may have been accessed directly.
+     */
+    public void clearCachedState() {
+        _autoCommitCached = null;
+        _readOnlyCached = null;
+        if (_conn instanceof DelegatingConnection) {
+            ((DelegatingConnection)_conn).clearCachedState();
+        }
+    }
+
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         checkOpen();
