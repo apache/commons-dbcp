@@ -49,6 +49,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_DEFAULTREADONLY = "defaultReadOnly";
     private final static String PROP_DEFAULTTRANSACTIONISOLATION = "defaultTransactionIsolation";
     private final static String PROP_DEFAULTCATALOG = "defaultCatalog";
+    private final static String PROP_CACHESTATE ="cacheState";
     private final static String PROP_DRIVERCLASSNAME = "driverClassName";
     private final static String PROP_LIFO = "lifo";
     private final static String PROP_MAXACTIVE = "maxActive";
@@ -87,6 +88,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_DEFAULTREADONLY,
         PROP_DEFAULTTRANSACTIONISOLATION,
         PROP_DEFAULTCATALOG,
+        PROP_CACHESTATE,
         PROP_DRIVERCLASSNAME,
         PROP_LIFO,
         PROP_MAXACTIVE,
@@ -216,6 +218,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_DEFAULTCATALOG);
         if (value != null) {
             dataSource.setDefaultCatalog(value);
+        }
+
+        value = properties.getProperty(PROP_CACHESTATE);
+        if (value != null) {
+            dataSource.setCacheState(Boolean.valueOf(value).booleanValue());
         }
 
         value = properties.getProperty(PROP_DRIVERCLASSNAME);

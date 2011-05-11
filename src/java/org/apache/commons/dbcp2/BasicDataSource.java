@@ -192,7 +192,30 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
-  
+    /**
+     * The property that controls if the pooled connections cache some state
+     * rather than query the database for current state to improve performance.
+     */
+    private boolean cacheState = true;
+
+    /**
+     * Returns the state caching flag.
+     * 
+     * @return  the state caching flag
+     */
+    public boolean getCacheState() {
+        return cacheState;
+    }
+
+    /**
+     * Sets the state caching flag.
+     * 
+     * @param cacheState    The new value for the state caching flag
+     */
+    public void setCacheState(boolean cacheState) {
+        this.cacheState = cacheState;
+    }
+
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
@@ -1752,6 +1775,7 @@ public class BasicDataSource implements DataSource {
                                               defaultAutoCommit,
                                               defaultTransactionIsolation,
                                               defaultCatalog,
+                                              cacheState,
                                               configuration);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {

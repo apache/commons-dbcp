@@ -112,6 +112,17 @@ testWhileIdle
    <td></td>
    <td>The default catalog of connections created by this pool.</td>
 </tr>
+<tr>
+  <td>cacheState</td>
+  <td>true</td>
+  <td>If true, the pooled connection will cache the current readOnly and
+      autoCommit settings when first read or written and on all subsequent
+      writes. This removes the need for additional database queries for any
+      further calls to the getter. If the underlying connection is accessed
+      directly and the readOnly and/or autoCommit settings changed the cached
+      values will not reflect the current state. In this case, caching should be
+      disabled by setting this attribute to false.</td>
+</tr>
 </table>
 
 
