@@ -75,7 +75,7 @@ public class DelegatingConnection extends AbandonedTrace
 
     protected boolean _closed = false;
     
-    
+    private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
     private Boolean _readOnlyCached = null;
 
@@ -347,10 +347,19 @@ public class DelegatingConnection extends AbandonedTrace
     public void commit() throws SQLException
     { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
     
+    /**
+     * Returns the state caching flag.
+     * 
+     * @return  the state caching flag
+     */
+    public boolean getCacheState() {
+        return _cacheState;
+    }
+
     @Override
     public boolean getAutoCommit() throws SQLException {
         checkOpen();
-        if (_autoCommitCached != null) {
+        if (_cacheState && _autoCommitCached != null) {
             return _autoCommitCached.booleanValue();
         }
         try {
@@ -392,7 +401,7 @@ public class DelegatingConnection extends AbandonedTrace
     @Override
     public boolean isReadOnly() throws SQLException {
         checkOpen();
-        if (_readOnlyCached != null) {
+        if (_cacheState && _readOnlyCached != null) {
             return _readOnlyCached.booleanValue();
         }
         try {
@@ -412,12 +421,23 @@ public class DelegatingConnection extends AbandonedTrace
     public void rollback() throws SQLException
     { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
     
+    /**
+     * Sets the state caching flag.
+     * 
+     * @param cacheState    The new value for the state caching flag
+     */
+    public void setCacheState(boolean cacheState) {
+        this._cacheState = cacheState;
+    }
+
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         checkOpen();
         try {
             _conn.setAutoCommit(autoCommit);
-            _autoCommitCached = Boolean.valueOf(autoCommit);
+            if (_cacheState) {
+                _autoCommitCached = Boolean.valueOf(autoCommit);
+            }
         } catch (SQLException e) {
             _autoCommitCached = null;
             handleException(e);
@@ -433,7 +453,9 @@ public class DelegatingConnection extends AbandonedTrace
         checkOpen();
         try {
             _conn.setReadOnly(readOnly);
-            _readOnlyCached = Boolean.valueOf(readOnly);
+            if (_cacheState) {
+                _readOnlyCached = Boolean.valueOf(readOnly);
+            }
         } catch (SQLException e) {
             _readOnlyCached = null;
             handleException(e);

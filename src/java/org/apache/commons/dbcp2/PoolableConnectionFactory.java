@@ -443,6 +443,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @param defaultCatalog the default "catalog" setting for returned {@link Connection}s
      * @param config the AbandonedConfig if tracing SQL objects
+     * @param cacheState the state caching flag for returned {@link Connection}s
      * @since 1.3
      */
     public PoolableConnectionFactory(
@@ -470,6 +471,51 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
         _defaultCatalog = defaultCatalog;
+    }
+
+    /**
+     * Create a new <tt>PoolableConnectionFactory</tt>.
+     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
+     * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
+     * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
+     * @param connectionInitSqls a Collection of SQL statements to initialize {@link Connection}s. Using <tt>null</tt> turns off initialization.
+     * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
+     * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
+     * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
+     * @param defaultCatalog the default "catalog" setting for returned {@link Connection}s
+     * @param config the AbandonedConfig if tracing SQL objects
+     * @param cacheState the state caching flag for returned {@link Connection}s
+     * @since 2.0
+     */
+    public PoolableConnectionFactory(
+        ConnectionFactory connFactory,
+        ObjectPool pool,
+        KeyedObjectPoolFactory stmtPoolFactory,
+        String validationQuery,
+        int validationQueryTimeout,
+        Collection connectionInitSqls,
+        Boolean defaultReadOnly,
+        boolean defaultAutoCommit,
+        int defaultTransactionIsolation,
+        String defaultCatalog,
+        boolean cacheState,
+        AbandonedConfig config) {
+
+        _connFactory = connFactory;
+        _pool = pool;
+        _config = config;
+        _pool.setFactory(this);
+        _stmtPoolFactory = stmtPoolFactory;
+        _validationQuery = validationQuery;
+        _validationQueryTimeout = validationQueryTimeout;
+        _connectionInitSqls = connectionInitSqls;
+        _defaultReadOnly = defaultReadOnly;
+        _defaultAutoCommit = defaultAutoCommit;
+        _defaultTransactionIsolation = defaultTransactionIsolation;
+        _defaultCatalog = defaultCatalog;
+        _cacheState = cacheState;
     }
 
     /**
@@ -734,6 +780,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     protected String _defaultCatalog;
+    private boolean _cacheState;
 
     /**
      * Configuration for removing abandoned connections.
