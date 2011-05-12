@@ -38,7 +38,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolablePreparedStatement extends DelegatingPreparedStatement implements PreparedStatement {
+public class PoolablePreparedStatement extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */

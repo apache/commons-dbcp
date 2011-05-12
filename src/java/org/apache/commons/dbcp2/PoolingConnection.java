@@ -42,7 +42,7 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolingConnection extends DelegatingConnection implements Connection, KeyedPoolableObjectFactory {
+public class PoolingConnection extends DelegatingConnection implements KeyedPoolableObjectFactory {
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
     protected KeyedObjectPool _pstmtPool = null;
 

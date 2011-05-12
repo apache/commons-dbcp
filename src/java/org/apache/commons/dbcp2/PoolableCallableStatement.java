@@ -35,7 +35,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @version $Revision$ $Date$
  * @since 1.3
  */
-public class PoolableCallableStatement extends DelegatingCallableStatement implements CallableStatement {
+public class PoolableCallableStatement extends DelegatingCallableStatement {
 
     /**
      * The {@link KeyedObjectPool} from which this CallableStatement was obtained.
