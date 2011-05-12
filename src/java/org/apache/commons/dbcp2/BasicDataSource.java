@@ -34,6 +34,7 @@ import org.apache.commons.pool2.KeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 
 /**
@@ -1533,7 +1534,7 @@ public class BasicDataSource implements DataSource {
             if (isPoolPreparedStatements()) {
                 statementPoolFactory = new GenericKeyedObjectPoolFactory(null,
                             -1, // unlimited maxActive (per key)
-                            GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL,
+                            WhenExhaustedAction.FAIL,
                             0, // maxWait
                             1, // maxIdle (per key)
                             maxOpenPreparedStatements);
