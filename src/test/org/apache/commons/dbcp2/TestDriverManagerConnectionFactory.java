@@ -22,6 +22,7 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -48,7 +49,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
         System.setProperty("jdbc.drivers",
                 "org.apache.commons.dbcp2.TesterDriver");
         GenericObjectPool connectionPool = new GenericObjectPool(null, 10,
-                GenericObjectPool.WHEN_EXHAUSTED_BLOCK, -1, 0);
+                WhenExhaustedAction.BLOCK, -1, 0);
         final ConnectionFactory connectionFactory =
             new DriverManagerConnectionFactory(
                     "jdbc:apache:commons:testdriver",

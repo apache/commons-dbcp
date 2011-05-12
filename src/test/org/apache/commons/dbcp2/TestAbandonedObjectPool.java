@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.PoolableObjectFactory;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * TestCase for AbandonedObjectPool
@@ -71,7 +72,7 @@ public class TestAbandonedObjectPool extends TestCase {
         final int POOL_SIZE = 30;
         pool.setMaxActive(POOL_SIZE);
         pool.setMaxIdle(POOL_SIZE);
-        pool.setWhenExhaustedAction(AbandonedObjectPool.WHEN_EXHAUSTED_FAIL);
+        pool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
 
         // Exhaust the connection pool
         Vector vec = new Vector();

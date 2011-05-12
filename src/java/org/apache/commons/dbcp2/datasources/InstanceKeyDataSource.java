@@ -36,6 +36,7 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.SQLNestedException;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and 
@@ -861,12 +862,13 @@ public abstract class InstanceKeyDataSource
         return cpds;
     }
 
-    protected byte whenExhaustedAction(int maxActive, int maxWait) {
-        byte whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_BLOCK;
+    protected WhenExhaustedAction whenExhaustedAction(int maxActive,
+            int maxWait) {
+        WhenExhaustedAction whenExhausted = WhenExhaustedAction.BLOCK;
         if (maxActive <= 0) {
-            whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_GROW;
+            whenExhausted = WhenExhaustedAction.GROW;
         } else if (maxWait == 0) {
-            whenExhausted = GenericObjectPool.WHEN_EXHAUSTED_FAIL;
+            whenExhausted = WhenExhaustedAction.FAIL;
         }
         return whenExhausted;
     }    
