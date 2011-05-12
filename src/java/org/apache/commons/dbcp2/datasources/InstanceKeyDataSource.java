@@ -34,7 +34,6 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.SQLNestedException;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
@@ -710,7 +709,7 @@ public abstract class InstanceKeyDataSource
             info = getPooledConnectionAndInfo(username, password);
         } catch (NoSuchElementException e) {
             closeDueToException(info);
-            throw new SQLNestedException("Cannot borrow connection from pool", e);
+            throw new SQLException("Cannot borrow connection from pool", e);
         } catch (RuntimeException e) {
             closeDueToException(info);
             throw e;
@@ -719,7 +718,7 @@ public abstract class InstanceKeyDataSource
             throw e;
         } catch (Exception e) {
             closeDueToException(info);
-            throw new SQLNestedException("Cannot borrow connection from pool", e);
+            throw new SQLException("Cannot borrow connection from pool", e);
         }
         
         if (!(null == password ? null == info.getPassword() 
@@ -749,7 +748,7 @@ public abstract class InstanceKeyDataSource
                     info = getPooledConnectionAndInfo(username, password);
                 } catch (NoSuchElementException e) {
                     closeDueToException(info);
-                    throw new SQLNestedException("Cannot borrow connection from pool", e);
+                    throw new SQLException("Cannot borrow connection from pool", e);
                 } catch (RuntimeException e) {
                     closeDueToException(info);
                     throw e;
@@ -758,7 +757,7 @@ public abstract class InstanceKeyDataSource
                     throw e;
                 } catch (Exception e) {
                     closeDueToException(info);
-                    throw new SQLNestedException("Cannot borrow connection from pool", e);
+                    throw new SQLException("Cannot borrow connection from pool", e);
                 }
                 if (info != null && password.equals(info.getPassword())) {
                     break;

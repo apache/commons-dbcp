@@ -112,7 +112,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLNestedException("Borrow prepareStatement from pool failed", e);
+            throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
@@ -152,11 +152,11 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
         try {
             return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, STATEMENT_CALLABLESTMT)));
         } catch (NoSuchElementException e) {
-            throw new SQLNestedException("MaxOpenCallableStatements limit reached", e);
+            throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new SQLNestedException("Borrow callableStatement from pool failed", e);
+            throw new SQLException("Borrow callableStatement from pool failed", e);
         }
     }
     
@@ -175,11 +175,11 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
             return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, resultSetType,
                             resultSetConcurrency, STATEMENT_CALLABLESTMT)));
         } catch (NoSuchElementException e) {
-            throw new SQLNestedException("MaxOpenCallableStatements limit reached", e);
+            throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new SQLNestedException("Borrow callableStatement from pool failed", e);
+            throw new SQLException("Borrow callableStatement from pool failed", e);
         }
     }
     
