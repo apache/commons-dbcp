@@ -17,8 +17,6 @@
 
 package org.apache.commons.dbcp2;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -36,7 +34,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.pool2.ObjectPool;
-import org.xml.sax.SAXException;
 
 
 /**
