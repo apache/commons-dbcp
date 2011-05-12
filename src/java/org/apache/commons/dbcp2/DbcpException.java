@@ -29,6 +29,7 @@ package org.apache.commons.dbcp2;
  * 
  * @deprecated This will be removed in a future version of DBCP.
  **/
+@Deprecated
 public class DbcpException extends RuntimeException {
 
     private static final long serialVersionUID = 2477800549022838103L;
