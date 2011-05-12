@@ -139,6 +139,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
 
     /** @deprecated */
     @Override
+    @Deprecated
     public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException
     { checkOpen(); try { return ((CallableStatement)_stmt).getBigDecimal( parameterIndex,  scale); } catch (SQLException e) { handleException(e); return null; } }
 

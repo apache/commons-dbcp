@@ -60,7 +60,8 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
     </release>
       <action dev="markt" type="update">
-        Updated source code for Java 1.6 (added @Override annotations).
+        Updated source code for Java 1.6 (added @Override & @Deprecated
+        annotations).
       </action>
       <action dev="markt" type="update">
         Removed JOCL support.
