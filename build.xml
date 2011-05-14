@@ -227,5 +227,23 @@
    </target>
 
    <target name="dist" depends="build" description="gump target"/>
-   
+	
+   <target name="mock-jar" depends="compile-test" description="Bundles mock JDBC objects">
+      <mkdir dir="${dist.dir}"/>
+      <jar jarfile="${mock.jar}">
+         <fileset dir="${build.test-classes.dir}">
+            <include name="**/Tester*.class"/>
+         </fileset>
+         <metainf dir="${basedir}" includes="LICENSE.txt,NOTICE.txt"/>
+         <manifest>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Package" value="${package}"/>
+            <attribute name="Extension-Name" value="${name}-mocks"/>
+            <attribute name="Specification-Vendor" value="Apache Software Foundation"/>
+            <attribute name="Specification-Title" value="${title}"/>
+            <attribute name="Implementation-Version" value="${version}"/>
+            <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+         </manifest>
+      </jar>
+   </target>
 </project>
