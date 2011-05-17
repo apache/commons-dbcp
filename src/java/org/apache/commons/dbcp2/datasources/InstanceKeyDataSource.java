@@ -861,17 +861,6 @@ public abstract class InstanceKeyDataSource
         return cpds;
     }
 
-    protected WhenExhaustedAction whenExhaustedAction(int maxActive,
-            int maxWait) {
-        WhenExhaustedAction whenExhausted = WhenExhaustedAction.BLOCK;
-        if (maxActive <= 0) {
-            whenExhausted = WhenExhaustedAction.GROW;
-        } else if (maxWait == 0) {
-            whenExhausted = WhenExhaustedAction.FAIL;
-        }
-        return whenExhausted;
-    }    
-
     // ----------------------------------------------------------------------
     // Referenceable implementation 
 
