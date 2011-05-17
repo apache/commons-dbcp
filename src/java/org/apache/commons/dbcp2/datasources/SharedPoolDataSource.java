@@ -30,6 +30,7 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
@@ -217,7 +218,14 @@ public class SharedPoolDataSource
         tmpPool.setMaxActive(getMaxActive());
         tmpPool.setMaxIdle(getMaxIdle());
         tmpPool.setMaxWait(getMaxWait());
-        tmpPool.setWhenExhaustedAction(whenExhaustedAction(maxActive, maxWait));
+        tmpPool.setWhenExhaustedAction(WhenExhaustedAction.BLOCK);
+        if (maxActive <= 0) {
+            tmpPool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            tmpPool.setMaxActive(Integer.MAX_VALUE);
+        }
+        if (maxWait == 0) {
+            tmpPool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+        }
         tmpPool.setTestOnBorrow(getTestOnBorrow());
         tmpPool.setTestOnReturn(getTestOnReturn());
         tmpPool.setTimeBetweenEvictionRunsMillis(

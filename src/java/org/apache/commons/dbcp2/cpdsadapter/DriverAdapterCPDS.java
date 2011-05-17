@@ -177,7 +177,7 @@ public class DriverAdapterCPDS
                 // since there is no limit, create a prepared statement pool with an eviction thread
                 //  evictor settings are the same as the connection pool settings.
                 stmtPool = new GenericKeyedObjectPool(null,
-                    getMaxActive(), WhenExhaustedAction.GROW, 0,
+                    Integer.MAX_VALUE, WhenExhaustedAction.FAIL, 0,
                     getMaxIdle(), false, false,
                     getTimeBetweenEvictionRunsMillis(),getNumTestsPerEvictionRun(),getMinEvictableIdleTimeMillis(),
                     false);
@@ -188,7 +188,7 @@ public class DriverAdapterCPDS
                 //  pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
                 // see org.apache.commons.pool2.impl.GenericKeyedObjectPool.clearOldest method
                 stmtPool = new GenericKeyedObjectPool(null,
-                    getMaxActive(), WhenExhaustedAction.GROW, 0,
+                    Integer.MAX_VALUE, WhenExhaustedAction.FAIL, 0,
                     getMaxIdle(), getMaxPreparedStatements(), false, false,
                     -1,0,0, // -1 tells the pool that there should be no eviction thread.
                     false);
