@@ -32,6 +32,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.pool2.KeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
@@ -535,7 +536,8 @@ public class BasicDataSource implements DataSource {
      * and <code>maxOpenPreparedStatements</code> limits the total number of prepared or callable statements
      * that may be in use at a given time.</p>
      */
-    protected int maxOpenPreparedStatements = GenericKeyedObjectPool.DEFAULT_MAX_TOTAL;
+    protected int maxOpenPreparedStatements =
+        GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
      * Gets the value of the {@link #maxOpenPreparedStatements} property.
@@ -1532,12 +1534,15 @@ public class BasicDataSource implements DataSource {
             // Set up statement pool, if desired
             GenericKeyedObjectPoolFactory statementPoolFactory = null;
             if (isPoolPreparedStatements()) {
-                statementPoolFactory = new GenericKeyedObjectPoolFactory(null,
-                            -1, // unlimited maxActive (per key)
-                            WhenExhaustedAction.FAIL,
-                            0, // maxWait
-                            1, // maxIdle (per key)
-                            maxOpenPreparedStatements);
+                GenericKeyedObjectPoolConfig config =
+                    new GenericKeyedObjectPoolConfig();
+                config.setMaxTotalPerKey(-1);
+                config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+                config.setMaxWait(0);
+                config.setMaxIdle(1);
+                config.setMaxTotal(maxOpenPreparedStatements);
+                statementPoolFactory =
+                    new GenericKeyedObjectPoolFactory(config);
             }
     
             // Set up the poolable connection factory

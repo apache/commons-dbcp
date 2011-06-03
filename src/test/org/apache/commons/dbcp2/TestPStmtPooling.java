@@ -29,6 +29,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.KeyedObjectPoolFactory;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
@@ -53,7 +54,9 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         ObjectPool connPool = new GenericObjectPool();
-        KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+        KeyedObjectPoolFactory stmtPoolFactory =
+            new GenericKeyedObjectPoolFactory(
+                    new GenericKeyedObjectPoolConfig());
 
         new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
                 null, false, true);
@@ -76,7 +79,9 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         ObjectPool connPool = new GenericObjectPool();
-        KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+        KeyedObjectPoolFactory stmtPoolFactory =
+            new GenericKeyedObjectPoolFactory(
+                    new GenericKeyedObjectPoolConfig());
 
         new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
                 null, false, true);
@@ -112,7 +117,9 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         ObjectPool connPool = new GenericObjectPool();
-        KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+        KeyedObjectPoolFactory stmtPoolFactory =
+            new GenericKeyedObjectPoolFactory(
+                    new GenericKeyedObjectPoolConfig());
 
         new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
                 null, false, true);

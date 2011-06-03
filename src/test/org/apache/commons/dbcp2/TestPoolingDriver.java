@@ -29,6 +29,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
@@ -60,7 +61,19 @@ public class TestPoolingDriver extends TestConnectionPool {
         super.setUp();
         GenericObjectPool pool = new GenericObjectPool(null, getMaxActive(), WhenExhaustedAction.BLOCK, getMaxWait(), 10, true, true, 10000L, 5, 5000L, true);
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
-        GenericKeyedObjectPoolFactory opf = new GenericKeyedObjectPoolFactory(null, 10, WhenExhaustedAction.BLOCK, 2000L, 10, true, true, 10000L, 5, 5000L, true);
+        GenericKeyedObjectPoolConfig config =
+            new GenericKeyedObjectPoolConfig();
+        config.setMaxTotalPerKey(10);
+        config.setMaxWait(2000);
+        config.setMaxIdle(10);
+        config.setTestOnBorrow(true);
+        config.setTestOnReturn(true);
+        config.setTestWhileIdle(true);
+        config.setTimeBetweenEvictionRunsMillis(10000);
+        config.setNumTestsPerEvictionRun(5);
+        config.setMinEvictableIdleTimeMillis(5000);
+        GenericKeyedObjectPoolFactory opf =
+            new GenericKeyedObjectPoolFactory(config);
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
         assertNotNull(pcf);
         driver = new PoolingDriver();
