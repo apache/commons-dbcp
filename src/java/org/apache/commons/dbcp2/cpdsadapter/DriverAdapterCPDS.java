@@ -36,6 +36,7 @@ import javax.naming.NamingException;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
@@ -172,27 +173,31 @@ public class DriverAdapterCPDS
         */
         KeyedObjectPool stmtPool = null;
         if (isPoolPreparedStatements()) {
+            GenericKeyedObjectPoolConfig config =
+                new GenericKeyedObjectPoolConfig();
+            config.setMaxTotalPerKey(Integer.MAX_VALUE);
+            config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            config.setMaxWait(0);
+            config.setMaxIdle(getMaxIdle());
             if (getMaxPreparedStatements() <= 0)
             {
                 // since there is no limit, create a prepared statement pool with an eviction thread
                 //  evictor settings are the same as the connection pool settings.
-                stmtPool = new GenericKeyedObjectPool(null,
-                    Integer.MAX_VALUE, WhenExhaustedAction.FAIL, 0,
-                    getMaxIdle(), false, false,
-                    getTimeBetweenEvictionRunsMillis(),getNumTestsPerEvictionRun(),getMinEvictableIdleTimeMillis(),
-                    false);
+                config.setTimeBetweenEvictionRunsMillis(getTimeBetweenEvictionRunsMillis());
+                config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
+                config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
             }
             else
             {
                 // since there is limit, create a prepared statement pool without an eviction thread
                 //  pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
                 // see org.apache.commons.pool2.impl.GenericKeyedObjectPool.clearOldest method
-                stmtPool = new GenericKeyedObjectPool(null,
-                    Integer.MAX_VALUE, WhenExhaustedAction.FAIL, 0,
-                    getMaxIdle(), getMaxPreparedStatements(), false, false,
-                    -1,0,0, // -1 tells the pool that there should be no eviction thread.
-                    false);
+                config.setMaxTotal(getMaxPreparedStatements());
+                config.setTimeBetweenEvictionRunsMillis(-1);
+                config.setNumTestsPerEvictionRun(0);
+                config.setMinEvictableIdleTimeMillis(0);
             }
+            stmtPool = new GenericKeyedObjectPool(config);
         }
         // Workaround for buggy WebLogic 5.1 classloader - ignore the
         // exception upon first invocation.

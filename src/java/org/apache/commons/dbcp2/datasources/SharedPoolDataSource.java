@@ -214,14 +214,14 @@ public class SharedPoolDataSource
         ConnectionPoolDataSource cpds = testCPDS(username, password);
 
         // Create an object pool to contain our PooledConnections
-        GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool(null);
-        tmpPool.setMaxActive(getMaxActive());
+        GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool();
+        tmpPool.setMaxTotalPerKey(getMaxActive());
         tmpPool.setMaxIdle(getMaxIdle());
         tmpPool.setMaxWait(getMaxWait());
         tmpPool.setWhenExhaustedAction(WhenExhaustedAction.BLOCK);
         if (maxActive <= 0) {
             tmpPool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
-            tmpPool.setMaxActive(Integer.MAX_VALUE);
+            tmpPool.setMaxTotalPerKey(Integer.MAX_VALUE);
         }
         if (maxWait == 0) {
             tmpPool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
