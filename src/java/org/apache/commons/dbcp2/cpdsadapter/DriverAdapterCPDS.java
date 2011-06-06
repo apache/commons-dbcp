@@ -34,6 +34,7 @@ import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import javax.naming.NamingException;
 
+import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -178,7 +179,7 @@ public class DriverAdapterCPDS
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
             config.setMaxWait(0);
-            config.setMaxIdle(getMaxIdle());
+            config.setMaxIdlePerKey(getMaxIdle());
             if (getMaxPreparedStatements() <= 0)
             {
                 // since there is no limit, create a prepared statement pool with an eviction thread

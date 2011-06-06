@@ -1539,7 +1539,7 @@ public class BasicDataSource implements DataSource {
                 config.setMaxTotalPerKey(-1);
                 config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
                 config.setMaxWait(0);
-                config.setMaxIdle(1);
+                config.setMaxIdlePerKey(1);
                 config.setMaxTotal(maxOpenPreparedStatements);
                 statementPoolFactory =
                     new GenericKeyedObjectPoolFactory(config);

@@ -216,7 +216,7 @@ public class SharedPoolDataSource
         // Create an object pool to contain our PooledConnections
         GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool();
         tmpPool.setMaxTotalPerKey(getMaxActive());
-        tmpPool.setMaxIdle(getMaxIdle());
+        tmpPool.setMaxIdlePerKey(getMaxIdle());
         tmpPool.setMaxWait(getMaxWait());
         tmpPool.setWhenExhaustedAction(WhenExhaustedAction.BLOCK);
         if (maxActive <= 0) {
