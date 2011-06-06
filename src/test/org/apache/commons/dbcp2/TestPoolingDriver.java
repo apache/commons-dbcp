@@ -65,7 +65,7 @@ public class TestPoolingDriver extends TestConnectionPool {
             new GenericKeyedObjectPoolConfig();
         config.setMaxTotalPerKey(10);
         config.setMaxWait(2000);
-        config.setMaxIdle(10);
+        config.setMaxIdlePerKey(10);
         config.setTestOnBorrow(true);
         config.setTestOnReturn(true);
         config.setTestWhileIdle(true);
