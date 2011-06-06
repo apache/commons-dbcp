@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -70,7 +71,6 @@ public class TestAbandonedObjectPool extends TestCase {
     * 
     */
     public void testConcurrentInvalidation() throws Exception {
-        /** FIXME: re-enable when associated pool problem is resolved *****
         final int POOL_SIZE = 30;
         pool.setMaxActive(POOL_SIZE);
         pool.setMaxIdle(POOL_SIZE);
@@ -109,8 +109,7 @@ public class TestAbandonedObjectPool extends TestCase {
         }
         
         // Now, the number of open connections should be 0
-        assertTrue("numActive should have been 0, was " + pool.getNumActive(), pool.getNumActive() == 0);
-        */
+        assertTrue("numActive should have been 0, was " + pool.getNumIdle(), pool.getNumActive() == 0);
     }
     
     class ConcurrentBorrower extends Thread {
@@ -164,12 +163,11 @@ class PooledTestObject extends AbandonedTrace {
     private boolean active = false;
     private int _hash = 0;
     private boolean _abandoned = false;
-
-    private static int hash = 1;
+    private static AtomicInteger hash = new AtomicInteger();
     
     public PooledTestObject(AbandonedConfig config) {
         super(config);
-        _hash = hash++;
+        _hash = hash.incrementAndGet();
     }
     
     public synchronized void setActive(boolean b) {
