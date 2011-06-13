@@ -52,7 +52,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     public void setUp() throws Exception {
         super.setUp();
         pool = new GenericObjectPool();
-        pool.setMaxActive(getMaxActive());
+        pool.setMaxTotal(getMaxTotal());
         pool.setMaxWait(getMaxWait());
         Properties props = new Properties();
         props.setProperty("user", "username");
@@ -75,7 +75,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     
     public void testPoolGuardConnectionWrapperEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool 
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
         }
@@ -111,7 +111,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         // Force PoolGuardConnectionWrappers to wrap non-Delegating connections
         pool.close();
         pool = new GenericObjectPool();
-        pool.setMaxActive(getMaxActive());
+        pool.setMaxTotal(getMaxTotal());
         pool.setMaxWait(getMaxWait());
         Properties props = new Properties();
         props.setProperty("user", "username");

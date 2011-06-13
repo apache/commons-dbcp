@@ -64,7 +64,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public void testAbandoned() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
-        ds.setMaxActive(1);
+        ds.setMaxTotal(1);
 
         for (int i = 0; i < 3; i++) {
             assertNotNull(ds.getConnection());
@@ -74,7 +74,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public void testAbandonedClose() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
-        ds.setMaxActive(1);
+        ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn1 = getConnection();
@@ -100,7 +100,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public void testAbandonedCloseWithExceptions() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
-        ds.setMaxActive(1);
+        ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn1 = getConnection();
@@ -130,7 +130,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     public void testlastUsed() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
-        ds.setMaxActive(2);
+        ds.setMaxTotal(2);
         Connection conn1 = ds.getConnection();
         Thread.sleep(500);
         conn1.createStatement(); // Should reset lastUsed
@@ -151,7 +151,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     public void testlastUsedPrepareCall() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
-        ds.setMaxActive(2);
+        ds.setMaxTotal(2);
         Connection conn1 = ds.getConnection();
         Thread.sleep(500);
         conn1.prepareCall("{call home}"); // Should reset lastUsed
@@ -172,7 +172,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     public void testLastUsedPreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
-        ds.setMaxActive(2);
+        ds.setMaxTotal(2);
         Connection conn1 = ds.getConnection();
         Statement st = conn1.createStatement(); 
         String querySQL = "SELECT 1 FROM DUAL";

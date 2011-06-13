@@ -65,7 +65,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
     public void testSharedPoolDSDestroyOnReturn() throws Exception {
        SharedPoolDataSource ds = new SharedPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
-       ds.setMaxActive(10);
+       ds.setMaxTotal(10);
        ds.setMaxWait(50);
        ds.setMaxIdle(2);
        Connection conn1 = ds.getConnection("username", "password");

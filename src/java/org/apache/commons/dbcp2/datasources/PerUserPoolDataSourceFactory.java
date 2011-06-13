@@ -43,9 +43,9 @@ public class PerUserPoolDataSourceFactory
     protected InstanceKeyDataSource getNewInstance(Reference ref) 
         throws IOException, ClassNotFoundException {
         PerUserPoolDataSource pupds =  new PerUserPoolDataSource();
-        RefAddr ra = ref.get("defaultMaxActive");
+        RefAddr ra = ref.get("defaultMaxTotal");
         if (ra != null && ra.getContent() != null) {
-            pupds.setDefaultMaxActive(
+            pupds.setDefaultMaxTotal(
                 Integer.parseInt(ra.getContent().toString()));
         }
 
@@ -74,10 +74,10 @@ public class PerUserPoolDataSourceFactory
                 (Map) deserialize(serialized);
         }
 
-        ra = ref.get("perUserMaxActive");
+        ra = ref.get("perUserMaxTotal");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserMaxActive = (Map) deserialize(serialized);
+            pupds.perUserMaxTotal = (Map) deserialize(serialized);
         }
         
         ra = ref.get("perUserMaxIdle");

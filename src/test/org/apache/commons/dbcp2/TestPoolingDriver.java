@@ -61,7 +61,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     public void setUp() throws Exception {
         super.setUp();
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
-        poolConfig.setMaxTotal(getMaxActive());
+        poolConfig.setMaxTotal(getMaxTotal());
         poolConfig.setMaxWait(getMaxWait());
         poolConfig.setMinIdle(10);
         poolConfig.setTestOnBorrow(true);

@@ -73,7 +73,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Override
     public void testConnectionsAreDistinct() throws Exception {
-        Connection[] conn = new Connection[getMaxActive()];
+        Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
@@ -100,9 +100,9 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
-    public void testMaxActive() throws Exception {
-        Transaction[] transactions = new Transaction[getMaxActive()];
-        Connection[] c = new Connection[getMaxActive()];
+    public void testMaxTotal() throws Exception {
+        Transaction[] transactions = new Transaction[getMaxTotal()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             // create a new connection in the current transaction
             c[i] = newConnection();
@@ -116,7 +116,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         try {
             newConnection();
-            fail("Allowed to open more than DefaultMaxActive connections.");
+            fail("Allowed to open more than DefaultMaxTotal connections.");
         } catch (java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception

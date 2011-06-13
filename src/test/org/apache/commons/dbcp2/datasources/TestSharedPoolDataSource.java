@@ -66,7 +66,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
-        tds.setMaxActive(getMaxActive());
+        tds.setMaxTotal(getMaxTotal());
         tds.setMaxWait((int)(getMaxWait()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
@@ -167,7 +167,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testClosingWithUserName() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
@@ -258,7 +258,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testOpening() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
         for (int i=0; i<c.length; i++) 
         {
@@ -280,7 +280,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testClosing() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
@@ -313,10 +313,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Override
-    public void testMaxActive() 
+    public void testMaxTotal() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) 
         {
             c[i] = ds.getConnection();
@@ -326,7 +326,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         try
         {
             ds.getConnection();
-            fail("Allowed to open more than DefaultMaxActive connections.");
+            fail("Allowed to open more than DefaultMaxTotal connections.");
         }
         catch(java.sql.SQLException e)
         {
@@ -346,7 +346,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         
         ((SharedPoolDataSource)ds).setMaxWait(maxWait);
         // Obtain all the connections from the pool
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection("foo","bar");
             assertTrue(c[i] != null);            
@@ -493,7 +493,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
-        tds.setMaxActive(getMaxActive());
+        tds.setMaxTotal(getMaxTotal());
         tds.setMaxWait((int)(getMaxWait()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);

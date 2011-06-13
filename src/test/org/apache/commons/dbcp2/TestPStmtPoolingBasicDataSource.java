@@ -172,7 +172,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
 
     public void testPStmtPoolingWithNoClose() throws Exception {
-        ds.setMaxActive(1); // only one connection in pool needed
+        ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
         Connection conn1 = getConnection();
@@ -203,7 +203,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
     
     public void testPStmtPoolingAccrossClose() throws Exception {
-        ds.setMaxActive(1); // only one connection in pool needed
+        ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
         Connection conn1 = getConnection();

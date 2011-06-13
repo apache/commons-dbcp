@@ -62,13 +62,13 @@ public class PerUserPoolDataSource
 
     private static final long serialVersionUID = -3104731034410444060L;
 
-    private int defaultMaxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private int defaultMaxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private int defaultMaxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
     private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
             GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
     Map perUserDefaultAutoCommit = null;    
     Map perUserDefaultTransactionIsolation = null;
-    Map perUserMaxActive = null;    
+    Map perUserMaxTotal = null;    
     Map perUserMaxIdle = null;    
     Map perUserMaxWait = null;
     Map perUserDefaultReadOnly = null;    
@@ -109,8 +109,8 @@ public class PerUserPoolDataSource
      * This value is used for any username which is not specified
      * in perUserMaxConnections.
      */
-    public int getDefaultMaxActive() {
-        return (this.defaultMaxActive);
+    public int getDefaultMaxTotal() {
+        return (this.defaultMaxTotal);
     }
 
     /**
@@ -119,9 +119,9 @@ public class PerUserPoolDataSource
      * This value is used for any username which is not specified
      * in perUserMaxConnections.  The default is 8.
      */
-    public void setDefaultMaxActive(int maxActive) {
+    public void setDefaultMaxTotal(int maxActive) {
         assertInitializationAllowed();
-        this.defaultMaxActive = maxActive;
+        this.defaultMaxTotal = maxActive;
     }
 
     /**
@@ -223,12 +223,12 @@ public class PerUserPoolDataSource
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or non-positive for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
-     * username specified here will override the value of defaultMaxActive.
+     * username specified here will override the value of defaultMaxTotal.
      */
-    public Integer getPerUserMaxActive(String username) {
+    public Integer getPerUserMaxTotal(String username) {
         Integer value = null;
-        if (perUserMaxActive != null) {
-            value = (Integer) perUserMaxActive.get(username);
+        if (perUserMaxTotal != null) {
+            value = (Integer) perUserMaxTotal.get(username);
         }
         return value;
     }
@@ -237,14 +237,14 @@ public class PerUserPoolDataSource
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or non-positive for no limit.
      * The keys are usernames and the value is the maximum connections.  Any 
-     * username specified here will override the value of defaultMaxActive.
+     * username specified here will override the value of defaultMaxTotal.
      */
-    public void setPerUserMaxActive(String username, Integer value) {
+    public void setPerUserMaxTotal(String username, Integer value) {
         assertInitializationAllowed();
-        if (perUserMaxActive == null) {
-            perUserMaxActive = new HashMap();
+        if (perUserMaxTotal == null) {
+            perUserMaxTotal = new HashMap();
         }
-        perUserMaxActive.put(username, value);
+        perUserMaxTotal.put(username, value);
     }
 
 
@@ -496,9 +496,9 @@ public class PerUserPoolDataSource
 
         ConnectionPoolDataSource cpds = testCPDS(username, password);
 
-        Integer userMax = getPerUserMaxActive(username);
-        int maxActive = (userMax == null) ? 
-            getDefaultMaxActive() : userMax.intValue();
+        Integer userMax = getPerUserMaxTotal(username);
+        int maxTotal = (userMax == null) ? 
+            getDefaultMaxTotal() : userMax.intValue();
         userMax = getPerUserMaxIdle(username);
         int maxIdle =  (userMax == null) ?
             getDefaultMaxIdle() : userMax.intValue();
@@ -508,12 +508,12 @@ public class PerUserPoolDataSource
 
         // Create an object pool to contain our PooledConnections
         GenericObjectPool pool = new GenericObjectPool(null);
-        pool.setMaxActive(maxActive);
+        pool.setMaxTotal(maxTotal);
         pool.setMaxIdle(maxIdle);
         pool.setMaxWait(maxWait);
-        if (maxActive <= 0) {
+        if (maxTotal <= 0) {
             pool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
-            pool.setMaxActive(Integer.MAX_VALUE);
+            pool.setMaxTotal(Integer.MAX_VALUE);
         }
         if (maxWait == 0) {
             pool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);

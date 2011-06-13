@@ -86,7 +86,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         
         assertEquals("org.apache.commons.dbcp2.TesterDriver", ds.getDriverClassName());
         assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
-        assertEquals(10, ds.getMaxActive());
+        assertEquals(10, ds.getMaxTotal());
         assertEquals(8, ds.getMaxIdle());
         assertEquals(0, ds.getMinIdle());
         assertEquals(500, ds.getMaxWait());

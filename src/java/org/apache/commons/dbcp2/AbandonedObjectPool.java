@@ -74,7 +74,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
         if (config != null
                 && config.getRemoveAbandoned()
                 && (getNumIdle() < 2)
-                && (getNumActive() > getMaxActive() - 3) ) {
+                && (getNumActive() > getMaxTotal() - 3) ) {
             removeAbandoned();
         }
         Object obj = super.borrowObject();
