@@ -40,7 +40,7 @@ public class SharedPoolDataSourceFactory
         SharedPoolDataSource spds = new SharedPoolDataSource();
         RefAddr ra = ref.get("maxActive");
         if (ra != null && ra.getContent() != null) {
-            spds.setMaxActive(
+            spds.setMaxTotal(
                 Integer.parseInt(ra.getContent().toString()));
         }
 

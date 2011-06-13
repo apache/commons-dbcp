@@ -55,7 +55,7 @@ public class SharedPoolDataSource
 
     private static final long serialVersionUID = -8132305535403690372L;
 
-    private int maxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
     private int maxWait = (int)Math.min(Integer.MAX_VALUE,
             GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
@@ -86,8 +86,8 @@ public class SharedPoolDataSource
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or non-positive for no limit.
      */
-    public int getMaxActive() {
-        return (this.maxActive);
+    public int getMaxTotal() {
+        return (this.maxTotal);
     }
 
     /**
@@ -95,9 +95,9 @@ public class SharedPoolDataSource
      * this pool at the same time, or non-positive for no limit.
      * The default is 8.
      */
-    public void setMaxActive(int maxActive) {
+    public void setMaxTotal(int maxTotal) {
         assertInitializationAllowed();
-        this.maxActive = maxActive;
+        this.maxTotal = maxTotal;
     }
 
     /**
@@ -216,11 +216,11 @@ public class SharedPoolDataSource
 
         // Create an object pool to contain our PooledConnections
         GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool();
-        tmpPool.setMaxTotalPerKey(getMaxActive());
+        tmpPool.setMaxTotalPerKey(getMaxTotal());
         tmpPool.setMaxIdlePerKey(getMaxIdle());
         tmpPool.setMaxWait(getMaxWait());
         tmpPool.setWhenExhaustedAction(WhenExhaustedAction.BLOCK);
-        if (maxActive <= 0) {
+        if (maxTotal <= 0) {
             tmpPool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
             tmpPool.setMaxTotalPerKey(Integer.MAX_VALUE);
         }

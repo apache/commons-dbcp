@@ -322,7 +322,7 @@ public class BasicDataSource implements DataSource {
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or negative for no limit.
      */
-    protected int maxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    protected int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
      * <p>Returns the maximum number of active connections that can be
@@ -332,21 +332,21 @@ public class BasicDataSource implements DataSource {
      * 
      * @return the maximum number of active connections
      */
-    public synchronized int getMaxActive() {
-        return this.maxActive;
+    public synchronized int getMaxTotal() {
+        return this.maxTotal;
     }
 
     /**
-     * Sets the maximum number of active connections that can be
-     * allocated at the same time. Use a negative value for no limit.
+     * Sets the maximum total number of idle and borrows connections that can be
+     * active at the same time. Use a negative value for no limit.
      * 
-     * @param maxActive the new value for maxActive
-     * @see #getMaxActive()
+     * @param maxTotal the new value for maxTotal
+     * @see #getMaxTotal()
      */
-    public synchronized void setMaxActive(int maxActive) {
-        this.maxActive = maxActive;
+    public synchronized void setMaxTotal(int maxTotal) {
+        this.maxTotal = maxTotal;
         if (connectionPool != null) {
-            connectionPool.setMaxActive(maxActive);
+            connectionPool.setMaxTotal(maxTotal);
         }
     }
 
@@ -1276,7 +1276,7 @@ public class BasicDataSource implements DataSource {
      * <p>Abandoned connections are identified and removed when 
      * {@link #getConnection()} is invoked and the following conditions hold
      * <ul><li>{@link #getRemoveAbandoned()} = true </li>
-     *     <li>{@link #getNumActive()} > {@link #getMaxActive()} - 3 </li>
+     *     <li>{@link #getNumActive()} > {@link #getMaxTotal()} - 3 </li>
      *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
      *
      * @see #getRemoveAbandonedTimeout()
@@ -1322,7 +1322,7 @@ public class BasicDataSource implements DataSource {
      * <code><ul>
      * <li><code>{@link #getRemoveAbandoned() removeAbandoned} == true</li>
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
-     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxActive() maxActive} - 3</li>
+     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxActive} - 3</li>
      * </ul></code></p>
      * 
      * <p>The default value is 300 seconds.</p>
@@ -1707,7 +1707,7 @@ public class BasicDataSource implements DataSource {
         else {
             gop = new GenericObjectPool();
         }
-        gop.setMaxActive(maxActive);
+        gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
         gop.setMaxWait(maxWait);

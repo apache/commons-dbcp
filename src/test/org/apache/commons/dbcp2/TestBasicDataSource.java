@@ -57,7 +57,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
-        ds.setMaxActive(getMaxActive());
+        ds.setMaxTotal(getMaxTotal());
         ds.setMaxWait(getMaxWait());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
@@ -351,7 +351,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
     
     public void testDefaultCatalog() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = getConnection();
             assertTrue(c[i] != null);
@@ -392,7 +392,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     public void testInitialSize() throws Exception {
-        ds.setMaxActive(20);
+        ds.setMaxTotal(20);
         ds.setMaxIdle(20);
         ds.setInitialSize(10);
 
@@ -459,12 +459,12 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
     
     /**
-     * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxActive(0)
-     * MaxActive == 0 should throw SQLException on getConnection.
+     * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxTotal(0)
+     * MaxTotal == 0 should throw SQLException on getConnection.
      * Results from Bug 29863 in commons-pool.
      */
-    public void testMaxActiveZero() throws Exception {
-        ds.setMaxActive(0);
+    public void testMaxTotalZero() throws Exception {
+        ds.setMaxTotal(0);
         
         try {
             Connection conn = ds.getConnection();
@@ -485,7 +485,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
-        ds.setMaxActive(getMaxActive());
+        ds.setMaxTotal(getMaxTotal());
         ds.setMaxWait(getMaxWait());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);

@@ -237,7 +237,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         
         value = properties.getProperty(PROP_MAXACTIVE);
         if (value != null) {
-            dataSource.setMaxActive(Integer.parseInt(value));
+            dataSource.setMaxTotal(Integer.parseInt(value));
         }
 
         value = properties.getProperty(PROP_MAXIDLE);

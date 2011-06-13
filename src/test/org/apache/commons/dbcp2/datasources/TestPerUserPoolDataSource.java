@@ -68,9 +68,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
-        tds.setDefaultMaxActive(getMaxActive());
+        tds.setDefaultMaxTotal(getMaxTotal());
         tds.setDefaultMaxWait((int)(getMaxWait()));
-        tds.setPerUserMaxActive("foo",new Integer(getMaxActive()));
+        tds.setPerUserMaxTotal("foo",new Integer(getMaxTotal()));
         tds.setPerUserMaxWait("foo",new Integer((int)(getMaxWait())));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
@@ -165,7 +165,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testClosingWithUserName() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
@@ -256,7 +256,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testOpening() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
         for (int i=0; i<c.length; i++) 
         {
@@ -278,7 +278,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testClosing() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++) 
         {
@@ -299,10 +299,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
-    public void testMaxActive() 
+    public void testMaxTotal() 
         throws Exception 
     {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) 
         {
             c[i] = ds.getConnection();
@@ -312,7 +312,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         try
         {
             ds.getConnection();
-            fail("Allowed to open more than DefaultMaxActive connections.");
+            fail("Allowed to open more than DefaultMaxTotal connections.");
         }
         catch(java.sql.SQLException e)
         {
@@ -333,7 +333,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testMaxWaitZero() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWait(0);
-        tds.setPerUserMaxActive("u1", new Integer(1));
+        tds.setPerUserMaxTotal("u1", new Integer(1));
         Connection conn = tds.getConnection("u1", "p1");
         try {
             tds.getConnection("u1", "p1");
@@ -348,8 +348,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         
         // you need to set maxActive otherwise there is no accounting
-        tds.setPerUserMaxActive("u1", new Integer(5));
-        tds.setPerUserMaxActive("u2", new Integer(5));
+        tds.setPerUserMaxTotal("u1", new Integer(5));
+        tds.setPerUserMaxTotal("u2", new Integer(5));
         
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumActive("u1", "p1"));
@@ -486,7 +486,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxActive("jsmith", new Integer(2));
+        puds.setPerUserMaxTotal("jsmith", new Integer(2));
         String[] users = {"mkh", "hanafey", "jsmith"};
         String password = "password";
         Connection[] c = new Connection[users.length];
@@ -506,7 +506,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxActive("jsmith", new Integer(2));
+        puds.setPerUserMaxTotal("jsmith", new Integer(2));
         String[] users = {"jsmith", "hanafey", "mkh"};
         String password = "password";
         Connection[] c = new Connection[users.length];

@@ -65,7 +65,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     protected abstract Connection getConnection() throws Exception;
     
-    protected int getMaxActive() {
+    protected int getMaxTotal() {
         return 10;
     }
     
@@ -97,7 +97,7 @@ public abstract class TestConnectionPool extends TestCase {
     // ----------- tests --------------------------------- 
 
     public void testClearWarnings() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             assertTrue(c[i] != null);
@@ -129,7 +129,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testIsClosed() throws Exception {
-        for(int i=0;i<getMaxActive();i++) {
+        for(int i=0;i<getMaxTotal();i++) {
             Connection conn = newConnection();
             assertNotNull(conn);
             assertTrue(!conn.isClosed());
@@ -150,7 +150,7 @@ public abstract class TestConnectionPool extends TestCase {
      * an exception being thrown.
      */
     public void testCanCloseConnectionTwice() throws Exception {
-        for (int i = 0; i < getMaxActive(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+        for (int i = 0; i < getMaxTotal(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             Connection conn = newConnection();
             assertNotNull(conn);
             assertTrue(!conn.isClosed());
@@ -393,8 +393,8 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void testPooling() throws Exception {  
         // Grab a maximal set of open connections from the pool
-        Connection[] c = new Connection[getMaxActive()];
-        Connection[] u = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
+        Connection[] u = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             if (c[i] instanceof DelegatingConnection) {
@@ -446,7 +446,7 @@ public abstract class TestConnectionPool extends TestCase {
     
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testConnectionsAreDistinct() throws Exception {
-        Connection[] conn = new Connection[getMaxActive()];
+        Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
@@ -461,7 +461,7 @@ public abstract class TestConnectionPool extends TestCase {
 
 
     public void testOpening() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
@@ -477,7 +477,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testClosing() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
@@ -495,8 +495,8 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
-    public void testMaxActive() throws Exception {
-        Connection[] c = new Connection[getMaxActive()];
+    public void testMaxTotal() throws Exception {
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             assertTrue(c[i] != null);
@@ -504,7 +504,7 @@ public abstract class TestConnectionPool extends TestCase {
 
         try {
             newConnection();
-            fail("Allowed to open more than DefaultMaxActive connections.");
+            fail("Allowed to open more than DefaultMaxTotal connections.");
         } catch (java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
@@ -531,7 +531,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     public void testThreaded() {
-        TestThread[] threads = new TestThread[getMaxActive()];
+        TestThread[] threads = new TestThread[getMaxTotal()];
         for(int i=0;i<threads.length;i++) {
             threads[i] = new TestThread(50,50);
             Thread t = new Thread(threads[i]);
@@ -692,7 +692,7 @@ public abstract class TestConnectionPool extends TestCase {
     // @see http://jira.codehaus.org/browse/SUREFIRE-121
     
     /**
-     * Launches a group of 2 * getMaxActive() threads, each of which will attempt to obtain a connection
+     * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection
      * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
      * threads will continue this process indefinitely.  If <expectError> is true, exactly 1/2 of the
      * threads are expected to either throw exceptions or fail to complete. If <expectError> is false,
@@ -708,7 +708,7 @@ public abstract class TestConnectionPool extends TestCase {
     protected void multipleThreads(final int holdTime, final boolean expectError, final boolean loopOnce, final long maxWait)
             throws Exception {
                 long startTime = timeStamp();
-                final PoolTest[] pts = new PoolTest[2 * getMaxActive()];
+                final PoolTest[] pts = new PoolTest[2 * getMaxTotal()];
                 // Catch Exception so we can stop all threads if one fails
                 ThreadGroup threadGroup = new ThreadGroup("foo") {
                     @Override

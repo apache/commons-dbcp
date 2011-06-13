@@ -76,7 +76,7 @@ public class TestManagedDataSource extends TestConnectionPool {
 
         // create the pool
         pool = new GenericObjectPool();
-        pool.setMaxActive(getMaxActive());
+        pool.setMaxTotal(getMaxTotal());
         pool.setMaxWait(getMaxWait());
 
         // create the pool object factory
@@ -131,7 +131,7 @@ public class TestManagedDataSource extends TestConnectionPool {
 
     public void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
         // Get a maximal set of connections from the pool
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
         }
@@ -153,7 +153,7 @@ public class TestManagedDataSource extends TestConnectionPool {
 
     public void testManagedConnectionEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
-        Connection[] c = new Connection[getMaxActive()];
+        Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
         }
@@ -182,7 +182,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         // Force ManagedConnections to wrap non-Delegating connections
         pool.close();
         pool = new GenericObjectPool();
-        pool.setMaxActive(getMaxActive());
+        pool.setMaxTotal(getMaxTotal());
         pool.setMaxWait(getMaxWait());
         Properties props = new Properties();
         props.setProperty("user", "username");
