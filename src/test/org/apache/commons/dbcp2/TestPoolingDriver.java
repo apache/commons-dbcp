@@ -32,6 +32,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
@@ -59,21 +60,34 @@ public class TestPoolingDriver extends TestConnectionPool {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        GenericObjectPool pool = new GenericObjectPool(null, getMaxActive(), WhenExhaustedAction.BLOCK, getMaxWait(), 10, true, true, 10000L, 5, 5000L, true);
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(getMaxActive());
+        poolConfig.setMaxWait(getMaxWait());
+        poolConfig.setMinIdle(10);
+        poolConfig.setTestOnBorrow(true);
+        poolConfig.setTestOnReturn(true);
+        poolConfig.setTestWhileIdle(true);
+        poolConfig.setTimeBetweenEvictionRunsMillis(10000L);
+        poolConfig.setNumTestsPerEvictionRun(5);
+        poolConfig.setMinEvictableIdleTimeMillis(5000L);
+        GenericObjectPool pool = new GenericObjectPool(poolConfig);
+
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
-        GenericKeyedObjectPoolConfig config =
+
+        GenericKeyedObjectPoolConfig keyedPoolConfig =
             new GenericKeyedObjectPoolConfig();
-        config.setMaxTotalPerKey(10);
-        config.setMaxWait(2000);
-        config.setMaxIdlePerKey(10);
-        config.setTestOnBorrow(true);
-        config.setTestOnReturn(true);
-        config.setTestWhileIdle(true);
-        config.setTimeBetweenEvictionRunsMillis(10000);
-        config.setNumTestsPerEvictionRun(5);
-        config.setMinEvictableIdleTimeMillis(5000);
+        keyedPoolConfig.setMaxTotalPerKey(10);
+        keyedPoolConfig.setMaxWait(2000);
+        keyedPoolConfig.setMaxIdlePerKey(10);
+        keyedPoolConfig.setTestOnBorrow(true);
+        keyedPoolConfig.setTestOnReturn(true);
+        keyedPoolConfig.setTestWhileIdle(true);
+        keyedPoolConfig.setTimeBetweenEvictionRunsMillis(10000);
+        keyedPoolConfig.setNumTestsPerEvictionRun(5);
+        keyedPoolConfig.setMinEvictableIdleTimeMillis(5000);
         GenericKeyedObjectPoolFactory opf =
-            new GenericKeyedObjectPoolFactory(config);
+            new GenericKeyedObjectPoolFactory(keyedPoolConfig);
+
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
         assertNotNull(pcf);
         driver = new PoolingDriver();
@@ -88,14 +102,14 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
     
     public void test1() {
-        GenericObjectPool connectionPool = new GenericObjectPool(null);
+        GenericObjectPool connectionPool = new GenericObjectPool();
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
         new PoolingDataSource(connectionPool);
     }
 
     public void test2() {
-        GenericObjectPool connectionPool = new GenericObjectPool(null);
+        GenericObjectPool connectionPool = new GenericObjectPool();
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
         PoolingDriver driver2 = new PoolingDriver();
@@ -125,12 +139,11 @@ public class TestPoolingDriver extends TestConnectionPool {
     
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testReportedBug12400() throws Exception {
-        ObjectPool connectionPool = new GenericObjectPool(
-            null,
-            70,
-            WhenExhaustedAction.BLOCK,
-            60000,
-            10);
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        config.setMaxTotal(70);
+        config.setMaxWait(60000);
+        config.setMaxIdle(10);
+        ObjectPool connectionPool = new GenericObjectPool(config);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver", 
             "username", 
