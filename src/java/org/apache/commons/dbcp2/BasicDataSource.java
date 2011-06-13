@@ -31,10 +31,10 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.KeyedObjectPoolFactory;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 
@@ -291,7 +291,7 @@ public class BasicDataSource implements DataSource {
      * means that the pool behaves as a FIFO queue - connections are taken from
      * the idle instance pool in the order that they are returned to the pool.
      */
-    private boolean lifo = GenericObjectPool.DEFAULT_LIFO;
+    private boolean lifo = GenericObjectPoolConfig.DEFAULT_LIFO;
 
     /**
      * Returns the LIFO property. 
@@ -322,7 +322,7 @@ public class BasicDataSource implements DataSource {
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or negative for no limit.
      */
-    protected int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
+    protected int maxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
      * <p>Returns the maximum number of active connections that can be
@@ -360,7 +360,7 @@ public class BasicDataSource implements DataSource {
      * connections to rise above maxIdle. The best value for maxIdle for heavily
      * loaded system will vary but the default is a good starting point.
      */
-    protected int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
+    protected int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
 
     /**
      * <p>Returns the maximum number of connections that can remain idle in the
@@ -395,7 +395,7 @@ public class BasicDataSource implements DataSource {
      * runs. The value of this property has no effect unless {@link #timeBetweenEvictionRunsMillis}
      * has a positive value.
      */
-    protected int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;
+    protected int minIdle = GenericObjectPoolConfig.DEFAULT_MIN_IDLE;
 
     /**
      * Returns the minimum number of idle connections in the pool. The pool attempts
@@ -464,7 +464,7 @@ public class BasicDataSource implements DataSource {
      * are no available connections) for a connection to be returned before
      * throwing an exception, or <= 0 to wait indefinitely.
      */
-    protected long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
+    protected long maxWait = GenericObjectPoolConfig.DEFAULT_MAX_WAIT;
 
     /**
      * <p>Returns the maximum number of milliseconds that the pool will wait
@@ -638,7 +638,7 @@ public class BasicDataSource implements DataSource {
      * be run.
      */
     protected long timeBetweenEvictionRunsMillis =
-        GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+        GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
         
     /**
      * Returns the value of the {@link #timeBetweenEvictionRunsMillis}
@@ -669,7 +669,7 @@ public class BasicDataSource implements DataSource {
      * evictor thread (if any).
      */
     protected int numTestsPerEvictionRun =
-        GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+        GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
     /**
      * Returns the value of the {@link #numTestsPerEvictionRun} property.
@@ -701,7 +701,7 @@ public class BasicDataSource implements DataSource {
      * is eligible for eviction by the idle object evictor (if any).
      */
     protected long minEvictableIdleTimeMillis =
-        GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+        GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
     /**
      * Returns the {@link #minEvictableIdleTimeMillis} property.
@@ -734,7 +734,8 @@ public class BasicDataSource implements DataSource {
      * Note that {@code minEvictableIdleTimeMillis} takes precedence over this
      * parameter.  See {@link #getSoftMinEvictableIdleTimeMillis()}.
      */
-    private long softMinEvictableIdleTimeMillis = GenericObjectPool.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+    private long softMinEvictableIdleTimeMillis =
+        GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
     
     /**
      * Sets the minimum amount of time a connection may sit idle in the pool

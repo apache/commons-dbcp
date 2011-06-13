@@ -30,6 +30,7 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
@@ -54,10 +55,10 @@ public class SharedPoolDataSource
 
     private static final long serialVersionUID = -8132305535403690372L;
 
-    private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
-    private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
+    private int maxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
     private int maxWait = (int)Math.min(Integer.MAX_VALUE,
-        GenericObjectPool.DEFAULT_MAX_WAIT);
+            GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
     private transient KeyedObjectPool pool = null;
     private transient KeyedCPDSConnectionFactory factory = null;
 

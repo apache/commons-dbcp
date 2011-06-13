@@ -33,6 +33,7 @@ import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
@@ -61,10 +62,10 @@ public class PerUserPoolDataSource
 
     private static final long serialVersionUID = -3104731034410444060L;
 
-    private int defaultMaxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
-    private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
+    private int defaultMaxActive = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private int defaultMaxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
     private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
-        GenericObjectPool.DEFAULT_MAX_WAIT);
+            GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
     Map perUserDefaultAutoCommit = null;    
     Map perUserDefaultTransactionIsolation = null;
     Map perUserMaxActive = null;    

@@ -34,8 +34,7 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and 
@@ -122,17 +121,20 @@ public abstract class InstanceKeyDataSource
     private PrintWriter logWriter = null;
     
     // Pool properties
-    private boolean _testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
-    private boolean _testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
+    private boolean _testOnBorrow =
+        GenericObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
+    private boolean _testOnReturn =
+        GenericObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
     private int _timeBetweenEvictionRunsMillis = (int)
         Math.min(Integer.MAX_VALUE,
-                 GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+                 GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
     private int _numTestsPerEvictionRun = 
-        GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+        GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
     private int _minEvictableIdleTimeMillis = (int)
     Math.min(Integer.MAX_VALUE,
-             GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-    private boolean _testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
+            GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+    private boolean _testWhileIdle =
+        GenericObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
     private boolean rollbackAfterValidation = false;
     
