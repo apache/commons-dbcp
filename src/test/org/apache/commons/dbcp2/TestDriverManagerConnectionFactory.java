@@ -60,7 +60,6 @@ public class TestDriverManagerConnectionFactory extends TestCase {
         final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, connectionPool,
                     null, null, false, true);
-        connectionPool.setFactory(poolableConnectionFactory);
         PoolingDataSource dataSource =
             new PoolingDataSource(connectionPool);
 
