@@ -88,7 +88,7 @@ public class TestCPDSConnectionFactory extends TestCase {
      */
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        GenericObjectPool pool = new GenericObjectPool(null);
+        GenericObjectPool pool = new GenericObjectPool();
         CPDSConnectionFactory factory = 
             new CPDSConnectionFactory(cpds, pool, null, "username", "password");
         
