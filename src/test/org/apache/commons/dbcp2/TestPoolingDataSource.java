@@ -62,7 +62,6 @@ public class TestPoolingDataSource extends TestConnectionPool {
                 new DriverConnectionFactory(new TesterDriver(),
                         "jdbc:apache:commons:testdriver", props),
                 pool, null, "SELECT DUMMY FROM DUAL", true, true);
-        pool.setFactory(factory);
         ds = new PoolingDataSource(pool);
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
@@ -120,7 +119,6 @@ public class TestPoolingDataSource extends TestConnectionPool {
             new NonDelegatingPoolableConnectionFactory(
                 new DriverConnectionFactory(new TesterDriver(),
                         "jdbc:apache:commons:testdriver", props), pool);
-        pool.setFactory(factory);
         ds = new PoolingDataSource(pool);
         checkPoolGuardConnectionWrapperEqualsReflexive();
     }
