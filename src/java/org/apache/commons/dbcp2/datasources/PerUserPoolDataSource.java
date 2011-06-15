@@ -507,7 +507,7 @@ public class PerUserPoolDataSource
             getDefaultMaxWait() : userMax.intValue();
 
         // Create an object pool to contain our PooledConnections
-        GenericObjectPool pool = new GenericObjectPool(null);
+        GenericObjectPool pool = new GenericObjectPool();
         pool.setMaxTotal(maxTotal);
         pool.setMaxIdle(maxIdle);
         pool.setMaxWait(maxWait);
