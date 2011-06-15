@@ -81,7 +81,6 @@ public class TestManagedDataSource extends TestConnectionPool {
 
         // create the pool object factory
         PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, pool, null, "SELECT DUMMY FROM DUAL", true, true);
-        pool.setFactory(factory);
 
         // finally create the datasource
         ds = new ManagedDataSource(pool, xaConnectionFactory.getTransactionRegistry());
@@ -187,8 +186,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         Properties props = new Properties();
         props.setProperty("user", "username");
         props.setProperty("password", "password");
-        NonDelegatingPoolableConnectionFactory factory = new NonDelegatingPoolableConnectionFactory(new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", props), pool);
-        pool.setFactory(factory);
+        NonDelegatingPoolableConnectionFactory factory = new NonDelegatingPoolableConnectionFactory(
+                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", props), pool);
         ds = new PoolingDataSource(pool);
         checkManagedConnectionEqualsReflexive();
     }
