@@ -49,7 +49,6 @@ public class TestPoolableConnection extends TestCase {
             new PoolableConnectionFactory(
                 new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver", null),
                 pool, null, null, true, true);
-        pool.setFactory(factory);
     }
 
     public void testConnectionPool() throws Exception {
