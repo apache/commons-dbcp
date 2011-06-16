@@ -75,7 +75,7 @@ public class TestPoolableConnection extends TestCase {
         ((PoolableConnection)conn).getInnermostDelegate().close();
         
         // At this point, we can close the pooled connection. The
-        // PoolableConnection *should* realise that its underlying
+        // PoolableConnection *should* realize that its underlying
         // connection is gone and invalidate itself. The pool should have no
         // active connections.
 
