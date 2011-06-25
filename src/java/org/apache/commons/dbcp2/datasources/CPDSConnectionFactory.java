@@ -101,29 +101,29 @@ class CPDSConnectionFactory
      * @param username
      * @param password
      */
-     public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                  ObjectPool pool,
-                                  String validationQuery,
-                                  boolean rollbackAfterValidation,
-                                  String username,
-                                  String password) {
-         _cpds = cpds;
-         _pool = pool;
-         pool.setFactory(this);
-         _validationQuery = validationQuery;
-         _username = username;
-         _password = password;
-         _rollbackAfterValidation = rollbackAfterValidation;
-     }
+    public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
+                                 ObjectPool pool,
+                                 String validationQuery,
+                                 boolean rollbackAfterValidation,
+                                 String username,
+                                 String password) {
+        _cpds = cpds;
+        _pool = pool;
+        pool.setFactory(this);
+        _validationQuery = validationQuery;
+        _username = username;
+        _password = password;
+        _rollbackAfterValidation = rollbackAfterValidation;
+    }
      
-     /**
-      * Returns the object pool used to pool connections created by this factory.
-      * 
-      * @return ObjectPool managing pooled connections
-      */
-     public ObjectPool getPool() {
-         return _pool;
-     }
+    /**
+     * Returns the object pool used to pool connections created by this factory.
+     * 
+     * @return ObjectPool managing pooled connections
+     */
+    public ObjectPool getPool() {
+        return _pool;
+    }
 
     @Override
     public synchronized Object makeObject() {
