@@ -53,8 +53,8 @@ public class AbandonedObjectPool extends GenericObjectPool {
      */
     public AbandonedObjectPool(PoolableObjectFactory factory,
                                AbandonedConfig config) {
+        super(factory);
         this.config = config;
-        this.setFactory(factory);
     }
 
     /**

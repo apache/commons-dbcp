@@ -180,13 +180,14 @@ public class BasicManagedDataSource extends BasicDataSource {
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
     @Override
-    protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
-            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig abandonedConfig) throws SQLException {
+    protected PoolableConnectionFactory createPoolableConnectionFactory(
+            ConnectionFactory driverConnectionFactory,
+            KeyedObjectPoolFactory statementPoolFactory,
+            AbandonedConfig abandonedConfig) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
                 new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory,
-                                              connectionPool,
                                               statementPoolFactory,
                                               validationQuery,
                                               validationQueryTimeout,
@@ -202,5 +203,6 @@ public class BasicManagedDataSource extends BasicDataSource {
         } catch (Exception e) {
             throw (SQLException)new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")").initCause(e);
         }
+        return connectionFactory;
     }
 }

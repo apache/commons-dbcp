@@ -42,16 +42,13 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
@@ -61,7 +58,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param connectionInitSqls a Collection of SQL statements to initialize {@link Connection}s. Using <tt>null</tt> turns off initialization.
@@ -69,10 +65,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _connectionInitSqls = connectionInitSqls;
@@ -83,7 +77,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -91,10 +84,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, boolean defaultReadOnly, boolean defaultAutoCommit) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, boolean defaultReadOnly, boolean defaultAutoCommit) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -105,7 +96,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -114,10 +104,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -129,17 +117,14 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
@@ -150,7 +135,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param connectionInitSqls a Collection of SQL statement to initialize {@link Connection}s. Using <tt>null</tt> turns off initialization.
@@ -159,10 +143,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _connectionInitSqls = connectionInitSqls;
@@ -174,7 +156,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -183,10 +164,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -198,7 +177,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -208,10 +186,8 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      * @since 1.3
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory, KeyedObjectPoolFactory stmtPoolFactory, String validationQuery, int validationQueryTimeout, Collection connectionInitSqls, boolean defaultReadOnly, boolean defaultAutoCommit, int defaultTransactionIsolation) {
         _connFactory = connFactory;
-        _pool = pool;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -224,7 +200,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
@@ -233,7 +208,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         boolean defaultReadOnly,
@@ -241,9 +215,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
@@ -253,7 +225,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
@@ -263,7 +234,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         boolean defaultReadOnly,
@@ -272,9 +242,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
@@ -285,7 +253,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
@@ -296,7 +263,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         boolean defaultReadOnly,
@@ -306,9 +272,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
@@ -320,7 +284,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
@@ -331,7 +294,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         Boolean defaultReadOnly,
@@ -341,9 +303,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _defaultReadOnly = defaultReadOnly;
@@ -355,7 +315,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param connectionInitSqls a Collection of SQL statements to initialize {@link Connection}s. Using <tt>null</tt> turns off initialization.
@@ -368,7 +327,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         Collection connectionInitSqls,
@@ -379,9 +337,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _connectionInitSqls = connectionInitSqls;
@@ -394,7 +350,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -407,7 +362,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         int validationQueryTimeout,
@@ -418,9 +372,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -433,7 +385,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -448,7 +399,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         int validationQueryTimeout,
@@ -460,9 +410,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
@@ -476,7 +424,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.  Should return at least one row. Using <tt>null</tt> turns off validation.
      * @param validationQueryTimeout the number of seconds that validation queries will wait for database response before failing.  Use a value less than or equal to 0 for no timeout.
@@ -491,7 +438,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      */
     public PoolableConnectionFactory(
         ConnectionFactory connFactory,
-        ObjectPool pool,
         KeyedObjectPoolFactory stmtPoolFactory,
         String validationQuery,
         int validationQueryTimeout,
@@ -504,9 +450,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         AbandonedConfig config) {
 
         _connFactory = connFactory;
-        _pool = pool;
         _config = config;
-        _pool.setFactory(this);
         _stmtPoolFactory = stmtPoolFactory;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;

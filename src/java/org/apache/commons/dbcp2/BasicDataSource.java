@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.KeyedObjectPoolFactory;
+import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -1529,9 +1530,6 @@ public class BasicDataSource implements DataSource {
             // create factory which returns raw physical connections
             ConnectionFactory driverConnectionFactory = createConnectionFactory();
     
-            // create a pool for our connections
-            createConnectionPool();
-    
             // Set up statement pool, if desired
             GenericKeyedObjectPoolFactory statementPoolFactory = null;
             if (isPoolPreparedStatements()) {
@@ -1548,9 +1546,11 @@ public class BasicDataSource implements DataSource {
     
             // Set up the poolable connection factory
             boolean success = false;
+            PoolableConnectionFactory poolableConnectionFactory;
             try {
-                createPoolableConnectionFactory(driverConnectionFactory,
-                        statementPoolFactory, abandonedConfig);
+                poolableConnectionFactory = createPoolableConnectionFactory(
+                        driverConnectionFactory, statementPoolFactory,
+                        abandonedConfig);
                 success = true;
             } catch (SQLException se) {
                 throw se;
@@ -1558,10 +1558,11 @@ public class BasicDataSource implements DataSource {
                 throw rte; 
             } catch (Exception ex) {
                 throw new SQLException("Error creating connection factory", ex);
-            } finally {
-                if (!success) {
-                    closeConnectionPool();
-                }
+            }
+
+            if (success) {
+                // create a pool for our connections
+                createConnectionPool(poolableConnectionFactory);
             }
             
             // Create the pooling data source to manage connections
@@ -1698,14 +1699,14 @@ public class BasicDataSource implements DataSource {
      * to a positive value causes {@link GenericObjectPool}'s eviction timer
      * to be started.
      */
-    protected void createConnectionPool() {
+    protected void createConnectionPool(PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
         GenericObjectPool gop;
         if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
-            gop = new AbandonedObjectPool(null,abandonedConfig);
+            gop = new AbandonedObjectPool(factory,abandonedConfig);
         }
         else {
-            gop = new GenericObjectPool();
+            gop = new GenericObjectPool(factory);
         }
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
@@ -1717,6 +1718,7 @@ public class BasicDataSource implements DataSource {
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
+        factory.setPool(gop);
         connectionPool = gop;
     }
     
@@ -1767,13 +1769,12 @@ public class BasicDataSource implements DataSource {
      * @param configuration abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
-    protected void createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
+    protected PoolableConnectionFactory createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
             KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig configuration) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
                 new PoolableConnectionFactory(driverConnectionFactory,
-                                              connectionPool,
                                               statementPoolFactory,
                                               validationQuery,
                                               validationQueryTimeout,
@@ -1790,6 +1791,7 @@ public class BasicDataSource implements DataSource {
         } catch (Exception e) {
             throw new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
+        return connectionFactory;
     }
 
     protected static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {

@@ -60,18 +60,6 @@ public class TestPoolingDriver extends TestConnectionPool {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
-        poolConfig.setMaxTotal(getMaxTotal());
-        poolConfig.setMaxWait(getMaxWait());
-        poolConfig.setMinIdle(10);
-        poolConfig.setTestOnBorrow(true);
-        poolConfig.setTestOnReturn(true);
-        poolConfig.setTestWhileIdle(true);
-        poolConfig.setTimeBetweenEvictionRunsMillis(10000L);
-        poolConfig.setNumTestsPerEvictionRun(5);
-        poolConfig.setMinEvictableIdleTimeMillis(5000L);
-        GenericObjectPool pool = new GenericObjectPool(poolConfig);
-
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
         GenericKeyedObjectPoolConfig keyedPoolConfig =
@@ -88,7 +76,22 @@ public class TestPoolingDriver extends TestConnectionPool {
         GenericKeyedObjectPoolFactory opf =
             new GenericKeyedObjectPoolFactory(keyedPoolConfig);
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, pool, opf, "SELECT COUNT(*) FROM DUAL", false, true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, opf, "SELECT COUNT(*) FROM DUAL", false, true);
+
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(getMaxTotal());
+        poolConfig.setMaxWait(getMaxWait());
+        poolConfig.setMinIdle(10);
+        poolConfig.setTestOnBorrow(true);
+        poolConfig.setTestOnReturn(true);
+        poolConfig.setTestWhileIdle(true);
+        poolConfig.setTimeBetweenEvictionRunsMillis(10000L);
+        poolConfig.setNumTestsPerEvictionRun(5);
+        poolConfig.setMinEvictableIdleTimeMillis(5000L);
+        
+        GenericObjectPool pool = new GenericObjectPool(pcf, poolConfig);
+        pcf.setPool(pool);
+
         assertNotNull(pcf);
         driver = new PoolingDriver();
         driver.registerPool("test",pool);
@@ -102,16 +105,16 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
     
     public void test1() {
-        GenericObjectPool connectionPool = new GenericObjectPool();
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+        GenericObjectPool connectionPool = new GenericObjectPool(pcf);
         new PoolingDataSource(connectionPool);
     }
 
     public void test2() {
-        GenericObjectPool connectionPool = new GenericObjectPool();
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+        GenericObjectPool connectionPool = new GenericObjectPool(pcf);
         PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example",connectionPool);
     }
@@ -143,7 +146,6 @@ public class TestPoolingDriver extends TestConnectionPool {
         config.setMaxTotal(70);
         config.setMaxWait(60000);
         config.setMaxIdle(10);
-        ObjectPool connectionPool = new GenericObjectPool(config);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver", 
             "username", 
@@ -151,11 +153,13 @@ public class TestPoolingDriver extends TestConnectionPool {
         PoolableConnectionFactory poolableConnectionFactory = 
             new PoolableConnectionFactory(
                 connectionFactory,
-                connectionPool,
                 null,
                 null,
                 false,
                 true);
+        ObjectPool connectionPool =
+            new GenericObjectPool(poolableConnectionFactory,config);
+        poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
         PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("neusoftim",connectionPool);

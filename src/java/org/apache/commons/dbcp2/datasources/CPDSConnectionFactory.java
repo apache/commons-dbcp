@@ -50,7 +50,7 @@ class CPDSConnectionFactory
     private final ConnectionPoolDataSource _cpds;
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
-    private final ObjectPool _pool;
+    private ObjectPool _pool;
     private String _username = null;
     private String _password = null;
 
@@ -70,8 +70,6 @@ class CPDSConnectionFactory
      * 
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnection's
-     * @param pool the {@link ObjectPool} in which to pool those
-     * {@link Connection}s
      * @param validationQuery a query to use to {@link #validateObject validate}
      * {@link Connection}s. Should return at least one row. May be 
      * <tt>null</tt>
@@ -79,11 +77,10 @@ class CPDSConnectionFactory
      * @param password
      */
     public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                 ObjectPool pool,
                                  String validationQuery,
                                  String username,
                                  String password) {
-        this(cpds, pool, validationQuery, false, username, password);
+        this(cpds, validationQuery, false, username, password);
     }
     
     /**
@@ -91,8 +88,6 @@ class CPDSConnectionFactory
      * 
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnection's
-     * @param pool the {@link ObjectPool} in which to pool those {@link
-     * Connection}s
      * @param validationQuery a query to use to {@link #validateObject
      * validate} {@link Connection}s. Should return at least one row.
      * May be <tt>null</tt>
@@ -102,20 +97,17 @@ class CPDSConnectionFactory
      * @param password
      */
     public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                 ObjectPool pool,
                                  String validationQuery,
                                  boolean rollbackAfterValidation,
                                  String username,
                                  String password) {
         _cpds = cpds;
-        _pool = pool;
-        pool.setFactory(this);
         _validationQuery = validationQuery;
         _username = username;
         _password = password;
         _rollbackAfterValidation = rollbackAfterValidation;
     }
-     
+
     /**
      * Returns the object pool used to pool connections created by this factory.
      * 
@@ -123,6 +115,15 @@ class CPDSConnectionFactory
      */
     public ObjectPool getPool() {
         return _pool;
+    }
+
+    /**
+     * 
+     * @param pool the {@link ObjectPool} in which to pool those {@link
+     * Connection}s
+     */
+    public void setPool(ObjectPool pool) {
+        this._pool = pool;
     }
 
     @Override
