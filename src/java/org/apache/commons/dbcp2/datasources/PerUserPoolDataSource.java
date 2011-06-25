@@ -506,8 +506,16 @@ public class PerUserPoolDataSource
         int maxWait = (userMax == null) ?
             getDefaultMaxWait() : userMax.intValue();
 
+        // Set up the factory we will use (passing the pool associates
+        // the factory with the pool, so we do not have to do so
+        // explicitly)
+        CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds,
+                getValidationQuery(), isRollbackAfterValidation(), username,
+                password);
+               
         // Create an object pool to contain our PooledConnections
-        GenericObjectPool pool = new GenericObjectPool();
+        GenericObjectPool pool = new GenericObjectPool(factory);
+        factory.setPool(pool);
         pool.setMaxTotal(maxTotal);
         pool.setMaxIdle(maxIdle);
         pool.setMaxWait(maxWait);
@@ -527,12 +535,6 @@ public class PerUserPoolDataSource
         pool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         pool.setTestWhileIdle(getTestWhileIdle());
                 
-        // Set up the factory we will use (passing the pool associates
-        // the factory with the pool, so we do not have to do so
-        // explicitly)
-        CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, pool, getValidationQuery(),
-                isRollbackAfterValidation(), username, password);
-           
         Object old = managers.put(getPoolKey(username,password), factory);
         if (old != null) {
             throw new IllegalStateException("Pool already contains an entry for this user/password: "+username);

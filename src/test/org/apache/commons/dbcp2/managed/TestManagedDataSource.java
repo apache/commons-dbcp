@@ -26,7 +26,6 @@ import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
-import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 
@@ -74,13 +73,14 @@ public class TestManagedDataSource extends TestConnectionPool {
         // wrap it with a LocalXAConnectionFactory
         XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(transactionManager, connectionFactory);
 
+        // create the pool object factory
+        PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null, "SELECT DUMMY FROM DUAL", true, true);
+
         // create the pool
-        pool = new GenericObjectPool();
+        pool = new GenericObjectPool(factory);
+        factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
         pool.setMaxWait(getMaxWait());
-
-        // create the pool object factory
-        PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, pool, null, "SELECT DUMMY FROM DUAL", true, true);
 
         // finally create the datasource
         ds = new ManagedDataSource(pool, xaConnectionFactory.getTransactionRegistry());
@@ -179,15 +179,15 @@ public class TestManagedDataSource extends TestConnectionPool {
         checkManagedConnectionEqualsReflexive();
 
         // Force ManagedConnections to wrap non-Delegating connections
-        pool.close();
-        pool = new GenericObjectPool();
-        pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWait(getMaxWait());
         Properties props = new Properties();
         props.setProperty("user", "username");
         props.setProperty("password", "password");
         NonDelegatingPoolableConnectionFactory factory = new NonDelegatingPoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", props), pool);
+                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", props));
+        pool.close();
+        pool = new GenericObjectPool(factory);
+        pool.setMaxTotal(getMaxTotal());
+        pool.setMaxWait(getMaxWait());
         ds = new PoolingDataSource(pool);
         checkManagedConnectionEqualsReflexive();
     }
@@ -239,8 +239,8 @@ public class TestManagedDataSource extends TestConnectionPool {
      */
     private static class NonDelegatingPoolableConnectionFactory
             extends PoolableConnectionFactory {
-        public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory, ObjectPool pool) {
-            super(connFactory, pool, null, null, true, true);
+        public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory) {
+            super(connFactory, null, null, true, true);
         }
 
         @Override

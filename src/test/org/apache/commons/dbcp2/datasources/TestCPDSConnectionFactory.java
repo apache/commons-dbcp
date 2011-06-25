@@ -88,9 +88,10 @@ public class TestCPDSConnectionFactory extends TestCase {
      */
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        GenericObjectPool pool = new GenericObjectPool();
         CPDSConnectionFactory factory = 
-            new CPDSConnectionFactory(cpds, pool, null, "username", "password");
+            new CPDSConnectionFactory(cpds, null, "username", "password");
+        GenericObjectPool pool = new GenericObjectPool(factory);
+        factory.setPool(pool);
         
         // Checkout a pair of connections
         PooledConnection pcon1 = 

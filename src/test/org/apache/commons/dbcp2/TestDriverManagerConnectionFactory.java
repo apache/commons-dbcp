@@ -52,14 +52,16 @@ public class TestDriverManagerConnectionFactory extends TestCase {
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
-        GenericObjectPool connectionPool = new GenericObjectPool(config);
         final ConnectionFactory connectionFactory =
             new DriverManagerConnectionFactory(
                     "jdbc:apache:commons:testdriver",
                     "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory, connectionPool,
+            new PoolableConnectionFactory(connectionFactory,
                     null, null, false, true);
+        GenericObjectPool connectionPool =
+            new GenericObjectPool(poolableConnectionFactory, config);
+        poolableConnectionFactory.setPool(connectionPool);
         PoolingDataSource dataSource =
             new PoolingDataSource(connectionPool);
 

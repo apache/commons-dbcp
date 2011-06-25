@@ -147,16 +147,7 @@ public class PoolingDriverExample {
 
     public static void setupDriver(String connectURI) throws Exception {
         //
-        // First, we'll need a ObjectPool that serves as the
-        // actual pool of connections.
-        //
-        // We'll use a GenericObjectPool instance, although
-        // any ObjectPool implementation will suffice.
-        //
-        ObjectPool connectionPool = new GenericObjectPool(null);
-
-        //
-        // Next, we'll create a ConnectionFactory that the
+        // First, we'll create a ConnectionFactory that the
         // pool will use to create Connections.
         // We'll use the DriverManagerConnectionFactory,
         // using the connect string passed in the command line
@@ -165,11 +156,20 @@ public class PoolingDriverExample {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,null);
 
         //
-        // Now we'll create the PoolableConnectionFactory, which wraps
+        // Next, we'll create the PoolableConnectionFactory, which wraps
         // the "real" Connections created by the ConnectionFactory with
         // the classes that implement the pooling functionality.
         //
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+
+        //
+        // Now we'll need a ObjectPool that serves as the
+        // actual pool of connections.
+        //
+        // We'll use a GenericObjectPool instance, although
+        // any ObjectPool implementation will suffice.
+        //
+        ObjectPool connectionPool = new GenericObjectPool(poolableConnectionFactory);
 
         //
         // Finally, we create the PoolingDriver itself...

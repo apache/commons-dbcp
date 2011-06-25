@@ -40,7 +40,6 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * Create a PoolableManagedConnectionFactory and attach it to a connection pool.
      * 
      * @param connFactory XAConnectionFactory
-     * @param pool connection pool 
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling
      * {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
@@ -49,10 +48,10 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * @param defaultAutoCommit the default "auto commit" setting for returned {@link Connection}s
      */
     public PoolableManagedConnectionFactory(XAConnectionFactory connFactory,
-            ObjectPool pool, KeyedObjectPoolFactory stmtPoolFactory,
+            KeyedObjectPoolFactory stmtPoolFactory,
             String validationQuery, boolean defaultReadOnly,
             boolean defaultAutoCommit) {
-        super(connFactory, pool, stmtPoolFactory, validationQuery,
+        super(connFactory, stmtPoolFactory, validationQuery,
                 defaultReadOnly, defaultAutoCommit);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }
@@ -61,7 +60,6 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * Create a PoolableManagedConnectionFactory and attach it to a connection pool.
      * 
      * @param connFactory XAConnectionFactory
-     * @param pool connection pool 
      * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling
      * {@link java.sql.PreparedStatement}s, or <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
@@ -77,7 +75,6 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * @param config the AbandonedConfig if tracing SQL objects
      */
     public PoolableManagedConnectionFactory(XAConnectionFactory connFactory,
-            ObjectPool pool,
             KeyedObjectPoolFactory stmtPoolFactory,
             String validationQuery,
             int validationQueryTimeout,
@@ -87,7 +84,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             int defaultTransactionIsolation,
             String defaultCatalog,
             AbandonedConfig config) {
-        super(connFactory, pool, stmtPoolFactory, validationQuery, validationQueryTimeout, connectionInitSqls,
+        super(connFactory, stmtPoolFactory, validationQuery, validationQueryTimeout, connectionInitSqls,
                 defaultReadOnly, defaultAutoCommit, defaultTransactionIsolation, defaultCatalog, config);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }

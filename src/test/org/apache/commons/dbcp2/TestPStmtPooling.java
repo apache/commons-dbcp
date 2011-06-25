@@ -53,13 +53,13 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        ObjectPool connPool = new GenericObjectPool();
         KeyedObjectPoolFactory stmtPoolFactory =
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
-                null, false, true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
+                connFactory, stmtPoolFactory, null, false, true);
+        ObjectPool connPool = new GenericObjectPool(pcf);
 
         DataSource ds = new PoolingDataSource(connPool);
 
@@ -78,13 +78,14 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        ObjectPool connPool = new GenericObjectPool();
         KeyedObjectPoolFactory stmtPoolFactory =
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
-                null, false, true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
+                connFactory, stmtPoolFactory, null, false, true);
+
+        ObjectPool connPool = new GenericObjectPool(pcf);
 
         DataSource ds = new PoolingDataSource(connPool);
 
@@ -116,13 +117,14 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        ObjectPool connPool = new GenericObjectPool();
         KeyedObjectPoolFactory stmtPoolFactory =
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        new PoolableConnectionFactory(connFactory, connPool, stmtPoolFactory,
-                null, false, true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
+                connFactory, stmtPoolFactory, null, false, true);
+
+        ObjectPool connPool = new GenericObjectPool(pcf);
 
         DataSource ds = new PoolingDataSource(connPool);
         ((PoolingDataSource) ds).setAccessToUnderlyingConnectionAllowed(true);
