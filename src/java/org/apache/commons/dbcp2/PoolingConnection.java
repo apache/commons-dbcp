@@ -61,13 +61,8 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
         super(c);
     }
 
-    /**
-     * Constructor.
-     * @param c the underlying {@link Connection}.
-     * @param pool {@link KeyedObjectPool} of {@link PreparedStatement}s and {@link CallableStatement}s.
-     */
-    public PoolingConnection(Connection c, KeyedObjectPool pool) {
-        super(c);
+
+    public void setStatementPool(KeyedObjectPool pool) {
         _pstmtPool = pool;
     }
 

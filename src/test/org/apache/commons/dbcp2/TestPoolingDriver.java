@@ -62,22 +62,9 @@ public class TestPoolingDriver extends TestConnectionPool {
         super.setUp();
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
-        GenericKeyedObjectPoolConfig keyedPoolConfig =
-            new GenericKeyedObjectPoolConfig();
-        keyedPoolConfig.setMaxTotalPerKey(10);
-        keyedPoolConfig.setMaxWait(2000);
-        keyedPoolConfig.setMaxIdlePerKey(10);
-        keyedPoolConfig.setTestOnBorrow(true);
-        keyedPoolConfig.setTestOnReturn(true);
-        keyedPoolConfig.setTestWhileIdle(true);
-        keyedPoolConfig.setTimeBetweenEvictionRunsMillis(10000);
-        keyedPoolConfig.setNumTestsPerEvictionRun(5);
-        keyedPoolConfig.setMinEvictableIdleTimeMillis(5000);
-        GenericKeyedObjectPoolFactory opf =
-            new GenericKeyedObjectPoolFactory(keyedPoolConfig);
-
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf);
-        pcf.setStatementPoolFactory(opf);
+        pcf.setPoolStatements(true);
+        pcf.setMaxOpenPrepatedStatements(10);
         pcf.setValidationQuery("SELECT COUNT(*) FROM DUAL");
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);

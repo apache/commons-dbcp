@@ -89,11 +89,10 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         UserPassKey key = new UserPassKey("username", "password");
-        GenericKeyedObjectPool pool = new GenericKeyedObjectPool();
         KeyedCPDSConnectionFactory factory = 
             new KeyedCPDSConnectionFactory(cpds, null, false);
+        GenericKeyedObjectPool pool = new GenericKeyedObjectPool(factory);
         factory.setPool(pool);
-        pool.setFactory(factory);
         
         // Checkout a pair of connections
         PooledConnection pcon1 = 

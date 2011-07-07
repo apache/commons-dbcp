@@ -27,6 +27,9 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedObjectPoolFactory;
 import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * A {@link PoolableObjectFactory} that creates
@@ -113,16 +116,6 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     }
 
     /**
-     * Sets the {@link KeyedObjectPoolFactory} I use to create {@link KeyedObjectPool}s
-     * for pooling {@link java.sql.PreparedStatement}s.
-     * Set to <tt>null</tt> to disable {@link java.sql.PreparedStatement} pooling.
-     * @param stmtPoolFactory the {@link KeyedObjectPoolFactory} to use to create {@link KeyedObjectPool}s for pooling {@link java.sql.PreparedStatement}s
-     */
-    public void setStatementPoolFactory(KeyedObjectPoolFactory stmtPoolFactory) {
-        _stmtPoolFactory = stmtPoolFactory;
-    }
-
-    /**
      * Sets the default "read only" setting for borrowed {@link Connection}s
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
@@ -162,6 +155,14 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         this._cacheState = cacheState;
     }
 
+    public void setPoolStatements(boolean poolStatements) {
+        this.poolStatements = poolStatements;
+    }
+
+    public void setMaxOpenPrepatedStatements(int maxOpenPreparedStatements) {
+        this.maxOpenPreparedStatements = maxOpenPreparedStatements;
+    }
+
     @Override
     public Object makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
@@ -169,11 +170,19 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
         initializeConnection(conn);
-        if(null != _stmtPoolFactory) {
-            KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
-            conn = new PoolingConnection(conn,stmtpool);
+        if(poolStatements) {
+            conn = new PoolingConnection(conn);
+            GenericKeyedObjectPoolConfig config =
+                new GenericKeyedObjectPoolConfig();
+            config.setMaxTotalPerKey(-1);
+            config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            config.setMaxWait(0);
+            config.setMaxIdlePerKey(1);
+            config.setMaxTotal(maxOpenPreparedStatements);
+            KeyedObjectPool stmtPool =
+                new GenericKeyedObjectPool((PoolingConnection)conn, config);
+            ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
-            stmtpool.setFactory((PoolingConnection)conn);
         }
         return new PoolableConnection(conn,_pool,_config);
     }
@@ -314,12 +323,14 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected volatile int _validationQueryTimeout = -1;
     protected Collection _connectionInitSqls = null;
     protected volatile ObjectPool _pool = null;
-    protected volatile KeyedObjectPoolFactory _stmtPoolFactory = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     protected String _defaultCatalog;
-    private boolean _cacheState;
+    protected boolean _cacheState;
+    protected boolean poolStatements = false;
+    protected int maxOpenPreparedStatements =
+        GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
 
     /**
      * Configuration for removing abandoned connections.

@@ -53,13 +53,9 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        KeyedObjectPoolFactory stmtPoolFactory =
-            new GenericKeyedObjectPoolFactory(
-                    new GenericKeyedObjectPoolConfig());
-
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory);
-        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
         ObjectPool connPool = new GenericObjectPool(pcf);
@@ -81,13 +77,9 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        KeyedObjectPoolFactory stmtPoolFactory =
-            new GenericKeyedObjectPoolFactory(
-                    new GenericKeyedObjectPoolConfig());
-
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory);
-        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
 
@@ -123,13 +115,9 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
-        KeyedObjectPoolFactory stmtPoolFactory =
-            new GenericKeyedObjectPoolFactory(
-                    new GenericKeyedObjectPoolConfig());
-
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory);
-        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
 

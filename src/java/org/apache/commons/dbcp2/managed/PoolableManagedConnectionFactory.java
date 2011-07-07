@@ -21,6 +21,9 @@ import java.sql.Connection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.
@@ -56,12 +59,22 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
         initializeConnection(conn);
-        if(null != _stmtPoolFactory) {
-            KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
-            conn = new PoolingConnection(conn,stmtpool);
-            stmtpool.setFactory((PoolingConnection)conn);
+        if(poolStatements) {
+            conn = new PoolingConnection(conn);
+            GenericKeyedObjectPoolConfig config =
+                new GenericKeyedObjectPoolConfig();
+            config.setMaxTotalPerKey(-1);
+            config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            config.setMaxWait(0);
+            config.setMaxIdlePerKey(1);
+            config.setMaxTotal(maxOpenPreparedStatements);
+            KeyedObjectPool stmtPool =
+                new GenericKeyedObjectPool((PoolingConnection)conn, config);
+            ((PoolingConnection)conn).setStatementPool(stmtPool);
+            ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PoolableManagedConnection(transactionRegistry,conn,_pool,_config);
+        return new PoolableManagedConnection(transactionRegistry, conn, _pool,
+                _config);
     }
 
 }

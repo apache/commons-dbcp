@@ -118,8 +118,8 @@ public class TestDelegatingConnection extends TestCase {
         }
 
         try {
-            PoolingConnection pc = new PoolingConnection
-                (delegateConn2, new GenericKeyedObjectPool());
+            PoolingConnection pc = new PoolingConnection(delegateConn2);
+            pc.setStatementPool(new GenericKeyedObjectPool(pc));
             conn = new DelegatingConnection(pc);
             pc.close();
             conn.close();
