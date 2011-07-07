@@ -76,7 +76,11 @@ public class TestPoolingDriver extends TestConnectionPool {
         GenericKeyedObjectPoolFactory opf =
             new GenericKeyedObjectPoolFactory(keyedPoolConfig);
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, opf, "SELECT COUNT(*) FROM DUAL", false, true);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf);
+        pcf.setStatementPoolFactory(opf);
+        pcf.setValidationQuery("SELECT COUNT(*) FROM DUAL");
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxTotal(getMaxTotal());
@@ -106,14 +110,20 @@ public class TestPoolingDriver extends TestConnectionPool {
     
     public void test1() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connectionFactory);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
         GenericObjectPool connectionPool = new GenericObjectPool(pcf);
         new PoolingDataSource(connectionPool);
     }
 
     public void test2() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connectionFactory);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
         GenericObjectPool connectionPool = new GenericObjectPool(pcf);
         PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example",connectionPool);
@@ -151,12 +161,9 @@ public class TestPoolingDriver extends TestConnectionPool {
             "username", 
             "password");
         PoolableConnectionFactory poolableConnectionFactory = 
-            new PoolableConnectionFactory(
-                connectionFactory,
-                null,
-                null,
-                false,
-                true);
+            new PoolableConnectionFactory(connectionFactory);
+        poolableConnectionFactory.setDefaultReadOnly(false);
+        poolableConnectionFactory.setDefaultAutoCommit(true);
         ObjectPool connectionPool =
             new GenericObjectPool(poolableConnectionFactory,config);
         poolableConnectionFactory.setPool(connectionPool);

@@ -74,7 +74,11 @@ public class TestManagedDataSource extends TestConnectionPool {
         XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(transactionManager, connectionFactory);
 
         // create the pool object factory
-        PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null, "SELECT DUMMY FROM DUAL", true, true);
+        PoolableConnectionFactory factory =
+            new PoolableConnectionFactory(xaConnectionFactory);
+        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
+        factory.setDefaultReadOnly(true);
+        factory.setDefaultAutoCommit(true);
 
         // create the pool
         pool = new GenericObjectPool(factory);
@@ -240,7 +244,9 @@ public class TestManagedDataSource extends TestConnectionPool {
     private static class NonDelegatingPoolableConnectionFactory
             extends PoolableConnectionFactory {
         public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory) {
-            super(connFactory, null, null, true, true);
+            super(connFactory);
+            super.setDefaultAutoCommit(true);
+            super.setDefaultReadOnly(true);
         }
 
         @Override

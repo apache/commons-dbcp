@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -57,8 +56,10 @@ public class TestDriverManagerConnectionFactory extends TestCase {
                     "jdbc:apache:commons:testdriver",
                     "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory,
-                    null, null, false, true);
+            new PoolableConnectionFactory(connectionFactory);
+        poolableConnectionFactory.setDefaultReadOnly(false);
+        poolableConnectionFactory.setDefaultAutoCommit(true);
+
         GenericObjectPool connectionPool =
             new GenericObjectPool(poolableConnectionFactory, config);
         poolableConnectionFactory.setPool(connectionPool);

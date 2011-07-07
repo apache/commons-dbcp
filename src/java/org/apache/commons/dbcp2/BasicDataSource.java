@@ -1774,17 +1774,19 @@ public class BasicDataSource implements DataSource {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
-                new PoolableConnectionFactory(driverConnectionFactory,
-                                              statementPoolFactory,
-                                              validationQuery,
-                                              validationQueryTimeout,
-                                              connectionInitSqls,
-                                              defaultReadOnly,
-                                              defaultAutoCommit,
-                                              defaultTransactionIsolation,
-                                              defaultCatalog,
-                                              cacheState,
-                                              configuration);
+                new PoolableConnectionFactory(driverConnectionFactory);
+            connectionFactory.setStatementPoolFactory(statementPoolFactory);
+            connectionFactory.setValidationQuery(validationQuery);
+            connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
+            connectionFactory.setConnectionInitSql(connectionInitSqls);
+            if (defaultReadOnly != null) {
+                connectionFactory.setDefaultReadOnly(defaultReadOnly.booleanValue());
+            }
+            connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
+            connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
+            connectionFactory.setDefaultCatalog(defaultCatalog);
+            connectionFactory.setAbandonedConfig(configuration);
+            connectionFactory.setCacheState(cacheState);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

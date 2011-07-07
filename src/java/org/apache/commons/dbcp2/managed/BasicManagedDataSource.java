@@ -186,17 +186,19 @@ public class BasicManagedDataSource extends BasicDataSource {
             AbandonedConfig abandonedConfig) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory =
-                new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory,
-                                              statementPoolFactory,
-                                              validationQuery,
-                                              validationQueryTimeout,
-                                              connectionInitSqls,
-                                              defaultReadOnly,
-                                              defaultAutoCommit,
-                                              defaultTransactionIsolation,
-                                              defaultCatalog,
-                                              abandonedConfig);
+            connectionFactory = new PoolableManagedConnectionFactory(
+                    (XAConnectionFactory) driverConnectionFactory);
+            connectionFactory.setStatementPoolFactory(statementPoolFactory);
+            connectionFactory.setValidationQuery(validationQuery);
+            connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
+            connectionFactory.setConnectionInitSql(connectionInitSqls);
+            if (defaultReadOnly != null) {
+                connectionFactory.setDefaultReadOnly(defaultReadOnly.booleanValue());
+            }
+            connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
+            connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
+            connectionFactory.setDefaultCatalog(defaultCatalog);
+            connectionFactory.setAbandonedConfig(abandonedConfig);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
