@@ -578,6 +578,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         if(null != _stmtPoolFactory) {
             KeyedObjectPool stmtpool = _stmtPoolFactory.createPool();
             conn = new PoolingConnection(conn,stmtpool);
+            ((PoolingConnection) conn).setCacheState(_cacheState);
             stmtpool.setFactory((PoolingConnection)conn);
         }
         return new PoolableConnection(conn,_pool,_config);
