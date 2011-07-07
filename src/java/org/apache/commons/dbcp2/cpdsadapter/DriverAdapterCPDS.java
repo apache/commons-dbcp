@@ -34,7 +34,6 @@ import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import javax.naming.NamingException;
 
-import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -160,18 +159,36 @@ public class DriverAdapterCPDS
      * @param pass password to be used fur the connection
      */
     @Override
-    public PooledConnection getPooledConnection(String username, 
-                                                String pass)
+    public PooledConnection getPooledConnection(String username, String pass)
             throws SQLException {
         getConnectionCalled = true;
-        /*
-        public GenericKeyedObjectPool(KeyedPoolableObjectFactory factory, 
-        int maxActive, byte whenExhaustedAction, long maxWait, 
-        int maxIdle, boolean testOnBorrow, boolean testOnReturn, 
-        long timeBetweenEvictionRunsMillis, 
-        int numTestsPerEvictionRun, long minEvictableIdleTimeMillis, 
-        boolean testWhileIdle) {
-        */
+        PooledConnectionImpl pci = null;
+        // Workaround for buggy WebLogic 5.1 classloader - ignore the
+        // exception upon first invocation.
+        try {
+            if (connectionProperties != null) {
+                connectionProperties.put("user", username);
+                connectionProperties.put("password", pass);
+                pci = new PooledConnectionImpl(DriverManager.getConnection(
+                        getUrl(), connectionProperties));
+            } else {
+                pci = new PooledConnectionImpl(DriverManager.getConnection(
+                        getUrl(), username, pass));
+            }
+            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+        }
+        catch (ClassCircularityError e)
+        {
+            if (connectionProperties != null) {
+                pci = new PooledConnectionImpl(DriverManager.getConnection(
+                        getUrl(), connectionProperties));
+            } else {
+                pci = new PooledConnectionImpl(DriverManager.getConnection(
+                        getUrl(), username, pass));
+            }
+            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+            return pci;
+        }
         KeyedObjectPool stmtPool = null;
         if (isPoolPreparedStatements()) {
             GenericKeyedObjectPoolConfig config =
@@ -199,40 +216,10 @@ public class DriverAdapterCPDS
                 config.setMinEvictableIdleTimeMillis(0);
             }
             stmtPool = new GenericKeyedObjectPool(config);
+            stmtPool.setFactory(pci);
+            pci.setStatementPool(stmtPool);
         }
-        // Workaround for buggy WebLogic 5.1 classloader - ignore the
-        // exception upon first invocation.
-        try {
-            PooledConnectionImpl pci = null;
-            if (connectionProperties != null) {
-                connectionProperties.put("user", username);
-                connectionProperties.put("password", pass);
-                pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), connectionProperties), 
-                        stmtPool);
-            } else {
-                pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), username, pass), 
-                        stmtPool);
-            }
-            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-            return pci;
-        }
-        catch (ClassCircularityError e)
-        {
-            PooledConnectionImpl pci = null;
-            if (connectionProperties != null) {
-                pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), connectionProperties), 
-                        stmtPool);
-            } else {
-                pci = new PooledConnectionImpl(
-                        DriverManager.getConnection(getUrl(), username, pass), 
-                        stmtPool);
-            }
-            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-            return pci;
-        }
+        return pci;
     }
 
     // ----------------------------------------------------------------------
