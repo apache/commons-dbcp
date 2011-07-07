@@ -1530,27 +1530,17 @@ public class BasicDataSource implements DataSource {
             // create factory which returns raw physical connections
             ConnectionFactory driverConnectionFactory = createConnectionFactory();
     
-            // Set up statement pool, if desired
-            GenericKeyedObjectPoolFactory statementPoolFactory = null;
-            if (isPoolPreparedStatements()) {
-                GenericKeyedObjectPoolConfig config =
-                    new GenericKeyedObjectPoolConfig();
-                config.setMaxTotalPerKey(-1);
-                config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
-                config.setMaxWait(0);
-                config.setMaxIdlePerKey(1);
-                config.setMaxTotal(maxOpenPreparedStatements);
-                statementPoolFactory =
-                    new GenericKeyedObjectPoolFactory(config);
-            }
-    
             // Set up the poolable connection factory
             boolean success = false;
             PoolableConnectionFactory poolableConnectionFactory;
             try {
                 poolableConnectionFactory = createPoolableConnectionFactory(
-                        driverConnectionFactory, statementPoolFactory,
+                        driverConnectionFactory,
                         abandonedConfig);
+                poolableConnectionFactory.setPoolStatements(
+                        poolPreparedStatements);
+                poolableConnectionFactory.setMaxOpenPrepatedStatements(
+                        maxOpenPreparedStatements);
                 success = true;
             } catch (SQLException se) {
                 throw se;
@@ -1765,17 +1755,16 @@ public class BasicDataSource implements DataSource {
      * so subclasses can replace the default implementation.
      * 
      * @param driverConnectionFactory JDBC connection factory
-     * @param statementPoolFactory statement pool factory (null if statement pooling is turned off)
      * @param configuration abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
-    protected PoolableConnectionFactory createPoolableConnectionFactory(ConnectionFactory driverConnectionFactory,
-            KeyedObjectPoolFactory statementPoolFactory, AbandonedConfig configuration) throws SQLException {
+    protected PoolableConnectionFactory createPoolableConnectionFactory(
+            ConnectionFactory driverConnectionFactory,
+            AbandonedConfig configuration) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
                 new PoolableConnectionFactory(driverConnectionFactory);
-            connectionFactory.setStatementPoolFactory(statementPoolFactory);
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -1787,6 +1776,9 @@ public class BasicDataSource implements DataSource {
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setAbandonedConfig(configuration);
             connectionFactory.setCacheState(cacheState);
+            connectionFactory.setPoolStatements(poolPreparedStatements);
+            connectionFactory.setMaxOpenPrepatedStatements(
+                    maxOpenPreparedStatements);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

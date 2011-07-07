@@ -215,8 +215,7 @@ public class DriverAdapterCPDS
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleTimeMillis(0);
             }
-            stmtPool = new GenericKeyedObjectPool(config);
-            stmtPool.setFactory(pci);
+            stmtPool = new GenericKeyedObjectPool(pci, config);
             pci.setStatementPool(stmtPool);
         }
         return pci;

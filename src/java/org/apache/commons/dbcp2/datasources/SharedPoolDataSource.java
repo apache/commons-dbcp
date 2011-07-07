@@ -215,7 +215,10 @@ public class SharedPoolDataSource
         ConnectionPoolDataSource cpds = testCPDS(username, password);
 
         // Create an object pool to contain our PooledConnections
-        GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool();
+        factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
+                isRollbackAfterValidation());
+        GenericKeyedObjectPool tmpPool = new GenericKeyedObjectPool(factory);
+        factory.setPool(tmpPool);
         tmpPool.setMaxTotalPerKey(getMaxTotal());
         tmpPool.setMaxIdlePerKey(getMaxIdle());
         tmpPool.setMaxWait(getMaxWait());
@@ -234,10 +237,6 @@ public class SharedPoolDataSource
         tmpPool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         tmpPool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         tmpPool.setTestWhileIdle(getTestWhileIdle());
-        factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
-                                       isRollbackAfterValidation());
-        factory.setPool(tmpPool);
-        tmpPool.setFactory(factory);
         pool = tmpPool;
     }
 

@@ -22,7 +22,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
-import org.apache.commons.pool2.KeyedObjectPoolFactory;
 
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
@@ -175,20 +174,17 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Creates the PoolableConnectionFactory and attaches it to the connection pool.
      *
      * @param driverConnectionFactory JDBC connection factory created by {@link #createConnectionFactory()}
-     * @param statementPoolFactory statement pool factory (null if statement pooling is turned off)
      * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
     @Override
     protected PoolableConnectionFactory createPoolableConnectionFactory(
             ConnectionFactory driverConnectionFactory,
-            KeyedObjectPoolFactory statementPoolFactory,
             AbandonedConfig abandonedConfig) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory = new PoolableManagedConnectionFactory(
                     (XAConnectionFactory) driverConnectionFactory);
-            connectionFactory.setStatementPoolFactory(statementPoolFactory);
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -199,6 +195,9 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setAbandonedConfig(abandonedConfig);
+            connectionFactory.setPoolStatements(poolPreparedStatements);
+            connectionFactory.setMaxOpenPrepatedStatements(
+                    maxOpenPreparedStatements);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
