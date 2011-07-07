@@ -44,10 +44,12 @@ public class TestPoolableConnection extends TestCase {
 
     @Override
     public void setUp() throws Exception {
-        PoolableConnectionFactory factory = 
-            new PoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver", null),
-                null, null, true, true);
+        PoolableConnectionFactory factory = new PoolableConnectionFactory(
+                new DriverConnectionFactory(
+                        new TesterDriver(),"jdbc:apache:commons:testdriver", null));
+        factory.setDefaultAutoCommit(true);
+        factory.setDefaultReadOnly(true);
+
         pool = new GenericObjectPool(factory);
         factory.setPool(pool);
     }

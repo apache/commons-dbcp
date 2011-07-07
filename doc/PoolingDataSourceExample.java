@@ -137,14 +137,16 @@ public class PoolingDataSourceExample {
         // using the connect string passed in the command line
         // arguments.
         //
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,null);
+        ConnectionFactory connectionFactory =
+            new DriverManagerConnectionFactory(connectURI,null);
 
         //
         // Next we'll create the PoolableConnectionFactory, which wraps
         // the "real" Connections created by the ConnectionFactory with
         // the classes that implement the pooling functionality.
         //
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,null,null,false,true);
+        PoolableConnectionFactory poolableConnectionFactory =
+            new PoolableConnectionFactory(connectionFactory);
 
         //
         // Now we'll need a ObjectPool that serves as the
@@ -153,7 +155,8 @@ public class PoolingDataSourceExample {
         // We'll use a GenericObjectPool instance, although
         // any ObjectPool implementation will suffice.
         //
-        ObjectPool connectionPool = new GenericObjectPool(poolableConnectionFactory);
+        ObjectPool connectionPool =
+            new GenericObjectPool(poolableConnectionFactory);
 
         //
         // Finally, we create the PoolingDriver itself,

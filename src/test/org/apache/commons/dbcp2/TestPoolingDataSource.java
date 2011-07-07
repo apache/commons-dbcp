@@ -53,11 +53,13 @@ public class TestPoolingDataSource extends TestConnectionPool {
         Properties props = new Properties();
         props.setProperty("user", "username");
         props.setProperty("password", "password");
-         PoolableConnectionFactory factory = 
+        PoolableConnectionFactory factory = 
             new PoolableConnectionFactory(
                 new DriverConnectionFactory(new TesterDriver(),
-                        "jdbc:apache:commons:testdriver", props),
-                null, "SELECT DUMMY FROM DUAL", true, true);
+                        "jdbc:apache:commons:testdriver", props));
+        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
+        factory.setDefaultReadOnly(true);
+        factory.setDefaultAutoCommit(true);
         pool = new GenericObjectPool(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
@@ -162,7 +164,9 @@ public class TestPoolingDataSource extends TestConnectionPool {
     private static class NonDelegatingPoolableConnectionFactory
             extends PoolableConnectionFactory {
         public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory) {
-            super(connFactory, null, null, true, true);
+            super(connFactory);
+            super.setDefaultAutoCommit(true);
+            super.setDefaultReadOnly(true);
         }
     
         @Override

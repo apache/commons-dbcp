@@ -57,8 +57,11 @@ public class TestPStmtPooling extends TestCase {
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
-                connFactory, stmtPoolFactory, null, false, true);
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connFactory);
+        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
         ObjectPool connPool = new GenericObjectPool(pcf);
 
         DataSource ds = new PoolingDataSource(connPool);
@@ -82,8 +85,11 @@ public class TestPStmtPooling extends TestCase {
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
-                connFactory, stmtPoolFactory, null, false, true);
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connFactory);
+        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
 
         ObjectPool connPool = new GenericObjectPool(pcf);
 
@@ -121,8 +127,11 @@ public class TestPStmtPooling extends TestCase {
             new GenericKeyedObjectPoolFactory(
                     new GenericKeyedObjectPoolConfig());
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(
-                connFactory, stmtPoolFactory, null, false, true);
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connFactory);
+        pcf.setStatementPoolFactory(stmtPoolFactory);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
 
         ObjectPool connPool = new GenericObjectPool(pcf);
 
