@@ -50,7 +50,7 @@ class KeyedCPDSConnectionFactory
     private final ConnectionPoolDataSource _cpds;
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
-    private final KeyedObjectPool _pool;
+    private KeyedObjectPool _pool;
     
     /** 
      * Map of PooledConnections for which close events are ignored.
@@ -66,38 +66,35 @@ class KeyedCPDSConnectionFactory
     /**
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
      * @param cpds the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param pool the {*link ObjectPool} in which to pool those {*link Connection}s
      * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.
      * Should return at least one row. May be <tt>null</tt>
      */
     public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                      KeyedObjectPool pool,
                                       String validationQuery) {
-        this(cpds , pool, validationQuery, false);  
+        this(cpds , validationQuery, false);  
     }
 
     /**
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnections
-     * @param pool the {@link KeyedObjectPool} in which to pool those
-     * {@link Connection}s
      * @param validationQuery a query to use to {@link #validateObject validate}
      * {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
      * @param rollbackAfterValidation whether a rollback should be issued after
      * {@link #validateObject validating} {@link Connection}s.
      */
     public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds, 
-                                      KeyedObjectPool pool, 
                                       String validationQuery,
                                       boolean rollbackAfterValidation) {
         _cpds = cpds;
-        _pool = pool;
-        pool.setFactory(this);
         _validationQuery = validationQuery;
         _rollbackAfterValidation = rollbackAfterValidation;
     }
-    
+
+    public void setPool(KeyedObjectPool pool) {
+        this._pool = pool;
+    }
+
     /**
      * Returns the keyed object pool used to pool connections created by this factory.
      * 

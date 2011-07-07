@@ -234,12 +234,11 @@ public class SharedPoolDataSource
         tmpPool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         tmpPool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         tmpPool.setTestWhileIdle(getTestWhileIdle());
-        pool = tmpPool;
-        // Set up the factory we will use (passing the pool associates
-        // the factory with the pool, so we do not have to do so
-        // explicitly)
-        factory = new KeyedCPDSConnectionFactory(cpds, pool, getValidationQuery(),
+        factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
                                        isRollbackAfterValidation());
+        factory.setPool(tmpPool);
+        tmpPool.setFactory(factory);
+        pool = tmpPool;
     }
 
     @Override
