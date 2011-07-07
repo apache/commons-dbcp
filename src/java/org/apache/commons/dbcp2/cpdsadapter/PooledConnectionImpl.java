@@ -91,7 +91,7 @@ class PooledConnectionImpl
      * @param connection the connection to be wrapped
      * @param pool the pool to use
      */
-    PooledConnectionImpl(Connection connection, KeyedObjectPool pool) {
+    PooledConnectionImpl(Connection connection) {
         this.connection = connection;
         if (connection instanceof DelegatingConnection) {
             this.delegatingConnection = (DelegatingConnection) connection;
@@ -100,10 +100,10 @@ class PooledConnectionImpl
         }
         eventListeners = new Vector();
         isClosed = false;
-        if (pool != null) {
-            pstmtPool = pool;
-            pstmtPool.setFactory(this);            
-        }
+    }
+    
+    public void setStatementPool(KeyedObjectPool statementPool) {
+        pstmtPool = statementPool;
     }
 
     /**
