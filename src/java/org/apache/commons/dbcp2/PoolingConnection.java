@@ -368,7 +368,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * A key uniquely identifiying {@link PreparedStatement}s.
+     * A key uniquely identifying {@link PreparedStatement}s.
      */
     static class PStmtKey {
         
