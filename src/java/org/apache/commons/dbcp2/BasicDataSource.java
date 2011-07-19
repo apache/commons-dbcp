@@ -30,13 +30,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import org.apache.commons.pool2.KeyedObjectPoolFactory;
-import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 
 /**

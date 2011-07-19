@@ -28,12 +28,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
