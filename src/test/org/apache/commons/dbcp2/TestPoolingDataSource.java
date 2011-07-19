@@ -170,7 +170,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         }
     
         @Override
-        synchronized public Object makeObject() throws Exception {
+        synchronized public Connection makeObject() throws Exception {
             return _connFactory.createConnection();
         }
     }
