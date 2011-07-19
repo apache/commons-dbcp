@@ -40,7 +40,9 @@ import org.apache.commons.pool2.impl.WhenExhaustedAction;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolableConnectionFactory implements PoolableObjectFactory {
+public class PoolableConnectionFactory
+        implements PoolableObjectFactory<Connection> {
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain
@@ -95,7 +97,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Sets the {@link ObjectPool} in which to pool {@link Connection}s.
      * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
-    synchronized public void setPool(ObjectPool pool) {
+    synchronized public void setPool(ObjectPool<Connection> pool) {
         if(null != _pool && pool != _pool) {
             try {
                 _pool.close();
@@ -110,7 +112,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      * @return the connection pool
      */
-    public synchronized ObjectPool getPool() {
+    public synchronized ObjectPool<Connection> getPool() {
         return _pool;
     }
 
@@ -163,7 +165,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     }
 
     @Override
-    public Object makeObject() throws Exception {
+    public Connection makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
@@ -218,22 +220,18 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     }
 
     @Override
-    public void destroyObject(Object obj) throws Exception {
+    public void destroyObject(Connection obj) throws Exception {
         if(obj instanceof PoolableConnection) {
             ((PoolableConnection)obj).reallyClose();
         }
     }
 
     @Override
-    public boolean validateObject(Object obj) {
-        if(obj instanceof Connection) {
-            try {
-                validateConnection((Connection) obj);
-                return true;
-            } catch(Exception e) {
-                return false;
-            }
-        } else {
+    public boolean validateObject(Connection conn) {
+        try {
+            validateConnection(conn);
+            return true;
+        } catch(Exception e) {
             return false;
         }
     }
@@ -275,45 +273,41 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     }
 
     @Override
-    public void passivateObject(Object obj) throws Exception {
-        if(obj instanceof Connection) {
-            Connection conn = (Connection)obj;
-            if(!conn.getAutoCommit() && !conn.isReadOnly()) {
-                conn.rollback();
-            }
-            conn.clearWarnings();
-            if(!conn.getAutoCommit()) {
-                conn.setAutoCommit(true);
-            }
+    public void passivateObject(Connection conn) throws Exception {
+        if(!conn.getAutoCommit() && !conn.isReadOnly()) {
+            conn.rollback();
         }
-        if(obj instanceof DelegatingConnection) {
-            ((DelegatingConnection)obj).passivate();
+        conn.clearWarnings();
+        if(!conn.getAutoCommit()) {
+            conn.setAutoCommit(true);
+        }
+
+        if(conn instanceof DelegatingConnection) {
+            ((DelegatingConnection)conn).passivate();
         }
     }
 
     @Override
-    public void activateObject(Object obj) throws Exception {
-        if(obj instanceof DelegatingConnection) {
-            ((DelegatingConnection)obj).activate();
+    public void activateObject(Connection conn) throws Exception {
+        if(conn instanceof DelegatingConnection) {
+            ((DelegatingConnection)conn).activate();
         }
-        if(obj instanceof Connection) {
-            Connection conn = (Connection)obj;
-            if (conn.getAutoCommit() != _defaultAutoCommit) {
-                conn.setAutoCommit(_defaultAutoCommit);
-            }
-            if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) 
-                    && (conn.getTransactionIsolation() != 
-                    _defaultTransactionIsolation)) {
-                conn.setTransactionIsolation(_defaultTransactionIsolation);
-            }
-            if ((_defaultReadOnly != null) && 
-                    (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
-                conn.setReadOnly(_defaultReadOnly.booleanValue());
-            }
-            if ((_defaultCatalog != null) &&
-                    (!_defaultCatalog.equals(conn.getCatalog()))) {
-                conn.setCatalog(_defaultCatalog);
-            }
+
+        if (conn.getAutoCommit() != _defaultAutoCommit) {
+            conn.setAutoCommit(_defaultAutoCommit);
+        }
+        if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) 
+                && (conn.getTransactionIsolation() != 
+                _defaultTransactionIsolation)) {
+            conn.setTransactionIsolation(_defaultTransactionIsolation);
+        }
+        if ((_defaultReadOnly != null) && 
+                (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
+            conn.setReadOnly(_defaultReadOnly.booleanValue());
+        }
+        if ((_defaultCatalog != null) &&
+                (!_defaultCatalog.equals(conn.getCatalog()))) {
+            conn.setCatalog(_defaultCatalog);
         }
     }
 
@@ -321,7 +315,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     protected volatile String _validationQuery = null;
     protected volatile int _validationQueryTimeout = -1;
     protected Collection _connectionInitSqls = null;
-    protected volatile ObjectPool _pool = null;
+    protected volatile ObjectPool<Connection> _pool = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
