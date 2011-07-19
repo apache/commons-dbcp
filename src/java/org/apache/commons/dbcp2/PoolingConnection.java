@@ -43,7 +43,7 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 public class PoolingConnection extends DelegatingConnection
-        implements KeyedPoolableObjectFactory {
+        implements KeyedPoolableObjectFactory<PStmtKey,DelegatingPreparedStatement> {
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
     protected KeyedObjectPool<PStmtKey,PreparedStatement> _pstmtPool = null;
@@ -279,11 +279,11 @@ public class PoolingConnection extends DelegatingConnection
      * @see #createKey(String, int, int, byte)
      */
     @Override
-    public Object makeObject(Object obj) throws Exception {
-        if(null == obj || !(obj instanceof PStmtKey)) {
+    public DelegatingPreparedStatement makeObject(PStmtKey key)
+            throws Exception {
+        if(null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         } else {
-            PStmtKey key = (PStmtKey)obj;
             if( null == key._resultSetType && null == key._resultSetConcurrency ) {
                 if (key._stmtType == STATEMENT_PREPAREDSTMT ) {
                     return new PoolablePreparedStatement(getDelegate().prepareStatement( key._sql), key, _pstmtPool, this); 
@@ -311,12 +311,9 @@ public class PoolingConnection extends DelegatingConnection
      * @param obj the pooled statement to be destroyed.
      */
     @Override
-    public void destroyObject(Object key, Object obj) throws Exception {
-        if(obj instanceof DelegatingPreparedStatement) {
-            ((DelegatingPreparedStatement)obj).getInnermostDelegate().close();
-        } else {
-            ((PreparedStatement)obj).close();
-        }
+    public void destroyObject(PStmtKey key, DelegatingPreparedStatement dps)
+            throws Exception {
+        dps.getInnermostDelegate().close();
     }
 
     /**
@@ -328,7 +325,8 @@ public class PoolingConnection extends DelegatingConnection
      * @return <tt>true</tt>
      */
     @Override
-    public boolean validateObject(Object key, Object obj) {
+    public boolean validateObject(PStmtKey key,
+            DelegatingPreparedStatement obj) {
         return true;
     }
 
@@ -340,8 +338,9 @@ public class PoolingConnection extends DelegatingConnection
      * @param obj pooled statement to be activated
      */
     @Override
-    public void activateObject(Object key, Object obj) throws Exception {
-        ((DelegatingPreparedStatement)obj).activate();
+    public void activateObject(PStmtKey key,
+            DelegatingPreparedStatement dps) throws Exception {
+        dps.activate();
     }
 
     /**
@@ -353,9 +352,10 @@ public class PoolingConnection extends DelegatingConnection
      * @param obj a {@link PreparedStatement}
      */
     @Override
-    public void passivateObject(Object key, Object obj) throws Exception {
-        ((PreparedStatement)obj).clearParameters();
-        ((DelegatingPreparedStatement)obj).passivate();
+    public void passivateObject(PStmtKey key,
+            DelegatingPreparedStatement dps) throws Exception {
+        dps.clearParameters();
+        dps.passivate();
     }
 
     @Override
