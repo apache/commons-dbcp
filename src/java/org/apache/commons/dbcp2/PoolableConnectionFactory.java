@@ -22,7 +22,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Iterator;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
@@ -89,7 +88,8 @@ public class PoolableConnectionFactory
      * @param connectionInitSqls SQL statement to initialize {@link Connection}s.
      * @since 1.3
      */
-    synchronized public void setConnectionInitSql(Collection connectionInitSqls) {
+    synchronized public void setConnectionInitSql(
+            Collection<String> connectionInitSqls) {
         _connectionInitSqls = connectionInitSqls;
     }
 
@@ -189,7 +189,7 @@ public class PoolableConnectionFactory
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
-        Collection sqls = _connectionInitSqls;
+        Collection<String> sqls = _connectionInitSqls;
         if(conn.isClosed()) {
             throw new SQLException("initializeConnection: connection closed");
         }
@@ -197,14 +197,11 @@ public class PoolableConnectionFactory
             Statement stmt = null;
             try {
                 stmt = conn.createStatement();
-                for (Iterator iterator = sqls.iterator(); iterator.hasNext();)
-                {
-                    Object o = iterator.next();
-                    if (o == null) {
-                        throw new NullPointerException("null connectionInitSqls element");
+                for (String sql : sqls) {
+                    if (sql == null) {
+                        throw new NullPointerException(
+                                "null connectionInitSqls element");
                     }
-                    // o might not be a String instance
-                    String sql = o.toString();
                     stmt.execute(sql);
                 }
             } finally {
@@ -314,7 +311,7 @@ public class PoolableConnectionFactory
     protected volatile ConnectionFactory _connFactory = null;
     protected volatile String _validationQuery = null;
     protected volatile int _validationQueryTimeout = -1;
-    protected Collection _connectionInitSqls = null;
+    protected Collection<String> _connectionInitSqls = null;
     protected volatile ObjectPool<Connection> _pool = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
