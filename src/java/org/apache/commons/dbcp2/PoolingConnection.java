@@ -46,7 +46,7 @@ public class PoolingConnection extends DelegatingConnection
         implements KeyedPoolableObjectFactory<PStmtKey,DelegatingPreparedStatement> {
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    protected KeyedObjectPool<PStmtKey,PreparedStatement> _pstmtPool = null;
+    protected KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> _pstmtPool = null;
 
     /** Prepared Statement type */
     protected static final byte STATEMENT_PREPAREDSTMT = 0;
@@ -65,7 +65,7 @@ public class PoolingConnection extends DelegatingConnection
 
 
     public void setStatementPool(
-            KeyedObjectPool<PStmtKey,PreparedStatement> pool) {
+            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pool) {
         _pstmtPool = pool;
     }
 
@@ -77,7 +77,7 @@ public class PoolingConnection extends DelegatingConnection
     @Override
     public synchronized void close() throws SQLException {
         if(null != _pstmtPool) {
-            KeyedObjectPool<PStmtKey,PreparedStatement> oldpool = _pstmtPool;            
+            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> oldpool = _pstmtPool;            
             _pstmtPool = null;
             try {
                 oldpool.close();
