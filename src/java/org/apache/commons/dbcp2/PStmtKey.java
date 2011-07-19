@@ -21,60 +21,81 @@ import java.sql.PreparedStatement;
 /**
  * A key uniquely identifying {@link PreparedStatement}s.
  */
-class PStmtKey {
+public class PStmtKey {
     
     /** SQL defining Prepared or Callable Statement */
-    protected String _sql = null;
+    private String _sql = null;
     
     /** Result set type */
-    protected Integer _resultSetType = null;
+    private Integer _resultSetType = null;
     
     /** Result set concurrency */
-    protected Integer _resultSetConcurrency = null;
+    private Integer _resultSetConcurrency = null;
     
     /** Database catalog */
-    protected String _catalog = null;
+    private String _catalog = null;
     
     /** 
      *  Statement type. Either STATEMENT_PREPAREDSTMT (PreparedStatement)
      *  or STATEMENT_CALLABLESTMT (CallableStatement) 
      */
-    protected byte _stmtType = PoolingConnection.STATEMENT_PREPAREDSTMT;
+    private byte _stmtType = PoolingConnection.STATEMENT_PREPAREDSTMT;
     
-    PStmtKey(String sql) {
+    public PStmtKey(String sql) {
         _sql = sql;
     }
 
-    PStmtKey(String sql, String catalog) {
+    public PStmtKey(String sql, String catalog) {
         _sql = sql;
         _catalog = catalog;
     }
     
-    PStmtKey(String sql, String catalog, byte stmtType) {
+    public PStmtKey(String sql, String catalog, byte stmtType) {
         _sql = sql;
         _catalog = catalog;
         _stmtType = stmtType;
     }
 
-    PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
+    public  PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
         _sql = sql;
         _resultSetType = new Integer(resultSetType);
         _resultSetConcurrency = new Integer(resultSetConcurrency);
     }
 
-    PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
+    public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
         _sql = sql;
         _catalog = catalog;
         _resultSetType = new Integer(resultSetType);
         _resultSetConcurrency = new Integer(resultSetConcurrency);
     }
     
-    PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
+    public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
         _sql = sql;
         _catalog = catalog;
         _resultSetType = new Integer(resultSetType);
         _resultSetConcurrency = new Integer(resultSetConcurrency);
         _stmtType = stmtType;
+    }
+
+    
+    public String getSql() {
+        return _sql;
+    }
+
+    public Integer getResultSetType() {
+        return _resultSetType;
+    }
+
+    public Integer getResultSetConcurrency() {
+        return _resultSetConcurrency;
+    }
+
+    public String getCatalog() {
+        return _catalog;
+    }
+
+    public byte getStmtType() {
+        return _stmtType;
     }
 
     @Override
