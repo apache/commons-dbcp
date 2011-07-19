@@ -284,19 +284,19 @@ public class PoolingConnection extends DelegatingConnection
         if(null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         } else {
-            if( null == key._resultSetType && null == key._resultSetConcurrency ) {
-                if (key._stmtType == STATEMENT_PREPAREDSTMT ) {
-                    return new PoolablePreparedStatement(getDelegate().prepareStatement( key._sql), key, _pstmtPool, this); 
+            if( null == key.getResultSetType() && null == key.getResultSetConcurrency()) {
+                if (key.getStmtType() == STATEMENT_PREPAREDSTMT ) {
+                    return new PoolablePreparedStatement(getDelegate().prepareStatement( key.getSql()), key, _pstmtPool, this); 
                 } else {
-                    return new PoolableCallableStatement(getDelegate().prepareCall( key._sql), key, _pstmtPool, this);
+                    return new PoolableCallableStatement(getDelegate().prepareCall( key.getSql()), key, _pstmtPool, this);
                 }
             } else { // Both _resultSetType and _resultSetConcurrency are non-null here (both or neither are set by constructors)
-                if(key._stmtType == STATEMENT_PREPAREDSTMT) {
+                if(key.getStmtType() == STATEMENT_PREPAREDSTMT) {
                     return new PoolablePreparedStatement(getDelegate().prepareStatement(
-                        key._sql, key._resultSetType.intValue(),key._resultSetConcurrency.intValue()), key, _pstmtPool, this);
+                        key.getSql(), key.getResultSetType().intValue(),key.getResultSetConcurrency().intValue()), key, _pstmtPool, this);
                 } else {
                     return new PoolableCallableStatement( getDelegate().prepareCall(
-                        key._sql,key._resultSetType.intValue(), key._resultSetConcurrency.intValue()), key, _pstmtPool, this);
+                        key.getSql(),key.getResultSetType().intValue(), key.getResultSetConcurrency().intValue()), key, _pstmtPool, this);
                 }
             }
         }
