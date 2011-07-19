@@ -42,9 +42,11 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolingConnection extends DelegatingConnection implements KeyedPoolableObjectFactory {
+public class PoolingConnection extends DelegatingConnection
+        implements KeyedPoolableObjectFactory {
+
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    protected KeyedObjectPool _pstmtPool = null;
+    protected KeyedObjectPool<PStmtKey,PreparedStatement> _pstmtPool = null;
 
     /** Prepared Statement type */
     private static final byte STATEMENT_PREPAREDSTMT = 0;
@@ -62,7 +64,8 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
     }
 
 
-    public void setStatementPool(KeyedObjectPool pool) {
+    public void setStatementPool(
+            KeyedObjectPool<PStmtKey,PreparedStatement> pool) {
         _pstmtPool = pool;
     }
 
@@ -74,7 +77,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
     @Override
     public synchronized void close() throws SQLException {
         if(null != _pstmtPool) {
-            KeyedObjectPool oldpool = _pstmtPool;            
+            KeyedObjectPool<PStmtKey,PreparedStatement> oldpool = _pstmtPool;            
             _pstmtPool = null;
             try {
                 oldpool.close();
@@ -101,7 +104,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
                     "Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
-            return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql)));
+            return _pstmtPool.borrowObject(createKey(sql));
         } catch(NoSuchElementException e) {
             throw (SQLException) new SQLException("MaxOpenPreparedStatements limit reached").initCause(e); 
         } catch(RuntimeException e) {
@@ -125,7 +128,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
                     "Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
-            return(PreparedStatement)(_pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency)));
+            return _pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency));
         } catch(NoSuchElementException e) {
             throw (SQLException) new SQLException("MaxOpenPreparedStatements limit reached").initCause(e); 
         } catch(RuntimeException e) {
@@ -210,7 +213,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
      */
-    protected Object createKey(String sql, int resultSetType, int resultSetConcurrency) {
+    protected PStmtKey createKey(String sql, int resultSetType, int resultSetConcurrency) {
         String catalog = null;
         try {
             catalog = getCatalog();
@@ -225,7 +228,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
      * @param resultSetConcurrency result set concurrency
      * @param stmtType statement type - either {@link #STATEMENT_CALLABLESTMT} or {@link #STATEMENT_PREPAREDSTMT}
      */
-    protected Object createKey(String sql, int resultSetType, int resultSetConcurrency, byte stmtType) {
+    protected PStmtKey createKey(String sql, int resultSetType, int resultSetConcurrency, byte stmtType) {
         String catalog = null;
         try {
             catalog = getCatalog();
@@ -237,7 +240,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
      * Create a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      */
-    protected Object createKey(String sql) {
+    protected PStmtKey createKey(String sql) {
         String catalog = null;
         try {
             catalog = getCatalog();
@@ -250,7 +253,7 @@ public class PoolingConnection extends DelegatingConnection implements KeyedPool
      * @param sql the sql string used to define the statement
      * @param stmtType statement type - either {@link #STATEMENT_CALLABLESTMT} or {@link #STATEMENT_PREPAREDSTMT}
      */
-    protected Object createKey(String sql, byte stmtType) {
+    protected PStmtKey createKey(String sql, byte stmtType) {
         String catalog = null;
         try {
             catalog = getCatalog();
