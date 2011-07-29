@@ -661,7 +661,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     { try { _res.moveToCurrentRow(); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public Object getObject(int i, Map map) throws SQLException
+    public Object getObject(int i, Map<String,Class<?>> map) throws SQLException
     { try { return _res.getObject(i, map); } catch (SQLException e) { handleException(e); return null; } }
 
     @Override
@@ -681,7 +681,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     { try { return _res.getArray(i); } catch (SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Object getObject(String colName, Map map) throws SQLException
+    public Object getObject(String colName, Map<String,Class<?>> map) throws SQLException
     { try { return _res.getObject(colName, map); } catch (SQLException e) { handleException(e); return null; } }
 
     @Override
@@ -1245,6 +1245,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateClob(String columnLabel, Reader reader) throws SQLException {
         try {
             _res.updateClob(columnLabel, reader);
@@ -1254,6 +1255,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(int columnIndex, Reader reader) throws SQLException {
         try {
             _res.updateNClob(columnIndex, reader);
@@ -1263,6 +1265,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 
+    @Override
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
         try {
             _res.updateNClob(columnLabel, reader);
