@@ -40,7 +40,8 @@ public class AbandonedTrace {
     /** A stack trace of the code that created me (if in debug mode) */
     private volatile Exception createdBy;
     /** A list of objects created by children of this object */
-    private final List traceList = new ArrayList();
+    private final List<AbandonedTrace> traceList =
+        new ArrayList<AbandonedTrace>();
     /** Last time this connection was used */
     private volatile long lastUsed = 0;
 
@@ -168,9 +169,9 @@ public class AbandonedTrace {
      *
      * @return List of objects
      */
-    protected List getTrace() {
+    protected List<AbandonedTrace> getTrace() {
         synchronized (this.traceList) {
-            return new ArrayList(traceList);
+            return new ArrayList<AbandonedTrace>(traceList);
         }
     }
 
@@ -183,9 +184,9 @@ public class AbandonedTrace {
             createdBy.printStackTrace(config.getLogWriter());
         }
         synchronized(this.traceList) {
-            Iterator it = this.traceList.iterator();
+            Iterator<AbandonedTrace> it = this.traceList.iterator();
             while (it.hasNext()) {
-                AbandonedTrace at = (AbandonedTrace)it.next();
+                AbandonedTrace at = it.next();
                 at.printStackTrace();
             }
         }
