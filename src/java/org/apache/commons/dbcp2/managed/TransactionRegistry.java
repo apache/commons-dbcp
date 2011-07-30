@@ -40,8 +40,10 @@ import javax.transaction.xa.XAResource;
  */
 public class TransactionRegistry {
     private final TransactionManager transactionManager;
-    private final Map caches = new WeakHashMap();
-    private final Map xaResources = new WeakHashMap();
+    private final Map<Transaction, TransactionContext> caches =
+        new WeakHashMap<Transaction, TransactionContext>();
+    private final Map<Connection, XAResource> xaResources =
+        new WeakHashMap<Connection, XAResource>();
 
     /**
      * Creates a TransactionRegistry for the specified transaction manager.
@@ -73,7 +75,7 @@ public class TransactionRegistry {
      */
     public synchronized XAResource getXAResource(Connection connection) throws SQLException {
         if (connection == null) throw new NullPointerException("connection is null");
-        XAResource xaResource = (XAResource) xaResources.get(connection);
+        XAResource xaResource = xaResources.get(connection);
         if (xaResource == null) {
             throw new SQLException("Connection does not have a registered XAResource " + connection);
         }
@@ -106,7 +108,7 @@ public class TransactionRegistry {
 
         // register the the context (or create a new one)
         synchronized (this) {
-            TransactionContext cache = (TransactionContext) caches.get(transaction);
+            TransactionContext cache = caches.get(transaction);
             if (cache == null) {
                 cache = new TransactionContext(this, transaction);
                 caches.put(transaction, cache);
