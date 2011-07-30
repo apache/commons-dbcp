@@ -38,7 +38,7 @@ import java.lang.ref.WeakReference;
  */
 public class TransactionContext {
     private final TransactionRegistry transactionRegistry;
-    private final WeakReference transactionRef;
+    private final WeakReference<Transaction> transactionRef;
     private Connection sharedConnection;
 
     /**
@@ -54,7 +54,7 @@ public class TransactionContext {
         if (transactionRegistry == null) throw new NullPointerException("transactionRegistry is null");
         if (transaction == null) throw new NullPointerException("transaction is null");
         this.transactionRegistry = transactionRegistry;
-        this.transactionRef = new WeakReference(transaction);
+        this.transactionRef = new WeakReference<Transaction>(transaction);
     }
 
     /**
@@ -129,7 +129,7 @@ public class TransactionContext {
      */
     public boolean isActive() throws SQLException {
         try {
-            Transaction transaction = (Transaction) this.transactionRef.get();
+            Transaction transaction = this.transactionRef.get();
             if (transaction == null) {
                 return false;
             }
@@ -141,7 +141,7 @@ public class TransactionContext {
     }
 
     private Transaction getTransaction() throws SQLException {
-        Transaction transaction = (Transaction) this.transactionRef.get();
+        Transaction transaction = this.transactionRef.get();
         if (transaction == null) {
             throw new SQLException("Unable to enlist connection because the transaction has been garbage collected");
         }
