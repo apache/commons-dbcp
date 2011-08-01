@@ -97,7 +97,7 @@ public class PoolableConnectionFactory
      * Sets the {@link ObjectPool} in which to pool {@link Connection}s.
      * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
-    synchronized public void setPool(ObjectPool<Connection> pool) {
+    synchronized public void setPool(ObjectPool<PoolableConnection> pool) {
         if(null != _pool && pool != _pool) {
             try {
                 _pool.close();
@@ -112,7 +112,7 @@ public class PoolableConnectionFactory
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      * @return the connection pool
      */
-    public synchronized ObjectPool<Connection> getPool() {
+    public synchronized ObjectPool<PoolableConnection> getPool() {
         return _pool;
     }
 
@@ -312,7 +312,7 @@ public class PoolableConnectionFactory
     protected volatile String _validationQuery = null;
     protected volatile int _validationQueryTimeout = -1;
     protected Collection<String> _connectionInitSqls = null;
-    protected volatile ObjectPool<Connection> _pool = null;
+    protected volatile ObjectPool<PoolableConnection> _pool = null;
     protected Boolean _defaultReadOnly = null;
     protected boolean _defaultAutoCommit = true;
     protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;

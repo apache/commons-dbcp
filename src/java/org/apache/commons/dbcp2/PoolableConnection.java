@@ -34,14 +34,15 @@ import org.apache.commons.pool2.ObjectPool;
 public class PoolableConnection extends DelegatingConnection {
     /** The pool to which I should return. */
     // TODO: Correct use of the pool requires that this connection is only every returned to the pool once.
-    protected ObjectPool _pool = null;
+    protected ObjectPool<PoolableConnection> _pool = null;
 
     /**
      *
      * @param conn my underlying connection
      * @param pool the pool to which I should return when closed
      */
-    public PoolableConnection(Connection conn, ObjectPool pool) {
+    public PoolableConnection(Connection conn,
+            ObjectPool<PoolableConnection> pool) {
         super(conn);
         _pool = pool;
     }
@@ -52,7 +53,8 @@ public class PoolableConnection extends DelegatingConnection {
      * @param pool the pool to which I should return when closed
      * @param config the abandoned configuration settings
      */
-    public PoolableConnection(Connection conn, ObjectPool pool, AbandonedConfig config) {
+    public PoolableConnection(Connection conn,
+            ObjectPool<PoolableConnection> pool, AbandonedConfig config) {
         super(conn, config);
         _pool = pool;
     }
