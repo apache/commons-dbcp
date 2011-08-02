@@ -1785,7 +1785,7 @@ public class BasicDataSource implements DataSource {
     }
 
     protected static void validateConnectionFactory(PoolableConnectionFactory connectionFactory) throws Exception {
-        Connection conn = null;
+        PoolableConnection conn = null;
         try {
             conn = connectionFactory.makeObject();
             connectionFactory.activateObject(conn);
@@ -1793,7 +1793,9 @@ public class BasicDataSource implements DataSource {
             connectionFactory.passivateObject(conn);
         }
         finally {
-            connectionFactory.destroyObject(conn);
+            if (conn != null) {
+                connectionFactory.destroyObject(conn);
+            }
         }
     }
 

@@ -178,25 +178,6 @@ public class TestManagedDataSource extends TestConnectionPool {
     * JIRA: DBCP-198
     */
     public void testManagedConnectionEqualsReflexive() throws Exception {
-        // Statndard setup - using DelegatingConnections
-        // returned from PoolableConnectionFactory
-        checkManagedConnectionEqualsReflexive();
-
-        // Force ManagedConnections to wrap non-Delegating connections
-        Properties props = new Properties();
-        props.setProperty("user", "username");
-        props.setProperty("password", "password");
-        NonDelegatingPoolableConnectionFactory factory = new NonDelegatingPoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", props));
-        pool.close();
-        pool = new GenericObjectPool(factory);
-        pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWait(getMaxWait());
-        ds = new PoolingDataSource(pool);
-        checkManagedConnectionEqualsReflexive();
-    }
-
-    private void checkManagedConnectionEqualsReflexive() throws Exception {
         Connection con = ds.getConnection();
         Connection con2 = con;
         assertTrue(con2.equals(con));
@@ -236,22 +217,5 @@ public class TestManagedDataSource extends TestConnectionPool {
         assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
         assertTrue(con2.innermostDelegateEquals(inner));
         assertTrue(con.equals(con2));
-    }
-
-    /**
-     * Factory to return non-delegating connections for DBCP-198 test
-     */
-    private static class NonDelegatingPoolableConnectionFactory
-            extends PoolableConnectionFactory {
-        public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory) {
-            super(connFactory);
-            super.setDefaultAutoCommit(true);
-            super.setDefaultReadOnly(true);
-        }
-
-        @Override
-        synchronized public Connection makeObject() throws Exception {
-            return _connFactory.createConnection();
-        }
     }
 }

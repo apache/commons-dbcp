@@ -40,7 +40,7 @@ import org.apache.commons.pool2.impl.WhenExhaustedAction;
  * @version $Revision$ $Date$
  */
 public class PoolableConnectionFactory
-        implements PoolableObjectFactory<Connection> {
+        implements PoolableObjectFactory<PoolableConnection> {
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
@@ -165,12 +165,23 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public Connection makeObject() throws Exception {
+    public PoolableConnection makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
-        initializeConnection(conn);
+        try {
+            initializeConnection(conn);
+        } catch (SQLException sqle) {
+            // Make sure the connection is closed
+            try {
+                conn.close();
+            } catch (SQLException ignore) {
+                // ignore
+            }
+            // Rethrow original exception so it is visible to caller
+            throw sqle;
+        }
         if(poolStatements) {
             conn = new PoolingConnection(conn);
             GenericKeyedObjectPoolConfig<PStmtKey,DelegatingPreparedStatement> config =
@@ -217,14 +228,12 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void destroyObject(Connection obj) throws Exception {
-        if(obj instanceof PoolableConnection) {
-            ((PoolableConnection)obj).reallyClose();
-        }
+    public void destroyObject(PoolableConnection obj) throws Exception {
+        obj.reallyClose();
     }
 
     @Override
-    public boolean validateObject(Connection conn) {
+    public boolean validateObject(PoolableConnection conn) {
         try {
             validateConnection(conn);
             return true;
@@ -270,7 +279,7 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void passivateObject(Connection conn) throws Exception {
+    public void passivateObject(PoolableConnection conn) throws Exception {
         if(!conn.getAutoCommit() && !conn.isReadOnly()) {
             conn.rollback();
         }
@@ -279,16 +288,12 @@ public class PoolableConnectionFactory
             conn.setAutoCommit(true);
         }
 
-        if(conn instanceof DelegatingConnection) {
-            ((DelegatingConnection)conn).passivate();
-        }
+        conn.passivate();
     }
 
     @Override
-    public void activateObject(Connection conn) throws Exception {
-        if(conn instanceof DelegatingConnection) {
-            ((DelegatingConnection)conn).activate();
-        }
+    public void activateObject(PoolableConnection conn) throws Exception {
+        conn.activate();
 
         if (conn.getAutoCommit() != _defaultAutoCommit) {
             conn.setAutoCommit(_defaultAutoCommit);

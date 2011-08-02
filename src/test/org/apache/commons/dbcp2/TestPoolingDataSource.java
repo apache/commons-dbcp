@@ -93,37 +93,16 @@ public class TestPoolingDataSource extends TestConnectionPool {
         }
     }
     
-    private void checkPoolGuardConnectionWrapperEqualsReflexive() throws Exception {
-        Connection con = ds.getConnection();
-        Connection con2 = con;
-        assertTrue(con2.equals(con));
-        assertTrue(con.equals(con2));
-        con.close();
-    }
-    
     /*
      * JIRA: DBCP-198
      */
     public void testPoolGuardConnectionWrapperEqualsReflexive()
         throws Exception {
-        // Statndard setup - using DelegatingConnections
-        // returned from PoolableConnectionFactory
-        checkPoolGuardConnectionWrapperEqualsReflexive();
-        // Force PoolGuardConnectionWrappers to wrap non-Delegating connections
-        pool.close();
-        
-        Properties props = new Properties();
-        props.setProperty("user", "username");
-        props.setProperty("password", "password");
-        NonDelegatingPoolableConnectionFactory factory = 
-            new NonDelegatingPoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(),
-                        "jdbc:apache:commons:testdriver", props));
-        pool = new GenericObjectPool(factory);
-        pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWait(getMaxWait());
-        ds = new PoolingDataSource(pool);
-        checkPoolGuardConnectionWrapperEqualsReflexive();
+        Connection con = ds.getConnection();
+        Connection con2 = con;
+        assertTrue(con2.equals(con));
+        assertTrue(con.equals(con2));
+        con.close();
     }
     
     public void testPoolGuardConnectionWrapperEqualsFail() throws Exception {
@@ -158,20 +137,5 @@ public class TestPoolingDataSource extends TestConnectionPool {
         assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
         assertTrue(con2.innermostDelegateEquals(inner));
         assertTrue(con.equals(con2));
-    }
-    
-    /** Factory to return non-delegating connections for DBCP-198 test */
-    private static class NonDelegatingPoolableConnectionFactory
-            extends PoolableConnectionFactory {
-        public NonDelegatingPoolableConnectionFactory(ConnectionFactory connFactory) {
-            super(connFactory);
-            super.setDefaultAutoCommit(true);
-            super.setDefaultReadOnly(true);
-        }
-    
-        @Override
-        synchronized public Connection makeObject() throws Exception {
-            return _connFactory.createConnection();
-        }
     }
 }
