@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.managed;
 import java.sql.Connection;
 
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -53,7 +54,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * if statement pooling is enabled.
      */
     @Override
-    synchronized public Connection makeObject() throws Exception {
+    synchronized public PoolableConnection makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
