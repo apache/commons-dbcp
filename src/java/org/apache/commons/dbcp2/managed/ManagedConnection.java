@@ -41,13 +41,15 @@ import java.sql.SQLException;
  * @version $Revision$
  */
 public class ManagedConnection extends DelegatingConnection {
-    private final ObjectPool pool;
+    private final ObjectPool<Connection> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
     private TransactionContext transactionContext;
     private boolean isSharedConnection;
 
-    public ManagedConnection(ObjectPool pool, TransactionRegistry transactionRegistry, boolean accessToUnderlyingConnectionAllowed) throws SQLException {
+    public ManagedConnection(ObjectPool<Connection> pool, 
+            TransactionRegistry transactionRegistry,
+            boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
         this.pool = pool;
         this.transactionRegistry = transactionRegistry;
@@ -115,7 +117,7 @@ public class ManagedConnection extends DelegatingConnection {
             if (getDelegateInternal() == null) {
                 try {
                     // borrow a new connection from the pool
-                    Connection connection = (Connection) pool.borrowObject();
+                    Connection connection = pool.borrowObject();
                     setDelegate(connection);
                 } catch (Exception e) {
                     throw (SQLException) new SQLException("Unable to acquire a new connection from the pool").initCause(e);

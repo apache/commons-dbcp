@@ -140,7 +140,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
         // Create the XADataSource instance using the configured class name if it has not been set
         if (xaDataSourceInstance == null) {
-            Class xaDataSourceClass = null;
+            Class<?> xaDataSourceClass = null;
             try {
                 xaDataSourceClass = Class.forName(xaDataSource);
             } catch (Throwable t) {

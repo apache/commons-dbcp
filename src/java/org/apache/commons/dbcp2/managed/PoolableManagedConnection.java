@@ -41,7 +41,9 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param pool connection pool
      * @param config abandoned configuration settings
      */
-    public PoolableManagedConnection(TransactionRegistry transactionRegistry, Connection conn, ObjectPool pool, AbandonedConfig config) {
+    public PoolableManagedConnection(TransactionRegistry transactionRegistry,
+            Connection conn, ObjectPool<PoolableConnection> pool,
+            AbandonedConfig config) {
         super(conn, pool, config);
         this.transactionRegistry = transactionRegistry;
     }
@@ -53,7 +55,8 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param conn underlying connection
      * @param pool connection pool
      */
-    public PoolableManagedConnection(TransactionRegistry transactionRegistry, Connection conn, ObjectPool pool) {
+    public PoolableManagedConnection(TransactionRegistry transactionRegistry,
+            Connection conn, ObjectPool<PoolableConnection> pool) {
         super(conn, pool);
         this.transactionRegistry = transactionRegistry;
     }
