@@ -19,6 +19,8 @@ package org.apache.commons.dbcp2;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -137,7 +139,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     @Override
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
-                                    Hashtable environment)
+            @SuppressWarnings("rawtypes") Hashtable environment)
         throws Exception {
 
         // We only know how to deal with <code>javax.naming.Reference</code>s
@@ -353,13 +355,20 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_CONNECTIONINITSQLS);
         if (value != null) {
             StringTokenizer tokenizer = new StringTokenizer(value, ";");
-            dataSource.setConnectionInitSqls(Collections.list(tokenizer));
+            // Have to jump through these hoops as StringTokenizer implements
+            // Enumeration<Object> rather than Enumeration<String>
+            Collection<String> tokens =
+                new ArrayList<String>(tokenizer.countTokens());
+            while (tokenizer.hasMoreTokens()) {
+                tokens.add(tokenizer.nextToken());
+            }
+            dataSource.setConnectionInitSqls(tokens);
         }
 
         value = properties.getProperty(PROP_CONNECTIONPROPERTIES);
         if (value != null) {
           Properties p = getProperties(value);
-          Enumeration e = p.propertyNames();
+          Enumeration<?> e = p.propertyNames();
           while (e.hasMoreElements()) {
             String propertyName = (String) e.nextElement();
             dataSource.addConnectionProperty(propertyName, p.getProperty(propertyName));
