@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -42,19 +43,18 @@ import javax.naming.spi.ObjectFactory;
 abstract class InstanceKeyObjectFactory
     implements ObjectFactory
 {
-    private static final Map instanceMap = new HashMap();
+    private static final Map<String, InstanceKeyDataSource> instanceMap =
+        new HashMap<String, InstanceKeyDataSource>();
 
     synchronized static String registerNewInstance(InstanceKeyDataSource ds) {
         int max = 0;
-        Iterator i = instanceMap.keySet().iterator();
+        Iterator<String> i = instanceMap.keySet().iterator();
         while (i.hasNext()) {
-            Object obj = i.next();
-            if (obj instanceof String)
-            {
+            String s = i.next();
+            if (s != null) {
                 try {
-                    max = Math.max(max, Integer.valueOf((String)obj).intValue());
-                }
-                catch (NumberFormatException e) {
+                    max = Math.max(max, Integer.valueOf(s).intValue());
+                } catch (NumberFormatException e) {
                     // no sweat, ignore those keys
                 }
             }
@@ -76,10 +76,10 @@ abstract class InstanceKeyObjectFactory
      */
     public static void closeAll() throws Exception {
         //Get iterator to loop over all instances of this datasource.
-        Iterator instanceIterator = instanceMap.entrySet().iterator();
+        Iterator<Entry<String,InstanceKeyDataSource>> instanceIterator =
+            instanceMap.entrySet().iterator();
         while (instanceIterator.hasNext()) {
-            ((InstanceKeyDataSource)
-                ((Map.Entry) instanceIterator.next()).getValue()).close();
+            instanceIterator.next().getValue().close();
         }
         instanceMap.clear();
     }
@@ -91,7 +91,7 @@ abstract class InstanceKeyObjectFactory
      */
     @Override
     public Object getObjectInstance(Object refObj, Name name,
-                                    Context context, Hashtable env)
+                                    Context context, Hashtable<?,?> env)
         throws IOException, ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
