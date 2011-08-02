@@ -1014,7 +1014,7 @@ public class BasicDataSource implements DataSource {
      * 
      * @since 1.3
      */
-    protected volatile List connectionInitSqls;
+    protected volatile List<String> connectionInitSqls;
 
     /**
      * Returns the list of SQL statements executed when a physical connection
@@ -1024,10 +1024,10 @@ public class BasicDataSource implements DataSource {
      * @return initialization SQL statements
      * @since 1.3
      */
-    public Collection getConnectionInitSqls() {
-        Collection result = connectionInitSqls; 
+    public Collection<String> getConnectionInitSqls() {
+        Collection<String> result = connectionInitSqls; 
         if (result == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return result;
     }
@@ -1044,20 +1044,17 @@ public class BasicDataSource implements DataSource {
      * @param connectionInitSqls Collection of SQL statements to execute
      * on connection creation
      */
-    public void setConnectionInitSqls(Collection connectionInitSqls) {
+    public void setConnectionInitSqls(Collection<String> connectionInitSqls) {
         if ((connectionInitSqls != null) && (connectionInitSqls.size() > 0)) {
-            ArrayList newVal = null;
-            for (Iterator iterator = connectionInitSqls.iterator();
+            ArrayList<String> newVal = null;
+            for (Iterator<String> iterator = connectionInitSqls.iterator();
             iterator.hasNext();) {
-                Object o = iterator.next();
-                if (o != null) {
-                    String s = o.toString();
-                    if (s.trim().length() > 0) {
-                        if (newVal == null) {
-                            newVal = new ArrayList();
-                        }
-                        newVal.add(s);
+            String s = iterator.next();
+            if (s != null && s.trim().length() > 0) {
+                    if (newVal == null) {
+                        newVal = new ArrayList<String>();
                     }
+                    newVal.add(s);
                 }
             }
             this.connectionInitSqls = newVal;
@@ -1796,17 +1793,6 @@ public class BasicDataSource implements DataSource {
             if (conn != null) {
                 connectionFactory.destroyObject(conn);
             }
-        }
-    }
-
-    /**
-     * Not used currently
-     */
-    private void restart() {
-        try {
-            close();
-        } catch (SQLException e) {
-            log("Could not restart DataSource, cause: " + e.getMessage());
         }
     }
 
