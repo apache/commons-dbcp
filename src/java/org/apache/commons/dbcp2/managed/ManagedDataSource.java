@@ -51,7 +51,8 @@ public class ManagedDataSource extends PoolingDataSource {
      * @param transactionRegistry the transaction registry obtained from the
      * XAConnectionFactory used to create the connection pool object factory
      */
-    public ManagedDataSource(ObjectPool pool, TransactionRegistry transactionRegistry) {
+    public ManagedDataSource(ObjectPool<Connection> pool,
+            TransactionRegistry transactionRegistry) {
         super(pool);
         this.transactionRegistry = transactionRegistry;
     }
