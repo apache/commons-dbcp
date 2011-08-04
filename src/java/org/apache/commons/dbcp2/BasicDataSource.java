@@ -1122,7 +1122,7 @@ public class BasicDataSource implements DataSource {
     /**
      * The object pool that internally manages our connections.
      */
-    protected volatile GenericObjectPool connectionPool = null;
+    protected volatile GenericObjectPool<Connection> connectionPool = null;
     
     /**
      * The connection properties that will be sent to our JDBC driver when

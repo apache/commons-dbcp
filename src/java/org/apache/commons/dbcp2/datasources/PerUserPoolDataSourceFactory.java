@@ -39,6 +39,7 @@ public class PerUserPoolDataSourceFactory
         return PER_USER_POOL_CLASSNAME.equals(className);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected InstanceKeyDataSource getNewInstance(Reference ref) 
         throws IOException, ClassNotFoundException {
@@ -64,38 +65,43 @@ public class PerUserPoolDataSourceFactory
         ra = ref.get("perUserDefaultAutoCommit");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserDefaultAutoCommit = (Map) deserialize(serialized);
+            pupds.perUserDefaultAutoCommit =
+                (Map<String,Boolean>) deserialize(serialized);
         }
 
         ra = ref.get("perUserDefaultTransactionIsolation");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
             pupds.perUserDefaultTransactionIsolation = 
-                (Map) deserialize(serialized);
+                (Map<String,Integer>) deserialize(serialized);
         }
 
         ra = ref.get("perUserMaxTotal");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserMaxTotal = (Map) deserialize(serialized);
+            pupds.perUserMaxTotal =
+                (Map<String,Integer>) deserialize(serialized);
         }
         
         ra = ref.get("perUserMaxIdle");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserMaxIdle = (Map) deserialize(serialized);
+            pupds.perUserMaxIdle =
+                (Map<String,Integer>) deserialize(serialized);
         }
         
         ra = ref.get("perUserMaxWait");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserMaxWait = (Map) deserialize(serialized);
+            pupds.perUserMaxWait =
+                (Map<String,Integer>) deserialize(serialized);
         }
                 
         ra = ref.get("perUserDefaultReadOnly");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserDefaultReadOnly = (Map) deserialize(serialized);
+            pupds.perUserDefaultReadOnly =
+                (Map<String,Boolean>) deserialize(serialized);
         }
         return pupds;
     }            
