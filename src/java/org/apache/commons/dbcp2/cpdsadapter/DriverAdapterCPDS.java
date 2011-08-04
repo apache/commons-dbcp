@@ -189,10 +189,10 @@ public class DriverAdapterCPDS
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
             return pci;
         }
-        KeyedObjectPool stmtPool = null;
+        KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> stmtPool = null;
         if (isPoolPreparedStatements()) {
-            GenericKeyedObjectPoolConfig config =
-                new GenericKeyedObjectPoolConfig();
+            GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatementStub> config =
+                new GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatementStub>();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
             config.setMaxWait(0);
@@ -215,7 +215,7 @@ public class DriverAdapterCPDS
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleTimeMillis(0);
             }
-            stmtPool = new GenericKeyedObjectPool(pci, config);
+            stmtPool = new GenericKeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub>(pci, config);
             pci.setStatementPool(stmtPool);
         }
         return pci;
