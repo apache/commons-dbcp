@@ -38,16 +38,16 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolablePreparedStatement extends DelegatingPreparedStatement {
+public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement> extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    protected KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> _pool = null;
+    protected KeyedObjectPool<K, S> _pool = null;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
      */
-    protected PStmtKey _key = null;
+    protected K _key = null;
 
     private volatile boolean batchAdded = false;
 
@@ -58,8 +58,8 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement {
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
      * @param conn the {@link Connection} from which I was created
      */
-    public PoolablePreparedStatement(PreparedStatement stmt, PStmtKey key,
-            KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool,
+    public PoolablePreparedStatement(PreparedStatement stmt, K key,
+            KeyedObjectPool<K, S> pool,
             Connection conn) {
         super((DelegatingConnection) conn, stmt);
         _pool = pool;
@@ -98,7 +98,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement {
         // calling close twice should have no effect
         if (!isClosed()) {
             try {
-                _pool.returnObject(_key,this);
+                _pool.returnObject(_key, (S) this);
             } catch(SQLException e) {
                 throw e;
             } catch(RuntimeException e) {

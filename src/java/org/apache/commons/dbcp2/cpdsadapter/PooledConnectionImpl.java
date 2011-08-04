@@ -30,8 +30,6 @@ import javax.sql.StatementEventListener;
 /* JDBC_4_ANT_KEY_END */
 
 import org.apache.commons.dbcp2.DelegatingConnection;
-import org.apache.commons.dbcp2.DelegatingPreparedStatement;
-import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 
@@ -81,7 +79,7 @@ class PooledConnectionImpl implements PooledConnection,
 
     /** My pool of {*link PreparedStatement}s. */
     // TODO - make final?
-    protected KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pstmtPool = null;
+    protected KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> pstmtPool = null;
 
     /** 
      * Controls access to the underlying connection 
@@ -105,7 +103,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
     
     public void setStatementPool(
-            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> statementPool) {
+            KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> statementPool) {
         pstmtPool = statementPool;
     }
 
