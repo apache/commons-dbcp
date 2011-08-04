@@ -21,8 +21,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.sql.ConnectionEvent;
@@ -41,7 +41,8 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 class KeyedCPDSConnectionFactory
-    implements KeyedPoolableObjectFactory, ConnectionEventListener, PooledConnectionManager {
+    implements KeyedPoolableObjectFactory<UserPassKey,PooledConnectionAndInfo>,
+    ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE
             = "close() was called on a Connection, but "
@@ -50,18 +51,20 @@ class KeyedCPDSConnectionFactory
     private final ConnectionPoolDataSource _cpds;
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
-    private KeyedObjectPool _pool;
+    private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> _pool;
     
     /** 
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
-    private final Map /* <PooledConnection, null> */ validatingMap = new HashMap();
+    private final Set<PooledConnection> validatingSet =
+        new HashSet<PooledConnection>();
     
     /**
      * Map of PooledConnectionAndInfo instances
      */
-    private final WeakHashMap /* <PooledConnection, PooledConnectionAndInfo> */ pcMap = new WeakHashMap();
+    private final WeakHashMap<PooledConnection, PooledConnectionAndInfo> pcMap =
+        new WeakHashMap<PooledConnection, PooledConnectionAndInfo>();
 
     /**
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
@@ -91,7 +94,7 @@ class KeyedCPDSConnectionFactory
         _rollbackAfterValidation = rollbackAfterValidation;
     }
 
-    public void setPool(KeyedObjectPool pool) {
+    public void setPool(KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool) {
         this._pool = pool;
     }
 
@@ -100,7 +103,7 @@ class KeyedCPDSConnectionFactory
      * 
      * @return KeyedObjectPool managing pooled connections
      */
-    public KeyedObjectPool getPool() {
+    public KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> getPool() {
         return _pool;
     }
 
@@ -112,9 +115,9 @@ class KeyedCPDSConnectionFactory
      * @see org.apache.commons.pool2.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
      */
     @Override
-    public synchronized Object makeObject(Object key) throws Exception {
-        Object obj = null;
-        UserPassKey upkey = (UserPassKey)key;
+    public synchronized PooledConnectionAndInfo makeObject(UserPassKey upkey)
+            throws Exception {
+        PooledConnectionAndInfo pci = null;
 
         PooledConnection pc = null;
         String username = upkey.getUsername();
@@ -132,101 +135,96 @@ class KeyedCPDSConnectionFactory
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
-        obj = new PooledConnectionAndInfo(pc, username, password);
-        pcMap.put(pc, obj);
+        pci = new PooledConnectionAndInfo(pc, username, password);
+        pcMap.put(pc, pci);
 
-        return obj;
+        return pci;
     }
 
     /**
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(Object key, Object obj) throws Exception {
-        if (obj instanceof PooledConnectionAndInfo) {
-            PooledConnection pc = ((PooledConnectionAndInfo)obj).getPooledConnection();
-            pc.removeConnectionEventListener(this);
-            pcMap.remove(pc);
-            pc.close(); 
-        }
+    public void destroyObject(UserPassKey key, PooledConnectionAndInfo pci)
+            throws Exception {
+        PooledConnection pc = pci.getPooledConnection();
+        pc.removeConnectionEventListener(this);
+        pcMap.remove(pc);
+        pc.close(); 
     }
 
     /**
      * Validates a pooled connection.
      * 
      * @param key ignored
-     * @param obj {@link PooledConnectionAndInfo} containing the connection to validate
+     * @param pci {@link PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation suceeds
      */
     @Override
-    public boolean validateObject(Object key, Object obj) {
+    public boolean validateObject(UserPassKey key,
+            PooledConnectionAndInfo pci) {
         boolean valid = false;
-        if (obj instanceof PooledConnectionAndInfo) {
-            PooledConnection pconn =
-                ((PooledConnectionAndInfo)obj).getPooledConnection();
-            String query = _validationQuery;
-            if (null != query) {
-                Connection conn = null;
-                Statement stmt = null;
-                ResultSet rset = null;
-                // logical Connection from the PooledConnection must be closed
-                // before another one can be requested and closing it will
-                // generate an event. Keep track so we know not to return
-                // the PooledConnection
-                validatingMap.put(pconn, null);
-                try {
-                    conn = pconn.getConnection();
-                    stmt = conn.createStatement();
-                    rset = stmt.executeQuery(query);
-                    if (rset.next()) {
-                        valid = true;
-                    } else {
-                        valid = false;
-                    }
-                    if (_rollbackAfterValidation) {
-                        conn.rollback();
-                    }
-                } catch(Exception e) {
+        PooledConnection pconn = pci.getPooledConnection();
+        String query = _validationQuery;
+        if (null != query) {
+            Connection conn = null;
+            Statement stmt = null;
+            ResultSet rset = null;
+            // logical Connection from the PooledConnection must be closed
+            // before another one can be requested and closing it will
+            // generate an event. Keep track so we know not to return
+            // the PooledConnection
+            validatingSet.add(pconn);
+            try {
+                conn = pconn.getConnection();
+                stmt = conn.createStatement();
+                rset = stmt.executeQuery(query);
+                if (rset.next()) {
+                    valid = true;
+                } else {
                     valid = false;
-                } finally {
-                    if (rset != null) {
-                        try {
-                            rset.close();
-                        } catch (Throwable t) {
-                            // ignore
-                        }
-                    }
-                    if (stmt != null) {
-                        try {
-                            stmt.close();
-                        } catch (Throwable t) {
-                            // ignore
-                        }
-                    }
-                    if (conn != null) {
-                        try {
-                            conn.close();
-                        } catch (Throwable t) {
-                            // ignore
-                        }
-                    }
-                    validatingMap.remove(pconn);
                 }
-            } else {
-                valid = true;
+                if (_rollbackAfterValidation) {
+                    conn.rollback();
+                }
+            } catch(Exception e) {
+                valid = false;
+            } finally {
+                if (rset != null) {
+                    try {
+                        rset.close();
+                    } catch (Throwable t) {
+                        // ignore
+                    }
+                }
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (Throwable t) {
+                        // ignore
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (Throwable t) {
+                        // ignore
+                    }
+                }
+                validatingSet.remove(pconn);
             }
         } else {
-            valid = false;
+            valid = true;
         }
         return valid;
     }
 
     @Override
-    public void passivateObject(Object key, Object obj) {
+    public void passivateObject(UserPassKey key, PooledConnectionAndInfo pci) {
     }
 
     @Override
-    public void activateObject(Object key, Object obj) {
+    public void activateObject(UserPassKey key, PooledConnectionAndInfo pci) {
     }
 
     // ***********************************************************************
@@ -245,23 +243,22 @@ class KeyedCPDSConnectionFactory
         // if this event occurred because we were validating, or if this
         // connection has been marked for removal, ignore it
         // otherwise return the connection to the pool.
-        if (!validatingMap.containsKey(pc)) {
-            PooledConnectionAndInfo info =
-                (PooledConnectionAndInfo) pcMap.get(pc);
-            if (info == null) {
+        if (!validatingSet.contains(pc)) {
+            PooledConnectionAndInfo pci = pcMap.get(pc);
+            if (pci == null) {
                 throw new IllegalStateException(NO_KEY_MESSAGE);
             }
             try {
-                _pool.returnObject(info.getUserPassKey(), info);
+                _pool.returnObject(pci.getUserPassKey(), pci);
             } catch (Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " +
                 "NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
-                    _pool.invalidateObject(info.getUserPassKey(), info);
+                    _pool.invalidateObject(pci.getUserPassKey(), pci);
                 } catch (Exception e3) {
                     System.err.println("EXCEPTION WHILE DESTROYING OBJECT " +
-                            info);
+                            pci);
                     e3.printStackTrace();
                 }
             }
@@ -282,7 +279,7 @@ class KeyedCPDSConnectionFactory
         }
         pc.removeConnectionEventListener(this);
 
-        PooledConnectionAndInfo info = (PooledConnectionAndInfo) pcMap.get(pc);
+        PooledConnectionAndInfo info = pcMap.get(pc);
         if (info == null) {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
@@ -307,7 +304,7 @@ class KeyedCPDSConnectionFactory
      */
     @Override
     public void invalidate(PooledConnection pc) throws SQLException {
-        PooledConnectionAndInfo info = (PooledConnectionAndInfo) pcMap.get(pc);
+        PooledConnectionAndInfo info = pcMap.get(pc);
         if (info == null) {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
