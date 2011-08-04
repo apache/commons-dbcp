@@ -21,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.dbcp2.DelegatingPreparedStatement;
+import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
 
 /**
@@ -41,7 +43,9 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement {
      * @param conn the {@link Connection} from which I was created
      */
     public PoolablePreparedStatementStub(PreparedStatement stmt,
-            PStmtKeyCPDS key, KeyedObjectPool pool, Connection conn) {
+            PStmtKey key,
+            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pool,
+            Connection conn) {
         super(stmt, key, pool, conn);
     }
 

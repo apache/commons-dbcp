@@ -42,7 +42,7 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    protected KeyedObjectPool _pool = null;
+    protected KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> _pool = null;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
@@ -59,7 +59,8 @@ public class PoolablePreparedStatement extends DelegatingPreparedStatement {
      * @param conn the {@link Connection} from which I was created
      */
     public PoolablePreparedStatement(PreparedStatement stmt, PStmtKey key,
-            KeyedObjectPool pool, Connection conn) {
+            KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool,
+            Connection conn) {
         super((DelegatingConnection) conn, stmt);
         _pool = pool;
         _key = key;
