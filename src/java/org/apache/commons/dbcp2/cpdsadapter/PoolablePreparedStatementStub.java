@@ -40,8 +40,8 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement {
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
      * @param conn the {@link Connection} from which I was created
      */
-    public PoolablePreparedStatementStub(PreparedStatement stmt, Object key, 
-            KeyedObjectPool pool, Connection conn) {
+    public PoolablePreparedStatementStub(PreparedStatement stmt,
+            PStmtKeyCPDS key, KeyedObjectPool pool, Connection conn) {
         super(stmt, key, pool, conn);
     }
 
