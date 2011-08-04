@@ -38,11 +38,12 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement> extends DelegatingPreparedStatement {
+public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,S>>
+        extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    protected KeyedObjectPool<K, S> _pool = null;
+    protected KeyedObjectPool<K, PoolablePreparedStatement<K,S>> _pool = null;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
@@ -59,7 +60,7 @@ public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement>
      * @param conn the {@link Connection} from which I was created
      */
     public PoolablePreparedStatement(PreparedStatement stmt, K key,
-            KeyedObjectPool<K, S> pool,
+            KeyedObjectPool<K, PoolablePreparedStatement<K,S>> pool,
             Connection conn) {
         super((DelegatingConnection) conn, stmt);
         _pool = pool;
@@ -98,7 +99,7 @@ public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement>
         // calling close twice should have no effect
         if (!isClosed()) {
             try {
-                _pool.returnObject(_key, (S) this);
+                _pool.returnObject(_key, this);
             } catch(SQLException e) {
                 throw e;
             } catch(RuntimeException e) {
@@ -110,7 +111,7 @@ public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement>
     }
     
     @Override
-    protected void activate() throws SQLException{
+    public void activate() throws SQLException{
         _closed = false;
         if(_conn != null) {
             _conn.addTrace(this);
@@ -119,7 +120,7 @@ public class PoolablePreparedStatement<K, S extends DelegatingPreparedStatement>
     }
   
     @Override
-    protected void passivate() throws SQLException {
+    public void passivate() throws SQLException {
         _closed = true;
         if(_conn != null) {
             _conn.removeTrace(this);

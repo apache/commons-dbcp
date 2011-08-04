@@ -34,6 +34,7 @@ import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import javax.naming.NamingException;
 
+import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -189,10 +190,10 @@ public class DriverAdapterCPDS
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
             return pci;
         }
-        KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> stmtPool = null;
+        KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> stmtPool = null;
         if (isPoolPreparedStatements()) {
-            GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatementStub> config =
-                new GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatementStub>();
+            GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>> config =
+                new GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>>();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
             config.setMaxWait(0);
@@ -215,7 +216,7 @@ public class DriverAdapterCPDS
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleTimeMillis(0);
             }
-            stmtPool = new GenericKeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub>(pci, config);
+            stmtPool = new GenericKeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>>(pci, config);
             pci.setStatementPool(stmtPool);
         }
         return pci;

@@ -30,6 +30,7 @@ import javax.sql.StatementEventListener;
 /* JDBC_4_ANT_KEY_END */
 
 import org.apache.commons.dbcp2.DelegatingConnection;
+import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 
@@ -41,7 +42,7 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 class PooledConnectionImpl implements PooledConnection,
-        KeyedPoolableObjectFactory<PStmtKeyCPDS,PoolablePreparedStatementStub> {
+        KeyedPoolableObjectFactory<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>> {
     
     private static final String CLOSED 
             = "Attempted to use PooledConnection after closed() was called.";
@@ -79,7 +80,7 @@ class PooledConnectionImpl implements PooledConnection,
 
     /** My pool of {*link PreparedStatement}s. */
     // TODO - make final?
-    protected KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> pstmtPool = null;
+    protected KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> pstmtPool = null;
 
     /** 
      * Controls access to the underlying connection 
@@ -103,7 +104,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
     
     public void setStatementPool(
-            KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> statementPool) {
+            KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> statementPool) {
         pstmtPool = statementPool;
     }
 
@@ -426,7 +427,7 @@ class PooledConnectionImpl implements PooledConnection,
      * @param obj the key for the {*link PreparedStatement} to be created
      */
     @Override
-    public PoolablePreparedStatementStub makeObject(PStmtKeyCPDS key) throws Exception {
+    public PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> makeObject(PStmtKeyCPDS key) throws Exception {
         if (null == key) {
             throw new IllegalArgumentException();
         } else {
@@ -460,7 +461,7 @@ class PooledConnectionImpl implements PooledConnection,
      * @param obj the {*link PreparedStatement} to be destroyed.
      */
     @Override
-    public void destroyObject(PStmtKeyCPDS key, PoolablePreparedStatementStub ppss)
+    public void destroyObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)
             throws Exception {
         ppss.getInnermostDelegate().close();
     }
@@ -473,7 +474,7 @@ class PooledConnectionImpl implements PooledConnection,
      * @return <tt>true</tt>
      */
     @Override
-    public boolean validateObject(PStmtKeyCPDS key, PoolablePreparedStatementStub ppss) {
+    public boolean validateObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss) {
         return true;
     }
 
@@ -484,7 +485,7 @@ class PooledConnectionImpl implements PooledConnection,
      * @param obj ignored
      */
     @Override
-    public void activateObject(PStmtKeyCPDS key, PoolablePreparedStatementStub ppss)
+    public void activateObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)
             throws Exception {
         ppss.activate();
     }
@@ -496,7 +497,7 @@ class PooledConnectionImpl implements PooledConnection,
      * @param obj a {*link PreparedStatement}
      */
     @Override
-    public void passivateObject(PStmtKeyCPDS key, PoolablePreparedStatementStub ppss)
+    public void passivateObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)
             throws Exception {
         ppss.clearParameters();
         ppss.passivate();

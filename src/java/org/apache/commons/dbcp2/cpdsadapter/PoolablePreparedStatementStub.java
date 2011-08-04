@@ -42,18 +42,18 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement<PStmtKeyCP
      */
     public PoolablePreparedStatementStub(PreparedStatement stmt,
             PStmtKeyCPDS key,
-            KeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatementStub> pool,
+            KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> pool,
             Connection conn) {
         super(stmt, key, pool, conn);
     }
 
     @Override
-    protected void activate() throws SQLException {
+    public void activate() throws SQLException {
         super.activate();
     }
 
     @Override
-    protected void passivate() throws SQLException {
+    public void passivate() throws SQLException {
         super.passivate();
     }
 }
