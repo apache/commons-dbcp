@@ -25,7 +25,7 @@ import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
- * <p>An implementation of a Jakarta-Commons ObjectPool which
+ * <p>An implementation of a Commons Pool ObjectPool which
  * tracks JDBC connections and can recover abandoned db connections.
  * If logAbandoned=true, a stack trace will be printed for any
  * abandoned db connections recovered.
@@ -33,7 +33,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * @author Glenn L. Nielsen
  * @version $Revision$ $Date$
  */
-public class AbandonedObjectPool extends GenericObjectPool {
+public class AbandonedObjectPool<T extends AbandonedTrace> extends GenericObjectPool<T> {
 
     /** 
      * DBCP AbandonedConfig 
@@ -43,7 +43,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
     /**
      * A list of connections in use
      */
-    private final List trace = new ArrayList();
+    private final List<T> trace = new ArrayList<T>();
 
     /**
      * Create an ObjectPool which tracks db connections.
@@ -51,7 +51,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * @param factory PoolableObjectFactory used to create this
      * @param config configuration for abandoned db connections
      */
-    public AbandonedObjectPool(PoolableObjectFactory factory,
+    public AbandonedObjectPool(PoolableObjectFactory<T> factory,
                                AbandonedConfig config) {
         super(factory);
         this.config = config;
@@ -70,18 +70,17 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * connection from the pool
      */
     @Override
-    public Object borrowObject() throws Exception {
+    public T borrowObject() throws Exception {
         if (config != null
                 && config.getRemoveAbandoned()
                 && (getNumIdle() < 2)
                 && (getNumActive() > getMaxTotal() - 3) ) {
             removeAbandoned();
         }
-        Object obj = super.borrowObject();
-        if (obj instanceof AbandonedTrace) {
-            ((AbandonedTrace) obj).setStackTrace();
-        }
-        if (obj != null && config != null && config.getRemoveAbandoned()) {
+        T obj = super.borrowObject();
+        obj.setStackTrace();
+
+        if (config != null && config.getRemoveAbandoned()) {
             synchronized (trace) {
                 trace.add(obj);
             }
@@ -97,7 +96,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * to the pool
      */
     @Override
-    public void returnObject(Object obj) {
+    public void returnObject(T obj) {
         if (config != null && config.getRemoveAbandoned()) {
             synchronized (trace) {
                 boolean foundObject = trace.remove(obj);
@@ -116,7 +115,7 @@ public class AbandonedObjectPool extends GenericObjectPool {
      * @throws Exception if an exception occurs invalidating the object
      */
     @Override
-    public void invalidateObject(Object obj) throws Exception {
+    public void invalidateObject(T obj) throws Exception {
         if (config != null && config.getRemoveAbandoned()) {
             synchronized (trace) {
                 boolean foundObject = trace.remove(obj);
@@ -136,11 +135,11 @@ public class AbandonedObjectPool extends GenericObjectPool {
         // Generate a list of abandoned connections to remove
         long now = System.currentTimeMillis();
         long timeout = now - (config.getRemoveAbandonedTimeout() * 1000);
-        ArrayList remove = new ArrayList();
+        ArrayList<T> remove = new ArrayList<T>();
         synchronized (trace) {
-            Iterator it = trace.iterator();
+            Iterator<T> it = trace.iterator();
             while (it.hasNext()) {
-                AbandonedTrace pc = (AbandonedTrace) it.next();
+                T pc = it.next();
                 if (pc.getLastUsed() > timeout) {
                     continue;
                 }
@@ -151,9 +150,9 @@ public class AbandonedObjectPool extends GenericObjectPool {
         }
 
         // Now remove the abandoned connections
-        Iterator it = remove.iterator();
+        Iterator<T> it = remove.iterator();
         while (it.hasNext()) {
-            AbandonedTrace pc = (AbandonedTrace) it.next();
+            T pc = it.next();
             if (config.getLogAbandoned()) {
                 pc.printStackTrace();
             }             
