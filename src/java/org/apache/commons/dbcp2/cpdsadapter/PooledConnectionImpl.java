@@ -424,7 +424,7 @@ class PooledConnectionImpl implements PooledConnection,
     /**
      * My {*link KeyedPoolableObjectFactory} method for creating
      * {*link PreparedStatement}s.
-     * @param obj the key for the {*link PreparedStatement} to be created
+     * @param key the key for the {*link PreparedStatement} to be created
      */
     @Override
     public PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> makeObject(PStmtKeyCPDS key) throws Exception {
@@ -458,7 +458,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for destroying
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param obj the {*link PreparedStatement} to be destroyed.
+     * @param ppss the {*link PreparedStatement} to be destroyed.
      */
     @Override
     public void destroyObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)
@@ -470,7 +470,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for validating
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param obj ignored
+     * @param ppss ignored
      * @return <tt>true</tt>
      */
     @Override
@@ -482,7 +482,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for activating
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param obj ignored
+     * @param ppss ignored
      */
     @Override
     public void activateObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)
@@ -494,7 +494,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for passivating
      * {*link PreparedStatement}s.  Currently invokes {*link PreparedStatement#clearParameters}.
      * @param key ignored
-     * @param obj a {*link PreparedStatement}
+     * @param ppss a {*link PreparedStatement}
      */
     @Override
     public void passivateObject(PStmtKeyCPDS key, PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub> ppss)

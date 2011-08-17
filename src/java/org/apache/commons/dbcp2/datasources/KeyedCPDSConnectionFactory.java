@@ -110,7 +110,7 @@ class KeyedCPDSConnectionFactory
     /**
      * Creates a new {@link PooledConnectionAndInfo} from the given {@link UserPassKey}.
      * 
-     * @param key {@link UserPassKey} containing user credentials
+     * @param upkey {@link UserPassKey} containing user credentials
      * @throws SQLException if the connection could not be created.
      * @see org.apache.commons.pool2.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
      */
