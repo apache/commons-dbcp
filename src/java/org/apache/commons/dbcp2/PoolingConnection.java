@@ -275,7 +275,7 @@ public class PoolingConnection extends DelegatingConnection
      * The <code>stmtType</code> field in the key determines whether 
      * a PoolablePreparedStatement or PoolableCallableStatement is created.
      * 
-     * @param obj the key for the {@link PreparedStatement} to be created
+     * @param key the key for the {@link PreparedStatement} to be created
      * @see #createKey(String, int, int, byte)
      */
     @Override
@@ -308,7 +308,7 @@ public class PoolingConnection extends DelegatingConnection
      * Closes the underlying statement.
      * 
      * @param key ignored
-     * @param obj the pooled statement to be destroyed.
+     * @param dps the pooled statement to be destroyed.
      */
     @Override
     public void destroyObject(PStmtKey key, DelegatingPreparedStatement dps)
@@ -335,7 +335,7 @@ public class PoolingConnection extends DelegatingConnection
      * pooled statements.
      * 
      * @param key ignored
-     * @param obj pooled statement to be activated
+     * @param dps pooled statement to be activated
      */
     @Override
     public void activateObject(PStmtKey key,
@@ -349,7 +349,7 @@ public class PoolingConnection extends DelegatingConnection
      * Invokes {@link PreparedStatement#clearParameters}.
      * 
      * @param key ignored
-     * @param obj a {@link PreparedStatement}
+     * @param dps a {@link PreparedStatement}
      */
     @Override
     public void passivateObject(PStmtKey key,
