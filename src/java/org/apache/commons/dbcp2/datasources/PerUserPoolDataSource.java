@@ -33,7 +33,6 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
@@ -529,11 +528,11 @@ public class PerUserPoolDataSource
         pool.setMaxIdle(maxIdle);
         pool.setMaxWait(maxWait);
         if (maxTotal <= 0) {
-            pool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            pool.setBlockWhenExhausted(false);
             pool.setMaxTotal(Integer.MAX_VALUE);
         }
         if (maxWait == 0) {
-            pool.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            pool.setBlockWhenExhausted(false);
         }
 
         pool.setTestOnBorrow(getTestOnBorrow());

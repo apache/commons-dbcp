@@ -38,7 +38,6 @@ import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * <p>
@@ -195,7 +194,7 @@ public class DriverAdapterCPDS
             GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>> config =
                 new GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>>();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
-            config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            config.setBlockWhenExhausted(false);
             config.setMaxWait(0);
             config.setMaxIdlePerKey(getMaxIdle());
             if (getMaxPreparedStatements() <= 0)
