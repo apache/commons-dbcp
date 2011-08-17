@@ -27,7 +27,6 @@ import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.WhenExhaustedAction;
 
 /**
  * A {@link PoolableObjectFactory} that creates
@@ -187,7 +186,7 @@ public class PoolableConnectionFactory
             GenericKeyedObjectPoolConfig<PStmtKey,DelegatingPreparedStatement> config =
                 new GenericKeyedObjectPoolConfig<PStmtKey,DelegatingPreparedStatement>();
             config.setMaxTotalPerKey(-1);
-            config.setWhenExhaustedAction(WhenExhaustedAction.FAIL);
+            config.setBlockWhenExhausted(false);
             config.setMaxWait(0);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
