@@ -183,8 +183,7 @@ public class PoolableConnectionFactory
         }
         if(poolStatements) {
             conn = new PoolingConnection(conn);
-            GenericKeyedObjectPoolConfig<PStmtKey,DelegatingPreparedStatement> config =
-                new GenericKeyedObjectPoolConfig<PStmtKey,DelegatingPreparedStatement>();
+            GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(-1);
             config.setBlockWhenExhausted(false);
             config.setMaxWait(0);

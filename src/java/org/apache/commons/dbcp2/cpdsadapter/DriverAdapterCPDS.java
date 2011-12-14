@@ -191,8 +191,7 @@ public class DriverAdapterCPDS
         }
         KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> stmtPool = null;
         if (isPoolPreparedStatements()) {
-            GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>> config =
-                new GenericKeyedObjectPoolConfig<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>>();
+            GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setBlockWhenExhausted(false);
             config.setMaxWait(0);
