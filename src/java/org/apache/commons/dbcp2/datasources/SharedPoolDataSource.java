@@ -216,7 +216,7 @@ public class SharedPoolDataSource
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
                 isRollbackAfterValidation());
-        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig<UserPassKey,PooledConnectionAndInfo>();
+        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
         config.setMaxTotalPerKey(getMaxTotal());
         config.setMaxIdlePerKey(getMaxIdle());
         config.setMaxWait(getMaxWait());
