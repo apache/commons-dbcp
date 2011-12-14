@@ -28,6 +28,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 
+import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
@@ -91,7 +92,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
         UserPassKey key = new UserPassKey("username", "password");
         KeyedCPDSConnectionFactory factory = 
             new KeyedCPDSConnectionFactory(cpds, null, false);
-        GenericKeyedObjectPool pool = new GenericKeyedObjectPool(factory);
+        KeyedObjectPool pool = new GenericKeyedObjectPool(factory);
         factory.setPool(pool);
         
         // Checkout a pair of connections
