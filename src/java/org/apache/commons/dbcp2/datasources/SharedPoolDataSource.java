@@ -29,6 +29,7 @@ import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
@@ -215,27 +216,28 @@ public class SharedPoolDataSource
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
                 isRollbackAfterValidation());
-        GenericKeyedObjectPool<UserPassKey,PooledConnectionAndInfo> tmpPool =
-            new GenericKeyedObjectPool<UserPassKey,PooledConnectionAndInfo>(factory);
-        factory.setPool(tmpPool);
-        tmpPool.setMaxTotalPerKey(getMaxTotal());
-        tmpPool.setMaxIdlePerKey(getMaxIdle());
-        tmpPool.setMaxWait(getMaxWait());
-        tmpPool.setBlockWhenExhausted(true);
+        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig<UserPassKey,PooledConnectionAndInfo>();
+        config.setMaxTotalPerKey(getMaxTotal());
+        config.setMaxIdlePerKey(getMaxIdle());
+        config.setMaxWait(getMaxWait());
+        config.setBlockWhenExhausted(true);
         if (maxTotal <= 0) {
-            tmpPool.setBlockWhenExhausted(false);
-            tmpPool.setMaxTotalPerKey(Integer.MAX_VALUE);
+            config.setBlockWhenExhausted(false);
+            config.setMaxTotalPerKey(Integer.MAX_VALUE);
         }
         if (maxWait == 0) {
-            tmpPool.setBlockWhenExhausted(false);
+            config.setBlockWhenExhausted(false);
         }
-        tmpPool.setTestOnBorrow(getTestOnBorrow());
-        tmpPool.setTestOnReturn(getTestOnReturn());
-        tmpPool.setTimeBetweenEvictionRunsMillis(
+        config.setTestOnBorrow(getTestOnBorrow());
+        config.setTestOnReturn(getTestOnReturn());
+        config.setTimeBetweenEvictionRunsMillis(
             getTimeBetweenEvictionRunsMillis());
-        tmpPool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
-        tmpPool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
-        tmpPool.setTestWhileIdle(getTestWhileIdle());
+        config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
+        config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
+        config.setTestWhileIdle(getTestWhileIdle());
+        KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> tmpPool =
+            new GenericKeyedObjectPool<UserPassKey,PooledConnectionAndInfo>(factory, config);
+        factory.setPool(tmpPool);
         pool = tmpPool;
     }
 
