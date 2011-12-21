@@ -39,6 +39,10 @@ The <action> type attribute can be add,update,fix,remove.
   </properties>
   <body>
     <release version="1.4.1" date="TBD" description="TBD">
+      <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
+        Improved configuration documentation of minIdle (made it match javadoc,
+        explaining that the evictor has to be enabled for the setting to have effect).
+      </action>
       <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
         Exposed GenericObjectPool's softMinEvictableIdleTimeMillis property for
         configuration and use by BasicDataSource.
