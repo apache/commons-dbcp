@@ -146,8 +146,11 @@ testWhileIdle
    <td>minIdle</td>
    <td>0</td>
    <td>
-      The minimum number of connections that can remain idle in the
-      pool, without extra ones being created, or zero to create none.
+     the minimum number of idle connections in the pool. The pool attempts
+     to ensure that minIdle connections are available when the idle object evictor
+     runs. The value of this property has no effect unless timeBetweenEvictionRunsMillis
+     has a positive value. Note also that no connections are created when 
+     numActive + numIdle >= maxActive (i.e., this setting does not override maxActive).
    </td>
 </tr>
 <tr>
