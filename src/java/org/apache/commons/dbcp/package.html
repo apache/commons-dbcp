@@ -75,7 +75,7 @@
          Q: I think I'm starting to get it, but can you walk me though it again?
       </p><p>
          A: Sure.  Let's assume you want to create a {@link javax.sql.DataSource}
-         that pools {@link java.sql.Connection}s.  Let's also assume that that
+         that pools {@link java.sql.Connection}s.  Let's also assume that
          those pooled {@link java.sql.Connection}s should be obtained from
          the {@link java.sql.DriverManager}.
          You'll want to create a {@link org.apache.commons.dbcp.PoolingDataSource}.
@@ -148,7 +148,7 @@ driver.registerPool("example",connectionPool);</pre>
       </p><p>
          For example, suppose you create a pool named "<tt>/eg</tt>" from a JOCL
          document.  The "connect string" for this pool will be
-         "<tt>jdbc:apache:commons:dbcp:/eg</tt>".  To do this, you'll need a create
+         "<tt>jdbc:apache:commons:dbcp:/eg</tt>".  To do this, you'll need to create
          a <i>resource</i> (just a file in your classpath) containing a JOCL description
          of the pool.  Specifically, this JOCL document should define a
          {@link org.apache.commons.dbcp.PoolableConnectionFactory} from which the
@@ -186,7 +186,7 @@ driver.registerPool("example",connectionPool);</pre>
          and the {@link org.apache.commons.dbcp.PoolingDriver} will find it
          automatically.  You need only register the {@link org.apache.commons.dbcp.PoolingDriver}
          (for example, using the <tt>jdbc.drivers</tt> property), and use the
-         the {@link java.sql.DriverManager} to create your {@link java.sql.Connection}s,
+         {@link java.sql.DriverManager} to create your {@link java.sql.Connection}s,
          like you normally would:
 <pre>Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:/eg");</pre>
       </p><p>
