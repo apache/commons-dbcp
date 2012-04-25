@@ -67,7 +67,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxTotal(getMaxTotal());
-        poolConfig.setMaxWait(getMaxWait());
+        poolConfig.setMaxWaitMillis(getMaxWait());
         poolConfig.setMinIdle(10);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
@@ -137,7 +137,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     public void testReportedBug12400() throws Exception {
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(70);
-        config.setMaxWait(60000);
+        config.setMaxWaitMillis(60000);
         config.setMaxIdle(10);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver", 

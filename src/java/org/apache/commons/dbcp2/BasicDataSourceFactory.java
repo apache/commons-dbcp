@@ -57,7 +57,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_MAXIDLE = "maxIdle";
     private final static String PROP_MINIDLE = "minIdle";
     private final static String PROP_INITIALSIZE = "initialSize";
-    private final static String PROP_MAXWAIT = "maxWait";
+    private final static String PROP_MAXWAITMILLIS = "maxWaitMillis";
     private final static String PROP_TESTONBORROW = "testOnBorrow";
     private final static String PROP_TESTONRETURN = "testOnReturn";
     private final static String PROP_TIMEBETWEENEVICTIONRUNSMILLIS = "timeBetweenEvictionRunsMillis";
@@ -96,7 +96,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_MAXIDLE,
         PROP_MINIDLE,
         PROP_INITIALSIZE,
-        PROP_MAXWAIT,
+        PROP_MAXWAITMILLIS,
         PROP_TESTONBORROW,
         PROP_TESTONRETURN,
         PROP_TIMEBETWEENEVICTIONRUNSMILLIS,
@@ -256,9 +256,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setInitialSize(Integer.parseInt(value));
         }
 
-        value = properties.getProperty(PROP_MAXWAIT);
+        value = properties.getProperty(PROP_MAXWAITMILLIS);
         if (value != null) {
-            dataSource.setMaxWait(Long.parseLong(value));
+            dataSource.setMaxWaitMillis(Long.parseLong(value));
         }
 
         value = properties.getProperty(PROP_TESTONBORROW);

@@ -186,7 +186,7 @@ public class PoolableConnectionFactory
             GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(-1);
             config.setBlockWhenExhausted(false);
-            config.setMaxWait(0);
+            config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =

@@ -89,7 +89,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals(10, ds.getMaxTotal());
         assertEquals(8, ds.getMaxIdle());
         assertEquals(0, ds.getMinIdle());
-        assertEquals(500, ds.getMaxWait());
+        assertEquals(500, ds.getMaxWaitMillis());
         assertEquals(5, ds.getInitialSize());
         assertEquals(5, ds.getNumIdle());
         assertEquals(true, ds.getDefaultAutoCommit());

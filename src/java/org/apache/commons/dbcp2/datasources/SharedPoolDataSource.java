@@ -56,8 +56,8 @@ public class SharedPoolDataSource
 
     private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
-    private int maxWait = (int)Math.min(Integer.MAX_VALUE,
-            GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
+    private int maxWaitMillis = (int)Math.min(Integer.MAX_VALUE,
+            GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
     private transient KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool = null;
     private transient KeyedCPDSConnectionFactory factory = null;
 
@@ -124,8 +124,8 @@ public class SharedPoolDataSource
      * immediately if value is 0.
      * The default is -1.
      */
-    public int getMaxWait() {
-        return (this.maxWait);
+    public int getMaxWaitMillis() {
+        return (this.maxWaitMillis);
     }
 
     /**
@@ -135,9 +135,9 @@ public class SharedPoolDataSource
      * immediately if value is 0.
      * The default is -1.
      */
-    public void setMaxWait(int maxWait) {
+    public void setMaxWaitMillis(int maxWaitMillis) {
         assertInitializationAllowed();
-        this.maxWait = maxWait;
+        this.maxWaitMillis = maxWaitMillis;
     }
 
     // ----------------------------------------------------------------------
@@ -219,13 +219,13 @@ public class SharedPoolDataSource
         GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
         config.setMaxTotalPerKey(getMaxTotal());
         config.setMaxIdlePerKey(getMaxIdle());
-        config.setMaxWait(getMaxWait());
+        config.setMaxWaitMillis(getMaxWaitMillis());
         config.setBlockWhenExhausted(true);
         if (maxTotal <= 0) {
             config.setBlockWhenExhausted(false);
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
         }
-        if (maxWait == 0) {
+        if (maxWaitMillis == 0) {
             config.setBlockWhenExhausted(false);
         }
         config.setTestOnBorrow(getTestOnBorrow());

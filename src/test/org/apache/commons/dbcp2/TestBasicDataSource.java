@@ -58,7 +58,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWait(getMaxWait());
+        ds.setMaxWaitMillis(getMaxWait());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -486,7 +486,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWait(getMaxWait());
+        ds.setMaxWaitMillis(getMaxWait());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);

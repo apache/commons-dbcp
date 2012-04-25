@@ -50,9 +50,9 @@ public class SharedPoolDataSourceFactory
                 Integer.parseInt(ra.getContent().toString()));
         }
 
-        ra = ref.get("maxWait");
+        ra = ref.get("maxWaitMillis");
         if (ra != null && ra.getContent() != null) {
-            spds.setMaxWait(
+            spds.setMaxWaitMillis(
                 Integer.parseInt(ra.getContent().toString()));
         }
         

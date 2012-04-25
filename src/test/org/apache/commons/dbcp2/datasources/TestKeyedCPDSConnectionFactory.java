@@ -67,7 +67,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
        SharedPoolDataSource ds = new SharedPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
        ds.setMaxTotal(10);
-       ds.setMaxWait(50);
+       ds.setMaxWaitMillis(50);
        ds.setMaxIdle(2);
        Connection conn1 = ds.getConnection("username", "password");
        Connection conn2 = ds.getConnection("username", "password");

@@ -67,7 +67,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWait((int)(getMaxWait()));
+        tds.setMaxWaitMillis((int)(getMaxWait()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -344,7 +344,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final int maxWait = 1000;
         final int theadCount = 20;
         
-        ((SharedPoolDataSource)ds).setMaxWait(maxWait);
+        ((SharedPoolDataSource)ds).setMaxWaitMillis(maxWait);
         // Obtain all the connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
@@ -388,13 +388,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
         final int defaultMaxWait = 430;
-        ((SharedPoolDataSource) ds).setMaxWait(defaultMaxWait);
+        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWait);
         multipleThreads(1, false, false, defaultMaxWait);
     }
 
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWait = 500;
-        ((SharedPoolDataSource) ds).setMaxWait(defaultMaxWait);
+        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWait);
         multipleThreads(2 * defaultMaxWait, true, true, defaultMaxWait);
     }
 
@@ -494,7 +494,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWait((int)(getMaxWait()));
+        tds.setMaxWaitMillis((int)(getMaxWait()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 

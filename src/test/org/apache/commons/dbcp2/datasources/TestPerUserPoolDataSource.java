@@ -69,9 +69,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWait((int)(getMaxWait()));
+        tds.setDefaultMaxWaitMillis((int)(getMaxWait()));
         tds.setPerUserMaxTotal("foo",new Integer(getMaxTotal()));
-        tds.setPerUserMaxWait("foo",new Integer((int)(getMaxWait())));
+        tds.setPerUserMaxWaitMillis("foo",new Integer((int)(getMaxWait())));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -332,7 +332,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      */
     public void testMaxWaitZero() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
-        tds.setDefaultMaxWait(0);
+        tds.setDefaultMaxWaitMillis(0);
         tds.setPerUserMaxTotal("u1", new Integer(1));
         Connection conn = tds.getConnection("u1", "p1");
         try {
@@ -397,15 +397,15 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
         final int defaultMaxWait = 430;
-        ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",new Integer(defaultMaxWait));
+        ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWait);
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Integer(defaultMaxWait));
         multipleThreads(1, false, false, defaultMaxWait);
     }
 
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWait = 500;
-        ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWait);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWait("foo",new Integer(defaultMaxWait));
+        ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWait);
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Integer(defaultMaxWait));
         multipleThreads(2 * defaultMaxWait, true, true, defaultMaxWait);
     }
 

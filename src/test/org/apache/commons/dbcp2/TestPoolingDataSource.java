@@ -63,7 +63,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         pool = new GenericObjectPool(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWait(getMaxWait());
+        pool.setMaxWaitMillis(getMaxWait());
         ds = new PoolingDataSource(pool);
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
