@@ -461,7 +461,8 @@ public class BasicDataSource implements DataSource {
      * are no available connections) for a connection to be returned before
      * throwing an exception, or <= 0 to wait indefinitely.
      */
-    protected long maxWait = GenericObjectPoolConfig.DEFAULT_MAX_WAIT;
+    protected long maxWaitMillis =
+            GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
 
     /**
      * <p>Returns the maximum number of milliseconds that the pool will wait
@@ -470,25 +471,25 @@ public class BasicDataSource implements DataSource {
      * <p>A value less than or equal to zero means the pool is set to wait
      * indefinitely.</p>
      * 
-     * @return the maxWait property value
+     * @return the maxWaitMillis property value
      */
-    public synchronized long getMaxWait() {
-        return this.maxWait;
+    public synchronized long getMaxWaitMillis() {
+        return this.maxWaitMillis;
     }
 
     /**
-     * <p>Sets the maxWait property.
+     * <p>Sets the MaxWaitMillis property.
      * </p>
      * <p>Use -1 to make the pool wait indefinitely.
      * </p>
      * 
-     * @param maxWait the new value for maxWait
-     * @see #getMaxWait()
+     * @param MaxWaitMillis the new value for MaxWaitMillis
+     * @see #getMaxWaitMillis()
      */
-    public synchronized void setMaxWait(long maxWait) {
-        this.maxWait = maxWait;
+    public synchronized void setMaxWaitMillis(long maxWaitMillis) {
+        this.maxWaitMillis = maxWaitMillis;
         if (connectionPool != null) {
-            connectionPool.setMaxWait(maxWait);
+            connectionPool.setMaxWaitMillis(maxWaitMillis);
         }
     }
 
@@ -1694,7 +1695,7 @@ public class BasicDataSource implements DataSource {
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
-        gop.setMaxWait(maxWait);
+        gop.setMaxWaitMillis(maxWaitMillis);
         gop.setTestOnBorrow(testOnBorrow);
         gop.setTestOnReturn(testOnReturn);
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);

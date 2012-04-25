@@ -62,13 +62,13 @@ public class PerUserPoolDataSource
 
     private int defaultMaxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private int defaultMaxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
-    private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
-            GenericObjectPoolConfig.DEFAULT_MAX_WAIT);
+    private int defaultMaxWaitMillis = (int)Math.min(Integer.MAX_VALUE,
+            GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
     Map<String,Boolean> perUserDefaultAutoCommit = null;    
     Map<String,Integer> perUserDefaultTransactionIsolation = null;
     Map<String,Integer> perUserMaxTotal = null;    
     Map<String,Integer> perUserMaxIdle = null;    
-    Map<String,Integer> perUserMaxWait = null;
+    Map<String,Integer> perUserMaxWaitMillis = null;
     Map<String,Boolean> perUserDefaultReadOnly = null;    
 
     /**
@@ -149,10 +149,10 @@ public class PerUserPoolDataSource
      * throwing an exception, or -1 to wait indefinitely.  Will fail 
      * immediately if value is 0.
      * This value is used for any username which is not specified
-     * in perUserMaxWait.  The default is -1.
+     * in perUserMaxWaitMillis.  The default is -1.
      */
-    public int getDefaultMaxWait() {
-        return (this.defaultMaxWait);
+    public int getDefaultMaxWaitMillis() {
+        return (this.defaultMaxWaitMillis);
     }
 
     /**
@@ -161,11 +161,12 @@ public class PerUserPoolDataSource
      * throwing an exception, or -1 to wait indefinitely.  Will fail 
      * immediately if value is 0.
      * This value is used for any username which is not specified
-     * in perUserMaxWait.  The default is -1.
+     * in perUserMaxWaitMillis.  The default is -1.
      */
-    public void setDefaultMaxWait(int defaultMaxWait) {
+    public void setDefaultMaxWaitMillis(int defaultMaxWaitMillis
+            ) {
         assertInitializationAllowed();
-        this.defaultMaxWait = defaultMaxWait;
+        this.defaultMaxWaitMillis = defaultMaxWaitMillis;
     }
 
     /**
@@ -280,12 +281,12 @@ public class PerUserPoolDataSource
      * throwing an exception, or -1 to wait indefinitely.  Will fail 
      * immediately if value is 0.
      * The keys are usernames and the value is the maximum connections.  Any 
-     * username specified here will override the value of defaultMaxWait.
+     * username specified here will override the value of defaultMaxWaitMillis.
      */
-    public Integer getPerUserMaxWait(String username) {
+    public Integer getPerUserMaxWaitMillis(String username) {
         Integer value = null;
-        if (perUserMaxWait != null) {
-            value = perUserMaxWait.get(username);
+        if (perUserMaxWaitMillis != null) {
+            value = perUserMaxWaitMillis.get(username);
         }
         return value;
     }
@@ -296,14 +297,14 @@ public class PerUserPoolDataSource
      * throwing an exception, or -1 to wait indefinitely.  Will fail 
      * immediately if value is 0.
      * The keys are usernames and the value is the maximum connections.  Any 
-     * username specified here will override the value of defaultMaxWait.
+     * username specified here will override the value of defaultMaxWaitMillis.
      */
-    public void setPerUserMaxWait(String username, Integer value) {
+    public void setPerUserMaxWaitMillis(String username, Integer value) {
         assertInitializationAllowed();
-        if (perUserMaxWait == null) {
-            perUserMaxWait = new HashMap<String,Integer>();
+        if (perUserMaxWaitMillis == null) {
+            perUserMaxWaitMillis = new HashMap<String,Integer>();
         }
-        perUserMaxWait.put(username, value);
+        perUserMaxWaitMillis.put(username, value);
     }
 
     /**
@@ -509,9 +510,9 @@ public class PerUserPoolDataSource
         userMax = getPerUserMaxIdle(username);
         int maxIdle =  (userMax == null) ?
             getDefaultMaxIdle() : userMax.intValue();
-        userMax = getPerUserMaxWait(username);
-        int maxWait = (userMax == null) ?
-            getDefaultMaxWait() : userMax.intValue();
+        userMax = getPerUserMaxWaitMillis(username);
+        int maxWaitMillis = (userMax == null) ?
+            getDefaultMaxWaitMillis() : userMax.intValue();
 
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
@@ -526,12 +527,12 @@ public class PerUserPoolDataSource
         factory.setPool(pool);
         pool.setMaxTotal(maxTotal);
         pool.setMaxIdle(maxIdle);
-        pool.setMaxWait(maxWait);
+        pool.setMaxWaitMillis(maxWaitMillis);
         if (maxTotal <= 0) {
             pool.setBlockWhenExhausted(false);
             pool.setMaxTotal(Integer.MAX_VALUE);
         }
-        if (maxWait == 0) {
+        if (maxWaitMillis == 0) {
             pool.setBlockWhenExhausted(false);
         }
 

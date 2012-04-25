@@ -56,9 +56,9 @@ public class PerUserPoolDataSourceFactory
                 Integer.parseInt(ra.getContent().toString()));
         }
 
-        ra = ref.get("defaultMaxWait");
+        ra = ref.get("defaultMaxWaitMillis");
         if (ra != null && ra.getContent() != null) {
-            pupds.setDefaultMaxWait(
+            pupds.setDefaultMaxWaitMillis(
                 Integer.parseInt(ra.getContent().toString()));
         }
 
@@ -90,10 +90,10 @@ public class PerUserPoolDataSourceFactory
                 (Map<String,Integer>) deserialize(serialized);
         }
         
-        ra = ref.get("perUserMaxWait");
+        ra = ref.get("perUserMaxWaitMillis");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.perUserMaxWait =
+            pupds.perUserMaxWaitMillis =
                 (Map<String,Integer>) deserialize(serialized);
         }
                 

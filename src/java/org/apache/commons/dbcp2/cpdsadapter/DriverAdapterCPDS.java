@@ -194,7 +194,7 @@ public class DriverAdapterCPDS
             GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setBlockWhenExhausted(false);
-            config.setMaxWait(0);
+            config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(getMaxIdle());
             if (getMaxPreparedStatements() <= 0)
             {
