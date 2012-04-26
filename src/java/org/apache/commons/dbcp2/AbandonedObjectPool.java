@@ -92,7 +92,7 @@ public class AbandonedObjectPool<T extends AbandonedTrace> extends GenericObject
      * Return a db connection to the pool.
      *
      * @param obj db Connection to return
-     * @throws Exception if an exception occurs returning the connection
+     * @throws RuntimeException if an exception occurs returning the connection
      * to the pool
      */
     @Override
