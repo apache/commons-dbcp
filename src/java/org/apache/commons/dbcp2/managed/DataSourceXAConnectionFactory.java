@@ -33,7 +33,7 @@ import java.sql.SQLException;
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     protected TransactionRegistry transactionRegistry;
     protected XADataSource xaDataSource;
-    protected String username;
+    private String username;
     protected String password;
 
     /**
