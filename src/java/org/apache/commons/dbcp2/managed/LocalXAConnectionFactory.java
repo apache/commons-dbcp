@@ -86,8 +86,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      */
     protected static class LocalXAResource implements XAResource {
         private final Connection connection;
-        private Xid currentXid;
-        private boolean originalAutoCommit;
+        private Xid currentXid; // @GuardedBy("this")
+        private boolean originalAutoCommit; // @GuardedBy("this")
 
         public LocalXAResource(Connection localTransaction) {
             this.connection = localTransaction;
