@@ -483,7 +483,7 @@ public class BasicDataSource implements DataSource {
      * <p>Use -1 to make the pool wait indefinitely.
      * </p>
      * 
-     * @param MaxWaitMillis the new value for MaxWaitMillis
+     * @param maxWaitMillis the new value for MaxWaitMillis
      * @see #getMaxWaitMillis()
      */
     public synchronized void setMaxWaitMillis(long maxWaitMillis) {
