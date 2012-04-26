@@ -1465,8 +1465,6 @@ public class BasicDataSource implements DataSource {
             if (oldpool != null) {
                 oldpool.close();
             }
-        } catch(SQLException e) {
-            throw e;
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
