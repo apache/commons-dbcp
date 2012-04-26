@@ -53,7 +53,7 @@ class CPDSConnectionFactory
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> _pool;
-    private String _username = null;
+    private final String _username;
     private String _password = null;
 
     /** 
