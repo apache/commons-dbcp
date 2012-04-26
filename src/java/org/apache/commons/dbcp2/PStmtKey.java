@@ -24,49 +24,45 @@ import java.sql.PreparedStatement;
 public class PStmtKey {
     
     /** SQL defining Prepared or Callable Statement */
-    private String _sql = null;
+    private final String _sql;
     
     /** Result set type */
-    private Integer _resultSetType = null;
+    private final Integer _resultSetType;
     
     /** Result set concurrency */
-    private Integer _resultSetConcurrency = null;
+    private final Integer _resultSetConcurrency;
     
     /** Database catalog */
-    private String _catalog = null;
+    private final String _catalog;
     
     /** 
      *  Statement type. Either STATEMENT_PREPAREDSTMT (PreparedStatement)
      *  or STATEMENT_CALLABLESTMT (CallableStatement) 
      */
-    private byte _stmtType = PoolingConnection.STATEMENT_PREPAREDSTMT;
+    private final byte _stmtType;
     
     public PStmtKey(String sql) {
-        _sql = sql;
+        this(sql, null, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
 
     public PStmtKey(String sql, String catalog) {
-        _sql = sql;
-        _catalog = catalog;
+        this(sql, catalog, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
     
     public PStmtKey(String sql, String catalog, byte stmtType) {
         _sql = sql;
         _catalog = catalog;
         _stmtType = stmtType;
+        _resultSetType = null;
+        _resultSetConcurrency = null;
     }
 
     public  PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
-        _sql = sql;
-        _resultSetType = new Integer(resultSetType);
-        _resultSetConcurrency = new Integer(resultSetConcurrency);
+        this(sql, null, resultSetType, resultSetConcurrency, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
 
     public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
-        _sql = sql;
-        _catalog = catalog;
-        _resultSetType = new Integer(resultSetType);
-        _resultSetConcurrency = new Integer(resultSetConcurrency);
+        this(sql, catalog, resultSetType, resultSetConcurrency, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
     
     public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
