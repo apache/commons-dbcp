@@ -20,13 +20,16 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
  * Utility methods
  */
 public class Utils {
+
+    private Utils() {
+        // not instantiable
+    }
 
     /**
      * Closes the ResultSet (which may be null).
@@ -37,7 +40,7 @@ public class Utils {
         if (rset != null) {
             try {
                 rset.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 // ignored
             }
         }
@@ -52,7 +55,7 @@ public class Utils {
         if (conn != null) {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 // ignored
             }
         }
@@ -67,7 +70,7 @@ public class Utils {
         if (stmt != null) {
             try {
                 stmt.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 // ignored
             }
         }
