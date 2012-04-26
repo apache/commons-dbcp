@@ -30,6 +30,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 
@@ -190,27 +191,9 @@ class KeyedCPDSConnectionFactory
             } catch(Exception e) {
                 valid = false;
             } finally {
-                if (rset != null) {
-                    try {
-                        rset.close();
-                    } catch (Throwable t) {
-                        // ignore
-                    }
-                }
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch (Throwable t) {
-                        // ignore
-                    }
-                }
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (Throwable t) {
-                        // ignore
-                    }
-                }
+                Utils.closeQuietly(rset);
+                Utils.closeQuietly(stmt);
+                Utils.closeQuietly(conn);
                 validatingSet.remove(pconn);
             }
         } else {

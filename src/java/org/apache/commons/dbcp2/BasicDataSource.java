@@ -1616,7 +1616,7 @@ public class BasicDataSource implements DataSource {
                             ).getContextClassLoader().loadClass(
                                     driverClassName);
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 String message = "Cannot load JDBC driver class '" +
                     driverClassName + "'";
                 logWriter.println(message);
@@ -1638,7 +1638,7 @@ public class BasicDataSource implements DataSource {
                     throw new SQLException("No suitable driver", "08001"); 
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             String message = "Cannot create JDBC driver of class '" +
                 (driverClassName != null ? driverClassName : "") +
                 "' for connect URL '" + url + "'";

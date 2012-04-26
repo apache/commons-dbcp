@@ -42,6 +42,9 @@ The <action> type attribute can be add,update,fix,remove.
      features as well as bug fixes and enhancements. Version 2.0.x supports JDBC
      4, so requires JDK 1.6.  Applications running under JDK 1.4-1.5 must use
      DBCP 1.3.x. Applications running under JDK 1.6 should use DBCP 2.0.x.">
+      <action issue="DBCP-322" dev="sebb" type="fix">
+        CPDSConnectionFactory.validateObject(Object) ignores Throwable.
+      </action>
       <action dev="markt" type="add">
         Provide a new option (cacheState) to cache current values of autoCommit
         and readOnly so database queries are not required for every call to the
