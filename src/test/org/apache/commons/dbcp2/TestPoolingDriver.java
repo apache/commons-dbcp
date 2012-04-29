@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,7 +52,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     private PoolingDriver driver = null;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -67,7 +67,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxTotal(getMaxTotal());
-        poolConfig.setMaxWaitMillis(getMaxWait());
+        poolConfig.setMaxWaitMillis(getMaxWaitMillis());
         poolConfig.setMinIdle(10);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
@@ -75,7 +75,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         poolConfig.setTimeBetweenEvictionRunsMillis(10000L);
         poolConfig.setNumTestsPerEvictionRun(5);
         poolConfig.setMinEvictableIdleTimeMillis(5000L);
-        
+
         GenericObjectPool pool = new GenericObjectPool(pcf, poolConfig);
         pcf.setPool(pool);
 
@@ -90,7 +90,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver.closePool("test");
         super.tearDown();
     }
-    
+
     public void test1() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         PoolableConnectionFactory pcf =
@@ -118,7 +118,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertFalse(conn1.isClosed());
-        conn1.close();        
+        conn1.close();
 
         Connection conn2 = getConnection();
         assertNotNull(conn2);
@@ -132,7 +132,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         assertTrue(conn1.isClosed());
         assertFalse(conn2.isClosed());
     }
-    
+
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testReportedBug12400() throws Exception {
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
@@ -140,10 +140,10 @@ public class TestPoolingDriver extends TestConnectionPool {
         config.setMaxWaitMillis(60000);
         config.setMaxIdle(10);
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-            "jdbc:apache:commons:testdriver", 
-            "username", 
+            "jdbc:apache:commons:testdriver",
+            "username",
             "password");
-        PoolableConnectionFactory poolableConnectionFactory = 
+        PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory);
         poolableConnectionFactory.setDefaultReadOnly(false);
         poolableConnectionFactory.setDefaultAutoCommit(true);
@@ -165,12 +165,12 @@ public class TestPoolingDriver extends TestConnectionPool {
             conn[i].close();
         }
     }
-    
+
     public void testClosePool() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
         conn.close();
-        
+
         PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
         driver2.closePool("test");
 
@@ -182,7 +182,7 @@ public class TestPoolingDriver extends TestConnectionPool {
             // OK
         }
     }
-    
+
     public void testInvalidateConnection() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
@@ -204,7 +204,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         PrintWriter pw = new PrintWriter(new ByteArrayOutputStream());
         System.setErr(new PrintStream(new ByteArrayOutputStream()));
         SQLException ex;
-        
+
         DriverManager.setLogWriter(pw);
         ex = new SQLException("A", new Exception("a"));
         ex.printStackTrace();

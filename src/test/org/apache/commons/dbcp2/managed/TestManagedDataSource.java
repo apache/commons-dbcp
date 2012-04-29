@@ -84,7 +84,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         pool = new GenericObjectPool(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWaitMillis(getMaxWait());
+        pool.setMaxWaitMillis(getMaxWaitMillis());
 
         // finally create the datasource
         ds = new ManagedDataSource(pool, xaConnectionFactory.getTransactionRegistry());
