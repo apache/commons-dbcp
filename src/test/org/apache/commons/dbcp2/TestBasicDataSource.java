@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import junit.framework.TestSuite;
 
 /**
  * TestSuite for BasicDataSource
- * 
+ *
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
@@ -58,7 +58,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWaitMillis(getMaxWait());
+        ds.setMaxWaitMillis(getMaxWaitMillis());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -116,7 +116,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         // both wrapper and raw active connection should be closed
         assertTrue(activeConnection.isClosed());
         assertTrue(rawActiveConnection.isClosed());
-        
+
         // Verify SQLException on getConnection after close
         try {
             getConnection();
@@ -124,10 +124,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         } catch (SQLException ex) {
             // Expected
         }
-        
+
         // Redundant close is OK
         ds.close();
-        
+
     }
 
     public void testSetProperties() throws Exception {
@@ -180,22 +180,22 @@ public class TestBasicDataSource extends TestConnectionPool {
             // expected
         }
     }
-    
+
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
         assertNotNull(conn);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
         conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
         conn.close();
-        
+
         Connection conn2 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
-        
+
         Connection conn3 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn3.getTransactionIsolation());
 
         conn2.close();
-        
+
         conn3.close();
     }
 
@@ -204,16 +204,16 @@ public class TestBasicDataSource extends TestConnectionPool {
         // this also needs access to the underlying connection
         ds.setAccessToUnderlyingConnectionAllowed(true);
         super.testPooling();
-    }    
-    
+    }
+
     public void testNoAccessToUnderlyingConnectionAllowed() throws Exception {
         // default: false
         assertEquals(false, ds.isAccessToUnderlyingConnectionAllowed());
-        
+
         Connection conn = getConnection();
         Connection dconn = ((DelegatingConnection) conn).getDelegate();
         assertNull(dconn);
-        
+
         dconn = ((DelegatingConnection) conn).getInnermostDelegate();
         assertNull(dconn);
     }
@@ -221,20 +221,20 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testAccessToUnderlyingConnectionAllowed() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
-        
+
         Connection conn = getConnection();
         Connection dconn = ((DelegatingConnection) conn).getDelegate();
         assertNotNull(dconn);
-        
+
         dconn = ((DelegatingConnection) conn).getInnermostDelegate();
         assertNotNull(dconn);
-        
+
         assertTrue(dconn instanceof TesterConnection);
     }
-    
+
     public void testEmptyValidationQuery() throws Exception {
         assertNotNull(ds.getValidationQuery());
-        
+
         ds.setValidationQuery("");
         assertNull(ds.getValidationQuery());
 
@@ -254,7 +254,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             }
         }
     }
-    
+
     public void testValidationQueryTimoutFail() {
         ds.setTestOnBorrow(true);
         ds.setValidationQueryTimeout(3); // Too fast for TesterStatement
@@ -267,7 +267,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             }
         }
     }
-    
+
     public void testValidationQueryTimeoutZero() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
@@ -275,7 +275,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         Connection con = ds.getConnection();
         con.close();
     }
-    
+
     public void testValidationQueryTimeoutNegative() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
@@ -283,7 +283,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         Connection con = ds.getConnection();
         con.close();
     }
-    
+
     public void testValidationQueryTimeoutSucceed() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
@@ -341,7 +341,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnReturn(true);
         ds.setTestWhileIdle(true);
         ds.setValidationQuery("");
-        
+
         Connection conn = ds.getConnection();
         conn.close();
 
@@ -349,35 +349,35 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(false, ds.getTestOnReturn());
         assertEquals(false, ds.getTestWhileIdle());
     }
-    
+
     public void testDefaultCatalog() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = getConnection();
             assertTrue(c[i] != null);
-            assertEquals(CATALOG, c[i].getCatalog()); 
+            assertEquals(CATALOG, c[i].getCatalog());
         }
 
         for (int i = 0; i < c.length; i++) {
             c[i].setCatalog("error");
             c[i].close();
         }
-        
+
         for (int i = 0; i < c.length; i++) {
             c[i] = getConnection();
             assertTrue(c[i] != null);
-            assertEquals(CATALOG, c[i].getCatalog()); 
-        }        
+            assertEquals(CATALOG, c[i].getCatalog());
+        }
 
         for (int i = 0; i < c.length; i++) {
             c[i].close();
         }
     }
-    
+
     public void testSetAutoCommitTrueOnClose() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         ds.setDefaultAutoCommit(false);
-        
+
         Connection conn = getConnection();
         assertNotNull(conn);
         assertEquals(false, conn.getAutoCommit());
@@ -405,17 +405,17 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     // Bugzilla Bug 28251:  Returning dead database connections to BasicDataSource
-    // isClosed() failure blocks returning a connection to the pool 
+    // isClosed() failure blocks returning a connection to the pool
     public void testIsClosedFailure() throws SQLException {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         Connection conn = ds.getConnection();
         assertNotNull(conn);
         assertEquals(1, ds.getNumActive());
-        
+
         // set an IO failure causing the isClosed mathod to fail
         TesterConnection tconn = (TesterConnection) ((DelegatingConnection)conn).getInnermostDelegate();
         tconn.setFailure(new IOException("network error"));
-        
+
         try {
             conn.close();
             fail("Expected SQLException");
@@ -424,40 +424,40 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         assertEquals(0, ds.getNumActive());
     }
-    
-    /** 
-     * Bugzilla Bug 29054: 
-     * The BasicDataSource.setTestOnReturn(boolean) is not carried through to 
+
+    /**
+     * Bugzilla Bug 29054:
+     * The BasicDataSource.setTestOnReturn(boolean) is not carried through to
      * the GenericObjectPool variable _testOnReturn.
-     */ 
+     */
     public void testPropertyTestOnReturn() throws Exception {
         ds.setValidationQuery("select 1 from dual");
         ds.setTestOnBorrow(false);
         ds.setTestWhileIdle(false);
         ds.setTestOnReturn(true);
-        
+
         Connection conn = ds.getConnection();
         assertNotNull(conn);
-        
+
         assertEquals(false, ds.connectionPool.getTestOnBorrow());
         assertEquals(false, ds.connectionPool.getTestWhileIdle());
         assertEquals(true, ds.connectionPool.getTestOnReturn());
     }
-    
+
     /**
      * Bugzilla Bug 29055: AutoCommit and ReadOnly
-     * The DaffodilDB driver throws an SQLException if 
-     * trying to commit or rollback a readOnly connection. 
+     * The DaffodilDB driver throws an SQLException if
+     * trying to commit or rollback a readOnly connection.
      */
     public void testRollbackReadOnly() throws Exception {
         ds.setDefaultReadOnly(true);
         ds.setDefaultAutoCommit(false);
-        
+
         Connection conn = ds.getConnection();
         assertNotNull(conn);
         conn.close();
     }
-    
+
     /**
      * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxTotal(0)
      * MaxTotal == 0 should throw SQLException on getConnection.
@@ -465,12 +465,12 @@ public class TestBasicDataSource extends TestConnectionPool {
      */
     public void testMaxTotalZero() throws Exception {
         ds.setMaxTotal(0);
-        
+
         try {
             Connection conn = ds.getConnection();
             assertNotNull(conn);
             fail("SQLException expected");
-            
+
         } catch (SQLException e) {
             // test OK
         }
@@ -486,7 +486,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWaitMillis(getMaxWait());
+        ds.setMaxWaitMillis(getMaxWaitMillis());
         ds.setDefaultAutoCommit(true);
         ds.setDefaultReadOnly(false);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -508,10 +508,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         // Allow one extra thread for JRockit compatibility
         assertTrue(Thread.activeCount() <= threadCount + 1);
     }
-    
+
     /**
      * JIRA DBCP-333: Check that a custom class loader is used.
-     * @throws Exception 
+     * @throws Exception
      */
     public void testDriverClassLoader() throws Exception {
         getConnection();
@@ -520,7 +520,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertTrue(cl instanceof TesterClassLoader);
         assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
     }
-    
+
     /**
      * JIRA: DBCP-342, DBCP-93
      * Verify that when errors occur during BasicDataSource initialization, GenericObjectPool
@@ -542,7 +542,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         // Set min idle > 0, so evictor will try to make connection as many as idle count
         ds.setMinIdle(2);
 
-        // Prevent concurrent execution of threads executing test subclasses 
+        // Prevent concurrent execution of threads executing test subclasses
         synchronized (TesterConnRequestCountDriver.class) {
     	    TesterConnRequestCountDriver.initConnRequestCount();
 
@@ -555,14 +555,14 @@ public class TestBasicDataSource extends TestConnectionPool {
     	            // Ignore
     	        }
     	    }
- 
+
     	    // sleep 1000ms. evictor will be invoked 10 times if running.
     	    Thread.sleep(1000);
 
     	    // Make sure there have been no Evictor-generated requests (count should be 10, from requests above)
     	    assertEquals(10, TesterConnRequestCountDriver.getConnectionRequestCount());
         }
-    	
+
         // make sure cleanup is complete
         assertNull(ds.connectionPool);
     }

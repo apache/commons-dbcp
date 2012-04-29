@@ -35,7 +35,7 @@
 maxActive
 maxIdle
 minIdle
-maxWait
+maxWaitMillis
 testOnBorrow
 testOnReturn
 timeBetweenEvictionRunsMillis
@@ -162,7 +162,7 @@ testWhileIdle
    </td>
 </tr>
 <tr>
-   <td>maxWait</td>
+   <td>maxWaitMillis</td>
    <td>indefinitely</td>
    <td>
       The maximum number of milliseconds that the pool will wait (when there

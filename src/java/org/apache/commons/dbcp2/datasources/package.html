@@ -151,7 +151,7 @@ public class Pool
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(cpds);
         tds.setMaxActive(10);
-        tds.setMaxWait(50);
+        tds.setMaxWaitMillis(50);
 
         ds = tds;
     }

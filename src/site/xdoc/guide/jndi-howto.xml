@@ -93,7 +93,7 @@
   ref.add(new StringRefAddr("dataSourceName", "jdbc/cpds"));
   ref.add(new StringRefAddr("defaultMaxActive", "100"));
   ref.add(new StringRefAddr("defaultMaxIdle", "30"));
-  ref.add(new StringRefAddr("defaultMaxWait", "10000"));
+  ref.add(new StringRefAddr("defaultMaxWaitMillis", "10000"));
   ic.rebind("jdbc/peruser", ref);
      
   // Use

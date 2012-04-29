@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 
 /**
  * Base test suite for DBCP pools.
- * 
+ *
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
  * @author John McNally
@@ -55,7 +55,7 @@ public abstract class TestConnectionPool extends TestCase {
             Connection conn = (Connection) connections.pop();
             try {
                 conn.close();
-            } catch (Exception ex) { 
+            } catch (Exception ex) {
                 // ignore
             } finally {
                 conn = null;
@@ -64,18 +64,18 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     protected abstract Connection getConnection() throws Exception;
-    
+
     protected int getMaxTotal() {
         return 10;
     }
-    
-    protected long getMaxWait() {
+
+    protected long getMaxWaitMillis() {
         return 100L;
     }
-    
+
     /** Connections opened during the course of a test */
     protected Stack connections = new Stack();
-    
+
     /** Acquire a connection and push it onto the connections stack */
     protected Connection newConnection() throws Exception {
         Connection connection = getConnection();
@@ -83,7 +83,7 @@ public abstract class TestConnectionPool extends TestCase {
         return connection;
     }
 
-    // ----------- Utility Methods --------------------------------- 
+    // ----------- Utility Methods ---------------------------------
 
     protected String getUsername(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
@@ -94,14 +94,14 @@ public abstract class TestConnectionPool extends TestCase {
         return null;
     }
 
-    // ----------- tests --------------------------------- 
+    // ----------- tests ---------------------------------
 
     public void testClearWarnings() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             assertTrue(c[i] != null);
-            
+
             // generate SQLWarning on connection
             c[i].prepareCall("warning");
         }
@@ -113,10 +113,10 @@ public abstract class TestConnectionPool extends TestCase {
         for (int i = 0; i < c.length; i++) {
             c[i].close();
         }
-        
+
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
-        }        
+        }
 
         for (int i = 0; i < c.length; i++) {
             // warnings should have been cleared by putting the connection back in the pool
@@ -391,7 +391,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn = null;
     }
 
-    public void testPooling() throws Exception {  
+    public void testPooling() throws Exception {
         // Grab a maximal set of open connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
         Connection[] u = new Connection[getMaxTotal()];
@@ -403,15 +403,15 @@ public abstract class TestConnectionPool extends TestCase {
                 for (int j = 0; j <= i; j++) {
                     c[j].close();
                 }
-                return; // skip this test   
+                return; // skip this test
             }
-        }        
+        }
         // Close connections one at a time and get new ones, making sure
         // the new ones come from the pool
         for (int i = 0; i < c.length; i++) {
             c[i].close();
             Connection con = newConnection();
-            Connection underCon = 
+            Connection underCon =
                 ((DelegatingConnection) con).getInnermostDelegate();
             assertTrue("Failed to get connection", underCon != null);
             boolean found = false;
@@ -425,25 +425,25 @@ public abstract class TestConnectionPool extends TestCase {
             con.close();
         }
     }
-    
+
     public void testAutoCommitBehavior() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
         assertTrue(conn.getAutoCommit());
         conn.setAutoCommit(false);
         conn.close();
-        
+
         Connection conn2 = newConnection();
         assertTrue( conn2.getAutoCommit() );
-        
+
         Connection conn3 = newConnection();
         assertTrue( conn3.getAutoCommit() );
 
         conn2.close();
-        
+
         conn3.close();
     }
-    
+
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxTotal()];
@@ -514,10 +514,10 @@ public abstract class TestConnectionPool extends TestCase {
             c[i].close();
         }
     }
-    
+
     /**
      * DBCP-128: BasicDataSource.getConnection()
-     * Connections don't work as hashtable keys 
+     * Connections don't work as hashtable keys
      */
     public void testHashing() throws Exception {
         Connection con = getConnection();
@@ -525,7 +525,7 @@ public abstract class TestConnectionPool extends TestCase {
         hash.put(con, "test");
         assertEquals("test", hash.get(con));
         assertTrue(hash.containsKey(con));
-        assertTrue(hash.contains("test")); 
+        assertTrue(hash.contains("test"));
         hash.clear();
         con.close();
     }
@@ -613,23 +613,23 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
-    // Bugzilla Bug 24328: PooledConnectionImpl ignores resultsetType 
+    // Bugzilla Bug 24328: PooledConnectionImpl ignores resultsetType
     // and Concurrency if statement pooling is not enabled
     // http://issues.apache.org/bugzilla/show_bug.cgi?id=24328
-    public void testPrepareStatementOptions() throws Exception 
+    public void testPrepareStatementOptions() throws Exception
     {
         Connection conn = newConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual", 
+        PreparedStatement stmt = conn.prepareStatement("select * from dual",
             ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
-        
+
         assertEquals(ResultSet.TYPE_SCROLL_SENSITIVE, rset.getType());
         assertEquals(ResultSet.CONCUR_UPDATABLE, rset.getConcurrency());
-        
+
         rset.close();
         stmt.close();
         conn.close();
@@ -648,7 +648,7 @@ public abstract class TestConnectionPool extends TestCase {
         stmt.close();
         conn.close();
     }
-    
+
     // Bugzilla Bug 26966: Connectionpool's connections always returns same
     public void testHashCode() throws Exception {
         Connection conn1 = newConnection();
@@ -690,23 +690,24 @@ public abstract class TestConnectionPool extends TestCase {
     // To pass this to a Maven test, use:
     // mvn test -DargLine="-DTestConnectionPool.display.thread.details=true"
     // @see http://jira.codehaus.org/browse/SUREFIRE-121
-    
+
     /**
      * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection
      * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
      * threads will continue this process indefinitely.  If <expectError> is true, exactly 1/2 of the
      * threads are expected to either throw exceptions or fail to complete. If <expectError> is false,
      * all threads are expected to complete successfully.
-     * 
+     *
      * @param holdTime time in ms that a thread holds a connection before returning it to the pool
      * @param expectError whether or not an error is expected
      * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
-     * @param maxWait passed in by client - has no impact on the test itself, but does get reported
-     * 
+     * @param maxWaitMillis passed in by client - has no impact on the test itself, but does get reported
+     *
      * @throws Exception
      */
-    protected void multipleThreads(final int holdTime, final boolean expectError, final boolean loopOnce, final long maxWait)
-            throws Exception {
+    protected void multipleThreads(final int holdTime,
+            final boolean expectError, final boolean loopOnce,
+            final long maxWaitMillis) throws Exception {
                 long startTime = timeStamp();
                 final PoolTest[] pts = new PoolTest[2 * getMaxTotal()];
                 // Catch Exception so we can stop all threads if one fails
@@ -720,11 +721,11 @@ public abstract class TestConnectionPool extends TestCase {
                 };
                 // Create all the threads
                 for (int i = 0; i < pts.length; i++) {
-                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce);    
+                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce);
                 }
                 // Start all the threads
                 for (int i = 0; i < pts.length; i++) {
-                    pts[i].start();    
+                    pts[i].start();
                 }
 
                 // Give all threads a chance to start and succeed
@@ -733,8 +734,8 @@ public abstract class TestConnectionPool extends TestCase {
                 // Stop threads
                 for (int i = 0; i < pts.length; i++) {
                     pts[i].stop();
-                }   
-                
+                }
+
                 /*
                  * Wait for all threads to terminate.
                  * This is essential to ensure that all threads have a chance to update success[0]
@@ -763,13 +764,13 @@ public abstract class TestConnectionPool extends TestCase {
                         }
                     }
                 }
-            
+
                 long time = timeStamp() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
                         + ". Loops: " + loops
                         + ". Hold time: " + holdTime
-                        + ". Maxwait: " + maxWait
+                        + ". maxWaitMillis: " + maxWaitMillis
                         + ". Done: " + done
                         + ". Did not run: " + didNotRun
                         + ". Failed: " + failed
@@ -794,7 +795,7 @@ public abstract class TestConnectionPool extends TestCase {
                                     + ". thrown: "+ pt.thrown
                                     + "."
                                     );
-                        }                        
+                        }
                     }
                     if (didNotRun > 0){
                         System.out.println("NOTE: some threads did not run the code: "+didNotRun);
@@ -836,7 +837,7 @@ public abstract class TestConnectionPool extends TestCase {
         private int connHash = 0; // Connection identity hashCode (to see which one is reused)
 
         private final boolean stopOnException; // If true, don't rethrow Exception
-        
+
         private final boolean loopOnce; // If true, don't repeat loop
 
         public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException) {
@@ -899,7 +900,7 @@ public abstract class TestConnectionPool extends TestCase {
                     throw new RuntimeException();
                 }
             } finally {
-                ended = timeStamp();                
+                ended = timeStamp();
             }
         }
 
@@ -913,6 +914,6 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     long timeStamp() {
-        return System.currentTimeMillis();// JVM 1.5+ System.nanoTime() / 1000000; 
+        return System.currentTimeMillis();// JVM 1.5+ System.nanoTime() / 1000000;
     }
 }

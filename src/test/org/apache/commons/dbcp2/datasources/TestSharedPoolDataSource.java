@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,7 +67,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWaitMillis((int)(getMaxWait()));
+        tds.setMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -82,14 +82,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
-     * exhibit the bug detailed in 
+     * exhibit the bug detailed in
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
-     * 
+     *
      * Starting with a successful connection, then incorrect password,
      * then correct password for same user illustrates
      * JIRA: DBCP-245
      */
-    public void testIncorrectPassword() throws Exception 
+    public void testIncorrectPassword() throws Exception
     {
         ds.getConnection("u2", "p2").close();
         try {
@@ -100,26 +100,26 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             // should fail
 
         }
-        
+
         // Use good password
         ds.getConnection("u1", "p1").close();
-        try 
+        try
         {
             ds.getConnection("u1", "x");
             fail("Able to retrieve connection with incorrect password");
         }
         catch (SQLException e)
         {
-            if (!e.getMessage().startsWith("Given password did not match")) 
+            if (!e.getMessage().startsWith("Given password did not match"))
             {
                 throw e;
             }
             // else the exception was expected
         }
-        
+
         // Make sure we can still use our good password.
         ds.getConnection("u1", "p1").close();
-        
+
         // Try related users and passwords
         ds.getConnection("foo", "bar").close();
         try {
@@ -136,7 +136,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
 
     @Override
-    public void testSimple() throws Exception 
+    public void testSimple() throws Exception
     {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
@@ -150,7 +150,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
-    public void testSimpleWithUsername() throws Exception 
+    public void testSimpleWithUsername() throws Exception
     {
         Connection conn = ds.getConnection("u1", "p1");
         assertNotNull(conn);
@@ -164,12 +164,12 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
-    public void testClosingWithUserName() 
-        throws Exception 
+    public void testClosingWithUserName()
+        throws Exception
     {
         Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection("u1", "p1");
         }
@@ -180,30 +180,30 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection("u1", "p1");
 
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i].close();
         }
 
         // open the maximum connections
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection("u1", "p1");
         }
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i].close();
         }
     }
 
     @Override
-    public void testSimple2() 
-        throws Exception 
+    public void testSimple2()
+        throws Exception
     {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
 
-        PreparedStatement stmt = 
+        PreparedStatement stmt =
             conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
@@ -211,7 +211,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(rset.next());
         rset.close();
         stmt.close();
-        
+
         stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
         rset = stmt.executeQuery();
@@ -219,14 +219,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(rset.next());
         rset.close();
         stmt.close();
-        
+
         conn.close();
-        try 
+        try
         {
             conn.createStatement();
             fail("Can't use closed connections");
-        } 
-        catch(SQLException e) 
+        }
+        catch(SQLException e)
         {
             // expected
         }
@@ -249,40 +249,40 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(rset.next());
         rset.close();
         stmt.close();
-        
+
         conn.close();
         conn = null;
     }
 
     @Override
-    public void testOpening() 
-        throws Exception 
+    public void testOpening()
+        throws Exception
     {
         Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection();
             assertTrue(c[i] != null);
-            for (int j=0; j<=i; j++) 
+            for (int j=0; j<=i; j++)
             {
                 assertTrue(!c[j].isClosed());
             }
         }
 
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i].close();
         }
     }
 
     @Override
-    public void testClosing() 
-        throws Exception 
+    public void testClosing()
+        throws Exception
     {
         Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection();
         }
@@ -290,37 +290,37 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // close one of the connections
         c[0].close();
         assertTrue(c[0].isClosed());
-        
+
         // get a new connection
         c[0] = ds.getConnection();
 
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i].close();
         }
     }
-    
+
     /**
      * Test pool close.  Illustrates BZ 37359.
-     * 
+     *
      * @throws Exception
      */
     public void testClosePool() throws Exception {
       ((SharedPoolDataSource)ds).close();
       SharedPoolDataSource tds = new SharedPoolDataSource();
-      // NPE before BZ 37359 fix 
+      // NPE before BZ 37359 fix
       tds.close();
     }
 
     @Override
-    public void testMaxTotal() 
-        throws Exception 
+    public void testMaxTotal()
+        throws Exception
     {
         Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection();
-            assertTrue(c[i] != null);            
+            assertTrue(c[i] != null);
         }
 
         try
@@ -334,49 +334,50 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             // throw an exception
         }
 
-        for (int i=0; i<c.length; i++) 
+        for (int i=0; i<c.length; i++)
         {
             c[i].close();
         }
     }
-    
-    public void testMaxWait() throws Exception {
-        final int maxWait = 1000;
+
+    public void testMaxWaitMillis() throws Exception {
+        final int maxWaitMillis = 1000;
         final int theadCount = 20;
-        
-        ((SharedPoolDataSource)ds).setMaxWaitMillis(maxWait);
+
+        ((SharedPoolDataSource)ds).setMaxWaitMillis(maxWaitMillis);
         // Obtain all the connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection("foo","bar");
-            assertTrue(c[i] != null);            
+            assertTrue(c[i] != null);
         }
 
         long start = System.currentTimeMillis();
-        
-        // Run a thread test with minimal hold time
-        // All threads should end after maxWait - DBCP-291
-        final PoolTest[] pts = new PoolTest[theadCount];
-        ThreadGroup threadGroup = new ThreadGroup("testMaxWait");
 
-        // Should take ~maxWait for threads to stop 
+        // Run a thread test with minimal hold time
+        // All threads should end after maxWaitMillis - DBCP-291
+        final PoolTest[] pts = new PoolTest[theadCount];
+        ThreadGroup threadGroup = new ThreadGroup("testMaxWaitMillis");
+
+        // Should take ~maxWaitMillis for threads to stop
         for (int i = 0; i < pts.length; i++) {
             (pts[i] = new PoolTest(threadGroup, 1, true)).start();
         }
-        
+
         // Wait for all the threads to complete
         for (int i = 0; i < pts.length; i++) {
             final PoolTest poolTest = pts[i];
             poolTest.getThread().join();
         }
 
-        
+
         long end = System.currentTimeMillis();
-        
-        System.out.println("testMaxWait took " + (end-start) + " ms. Maxwait: "+maxWait);
-        
+
+        System.out.println("testMaxWaitMillis took " + (end-start) +
+                " ms. maxWaitMillis: "+maxWaitMillis);
+
         // Threads should time out in parallel - allow double that to be safe
-        assertTrue((end-start) < (2 * maxWait)); 
+        assertTrue((end-start) < (2 * maxWaitMillis));
 
         // Put all the connections back in the pool
         for (int i=0; i<c.length; i++) {
@@ -387,39 +388,39 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
-        final int defaultMaxWait = 430;
-        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWait);
-        multipleThreads(1, false, false, defaultMaxWait);
+        final int defaultMaxWaitMillis = 430;
+        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWaitMillis);
+        multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
     public void testMultipleThreads2() throws Exception {
-        final int defaultMaxWait = 500;
-        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWait);
-        multipleThreads(2 * defaultMaxWait, true, true, defaultMaxWait);
+        final int defaultMaxWaitMillis = 500;
+        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWaitMillis);
+        multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
         assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn.getTransactionIsolation());
         conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
         conn.close();
-        
+
         Connection conn2 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn2.getTransactionIsolation());
-        
+
         Connection conn3 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED, 
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn3.getTransactionIsolation());
         conn2.close();
         conn3.close();
-    }     
+    }
 
-    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS 
+    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
     // when setPoolPreparedStatements(true)
-    public void testPoolPrepareStatement() throws Exception 
+    public void testPoolPrepareStatement() throws Exception
     {
         pcds.setPoolPreparedStatements(true);
 
@@ -494,7 +495,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWaitMillis((int)(getMaxWait()));
+        tds.setMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -581,21 +582,21 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         try {
             Connection con4 = ds.getConnection("foo", "bay"); // new password
             // Idle instances with old password should have been cleared
-            assertEquals("Should be no idle connections in the pool", 
+            assertEquals("Should be no idle connections in the pool",
                    0, ((SharedPoolDataSource) ds).getNumIdle());
             con4.close();
             // Should be one idle instance with new pwd
-            assertEquals("Should be one idle connection in the pool", 
+            assertEquals("Should be one idle connection in the pool",
                     1, ((SharedPoolDataSource) ds).getNumIdle());
             try {
                 ds.getConnection("foo", "bar"); // old password
-                fail("Should have generated SQLException"); 
+                fail("Should have generated SQLException");
             } catch (SQLException expected) {
             }
             Connection con5 = ds.getConnection("foo", "bay"); // take the idle one
             con3.close(); // Return a connection with the old password
             ds.getConnection("foo", "bay").close();  // will try bad returned connection and destroy it
-            assertEquals("Should be one idle connection in the pool", 
+            assertEquals("Should be one idle connection in the pool",
                     1, ((SharedPoolDataSource) ds).getNumIdle());
             con5.close();
         } finally {
