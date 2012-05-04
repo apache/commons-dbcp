@@ -83,8 +83,6 @@ public class PoolingConnection extends DelegatingConnection
                 oldpool.close();
             } catch(RuntimeException e) {
                 throw e;
-            } catch(SQLException e) {
-                throw e;
             } catch(Exception e) {
                 throw (SQLException) new SQLException("Cannot close connection").initCause(e);
             }
