@@ -1379,4 +1379,31 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /* JDBC_4_ANT_KEY_END */
 
+    @Override
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern,
+            String tableNamePattern, String columnNamePattern)
+            throws SQLException {
+        _conn.checkOpen();
+        try {
+            return DelegatingResultSet.wrapResultSet(_conn,
+                    _meta.getPseudoColumns(catalog, schemaPattern,
+                            tableNamePattern, columnNamePattern));
+}
+        catch (SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        _conn.checkOpen();
+        try {
+            return _meta.generatedKeyAlwaysReturned();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
 }

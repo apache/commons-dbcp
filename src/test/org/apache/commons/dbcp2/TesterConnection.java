@@ -35,6 +35,7 @@ import java.sql.SQLXML;
 import java.sql.Struct;
 import java.util.Properties;
 /* JDBC_4_ANT_KEY_END */
+import java.util.concurrent.Executor;
 
 /**
  * A dummy {@link Connection}, for testing purposes.
@@ -49,7 +50,7 @@ public class TesterConnection implements Connection {
     protected int _transactionIsolation = 1;
     protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
     protected String _catalog = null;
-    protected Map _typeMap = null;
+    protected Map<String,Class<?>> _typeMap = null;
     protected boolean _readOnly = false;
     protected SQLWarning warnings = null;
     protected String username = null;
@@ -126,7 +127,7 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public Map getTypeMap() throws SQLException {
+    public Map<String,Class<?>> getTypeMap() throws SQLException {
         checkOpen();
         return _typeMap;
     }
@@ -222,7 +223,7 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public void setTypeMap(Map map) throws SQLException {
+    public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
         checkOpen();
         _typeMap = map;
     }
@@ -383,4 +384,30 @@ public class TesterConnection implements Connection {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public String getSchema() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void abort(Executor executor) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds)
+            throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
 }

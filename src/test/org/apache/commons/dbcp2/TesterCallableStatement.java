@@ -152,7 +152,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public Object getObject(int i, Map map) throws SQLException {
+    public Object getObject(int i, Map<String, Class<?>> map) throws SQLException {
         return null;
     }
 
@@ -383,7 +383,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public Object getObject(String parameterName, Map map) throws SQLException {
+    public Object getObject(String parameterName, Map<String,Class<?>> map) throws SQLException {
         return null;
     }
 
@@ -568,4 +568,14 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     public void setNClob(String parameterName, Reader reader) throws SQLException {
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public <T> T getObject(int parameterIndex, Class<T> type) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public <T> T getObject(String parameterName, Class<T> type) throws SQLException {
+        return null;
+    }
 }

@@ -40,6 +40,7 @@ import java.sql.Struct;
 import java.util.Collections;
 import java.util.Properties;
 /* JDBC_4_ANT_KEY_END */
+import java.util.concurrent.Executor;
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -805,4 +806,62 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setSchema(schema);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public String getSchema() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getSchema();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public void abort(Executor executor) throws SQLException {
+        checkOpen();
+        try {
+            _conn.abort(executor);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds)
+            throws SQLException {
+        checkOpen();
+        try {
+            _conn.setNetworkTimeout(executor, milliseconds);
+        }
+        catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getNetworkTimeout();
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
 }

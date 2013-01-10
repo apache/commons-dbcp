@@ -23,10 +23,12 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -98,6 +100,11 @@ public class PoolingDataSource implements DataSource {
     }
     /* JDBC_4_ANT_KEY_END */
     
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
     //--- DataSource methods -----------------------------------------
 
     /**

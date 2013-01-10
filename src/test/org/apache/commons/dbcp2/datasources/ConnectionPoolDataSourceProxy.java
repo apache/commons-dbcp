@@ -19,6 +19,9 @@ package org.apache.commons.dbcp2.datasources;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
+
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
@@ -77,6 +80,11 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
         delegate.setLogWriter(out);     
     }
     
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        return delegate.getParentLogger();
+    }
+
     /**
      * Create a TesterPooledConnection with notifyOnClose turned on
      */
@@ -85,5 +93,4 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
         tpc.setNotifyOnClose(true);
         return tpc; 
     }
-
 }

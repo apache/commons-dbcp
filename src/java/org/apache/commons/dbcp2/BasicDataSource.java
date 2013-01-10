@@ -24,10 +24,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -1492,6 +1495,10 @@ public class BasicDataSource implements DataSource {
     }
     /* JDBC_4_ANT_KEY_END */
 
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
         
     // ------------------------------------------------------ Protected Methods
 
