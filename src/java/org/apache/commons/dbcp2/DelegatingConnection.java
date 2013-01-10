@@ -91,18 +91,6 @@ public class DelegatingConnection extends AbandonedTrace
         _conn = c;
     }
 
-    /**
-     * Create a wrapper for the Connection which traces
-     * the Statements created so that any unclosed Statements
-     * can be closed when this Connection is closed.
-     *
-     * @param c the {@link Connection} to delegate all calls to.
-     * @param config the configuration for tracing abandoned objects
-     */
-    public DelegatingConnection(Connection c, AbandonedConfig config) {
-        super(config);
-        _conn = c;
-    }
 
     /**
      * Returns a string representation of the metadata associated with

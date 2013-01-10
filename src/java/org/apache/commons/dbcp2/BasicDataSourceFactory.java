@@ -77,7 +77,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private final static String PROP_CONNECTIONINITSQLS = "connectionInitSqls";
     private final static String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";
-    private final static String PROP_REMOVEABANDONED = "removeAbandoned";
+    private final static String PROP_REMOVEABANDONEDONBORROW = "removeAbandonedOnBorrow";
+    private final static String PROP_REMOVEABANDONEDONMAINTENANCE = "removeAbandonedOnMaintenance";
     private final static String PROP_REMOVEABANDONEDTIMEOUT = "removeAbandonedTimeout";
     private final static String PROP_LOGABANDONED = "logAbandoned";
     private final static String PROP_POOLPREPAREDSTATEMENTS = "poolPreparedStatements";
@@ -111,7 +112,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_VALIDATIONQUERY_TIMEOUT,
         PROP_CONNECTIONINITSQLS,
         PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED,
-        PROP_REMOVEABANDONED,
+        PROP_REMOVEABANDONEDONBORROW,
+        PROP_REMOVEABANDONEDONMAINTENANCE,
         PROP_REMOVEABANDONEDTIMEOUT,
         PROP_LOGABANDONED,
         PROP_POOLPREPAREDSTATEMENTS,
@@ -326,9 +328,14 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.valueOf(value).booleanValue());
         }
 
-        value = properties.getProperty(PROP_REMOVEABANDONED);
+        value = properties.getProperty(PROP_REMOVEABANDONEDONBORROW);
         if (value != null) {
-            dataSource.setRemoveAbandoned(Boolean.valueOf(value).booleanValue());
+            dataSource.setRemoveAbandonedOnBorrow(Boolean.valueOf(value).booleanValue());
+        }
+
+        value = properties.getProperty(PROP_REMOVEABANDONEDONMAINTENANCE);
+        if (value != null) {
+            dataSource.setRemoveAbandonedOnMaintenance(Boolean.valueOf(value).booleanValue());
         }
 
         value = properties.getProperty(PROP_REMOVEABANDONEDTIMEOUT);

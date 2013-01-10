@@ -75,8 +75,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PoolableManagedConnection(transactionRegistry, conn, _pool,
-                _config);
+        return new PoolableManagedConnection(transactionRegistry, conn, _pool);
     }
 
 }

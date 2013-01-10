@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.pool2.impl.TrackedUse;
 
 /**
  * Tracks db connection usage for recovering and reporting
@@ -33,12 +31,8 @@ import java.util.List;
  * @author Glenn L. Nielsen
  * @version $Revision$ $Date$
  */
-public class AbandonedTrace {
+public class AbandonedTrace implements TrackedUse {
 
-    /** DBCP AbandonedConfig */
-    private final AbandonedConfig config;
-    /** A stack trace of the code that created me (if in debug mode) */
-    private volatile Exception createdBy;
     /** A list of objects created by children of this object */
     private final List<AbandonedTrace> traceList =
         new ArrayList<AbandonedTrace>();
@@ -50,17 +44,6 @@ public class AbandonedTrace {
      * without doing abandoned tracing.
      */
     public AbandonedTrace() {
-        this.config = null;
-        init(null);
-    }
-
-    /**
-     * Construct a new AbandonedTrace with no parent object.
-     *
-     * @param config AbandonedConfig
-     */
-    public AbandonedTrace(AbandonedConfig config) {
-        this.config = config;
         init(null);
     }
 
@@ -70,7 +53,6 @@ public class AbandonedTrace {
      * @param parent AbandonedTrace parent object
      */
     public AbandonedTrace(AbandonedTrace parent) {
-        this.config = parent.getConfig();
         init(parent);
     }
 
@@ -83,22 +65,6 @@ public class AbandonedTrace {
         if (parent != null) {                  
             parent.addTrace(this);
         }
-
-        if (config == null) {
-            return;
-        }
-        if (config.getLogAbandoned()) {
-            createdBy = new AbandonedObjectException();
-        }
-    }
-
-    /**
-     * Get the abandoned config for this object.
-     *
-     * @return AbandonedConfig for this object
-     */
-    protected AbandonedConfig getConfig() {
-        return config;
     }
 
     /**
@@ -106,7 +72,8 @@ public class AbandonedTrace {
      *
      * @return long time in ms
      */
-    protected long getLastUsed() {
+    @Override
+    public long getLastUsed() {
         return lastUsed;
     }
 
@@ -125,20 +92,6 @@ public class AbandonedTrace {
      */
     protected void setLastUsed(long time) {
         lastUsed = time;
-    }
-
-    /**
-     * If logAbandoned=true generate a stack trace
-     * for this object then add this object to the parent
-     * object trace list.
-     */
-    protected void setStackTrace() {
-        if (config == null) {                 
-            return;                           
-        }                    
-        if (config.getLogAbandoned()) {
-            createdBy = new AbandonedObjectException();
-        }
     }
 
     /**
@@ -176,23 +129,6 @@ public class AbandonedTrace {
     }
 
     /**
-     * Prints a stack trace of the code that
-     * created this object.
-     */
-    public void printStackTrace() {
-        if (createdBy != null && config != null) {
-            createdBy.printStackTrace(config.getLogWriter());
-        }
-        synchronized(this.traceList) {
-            Iterator<AbandonedTrace> it = this.traceList.iterator();
-            while (it.hasNext()) {
-                AbandonedTrace at = it.next();
-                at.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Remove a child object this object is tracing.
      *
      * @param trace AbandonedTrace object to remove
@@ -200,34 +136,6 @@ public class AbandonedTrace {
     protected void removeTrace(AbandonedTrace trace) {
         synchronized(this.traceList) {
             this.traceList.remove(trace);
-        }
-    }
-
-    static class AbandonedObjectException extends Exception {
-
-        private static final long serialVersionUID = 7398692158058772916L;
-
-        /** Date format */
-        //@GuardedBy("this")
-        private static final SimpleDateFormat format = new SimpleDateFormat
-            ("'DBCP object created' yyyy-MM-dd HH:mm:ss " +
-             "'by the following code was never closed:'");
-
-        private final long _createdTime;
-
-        public AbandonedObjectException() {
-            _createdTime = System.currentTimeMillis();
-        }
-
-        // Override getMessage to avoid creating objects and formatting
-        // dates unless the log message will actually be used.
-        @Override
-        public String getMessage() {
-            String msg;
-            synchronized(format) {
-                msg = format.format(new Date(_createdTime));
-            }
-            return msg;
         }
     }
 }

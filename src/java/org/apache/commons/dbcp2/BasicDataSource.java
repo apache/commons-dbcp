@@ -33,6 +33,7 @@ import java.sql.SQLFeatureNotSupportedException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -1263,7 +1264,7 @@ public class BasicDataSource implements DataSource {
 
     /**                       
      * <p>Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimout.</p>
+     * removeAbandonedTimeout when borrowObject is invoked.</p>
      *
      * <p>The default value is false.<p>
      * 
@@ -1273,39 +1274,90 @@ public class BasicDataSource implements DataSource {
      * 
      * <p>Abandoned connections are identified and removed when 
      * {@link #getConnection()} is invoked and the following conditions hold
-     * <ul><li>{@link #getRemoveAbandoned()} = true </li>
+     * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
+     *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
      *     <li>{@link #getNumActive()} > {@link #getMaxTotal()} - 3 </li>
      *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
      *
      * @see #getRemoveAbandonedTimeout()
      */                                                                   
-    public boolean getRemoveAbandoned() {   
+    public boolean getRemoveAbandonedOnBorrow() {   
         if (abandonedConfig != null) {
-            return abandonedConfig.getRemoveAbandoned();
+            return abandonedConfig.getRemoveAbandonedOnBorrow();
         }
         return false;
     }                                    
                                  
     /**
      * <p>Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimeout.</p>
+     * removeAbandonedTimeout when borrowObject is invoked.</p>
      *
      * <p>If set to true a connection is considered abandoned and eligible   
      * for removal if it has been idle longer than the
-     * {@link #getRemoveAbandoned() removeAbandonedTimeout}.</p>
+     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout}.</p>
      * 
      * <p>Setting this to true can recover db connections from poorly written
      * applications which fail to close a connection.</p>
      *
-     * @param removeAbandoned true means abandoned connections will be
-     *   removed
-     * @see #getRemoveAbandoned()
+     * @param removeAbandonedOnMaintenance true means abandoned connections will
+     *                                     be removed when borrowObject is
+     *                                     invoked
      */
-    public void setRemoveAbandoned(boolean removeAbandoned) {
+    public void setRemoveAbandonedOnMaintenance(
+            boolean removeAbandonedOnMaintenance) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
         }
-        abandonedConfig.setRemoveAbandoned(removeAbandoned);
+        abandonedConfig.setRemoveAbandonedOnMaintenance(
+                removeAbandonedOnMaintenance);
+        this.restartNeeded = true;
+    }                                                        
+                                               
+    /**                       
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimeout during pool maintenance.</p>
+     *
+     * <p>The default value is false.<p>
+     * 
+     * <p>If set to true a connection is considered abandoned and eligible
+     * for removal if it has not been used for more than
+     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
+     * 
+     * <p>Abandoned connections are identified and removed when 
+     * {@link #getConnection()} is invoked and the following conditions hold
+     * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
+     *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
+     *     <li>{@link #getNumActive()} > {@link #getMaxTotal()} - 3 </li>
+     *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
+     *
+     * @see #getRemoveAbandonedTimeout()
+     */                                                                   
+    public boolean getRemoveAbandonedOnMaintenance() {   
+        if (abandonedConfig != null) {
+            return abandonedConfig.getRemoveAbandonedOnMaintenance();
+        }
+        return false;
+    }                                    
+                                 
+    /**
+     * <p>Flag to remove abandoned connections if they exceed the
+     * removeAbandonedTimeout during pool maintenance.</p>
+     *
+     * <p>If set to true a connection is considered abandoned and eligible   
+     * for removal if it has been idle longer than the
+     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout}.</p>
+     * 
+     * <p>Setting this to true can recover db connections from poorly written
+     * applications which fail to close a connection.</p>
+     *
+     * @param removeAbandonedOnBorrow true means abandoned connections will be
+     *                                removed during pool maintenance
+     */
+    public void setRemoveAbandonedOnBorrow(boolean removeAbandonedOnBorrow) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
         this.restartNeeded = true;
     }                                                        
                                                
@@ -1318,7 +1370,8 @@ public class BasicDataSource implements DataSource {
      * 
      * <p>Abandoned connection cleanup happens when
      * <code><ul>
-     * <li><code>{@link #getRemoveAbandoned() removeAbandoned} == true</li>
+     * <li>{@link #getRemoveAbandonedOnBorrow()} or
+     *     {@link #getRemoveAbandonedOnMaintenance()} = true</li>
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
      * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxActive} - 3</li>
      * </ul></code></p>
@@ -1337,11 +1390,13 @@ public class BasicDataSource implements DataSource {
      * removed.</p>
      * 
      * <p>Setting this property has no effect if 
-     * {@link #getRemoveAbandoned() removeAbandoned} is false.</p>
+     * {@link #getRemoveAbandonedOnBorrow()} and
+     * {@link #getRemoveAbandonedOnMaintenance()} are false.</p>
      *
      * @param removeAbandonedTimeout new abandoned timeout in seconds
      * @see #getRemoveAbandonedTimeout()
-     * @see #getRemoveAbandoned()
+     * @see #getRemoveAbandonedOnBorrow()
+     * @see #getRemoveAbandonedOnMaintenance()
      */               
     public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
         if (abandonedConfig == null) {
@@ -1534,8 +1589,7 @@ public class BasicDataSource implements DataSource {
             PoolableConnectionFactory poolableConnectionFactory;
             try {
                 poolableConnectionFactory = createPoolableConnectionFactory(
-                        driverConnectionFactory,
-                        abandonedConfig);
+                        driverConnectionFactory);
                 poolableConnectionFactory.setPoolStatements(
                         poolPreparedStatements);
                 poolableConnectionFactory.setMaxOpenPrepatedStatements(
@@ -1691,8 +1745,11 @@ public class BasicDataSource implements DataSource {
     protected void createConnectionPool(PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
         GenericObjectPool gop;
-        if ((abandonedConfig != null) && (abandonedConfig.getRemoveAbandoned())) {
-            gop = new AbandonedObjectPool(factory,abandonedConfig);
+        if (abandonedConfig != null &&
+                (abandonedConfig.getRemoveAbandonedOnBorrow() ||
+                 abandonedConfig.getRemoveAbandonedOnMaintenance())) {
+            gop = new GenericObjectPool(factory, new GenericObjectPoolConfig(),
+                    abandonedConfig);
         }
         else {
             gop = new GenericObjectPool(factory);
@@ -1754,12 +1811,10 @@ public class BasicDataSource implements DataSource {
      * so subclasses can replace the default implementation.
      * 
      * @param driverConnectionFactory JDBC connection factory
-     * @param configuration abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
     protected PoolableConnectionFactory createPoolableConnectionFactory(
-            ConnectionFactory driverConnectionFactory,
-            AbandonedConfig configuration) throws SQLException {
+            ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory =
@@ -1773,7 +1828,6 @@ public class BasicDataSource implements DataSource {
             connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
             connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
             connectionFactory.setDefaultCatalog(defaultCatalog);
-            connectionFactory.setAbandonedConfig(configuration);
             connectionFactory.setCacheState(cacheState);
             connectionFactory.setPoolStatements(poolPreparedStatements);
             connectionFactory.setMaxOpenPrepatedStatements(

@@ -47,18 +47,6 @@ public class PoolableConnection extends DelegatingConnection {
         _pool = pool;
     }
 
-    /**
-     *
-     * @param conn my underlying connection
-     * @param pool the pool to which I should return when closed
-     * @param config the abandoned configuration settings
-     */
-    public PoolableConnection(Connection conn,
-            ObjectPool<PoolableConnection> pool, AbandonedConfig config) {
-        super(conn, config);
-        _pool = pool;
-    }
-
 
     /**
      * Returns me to my pool.

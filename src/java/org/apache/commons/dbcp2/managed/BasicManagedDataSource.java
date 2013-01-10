@@ -17,7 +17,6 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import org.apache.commons.dbcp2.AbandonedConfig;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
@@ -38,7 +37,7 @@ import java.sql.SQLException;
  * </p>
  * <p>BasicManagedDataSource adds the TransactionManager and XADataSource
  * properties.  The TransactionManager property is required and is
- * used to elist connections in global transactions.  The XADataSource
+ * used to enlist connections in global transactions.  The XADataSource
  * is optional and if set is the class name of the XADataSource class
  * for a two-phase-commit JDBC driver.  If the XADataSource property
  * is set, the driverClassName is ignored and a DataSourceXAConnectionFactory
@@ -179,8 +178,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      */
     @Override
     protected PoolableConnectionFactory createPoolableConnectionFactory(
-            ConnectionFactory driverConnectionFactory,
-            AbandonedConfig abandonedConfig) throws SQLException {
+            ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory = new PoolableManagedConnectionFactory(
@@ -194,7 +192,6 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
             connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
             connectionFactory.setDefaultCatalog(defaultCatalog);
-            connectionFactory.setAbandonedConfig(abandonedConfig);
             connectionFactory.setPoolStatements(poolPreparedStatements);
             connectionFactory.setMaxOpenPrepatedStatements(
                     maxOpenPreparedStatements);

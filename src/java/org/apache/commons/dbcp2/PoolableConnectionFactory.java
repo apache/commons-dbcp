@@ -147,10 +147,6 @@ public class PoolableConnectionFactory
         _defaultCatalog = defaultCatalog;
     }
 
-    public void setAbandonedConfig(AbandonedConfig abandonedConfig) {
-        this._config = abandonedConfig;
-    }
-
     public void setCacheState(boolean cacheState) {
         this._cacheState = cacheState;
     }
@@ -194,7 +190,7 @@ public class PoolableConnectionFactory
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PoolableConnection(conn,_pool,_config);
+        return new PoolableConnection(conn,_pool);
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
@@ -324,11 +320,6 @@ public class PoolableConnectionFactory
     protected boolean poolStatements = false;
     protected int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
-
-    /**
-     * Configuration for removing abandoned connections.
-     */
-    protected AbandonedConfig _config = null;
 
     /**
      * Internal constant to indicate the level is not set.
