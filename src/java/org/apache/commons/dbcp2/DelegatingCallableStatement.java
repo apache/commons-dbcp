@@ -752,7 +752,8 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
         catch (SQLException e) {
             handleException(e);
-        }    }
+        }
+    }
 
     @Override
     public void setBlob(String parameterName, InputStream inputStream) throws SQLException {
@@ -762,7 +763,8 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
         catch (SQLException e) {
             handleException(e);
-        }    }
+        }
+    }
 
     @Override
     public void setNClob(String parameterName, Reader reader) throws SQLException {
@@ -775,4 +777,32 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public <T> T getObject(int parameterIndex, Class<T> type)
+            throws SQLException {
+        checkOpen();
+        try {
+            return ((CallableStatement)_stmt).getObject(parameterIndex, type);
+}
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public <T> T getObject(String parameterName, Class<T> type)
+            throws SQLException {
+        checkOpen();
+        try {
+            return ((CallableStatement)_stmt).getObject(parameterName, type);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+
 }

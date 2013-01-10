@@ -338,4 +338,14 @@ public class TesterStatement implements Statement {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
 }

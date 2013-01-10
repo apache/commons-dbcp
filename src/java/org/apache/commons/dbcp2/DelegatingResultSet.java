@@ -1275,4 +1275,27 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        try {
+            return _res.getObject(columnIndex, type);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type)
+            throws SQLException {
+        try {
+            return _res.getObject(columnLabel, type);
+        }
+        catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
 }

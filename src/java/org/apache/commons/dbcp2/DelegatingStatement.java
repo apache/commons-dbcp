@@ -530,4 +530,25 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        checkOpen();
+        try {
+            _stmt.closeOnCompletion();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        checkOpen();
+        try {
+            return _stmt.isCloseOnCompletion();
+        } catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
 }

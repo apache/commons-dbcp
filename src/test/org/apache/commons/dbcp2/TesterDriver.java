@@ -22,7 +22,9 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * Mock object implementing the <code>java.sql.Driver</code> interface.
@@ -123,6 +125,11 @@ public class TesterDriver implements Driver {
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) {
         return new DriverPropertyInfo[0];
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
     }
 
     protected static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";

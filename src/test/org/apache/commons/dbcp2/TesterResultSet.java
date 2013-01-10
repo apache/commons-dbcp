@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.Map;
 /* JDBC_4_ANT_KEY_BEGIN */
 import java.io.InputStream;
 import java.io.Reader;
@@ -750,7 +751,7 @@ public SQLWarning getWarnings() throws SQLException {
 
 
     @Override
-    public Object getObject(int i, java.util.Map map) throws SQLException {
+    public Object getObject(int i, Map<String,Class<?>> map) throws SQLException {
         checkOpen();
         return new Object();
     }
@@ -780,7 +781,7 @@ public SQLWarning getWarnings() throws SQLException {
     }
 
     @Override
-    public Object getObject(String colName, java.util.Map map) throws SQLException {
+    public Object getObject(String colName, Map<String,Class<?>> map) throws SQLException {
         checkOpen();
         return colName;
     }
@@ -1162,4 +1163,15 @@ public SQLWarning getWarnings() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type)
+            throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
 }

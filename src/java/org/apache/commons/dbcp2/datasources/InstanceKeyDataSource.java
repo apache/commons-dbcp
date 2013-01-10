@@ -21,8 +21,10 @@ import java.io.Serializable;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -180,6 +182,11 @@ public abstract class InstanceKeyDataSource
         throw new SQLException("InstanceKeyDataSource is not a wrapper.");
     }
     /* JDBC_4_ANT_KEY_END */
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
 
     // -------------------------------------------------------------------
     // Properties

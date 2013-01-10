@@ -19,10 +19,13 @@ package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+
 import javax.sql.PooledConnection;
 import javax.sql.ConnectionPoolDataSource;
 import javax.naming.Name;
@@ -218,6 +221,11 @@ public class DriverAdapterCPDS
             pci.setStatementPool(stmtPool);
         }
         return pci;
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
     }
 
     // ----------------------------------------------------------------------
