@@ -49,7 +49,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         // abandoned enabled but should not affect the basic tests
         // (very high timeout)
         ds.setLogAbandoned(true);
-        ds.setRemoveAbandoned(true);
+        ds.setRemoveAbandonedOnBorrow(true);
+        ds.setRemoveAbandonedOnMaintenance(true);
         ds.setRemoveAbandonedTimeout(10000);
     }
 

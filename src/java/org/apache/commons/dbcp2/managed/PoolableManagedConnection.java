@@ -20,7 +20,6 @@ package org.apache.commons.dbcp2.managed;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.commons.dbcp2.AbandonedConfig;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.pool2.ObjectPool;
 
@@ -33,20 +32,6 @@ import org.apache.commons.pool2.ObjectPool;
 public class PoolableManagedConnection extends PoolableConnection {
     private final TransactionRegistry transactionRegistry;
 
-    /**
-     * Create a PoolableManagedConnection.
-     * 
-     * @param transactionRegistry transaction registry 
-     * @param conn underlying connection
-     * @param pool connection pool
-     * @param config abandoned configuration settings
-     */
-    public PoolableManagedConnection(TransactionRegistry transactionRegistry,
-            Connection conn, ObjectPool<PoolableConnection> pool,
-            AbandonedConfig config) {
-        super(conn, pool, config);
-        this.transactionRegistry = transactionRegistry;
-    }
     
     /**
      * Create a PoolableManagedConnection.

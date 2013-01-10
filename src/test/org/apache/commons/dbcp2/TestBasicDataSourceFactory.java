@@ -111,7 +111,8 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals(2, ds.getNumTestsPerEvictionRun());
         assertEquals(true, ds.getTestWhileIdle());
         assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
-        assertEquals(true, ds.getRemoveAbandoned());
+        assertEquals(false, ds.getRemoveAbandonedOnBorrow());
+        assertEquals(false, ds.getRemoveAbandonedOnMaintenance());
         assertEquals(3000, ds.getRemoveAbandonedTimeout());
         assertEquals(true, ds.getLogAbandoned());
         assertEquals(true, ds.isPoolPreparedStatements());
