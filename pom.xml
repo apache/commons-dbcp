@@ -234,6 +234,19 @@
       </resources>
       <testResources>
       </testResources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <configuration>
+            <ignorePathsToDelete>
+              <ignorePathToDelete>javadocs</ignorePathToDelete>
+            </ignorePathsToDelete>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
       <plugins>
         <!-- Specify cobertura version for "cobertura:cobertura" goal -->
         <plugin>
