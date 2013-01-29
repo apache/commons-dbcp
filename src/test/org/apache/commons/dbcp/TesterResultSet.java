@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import java.sql.SQLXML;
 
 /**
  * A dummy {@link ResultSet}, for testing purposes.
- * 
+ *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
@@ -59,13 +59,13 @@ public class TesterResultSet implements ResultSet {
         _type = type;
         _concurrency = concurrency;
     }
-    
+
     protected int _type = ResultSet.TYPE_FORWARD_ONLY;
     protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
 
     protected Object[][] _data = null;
     protected int _currentRow = -1;
-    
+
     protected Statement _statement = null;
     protected int _rowsLeft = 2;
     protected boolean _open = true;
@@ -89,12 +89,12 @@ public class TesterResultSet implements ResultSet {
         if (!_open) {
             return;
         }
-        
+
         // Not all result sets are generated from statements eg DatabaseMetaData
         if (_statement != null) {
             ((TesterStatement)_statement)._resultSet = null;
         }
-        
+
         _open = false;
     }
 
@@ -969,4 +969,17 @@ public class TesterResultSet implements ResultSet {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type)
+            throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

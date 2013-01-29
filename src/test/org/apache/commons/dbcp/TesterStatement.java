@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import java.sql.Statement;
 
 /**
  * A dummy {@link Statement}, for testing purposes.
- * 
+ *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
@@ -40,7 +40,7 @@ public class TesterStatement implements Statement {
         _resultSetType = resultSetType;
         _resultSetConcurrency = resultSetConcurrency;
     }
-    
+
     protected Connection _connection = null;
     protected boolean _open = true;
     protected int _rowsUpdated = 1;
@@ -60,20 +60,20 @@ public class TesterStatement implements Statement {
         checkOpen();
         if("null".equals(sql)) {
             return null;
-        } 
+        }
         if("invalid".equals(sql)) {
             throw new SQLException("invalid query");
         }
         if ("broken".equals(sql)) {
             throw new SQLException("broken connection");
-        }  
+        }
         if("select username".equals(sql)) {
             String username = ((TesterConnection) _connection).getUsername();
             Object[][] data = {{username}};
             return new TesterResultSet(this, data);
         } else {
             // Simulate timeout if queryTimout is set to less than 5 seconds
-            if (_queryTimeout > 0 && _queryTimeout < 5) { 
+            if (_queryTimeout > 0 && _queryTimeout < 5) {
                 throw new SQLException("query timeout");
             }
             return new TesterResultSet(this);
@@ -162,7 +162,7 @@ public class TesterStatement implements Statement {
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
         if (_resultSet == null) {
-            _resultSet = new TesterResultSet(this); 
+            _resultSet = new TesterResultSet(this);
         }
         return _resultSet;
     }
@@ -296,4 +296,15 @@ public class TesterStatement implements Statement {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public void closeOnCompletion() throws SQLException {
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        return false;
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

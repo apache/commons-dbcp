@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,10 +35,11 @@ import java.sql.SQLXML;
 import java.sql.Struct;
 import java.util.Properties;
 /* JDBC_4_ANT_KEY_END */
+import java.util.concurrent.Executor;
 
 /**
  * A dummy {@link Connection}, for testing purposes.
- * 
+ *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
@@ -60,7 +61,7 @@ public class TesterConnection implements Connection {
         this.username = username;
         this.password = password;
     }
-    
+
     public String getUsername() {
         return this.username;
     }
@@ -209,17 +210,17 @@ public class TesterConnection implements Connection {
         }
         checkFailure();
     }
-    
+
     protected void checkFailure() throws SQLException {
         if (failure != null) {
             throw (SQLException) new SQLException("TesterConnection failure").initCause(failure);
         }
     }
-    
+
     public void setFailure(Exception failure) {
         this.failure = failure;
     }
-    
+
     public int getHoldability() throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -334,4 +335,32 @@ public class TesterConnection implements Connection {
         throw new SQLException("Not implemented.");
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public String getSchema() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void abort(Executor executor) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds)
+            throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

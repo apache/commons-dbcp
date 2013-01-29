@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.jocl.JOCLContentHandler;
 import org.apache.commons.pool.ObjectPool;
@@ -62,14 +64,14 @@ public class PoolingDriver implements Driver {
     protected static final HashMap _pools = new HashMap();
 
     /** Controls access to the underlying connection */
-    private static boolean accessToUnderlyingConnectionAllowed = false; 
+    private static boolean accessToUnderlyingConnectionAllowed = false;
 
     public PoolingDriver() {
     }
 
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
-     * 
+     *
      * @return true if access to the underlying is allowed, false otherwise.
      */
     public static synchronized boolean isAccessToUnderlyingConnectionAllowed() {
@@ -80,7 +82,7 @@ public class PoolingDriver implements Driver {
      * Sets the value of the accessToUnderlyingConnectionAllowed property.
      * It controls if the PoolGuard allows access to the underlying connection.
      * (Default: false)
-     * 
+     *
      * @param allow Access to the underlying connection is granted when true.
      */
     public static synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
@@ -90,7 +92,7 @@ public class PoolingDriver implements Driver {
     /**
      * WARNING: This method throws DbcpExceptions (RuntimeExceptions)
      * and will be replaced by the protected getConnectionPool method.
-     * 
+     *
      * @deprecated This will be removed in a future version of DBCP.
      */
     public synchronized ObjectPool getPool(String name) {
@@ -101,7 +103,7 @@ public class PoolingDriver implements Driver {
             throw new DbcpException(e);
         }
     }
-    
+
     public synchronized ObjectPool getConnectionPool(String name) throws SQLException {
         ObjectPool pool = (ObjectPool)(_pools.get(name));
         if(null == pool) {
@@ -156,7 +158,7 @@ public class PoolingDriver implements Driver {
             }
         }
     }
-    
+
     public synchronized String[] getPoolNames(){
         Set names = _pools.keySet();
         return (String[]) names.toArray(new String[names.size()]);
@@ -180,7 +182,7 @@ public class PoolingDriver implements Driver {
                     Connection conn = (Connection)(pool.borrowObject());
                     if (conn != null) {
                         conn = new PoolGuardConnectionWrapper(pool, conn);
-                    } 
+                    }
                     return conn;
                 } catch(SQLException e) {
                     throw e;
@@ -199,9 +201,9 @@ public class PoolingDriver implements Driver {
 
     /**
      * Invalidates the given connection.
-     * 
+     *
      * @param conn connection to invalidate
-     * @throws SQLException if the connection is not a 
+     * @throws SQLException if the connection is not a
      * <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
      * the connection
      * @since 1.2.2
@@ -213,8 +215,8 @@ public class PoolingDriver implements Driver {
             Connection delegate = pgconn.delegate;
             try {
                 pool.invalidateObject(delegate);
-            } 
-            catch (Exception e) { 
+            }
+            catch (Exception e) {
             }
             pgconn.delegate = null;
         }
@@ -239,6 +241,13 @@ public class PoolingDriver implements Driver {
         return new DriverPropertyInfo[0];
     }
 
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
+    /* JDBC_4_1_ANT_KEY_END */
+
     /** My URL prefix */
     protected static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
     protected static final int URL_PREFIX_LEN = URL_PREFIX.length();
@@ -248,14 +257,14 @@ public class PoolingDriver implements Driver {
     protected static final int MINOR_VERSION = 0;
 
     /**
-     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
+     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
      */
     static private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
         private final ObjectPool pool;
         private Connection delegate;
-    
+
         PoolGuardConnectionWrapper(ObjectPool pool, Connection delegate) {
             super(delegate);
             this.pool = pool;
@@ -419,7 +428,7 @@ public class PoolingDriver implements Driver {
             checkOpen();
             return delegate.getHoldability();
         }
-    
+
         public void setHoldability(int holdability) throws SQLException {
             checkOpen();
             delegate.setHoldability(holdability);

@@ -69,15 +69,15 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     public String getCatalogSeparator() throws SQLException {
         return null;
     }
-    
+
     public String getCatalogTerm() throws SQLException {
         return null;
     }
-    
+
     public ResultSet getCatalogs() throws SQLException {
         return null;
     }
-    
+
     public ResultSet getColumnPrivileges(String catalog, String schema,
             String table, String columnNamePattern) throws SQLException {
         return null;
@@ -748,7 +748,7 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getClientInfoProperties() throws SQLException {
         return null;
     }
-    
+
     public ResultSet getFunctionColumns(String catalog, String schemaPattern,
             String functionNamePattern, String columnNamePattern)
             throws SQLException {
@@ -759,6 +759,19 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
             String functionNamePattern) throws SQLException {
         return null;
     }
-
     /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern,
+            String tableNamePattern, String columnNamePattern)
+            throws SQLException {
+        return null;
+    }
+
+    @Override
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        return false;
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,12 +27,12 @@ import java.sql.SQLException;
 
 /**
  * <p>A base delegating implementation of {@link DatabaseMetaData}.</p>
- * 
+ *
  * <p>Methods that create {@link ResultSet} objects are wrapped to
  * create {@link DelegatingResultSet} objects and the remaining methods
  * simply call the corresponding method on the "delegate"
  * provided in the constructor.</p>
- * 
+ *
  * <p>NOTE: as of version 2.0, this class will no longer extend AbandonedTrace.</p>
  */
 public class DelegatingDatabaseMetaData extends AbandonedTrace
@@ -40,7 +40,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     /** My delegate {@link DatabaseMetaData} */
     protected DatabaseMetaData _meta;
-    
+
     /** The connection that created me. **/
     protected DelegatingConnection _conn = null;
 
@@ -103,7 +103,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
         }
         return m;
     }
-    
+
     protected void handleException(SQLException e) throws SQLException {
         if (_conn != null) {
             _conn.handleException(e);
@@ -1134,7 +1134,7 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
             return _meta.unwrap(iface);
         }
     }
-    
+
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         { try { return _meta.getRowIdLifetime(); }
         catch (SQLException e) { handleException(e); throw new AssertionError(); } }
@@ -1206,4 +1206,31 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
 
     /* JDBC_4_ANT_KEY_END */
 
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern,
+            String tableNamePattern, String columnNamePattern)
+            throws SQLException {
+        _conn.checkOpen();
+        try {
+            return DelegatingResultSet.wrapResultSet(_conn,
+                    _meta.getPseudoColumns(catalog, schemaPattern,
+                            tableNamePattern, columnNamePattern));
+        } catch (SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        _conn.checkOpen();
+        try {
+            return _meta.generatedKeyAlwaysReturned();
+        } catch (SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }
