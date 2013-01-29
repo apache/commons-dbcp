@@ -73,6 +73,7 @@
 
       <available property="jndi.present" classname="javax.naming.Context"/>
       <available property="jdbc4.present" classname="java.sql.Wrapper"/>
+      <available property="jdbc41.present" classname="javax.sql.rowset.RowSetFactory"/>
    </target>
 
    <target name="check_jar">
@@ -128,7 +129,7 @@
    </target>
 
    <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
-      <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
+      <echo message="Commenting out the JDBC 4 and JDBC 4.1 additional methods since JDBC 4 was not detected."/>
       <property name="src.dir" value="${build.dir}/src"/>
       <property name="src.java.dir" value="${src.dir}/java"/>
       <property name="src.test.dir" value="${src.dir}/test"/>
@@ -148,15 +149,36 @@
       <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
    </target>
 
-   <target name="prepare-jdbc4" depends="init" if="jdbc4.present">
-      <echo message="JDBC 4 was detected."/>
+   <target name="prepare-jdbc4" depends="init" if="jdbc4.present" unless="jdbc41.present">
+      <echo message="JDBC 4 was detected. Commenting out the JDBC 4.1 additional methods."/>
       <property name="src.dir" value="${basedir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="javac.source" value="1.5" />
+
+      <mkdir dir="${src.dir}"/>
+      <copy todir="${src.dir}" filtering="yes">
+         <fileset dir="${basedir}/src" defaultexcludes="no">
+            <include name="**/*.java"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+            <include name="**/*.jocl"/>
+            <include name="**/package.html"/>
+         </fileset>
+      </copy>
+      <replace dir="${src.dir}" token="/* JDBC_4_1_ANT_KEY_BEGIN */" value="/*"/>
+      <replace dir="${src.dir}" token="/* JDBC_4_1_ANT_KEY_END */" value="*/"/>
+   </target>
+
+   <target name="prepare-jdbc41" depends="init" if="jdbc41.present">
+      <echo message="JDBC 4.1 was detected."/>
+	  <property name="src.dir" value="${basedir}/src"/>
       <property name="src.java.dir" value="${src.dir}/java"/>
       <property name="src.test.dir" value="${src.dir}/test"/>
       <property name="javac.source" value="1.5" />
    </target>
 
-   <target name="prepare" depends="init,prepare-nojdbc4,prepare-jdbc4"/>
+   <target name="prepare" depends="init,prepare-nojdbc4,prepare-jdbc4,prepare-jdbc41"/>
 
    <target name="javadoc" depends="prepare" description="generates javadocs">
       <mkdir dir="${javadoc.dir}"/>

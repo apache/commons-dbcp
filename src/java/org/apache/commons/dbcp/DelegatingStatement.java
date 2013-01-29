@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,11 @@ package org.apache.commons.dbcp;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A base delegating implementation of {@link Statement}.
@@ -73,14 +75,14 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * <p>This method considers two objects to be equal 
+     * <p>This method considers two objects to be equal
      * if the underlying jdbc objects are equal.</p>
-     * 
-     * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's 
+     *
+     * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's
      * {@link #getInnermostDelegate() innermostDelegate} is compared with
      * the innermost delegate of obj; otherwise obj itself is compared with the
      * the Statement returned by {@link #getInnermostDelegate()}.</p>
-     * 
+     *
      */
     public boolean equals(Object obj) {
     	if (obj == this) return true;
@@ -104,7 +106,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
         return obj.hashCode();
     }
-    
+
     /**
      * If my underlying {@link Statement} is not a
      * <tt>DelegatingStatement</tt>, returns it,
@@ -142,7 +144,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
             throw new SQLException
-                (this.getClass().getName() + " with address: \"" + 
+                (this.getClass().getName() + " with address: \"" +
                 this.toString() + "\" is closed.");
         }
     }
@@ -158,7 +160,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     _conn.removeTrace(this);
                     _conn = null;
                 }
-        
+
                 // The JDBC spec requires that a statment close any open
                 // ResultSet's when it is closed.
                 // FIXME The PreparedStatement we're wrapping should handle this for us.
@@ -171,7 +173,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     }
                     clearTrace();
                 }
-        
+
                 _stmt.close();
             }
             catch (SQLException e) {
@@ -485,4 +487,18 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        checkOpen();
+        _stmt.closeOnCompletion();
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        checkOpen();
+        return _stmt.isCloseOnCompletion();
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

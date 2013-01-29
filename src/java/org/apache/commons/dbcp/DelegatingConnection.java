@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,6 +40,7 @@ import java.sql.Struct;
 import java.util.Collections;
 import java.util.Properties;
 /* JDBC_4_ANT_KEY_END */
+import java.util.concurrent.Executor;
 
 /**
  * A base delegating implementation of {@link Connection}.
@@ -74,7 +75,7 @@ public class DelegatingConnection extends AbandonedTrace
     protected Connection _conn = null;
 
     protected boolean _closed = false;
-    
+
     /**
      * Create a wrapper for the Connection which traces this
      * Connection in the AbandonedObjectPool.
@@ -102,12 +103,12 @@ public class DelegatingConnection extends AbandonedTrace
     /**
      * Returns a string representation of the metadata associated with
      * the innnermost delegate connection.
-     * 
+     *
      * @since 1.2.2
      */
     public String toString() {
         String s = null;
-        
+
         Connection c = this.getInnermostDelegateInternal();
         if (c != null) {
             try {
@@ -131,11 +132,11 @@ public class DelegatingConnection extends AbandonedTrace
                 // Ignore
             }
         }
-        
+
         if (s == null) {
             s = super.toString();
         }
-        
+
         return s;
     }
 
@@ -146,17 +147,17 @@ public class DelegatingConnection extends AbandonedTrace
     public Connection getDelegate() {
         return getDelegateInternal();
     }
-    
+
     /**
      * Should be final but can't be for compatibility with previous releases.
      */
     protected Connection getDelegateInternal() {
         return _conn;
     }
-    
+
     /**
      * Compares innermost delegate to the given connection.
-     * 
+     *
      * @param c connection to compare innermost delegate with
      * @return true if innermost delegate equals <code>c</code>
      * @since 1.2.2
@@ -171,7 +172,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     /**
-     * This method considers two objects to be equal 
+     * This method considers two objects to be equal
      * if the underlying jdbc objects are equal.
      */
     public boolean equals(Object obj) {
@@ -185,7 +186,7 @@ public class DelegatingConnection extends AbandonedTrace
         if (delegate == null) {
             return false;
         }
-        if (obj instanceof DelegatingConnection) {    
+        if (obj instanceof DelegatingConnection) {
             DelegatingConnection c = (DelegatingConnection) obj;
             return c.innermostDelegateEquals(delegate);
         }
@@ -232,7 +233,7 @@ public class DelegatingConnection extends AbandonedTrace
         }
         return c;
     }
-    
+
     /** Sets my delegate. */
     public void setDelegate(Connection c) {
         _conn = c;
@@ -329,16 +330,16 @@ public class DelegatingConnection extends AbandonedTrace
 
     public void clearWarnings() throws SQLException
     { checkOpen(); try { _conn.clearWarnings(); } catch (SQLException e) { handleException(e); } }
-    
+
     public void commit() throws SQLException
     { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
-    
+
     public boolean getAutoCommit() throws SQLException
-    { checkOpen(); try { return _conn.getAutoCommit(); } catch (SQLException e) { handleException(e); return false; } 
+    { checkOpen(); try { return _conn.getAutoCommit(); } catch (SQLException e) { handleException(e); return false; }
     }
     public String getCatalog() throws SQLException
     { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
-    
+
     public DatabaseMetaData getMetaData() throws SQLException {
         checkOpen();
         try {
@@ -348,25 +349,25 @@ public class DelegatingConnection extends AbandonedTrace
             return null;
         }
     }
-    
+
     public int getTransactionIsolation() throws SQLException
     { checkOpen(); try { return _conn.getTransactionIsolation(); } catch (SQLException e) { handleException(e); return -1; } }
-    
+
     public Map getTypeMap() throws SQLException
     { checkOpen(); try { return _conn.getTypeMap(); } catch (SQLException e) { handleException(e); return null; } }
-    
+
     public SQLWarning getWarnings() throws SQLException
     { checkOpen(); try { return _conn.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
-    
+
     public boolean isReadOnly() throws SQLException
     { checkOpen(); try { return _conn.isReadOnly(); } catch (SQLException e) { handleException(e); return false; } }
-    
+
     public String nativeSQL(String sql) throws SQLException
     { checkOpen(); try { return _conn.nativeSQL(sql); } catch (SQLException e) { handleException(e); return null; } }
-    
+
     public void rollback() throws SQLException
     { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
-    
+
     public void setAutoCommit(boolean autoCommit) throws SQLException
     { checkOpen(); try { _conn.setAutoCommit(autoCommit); } catch (SQLException e) { handleException(e); } }
 
@@ -400,7 +401,7 @@ public class DelegatingConnection extends AbandonedTrace
             } else {
                 throw new SQLException
                     ("Connection is null.");
-            }      
+            }
         }
     }
 
@@ -679,4 +680,37 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        checkOpen();
+        _conn.setSchema(schema);
+    }
+
+    @Override
+    public String getSchema() throws SQLException {
+        checkOpen();
+        return _conn.getSchema();
+    }
+
+    @Override
+    public void abort(Executor executor) throws SQLException {
+        checkOpen();
+        _conn.abort(executor);
+    }
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds)
+            throws SQLException {
+        checkOpen();
+        _conn.setNetworkTimeout(executor, milliseconds);
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        checkOpen();
+        return _conn.getNetworkTimeout();
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

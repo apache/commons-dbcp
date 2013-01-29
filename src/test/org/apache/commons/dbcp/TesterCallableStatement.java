@@ -456,4 +456,18 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     public void setNClob(String parameterName, Reader reader) throws SQLException {
     }
 /* JDBC_4_ANT_KEY_END */
+
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public <T> T getObject(int parameterIndex, Class<T> type)
+            throws SQLException {
+        return null;
+    }
+
+    @Override
+    public <T> T getObject(String parameterName, Class<T> type)
+            throws SQLException {
+        return null;
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }

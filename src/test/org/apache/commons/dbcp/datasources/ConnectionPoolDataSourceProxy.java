@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,31 +19,34 @@ package org.apache.commons.dbcp.datasources;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
+
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
 /**
- * ConnectionPoolDataSource implementation that proxies another 
+ * ConnectionPoolDataSource implementation that proxies another
  * ConnectionPoolDataSource.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 
     protected ConnectionPoolDataSource delegate = null;
-    
+
     public ConnectionPoolDataSourceProxy(ConnectionPoolDataSource cpds) {
         this.delegate = cpds;
     }
-    
+
     public ConnectionPoolDataSource getDelegate() {
         return delegate;
     }
-    
+
     public int getLoginTimeout() throws SQLException {
         return delegate.getLoginTimeout();
     }
-   
+
     public PrintWriter getLogWriter() throws SQLException {
         return delegate.getLogWriter();
     }
@@ -64,20 +67,26 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     }
 
     public void setLoginTimeout(int seconds) throws SQLException {
-        delegate.setLoginTimeout(seconds);     
+        delegate.setLoginTimeout(seconds);
     }
 
     public void setLogWriter(PrintWriter out) throws SQLException {
-        delegate.setLogWriter(out);     
+        delegate.setLogWriter(out);
     }
-    
+
     /**
      * Create a TesterPooledConnection with notifyOnClose turned on
      */
     protected PooledConnection wrapPooledConnection(PooledConnection pc) {
         PooledConnectionProxy tpc = new PooledConnectionProxy(pc);
         tpc.setNotifyOnClose(true);
-        return tpc; 
+        return tpc;
     }
 
+    /* JDBC_4_1_ANT_KEY_BEGIN */
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
+    /* JDBC_4_1_ANT_KEY_END */
 }
