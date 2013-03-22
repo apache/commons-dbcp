@@ -32,7 +32,7 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
-  <url>http://commons.apache.org/dbcp/</url>
+  <url>http://commons.apache.org/proper/commons-dbcp/</url>
 
   <distributionManagement>
     <site>
