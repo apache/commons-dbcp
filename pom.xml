@@ -106,7 +106,7 @@
       <name>Yoav Shapira</name>
       <id>yoavs</id>
       <email>yoavs@apache.org</email>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
     </developer>
     <developer>
       <name>J&#x00f6;rg Schaible</name>
@@ -119,7 +119,7 @@
       <name>Mark Thomas</name>
       <id>markt</id>
       <email>markt@apache.org</email>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
     </developer>
   </developers>
   <contributors>
