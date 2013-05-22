@@ -22,9 +22,4 @@
   put here to instruct findbugs it must ignore them.
 -->
 <FindBugsFilter>
-  <!--  Minimum JDK level is still 1.4, so valueOf(int) is not available -->
-  <Match>
-    <Class>*</Class>
-    <Bug pattern="DM_NUMBER_CTOR" />
-  </Match>
 </FindBugsFilter>
