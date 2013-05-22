@@ -442,7 +442,7 @@ public class JOCLContentHandler extends DefaultHandler {
                     addObject(Boolean.TYPE,Boolean.valueOf(val));
                 } else if(ELT_BYTE.equals(localName)) {
                     byte val = Byte.parseByte(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Byte.TYPE,new Byte(val));
+                    addObject(Byte.TYPE, Byte.valueOf(val));
                 } else if(ELT_CHAR.equals(localName)) {
                     char val = '\u0000';
                     String valstr = getAttributeValue(ATT_VALUE,attr);
@@ -455,22 +455,22 @@ public class JOCLContentHandler extends DefaultHandler {
                     } else if(valstr.length()==0) {
                         throw new SAXException("if present, char value must be exactly one character long");
                     }
-                    addObject(Character.TYPE,new Character(val));
+                    addObject(Character.TYPE, Character.valueOf(val));
                 } else if(ELT_DOUBLE.equals(localName)) {
                     double val = Double.parseDouble(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Double.TYPE,new Double(val));
+                    addObject(Double.TYPE,Double.valueOf(val));
                 } else if(ELT_FLOAT.equals(localName)) {
                     float val = Float.parseFloat(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Float.TYPE,new Float(val));
+                    addObject(Float.TYPE,Float.valueOf(val));
                 } else if(ELT_INT.equals(localName)) {
                     int val = Integer.parseInt(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Integer.TYPE,new Integer(val));
+                    addObject(Integer.TYPE, Integer.valueOf(val));
                 } else if(ELT_LONG.equals(localName)) {
                     long val = Long.parseLong(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Long.TYPE,new Long(val));
+                    addObject(Long.TYPE, Long.valueOf(val));
                 } else if(ELT_SHORT.equals(localName)) {
                     short val = Short.parseShort(getAttributeValue(ATT_VALUE,attr,"0"));
-                    addObject(Short.TYPE,new Short(val));
+                    addObject(Short.TYPE, Short.valueOf(val));
                 } else if(ELT_STRING.equals(localName)) {
                     String val = getAttributeValue(ATT_VALUE,attr);
                     addObject("".getClass(),val);
