@@ -330,28 +330,23 @@
             <enableRulesSummary>false</enableRulesSummary>
           </configuration>
         </plugin>
-<!-- 
        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.4</version>
+          <version>3.0.1</version>
           <configuration>
-            <rulesets>
-              <ruleset>checkstyle.xml</ruleset>
-            </rulesets>
             <targetJdk>${maven.compile.target}</targetJdk>
           </configuration>
         </plugin>
--->
         <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>clirr-maven-plugin</artifactId>
-        <version>2.5</version>
-        <configuration>
-          <comparisonVersion>1.2.2</comparisonVersion>
-          <minSeverity>info</minSeverity>
-        </configuration>
-      </plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>clirr-maven-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <comparisonVersion>1.2.2</comparisonVersion>
+            <minSeverity>info</minSeverity>
+          </configuration>
+        </plugin>
       </plugins>
     </reporting>
 </project>
