@@ -398,22 +398,22 @@ public class PoolingConnection extends DelegatingConnection implements Connectio
 
         PStmtKey(String sql, int resultSetType, int resultSetConcurrency) {
             _sql = sql;
-            _resultSetType = Integer.valueOf(resultSetType);
-            _resultSetConcurrency = Integer.valueOf(resultSetConcurrency);
+            _resultSetType = new Integer(resultSetType);
+            _resultSetConcurrency = new Integer(resultSetConcurrency);
         }
 
         PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
             _sql = sql;
             _catalog = catalog;
-            _resultSetType = Integer.valueOf(resultSetType);
-            _resultSetConcurrency = Integer.valueOf(resultSetConcurrency);
+            _resultSetType = new Integer(resultSetType);
+            _resultSetConcurrency = new Integer(resultSetConcurrency);
         }
         
         PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
             _sql = sql;
             _catalog = catalog;
-            _resultSetType = Integer.valueOf(resultSetType);
-            _resultSetConcurrency = Integer.valueOf(resultSetConcurrency);
+            _resultSetType = new Integer(resultSetType);
+            _resultSetConcurrency = new Integer(resultSetConcurrency);
             _stmtType = stmtType;
         }
 
