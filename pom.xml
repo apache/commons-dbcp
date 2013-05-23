@@ -305,6 +305,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
+          <!-- Checkstyle version above 2.2 requires rewriting checkstyle.xml. -->
           <version>2.2</version>
           <configuration>
             <configLocation>${basedir}/checkstyle.xml</configLocation>
