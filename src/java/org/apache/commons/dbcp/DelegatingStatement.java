@@ -76,7 +76,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * <p>This method considers two objects to be equal
-     * if the underlying jdbc objects are equal.</p>
+     * if the underlying JDBC objects are equal.</p>
      *
      * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's
      * {@link #getInnermostDelegate() innermostDelegate} is compared with
