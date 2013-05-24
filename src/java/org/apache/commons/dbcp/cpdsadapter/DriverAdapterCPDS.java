@@ -42,7 +42,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
 /**
  * <p>
- * An adapter for jdbc drivers that do not include an implementation
+ * An adapter for JDBC drivers that do not include an implementation
  * of {@link javax.sql.ConnectionPoolDataSource}, but still include a
  * {@link java.sql.DriverManager} implementation.
  * <code>ConnectionPoolDataSource</code>s are not used within general
@@ -69,7 +69,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * The DriverAdapterCPDS also provides <code>PreparedStatement</code> pooling
  * which is not generally available in jbdc2
  * <code>ConnectionPoolDataSource</code> implementation, but is
- * addressed within the jdbc3 specification.  The <code>PreparedStatement</code>
+ * addressed within the JDBC3 specification.  The <code>PreparedStatement</code>
  * pool in DriverAdapterCPDS has been in the dbcp package for some time, but
  * it has not undergone extensive testing in the configuration used here.
  * It should be considered experimental and can be toggled with the

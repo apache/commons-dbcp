@@ -71,7 +71,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * The dbcp package contains an adapter,
  * {@link org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS},
  * that can be used to allow the use of <code>DataSource</code>'s based on this
- * class with jdbc driver implementations that do not supply a
+ * class with JDBC driver implementations that do not supply a
  * <code>ConnectionPoolDataSource</code>, but still
  * provide a {@link java.sql.Driver} implementation.
  * </p>
@@ -341,7 +341,7 @@ public abstract class InstanceKeyDataSource
     }
 
     /**
-     * Get the description.  This property is defined by jdbc as for use with
+     * Get the description.  This property is defined by JDBC as for use with
      * GUI (or other) tools that might deploy the datasource.  It serves no
      * internal purpose.
      *
@@ -352,7 +352,7 @@ public abstract class InstanceKeyDataSource
     }
 
     /**
-     * Set the description.  This property is defined by jdbc as for use with
+     * Set the description.  This property is defined by JDBC as for use with
      * GUI (or other) tools that might deploy the datasource.  It serves no
      * internal purpose.
      *
