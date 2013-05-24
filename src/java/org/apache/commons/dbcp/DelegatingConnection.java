@@ -218,6 +218,8 @@ public class DelegatingConnection extends AbandonedTrace
      * This method is useful when you may have nested
      * <tt>DelegatingConnection</tt>s, and you want to make
      * sure to obtain a "genuine" {@link Connection}.
+     * 
+     * @return The first delegate that is not a {@link DelegatingConnection}, or {@code null}.
      */
     public Connection getInnermostDelegate() {
         return getInnermostDelegateInternal();
@@ -234,7 +236,11 @@ public class DelegatingConnection extends AbandonedTrace
         return c;
     }
 
-    /** Sets my delegate. */
+    /**
+     * Sets my delegate.
+     * 
+     * @param c the delegate Connection
+     */
     public void setDelegate(Connection c) {
         _conn = c;
     }
