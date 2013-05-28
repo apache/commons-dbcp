@@ -20,11 +20,9 @@ package org.apache.commons.dbcp;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * A base delegating implementation of {@link Statement}.
