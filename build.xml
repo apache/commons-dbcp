@@ -23,7 +23,9 @@
 <project name="commons-dbcp" default="test" basedir=".">
 
    <target name="init">
-      <tstamp/>
+      <tstamp>
+        <format property="YEAR" pattern="yyyy" locale="en,GB"/>
+      </tstamp>
 
       <!-- read properties from the build.properties, if any -->
       <property name="component-propfile" value="${basedir}/build.properties"/>
@@ -64,7 +66,7 @@
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2013 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-${YEAR} Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/java/org/apache/commons/dbcp/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
