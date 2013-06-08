@@ -51,7 +51,7 @@
 
       <property name="name" value="commons-dbcp"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
-      <property name="version" value="1.3"/>
+      <property name="version" value="1.3.1"/>
       <property name="package" value="org.apache.commons.dbcp.*"/>
 
       <property name="build.dir" value="${basedir}/build"/>
@@ -65,7 +65,7 @@
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2009 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2013 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/java/org/apache/commons/dbcp/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
@@ -139,6 +139,12 @@
 
       <replace dir="${src.test.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
       <replace dir="${src.test.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
+   	
+   	  <replace dir="${src.java.dir}" token="/* JDBC_4_1_ANT_KEY_BEGIN */" value="/*"/>
+   	  <replace dir="${src.java.dir}" token="/* JDBC_4_1_ANT_KEY_END */" value="*/"/>
+
+   	  <replace dir="${src.test.dir}" token="/* JDBC_4_1_ANT_KEY_BEGIN */" value="/*"/>
+   	  <replace dir="${src.test.dir}" token="/* JDBC_4_1_ANT_KEY_END */" value="*/"/>
    </target>
 
    <target name="prepare" depends="init,filter-sources"/>
