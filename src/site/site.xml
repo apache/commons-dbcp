@@ -26,9 +26,9 @@
       <menu name="Commons&#xA0;DBCP">
         <item name="Overview" href="/index.html" />
         <item name="Configuration" href="/configuration.html" />
-        <item name="Javadoc (1.2.2 release)" href="http://commons.apache.org/dbcp/api-1.2.2/index.html"/>
-        <item name="Javadoc (1.3 release)" href="http://commons.apache.org/dbcp/api-1.3/index.html"/>
-        <item name="Javadoc (1.4 release)" href="http://commons.apache.org/dbcp/api-1.4/index.html"/>
+        <item name="Javadoc (1.2.2 release)" href="http://commons.apache.org/dbcp/javadocs/api-1.2.2/index.html"/>
+        <item name="Javadoc (1.3 release)" href="http://commons.apache.org/dbcp/javadocs/api-1.3/index.html"/>
+        <item name="Javadoc (1.4 release)" href="http://commons.apache.org/dbcp/javadocs/api-1.4/index.html"/>
         <item name="Javadoc (1.4.1-SNAPSHOT)" href="apidocs/index.html"/>
         <item name="Developers&#xA0;Guide" href="/guide/index.html" collapse="true">
         <item name="JNDI&#xA0;Howto"  href="/guide/jndi-howto.html"/>
