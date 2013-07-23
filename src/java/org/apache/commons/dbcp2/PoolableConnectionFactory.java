@@ -67,7 +67,7 @@ public class PoolableConnectionFactory
     public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
-    
+
     /**
      * Sets the validation query timeout, the amount of time, in seconds, that
      * connection validation will wait for a response from the database when
@@ -186,7 +186,7 @@ public class PoolableConnectionFactory
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
-                new GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>((PoolingConnection)conn, config);
+                    new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
@@ -199,23 +199,13 @@ public class PoolableConnectionFactory
             throw new SQLException("initializeConnection: connection closed");
         }
         if(null != sqls) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
+            try (Statement stmt = conn.createStatement();) {
                 for (String sql : sqls) {
                     if (sql == null) {
                         throw new NullPointerException(
                                 "null connectionInitSqls element");
                     }
                     stmt.execute(sql);
-                }
-            } finally {
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch(Exception t) {
-                        // ignored
-                    }
                 }
             }
         }
@@ -292,12 +282,12 @@ public class PoolableConnectionFactory
         if (conn.getAutoCommit() != _defaultAutoCommit) {
             conn.setAutoCommit(_defaultAutoCommit);
         }
-        if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) 
-                && (conn.getTransactionIsolation() != 
+        if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION)
+                && (conn.getTransactionIsolation() !=
                 _defaultTransactionIsolation)) {
             conn.setTransactionIsolation(_defaultTransactionIsolation);
         }
-        if ((_defaultReadOnly != null) && 
+        if ((_defaultReadOnly != null) &&
                 (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
             conn.setReadOnly(_defaultReadOnly.booleanValue());
         }
