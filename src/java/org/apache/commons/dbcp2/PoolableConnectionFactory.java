@@ -26,13 +26,15 @@ import java.util.Collection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.PooledObjectImpl;
 
 /**
- * A {@link PoolableObjectFactory} that creates
+ * A {@link PooledObjectFactory} that creates
  * {@link PoolableConnection}s.
  *
  * @author Rodney Waldhoff
@@ -42,7 +44,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @version $Revision$ $Date$
  */
 public class PoolableConnectionFactory
-        implements PoolableObjectFactory<PoolableConnection> {
+        implements PooledObjectFactory<PoolableConnection> {
 
     private static final Log log =
             LogFactory.getLog(PoolableConnectionFactory.class);
@@ -166,7 +168,7 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public PoolableConnection makeObject() throws Exception {
+    public PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
@@ -196,7 +198,7 @@ public class PoolableConnectionFactory
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PoolableConnection(conn,_pool);
+        return new PooledObjectImpl<>(new PoolableConnection(conn,_pool));
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
@@ -218,14 +220,15 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void destroyObject(PoolableConnection obj) throws Exception {
-        obj.reallyClose();
+    public void destroyObject(PooledObject<PoolableConnection> p)
+            throws Exception {
+        p.getObject().reallyClose();
     }
 
     @Override
-    public boolean validateObject(PoolableConnection conn) {
+    public boolean validateObject(PooledObject<PoolableConnection> p) {
         try {
-            validateConnection(conn);
+            validateConnection(p.getObject());
             return true;
         } catch(Exception e) {
             if (log.isDebugEnabled()) {
@@ -273,7 +276,9 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void passivateObject(PoolableConnection conn) throws Exception {
+    public void passivateObject(PooledObject<PoolableConnection> p)
+            throws Exception {
+        PoolableConnection conn = p.getObject();
         if(!conn.getAutoCommit() && !conn.isReadOnly()) {
             conn.rollback();
         }
@@ -286,7 +291,10 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void activateObject(PoolableConnection conn) throws Exception {
+    public void activateObject(PooledObject<PoolableConnection> p)
+            throws Exception {
+
+        PoolableConnection conn = p.getObject();
         conn.activate();
 
         if (conn.getAutoCommit() != _defaultAutoCommit) {
