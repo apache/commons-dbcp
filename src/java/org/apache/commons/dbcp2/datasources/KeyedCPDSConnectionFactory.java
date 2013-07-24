@@ -55,6 +55,7 @@ class KeyedCPDSConnectionFactory
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> _pool;
+    private long maxConnLifetimeMillis = -1;
 
     /**
      * Map of PooledConnections for which close events are ignored.
@@ -165,6 +166,11 @@ class KeyedCPDSConnectionFactory
     @Override
     public boolean validateObject(UserPassKey key,
             PooledObject<PooledConnectionAndInfo> p) {
+        try {
+            validateLifetime(p);
+        } catch (Exception e) {
+            return false;
+        }
         boolean valid = false;
         PooledConnection pconn = p.getObject().getPooledConnection();
         String query = _validationQuery;
@@ -204,11 +210,15 @@ class KeyedCPDSConnectionFactory
     }
 
     @Override
-    public void passivateObject(UserPassKey key, PooledObject<PooledConnectionAndInfo> p) {
+    public void passivateObject(UserPassKey key,
+            PooledObject<PooledConnectionAndInfo> p) throws Exception {
+        validateLifetime(p);
     }
 
     @Override
-    public void activateObject(UserPassKey key, PooledObject<PooledConnectionAndInfo> p) {
+    public void activateObject(UserPassKey key,
+            PooledObject<PooledConnectionAndInfo> p) throws Exception {
+        validateLifetime(p);
     }
 
     // ***********************************************************************
@@ -309,6 +319,16 @@ class KeyedCPDSConnectionFactory
     }
 
     /**
+     * Sets the maximum lifetime in milliseconds of a connection after which the
+     * connection will always fail activation, passivation and validation. A
+     * value of zero or less indicates an infinite lifetime. The default value
+     * is -1.
+     */
+    public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
+        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+
+    /**
      * This implementation does not fully close the KeyedObjectPool, as
      * this would affect all users.  Instead, it clears the pool associated
      * with the given user.  This method is not currently used.
@@ -322,4 +342,16 @@ class KeyedCPDSConnectionFactory
         }
     }
 
+    private void validateLifetime(PooledObject<PooledConnectionAndInfo> p)
+            throws Exception {
+        if (maxConnLifetimeMillis > 0) {
+            long lifetime = System.currentTimeMillis() - p.getCreateTime();
+            if (lifetime > maxConnLifetimeMillis) {
+                throw new Exception(Utils.getMessage(
+                        "connectionFactory.lifetimeExceeded",
+                        Long.valueOf(lifetime),
+                        Long.valueOf(maxConnLifetimeMillis)));
+            }
+        }
+    }
 }

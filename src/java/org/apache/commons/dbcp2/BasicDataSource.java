@@ -1103,6 +1103,31 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
+
+    private long maxConnLifetimeMillis = -1;
+
+    /**
+     * Returns the maximum permitted lifetime of a connection in milliseconds. A
+     * value of zero or less indicates an infinite lifetime.
+     */
+    public long getMaxConnLifetimeMillis() {
+        return maxConnLifetimeMillis;
+    }
+
+    /**
+     * <p>Sets the maximum permitted lifetime of a connection in
+     * milliseconds. A value of zero or less indicates an infinite lifetime.</p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
+     */
+    public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
+        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+
+
     // ----------------------------------------------------- Instance Variables
 
     // TODO: review & make isRestartNeeded() public, restartNeeded protected
@@ -1833,6 +1858,7 @@ public class BasicDataSource implements DataSource {
             connectionFactory.setPoolStatements(poolPreparedStatements);
             connectionFactory.setMaxOpenPrepatedStatements(
                     maxOpenPreparedStatements);
+            connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

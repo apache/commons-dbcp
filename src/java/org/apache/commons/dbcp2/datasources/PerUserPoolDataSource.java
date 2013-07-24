@@ -519,6 +519,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds,
                 getValidationQuery(), isRollbackAfterValidation(), username,
                 password);
+        factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
 
         // Create an object pool to contain our PooledConnections
         GenericObjectPool<PooledConnectionAndInfo> pool =
