@@ -89,18 +89,15 @@ public class TestCPDSConnectionFactory extends TestCase {
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         CPDSConnectionFactory factory =
-            new CPDSConnectionFactory(cpds, null, false, "username", "password");
-        GenericObjectPool pool = new GenericObjectPool(factory);
+                new CPDSConnectionFactory(cpds, null, false, "username", "password");
+        GenericObjectPool<PooledConnectionAndInfo> pool =
+                new GenericObjectPool<>(factory);
         factory.setPool(pool);
 
         // Checkout a pair of connections
-        PooledConnection pcon1 =
-            ((PooledConnectionAndInfo) pool.borrowObject())
-                .getPooledConnection();
+        PooledConnection pcon1 = pool.borrowObject().getPooledConnection();
         Connection con1 = pcon1.getConnection();
-        PooledConnection pcon2 =
-            ((PooledConnectionAndInfo) pool.borrowObject())
-                .getPooledConnection();
+        PooledConnection pcon2 = pool.borrowObject().getPooledConnection();
         assertEquals(2, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
 
@@ -121,9 +118,7 @@ public class TestCPDSConnectionFactory extends TestCase {
         assertEquals(0, pool.getNumIdle());
 
         // Ask for another connection
-        PooledConnection pcon3 =
-            ((PooledConnectionAndInfo) pool.borrowObject())
-                .getPooledConnection();
+        PooledConnection pcon3 = pool.borrowObject().getPooledConnection();
         assertTrue(!pcon3.equals(pcon1)); // better not get baddie back
         assertTrue(!pc.getListeners().contains(factory)); // verify cleanup
         assertEquals(2, pool.getNumActive());
