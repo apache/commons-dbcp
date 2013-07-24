@@ -22,6 +22,9 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
@@ -40,6 +43,9 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class PoolableConnectionFactory
         implements PoolableObjectFactory<PoolableConnection> {
+
+    private static final Log log =
+            LogFactory.getLog(PoolableConnectionFactory.class);
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
@@ -222,6 +228,10 @@ public class PoolableConnectionFactory
             validateConnection(conn);
             return true;
         } catch(Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug(Utils.getMessage(
+                        "poolableConnectionFactory.validateObject.fail"), e);
+            }
             return false;
         }
     }
