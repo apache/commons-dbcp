@@ -147,6 +147,12 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+       <version>1.1.3</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
@@ -176,14 +182,6 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- dragged in by tomcat-naming jars - only for jndi tests -->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-       <version>1.1.1</version>
-       <scope>test</scope>
-    </dependency>
-
     <!-- for testing of managed connections -->
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
