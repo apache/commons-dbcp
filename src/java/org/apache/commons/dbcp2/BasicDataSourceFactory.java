@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,6 +84,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_POOLPREPAREDSTATEMENTS = "poolPreparedStatements";
     private final static String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
     private final static String PROP_CONNECTIONPROPERTIES = "connectionProperties";
+    private final static String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
 
     private final static String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
@@ -118,7 +119,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_LOGABANDONED,
         PROP_POOLPREPAREDSTATEMENTS,
         PROP_MAXOPENPREPAREDSTATEMENTS,
-        PROP_CONNECTIONPROPERTIES
+        PROP_CONNECTIONPROPERTIES,
+        PROP_MAXCONNLIFETIMEMILLIS
     };
 
     // -------------------------------------------------- ObjectFactory Methods
@@ -169,7 +171,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     /**
      * Creates and configures a {@link BasicDataSource} instance based on the
      * given properties.
-     * 
+     *
      * @param properties the datasource configuration properties
      * @throws Exception if an error occurs creating the data source
      */
@@ -237,7 +239,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setLifo(Boolean.valueOf(value).booleanValue());
         }
-        
+
         value = properties.getProperty(PROP_MAXACTIVE);
         if (value != null) {
             dataSource.setMaxTotal(Integer.parseInt(value));
@@ -287,7 +289,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(value));
         }
-        
+
         value = properties.getProperty(PROP_SOFTMINEVICTABLEIDLETIMEMILLIS);
         if (value != null) {
             dataSource.setSoftMinEvictableIdleTimeMillis(Long.parseLong(value));
@@ -322,7 +324,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setValidationQueryTimeout(Integer.parseInt(value));
         }
-        
+
         value = properties.getProperty(PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED);
         if (value != null) {
             dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.valueOf(value).booleanValue());
@@ -339,7 +341,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         value = properties.getProperty(PROP_REMOVEABANDONEDTIMEOUT);
-        if (value != null) {     
+        if (value != null) {
             dataSource.setRemoveAbandonedTimeout(Integer.parseInt(value));
         }
 
@@ -379,6 +381,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
             String propertyName = (String) e.nextElement();
             dataSource.addConnectionProperty(propertyName, p.getProperty(propertyName));
           }
+        }
+
+        value = properties.getProperty(PROP_MAXCONNLIFETIMEMILLIS);
+        if (value != null) {
+            dataSource.setMaxConnLifetimeMillis(Long.parseLong(value));
         }
 
         // DBCP-215

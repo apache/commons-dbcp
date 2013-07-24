@@ -30,6 +30,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PoolableObjectFactory;
@@ -58,6 +59,8 @@ class CPDSConnectionFactory
     private ObjectPool<PooledConnectionAndInfo> _pool;
     private final String _username;
     private String _password = null;
+    private long maxConnLifetimeMillis = -1;
+
 
     /**
      * Map of PooledConnections for which close events are ignored.
@@ -157,6 +160,11 @@ class CPDSConnectionFactory
 
     @Override
     public boolean validateObject(PooledObject<PooledConnectionAndInfo> p) {
+        try {
+            validateLifetime(p);
+        } catch (Exception e) {
+            return false;
+        }
         boolean valid = false;
         PooledConnection pconn = p.getObject().getPooledConnection();
         String query = _validationQuery;
@@ -196,11 +204,15 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public void passivateObject(PooledObject<PooledConnectionAndInfo> p) {
+    public void passivateObject(PooledObject<PooledConnectionAndInfo> p)
+            throws Exception {
+        validateLifetime(p);
     }
 
     @Override
-    public void activateObject(PooledObject<PooledConnectionAndInfo> p) {
+    public void activateObject(PooledObject<PooledConnectionAndInfo> p)
+            throws Exception {
+        validateLifetime(p);
     }
 
     // ***********************************************************************
@@ -302,6 +314,16 @@ class CPDSConnectionFactory
     }
 
     /**
+     * Sets the maximum lifetime in milliseconds of a connection after which the
+     * connection will always fail activation, passivation and validation. A
+     * value of zero or less indicates an infinite lifetime. The default value
+     * is -1.
+     */
+    public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
+        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+
+    /**
      * Verifies that the username matches the user whose connections are being managed by this
      * factory and closes the pool if this is the case; otherwise does nothing.
      */
@@ -319,4 +341,16 @@ class CPDSConnectionFactory
         }
     }
 
+    private void validateLifetime(PooledObject<PooledConnectionAndInfo> p)
+            throws Exception {
+        if (maxConnLifetimeMillis > 0) {
+            long lifetime = System.currentTimeMillis() - p.getCreateTime();
+            if (lifetime > maxConnLifetimeMillis) {
+                throw new Exception(Utils.getMessage(
+                        "connectionFactory.lifetimeExceeded",
+                        Long.valueOf(lifetime),
+                        Long.valueOf(maxConnLifetimeMillis)));
+            }
+        }
+    }
 }

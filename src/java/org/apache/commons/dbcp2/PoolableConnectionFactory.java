@@ -167,6 +167,16 @@ public class PoolableConnectionFactory
         this.maxOpenPreparedStatements = maxOpenPreparedStatements;
     }
 
+    /**
+     * Sets the maximum lifetime in milliseconds of a connection after which the
+     * connection will always fail activation, passivation and validation. A
+     * value of zero or less indicates an infinite lifetime. The default value
+     * is -1.
+     */
+    public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
+        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+
     @Override
     public PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
@@ -228,9 +238,11 @@ public class PoolableConnectionFactory
     @Override
     public boolean validateObject(PooledObject<PoolableConnection> p) {
         try {
+            validateLifetime(p);
+
             validateConnection(p.getObject());
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug(Utils.getMessage(
                         "poolableConnectionFactory.validateObject.fail"), e);
@@ -278,6 +290,9 @@ public class PoolableConnectionFactory
     @Override
     public void passivateObject(PooledObject<PoolableConnection> p)
             throws Exception {
+
+        validateLifetime(p);
+
         PoolableConnection conn = p.getObject();
         if(!conn.getAutoCommit() && !conn.isReadOnly()) {
             conn.rollback();
@@ -293,6 +308,8 @@ public class PoolableConnectionFactory
     @Override
     public void activateObject(PooledObject<PoolableConnection> p)
             throws Exception {
+
+        validateLifetime(p);
 
         PoolableConnection conn = p.getObject();
         conn.activate();
@@ -315,6 +332,20 @@ public class PoolableConnectionFactory
         }
     }
 
+    private void validateLifetime(PooledObject<PoolableConnection> p)
+            throws Exception {
+        if (maxConnLifetimeMillis > 0) {
+            long lifetime = System.currentTimeMillis() - p.getCreateTime();
+            if (lifetime > maxConnLifetimeMillis) {
+                throw new Exception(Utils.getMessage(
+                        "connectionFactory.lifetimeExceeded",
+                        Long.valueOf(lifetime),
+                        Long.valueOf(maxConnLifetimeMillis)));
+            }
+        }
+    }
+
+
     protected volatile ConnectionFactory _connFactory = null;
     protected volatile String _validationQuery = null;
     protected volatile int _validationQueryTimeout = -1;
@@ -328,6 +359,7 @@ public class PoolableConnectionFactory
     protected boolean poolStatements = false;
     protected int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
+    private long maxConnLifetimeMillis = -1;
 
     /**
      * Internal constant to indicate the level is not set.

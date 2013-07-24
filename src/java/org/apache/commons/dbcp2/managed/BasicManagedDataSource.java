@@ -61,7 +61,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Gets the XADataSource instance used by the XAConnectionFactory.
-     * 
+     *
      * @return the XADataSource
      */
     public synchronized XADataSource getXaDataSourceInstance() {
@@ -75,7 +75,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * initialized.  The pool is initialized the first time one of the
      * following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
-     * 
+     *
      * @param xaDataSourceInstance XADataSource instance
      */
     public synchronized void setXaDataSourceInstance(XADataSource xaDataSourceInstance) {
@@ -90,7 +90,7 @@ public class BasicManagedDataSource extends BasicDataSource {
     public TransactionManager getTransactionManager() {
         return transactionManager;
     }
-    
+
     /**
      * Gets the transaction registry.
      * @return the transaction registry associating XAResources with managed connections
@@ -146,7 +146,7 @@ public class BasicManagedDataSource extends BasicDataSource {
                 String message = "Cannot load XA data source class '" + xaDataSource + "'";
                 throw (SQLException)new SQLException(message).initCause(t);
             }
-            
+
             try {
                 xaDataSourceInstance = (XADataSource) xaDataSourceClass.newInstance();
             } catch (Exception t) {
@@ -166,9 +166,9 @@ public class BasicManagedDataSource extends BasicDataSource {
         PoolingDataSource pds = new ManagedDataSource(connectionPool, transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         pds.setLogWriter(logWriter);
-        dataSource = pds; 
+        dataSource = pds;
     }
-    
+
     /**
      * Creates the PoolableConnectionFactory and attaches it to the connection pool.
      *
@@ -195,6 +195,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setPoolStatements(poolPreparedStatements);
             connectionFactory.setMaxOpenPrepatedStatements(
                     maxOpenPreparedStatements);
+            connectionFactory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
