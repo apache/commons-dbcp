@@ -34,8 +34,7 @@ import org.apache.commons.pool2.TrackedUse;
 public class AbandonedTrace implements TrackedUse {
 
     /** A list of objects created by children of this object */
-    private final List<AbandonedTrace> traceList =
-        new ArrayList<AbandonedTrace>();
+    private final List<AbandonedTrace> traceList = new ArrayList<>();
     /** Last time this connection was used */
     private volatile long lastUsed = 0;
 
@@ -124,7 +123,7 @@ public class AbandonedTrace implements TrackedUse {
      */
     protected List<AbandonedTrace> getTrace() {
         synchronized (this.traceList) {
-            return new ArrayList<AbandonedTrace>(traceList);
+            return new ArrayList<>(traceList);
         }
     }
 
