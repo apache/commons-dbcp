@@ -76,24 +76,6 @@ class CPDSConnectionFactory
      *
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnection's
-     * @param validationQuery a query to use to {@link #validateObject validate}
-     * {@link Connection}s. Should return at least one row. May be
-     * <tt>null</tt>
-     * @param username
-     * @param password
-     */
-    public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                 String validationQuery,
-                                 String username,
-                                 String password) {
-        this(cpds, validationQuery, false, username, password);
-    }
-
-    /**
-     * Create a new <tt>PoolableConnectionFactory</tt>.
-     *
-     * @param cpds the ConnectionPoolDataSource from which to obtain
-     * PooledConnection's
      * @param validationQuery a query to use to {@link #validateObject
      * validate} {@link Connection}s. Should return at least one row.
      * May be <tt>null</tt>
