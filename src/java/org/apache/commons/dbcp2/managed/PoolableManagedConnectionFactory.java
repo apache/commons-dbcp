@@ -24,29 +24,31 @@ import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.PooledObjectImpl;
 
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class PoolableManagedConnectionFactory extends PoolableConnectionFactory {
 
     /** Transaction registry associated with connections created by this factory */
     private final TransactionRegistry transactionRegistry;
-    
+
     /**
      * Create a PoolableManagedConnectionFactory and attach it to a connection pool.
-     * 
+     *
      * @param connFactory XAConnectionFactory
      */
     public PoolableManagedConnectionFactory(XAConnectionFactory connFactory) {
         super(connFactory);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }
-    
+
     /**
      * Uses the configured XAConnectionFactory to create a {@link PoolableManagedConnection}.
      * Throws <code>IllegalStateException</code> if the connection factory returns null.
@@ -55,7 +57,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * if statement pooling is enabled.
      */
     @Override
-    synchronized public PoolableConnection makeObject() throws Exception {
+    synchronized public PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
@@ -70,12 +72,12 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
-                new GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>(
-                        (PoolingConnection)conn, config);
+                new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PoolableManagedConnection(transactionRegistry, conn, _pool);
+        return new PooledObjectImpl<PoolableConnection>(
+                new PoolableManagedConnection(transactionRegistry, conn, _pool));
     }
 
 }

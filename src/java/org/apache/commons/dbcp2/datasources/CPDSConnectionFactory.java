@@ -33,6 +33,9 @@ import javax.sql.PooledConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PoolableObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.PooledObjectImpl;
 
 /**
  * A {@link PoolableObjectFactory} that creates
@@ -42,7 +45,7 @@ import org.apache.commons.pool2.PoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 class CPDSConnectionFactory
-        implements PoolableObjectFactory<PooledConnectionAndInfo>,
+        implements PooledObjectFactory<PooledConnectionAndInfo>,
         ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE
@@ -56,7 +59,7 @@ class CPDSConnectionFactory
     private final String _username;
     private String _password = null;
 
-    /** 
+    /**
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
@@ -71,11 +74,11 @@ class CPDSConnectionFactory
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
-     * 
+     *
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnection's
      * @param validationQuery a query to use to {@link #validateObject validate}
-     * {@link Connection}s. Should return at least one row. May be 
+     * {@link Connection}s. Should return at least one row. May be
      * <tt>null</tt>
      * @param username
      * @param password
@@ -86,10 +89,10 @@ class CPDSConnectionFactory
                                  String password) {
         this(cpds, validationQuery, false, username, password);
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
-     * 
+     *
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnection's
      * @param validationQuery a query to use to {@link #validateObject
@@ -114,7 +117,7 @@ class CPDSConnectionFactory
 
     /**
      * Returns the object pool used to pool connections created by this factory.
-     * 
+     *
      * @return ObjectPool managing pooled connections
      */
     public ObjectPool<PooledConnectionAndInfo> getPool() {
@@ -122,7 +125,7 @@ class CPDSConnectionFactory
     }
 
     /**
-     * 
+     *
      * @param pool the {@link ObjectPool} in which to pool those {@link
      * Connection}s
      */
@@ -131,7 +134,7 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public synchronized PooledConnectionAndInfo makeObject() {
+    public synchronized PooledObject<PooledConnectionAndInfo> makeObject() {
         PooledConnectionAndInfo pci;
         try {
             PooledConnection pc = null;
@@ -153,24 +156,28 @@ class CPDSConnectionFactory
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return pci;
+        return new PooledObjectImpl<>(pci);
     }
 
     /**
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(PooledConnectionAndInfo pci) throws Exception {
+    public void destroyObject(PooledObject<PooledConnectionAndInfo> p) throws Exception {
+        doDestroyObject(p.getObject());
+    }
+
+    private void doDestroyObject(PooledConnectionAndInfo pci) throws Exception{
         PooledConnection pc = pci.getPooledConnection();
         pc.removeConnectionEventListener(this);
         pcMap.remove(pc);
-        pc.close(); 
+        pc.close();
     }
 
     @Override
-    public boolean validateObject(PooledConnectionAndInfo obj) {
+    public boolean validateObject(PooledObject<PooledConnectionAndInfo> p) {
         boolean valid = false;
-        PooledConnection pconn = obj.getPooledConnection();
+        PooledConnection pconn = p.getObject().getPooledConnection();
         String query = _validationQuery;
         if (null != query) {
             Connection conn = null;
@@ -208,11 +215,11 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public void passivateObject(PooledConnectionAndInfo obj) {
+    public void passivateObject(PooledObject<PooledConnectionAndInfo> p) {
     }
 
     @Override
-    public void activateObject(PooledConnectionAndInfo obj) {
+    public void activateObject(PooledObject<PooledConnectionAndInfo> p) {
     }
 
     // ***********************************************************************
@@ -243,7 +250,7 @@ class CPDSConnectionFactory
                         + "NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
-                    destroyObject(pci);
+                    doDestroyObject(pci);
                 } catch (Exception e2) {
                     System.err.println("EXCEPTION WHILE DESTROYING OBJECT "
                             + pci);
@@ -278,11 +285,11 @@ class CPDSConnectionFactory
             e.printStackTrace();
         }
     }
-    
+
     // ***********************************************************************
     // PooledConnectionManager implementation
     // ***********************************************************************
-    
+
     /**
      * Invalidates the PooledConnection in the pool.  The CPDSConnectionFactory
      * closes the connection and pool counters are updated appropriately.
@@ -300,19 +307,19 @@ class CPDSConnectionFactory
             _pool.close();  // Clear any other instances in this pool and kill others as they come back
         } catch (Exception ex) {
             throw (SQLException) new SQLException("Error invalidating connection").initCause(ex);
-        }   
+        }
     }
-    
+
     /**
      * Sets the database password used when creating new connections.
-     * 
+     *
      * @param password new password
      */
     @Override
     public synchronized void setPassword(String password) {
         _password = password;
     }
-    
+
     /**
      * Verifies that the username matches the user whose connections are being managed by this
      * factory and closes the pool if this is the case; otherwise does nothing.
@@ -328,7 +335,7 @@ class CPDSConnectionFactory
             _pool.close();
         } catch (Exception ex) {
             throw (SQLException) new SQLException("Error closing connection pool").initCause(ex);
-        } 
+        }
     }
-    
+
 }

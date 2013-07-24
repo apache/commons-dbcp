@@ -32,7 +32,9 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.apache.commons.pool2.KeyedPoolableObjectFactory;
+import org.apache.commons.pool2.KeyedPooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.PooledObjectImpl;
 
 /**
  * A {*link PoolableObjectFactory} that creates
@@ -42,7 +44,7 @@ import org.apache.commons.pool2.KeyedPoolableObjectFactory;
  * @version $Revision$ $Date$
  */
 class KeyedCPDSConnectionFactory
-    implements KeyedPoolableObjectFactory<UserPassKey,PooledConnectionAndInfo>,
+    implements KeyedPooledObjectFactory<UserPassKey,PooledConnectionAndInfo>,
     ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE
@@ -53,14 +55,14 @@ class KeyedCPDSConnectionFactory
     private final String _validationQuery;
     private final boolean _rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> _pool;
-    
-    /** 
+
+    /**
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
     private final Set<PooledConnection> validatingSet =
         new HashSet<PooledConnection>();
-    
+
     /**
      * Map of PooledConnectionAndInfo instances
      */
@@ -75,7 +77,7 @@ class KeyedCPDSConnectionFactory
      */
     public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
                                       String validationQuery) {
-        this(cpds , validationQuery, false);  
+        this(cpds , validationQuery, false);
     }
 
     /**
@@ -87,7 +89,7 @@ class KeyedCPDSConnectionFactory
      * @param rollbackAfterValidation whether a rollback should be issued after
      * {@link #validateObject validating} {@link Connection}s.
      */
-    public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds, 
+    public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
                                       String validationQuery,
                                       boolean rollbackAfterValidation) {
         _cpds = cpds;
@@ -101,7 +103,7 @@ class KeyedCPDSConnectionFactory
 
     /**
      * Returns the keyed object pool used to pool connections created by this factory.
-     * 
+     *
      * @return KeyedObjectPool managing pooled connections
      */
     public KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> getPool() {
@@ -110,13 +112,13 @@ class KeyedCPDSConnectionFactory
 
     /**
      * Creates a new {@link PooledConnectionAndInfo} from the given {@link UserPassKey}.
-     * 
+     *
      * @param upkey {@link UserPassKey} containing user credentials
      * @throws SQLException if the connection could not be created.
      * @see org.apache.commons.pool2.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
      */
     @Override
-    public synchronized PooledConnectionAndInfo makeObject(UserPassKey upkey)
+    public synchronized PooledObject<PooledConnectionAndInfo> makeObject(UserPassKey upkey)
             throws Exception {
         PooledConnectionAndInfo pci = null;
 
@@ -139,33 +141,33 @@ class KeyedCPDSConnectionFactory
         pci = new PooledConnectionAndInfo(pc, username, password);
         pcMap.put(pc, pci);
 
-        return pci;
+        return new PooledObjectImpl<>(pci);
     }
 
     /**
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(UserPassKey key, PooledConnectionAndInfo pci)
+    public void destroyObject(UserPassKey key, PooledObject<PooledConnectionAndInfo> p)
             throws Exception {
-        PooledConnection pc = pci.getPooledConnection();
+        PooledConnection pc = p.getObject().getPooledConnection();
         pc.removeConnectionEventListener(this);
         pcMap.remove(pc);
-        pc.close(); 
+        pc.close();
     }
 
     /**
      * Validates a pooled connection.
-     * 
+     *
      * @param key ignored
      * @param pci {@link PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation suceeds
      */
     @Override
     public boolean validateObject(UserPassKey key,
-            PooledConnectionAndInfo pci) {
+            PooledObject<PooledConnectionAndInfo> p) {
         boolean valid = false;
-        PooledConnection pconn = pci.getPooledConnection();
+        PooledConnection pconn = p.getObject().getPooledConnection();
         String query = _validationQuery;
         if (null != query) {
             Connection conn = null;
@@ -203,11 +205,11 @@ class KeyedCPDSConnectionFactory
     }
 
     @Override
-    public void passivateObject(UserPassKey key, PooledConnectionAndInfo pci) {
+    public void passivateObject(UserPassKey key, PooledObject<PooledConnectionAndInfo> p) {
     }
 
     @Override
-    public void activateObject(UserPassKey key, PooledConnectionAndInfo pci) {
+    public void activateObject(UserPassKey key, PooledObject<PooledConnectionAndInfo> p) {
     }
 
     // ***********************************************************************
@@ -273,11 +275,11 @@ class KeyedCPDSConnectionFactory
             e.printStackTrace();
         }
     }
-    
+
     // ***********************************************************************
     // PooledConnectionManager implementation
     // ***********************************************************************
-    
+
     /**
      * Invalidates the PooledConnection in the pool.  The KeyedCPDSConnectionFactory
      * closes the connection and pool counters are updated appropriately.
@@ -299,14 +301,14 @@ class KeyedCPDSConnectionFactory
             throw (SQLException) new SQLException("Error invalidating connection").initCause(ex);
         }
     }
-    
+
     /**
      * Does nothing.  This factory does not cache user credentials.
      */
     @Override
     public void setPassword(String password) {
     }
-    
+
     /**
      * This implementation does not fully close the KeyedObjectPool, as
      * this would affect all users.  Instead, it clears the pool associated
@@ -318,7 +320,7 @@ class KeyedCPDSConnectionFactory
             _pool.clear(new UserPassKey(username, null));
         } catch (Exception ex) {
             throw (SQLException) new SQLException("Error closing connection pool").initCause(ex);
-        } 
+        }
     }
-    
+
 }
