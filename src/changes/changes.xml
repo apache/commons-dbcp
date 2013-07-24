@@ -69,7 +69,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" type="update">
         Removed JOCL support.
       </action>
-      <action dev="markt" type="update">
+      <action dev="markt" issue="DBCP-143" type="update">
         Remove deprecated SQLNestedException. 
       </action>
     </release>
