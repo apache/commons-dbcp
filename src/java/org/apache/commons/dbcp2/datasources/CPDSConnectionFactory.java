@@ -63,14 +63,13 @@ class CPDSConnectionFactory
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
-    private final Set<PooledConnection> validatingSet =
-        new HashSet<PooledConnection>();
+    private final Set<PooledConnection> validatingSet = new HashSet<>();
 
     /**
      * Map of PooledConnectionAndInfo instances
      */
     private final WeakHashMap<PooledConnection, PooledConnectionAndInfo> pcMap =
-        new WeakHashMap<PooledConnection, PooledConnectionAndInfo>();
+        new WeakHashMap<>();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
