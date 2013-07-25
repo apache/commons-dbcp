@@ -34,7 +34,7 @@ import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.PooledObjectImpl;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {*link PoolableObjectFactory} that creates
@@ -141,7 +141,7 @@ class KeyedCPDSConnectionFactory
         pci = new PooledConnectionAndInfo(pc, username, password);
         pcMap.put(pc, pci);
 
-        return new PooledObjectImpl<>(pci);
+        return new DefaultPooledObject<>(pci);
     }
 
     /**

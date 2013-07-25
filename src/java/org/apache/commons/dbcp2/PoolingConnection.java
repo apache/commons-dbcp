@@ -28,7 +28,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.PooledObjectImpl;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
@@ -287,19 +287,19 @@ public class PoolingConnection extends DelegatingConnection
         } else {
             if( null == key.getResultSetType() && null == key.getResultSetConcurrency()) {
                 if (key.getStmtType() == STATEMENT_PREPAREDSTMT ) {
-                    return new PooledObjectImpl<DelegatingPreparedStatement>(
+                    return new DefaultPooledObject<DelegatingPreparedStatement>(
                             new PoolablePreparedStatement(getDelegate().prepareStatement( key.getSql()), key, _pstmtPool, this));
                 } else {
-                    return new PooledObjectImpl<DelegatingPreparedStatement>(
+                    return new DefaultPooledObject<DelegatingPreparedStatement>(
                             new PoolableCallableStatement(getDelegate().prepareCall( key.getSql()), key, _pstmtPool, this));
                 }
             } else { // Both _resultSetType and _resultSetConcurrency are non-null here (both or neither are set by constructors)
                 if(key.getStmtType() == STATEMENT_PREPAREDSTMT) {
-                    return new PooledObjectImpl<DelegatingPreparedStatement>(
+                    return new DefaultPooledObject<DelegatingPreparedStatement>(
                             new PoolablePreparedStatement(getDelegate().prepareStatement(
                                     key.getSql(), key.getResultSetType().intValue(),key.getResultSetConcurrency().intValue()), key, _pstmtPool, this));
                 } else {
-                    return new PooledObjectImpl<DelegatingPreparedStatement>(
+                    return new DefaultPooledObject<DelegatingPreparedStatement>(
                             new PoolableCallableStatement( getDelegate().prepareCall(
                                     key.getSql(),key.getResultSetType().intValue(), key.getResultSetConcurrency().intValue()), key, _pstmtPool, this));
                 }

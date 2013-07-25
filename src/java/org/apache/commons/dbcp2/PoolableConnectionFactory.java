@@ -31,7 +31,7 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.PooledObjectImpl;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link PooledObjectFactory} that creates
@@ -208,7 +208,7 @@ public class PoolableConnectionFactory
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new PooledObjectImpl<>(new PoolableConnection(conn,_pool));
+        return new DefaultPooledObject<>(new PoolableConnection(conn,_pool));
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
