@@ -36,7 +36,7 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
-import org.apache.commons.pool2.impl.PooledObjectImpl;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link PoolableObjectFactory} that creates
@@ -140,7 +140,7 @@ class CPDSConnectionFactory
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return new PooledObjectImpl<>(pci);
+        return new DefaultPooledObject<>(pci);
     }
 
     /**
