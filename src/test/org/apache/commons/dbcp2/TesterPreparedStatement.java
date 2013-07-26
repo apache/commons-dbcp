@@ -434,6 +434,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + _sql + "]";
+        return _sql;
     }
 }
