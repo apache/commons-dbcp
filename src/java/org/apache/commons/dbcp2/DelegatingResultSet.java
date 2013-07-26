@@ -73,6 +73,9 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
      * Create a wrapper for the ResultSet which traces this
      * ResultSet to the Statement which created it and the
      * code which created it.
+     * <p>
+     * Private to ensure all construction is
+     * {@link #wrapResultSet(Statement, ResultSet)}
      *
      * @param stmt Statement which created this ResultSet
      * @param res ResultSet to wrap
@@ -87,6 +90,9 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
      * Create a wrapper for the ResultSet which traces this
      * ResultSet to the Connection which created it (via, for
      * example DatabaseMetadata, and the code which created it.
+     * <p>
+     * Private to ensure all construction is
+     * {@link #wrapResultSet(Connection, ResultSet)}
      *
      * @param conn Connection which created this ResultSet
      * @param res ResultSet to wrap
