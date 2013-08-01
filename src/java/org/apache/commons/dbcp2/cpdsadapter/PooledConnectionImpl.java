@@ -463,7 +463,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for destroying
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param ppss the {*link PreparedStatement} to be destroyed.
+     * @param p the wrapped {*link PreparedStatement} to be destroyed.
      */
     @Override
     public void destroyObject(PStmtKeyCPDS key,
@@ -476,7 +476,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for validating
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param ppss ignored
+     * @param p ignored
      * @return <tt>true</tt>
      */
     @Override
@@ -489,7 +489,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for activating
      * {*link PreparedStatement}s.
      * @param key ignored
-     * @param ppss ignored
+     * @param p ignored
      */
     @Override
     public void activateObject(PStmtKeyCPDS key,
@@ -502,7 +502,7 @@ class PooledConnectionImpl implements PooledConnection,
      * My {*link KeyedPoolableObjectFactory} method for passivating
      * {*link PreparedStatement}s.  Currently invokes {*link PreparedStatement#clearParameters}.
      * @param key ignored
-     * @param ppss a {*link PreparedStatement}
+     * @param p a wrapped {*link PreparedStatement}
      */
     @Override
     public void passivateObject(PStmtKeyCPDS key,
