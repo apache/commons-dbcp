@@ -30,6 +30,9 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
 
+import org.apache.commons.dbcp2.SwallowedExceptionLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -58,6 +61,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     private static final long serialVersionUID = -3104731034410444060L;
+
+    private static final Log log =
+            LogFactory.getLog(PerUserPoolDataSource.class);
 
     private int defaultMaxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private int defaultMaxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
@@ -543,6 +549,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         pool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         pool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         pool.setTestWhileIdle(getTestWhileIdle());
+        pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
 
         Object old = managers.put(getPoolKey(username,password), factory);
         if (old != null) {

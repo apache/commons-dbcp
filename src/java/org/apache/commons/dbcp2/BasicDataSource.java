@@ -33,6 +33,8 @@ import java.sql.SQLFeatureNotSupportedException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -55,6 +57,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @version $Revision$ $Date$
  */
 public class BasicDataSource implements DataSource {
+
+    private static final Log log =
+            LogFactory.getLog(BasicDataSource.class);
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
@@ -1790,6 +1795,7 @@ public class BasicDataSource implements DataSource {
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
+        gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
         factory.setPool(gop);
         connectionPool = gop;
     }
