@@ -313,7 +313,7 @@ public class PoolingConnection extends DelegatingConnection
      * Closes the underlying statement.
      *
      * @param key ignored
-     * @param dps the pooled statement to be destroyed.
+     * @param p the wrapped pooled statement to be destroyed.
      */
     @Override
     public void destroyObject(PStmtKey key,
@@ -327,7 +327,7 @@ public class PoolingConnection extends DelegatingConnection
      * pooled statements. Currently always returns true.
      *
      * @param key ignored
-     * @param obj ignored
+     * @param p ignored
      * @return <tt>true</tt>
      */
     @Override
@@ -341,7 +341,7 @@ public class PoolingConnection extends DelegatingConnection
      * pooled statements.
      *
      * @param key ignored
-     * @param dps pooled statement to be activated
+     * @param p wrapped pooled statement to be activated
      */
     @Override
     public void activateObject(PStmtKey key,
@@ -355,7 +355,7 @@ public class PoolingConnection extends DelegatingConnection
      * Invokes {@link PreparedStatement#clearParameters}.
      *
      * @param key ignored
-     * @param dps a {@link PreparedStatement}
+     * @param p a wrapped {@link PreparedStatement}
      */
     @Override
     public void passivateObject(PStmtKey key,

@@ -160,7 +160,8 @@ class KeyedCPDSConnectionFactory
      * Validates a pooled connection.
      *
      * @param key ignored
-     * @param pci {@link PooledConnectionAndInfo} containing the connection to validate
+     * @param p wrapped {@link PooledConnectionAndInfo} containing the
+     *          connection to validate
      * @return true if validation suceeds
      */
     @Override
