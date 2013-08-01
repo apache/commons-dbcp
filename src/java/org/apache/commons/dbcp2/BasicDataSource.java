@@ -1063,7 +1063,7 @@ public class BasicDataSource implements DataSource {
             String s = iterator.next();
             if (s != null && s.trim().length() > 0) {
                     if (newVal == null) {
-                        newVal = new ArrayList<String>();
+                        newVal = new ArrayList<>();
                     }
                     newVal.add(s);
                 }

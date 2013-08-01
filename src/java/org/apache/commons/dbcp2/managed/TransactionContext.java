@@ -54,7 +54,7 @@ public class TransactionContext {
         if (transactionRegistry == null) throw new NullPointerException("transactionRegistry is null");
         if (transaction == null) throw new NullPointerException("transaction is null");
         this.transactionRegistry = transactionRegistry;
-        this.transactionRef = new WeakReference<Transaction>(transaction);
+        this.transactionRef = new WeakReference<>(transaction);
     }
 
     /**

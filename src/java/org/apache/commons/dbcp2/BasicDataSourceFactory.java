@@ -366,7 +366,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             // Have to jump through these hoops as StringTokenizer implements
             // Enumeration<Object> rather than Enumeration<String>
             Collection<String> tokens =
-                new ArrayList<String>(tokenizer.countTokens());
+                    new ArrayList<>(tokenizer.countTokens());
             while (tokenizer.hasMoreTokens()) {
                 tokens.add(tokenizer.nextToken());
             }

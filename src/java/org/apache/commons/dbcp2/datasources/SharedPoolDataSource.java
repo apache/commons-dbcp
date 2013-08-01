@@ -237,7 +237,7 @@ public class SharedPoolDataSource
         config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         config.setTestWhileIdle(getTestWhileIdle());
         KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> tmpPool =
-            new GenericKeyedObjectPool<UserPassKey,PooledConnectionAndInfo>(factory, config);
+                new GenericKeyedObjectPool<>(factory, config);
         factory.setPool(tmpPool);
         pool = tmpPool;
     }

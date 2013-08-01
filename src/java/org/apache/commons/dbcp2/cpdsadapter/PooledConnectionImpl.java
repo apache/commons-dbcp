@@ -73,7 +73,7 @@ class PooledConnectionImpl implements PooledConnection,
      * StatementEventListeners
      */
     private final Vector<StatementEventListener> statementEventListeners =
-        new Vector<StatementEventListener>();
+            new Vector<>();
 
     /**
      * flag set to true, once close() is called.
@@ -101,7 +101,7 @@ class PooledConnectionImpl implements PooledConnection,
         } else {
             this.delegatingConnection = new DelegatingConnection(connection);
         }
-        eventListeners = new Vector<ConnectionEventListener>();
+        eventListeners = new Vector<>();
         isClosed = false;
     }
 

@@ -44,7 +44,7 @@ abstract class InstanceKeyObjectFactory
     implements ObjectFactory
 {
     private static final Map<String, InstanceKeyDataSource> instanceMap =
-        new HashMap<String, InstanceKeyDataSource>();
+            new HashMap<>();
 
     synchronized static String registerNewInstance(InstanceKeyDataSource ds) {
         int max = 0;
