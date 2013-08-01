@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,42 +45,42 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 /**
  * <p>
  * An adapter for jdbc drivers that do not include an implementation
- * of {@link javax.sql.ConnectionPoolDataSource}, but still include a 
- * {@link java.sql.DriverManager} implementation.  
- * <code>ConnectionPoolDataSource</code>s are not used within general 
+ * of {@link javax.sql.ConnectionPoolDataSource}, but still include a
+ * {@link java.sql.DriverManager} implementation.
+ * <code>ConnectionPoolDataSource</code>s are not used within general
  * applications.  They are used by <code>DataSource</code> implementations
- * that pool <code>Connection</code>s, such as 
+ * that pool <code>Connection</code>s, such as
  * {@link org.apache.commons.dbcp2.datasources.SharedPoolDataSource}.  A J2EE
  * container will normally provide some method of initializing the
  * <code>ConnectionPoolDataSource</code> whose attributes are presented
  * as bean getters/setters and then deploying it via JNDI.  It is then
  * available as a source of physical connections to the database, when
- * the pooling <code>DataSource</code> needs to create a new 
+ * the pooling <code>DataSource</code> needs to create a new
  * physical connection.
  * </p>
  *
  * <p>
  * Although normally used within a JNDI environment, the DriverAdapterCPDS
  * can be instantiated and initialized as any bean and then attached
- * directly to a pooling <code>DataSource</code>. 
- * <code>Jdbc2PoolDataSource</code> can use the 
+ * directly to a pooling <code>DataSource</code>.
+ * <code>Jdbc2PoolDataSource</code> can use the
  * <code>ConnectionPoolDataSource</code> with or without the use of JNDI.
  * </p>
  *
  * <p>
  * The DriverAdapterCPDS also provides <code>PreparedStatement</code> pooling
- * which is not generally available in jbdc2 
- * <code>ConnectionPoolDataSource</code> implementation, but is 
+ * which is not generally available in jbdc2
+ * <code>ConnectionPoolDataSource</code> implementation, but is
  * addressed within the jdbc3 specification.  The <code>PreparedStatement</code>
  * pool in DriverAdapterCPDS has been in the dbcp package for some time, but
  * it has not undergone extensive testing in the configuration used here.
- * It should be considered experimental and can be toggled with the 
+ * It should be considered experimental and can be toggled with the
  * poolPreparedStatements attribute.
  * </p>
  *
  * <p>
- * The <a href="package-summary.html">package documentation</a> contains an 
- * example using catalina and JNDI.  The <a 
+ * The <a href="package-summary.html">package documentation</a> contains an
+ * example using catalina and JNDI.  The <a
  * href="../datasources/package-summary.html">datasources package documentation</a>
  * shows how to use <code>DriverAdapterCPDS</code> as a source for
  * <code>Jdbc2PoolDataSource</code> without the use of JNDI.
@@ -90,14 +90,14 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @version $Revision$ $Date$
  */
 public class DriverAdapterCPDS
-    implements ConnectionPoolDataSource, Referenceable, Serializable, 
+    implements ConnectionPoolDataSource, Referenceable, Serializable,
                ObjectFactory {
-  
+
     private static final long serialVersionUID = -4820523787212147844L;
 
 
-    private static final String GET_CONNECTION_CALLED 
-            = "A PooledConnection was already requested from this source, " 
+    private static final String GET_CONNECTION_CALLED
+            = "A PooledConnection was already requested from this source, "
             + "further initialization is not allowed.";
 
     /** Description */
@@ -127,7 +127,7 @@ public class DriverAdapterCPDS
 
     /** Whether or not getConnection has been called */
     private volatile boolean getConnectionCalled = false;
-    
+
     /** Connection properties passed to JDBC Driver */
     private Properties connectionProperties = null;
 
@@ -136,11 +136,11 @@ public class DriverAdapterCPDS
         DriverManager.getDrivers();
     }
 
-    /** 
-     * Controls access to the underlying connection 
+    /**
+     * Controls access to the underlying connection
      */
-    private boolean accessToUnderlyingConnectionAllowed = false; 
-    
+    private boolean accessToUnderlyingConnectionAllowed = false;
+
     /**
      * Default no-arg constructor for Serialization
      */
@@ -155,7 +155,7 @@ public class DriverAdapterCPDS
     public PooledConnection getPooledConnection() throws SQLException {
         return getPooledConnection(getUser(), getPassword());
     }
-                     
+
     /**
      * Attempt to establish a database connection.
      * @param username name to be used for the connection
@@ -217,7 +217,7 @@ public class DriverAdapterCPDS
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleTimeMillis(0);
             }
-            stmtPool = new GenericKeyedObjectPool<PStmtKeyCPDS,PoolablePreparedStatement<PStmtKeyCPDS,PoolablePreparedStatementStub>>(pci, config);
+            stmtPool = new GenericKeyedObjectPool<>(pci, config);
             pci.setStatementPool(stmtPool);
         }
         return pci;
@@ -229,7 +229,7 @@ public class DriverAdapterCPDS
     }
 
     // ----------------------------------------------------------------------
-    // Referenceable implementation 
+    // Referenceable implementation
 
     /**
      * <CODE>Referenceable</CODE> implementation.
@@ -238,28 +238,28 @@ public class DriverAdapterCPDS
     public Reference getReference() throws NamingException {
         // this class implements its own factory
         String factory = getClass().getName();
-        
+
         Reference ref = new Reference(getClass().getName(), factory, null);
 
         ref.add(new StringRefAddr("description", getDescription()));
         ref.add(new StringRefAddr("driver", getDriver()));
-        ref.add(new StringRefAddr("loginTimeout", 
+        ref.add(new StringRefAddr("loginTimeout",
                                   String.valueOf(getLoginTimeout())));
         ref.add(new StringRefAddr("password", getPassword()));
         ref.add(new StringRefAddr("user", getUser()));
         ref.add(new StringRefAddr("url", getUrl()));
 
-        ref.add(new StringRefAddr("poolPreparedStatements", 
+        ref.add(new StringRefAddr("poolPreparedStatements",
                                   String.valueOf(isPoolPreparedStatements())));
-        ref.add(new StringRefAddr("maxActive", 
+        ref.add(new StringRefAddr("maxActive",
                                   String.valueOf(getMaxActive())));
-        ref.add(new StringRefAddr("maxIdle", 
+        ref.add(new StringRefAddr("maxIdle",
                                   String.valueOf(getMaxIdle())));
-        ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis", 
+        ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis",
             String.valueOf(getTimeBetweenEvictionRunsMillis())));
-        ref.add(new StringRefAddr("numTestsPerEvictionRun", 
+        ref.add(new StringRefAddr("numTestsPerEvictionRun",
             String.valueOf(getNumTestsPerEvictionRun())));
-        ref.add(new StringRefAddr("minEvictableIdleTimeMillis", 
+        ref.add(new StringRefAddr("minEvictableIdleTimeMillis",
             String.valueOf(getMinEvictableIdleTimeMillis())));
         ref.add(new StringRefAddr("maxPreparedStatements",
             String.valueOf(getMaxPreparedStatements())));
@@ -269,16 +269,16 @@ public class DriverAdapterCPDS
 
 
     // ----------------------------------------------------------------------
-    // ObjectFactory implementation 
+    // ObjectFactory implementation
 
     /**
      * implements ObjectFactory to create an instance of this class
-     */ 
+     */
     @Override
-    public Object getObjectInstance(Object refObj, Name name, 
-                                    Context context, Hashtable<?,?> env) 
+    public Object getObjectInstance(Object refObj, Name name,
+                                    Context context, Hashtable<?,?> env)
             throws Exception {
-        // The spec says to return null if we can't create an instance 
+        // The spec says to return null if we can't create an instance
         // of the reference
         DriverAdapterCPDS cpds = null;
         if (refObj instanceof Reference) {
@@ -362,29 +362,29 @@ public class DriverAdapterCPDS
 
     // ----------------------------------------------------------------------
     // Properties
-    
+
     /**
      * Get the connection properties passed to the JDBC driver.
-     * 
+     *
      * @return the JDBC connection properties used when creating connections.
      * @since 1.3
      */
     public Properties getConnectionProperties() {
         return connectionProperties;
     }
-    
+
     /**
      * <p>Set the connection properties passed to the JDBC driver.</p>
-     * 
+     *
      * <p>If <code>props</code> contains "user" and/or "password"
      * properties, the corresponding instance properties are set. If these
      * properties are not present, they are filled in using
      * {@link #getUser()}, {@link #getPassword()} when {@link #getPooledConnection()}
-     * is called, or using the actual parameters to the method call when 
+     * is called, or using the actual parameters to the method call when
      * {@link #getPooledConnection(String, String)} is called. Calls to
      * {@link #setUser(String)} or {@link #setPassword(String)} overwrite the values
      * of these properties if <code>connectionProperties</code> is not null.</p>
-     * 
+     *
      * @param props Connection properties to use when creating new connections.
      * @since 1.3
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
@@ -399,7 +399,7 @@ public class DriverAdapterCPDS
             setPassword(connectionProperties.getProperty("password"));
         }
     }
-    
+
     /**
      * Get the value of description.  This property is here for use by
      * the code which will deploy this datasource.  It is not used
@@ -411,7 +411,7 @@ public class DriverAdapterCPDS
     public String getDescription() {
         return description;
     }
-    
+
     /**
      * Set the value of description.  This property is here for use by
      * the code which will deploy this datasource.  It is not used
@@ -430,7 +430,7 @@ public class DriverAdapterCPDS
     public String getPassword() {
         return password;
     }
-    
+
     /**
      * Set the value of password for the default user.
      * @param v  Value to assign to password.
@@ -451,7 +451,7 @@ public class DriverAdapterCPDS
     public String getUrl() {
         return url;
     }
-    
+
     /**
      * Set the value of url used to locate the database for this datasource.
      * @param v  Value to assign to url.
@@ -469,7 +469,7 @@ public class DriverAdapterCPDS
     public String getUser() {
         return user;
     }
-    
+
     /**
      * Set the value of default user (login or username).
      * @param v  Value to assign to user.
@@ -490,9 +490,9 @@ public class DriverAdapterCPDS
     public String getDriver() {
         return driver;
     }
-    
+
     /**
-     * Set the driver classname.  Setting the driver classname cause the 
+     * Set the driver classname.  Setting the driver classname cause the
      * driver to be registered with the DriverManager.
      * @param v  Value to assign to driver.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
@@ -503,16 +503,16 @@ public class DriverAdapterCPDS
         // make sure driver is registered
         Class.forName(v);
     }
-    
+
     /**
-     * Gets the maximum time in seconds that this data source can wait 
+     * Gets the maximum time in seconds that this data source can wait
      * while attempting to connect to a database. NOT USED.
      */
     @Override
     public int getLoginTimeout() {
         return loginTimeout;
     }
-                           
+
     /**
      * Get the log writer for this data source. NOT USED.
      */
@@ -520,29 +520,29 @@ public class DriverAdapterCPDS
     public PrintWriter getLogWriter() {
         return logWriter;
     }
-                           
+
     /**
-     * Sets the maximum time in seconds that this data source will wait 
+     * Sets the maximum time in seconds that this data source will wait
      * while attempting to connect to a database. NOT USED.
      */
     @Override
     public void setLoginTimeout(int seconds) {
         loginTimeout = seconds;
-    } 
-                           
+    }
+
     /**
      * Set the log writer for this data source. NOT USED.
      */
     @Override
     public void setLogWriter(java.io.PrintWriter out) {
         logWriter = out;
-    } 
+    }
 
 
     // ------------------------------------------------------------------
     // PreparedStatement pool properties
 
-    
+
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
      * @return value of poolPreparedStatements.
@@ -550,7 +550,7 @@ public class DriverAdapterCPDS
     public boolean isPoolPreparedStatements() {
         return poolPreparedStatements;
     }
-    
+
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
      * @param v  true to pool statements.
@@ -592,7 +592,7 @@ public class DriverAdapterCPDS
     /**
      * The maximum number of statements that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
-     * 
+     *
      * @param maxIdle The maximum number of statements that can remain idle
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
@@ -646,7 +646,7 @@ public class DriverAdapterCPDS
      * When a negative value is supplied, <tt>ceil({*link #numIdle})/abs({*link #getNumTestsPerEvictionRun})</tt>
      * tests will be run.  I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the
      * idle objects will be tested per run.
-     * 
+     *
      * @param numTestsPerEvictionRun number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
      * @see #setTimeBetweenEvictionRunsMillis(int)
@@ -684,10 +684,10 @@ public class DriverAdapterCPDS
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
-    
+
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
-     * 
+     *
      * @return true if access to the underlying is allowed, false otherwise.
      */
     public synchronized boolean isAccessToUnderlyingConnectionAllowed() {
@@ -698,16 +698,16 @@ public class DriverAdapterCPDS
      * Sets the value of the accessToUnderlyingConnectionAllowed property.
      * It controls if the PoolGuard allows access to the underlying connection.
      * (Default: false)
-     * 
+     *
      * @param allow Access to the underlying connection is granted when true.
      */
     public synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
     }
-    
+
     /**
      * Returns the maximun number of prepared statements.
-     * 
+     *
      * @return maxPrepartedStatements value
      * @since 1.2.2
      */
@@ -718,9 +718,9 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the maximum number of prepared statements.
-     * @param maxPreparedStatements the new maximum number of prepared 
+     * @param maxPreparedStatements the new maximum number of prepared
      * statements
-     * 
+     *
      * @since 1.2.2
      */
     public void setMaxPreparedStatements(int maxPreparedStatements)
