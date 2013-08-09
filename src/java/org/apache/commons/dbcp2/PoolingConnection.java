@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.apache.commons.pool2.KeyedPoolableObjectFactory;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;

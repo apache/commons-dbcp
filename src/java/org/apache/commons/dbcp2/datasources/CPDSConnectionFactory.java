@@ -33,7 +33,6 @@ import javax.sql.PooledConnection;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.PoolableObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
