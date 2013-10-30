@@ -1691,20 +1691,27 @@ public class BasicDataSource implements DataSource {
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
-        Class driverFromCCL = null;
+        Class<Driver> driverFromCCL = null;
         if (driverClassName != null) {
             try {
                 try {
                     if (driverClassLoader == null) {
-                        driverFromCCL = Class.forName(driverClassName);
+                        @SuppressWarnings("unchecked")
+                        Class<Driver> c =
+                                (Class<Driver>) Class.forName(driverClassName);
+                        driverFromCCL = c;
                     } else {
-                        driverFromCCL = Class.forName(
+                        @SuppressWarnings("unchecked")
+                        Class<Driver> c = (Class<Driver>) Class.forName(
                                 driverClassName, true, driverClassLoader);
+                        driverFromCCL = c;
                     }
                 } catch (ClassNotFoundException cnfe) {
-                    driverFromCCL = Thread.currentThread(
+                    @SuppressWarnings("unchecked")
+                    Class<Driver> c = (Class<Driver>) Thread.currentThread(
                             ).getContextClassLoader().loadClass(
                                     driverClassName);
+                    driverFromCCL = c;
                 }
             } catch (Exception t) {
                 String message = "Cannot load JDBC driver class '" +
@@ -1723,7 +1730,7 @@ public class BasicDataSource implements DataSource {
             } else {
                 // Usage of DriverManager is not possible, as it does not
                 // respect the ContextClassLoader
-                driver = (Driver) driverFromCCL.newInstance();
+                driver = driverFromCCL.newInstance();
                 if (!driver.acceptsURL(url)) {
                     throw new SQLException("No suitable driver", "08001");
                 }
