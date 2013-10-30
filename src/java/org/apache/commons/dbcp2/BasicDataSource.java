@@ -226,12 +226,49 @@ public class BasicDataSource implements DataSource {
     }
 
     /**
+     * The instance of the JDBC Driver to use.
+     */
+    private Driver driver = null;
+    
+    /**
+     * Returns the JDBC Driver that has been configured for use by this pool.
+     * <p>
+     * Note: This getter only returns the last value set by a call to
+     * {@link #setDriver(Driver)}. It does not return any driver instance that
+     * may have been created from the value set via
+     * {@link #setDriverClassName(String)}.
+     * 
+     * @return the JDBC Driver that has been configured for use by this pool
+     */
+    public synchronized Driver getDriver() {
+        return driver;
+    }
+    
+    /**
+     * Sets the JDBC Driver instance to use for this pool.
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
+     * 
+     * @param driver
+     */
+    public synchronized void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+    
+    /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
     protected String driverClassName = null;
 
     /**
      * Returns the jdbc driver class name.
+     * <p>
+     * Note: This getter only returns the last value set by a call to
+     * {@link #setDriverClassName(String)}. It does not return the class name of
+     * any driver that may have been set via {@link #setDriver(Driver)}.
      *
      * @return the jdbc driver class name
      */
@@ -270,6 +307,11 @@ public class BasicDataSource implements DataSource {
     /**
      * Returns the class loader specified for loading the JDBC driver. Returns
      * <code>null</code> if no class loader has been explicitly specified.
+     * <p>
+     * Note: This getter only returns the last value set by a call to
+     * {@link #setDriverClassLoader(ClassLoader)}. It does not return the class
+     * loader of any driver that may have been set via
+     * {@link #setDriver(Driver)}.
      */
     public synchronized ClassLoader getDriverClassLoader() {
         return this.driverClassLoader;
@@ -1677,10 +1719,12 @@ public class BasicDataSource implements DataSource {
      * Creates a JDBC connection factory for this datasource.  The JDBC driver
      * is loaded using the following algorithm:
      * <ol>
-     * <li>If {@link #driverClassName} is specified that class is loaded using
-     * the {@link ClassLoader} of this class or, if {@link #driverClassLoader}
-     * is set, {@link #driverClassName} is loaded with the specified
-     * {@link ClassLoader}.</li>
+     * <li>If a Driver instance has been specified via
+     * {@link #setDriver(Driver)} use it</li>
+     * <li>If no Driver instance was specified and {@link #driverClassName} is
+     * specified that class is loaded using the {@link ClassLoader} of this
+     * class or, if {@link #driverClassLoader} is set, {@link #driverClassName}
+     * is loaded with the specified {@link ClassLoader}.</li>
      * <li>If {@link #driverClassName} is specified and the previous attempt
      * fails, the class is loaded using the context class loader of the current
      * thread.</li>
@@ -1692,56 +1736,58 @@ public class BasicDataSource implements DataSource {
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
         Class<Driver> driverFromCCL = null;
-        if (driverClassName != null) {
-            try {
+        Driver driver = this.driver;
+
+        if (driver == null) {
+            if (driverClassName != null) {
                 try {
-                    if (driverClassLoader == null) {
+                    try {
+                        if (driverClassLoader == null) {
+                            @SuppressWarnings("unchecked")
+                            Class<Driver> c =
+                                    (Class<Driver>) Class.forName(driverClassName);
+                            driverFromCCL = c;
+                        } else {
+                            @SuppressWarnings("unchecked")
+                            Class<Driver> c = (Class<Driver>) Class.forName(
+                                    driverClassName, true, driverClassLoader);
+                            driverFromCCL = c;
+                        }
+                    } catch (ClassNotFoundException cnfe) {
                         @SuppressWarnings("unchecked")
-                        Class<Driver> c =
-                                (Class<Driver>) Class.forName(driverClassName);
-                        driverFromCCL = c;
-                    } else {
-                        @SuppressWarnings("unchecked")
-                        Class<Driver> c = (Class<Driver>) Class.forName(
-                                driverClassName, true, driverClassLoader);
+                        Class<Driver> c = (Class<Driver>) Thread.currentThread(
+                                ).getContextClassLoader().loadClass(
+                                        driverClassName);
                         driverFromCCL = c;
                     }
-                } catch (ClassNotFoundException cnfe) {
-                    @SuppressWarnings("unchecked")
-                    Class<Driver> c = (Class<Driver>) Thread.currentThread(
-                            ).getContextClassLoader().loadClass(
-                                    driverClassName);
-                    driverFromCCL = c;
+                } catch (Exception t) {
+                    String message = "Cannot load JDBC driver class '" +
+                        driverClassName + "'";
+                    logWriter.println(message);
+                    t.printStackTrace(logWriter);
+                    throw new SQLException(message, t);
+                }
+            }
+
+            try {
+                if (driverFromCCL == null) {
+                    driver = DriverManager.getDriver(url);
+                } else {
+                    // Usage of DriverManager is not possible, as it does not
+                    // respect the ContextClassLoader
+                    driver = driverFromCCL.newInstance();
+                    if (!driver.acceptsURL(url)) {
+                        throw new SQLException("No suitable driver", "08001");
+                    }
                 }
             } catch (Exception t) {
-                String message = "Cannot load JDBC driver class '" +
-                    driverClassName + "'";
+                String message = "Cannot create JDBC driver of class '" +
+                    (driverClassName != null ? driverClassName : "") +
+                    "' for connect URL '" + url + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
                 throw new SQLException(message, t);
             }
-        }
-
-        // Create a JDBC driver instance
-        Driver driver = null;
-        try {
-            if (driverFromCCL == null) {
-                driver = DriverManager.getDriver(url);
-            } else {
-                // Usage of DriverManager is not possible, as it does not
-                // respect the ContextClassLoader
-                driver = driverFromCCL.newInstance();
-                if (!driver.acceptsURL(url)) {
-                    throw new SQLException("No suitable driver", "08001");
-                }
-            }
-        } catch (Exception t) {
-            String message = "Cannot create JDBC driver of class '" +
-                (driverClassName != null ? driverClassName : "") +
-                "' for connect URL '" + url + "'";
-            logWriter.println(message);
-            t.printStackTrace(logWriter);
-            throw new SQLException(message, t);
         }
 
         // Can't test without a validationQuery
@@ -1766,7 +1812,8 @@ public class BasicDataSource implements DataSource {
             log("DBCP DataSource configured without a 'password'");
         }
 
-        ConnectionFactory driverConnectionFactory = new DriverConnectionFactory(driver, url, connectionProperties);
+        ConnectionFactory driverConnectionFactory =
+                new DriverConnectionFactory(driver, url, connectionProperties);
         return driverConnectionFactory;
     }
 
