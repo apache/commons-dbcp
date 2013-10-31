@@ -1735,10 +1735,10 @@ public class BasicDataSource implements DataSource {
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
-        Class<Driver> driverFromCCL = null;
-        Driver driver = this.driver;
+        Driver driverToUse = this.driver;
 
-        if (driver == null) {
+        if (driverToUse == null) {
+            Class<Driver> driverFromCCL = null;
             if (driverClassName != null) {
                 try {
                     try {
@@ -1771,12 +1771,12 @@ public class BasicDataSource implements DataSource {
 
             try {
                 if (driverFromCCL == null) {
-                    driver = DriverManager.getDriver(url);
+                    driverToUse = DriverManager.getDriver(url);
                 } else {
                     // Usage of DriverManager is not possible, as it does not
                     // respect the ContextClassLoader
-                    driver = driverFromCCL.newInstance();
-                    if (!driver.acceptsURL(url)) {
+                    driverToUse = driverFromCCL.newInstance();
+                    if (!driverToUse.acceptsURL(url)) {
                         throw new SQLException("No suitable driver", "08001");
                     }
                 }
@@ -1813,7 +1813,7 @@ public class BasicDataSource implements DataSource {
         }
 
         ConnectionFactory driverConnectionFactory =
-                new DriverConnectionFactory(driver, url, connectionProperties);
+                new DriverConnectionFactory(driverToUse, url, connectionProperties);
         return driverConnectionFactory;
     }
 
