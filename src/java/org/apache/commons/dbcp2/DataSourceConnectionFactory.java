@@ -47,7 +47,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
         }
     }
 
-    protected String _uname = null;
-    protected String _passwd = null;
-    protected DataSource _source = null;
+    protected String _uname = null; // TODO make private?
+    protected String _passwd = null; // TODO make private?
+    protected DataSource _source = null; // TODO make private?
 }
