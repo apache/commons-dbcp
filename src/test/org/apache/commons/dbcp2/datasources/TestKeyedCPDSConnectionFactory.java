@@ -92,16 +92,16 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
         UserPassKey key = new UserPassKey("username", "password");
         KeyedCPDSConnectionFactory factory = 
             new KeyedCPDSConnectionFactory(cpds, null, false);
-        KeyedObjectPool pool = new GenericKeyedObjectPool(factory);
+        KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
         factory.setPool(pool);
         
         // Checkout a pair of connections
         PooledConnection pcon1 = 
-            ((PooledConnectionAndInfo) pool.borrowObject(key))
+            pool.borrowObject(key)
                 .getPooledConnection();
         Connection con1 = pcon1.getConnection();
         PooledConnection pcon2 = 
-            ((PooledConnectionAndInfo) pool.borrowObject(key))
+            pool.borrowObject(key)
                 .getPooledConnection();
         assertEquals(2, pool.getNumActive(key));
         assertEquals(0, pool.getNumIdle(key));
@@ -125,7 +125,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
         // Ask for another connection - should trigger makeObject, which causes
         // cleanup, removing listeners.
         PooledConnection pcon3 = 
-            ((PooledConnectionAndInfo) pool.borrowObject(key))
+            pool.borrowObject(key)
                 .getPooledConnection();
         assertTrue(!pcon3.equals(pcon1)); // better not get baddie back
         assertTrue(!pc.getListeners().contains(factory)); // verify cleanup

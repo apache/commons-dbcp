@@ -55,9 +55,9 @@ public class TestPStmtPooling extends TestCase {
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
-        ObjectPool connPool = new GenericObjectPool(pcf);
+        ObjectPool<? extends Connection> connPool = new GenericObjectPool<>(pcf);
 
-        DataSource ds = new PoolingDataSource(connPool);
+        DataSource ds = new PoolingDataSource((ObjectPool<Connection>) connPool);
 
         Connection conn = ds.getConnection();
         Statement stmt1 = conn.prepareStatement("select 1 from dual");

@@ -187,7 +187,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
 
-        ObjectPool pool = driver.getConnectionPool("test");
+        ObjectPool<?> pool = driver.getConnectionPool("test");
         assertEquals(1, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
 
