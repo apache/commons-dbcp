@@ -1738,23 +1738,21 @@ public class BasicDataSource implements DataSource {
         Driver driverToUse = this.driver;
 
         if (driverToUse == null) {
-            Class<Driver> driverFromCCL = null;
+            Class<?> driverFromCCL = null;
             if (driverClassName != null) {
                 try {
                     try {
                         if (driverClassLoader == null) {
-                            driverFromCCL = (Class<Driver>) Class.forName(driverClassName);
+                            driverFromCCL = Class.forName(driverClassName);
                         } else {
-                            driverFromCCL = (Class<Driver>) Class.forName(
+                            driverFromCCL = Class.forName(
                                     driverClassName, true, driverClassLoader);
                         }
                     } catch (ClassNotFoundException cnfe) {
-                        driverFromCCL = (Class<Driver>) Thread.currentThread(
+                        driverFromCCL = Thread.currentThread(
                                 ).getContextClassLoader().loadClass(
                                         driverClassName);
                     }
-                	// N.B. the casts above may cause ClassCastException if classname is not correct
-                	// This is caught below
                 } catch (Exception t) {
                     String message = "Cannot load JDBC driver class '" +
                         driverClassName + "'";
@@ -1770,7 +1768,8 @@ public class BasicDataSource implements DataSource {
                 } else {
                     // Usage of DriverManager is not possible, as it does not
                     // respect the ContextClassLoader
-                    driverToUse = driverFromCCL.newInstance();
+                	// N.B. This cast may cause ClassCastException which is handled below
+                    driverToUse = (Driver) driverFromCCL.newInstance();
                     if (!driverToUse.acceptsURL(url)) {
                         throw new SQLException("No suitable driver", "08001");
                     }
