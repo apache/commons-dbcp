@@ -46,6 +46,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-154" dev="markt" type="fix">
         Log validation failures of poolable connections.
       </action>
+      <action issue="DBCP-403" dev="sebb" type="fix">
+        DelegatingStatement.close() fails with NPE if statement is null
+      </action>
       <action issue="DBCP-322" dev="sebb" type="fix">
         CPDSConnectionFactory.validateObject(Object) ignores Throwable.
       </action>
