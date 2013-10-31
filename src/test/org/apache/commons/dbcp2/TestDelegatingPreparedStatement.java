@@ -72,11 +72,13 @@ public class TestDelegatingPreparedStatement extends TestCase {
         assertEquals(0, stmt.hashCode());
     }
     
-    public void testHashCode() {
+    public void testHashCode() throws Exception {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         DelegatingPreparedStatement stmt1 = new DelegatingPreparedStatement(conn,delegateStmt);
         DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn,delegateStmt);
         assertEquals(stmt1.hashCode(), stmt2.hashCode());
+        stmt1.close();
+        stmt2.close();
     }
     
     public void testEquals() {

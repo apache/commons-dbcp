@@ -70,11 +70,13 @@ public class TestDelegatingCallableStatement extends TestCase {
         assertEquals(0, stmt.hashCode());
     }
     
-    public void testHashCode() {
+    public void testHashCode() throws Exception {
         delegateStmt = new TesterCallableStatement(delegateConn,"select * from foo");
         DelegatingCallableStatement stmt1 = new DelegatingCallableStatement(conn,delegateStmt);
         DelegatingCallableStatement stmt2 = new DelegatingCallableStatement(conn,delegateStmt);
         assertEquals(stmt1.hashCode(), stmt2.hashCode());
+        stmt1.close();
+        stmt2.close();
     }
     
     public void testEquals() {
