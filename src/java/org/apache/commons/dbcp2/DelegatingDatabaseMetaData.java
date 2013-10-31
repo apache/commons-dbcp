@@ -36,10 +36,10 @@ import java.sql.SQLException;
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
-    protected DatabaseMetaData _meta;
+    protected DatabaseMetaData _meta; // TODO make final and private?
     
     /** The connection that created me. **/
-    protected DelegatingConnection _conn = null;
+    protected DelegatingConnection _conn = null; // TODO make final and private?
 
     public DelegatingDatabaseMetaData(DelegatingConnection c,
             DatabaseMetaData m) {

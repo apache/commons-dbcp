@@ -146,7 +146,7 @@ public abstract class InstanceKeyDataSource
     private boolean testPositionSet = false;
 
     /** Instance key */
-    protected String instanceKey = null;
+    protected String instanceKey = null; // TODO make packge protected?
 
     /**
      * Default no-arg constructor for Serialization

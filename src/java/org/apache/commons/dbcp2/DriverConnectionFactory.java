@@ -39,9 +39,9 @@ public class DriverConnectionFactory implements ConnectionFactory {
         return _driver.connect(_connectUri,_props);
     }
 
-    protected Driver _driver = null;
-    protected String _connectUri = null;
-    protected Properties _props = null;
+    protected Driver _driver = null; // TODO make final and private
+    protected String _connectUri = null; // TODO make final and private
+    protected Properties _props = null; // TODO make final and private
 
     @Override
     public String toString() {

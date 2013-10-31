@@ -80,8 +80,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         }
     }
 
-    protected String _connectUri = null;
-    protected String _uname = null;
-    protected String _passwd = null;
-    protected Properties _props = null;
+    private String _connectUri = null;
+    private String _uname = null;
+    private String _passwd = null;
+    private Properties _props = null;
 }

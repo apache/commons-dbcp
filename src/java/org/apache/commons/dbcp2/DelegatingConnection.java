@@ -72,9 +72,9 @@ public class DelegatingConnection extends AbandonedTrace
 /* JDBC_4_ANT_KEY_END */
 
     /** My delegate {@link Connection}. */
-    protected Connection _conn = null;
+    protected Connection _conn = null; // TODO make private and add getter/setter?
 
-    protected boolean _closed = false;
+    protected boolean _closed = false; // TODO make private and add getter/setter?
     
     private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
