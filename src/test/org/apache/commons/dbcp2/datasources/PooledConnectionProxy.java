@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.util.Collection;
+import java.util.EventListener;
 import java.util.Vector;
 
 import javax.sql.ConnectionEvent;
@@ -45,7 +46,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * ConnectionEventListeners
      */
-    private Vector eventListeners = new Vector();
+    private Vector<EventListener> eventListeners = new Vector<>();
     
     /** 
      * True means we will (dubiously) notify listeners with a
@@ -158,7 +159,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * Expose listeners
      */
-    public Collection getListeners() {
+    public Collection<EventListener> getListeners() {
         return eventListeners;
     }
 
