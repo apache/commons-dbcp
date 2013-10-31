@@ -1589,7 +1589,7 @@ public class BasicDataSource implements DataSource {
      */
     public synchronized void close() throws SQLException {
         closed = true;
-        GenericObjectPool oldpool = connectionPool;
+        GenericObjectPool<?> oldpool = connectionPool;
         connectionPool = null;
         dataSource = null;
         try {
@@ -1852,7 +1852,7 @@ public class BasicDataSource implements DataSource {
      * Closes the connection pool, silently swallowing any exception that occurs.
      */
     private void closeConnectionPool() {
-        GenericObjectPool oldpool = connectionPool;
+        GenericObjectPool<?> oldpool = connectionPool;
         connectionPool = null;
         try {
             if (oldpool != null) {
