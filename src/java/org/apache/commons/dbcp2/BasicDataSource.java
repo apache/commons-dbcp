@@ -1743,23 +1743,18 @@ public class BasicDataSource implements DataSource {
                 try {
                     try {
                         if (driverClassLoader == null) {
-                            @SuppressWarnings("unchecked")
-                            Class<Driver> c =
-                                    (Class<Driver>) Class.forName(driverClassName);
-                            driverFromCCL = c;
+                            driverFromCCL = (Class<Driver>) Class.forName(driverClassName);
                         } else {
-                            @SuppressWarnings("unchecked")
-                            Class<Driver> c = (Class<Driver>) Class.forName(
+                            driverFromCCL = (Class<Driver>) Class.forName(
                                     driverClassName, true, driverClassLoader);
-                            driverFromCCL = c;
                         }
                     } catch (ClassNotFoundException cnfe) {
-                        @SuppressWarnings("unchecked")
-                        Class<Driver> c = (Class<Driver>) Thread.currentThread(
+                        driverFromCCL = (Class<Driver>) Thread.currentThread(
                                 ).getContextClassLoader().loadClass(
                                         driverClassName);
-                        driverFromCCL = c;
                     }
+                	// N.B. the casts above may cause ClassCastException if classname is not correct
+                	// This is caught below
                 } catch (Exception t) {
                     String message = "Cannot load JDBC driver class '" +
                         driverClassName + "'";
