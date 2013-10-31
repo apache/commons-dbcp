@@ -52,7 +52,7 @@ public abstract class TestConnectionPool extends TestCase {
         super.tearDown();
         // Close any connections opened by the test
         while (!connections.isEmpty()) {
-            Connection conn = (Connection) connections.pop();
+            Connection conn = connections.pop();
             try {
                 conn.close();
             } catch (Exception ex) {
@@ -74,7 +74,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     /** Connections opened during the course of a test */
-    protected Stack connections = new Stack();
+    protected Stack<Connection> connections = new Stack<>();
 
     /** Acquire a connection and push it onto the connections stack */
     protected Connection newConnection() throws Exception {
@@ -521,7 +521,7 @@ public abstract class TestConnectionPool extends TestCase {
      */
     public void testHashing() throws Exception {
         Connection con = getConnection();
-        Hashtable hash = new Hashtable();
+        Hashtable<Connection, String> hash = new Hashtable<>();
         hash.put(con, "test");
         assertEquals("test", hash.get(con));
         assertTrue(hash.containsKey(con));
