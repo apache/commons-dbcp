@@ -148,7 +148,7 @@ public class TestJndi extends TestCase {
      *         or created.
      */
     protected InitialContext getInitialContext() throws NamingException {
-        Hashtable environment = new Hashtable();
+        Hashtable<String, String> environment = new Hashtable<>();
         environment.put(Context.INITIAL_CONTEXT_FACTORY,
                 org.apache.naming.java.javaURLContextFactory.class.getName());
         InitialContext ctx = new InitialContext(environment);

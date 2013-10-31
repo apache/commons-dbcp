@@ -52,7 +52,7 @@ public class TestFactory extends TestCase {
         Reference refObj = new Reference(SharedPoolDataSource.class.getName());
         refObj.add(new StringRefAddr("dataSourceName","java:comp/env/jdbc/bookstoreCPDS"));
         Context context = new InitialContext();
-        Hashtable env = new Hashtable();
+        Hashtable<?, ?> env = new Hashtable<>();
         
         ObjectFactory factory = new SharedPoolDataSourceFactory();
         
