@@ -39,7 +39,7 @@ public class PerUserPoolDataSourceFactory
         return PER_USER_POOL_CLASSNAME.equals(className);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // TODO is this needed? If so, why?
     @Override
     protected InstanceKeyDataSource getNewInstance(Reference ref) 
         throws IOException, ClassNotFoundException {
