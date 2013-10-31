@@ -175,7 +175,9 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     clearTrace();
                 }
         
-                _stmt.close();
+                if (_stmt != null) {
+                	_stmt.close();
+                }
             }
             catch (SQLException e) {
                 handleException(e);
