@@ -69,12 +69,12 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private int defaultMaxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
     private int defaultMaxWaitMillis = (int)Math.min(Integer.MAX_VALUE,
             GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
-    Map<String,Boolean> perUserDefaultAutoCommit = null;
-    Map<String,Integer> perUserDefaultTransactionIsolation = null;
-    Map<String,Integer> perUserMaxTotal = null;
-    Map<String,Integer> perUserMaxIdle = null;
-    Map<String,Integer> perUserMaxWaitMillis = null;
-    Map<String,Boolean> perUserDefaultReadOnly = null;
+    private Map<String,Boolean> perUserDefaultAutoCommit = null;
+    private Map<String,Integer> perUserDefaultTransactionIsolation = null;
+    private Map<String,Integer> perUserMaxTotal = null;
+    private Map<String,Integer> perUserMaxIdle = null;
+    private Map<String,Integer> perUserMaxWaitMillis = null;
+    private Map<String,Boolean> perUserDefaultReadOnly = null;
 
     /**
      * Map to keep track of Pools for a given user
@@ -100,7 +100,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
                     //ignore and try to close others.
             }
         }
-        InstanceKeyObjectFactory.removeInstance(instanceKey);
+        InstanceKeyObjectFactory.removeInstance(getInstanceKey());
     }
 
     // -------------------------------------------------------------------
@@ -198,6 +198,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserDefaultAutoCommit.put(username, value);
     }
 
+    void setPerUserDefaultAutoCommit(Map<String,Boolean> userDefaultAutoCommit) {
+        assertInitializationAllowed();
+        if (perUserDefaultAutoCommit == null) {
+            perUserDefaultAutoCommit = new HashMap<>();
+        } else {
+            perUserDefaultAutoCommit.clear();
+        }
+        perUserDefaultAutoCommit.putAll(userDefaultAutoCommit);
+    }
+
     /**
      * The isolation level of connections when returned from getConnection.
      * If null, the username will use the value of defaultTransactionIsolation.
@@ -221,6 +231,17 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             perUserDefaultTransactionIsolation = new HashMap<>();
         }
         perUserDefaultTransactionIsolation.put(username, value);
+    }
+
+    void setPerUserDefaultTransactionIsolation(
+            Map<String,Integer> userDefaultTransationIsolation) {
+        assertInitializationAllowed();
+        if (perUserDefaultTransactionIsolation == null) {
+            perUserDefaultTransactionIsolation = new HashMap<>();
+        } else {
+            perUserDefaultTransactionIsolation.clear();
+        }
+        perUserDefaultTransactionIsolation.putAll(userDefaultTransationIsolation);
     }
 
     /**
@@ -251,6 +272,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMaxTotal.put(username, value);
     }
 
+    void setPerUserMaxTotal(Map<String,Integer> userMaxTotal) {
+        assertInitializationAllowed();
+        if (perUserMaxTotal == null) {
+            perUserMaxTotal = new HashMap<>();
+        } else {
+            perUserMaxTotal.clear();
+        }
+        perUserMaxTotal.putAll(userMaxTotal);
+    }
 
     /**
      * The maximum number of active connections that can remain idle in the
@@ -278,6 +308,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             perUserMaxIdle = new HashMap<>();
         }
         perUserMaxIdle.put(username, value);
+    }
+
+    void setPerUserMaxIdle(Map<String,Integer> userMaxIdle) {
+        assertInitializationAllowed();
+        if (perUserMaxIdle == null) {
+            perUserMaxIdle = new HashMap<>();
+        } else {
+            perUserMaxIdle.clear();
+        }
+        perUserMaxIdle.putAll(userMaxIdle);
     }
 
     /**
@@ -312,6 +352,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMaxWaitMillis.put(username, value);
     }
 
+    void setPerUserMaxWaitMillis(Map<String,Integer> userMaxWaitMillis) {
+        assertInitializationAllowed();
+        if (perUserMaxWaitMillis == null) {
+            perUserMaxWaitMillis = new HashMap<>();
+        } else {
+            perUserMaxWaitMillis.clear();
+        }
+        perUserMaxWaitMillis.putAll(userMaxWaitMillis);
+    }
+
     /**
      * The keys are usernames and the value is the --.  Any
      * username specified here will override the value of defaultReadOnly.
@@ -334,6 +384,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             perUserDefaultReadOnly = new HashMap<>();
         }
         perUserDefaultReadOnly.put(username, value);
+    }
+
+    void setPerUserDefaultReadOnly(Map<String,Boolean> userDefaultReadOnly) {
+        assertInitializationAllowed();
+        if (perUserDefaultReadOnly == null) {
+            perUserDefaultReadOnly = new HashMap<>();
+        } else {
+            perUserDefaultReadOnly.clear();
+        }
+        perUserDefaultReadOnly.putAll(userDefaultReadOnly);
     }
 
     // ----------------------------------------------------------------------
@@ -488,7 +548,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public Reference getReference() throws NamingException {
         Reference ref = new Reference(getClass().getName(),
                 PerUserPoolDataSourceFactory.class.getName(), null);
-        ref.add(new StringRefAddr("instanceKey", instanceKey));
+        ref.add(new StringRefAddr("instanceKey", getInstanceKey()));
         return ref;
     }
 

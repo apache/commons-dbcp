@@ -75,7 +75,7 @@ public class SharedPoolDataSource
         if (pool != null) {
             pool.close();
         }
-        InstanceKeyObjectFactory.removeInstance(instanceKey);
+        InstanceKeyObjectFactory.removeInstance(getInstanceKey());
     }
 
     // -------------------------------------------------------------------
@@ -203,7 +203,7 @@ public class SharedPoolDataSource
     public Reference getReference() throws NamingException {
         Reference ref = new Reference(getClass().getName(),
             SharedPoolDataSourceFactory.class.getName(), null);
-        ref.add(new StringRefAddr("instanceKey", instanceKey));
+        ref.add(new StringRefAddr("instanceKey", getInstanceKey()));
         return ref;
     }
 
