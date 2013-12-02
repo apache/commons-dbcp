@@ -190,7 +190,6 @@ public class DriverAdapterCPDS
                         getUrl(), username, pass));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-            return pci;
         }
         KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> stmtPool = null;
         if (isPoolPreparedStatements()) {
