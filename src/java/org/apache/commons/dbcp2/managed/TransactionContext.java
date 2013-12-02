@@ -78,7 +78,7 @@ public class TransactionContext {
      */
     public void setSharedConnection(Connection sharedConnection) throws SQLException {
         if (this.sharedConnection != null) {
-            throw new IllegalStateException("A shared connection is alredy set");
+            throw new IllegalStateException("A shared connection is already set");
         }
 
         // This is the first use of the connection in this transaction, so we must
