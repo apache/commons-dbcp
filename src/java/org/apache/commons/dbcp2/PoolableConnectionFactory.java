@@ -298,6 +298,7 @@ public class PoolableConnectionFactory
             conn.rollback();
         }
         conn.clearWarnings();
+        // DBCP-97 Idle connections in the pool should have autoCommit enabled 
         if(!conn.getAutoCommit()) {
             conn.setAutoCommit(true);
         }
