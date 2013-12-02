@@ -294,12 +294,13 @@ public class PoolableConnectionFactory
         validateLifetime(p);
 
         PoolableConnection conn = p.getObject();
-        if(!conn.getAutoCommit() && !conn.isReadOnly()) {
+        boolean connAutoCommit = conn.getAutoCommit();
+        if(!connAutoCommit && !conn.isReadOnly()) {
             conn.rollback();
         }
         conn.clearWarnings();
         // DBCP-97 Idle connections in the pool should have autoCommit enabled 
-        if(!conn.getAutoCommit()) {
+        if(!connAutoCommit) {
             conn.setAutoCommit(true);
         }
 

@@ -79,6 +79,13 @@ The <action> type attribute can be add,update,fix,remove.
         Remove deprecated SQLNestedException. 
       </action>
     </release>
+    <release version="1.5.1" date="TBD" description="TBD">
+      <action dev="markt" issue="DBCP-405" type="fix">
+        Avoid multiple calls to Connection.getAutoCommit() in
+        PoolableConnectionFactory.passivateObject() as it could be an expensive
+        call.
+      </action>
+    </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
         Exposed GenericObjectPool's softMinEvictableIdleTimeMillis property for
