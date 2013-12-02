@@ -31,10 +31,10 @@ import java.sql.SQLException;
  * @version $Revision$
  */
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
-	protected TransactionRegistry transactionRegistry; // TODO make private?
-	protected XADataSource xaDataSource; // TODO make private?
+	private TransactionRegistry transactionRegistry;
+	private XADataSource xaDataSource;
     private String username;
-    protected String password; // TODO make private?
+    private String password;
 
     /**
      * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database
