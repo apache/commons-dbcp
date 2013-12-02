@@ -270,7 +270,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * {@link KeyedPoolableObjectFactory} method for creating
+     * {@link KeyedPooledObjectFactory} method for creating
      * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatement}s.
      * The <code>stmtType</code> field in the key determines whether
      * a PoolablePreparedStatement or PoolableCallableStatement is created.
@@ -307,7 +307,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * {@link KeyedPoolableObjectFactory} method for destroying
+     * {@link KeyedPooledObjectFactory} method for destroying
      * PoolablePreparedStatements and PoolableCallableStatements.
      * Closes the underlying statement.
      *
@@ -322,7 +322,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * {@link KeyedPoolableObjectFactory} method for validating
+     * {@link KeyedPooledObjectFactory} method for validating
      * pooled statements. Currently always returns true.
      *
      * @param key ignored
@@ -336,7 +336,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * {@link KeyedPoolableObjectFactory} method for activating
+     * {@link KeyedPooledObjectFactory} method for activating
      * pooled statements.
      *
      * @param key ignored
@@ -349,7 +349,7 @@ public class PoolingConnection extends DelegatingConnection
     }
 
     /**
-     * {@link KeyedPoolableObjectFactory} method for passivating
+     * {@link KeyedPooledObjectFactory} method for passivating
      * {@link PreparedStatement}s or {@link CallableStatement}s.
      * Invokes {@link PreparedStatement#clearParameters}.
      *
