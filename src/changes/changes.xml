@@ -38,6 +38,13 @@ The <action> type attribute can be add,update,fix,remove.
     <title>Commons DBCP Release Notes</title>
   </properties>
   <body>
+    <release version="1.5.1" date="TBD" description="TBD">
+      <action dev="markt" issue="DBCP-405" type="fix">
+        Avoid multiple calls to Connection.getAutoCommit() in
+        PoolableConnectionFactory.passivateObject() as it could be an expensive
+        call.
+      </action>
+    </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
         Improved configuration documentation of minIdle (made it match javadoc,

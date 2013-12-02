@@ -79,7 +79,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -101,7 +101,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
         _defaultAutoCommit = defaultAutoCommit;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -170,7 +170,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -194,7 +194,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultAutoCommit = defaultAutoCommit;
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -390,7 +390,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultTransactionIsolation = defaultTransactionIsolation;
         _defaultCatalog = defaultCatalog;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -429,7 +429,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
         _defaultTransactionIsolation = defaultTransactionIsolation;
         _defaultCatalog = defaultCatalog;
     }
-    
+
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
      * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
@@ -489,7 +489,7 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public void setValidationQuery(String validationQuery) {
         _validationQuery = validationQuery;
     }
-    
+
     /**
      * Sets the validation query timeout, the amount of time, in seconds, that
      * connection validation will wait for a response from the database when
@@ -681,11 +681,12 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
     public void passivateObject(Object obj) throws Exception {
         if(obj instanceof Connection) {
             Connection conn = (Connection)obj;
-            if(!conn.getAutoCommit() && !conn.isReadOnly()) {
+            boolean connAutoCommit = conn.getAutoCommit();
+            if(!connAutoCommit && !conn.isReadOnly()) {
                 conn.rollback();
             }
             conn.clearWarnings();
-            if(!conn.getAutoCommit()) {
+            if(!connAutoCommit) {
                 conn.setAutoCommit(true);
             }
         }
@@ -703,12 +704,12 @@ public class PoolableConnectionFactory implements PoolableObjectFactory {
             if (conn.getAutoCommit() != _defaultAutoCommit) {
                 conn.setAutoCommit(_defaultAutoCommit);
             }
-            if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) 
-                    && (conn.getTransactionIsolation() != 
+            if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION)
+                    && (conn.getTransactionIsolation() !=
                     _defaultTransactionIsolation)) {
                 conn.setTransactionIsolation(_defaultTransactionIsolation);
             }
-            if ((_defaultReadOnly != null) && 
+            if ((_defaultReadOnly != null) &&
                     (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
                 conn.setReadOnly(_defaultReadOnly.booleanValue());
             }
