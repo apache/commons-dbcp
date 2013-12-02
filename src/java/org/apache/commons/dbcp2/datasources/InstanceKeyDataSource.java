@@ -114,7 +114,7 @@ public abstract class InstanceKeyDataSource
     private String description = null;
 
     /** Environment that may be used to set up a jndi initial context. */
-    Properties jndiEnvironment = null;
+    private Properties jndiEnvironment = null;
 
     /** Login TimeOut in seconds */
     private int loginTimeout = 0;
@@ -146,7 +146,7 @@ public abstract class InstanceKeyDataSource
     private boolean testPositionSet = false;
 
     /** Instance key */
-    protected String instanceKey = null; // TODO make packge protected?
+    private String instanceKey = null; // TODO make packge protected?
 
     /**
      * Default no-arg constructor for Serialization
@@ -366,6 +366,10 @@ public abstract class InstanceKeyDataSource
         this.description = v;
     }
 
+    protected String getInstanceKey() {
+        return instanceKey;
+    }
+    
     /**
      * Get the value of jndiEnvironment which is used when instantiating
      * a jndi InitialContext.  This InitialContext is used to locate the
@@ -394,6 +398,23 @@ public abstract class InstanceKeyDataSource
             jndiEnvironment = new Properties();
         }
         jndiEnvironment.setProperty(key, value);
+    }
+    
+    /**
+     * Sets the JNDI environment to be used when instantiating a JNDI
+     * InitialContext. This InitialContext is used to locate the backend
+     * ConnectionPoolDataSource.
+     *
+     * @param properties the JNDI environment property to set which will
+     *                   overwrite any current settings
+     */
+    void setJndiEnvironment(Properties properties) {
+        if (jndiEnvironment == null) {
+            jndiEnvironment = new Properties();
+        } else {
+            jndiEnvironment.clear();
+        }
+        jndiEnvironment.putAll(properties);
     }
 
     /**

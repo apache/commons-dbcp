@@ -160,8 +160,7 @@ abstract class InstanceKeyObjectFactory
         ra = ref.get("jndiEnvironment");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            ikds.jndiEnvironment =
-                (Properties) deserialize(serialized);
+            ikds.setJndiEnvironment((Properties) deserialize(serialized));
         }
 
         ra = ref.get("loginTimeout");
