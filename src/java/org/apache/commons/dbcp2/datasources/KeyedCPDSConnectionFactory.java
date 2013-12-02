@@ -115,7 +115,7 @@ class KeyedCPDSConnectionFactory
      *
      * @param upkey {@link UserPassKey} containing user credentials
      * @throws SQLException if the connection could not be created.
-     * @see org.apache.commons.pool2.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
+     * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(java.lang.Object)
      */
     @Override
     public synchronized PooledObject<PooledConnectionAndInfo> makeObject(UserPassKey upkey)
