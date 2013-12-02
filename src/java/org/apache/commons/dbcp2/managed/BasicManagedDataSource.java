@@ -173,7 +173,6 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Creates the PoolableConnectionFactory and attaches it to the connection pool.
      *
      * @param driverConnectionFactory JDBC connection factory created by {@link #createConnectionFactory()}
-     * @param abandonedConfig abandoned connection tracking configuration (null if no tracking)
      * @throws SQLException if an error occurs creating the PoolableConnectionFactory
      */
     @Override

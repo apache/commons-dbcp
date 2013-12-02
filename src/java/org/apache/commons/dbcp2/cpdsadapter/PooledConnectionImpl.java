@@ -92,7 +92,6 @@ class PooledConnectionImpl implements PooledConnection,
     /**
      * Wrap the real connection.
      * @param connection the connection to be wrapped
-     * @param pool the pool to use
      */
     PooledConnectionImpl(Connection connection) {
         this.connection = connection;

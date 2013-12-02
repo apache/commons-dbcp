@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2.datasources;
 
 import java.sql.Connection;
@@ -38,8 +37,7 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {@link PoolableObjectFactory} that creates
- * {@link PoolableConnection}s.
+ * A {@link PooledObjectFactory} that creates {@link PoolableConnection}s.
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
