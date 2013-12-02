@@ -78,11 +78,11 @@ class PooledConnectionImpl implements PooledConnection,
     /**
      * flag set to true, once close() is called.
      */
-    boolean isClosed; // TODO - make private?
+    private boolean isClosed; // TODO - make private?
 
     /** My pool of {*link PreparedStatement}s. */
     // TODO - make final and private?
-    protected KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> pstmtPool = null;
+    private KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> pstmtPool = null;
 
     /**
      * Controls access to the underlying connection
