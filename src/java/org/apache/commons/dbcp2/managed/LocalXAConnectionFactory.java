@@ -35,8 +35,8 @@ import java.sql.SQLException;
  * @version $Revision$
  */
 public class LocalXAConnectionFactory implements XAConnectionFactory {
-    protected TransactionRegistry transactionRegistry; // TODO make private?
-    protected ConnectionFactory connectionFactory; // TODO make private?
+    private TransactionRegistry transactionRegistry;
+    private ConnectionFactory connectionFactory;
 
     /**
      * Creates an LocalXAConnectionFactory which uses the specified connection factory to create database
