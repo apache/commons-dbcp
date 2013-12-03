@@ -47,7 +47,7 @@ public class ManagedConnection extends DelegatingConnection {
     private TransactionContext transactionContext;
     private boolean isSharedConnection;
 
-    public ManagedConnection(ObjectPool<Connection> pool, 
+    public ManagedConnection(ObjectPool<Connection> pool,
             TransactionRegistry transactionRegistry,
             boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
@@ -160,8 +160,8 @@ public class ManagedConnection extends DelegatingConnection {
     }
 
     /**
-     * Delegates to {@link ManagedConnection#transactionComplete()} 
-     * for transaction completion events. 
+     * Delegates to {@link ManagedConnection#transactionComplete()}
+     * for transaction completion events.
      */
     protected class CompletionListener implements TransactionContextListener {
         @Override
@@ -175,34 +175,31 @@ public class ManagedConnection extends DelegatingConnection {
     protected void transactionComplete() {
         transactionContext = null;
 
-        // if we were using a shared connection, clear the reference now that the transaction has completed
+        // If we were using a shared connection, clear the reference now that
+        // the transaction has completed
         if (isSharedConnection) {
-            // for now, just set the delegate to null, it will be created later if needed
             setDelegate(null);
             isSharedConnection = false;
         }
 
-        // if this connection was closed during the transaction and there is still a delegate present close it
+        // If this connection was closed during the transaction and there is
+        // still a delegate present close it
         Connection delegate = getDelegateInternal();
         if (_closed && delegate != null) {
             try {
                 setDelegate(null);
 
-                // don't actually close the connection if in a transaction
                 if (!delegate.isClosed()) {
                     // don't use super.close() because it calls passivate() which marks the
                     // the connection as closed without returning it to the pool
                     delegate.close();
                 }
             } catch (SQLException ignored) {
-                // not a whole lot we can do here as connection is closed
+                // Not a whole lot we can do here as connection is closed
                 // and this is a transaction callback so there is no
                 // way to report the error
-            } finally {
-                _closed = true;
             }
         }
-
     }
 
     //
