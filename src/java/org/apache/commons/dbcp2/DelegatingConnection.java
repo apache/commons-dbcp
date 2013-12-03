@@ -36,6 +36,7 @@ import java.sql.Clob;
 import java.sql.NClob;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLXML;
+import java.sql.Savepoint;
 import java.sql.Struct;
 import java.util.Collections;
 import java.util.Properties;
@@ -328,13 +329,28 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
+
     @Override
-    public void clearWarnings() throws SQLException
-    { checkOpen(); try { _conn.clearWarnings(); } catch (SQLException e) { handleException(e); } }
+    public void clearWarnings() throws SQLException {
+        checkOpen();
+        try {
+            _conn.clearWarnings();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
     
     @Override
-    public void commit() throws SQLException
-    { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
+    public void commit() throws SQLException {
+        checkOpen();
+        try {
+            _conn.commit();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
     
     /**
      * Returns the state caching flag.
@@ -360,9 +376,18 @@ public class DelegatingConnection extends AbandonedTrace
         } 
     }
 
+
     @Override
-    public String getCatalog() throws SQLException
-    { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
+    public String getCatalog() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getCatalog();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
     
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
@@ -375,17 +400,42 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
     
+
     @Override
-    public int getTransactionIsolation() throws SQLException
-    { checkOpen(); try { return _conn.getTransactionIsolation(); } catch (SQLException e) { handleException(e); return -1; } }
-    
+    public int getTransactionIsolation() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getTransactionIsolation();
+        } catch (SQLException e) {
+            handleException(e);
+            return -1;
+        }
+    }
+
+
     @Override
-    public Map<String,Class<?>> getTypeMap() throws SQLException
-    { checkOpen(); try { return _conn.getTypeMap(); } catch (SQLException e) { handleException(e); return null; } }
-    
+    public Map<String,Class<?>> getTypeMap() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getTypeMap();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+
     @Override
-    public SQLWarning getWarnings() throws SQLException
-    { checkOpen(); try { return _conn.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
+    public SQLWarning getWarnings() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getWarnings();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
     
     @Override
     public boolean isReadOnly() throws SQLException {
@@ -402,13 +452,29 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
+
     @Override
-    public String nativeSQL(String sql) throws SQLException
-    { checkOpen(); try { return _conn.nativeSQL(sql); } catch (SQLException e) { handleException(e); return null; } }
-    
+    public String nativeSQL(String sql) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.nativeSQL(sql);
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+
     @Override
-    public void rollback() throws SQLException
-    { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
+    public void rollback() throws SQLException {
+        checkOpen();
+        try {
+            _conn.rollback();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
     
     /**
      * Sets the state caching flag.
@@ -463,13 +529,28 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    @Override
-    public void setTransactionIsolation(int level) throws SQLException
-    { checkOpen(); try { _conn.setTransactionIsolation(level); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void setTypeMap(Map<String,Class<?>> map) throws SQLException
-    { checkOpen(); try { _conn.setTypeMap(map); } catch (SQLException e) { handleException(e); } }
+    public void setTransactionIsolation(int level) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setTransactionIsolation(level);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    @Override
+    public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setTypeMap(map);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
 
     @Override
     public boolean isClosed() throws SQLException {
@@ -532,29 +613,76 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    @Override
-    public int getHoldability() throws SQLException
-    { checkOpen(); try { return _conn.getHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException
-    { checkOpen(); try { _conn.setHoldability(holdability); } catch (SQLException e) { handleException(e); } }
+    public int getHoldability() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getHoldability();
+        } catch (SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
 
     @Override
-    public java.sql.Savepoint setSavepoint() throws SQLException
-    { checkOpen(); try { return _conn.setSavepoint(); } catch (SQLException e) { handleException(e); return null; } }
+    public void setHoldability(int holdability) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setHoldability(holdability);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
 
     @Override
-    public java.sql.Savepoint setSavepoint(String name) throws SQLException
-    { checkOpen(); try { return _conn.setSavepoint(name); } catch (SQLException e) { handleException(e); return null; } }
+    public Savepoint setSavepoint() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.setSavepoint();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
 
     @Override
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException
-    { checkOpen(); try { _conn.rollback(savepoint); } catch (SQLException e) { handleException(e); } }
+    public Savepoint setSavepoint(String name) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.setSavepoint(name);
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
 
     @Override
-    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException
-    { checkOpen(); try { _conn.releaseSavepoint(savepoint); } catch (SQLException e) { handleException(e); } }
+    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
+        checkOpen();
+        try {
+            _conn.rollback(savepoint);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    @Override
+    public void releaseSavepoint(java.sql.Savepoint savepoint)
+            throws SQLException {
+        checkOpen();
+        try {
+            _conn.releaseSavepoint(savepoint);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
 
     @Override
     public Statement createStatement(int resultSetType,
