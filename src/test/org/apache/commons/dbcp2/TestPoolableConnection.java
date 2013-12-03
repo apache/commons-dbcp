@@ -106,7 +106,8 @@ public class TestPoolableConnection extends TestCase {
         outer.close();
         
         Assert.assertTrue(outer.isClosed());
-        Assert.assertFalse(conn.isClosed());
+        Assert.assertTrue(conn.isClosed());
         Assert.assertEquals(0, pool.getNumActive());
+        Assert.assertEquals(1, pool.getNumIdle());
     }
 }
