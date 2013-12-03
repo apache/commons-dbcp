@@ -22,6 +22,7 @@ import junit.framework.TestSuite;
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.TestConnectionPool;
@@ -53,8 +54,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    protected PoolingDataSource ds = null;
-    private GenericObjectPool pool = null;
+    protected PoolingDataSource<PoolableConnection> ds = null;
+    private GenericObjectPool<PoolableConnection> pool = null;
     protected TransactionManager transactionManager;
 
     @Override
@@ -81,13 +82,13 @@ public class TestManagedDataSource extends TestConnectionPool {
         factory.setDefaultAutoCommit(true);
 
         // create the pool
-        pool = new GenericObjectPool(factory);
+        pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
         pool.setMaxWaitMillis(getMaxWaitMillis());
 
         // finally create the datasource
-        ds = new ManagedDataSource(pool, xaConnectionFactory.getTransactionRegistry());
+        ds = new ManagedDataSource<>(pool, xaConnectionFactory.getTransactionRegistry());
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
