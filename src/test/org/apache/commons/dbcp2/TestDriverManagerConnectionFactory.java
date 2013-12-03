@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import junit.framework.TestSuite;
  * @version $Revision$ $Date$
  */
 public class TestDriverManagerConnectionFactory extends TestCase {
-    
+
     public TestDriverManagerConnectionFactory(String testName) {
         super(testName);
     }
@@ -60,15 +60,15 @@ public class TestDriverManagerConnectionFactory extends TestCase {
         poolableConnectionFactory.setDefaultReadOnly(false);
         poolableConnectionFactory.setDefaultAutoCommit(true);
 
-        GenericObjectPool connectionPool =
-            new GenericObjectPool(poolableConnectionFactory, config);
+        GenericObjectPool<PoolableConnection> connectionPool =
+                new GenericObjectPool<>(poolableConnectionFactory, config);
         poolableConnectionFactory.setPool(connectionPool);
-        PoolingDataSource dataSource =
-            new PoolingDataSource(connectionPool);
+        PoolingDataSource<PoolableConnection> dataSource =
+                new PoolingDataSource<>(connectionPool);
 
         ConnectionThread[] connectionThreads = new ConnectionThread[10];
         Thread[] threads = new Thread[10];
-        
+
         for (int i = 0; i < 10; i++) {
             connectionThreads[i] = new ConnectionThread(dataSource);
             threads[i] = new Thread(connectionThreads[i]);
@@ -85,11 +85,11 @@ public class TestDriverManagerConnectionFactory extends TestCase {
             }
         }
     }
-    
+
     private static final class ConnectionThread implements Runnable {
         private DataSource ds;
         private volatile boolean result = true;
-        
+
         private ConnectionThread(DataSource ds) {
             this.ds = ds;
         }
@@ -107,13 +107,13 @@ public class TestDriverManagerConnectionFactory extends TestCase {
                     try {
                         conn.close();
                     } catch (Exception e) {
-                        e.printStackTrace();                    
+                        e.printStackTrace();
                         result = false;
                     }
                 }
             }
         }
-        
+
         public boolean getResult() {
             return result;
         }

@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
@@ -155,14 +156,15 @@ public class PoolingDataSourceExample {
         // We'll use a GenericObjectPool instance, although
         // any ObjectPool implementation will suffice.
         //
-        ObjectPool connectionPool =
-            new GenericObjectPool(poolableConnectionFactory);
+        ObjectPool<PoolableConnection> connectionPool =
+                new GenericObjectPool<>(poolableConnectionFactory);
 
         //
         // Finally, we create the PoolingDriver itself,
         // passing in the object pool we created.
         //
-        PoolingDataSource dataSource = new PoolingDataSource(connectionPool);
+        PoolingDataSource<PoolableConnection> dataSource =
+                new PoolingDataSource<>(connectionPool);
 
         return dataSource;
     }

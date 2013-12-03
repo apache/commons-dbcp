@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
- * 
+ *
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
@@ -55,9 +55,9 @@ public class TestPStmtPooling extends TestCase {
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
-        ObjectPool<? extends Connection> connPool = new GenericObjectPool<>(pcf);
+        ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
-        DataSource ds = new PoolingDataSource((ObjectPool<Connection>) connPool);
+        DataSource ds = new PoolingDataSource<>(connPool);
 
         Connection conn = ds.getConnection();
         Statement stmt1 = conn.prepareStatement("select 1 from dual");
@@ -68,7 +68,7 @@ public class TestPStmtPooling extends TestCase {
         stmt2.close();
         assertSame(ustmt1, ustmt2);
     }
-    
+
     public void testCallableStatementPooling() throws Exception {
         new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -80,9 +80,9 @@ public class TestPStmtPooling extends TestCase {
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
 
-        ObjectPool connPool = new GenericObjectPool(pcf);
+        ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
-        DataSource ds = new PoolingDataSource(connPool);
+        DataSource ds = new PoolingDataSource<>(connPool);
 
         Connection conn = ds.getConnection();
         Statement stmt1 = conn.prepareStatement("select 1 from dual");
@@ -106,7 +106,7 @@ public class TestPStmtPooling extends TestCase {
         assertNotSame(ustmt1, ustmt3);
         assertNotSame(ustmt3, ucstmt1);
     }
-    
+
     public void testClosePool() throws Exception {
         new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -118,16 +118,16 @@ public class TestPStmtPooling extends TestCase {
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
 
-        ObjectPool connPool = new GenericObjectPool(pcf);
+        ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
-        DataSource ds = new PoolingDataSource(connPool);
-        ((PoolingDataSource) ds).setAccessToUnderlyingConnectionAllowed(true);
+        DataSource ds = new PoolingDataSource<>(connPool);
+        ((PoolingDataSource<?>) ds).setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn = ds.getConnection();
         conn.prepareStatement("select 1 from dual");
-        
+
         Connection poolableConnection = ((DelegatingConnection) conn).getDelegate();
-        Connection poolingConnection = 
+        Connection poolingConnection =
             ((DelegatingConnection) poolableConnection).getDelegate();
         poolingConnection.close();
         try {
@@ -135,6 +135,6 @@ public class TestPStmtPooling extends TestCase {
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
-        }     
+        }
     }
 }
