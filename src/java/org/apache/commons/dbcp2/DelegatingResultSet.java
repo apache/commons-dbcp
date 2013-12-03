@@ -207,7 +207,7 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
             ((DelegatingStatement)_stmt).handleException(e);
         }
         else if ((_conn != null) && (_conn instanceof DelegatingConnection)) {
-            ((DelegatingConnection)_conn).handleException(e);
+            ((DelegatingConnection<?>)_conn).handleException(e);
         }
         else {
             throw e;
