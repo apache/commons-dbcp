@@ -29,7 +29,7 @@ import java.sql.SQLException;
  * @author Dain Sundstrom
  * @version $Revision$
  */
-public class ManagedDataSource extends PoolingDataSource {
+public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C> {
     private TransactionRegistry transactionRegistry;
 
     /**
@@ -51,7 +51,7 @@ public class ManagedDataSource extends PoolingDataSource {
      * @param transactionRegistry the transaction registry obtained from the
      * XAConnectionFactory used to create the connection pool object factory
      */
-    public ManagedDataSource(ObjectPool<Connection> pool,
+    public ManagedDataSource(ObjectPool<C> pool,
             TransactionRegistry transactionRegistry) {
         super(pool);
         this.transactionRegistry = transactionRegistry;

@@ -40,7 +40,7 @@ import java.sql.SQLException;
  * @author Dain Sundstrom
  * @version $Revision$
  */
-public class ManagedConnection extends DelegatingConnection {
+public class ManagedConnection<C extends Connection> extends DelegatingConnection {
     private final ObjectPool<Connection> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;

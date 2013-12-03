@@ -230,7 +230,7 @@ public class BasicDataSource implements DataSource {
      * The instance of the JDBC Driver to use.
      */
     private Driver driver = null;
-    
+
     /**
      * Returns the JDBC Driver that has been configured for use by this pool.
      * <p>
@@ -238,13 +238,13 @@ public class BasicDataSource implements DataSource {
      * {@link #setDriver(Driver)}. It does not return any driver instance that
      * may have been created from the value set via
      * {@link #setDriverClassName(String)}.
-     * 
+     *
      * @return the JDBC Driver that has been configured for use by this pool
      */
     public synchronized Driver getDriver() {
         return driver;
     }
-    
+
     /**
      * Sets the JDBC Driver instance to use for this pool.
      * <p>
@@ -252,13 +252,13 @@ public class BasicDataSource implements DataSource {
      * initialized.  The pool is initialized the first time one of the
      * following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
-     * 
+     *
      * @param driver
      */
     public synchronized void setDriver(Driver driver) {
         this.driver = driver;
     }
-    
+
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
@@ -1201,7 +1201,7 @@ public class BasicDataSource implements DataSource {
     /**
      * The object pool that internally manages our connections.
      */
-    protected volatile GenericObjectPool<Connection> connectionPool = null;
+    protected volatile GenericObjectPool<PoolableConnection> connectionPool = null;
 
     /**
      * The connection properties that will be sent to our JDBC driver when
@@ -1518,7 +1518,7 @@ public class BasicDataSource implements DataSource {
         }
         return null;
     }
-    
+
     /**
      * Sets the log writer to be used by this configuration to log
      * information on abandoned objects.
@@ -1532,7 +1532,7 @@ public class BasicDataSource implements DataSource {
         abandonedConfig.setLogWriter(logWriter);
         this.restartNeeded = true;
     }
-    
+
     /**
      * If the connection pool implements {@link UsageTracking}, should the
      * connection pool record a stack trace every time a method is called on a
@@ -1547,7 +1547,7 @@ public class BasicDataSource implements DataSource {
         }
         return false;
     }
-    
+
     /**
      * If the connection pool implements {@link UsageTracking}, configure
      * whether the connection pool should record a stack trace every time a
@@ -1565,7 +1565,7 @@ public class BasicDataSource implements DataSource {
         abandonedConfig.setUseUsageTracking(usageTracking);
         this.restartNeeded = true;
     }
-    
+
     // --------------------------------------------------------- Public Methods
 
     /**
@@ -1882,15 +1882,15 @@ public class BasicDataSource implements DataSource {
      */
     protected void createConnectionPool(PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
-        GenericObjectPool gop;
+        GenericObjectPool<PoolableConnection> gop;
         if (abandonedConfig != null &&
                 (abandonedConfig.getRemoveAbandonedOnBorrow() ||
                  abandonedConfig.getRemoveAbandonedOnMaintenance())) {
-            gop = new GenericObjectPool(factory, new GenericObjectPoolConfig(),
+            gop = new GenericObjectPool<>(factory, new GenericObjectPoolConfig(),
                     abandonedConfig);
         }
         else {
-            gop = new GenericObjectPool(factory);
+            gop = new GenericObjectPool<>(factory);
         }
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
@@ -1939,7 +1939,7 @@ public class BasicDataSource implements DataSource {
      * @throws SQLException if unable to create a datasource instance
      */
     protected void createDataSourceInstance() throws SQLException {
-        PoolingDataSource pds = new PoolingDataSource(connectionPool);
+        PoolingDataSource<PoolableConnection> pds = new PoolingDataSource<>(connectionPool);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         pds.setLogWriter(logWriter);
         dataSource = pds;
