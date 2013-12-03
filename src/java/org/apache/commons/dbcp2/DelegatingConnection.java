@@ -242,6 +242,12 @@ public class DelegatingConnection extends AbandonedTrace
      */
     @Override
     public void close() throws SQLException {
+        if (!_closed) {
+            closeInternal();
+        }
+    }
+
+    protected final void closeInternal() throws SQLException {
         try {
             passivate();
         } finally {
@@ -252,7 +258,7 @@ public class DelegatingConnection extends AbandonedTrace
             }
         }
     }
-
+    
     protected void handleException(SQLException e) throws SQLException {
         throw e;
     }
