@@ -61,7 +61,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
      */
     public PoolablePreparedStatement(PreparedStatement stmt, K key,
             KeyedObjectPool<K, PoolablePreparedStatement<K,S>> pool,
-            DelegatingConnection conn) {
+            DelegatingConnection<?> conn) {
         super(conn, stmt);
         _pool = pool;
         _key = key;

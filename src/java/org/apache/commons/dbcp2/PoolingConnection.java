@@ -45,7 +45,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolingConnection extends DelegatingConnection
+public class PoolingConnection extends DelegatingConnection<Connection>
         implements KeyedPooledObjectFactory<PStmtKey,DelegatingPreparedStatement> {
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
