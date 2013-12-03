@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,7 +76,7 @@ public class TestPoolableConnection extends TestCase {
         // Now close our innermost delegate, simulating the case where the
         // underlying connection closes itself
         ((PoolableConnection)conn).getInnermostDelegate().close();
-        
+
         // At this point, we can close the pooled connection. The
         // PoolableConnection *should* realize that its underlying
         // connection is gone and invalidate itself. The pool should have no
@@ -89,22 +89,22 @@ public class TestPoolableConnection extends TestCase {
             // should *NOT* be returned to the pool
         }
 
-        assertEquals("The pool should have no active connections", 
+        assertEquals("The pool should have no active connections",
             0, pool.getNumActive());
     }
-    
+
     public void testClosingWrappedInDelegate() throws Exception {
         Assert.assertEquals(0, pool.getNumActive());
-        
+
         Connection conn = pool.borrowObject();
-        DelegatingConnection outer = new DelegatingConnection(conn);
-        
+        DelegatingConnection<Connection> outer = new DelegatingConnection<>(conn);
+
         Assert.assertFalse(outer.isClosed());
         Assert.assertFalse(conn.isClosed());
         Assert.assertEquals(1, pool.getNumActive());
 
         outer.close();
-        
+
         Assert.assertTrue(outer.isClosed());
         Assert.assertTrue(conn.isClosed());
         Assert.assertEquals(0, pool.getNumActive());

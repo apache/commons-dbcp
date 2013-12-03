@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class TestDelegatingConnection extends TestCase {
         return new TestSuite(TestDelegatingConnection.class);
     }
 
-    private DelegatingConnection conn = null;
+    private DelegatingConnection<? extends Connection> conn = null;
     private Connection delegateConn = null;
     private Connection delegateConn2 = null;
 
@@ -47,7 +47,7 @@ public class TestDelegatingConnection extends TestCase {
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateConn2 = new TesterConnection("test", "test");
-        conn = new DelegatingConnection(delegateConn);
+        conn = new DelegatingConnection<>(delegateConn);
     }
 
 
@@ -62,21 +62,21 @@ public class TestDelegatingConnection extends TestCase {
     }
 
     public void testHashCodeEqual() throws Exception {
-        DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
+        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn);
         assertEquals(conn.hashCode(), conn2.hashCode());
         conn2.close();
     }
 
     public void testHashCodeNotEqual() throws Exception {
-        DelegatingConnection conn2 = new DelegatingConnection(delegateConn2);
+        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn2);
         assertTrue(conn.hashCode() != conn2.hashCode());
         conn2.close();
     }
-    
+
     public void testEquals() {
-        DelegatingConnection conn2 = new DelegatingConnection(delegateConn);
-        DelegatingConnection conn3 = new DelegatingConnection(null);
-        
+        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn);
+        DelegatingConnection<Connection> conn3 = new DelegatingConnection<>(null);
+
         assertTrue(!conn.equals(null));
         assertTrue(conn.equals(conn2));
         assertTrue(!conn.equals(conn3));
@@ -84,9 +84,9 @@ public class TestDelegatingConnection extends TestCase {
         assertTrue(conn3.equals(conn3));
         assertTrue(conn.equals(conn));
         assertTrue(conn2.equals(conn2));
-        assertTrue(conn3.equals(new DelegatingConnection(null)));
+        assertTrue(conn3.equals(new DelegatingConnection<>(null)));
     }
-    
+
     public void testCheckOpen() throws Exception {
         conn.checkOpen();
         conn.close();
@@ -95,9 +95,9 @@ public class TestDelegatingConnection extends TestCase {
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             // expected
-        }      
+        }
     }
-    
+
     /**
      * Verify fix for DBCP-241
      */
@@ -111,8 +111,8 @@ public class TestDelegatingConnection extends TestCase {
         }
 
         try {
-            conn = new DelegatingConnection(null);
-            conn._closed = true;  
+            conn = new DelegatingConnection<>(null);
+            conn._closed = true;
             conn.checkOpen();
             fail("Expecting SQLException");
         } catch (SQLException ex) {
@@ -122,17 +122,17 @@ public class TestDelegatingConnection extends TestCase {
         try {
             PoolingConnection pc = new PoolingConnection(delegateConn2);
             pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
-            conn = new DelegatingConnection(pc);
+            conn = new DelegatingConnection<>(pc);
             pc.close();
             conn.close();
             conn.prepareStatement("");
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
-        }  
-        
+        }
+
         try {
-            conn = new DelegatingConnection(new RTEGeneratingConnection());
+            conn = new DelegatingConnection<>(new RTEGeneratingConnection());
             conn.close();
             conn.checkOpen();
             fail("Expecting SQLException");
@@ -140,7 +140,7 @@ public class TestDelegatingConnection extends TestCase {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
     }
-    
+
     /**
      * Delegate that will throw RTE on toString
      * Used to validate fix for DBCP-241
@@ -153,6 +153,6 @@ public class TestDelegatingConnection extends TestCase {
         public String toString() {
             throw new RuntimeException("bang!");
         }
-        
+
     }
 }

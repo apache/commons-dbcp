@@ -47,7 +47,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     public void testHashCode() throws Exception {
         // TODO reenable... hashcode doesn't work when accessToUnderlyingConnectionAllowed is false
     }
-    
+
     /**
      * JIRA: DBCP-294
      * Verify that PoolableConnections created by BasicManagedDataSource unregister themselves
@@ -60,11 +60,11 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
         basicManagedDataSource.setUsername("username");
         basicManagedDataSource.setPassword("password");
-        basicManagedDataSource.setMaxIdle(1); 
-        // Create two connections 
-        ManagedConnection conn = (ManagedConnection) basicManagedDataSource.getConnection();
+        basicManagedDataSource.setMaxIdle(1);
+        // Create two connections
+        ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
         assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
-        ManagedConnection conn2 = (ManagedConnection) basicManagedDataSource.getConnection();
+        ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
         conn2.close(); // Return one connection to the pool
         conn.close();  // No room at the inn - this will trigger reallyClose(), which should unregister
         try {
@@ -72,7 +72,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             fail("Expecting SQLException - XAResources orphaned");
         } catch (SQLException ex) {
             // expected
-        }     
+        }
         conn2.close();
         basicManagedDataSource.close();
     }

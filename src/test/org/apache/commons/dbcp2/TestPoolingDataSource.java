@@ -81,7 +81,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
             c[i] = newConnection();
         }
         // Close the delegate of one wrapper in the pool
-        ((DelegatingConnection) c[0]).getDelegate().close();
+        ((DelegatingConnection<?>) c[0]).getDelegate().close();
 
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent, so equal
@@ -129,10 +129,10 @@ public class TestPoolingDataSource extends TestConnectionPool {
 
     public void testestPoolGuardConnectionWrapperEqualInnermost() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        DelegatingConnection con = (DelegatingConnection) ds.getConnection();
+        DelegatingConnection<?> con = (DelegatingConnection<?>) ds.getConnection();
         Connection inner = con.getInnermostDelegate();
         ds.setAccessToUnderlyingConnectionAllowed(false);
-        DelegatingConnection con2 = new DelegatingConnection(inner);
+        DelegatingConnection<Connection> con2 = new DelegatingConnection<>(inner);
         assertTrue(con2.equals(con));
         assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
         assertTrue(con2.innermostDelegateEquals(inner));
