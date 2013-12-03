@@ -60,7 +60,7 @@ public class PoolableConnection extends DelegatingConnection {
 
         boolean isUnderlyingConectionClosed;
         try {
-            isUnderlyingConectionClosed = _conn.isClosed();
+            isUnderlyingConectionClosed = getDelegateInternal().isClosed();
         } catch (SQLException e) {
             try {
                 _pool.invalidateObject(this); // XXX should be guarded to happen at most once
