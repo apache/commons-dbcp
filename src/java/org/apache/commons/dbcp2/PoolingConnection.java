@@ -32,8 +32,9 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
  * <p>
- * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than creating a new PreparedStatement
- * each time, may actually pull the statement from a pool of unused statements.
+ * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than
+ * creating a new PreparedStatement each time, may actually pull the statement
+ * from a pool of unused statements.
  * The {@link PreparedStatement#close} method of the returned statement doesn't
  * actually close the statement, but rather returns it to the pool.
  * (See {@link PoolablePreparedStatement}, {@link PoolableCallableStatement}.)
@@ -73,23 +74,31 @@ public class PoolingConnection extends DelegatingConnection
 
 
     /**
-     * Close and free all {@link PreparedStatement}s or {@link CallableStatement} from the pool, and
-     * close the underlying connection.
+     * Close and free all {@link PreparedStatement}s or
+     * {@link CallableStatement}s from the pool, and close the underlying
+     * connection.
      */
     @Override
     public synchronized void close() throws SQLException {
-        if(null != _pstmtPool) {
-            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> oldpool = _pstmtPool;
-            _pstmtPool = null;
+        try {
+            if (null != _pstmtPool) {
+                KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> oldpool = _pstmtPool;
+                _pstmtPool = null;
+                try {
+                    oldpool.close();
+                } catch(RuntimeException e) {
+                    throw e;
+                } catch(Exception e) {
+                    throw (SQLException) new SQLException("Cannot close connection").initCause(e);
+                }
+            }
+        } finally {
             try {
-                oldpool.close();
-            } catch(RuntimeException e) {
-                throw e;
-            } catch(Exception e) {
-                throw (SQLException) new SQLException("Cannot close connection").initCause(e);
+                getDelegateInternal().close();
+            } finally {
+                _closed = true;
             }
         }
-        getInnermostDelegate().close();
     }
 
     /**

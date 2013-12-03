@@ -74,9 +74,12 @@ class ConnectionImpl extends DelegatingConnection {
     @Override
     public void close() throws SQLException {
         if (!_closed) {
-            _closed = true;
-            passivate();
-            pooledConnection.notifyListeners();
+            try {
+                passivate();
+            } finally {
+                _closed = true;
+                pooledConnection.notifyListeners();
+            }
         }
     }
 

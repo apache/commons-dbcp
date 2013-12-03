@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
@@ -26,6 +25,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.junit.Assert;
 
 /**
  * @author James Ring
@@ -91,5 +91,22 @@ public class TestPoolableConnection extends TestCase {
 
         assertEquals("The pool should have no active connections", 
             0, pool.getNumActive());
+    }
+    
+    public void testClosingWrappedInDelegate() throws Exception {
+        Assert.assertEquals(0, pool.getNumActive());
+        
+        Connection conn = pool.borrowObject();
+        DelegatingConnection outer = new DelegatingConnection(conn);
+        
+        Assert.assertFalse(outer.isClosed());
+        Assert.assertFalse(conn.isClosed());
+        Assert.assertEquals(1, pool.getNumActive());
+
+        outer.close();
+        
+        Assert.assertTrue(outer.isClosed());
+        Assert.assertFalse(conn.isClosed());
+        Assert.assertEquals(0, pool.getNumActive());
     }
 }

@@ -142,10 +142,7 @@ public class DelegatingConnection extends AbandonedTrace
         return getDelegateInternal();
     }
     
-    /**
-     * Should be final but can't be for compatibility with previous releases.
-     */
-    protected Connection getDelegateInternal() {
+    protected final Connection getDelegateInternal() {
         return _conn;
     }
     
@@ -234,13 +231,26 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     /**
-     * Closes the underlying connection, and close
-     * any Statements that were not explicitly closed.
+     * Closes the underlying connection, and close any Statements that were not
+     * explicitly closed. Sub-classes that override this method must:
+     * <ol>
+     * <li>Call passivate()</li>
+     * <li>Call close (or the equivalent appropriate action) on the wrapped
+     *     connection</li>
+     * <li>Set _closed to <code>false</code></li>
+     * </ol>
      */
     @Override
     public void close() throws SQLException {
-        passivate();
-        _conn.close();
+        try {
+            passivate();
+        } finally {
+            try {
+                _conn.close();
+            } finally {
+                _closed = true;
+            }
+        }
     }
 
     protected void handleException(SQLException e) throws SQLException {
@@ -584,33 +594,25 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     protected void passivate() throws SQLException {
-        try {
-            // The JDBC spec requires that a Connection close any open
-            // Statement's when it is closed.
-            // DBCP-288. Not all the traced objects will be statements
-            List<AbandonedTrace> traces = getTrace();
-            if(traces != null) {
-                Iterator<AbandonedTrace> traceIter = traces.iterator();
-                while (traceIter.hasNext()) {
-                    Object trace = traceIter.next();
-                    if (trace instanceof Statement) {
-                        ((Statement) trace).close();
-                    } else if (trace instanceof ResultSet) {
-                        // DBCP-265: Need to close the result sets that are
-                        // generated via DatabaseMetaData
-                        ((ResultSet) trace).close();
-                    }
+        // The JDBC spec requires that a Connection close any open
+        // Statement's when it is closed.
+        // DBCP-288. Not all the traced objects will be statements
+        List<AbandonedTrace> traces = getTrace();
+        if(traces != null) {
+            Iterator<AbandonedTrace> traceIter = traces.iterator();
+            while (traceIter.hasNext()) {
+                Object trace = traceIter.next();
+                if (trace instanceof Statement) {
+                    ((Statement) trace).close();
+                } else if (trace instanceof ResultSet) {
+                    // DBCP-265: Need to close the result sets that are
+                    // generated via DatabaseMetaData
+                    ((ResultSet) trace).close();
                 }
-                clearTrace();
             }
-            setLastUsed(0);
-            if(_conn instanceof DelegatingConnection) {
-                ((DelegatingConnection)_conn).passivate();
-            }
+            clearTrace();
         }
-        finally {
-            _closed = true;
-        }
+        setLastUsed(0);
     }
 
 
