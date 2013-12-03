@@ -40,7 +40,7 @@ public class TestPoolableConnection extends TestCase {
         return new TestSuite(TestPoolableConnection.class);
     }
 
-    private ObjectPool pool = null;
+    private ObjectPool<PoolableConnection> pool = null;
 
     @Override
     public void setUp() throws Exception {
@@ -50,13 +50,13 @@ public class TestPoolableConnection extends TestCase {
         factory.setDefaultAutoCommit(true);
         factory.setDefaultReadOnly(true);
 
-        pool = new GenericObjectPool(factory);
+        pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
     }
 
     public void testConnectionPool() throws Exception {
         // Grab a new connection from the pool
-        Connection c = (Connection)pool.borrowObject();
+        Connection c = pool.borrowObject();
 
         assertNotNull("Connection should be created and should not be null", c);
         assertEquals("There should be exactly one active object in the pool", 1, pool.getNumActive());
@@ -71,7 +71,7 @@ public class TestPoolableConnection extends TestCase {
     // delegated connection closes itself.
     public void testPoolableConnectionLeak() throws Exception {
         // 'Borrow' a connection from the pool
-        Connection conn = (Connection)pool.borrowObject();
+        Connection conn = pool.borrowObject();
 
         // Now close our innermost delegate, simulating the case where the
         // underlying connection closes itself
