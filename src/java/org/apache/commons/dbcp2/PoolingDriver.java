@@ -50,7 +50,7 @@ public class PoolingDriver implements Driver {
     }
 
     /** The map of registered pools. */
-    protected static final HashMap<String,ObjectPool<Connection>> _pools =
+    protected static final HashMap<String,ObjectPool<? extends Connection>> _pools =
             new HashMap<>();
 
     /** Controls access to the underlying connection */
@@ -66,8 +66,8 @@ public class PoolingDriver implements Driver {
     protected PoolingDriver(boolean accessToUnderlyingConnectionAllowed) {
         this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
     }
-    
-    
+
+
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
      *
@@ -77,9 +77,9 @@ public class PoolingDriver implements Driver {
         return accessToUnderlyingConnectionAllowed;
     }
 
-    public synchronized ObjectPool<Connection> getConnectionPool(String name)
+    public synchronized ObjectPool<? extends Connection> getConnectionPool(String name)
             throws SQLException {
-        ObjectPool<Connection> pool = _pools.get(name);
+        ObjectPool<? extends Connection> pool = _pools.get(name);
         if (null == pool) {
             throw new SQLException("Pool not registered.");
         }
@@ -87,12 +87,12 @@ public class PoolingDriver implements Driver {
     }
 
     public synchronized void registerPool(String name,
-            ObjectPool<Connection> pool) {
+            ObjectPool<? extends Connection> pool) {
         _pools.put(name,pool);
     }
 
     public synchronized void closePool(String name) throws SQLException {
-        ObjectPool<Connection> pool = _pools.get(name);
+        ObjectPool<? extends Connection> pool = _pools.get(name);
         if (pool != null) {
             _pools.remove(name);
             try {
@@ -121,17 +121,17 @@ public class PoolingDriver implements Driver {
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
         if(acceptsURL(url)) {
-            ObjectPool<Connection> pool =
+            ObjectPool<? extends Connection> pool =
                 getConnectionPool(url.substring(URL_PREFIX_LEN));
             if(null == pool) {
                 throw new SQLException("No pool found for " + url + ".");
             } else {
                 try {
                     Connection conn = pool.borrowObject();
-                    if (conn != null) {
-                        conn = new PoolGuardConnectionWrapper(pool, conn);
+                    if (conn == null) {
+                        return null;
                     }
-                    return conn;
+                    return new PoolGuardConnectionWrapper(pool, conn);
                 } catch(SQLException e) {
                     throw e;
                 } catch(NoSuchElementException e) {
@@ -164,7 +164,8 @@ public class PoolingDriver implements Driver {
     public void invalidateConnection(Connection conn) throws SQLException {
         if (conn instanceof PoolGuardConnectionWrapper) { // normal case
             PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
-            ObjectPool<Connection> pool = pgconn.pool;
+            @SuppressWarnings("unchecked")
+            ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
             try {
                 pool.invalidateObject(pgconn.getDelegateInternal());
             }
@@ -208,11 +209,11 @@ public class PoolingDriver implements Driver {
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
      */
-    private class PoolGuardConnectionWrapper extends DelegatingConnection {
+    private class PoolGuardConnectionWrapper extends DelegatingConnection<Connection> {
 
-        private final ObjectPool<Connection> pool;
+        private final ObjectPool<? extends Connection> pool;
 
-        PoolGuardConnectionWrapper(ObjectPool<Connection> pool,
+        PoolGuardConnectionWrapper(ObjectPool<? extends Connection> pool,
                 Connection delegate) {
             super(delegate);
             this.pool = pool;
