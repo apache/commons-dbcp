@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import java.sql.SQLException;
 
 /**
  * <p>A base delegating implementation of {@link DatabaseMetaData}.</p>
- * 
+ *
  * <p>Methods that create {@link ResultSet} objects are wrapped to
  * create {@link DelegatingResultSet} objects and the remaining methods
  * simply call the corresponding method on the "delegate"
@@ -37,11 +37,11 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
     protected DatabaseMetaData _meta; // TODO make final and private?
-    
-    /** The connection that created me. **/
-    protected DelegatingConnection _conn = null; // TODO make final and private?
 
-    public DelegatingDatabaseMetaData(DelegatingConnection c,
+    /** The connection that created me. **/
+    protected DelegatingConnection<?> _conn = null; // TODO make final and private?
+
+    public DelegatingDatabaseMetaData(DelegatingConnection<?> c,
             DatabaseMetaData m) {
         super();
         _conn = c;
@@ -102,7 +102,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
         return m;
     }
-    
+
     protected void handleException(SQLException e) throws SQLException {
         if (_conn != null) {
             _conn.handleException(e);
@@ -1300,7 +1300,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
             return _meta.unwrap(iface);
         }
     }
-    
+
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         { try { return _meta.getRowIdLifetime(); }

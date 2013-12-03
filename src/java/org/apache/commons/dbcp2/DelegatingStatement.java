@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
     protected Statement _stmt = null;
     /** The connection that created me. **/
-    protected DelegatingConnection _conn = null;
+    protected DelegatingConnection<?> _conn = null;
 
     /**
      * Create a wrapper for the Statement which traces this
@@ -57,7 +57,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * @param s the {@link Statement} to delegate all calls to.
      * @param c the {@link DelegatingConnection} that created this statement.
      */
-    public DelegatingStatement(DelegatingConnection c, Statement s) {
+    public DelegatingStatement(DelegatingConnection<?> c, Statement s) {
         super(c);
         _stmt = s;
         _conn = c;
@@ -73,14 +73,14 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * <p>This method considers two objects to be equal 
+     * <p>This method considers two objects to be equal
      * if the underlying jdbc objects are equal.</p>
-     * 
-     * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's 
+     *
+     * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's
      * {@link #getInnermostDelegate() innermostDelegate} is compared with
      * the innermost delegate of obj; otherwise obj itself is compared with the
      * the Statement returned by {@link #getInnermostDelegate()}.</p>
-     * 
+     *
      */
     @Override
     public boolean equals(Object obj) {
@@ -106,7 +106,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
         return obj.hashCode();
     }
-    
+
     /**
      * If my underlying {@link Statement} is not a
      * <tt>DelegatingStatement</tt>, returns it,
@@ -144,7 +144,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
             throw new SQLException
-                (this.getClass().getName() + " with address: \"" + 
+                (this.getClass().getName() + " with address: \"" +
                 this.toString() + "\" is closed.");
         }
     }
@@ -161,7 +161,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     _conn.removeTrace(this);
                     _conn = null;
                 }
-        
+
                 // The JDBC spec requires that a statment close any open
                 // ResultSet's when it is closed.
                 // FIXME The PreparedStatement we're wrapping should handle this for us.
@@ -174,7 +174,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     }
                     clearTrace();
                 }
-        
+
                 if (_stmt != null) {
                 	_stmt.close();
                 }
