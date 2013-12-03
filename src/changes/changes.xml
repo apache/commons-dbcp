@@ -44,6 +44,10 @@ The <action> type attribute can be add,update,fix,remove.
         PoolableConnectionFactory.passivateObject() as it could be an expensive
         call.
       </action>
+      <action dev="markt" issue="DBCP-392" type="fix">
+        Use one line per statement for methods with multiple statements rather
+        than using a single line.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
