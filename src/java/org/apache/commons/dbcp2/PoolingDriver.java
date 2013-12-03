@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.CallableStatement;
@@ -61,29 +60,27 @@ public class PoolingDriver implements Driver {
             new HashMap<>();
 
     /** Controls access to the underlying connection */
-    private static boolean accessToUnderlyingConnectionAllowed = false;
+    private final boolean accessToUnderlyingConnectionAllowed;
 
     public PoolingDriver() {
+        this(true);
     }
 
+    /**
+     * For unit testing purposes.
+     */
+    protected PoolingDriver(boolean accessToUnderlyingConnectionAllowed) {
+        this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+    }
+    
+    
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
      *
      * @return true if access to the underlying is allowed, false otherwise.
      */
-    public static synchronized boolean isAccessToUnderlyingConnectionAllowed() {
+    protected boolean isAccessToUnderlyingConnectionAllowed() {
         return accessToUnderlyingConnectionAllowed;
-    }
-
-    /**
-     * Sets the value of the accessToUnderlyingConnectionAllowed property.
-     * It controls if the PoolGuard allows access to the underlying connection.
-     * (Default: false)
-     *
-     * @param allow Access to the underlying connection is granted when true.
-     */
-    public static synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
-        accessToUnderlyingConnectionAllowed = allow;
     }
 
     public synchronized ObjectPool<Connection> getConnectionPool(String name)
@@ -219,7 +216,7 @@ public class PoolingDriver implements Driver {
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
      */
-    static private class PoolGuardConnectionWrapper extends DelegatingConnection {
+    private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
         private final ObjectPool<Connection> pool;
         private Connection delegate;

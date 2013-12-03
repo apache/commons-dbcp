@@ -80,9 +80,8 @@ public class TestPoolingDriver extends TestConnectionPool {
         pcf.setPool(pool);
 
         assertNotNull(pcf);
-        driver = new PoolingDriver();
+        driver = new PoolingDriver(true);
         driver.registerPool("test",pool);
-        PoolingDriver.setAccessToUnderlyingConnectionAllowed(true);
     }
 
     @Override
