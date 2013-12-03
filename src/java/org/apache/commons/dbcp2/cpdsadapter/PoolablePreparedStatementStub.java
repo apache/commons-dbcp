@@ -37,7 +37,7 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement<PStmtKeyCP
     /**
      * Constructor
      * @param stmt my underlying {@link PreparedStatement}
-     * @param key my key" as used by {@link KeyedObjectPool}
+     * @param key my key as used by {@link KeyedObjectPool}
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
      * @param conn the {@link Connection} from which I was created
      */
