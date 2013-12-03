@@ -57,7 +57,7 @@ class PooledConnectionImpl implements PooledConnection,
     /**
      * A DelegatingConnection used to create a PoolablePreparedStatementStub
      */
-    private final DelegatingConnection delegatingConnection;
+    private final DelegatingConnection<?> delegatingConnection;
 
     /**
      * The JDBC database logical connection.
@@ -96,9 +96,9 @@ class PooledConnectionImpl implements PooledConnection,
     PooledConnectionImpl(Connection connection) {
         this.connection = connection;
         if (connection instanceof DelegatingConnection) {
-            this.delegatingConnection = (DelegatingConnection) connection;
+            this.delegatingConnection = (DelegatingConnection<?>) connection;
         } else {
-            this.delegatingConnection = new DelegatingConnection(connection);
+            this.delegatingConnection = new DelegatingConnection<>(connection);
         }
         eventListeners = new Vector<>();
         isClosed = false;

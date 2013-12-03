@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,20 +26,20 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 
 /**
  * This class is the <code>Connection</code> that will be returned
- * from <code>PooledConnectionImpl.getConnection()</code>.  
- * Most methods are wrappers around the jdbc 1.x <code>Connection</code>.  
+ * from <code>PooledConnectionImpl.getConnection()</code>.
+ * Most methods are wrappers around the jdbc 1.x <code>Connection</code>.
  * A few exceptions include preparedStatement and close.
  * In accordance with the jdbc specification this Connection cannot
  * be used after closed() is called.  Any further usage will result in an
  * SQLException.
- * 
+ *
  * ConnectionImpl extends DelegatingConnection to enable access to the
  * underlying connection.
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
  */
-class ConnectionImpl extends DelegatingConnection {
+class ConnectionImpl extends DelegatingConnection<Connection> {
 
     private final boolean accessToUnderlyingConnectionAllowed;
 
@@ -47,13 +47,13 @@ class ConnectionImpl extends DelegatingConnection {
      private final PooledConnectionImpl pooledConnection;
 
     /**
-     * Creates a <code>ConnectionImpl</code>. 
+     * Creates a <code>ConnectionImpl</code>.
      *
      * @param pooledConnection The PooledConnection that is calling the ctor.
      * @param connection The JDBC 1.x Connection to wrap.
      * @param accessToUnderlyingConnectionAllowed if true, then access is allowed to the underlying connectiion
      */
-    ConnectionImpl(PooledConnectionImpl pooledConnection, 
+    ConnectionImpl(PooledConnectionImpl pooledConnection,
             Connection connection,
             boolean accessToUnderlyingConnectionAllowed) {
         super(connection);
@@ -115,8 +115,8 @@ class ConnectionImpl extends DelegatingConnection {
      * in the wrapped connection.
      */
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType, 
-                                              int resultSetConcurrency) 
+    public PreparedStatement prepareStatement(String sql, int resultSetType,
+                                              int resultSetConcurrency)
             throws SQLException {
         checkOpen();
         try {
