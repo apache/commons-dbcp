@@ -48,6 +48,9 @@ The <action> type attribute can be add,update,fix,remove.
         Use one line per statement for methods with multiple statements rather
         than using a single line.
       </action>
+      <action dev="markt" issue="DBCP-396" type="fix">
+        Expose all of the AbandonedConfig properties through a BasicDataSource.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">

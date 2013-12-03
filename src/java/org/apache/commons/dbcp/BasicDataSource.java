@@ -1351,6 +1351,31 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
+    /**
+     * Gets the log writer to be used by this configuration to log
+     * information on abandoned objects.
+     */
+    public PrintWriter getAbandonedLogWriter() {
+        if (abandonedConfig != null) {
+            return abandonedConfig.getLogWriter();
+        }
+        return null;
+    }
+
+    /**
+     * Sets the log writer to be used by this configuration to log
+     * information on abandoned objects.
+     *
+     * @param logWriter The new log writer
+     */
+    public void setAbandonedLogWriter(PrintWriter logWriter) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setLogWriter(logWriter);
+    }
+
+
     // --------------------------------------------------------- Public Methods
 
     /**
