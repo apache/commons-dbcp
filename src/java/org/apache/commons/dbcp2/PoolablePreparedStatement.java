@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,12 +61,12 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
      */
     public PoolablePreparedStatement(PreparedStatement stmt, K key,
             KeyedObjectPool<K, PoolablePreparedStatement<K,S>> pool,
-            Connection conn) {
-        super((DelegatingConnection) conn, stmt);
+            DelegatingConnection conn) {
+        super(conn, stmt);
         _pool = pool;
         _key = key;
 
-        // Remove from trace now because this statement will be 
+        // Remove from trace now because this statement will be
         // added by the activate method.
         if(_conn != null) {
             _conn.removeTrace(this);
@@ -109,7 +109,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
             }
         }
     }
-    
+
     @Override
     public void activate() throws SQLException{
         _closed = false;
@@ -118,7 +118,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
         }
         super.activate();
     }
-  
+
     @Override
     public void passivate() throws SQLException {
         _closed = true;
@@ -141,7 +141,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
         if (batchAdded) {
             clearBatch();
         }
-        
+
         super.passivate();
     }
 
