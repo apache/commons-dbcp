@@ -36,6 +36,7 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.UsageTracking;
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -1507,6 +1508,64 @@ public class BasicDataSource implements DataSource {
         this.restartNeeded = true;
     }
 
+    /**
+     * Gets the log writer to be used by this configuration to log
+     * information on abandoned objects.
+     */
+    public PrintWriter getAbandonedLogWriter() {
+        if (abandonedConfig != null) {
+            return abandonedConfig.getLogWriter();
+        }
+        return null;
+    }
+    
+    /**
+     * Sets the log writer to be used by this configuration to log
+     * information on abandoned objects.
+     *
+     * @param logWriter The new log writer
+     */
+    public void setAbandonedLogWriter(PrintWriter logWriter) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setLogWriter(logWriter);
+        this.restartNeeded = true;
+    }
+    
+    /**
+     * If the connection pool implements {@link UsageTracking}, should the
+     * connection pool record a stack trace every time a method is called on a
+     * pooled connection and retain the most recent stack trace to aid debugging
+     * of abandoned connections?
+     *
+     * @return <code>true</code> if usage tracking is enabled
+     */
+    public boolean getAbandonedUsageTracking() {
+        if (abandonedConfig != null) {
+            return abandonedConfig.getUseUsageTracking();
+        }
+        return false;
+    }
+    
+    /**
+     * If the connection pool implements {@link UsageTracking}, configure
+     * whether the connection pool should record a stack trace every time a
+     * method is called on a pooled connection and retain the most recent stack
+     * trace to aid debugging of abandoned connections.
+     *
+     * @param   usageTracking    A value of <code>true</code> will enable
+     *                              the recording of a stack trace on every use
+     *                              of a pooled connection
+     */
+    public void setAbandonedUsageTracking(boolean usageTracking) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        abandonedConfig.setUseUsageTracking(usageTracking);
+        this.restartNeeded = true;
+    }
+    
     // --------------------------------------------------------- Public Methods
 
     /**
