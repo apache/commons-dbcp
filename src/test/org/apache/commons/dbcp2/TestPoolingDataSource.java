@@ -44,8 +44,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    protected PoolingDataSource ds = null;
-    private GenericObjectPool pool = null;
+    protected PoolingDataSource<PoolableConnection> ds = null;
+    private GenericObjectPool<PoolableConnection> pool = null;
 
     @Override
     public void setUp() throws Exception {
@@ -60,11 +60,11 @@ public class TestPoolingDataSource extends TestConnectionPool {
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
         factory.setDefaultReadOnly(true);
         factory.setDefaultAutoCommit(true);
-        pool = new GenericObjectPool(factory);
+        pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
         pool.setMaxWaitMillis(getMaxWaitMillis());
-        ds = new PoolingDataSource(pool);
+        ds = new PoolingDataSource<>(pool);
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
