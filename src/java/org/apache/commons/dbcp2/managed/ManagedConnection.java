@@ -148,10 +148,10 @@ public class ManagedConnection extends DelegatingConnection {
     public void close() throws SQLException {
         if (!_closed) {
             try {
-                // don't actually close the connection if in a transaction
-                // the connection will be closed by the transactionComplete method
+                // Don't actually close the connection if in a transaction. The
+                // connection will be closed by the transactionComplete method.
                 if (transactionContext == null) {
-                    getDelegateInternal().close();
+                    super.close();
                 }
             } finally {
                 _closed = true;
@@ -190,14 +190,12 @@ public class ManagedConnection extends DelegatingConnection {
                 setDelegate(null);
 
                 if (!delegate.isClosed()) {
-                    // don't use super.close() because it calls passivate() which marks the
-                    // the connection as closed without returning it to the pool
-                    delegate.close();
+                    super.close();
                 }
             } catch (SQLException ignored) {
                 // Not a whole lot we can do here as connection is closed
                 // and this is a transaction callback so there is no
-                // way to report the error
+                // way to report the error.
             }
         }
     }
