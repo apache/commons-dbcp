@@ -16,19 +16,13 @@
  */
 package org.apache.commons.dbcp2;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
@@ -171,13 +165,11 @@ public class PoolingDriver implements Driver {
         if (conn instanceof PoolGuardConnectionWrapper) { // normal case
             PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
             ObjectPool<Connection> pool = pgconn.pool;
-            Connection delegate = pgconn.delegate;
             try {
-                pool.invalidateObject(delegate);
+                pool.invalidateObject(pgconn.getDelegateInternal());
             }
             catch (Exception e) {
             }
-            pgconn.delegate = null;
         }
         else {
             throw new SQLException("Invalid connection class");
@@ -219,266 +211,11 @@ public class PoolingDriver implements Driver {
     private class PoolGuardConnectionWrapper extends DelegatingConnection {
 
         private final ObjectPool<Connection> pool;
-        private Connection delegate;
 
         PoolGuardConnectionWrapper(ObjectPool<Connection> pool,
                 Connection delegate) {
             super(delegate);
             this.pool = pool;
-            this.delegate = delegate;
-        }
-
-        @Override
-        protected void checkOpen() throws SQLException {
-            if(delegate == null) {
-                throw new SQLException("Connection is closed.");
-            }
-        }
-
-        @Override
-        public void close() throws SQLException {
-            if (delegate != null) {
-                this.delegate.close();
-                this.delegate = null;
-                super.setDelegate(null);
-            }
-        }
-
-        @Override
-        public boolean isClosed() throws SQLException {
-            if (delegate == null) {
-                return true;
-            }
-            return delegate.isClosed();
-        }
-
-        @Override
-        public void clearWarnings() throws SQLException {
-            checkOpen();
-            delegate.clearWarnings();
-        }
-
-        @Override
-        public void commit() throws SQLException {
-            checkOpen();
-            delegate.commit();
-        }
-
-        @Override
-        public Statement createStatement() throws SQLException {
-            checkOpen();
-            return new DelegatingStatement(this, delegate.createStatement());
-        }
-
-        @Override
-        public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-            checkOpen();
-            return new DelegatingStatement(this, delegate.createStatement(resultSetType, resultSetConcurrency));
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (delegate == null){
-                return false;
-            }
-            return delegate.equals(obj);
-        }
-
-        @Override
-        public boolean getAutoCommit() throws SQLException {
-            checkOpen();
-            return delegate.getAutoCommit();
-        }
-
-        @Override
-        public String getCatalog() throws SQLException {
-            checkOpen();
-            return delegate.getCatalog();
-        }
-
-        @Override
-        public DatabaseMetaData getMetaData() throws SQLException {
-            checkOpen();
-            return delegate.getMetaData();
-        }
-
-        @Override
-        public int getTransactionIsolation() throws SQLException {
-            checkOpen();
-            return delegate.getTransactionIsolation();
-        }
-
-        @Override
-        public Map<String,Class<?>> getTypeMap() throws SQLException {
-            checkOpen();
-            return delegate.getTypeMap();
-        }
-
-        @Override
-        public SQLWarning getWarnings() throws SQLException {
-            checkOpen();
-            return delegate.getWarnings();
-        }
-
-        @Override
-        public int hashCode() {
-            if (delegate == null){
-                return 0;
-            }
-            return delegate.hashCode();
-        }
-
-        @Override
-        public boolean isReadOnly() throws SQLException {
-            checkOpen();
-            return delegate.isReadOnly();
-        }
-
-        @Override
-        public String nativeSQL(String sql) throws SQLException {
-            checkOpen();
-            return delegate.nativeSQL(sql);
-        }
-
-        @Override
-        public CallableStatement prepareCall(String sql) throws SQLException {
-            checkOpen();
-            return new DelegatingCallableStatement(this, delegate.prepareCall(sql));
-        }
-
-        @Override
-        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-            checkOpen();
-            return new DelegatingCallableStatement(this, delegate.prepareCall(sql, resultSetType, resultSetConcurrency));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, resultSetType, resultSetConcurrency));
-        }
-
-        @Override
-        public void rollback() throws SQLException {
-            checkOpen();
-            delegate.rollback();
-        }
-
-        @Override
-        public void setAutoCommit(boolean autoCommit) throws SQLException {
-            checkOpen();
-            delegate.setAutoCommit(autoCommit);
-        }
-
-        @Override
-        public void setCatalog(String catalog) throws SQLException {
-            checkOpen();
-            delegate.setCatalog(catalog);
-        }
-
-        @Override
-        public void setReadOnly(boolean readOnly) throws SQLException {
-            checkOpen();
-            delegate.setReadOnly(readOnly);
-        }
-
-        @Override
-        public void setTransactionIsolation(int level) throws SQLException {
-            checkOpen();
-            delegate.setTransactionIsolation(level);
-        }
-
-        @Override
-        public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
-            checkOpen();
-            delegate.setTypeMap(map);
-        }
-
-        @Override
-        public String toString() {
-            if (delegate == null){
-                return "NULL";
-            }
-            return delegate.toString();
-        }
-
-        @Override
-        public int getHoldability() throws SQLException {
-            checkOpen();
-            return delegate.getHoldability();
-        }
-
-        @Override
-        public void setHoldability(int holdability) throws SQLException {
-            checkOpen();
-            delegate.setHoldability(holdability);
-        }
-
-        @Override
-        public java.sql.Savepoint setSavepoint() throws SQLException {
-            checkOpen();
-            return delegate.setSavepoint();
-        }
-
-        @Override
-        public java.sql.Savepoint setSavepoint(String name) throws SQLException {
-            checkOpen();
-            return delegate.setSavepoint(name);
-        }
-
-        @Override
-        public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException {
-            checkOpen();
-            delegate.releaseSavepoint(savepoint);
-        }
-
-        @Override
-        public void rollback(java.sql.Savepoint savepoint) throws SQLException {
-            checkOpen();
-            delegate.rollback(savepoint);
-        }
-
-        @Override
-        public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-            checkOpen();
-            return new DelegatingStatement(this, delegate.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
-        }
-
-        @Override
-        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-            checkOpen();
-            return new DelegatingCallableStatement(this, delegate.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, autoGeneratedKeys));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, columnIndexes));
-        }
-
-        @Override
-        public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-            checkOpen();
-            return new DelegatingPreparedStatement(this, delegate.prepareStatement(sql, columnNames));
         }
 
         /**
