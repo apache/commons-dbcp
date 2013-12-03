@@ -78,6 +78,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-143" type="update">
         Remove deprecated SQLNestedException. 
       </action>
+      <action dev="markt" issue="DBCP-384" type="fix">
+        Fix threading issues with accessToUnderlyingConnectionAllowed attribute
+        of PoolingDriver which is used to support unit testing.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-405" type="fix">
