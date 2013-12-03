@@ -96,8 +96,9 @@ public class TestPoolingDriver extends TestConnectionPool {
             new PoolableConnectionFactory(connectionFactory);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
-        GenericObjectPool connectionPool = new GenericObjectPool(pcf);
-        new PoolingDataSource(connectionPool);
+        GenericObjectPool<PoolableConnection> connectionPool =
+                new GenericObjectPool<>(pcf);
+        new PoolingDataSource<>(connectionPool);
     }
 
     public void test2() {

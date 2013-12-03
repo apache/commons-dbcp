@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,20 +38,20 @@ import org.apache.commons.pool2.ObjectPool;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolingDataSource implements DataSource {
+public class PoolingDataSource<C extends Connection> implements DataSource {
 
     /** Controls access to the underlying connection */
-    private boolean accessToUnderlyingConnectionAllowed = false; 
+    private boolean accessToUnderlyingConnectionAllowed = false;
 
     public PoolingDataSource() {
         this(null);
     }
 
-    public PoolingDataSource(ObjectPool<Connection> pool) {
+    public PoolingDataSource(ObjectPool<C> pool) {
         _pool = pool;
     }
 
-    public void setPool(ObjectPool<Connection> pool)
+    public void setPool(ObjectPool<C> pool)
             throws IllegalStateException, NullPointerException {
         if(null != _pool) {
             throw new IllegalStateException("Pool already set");
@@ -64,7 +64,7 @@ public class PoolingDataSource implements DataSource {
 
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
-     * 
+     *
      * @return true if access to the underlying is allowed, false otherwise.
      */
     public boolean isAccessToUnderlyingConnectionAllowed() {
@@ -75,7 +75,7 @@ public class PoolingDataSource implements DataSource {
      * Sets the value of the accessToUnderlyingConnectionAllowed property.
      * It controls if the PoolGuard allows access to the underlying connection.
      * (Default: false)
-     * 
+     *
      * @param allow Access to the underlying connection is granted when true.
      */
     public void setAccessToUnderlyingConnectionAllowed(boolean allow) {
@@ -93,7 +93,7 @@ public class PoolingDataSource implements DataSource {
         throw new SQLException("PoolingDataSource is not a wrapper.");
     }
     /* JDBC_4_ANT_KEY_END */
-    
+
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
@@ -111,7 +111,7 @@ public class PoolingDataSource implements DataSource {
             Connection conn = _pool.borrowObject();
             if (conn != null) {
                 conn = new PoolGuardConnectionWrapper(conn);
-            } 
+            }
             return conn;
         } catch(SQLException e) {
             throw e;
@@ -175,10 +175,10 @@ public class PoolingDataSource implements DataSource {
     /** My log writer. */
     protected PrintWriter _logWriter = null;
 
-    protected ObjectPool<Connection> _pool = null;
+    protected ObjectPool<C> _pool = null;
 
     /**
-     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a 
+     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
      */
     private class PoolGuardConnectionWrapper extends DelegatingConnection {
