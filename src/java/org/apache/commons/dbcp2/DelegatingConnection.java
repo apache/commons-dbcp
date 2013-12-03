@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ import java.util.concurrent.Executor;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class DelegatingConnection extends AbandonedTrace
+public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         implements Connection {
 
 /* JDBC_4_ANT_KEY_BEGIN */
@@ -73,10 +73,10 @@ public class DelegatingConnection extends AbandonedTrace
 /* JDBC_4_ANT_KEY_END */
 
     /** My delegate {@link Connection}. */
-    private Connection _conn = null;
+    private C _conn = null;
 
     protected boolean _closed = false; // TODO make private and add getter/setter?
-    
+
     private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
     private Boolean _readOnlyCached = null;
@@ -87,7 +87,7 @@ public class DelegatingConnection extends AbandonedTrace
      *
      * @param c the {@link Connection} to delegate all calls to.
      */
-    public DelegatingConnection(Connection c) {
+    public DelegatingConnection(C c) {
         super();
         _conn = c;
     }
@@ -96,13 +96,13 @@ public class DelegatingConnection extends AbandonedTrace
     /**
      * Returns a string representation of the metadata associated with
      * the innnermost delegate connection.
-     * 
+     *
      * @since 1.2.2
      */
     @Override
     public String toString() {
         String s = null;
-        
+
         Connection c = this.getInnermostDelegateInternal();
         if (c != null) {
             try {
@@ -126,11 +126,11 @@ public class DelegatingConnection extends AbandonedTrace
                 // Ignore
             }
         }
-        
+
         if (s == null) {
             s = super.toString();
         }
-        
+
         return s;
     }
 
@@ -141,14 +141,14 @@ public class DelegatingConnection extends AbandonedTrace
     public Connection getDelegate() {
         return getDelegateInternal();
     }
-    
+
     protected final Connection getDelegateInternal() {
         return _conn;
     }
-    
+
     /**
      * Compares innermost delegate to the given connection.
-     * 
+     *
      * @param c connection to compare innermost delegate with
      * @return true if innermost delegate equals <code>c</code>
      * @since 1.2.2
@@ -163,7 +163,7 @@ public class DelegatingConnection extends AbandonedTrace
     }
 
     /**
-     * This method considers two objects to be equal 
+     * This method considers two objects to be equal
      * if the underlying jdbc objects are equal.
      */
     @Override
@@ -175,8 +175,8 @@ public class DelegatingConnection extends AbandonedTrace
             return true;
         }
         Connection delegate = getInnermostDelegateInternal();
-        if (obj instanceof DelegatingConnection) {    
-            DelegatingConnection c = (DelegatingConnection) obj;
+        if (obj instanceof DelegatingConnection) {
+            DelegatingConnection<?> c = (DelegatingConnection<?>) obj;
             Connection cDelegate = c.getInnermostDelegateInternal();
             return delegate == cDelegate || (delegate != null && delegate.equals(cDelegate));
         }
@@ -217,16 +217,16 @@ public class DelegatingConnection extends AbandonedTrace
     protected final Connection getInnermostDelegateInternal() {
         Connection c = _conn;
         while(c != null && c instanceof DelegatingConnection) {
-            c = ((DelegatingConnection)c).getDelegateInternal();
+            c = ((DelegatingConnection<?>)c).getDelegateInternal();
             if(this == c) {
                 return null;
             }
         }
         return c;
     }
-    
+
     /** Sets my delegate. */
-    public void setDelegate(Connection c) {
+    public void setDelegate(C c) {
         _conn = c;
     }
 
@@ -258,7 +258,7 @@ public class DelegatingConnection extends AbandonedTrace
             }
         }
     }
-    
+
     protected void handleException(SQLException e) throws SQLException {
         throw e;
     }
@@ -356,7 +356,7 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    
+
     @Override
     public void commit() throws SQLException {
         checkOpen();
@@ -367,10 +367,10 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    
+
     /**
      * Returns the state caching flag.
-     * 
+     *
      * @return  the state caching flag
      */
     public boolean getCacheState() {
@@ -389,7 +389,7 @@ public class DelegatingConnection extends AbandonedTrace
         } catch (SQLException e) {
             handleException(e);
             return false;
-        } 
+        }
     }
 
 
@@ -404,7 +404,7 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    
+
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
         checkOpen();
@@ -415,7 +415,7 @@ public class DelegatingConnection extends AbandonedTrace
             return null;
         }
     }
-    
+
 
     @Override
     public int getTransactionIsolation() throws SQLException {
@@ -452,7 +452,7 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    
+
     @Override
     public boolean isReadOnly() throws SQLException {
         checkOpen();
@@ -491,10 +491,10 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    
+
     /**
      * Sets the state caching flag.
-     * 
+     *
      * @param cacheState    The new value for the state caching flag
      */
     public void setCacheState(boolean cacheState) {
@@ -509,7 +509,7 @@ public class DelegatingConnection extends AbandonedTrace
         _autoCommitCached = null;
         _readOnlyCached = null;
         if (_conn instanceof DelegatingConnection) {
-            ((DelegatingConnection)_conn).clearCachedState();
+            ((DelegatingConnection<?>)_conn).clearCachedState();
         }
     }
 
@@ -587,7 +587,7 @@ public class DelegatingConnection extends AbandonedTrace
             } else {
                 throw new SQLException
                     ("Connection is null.");
-            }      
+            }
         }
     }
 
@@ -595,7 +595,7 @@ public class DelegatingConnection extends AbandonedTrace
         _closed = false;
         setLastUsed();
         if(_conn instanceof DelegatingConnection) {
-            ((DelegatingConnection)_conn).activate();
+            ((DelegatingConnection<?>)_conn).activate();
         }
     }
 
