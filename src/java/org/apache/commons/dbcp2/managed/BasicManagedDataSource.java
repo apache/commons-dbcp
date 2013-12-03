@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 
@@ -163,7 +164,8 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     @Override
     protected void createDataSourceInstance() throws SQLException {
-        PoolingDataSource pds = new ManagedDataSource(connectionPool, transactionRegistry);
+        PoolingDataSource<PoolableConnection> pds =
+                new ManagedDataSource<>(connectionPool, transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         pds.setLogWriter(logWriter);
         dataSource = pds;
