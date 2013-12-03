@@ -76,7 +76,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         poolConfig.setNumTestsPerEvictionRun(5);
         poolConfig.setMinEvictableIdleTimeMillis(5000L);
 
-        GenericObjectPool pool = new GenericObjectPool(pcf, poolConfig);
+        GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(pcf, poolConfig);
         pcf.setPool(pool);
 
         assertNotNull(pcf);
@@ -107,7 +107,7 @@ public class TestPoolingDriver extends TestConnectionPool {
             new PoolableConnectionFactory(connectionFactory);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
-        GenericObjectPool connectionPool = new GenericObjectPool(pcf);
+        GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example",connectionPool);
     }
@@ -147,8 +147,8 @@ public class TestPoolingDriver extends TestConnectionPool {
             new PoolableConnectionFactory(connectionFactory);
         poolableConnectionFactory.setDefaultReadOnly(false);
         poolableConnectionFactory.setDefaultAutoCommit(true);
-        ObjectPool connectionPool =
-            new GenericObjectPool(poolableConnectionFactory,config);
+        ObjectPool<PoolableConnection> connectionPool =
+                new GenericObjectPool<>(poolableConnectionFactory,config);
         poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
         PoolingDriver driver2 = new PoolingDriver();
