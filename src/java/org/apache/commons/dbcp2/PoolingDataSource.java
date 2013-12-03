@@ -108,11 +108,11 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         try {
-            Connection conn = _pool.borrowObject();
-            if (conn != null) {
-                conn = new PoolGuardConnectionWrapper(conn);
+            C conn = _pool.borrowObject();
+            if (conn == null) {
+                return null;
             }
-            return conn;
+            return  new PoolGuardConnectionWrapper<>(conn);
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
@@ -181,9 +181,10 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
      */
-    private class PoolGuardConnectionWrapper extends DelegatingConnection {
+    private class PoolGuardConnectionWrapper<D extends Connection>
+            extends DelegatingConnection<D> {
 
-        PoolGuardConnectionWrapper(Connection delegate) {
+        PoolGuardConnectionWrapper(D delegate) {
             super(delegate);
         }
 
@@ -191,7 +192,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
          * @see org.apache.commons.dbcp2.DelegatingConnection#getDelegate()
          */
         @Override
-        public Connection getDelegate() {
+        public D getDelegate() {
             if (isAccessToUnderlyingConnectionAllowed()) {
                 return super.getDelegate();
             } else {

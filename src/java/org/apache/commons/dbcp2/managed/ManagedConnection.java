@@ -255,7 +255,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     @Override
-    public Connection getDelegate() {
+    public C getDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
             return getDelegateInternal();
         } else {

@@ -138,7 +138,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * Returns my underlying {@link Connection}.
      * @return my underlying {@link Connection}.
      */
-    public Connection getDelegate() {
+    public C getDelegate() {
         return getDelegateInternal();
     }
 
