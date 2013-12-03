@@ -104,6 +104,7 @@ public class PoolableConnection extends DelegatingConnection {
             }
             throw new SQLException("Already closed.");
         }
+        _closed = true;
     }
 
     /**
