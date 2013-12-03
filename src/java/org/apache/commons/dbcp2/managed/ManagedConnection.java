@@ -40,14 +40,14 @@ import java.sql.SQLException;
  * @author Dain Sundstrom
  * @version $Revision$
  */
-public class ManagedConnection<C extends Connection> extends DelegatingConnection {
-    private final ObjectPool<Connection> pool;
+public class ManagedConnection<C extends Connection> extends DelegatingConnection<C> {
+    private final ObjectPool<C> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
     private TransactionContext transactionContext;
     private boolean isSharedConnection;
 
-    public ManagedConnection(ObjectPool<Connection> pool,
+    public ManagedConnection(ObjectPool<C> pool,
             TransactionRegistry transactionRegistry,
             boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
@@ -88,7 +88,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // in the transaction, replace our delegate with the enrolled connection
 
             // return current connection to the pool
-            Connection connection = getDelegateInternal();
+            C connection = getDelegateInternal();
             setDelegate(null);
             if (connection != null) {
                 try {
@@ -106,8 +106,12 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // add a listener to the transaction context
             transactionContext.addTransactionContextListener(new CompletionListener());
 
-            // set our delegate to the shared connection
-            setDelegate(transactionContext.getSharedConnection());
+            // Set our delegate to the shared connection. Note that this will
+            // always be of type C since it has been shared by another
+            // connection from the same pool.
+            @SuppressWarnings("unchecked")
+            C shared = (C) transactionContext.getSharedConnection();
+            setDelegate(shared);
 
             // remember that we are using a shared connection so it can be cleared after the
             // transaction completes
@@ -117,7 +121,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             if (getDelegateInternal() == null) {
                 try {
                     // borrow a new connection from the pool
-                    Connection connection = pool.borrowObject();
+                    C connection = pool.borrowObject();
                     setDelegate(connection);
                 } catch (Exception e) {
                     throw (SQLException) new SQLException("Unable to acquire a new connection from the pool").initCause(e);

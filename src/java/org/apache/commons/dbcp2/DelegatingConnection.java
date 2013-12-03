@@ -142,7 +142,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         return getDelegateInternal();
     }
 
-    protected final Connection getDelegateInternal() {
+    protected final C getDelegateInternal() {
         return _conn;
     }
 
