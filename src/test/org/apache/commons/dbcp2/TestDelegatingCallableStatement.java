@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ public class TestDelegatingCallableStatement extends TestCase {
         return new TestSuite(TestDelegatingCallableStatement.class);
     }
 
-    private DelegatingConnection conn = null;
+    private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingCallableStatement stmt = null;
     private CallableStatement delegateStmt = null;
@@ -44,7 +44,7 @@ public class TestDelegatingCallableStatement extends TestCase {
     @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
-        conn = new DelegatingConnection(delegateConn);
+        conn = new DelegatingConnection<>(delegateConn);
     }
 
     public void testExecuteQueryReturnsNull() throws Exception {
@@ -69,7 +69,7 @@ public class TestDelegatingCallableStatement extends TestCase {
         stmt = new DelegatingCallableStatement(conn, null);
         assertEquals(0, stmt.hashCode());
     }
-    
+
     public void testHashCode() throws Exception {
         delegateStmt = new TesterCallableStatement(delegateConn,"select * from foo");
         DelegatingCallableStatement stmt1 = new DelegatingCallableStatement(conn,delegateStmt);
@@ -78,7 +78,7 @@ public class TestDelegatingCallableStatement extends TestCase {
         stmt1.close();
         stmt2.close();
     }
-    
+
     public void testEquals() {
         delegateStmt = new TesterCallableStatement(delegateConn,"select * from foo");
         CallableStatement del = new TesterCallableStatement(delegateConn,"select * from foo");
@@ -86,13 +86,13 @@ public class TestDelegatingCallableStatement extends TestCase {
         DelegatingCallableStatement stmt2 = new DelegatingCallableStatement(conn, delegateStmt);
         DelegatingCallableStatement stmt3 = new DelegatingCallableStatement(conn, null);
         DelegatingCallableStatement stmt4 = new DelegatingCallableStatement(conn, del);
-        
+
         // Nothing is equal to null
         assertFalse(stmt1.equals(null));
         assertFalse(stmt2.equals(null));
         assertFalse(stmt3.equals(null));
         assertFalse(stmt4.equals(null));
-        
+
         // 1 & 2 are equivalent
         assertTrue(stmt1.equals(stmt2));
         assertTrue(stmt2.equals(stmt1)); // reflexive
@@ -108,15 +108,15 @@ public class TestDelegatingCallableStatement extends TestCase {
         // Check self-equals
         assertTrue(stmt1.equals(stmt1));
         assertTrue(stmt2.equals(stmt2));
-        assertTrue(stmt3.equals(stmt3)); 
+        assertTrue(stmt3.equals(stmt3));
         assertTrue(stmt4.equals(stmt4));
-        
+
         DelegatingStatement dstmt1 = stmt1;
-        
+
         // 1 & 2 are equivalent
         assertTrue(dstmt1.equals(stmt2));
         assertTrue(stmt2.equals(dstmt1)); // reflexive
-        
+
         // innermost delegate itself - bugged behavior?
         assertTrue(stmt1.equals(delegateStmt));
 

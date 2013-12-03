@@ -86,13 +86,13 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         // active connection is held open when ds is closed
         Connection activeConnection = getConnection();
-        Connection rawActiveConnection = ((DelegatingConnection) activeConnection).getInnermostDelegate();
+        Connection rawActiveConnection = ((DelegatingConnection<?>) activeConnection).getInnermostDelegate();
         assertFalse(activeConnection.isClosed());
         assertFalse(rawActiveConnection.isClosed());
 
         // idle connection is in pool but closed
         Connection idleConnection = getConnection();
-        Connection rawIdleConnection = ((DelegatingConnection) idleConnection).getInnermostDelegate();
+        Connection rawIdleConnection = ((DelegatingConnection<?>) idleConnection).getInnermostDelegate();
         assertFalse(idleConnection.isClosed());
         assertFalse(rawIdleConnection.isClosed());
 
@@ -211,10 +211,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(false, ds.isAccessToUnderlyingConnectionAllowed());
 
         Connection conn = getConnection();
-        Connection dconn = ((DelegatingConnection) conn).getDelegate();
+        Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
         assertNull(dconn);
 
-        dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
         assertNull(dconn);
     }
 
@@ -223,10 +223,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
 
         Connection conn = getConnection();
-        Connection dconn = ((DelegatingConnection) conn).getDelegate();
+        Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
         assertNotNull(dconn);
 
-        dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
         assertNotNull(dconn);
 
         assertTrue(dconn instanceof TesterConnection);
@@ -382,7 +382,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertNotNull(conn);
         assertEquals(false, conn.getAutoCommit());
 
-        Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();
+        Connection dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
         assertNotNull(dconn);
         assertEquals(false, dconn.getAutoCommit());
 
@@ -413,7 +413,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(1, ds.getNumActive());
 
         // set an IO failure causing the isClosed mathod to fail
-        TesterConnection tconn = (TesterConnection) ((DelegatingConnection)conn).getInnermostDelegate();
+        TesterConnection tconn = (TesterConnection) ((DelegatingConnection<?>)conn).getInnermostDelegate();
         tconn.setFailure(new IOException("network error"));
 
         try {

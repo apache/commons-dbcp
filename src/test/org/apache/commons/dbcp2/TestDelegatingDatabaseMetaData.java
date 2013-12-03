@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         return new TestSuite(TestDelegatingDatabaseMetaData.class);
     }
 
-    private DelegatingConnection conn = null;
+    private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingDatabaseMetaData meta = null;
     private DatabaseMetaData delegateMeta = null;
@@ -47,7 +47,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateMeta = delegateConn.getMetaData();
-        conn = new DelegatingConnection(delegateConn);
+        conn = new DelegatingConnection<>(delegateConn);
         meta = new DelegatingDatabaseMetaData(conn,delegateMeta);
     }
 
@@ -67,7 +67,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
             new DelegatingDatabaseMetaData(conn,delegateMeta);
         assertEquals(meta1.hashCode(), meta2.hashCode());
     }
-    
+
     public void testEquals() {
         try {
             delegateMeta = conn.getMetaData();
@@ -80,7 +80,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
             new DelegatingDatabaseMetaData(conn,delegateMeta);
         DelegatingDatabaseMetaData meta3 =
             new DelegatingDatabaseMetaData(conn,null);
-        
+
         assertTrue(!meta1.equals(null));
         assertTrue(meta1.equals(meta2));
         assertTrue(!meta1.equals(meta3));
@@ -88,7 +88,7 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         assertTrue(meta2.equals(meta2));
         assertTrue(meta3.equals(meta3));
     }
-    
+
     /* JDBC_4_ANT_KEY_BEGIN */
     public void testCheckOpen() throws Exception {
         ResultSet rst = meta.getSchemas();

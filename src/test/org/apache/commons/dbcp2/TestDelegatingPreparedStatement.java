@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
         return new TestSuite(TestDelegatingPreparedStatement.class);
     }
 
-    private DelegatingConnection conn = null;
+    private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingPreparedStatement stmt = null;
     private PreparedStatement delegateStmt = null;
@@ -46,7 +46,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
     @Override
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
-        conn = new DelegatingConnection(delegateConn);
+        conn = new DelegatingConnection<>(delegateConn);
     }
 
     public void testExecuteQueryReturnsNull() throws Exception {
@@ -71,7 +71,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
         stmt = new DelegatingPreparedStatement(conn, null);
         assertEquals(0, stmt.hashCode());
     }
-    
+
     public void testHashCode() throws Exception {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         DelegatingPreparedStatement stmt1 = new DelegatingPreparedStatement(conn,delegateStmt);
@@ -80,7 +80,7 @@ public class TestDelegatingPreparedStatement extends TestCase {
         stmt1.close();
         stmt2.close();
     }
-    
+
     public void testEquals() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         PreparedStatement del = new TesterPreparedStatement(delegateConn,"select * from foo");
@@ -88,13 +88,13 @@ public class TestDelegatingPreparedStatement extends TestCase {
         DelegatingPreparedStatement stmt2 = new DelegatingPreparedStatement(conn, delegateStmt);
         DelegatingPreparedStatement stmt3 = new DelegatingPreparedStatement(conn, null);
         DelegatingPreparedStatement stmt4 = new DelegatingPreparedStatement(conn, del);
-        
+
         // Nothing is equal to null
         assertFalse(stmt1.equals(null));
         assertFalse(stmt2.equals(null));
         assertFalse(stmt3.equals(null));
         assertFalse(stmt4.equals(null));
-        
+
         // 1 & 2 are equivalent
         assertTrue(stmt1.equals(stmt2));
         assertTrue(stmt2.equals(stmt1)); // reflexive
@@ -110,15 +110,15 @@ public class TestDelegatingPreparedStatement extends TestCase {
         // Check self-equals
         assertTrue(stmt1.equals(stmt1));
         assertTrue(stmt2.equals(stmt2));
-        assertTrue(stmt3.equals(stmt3)); 
+        assertTrue(stmt3.equals(stmt3));
         assertTrue(stmt4.equals(stmt4));
-        
+
         DelegatingStatement dstmt1 = stmt1;
-        
+
         // 1 & 2 are equivalent
         assertTrue(dstmt1.equals(stmt2));
         assertTrue(stmt2.equals(dstmt1)); // reflexive
-        
+
         // innermost delegate itself - bugged behavior?
         assertTrue(stmt1.equals(delegateStmt));
 

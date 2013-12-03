@@ -79,7 +79,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             for(int j=0;j<i;j++) {
                 // two connections should be distinct instances
                 assertNotSame(conn[j], conn[i]);
-                // but they should be equivilant since they are sharing the same underlying connection 
+                // but they should be equivilant since they are sharing the same underlying connection
                 assertEquals(conn[j], conn[i]);
             }
         }
@@ -160,8 +160,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Override
     public void testSharedConnection() throws Exception {
-        DelegatingConnection connectionA = (DelegatingConnection) newConnection();
-        DelegatingConnection connectionB = (DelegatingConnection) newConnection();
+        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         assertTrue(connectionA.equals(connectionB));
         assertTrue(connectionB.equals(connectionA));
@@ -173,8 +173,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     public void testSharedTransactionConversion() throws Exception {
-        DelegatingConnection connectionA = (DelegatingConnection) newConnection();
-        DelegatingConnection connectionB = (DelegatingConnection) newConnection();
+        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         // in a transaciton the connections should be equal
         assertTrue(connectionA.equals(connectionB));
@@ -211,8 +211,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     public void testCloseInTransaction() throws Exception {
-        DelegatingConnection connectionA = (DelegatingConnection) newConnection();
-        DelegatingConnection connectionB = (DelegatingConnection) newConnection();
+        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         assertTrue(connectionA.equals(connectionB));
         assertTrue(connectionB.equals(connectionA));
@@ -278,7 +278,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         Connection connection = newConnection();
 
         // NOTE: This test class uses connections that are read-only by default
-        
+
         // conection should be read only
         assertTrue("Connection be read-only", connection.isReadOnly());
 

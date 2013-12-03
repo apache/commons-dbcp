@@ -398,7 +398,7 @@ public abstract class TestConnectionPool extends TestCase {
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             if (c[i] instanceof DelegatingConnection) {
-                u[i] = ((DelegatingConnection) c[i]).getInnermostDelegate();
+                u[i] = ((DelegatingConnection<?>) c[i]).getInnermostDelegate();
             } else {
                 for (int j = 0; j <= i; j++) {
                     c[j].close();
@@ -412,7 +412,7 @@ public abstract class TestConnectionPool extends TestCase {
             c[i].close();
             Connection con = newConnection();
             Connection underCon =
-                ((DelegatingConnection) con).getInnermostDelegate();
+                ((DelegatingConnection<?>) con).getInnermostDelegate();
             assertTrue("Failed to get connection", underCon != null);
             boolean found = false;
             for (int j = 0; j < c.length; j++) {
@@ -869,7 +869,7 @@ public abstract class TestConnectionPool extends TestCase {
                     state = "Getting Connection";
                     preconnected = timeStamp();
                     Connection conn = getConnection();
-                    connHash = System.identityHashCode(((DelegatingConnection)conn).getInnermostDelegate());
+                    connHash = System.identityHashCode(((DelegatingConnection<?>)conn).getInnermostDelegate());
                     connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);

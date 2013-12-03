@@ -126,9 +126,9 @@ public class TestPStmtPooling extends TestCase {
         Connection conn = ds.getConnection();
         conn.prepareStatement("select 1 from dual");
 
-        Connection poolableConnection = ((DelegatingConnection) conn).getDelegate();
+        Connection poolableConnection = ((DelegatingConnection<?>) conn).getDelegate();
         Connection poolingConnection =
-            ((DelegatingConnection) poolableConnection).getDelegate();
+            ((DelegatingConnection<?>) poolableConnection).getDelegate();
         poolingConnection.close();
         try {
             conn.prepareStatement("select 1 from dual");
