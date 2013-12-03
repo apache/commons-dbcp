@@ -218,7 +218,7 @@ public class DelegatingConnection extends AbandonedTrace
      * This method is useful when you may have nested
      * <tt>DelegatingConnection</tt>s, and you want to make
      * sure to obtain a "genuine" {@link Connection}.
-     * 
+     *
      * @return The first delegate that is not a {@link DelegatingConnection}, or {@code null}.
      */
     public Connection getInnermostDelegate() {
@@ -238,7 +238,7 @@ public class DelegatingConnection extends AbandonedTrace
 
     /**
      * Sets my delegate.
-     * 
+     *
      * @param c the delegate Connection
      */
     public void setDelegate(Connection c) {
@@ -334,17 +334,48 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    public void clearWarnings() throws SQLException
-    { checkOpen(); try { _conn.clearWarnings(); } catch (SQLException e) { handleException(e); } }
 
-    public void commit() throws SQLException
-    { checkOpen(); try { _conn.commit(); } catch (SQLException e) { handleException(e); } }
-
-    public boolean getAutoCommit() throws SQLException
-    { checkOpen(); try { return _conn.getAutoCommit(); } catch (SQLException e) { handleException(e); return false; }
+    public void clearWarnings() throws SQLException {
+        checkOpen();
+        try {
+            _conn.clearWarnings();
+        } catch (SQLException e) {
+            handleException(e);
+        }
     }
-    public String getCatalog() throws SQLException
-    { checkOpen(); try { return _conn.getCatalog(); } catch (SQLException e) { handleException(e); return null; } }
+
+
+    public void commit() throws SQLException {
+        checkOpen();
+        try {
+            _conn.commit();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public boolean getAutoCommit() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getAutoCommit();
+        } catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+
+    public String getCatalog() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getCatalog();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
 
     public DatabaseMetaData getMetaData() throws SQLException {
         checkOpen();
@@ -356,38 +387,121 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    public int getTransactionIsolation() throws SQLException
-    { checkOpen(); try { return _conn.getTransactionIsolation(); } catch (SQLException e) { handleException(e); return -1; } }
 
-    public Map getTypeMap() throws SQLException
-    { checkOpen(); try { return _conn.getTypeMap(); } catch (SQLException e) { handleException(e); return null; } }
+    public int getTransactionIsolation() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getTransactionIsolation();
+        } catch (SQLException e) {
+            handleException(e);
+            return -1;
+        }
+    }
 
-    public SQLWarning getWarnings() throws SQLException
-    { checkOpen(); try { return _conn.getWarnings(); } catch (SQLException e) { handleException(e); return null; } }
 
-    public boolean isReadOnly() throws SQLException
-    { checkOpen(); try { return _conn.isReadOnly(); } catch (SQLException e) { handleException(e); return false; } }
+    public Map getTypeMap() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getTypeMap();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
 
-    public String nativeSQL(String sql) throws SQLException
-    { checkOpen(); try { return _conn.nativeSQL(sql); } catch (SQLException e) { handleException(e); return null; } }
 
-    public void rollback() throws SQLException
-    { checkOpen(); try {  _conn.rollback(); } catch (SQLException e) { handleException(e); } }
+    public SQLWarning getWarnings() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getWarnings();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
 
-    public void setAutoCommit(boolean autoCommit) throws SQLException
-    { checkOpen(); try { _conn.setAutoCommit(autoCommit); } catch (SQLException e) { handleException(e); } }
 
-    public void setCatalog(String catalog) throws SQLException
-    { checkOpen(); try { _conn.setCatalog(catalog); } catch (SQLException e) { handleException(e); } }
+    public boolean isReadOnly() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.isReadOnly();
+        } catch (SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
 
-    public void setReadOnly(boolean readOnly) throws SQLException
-    { checkOpen(); try { _conn.setReadOnly(readOnly); } catch (SQLException e) { handleException(e); } }
 
-    public void setTransactionIsolation(int level) throws SQLException
-    { checkOpen(); try { _conn.setTransactionIsolation(level); } catch (SQLException e) { handleException(e); } }
+    public String nativeSQL(String sql) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.nativeSQL(sql);
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
 
-    public void setTypeMap(Map map) throws SQLException
-    { checkOpen(); try { _conn.setTypeMap(map); } catch (SQLException e) { handleException(e); } }
+
+    public void rollback() throws SQLException {
+        checkOpen();
+        try {
+            _conn.rollback();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setAutoCommit(autoCommit);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void setCatalog(String catalog) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setCatalog(catalog);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setReadOnly(readOnly);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void setTransactionIsolation(int level) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setTransactionIsolation(level);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void setTypeMap(Map map) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setTypeMap(map);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
 
     public boolean isClosed() throws SQLException {
         return _closed || _conn.isClosed();
@@ -449,23 +563,70 @@ public class DelegatingConnection extends AbandonedTrace
         }
     }
 
-    public int getHoldability() throws SQLException
-    { checkOpen(); try { return _conn.getHoldability(); } catch (SQLException e) { handleException(e); return 0; } }
 
-    public void setHoldability(int holdability) throws SQLException
-    { checkOpen(); try { _conn.setHoldability(holdability); } catch (SQLException e) { handleException(e); } }
+    public int getHoldability() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.getHoldability();
+        } catch (SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
 
-    public java.sql.Savepoint setSavepoint() throws SQLException
-    { checkOpen(); try { return _conn.setSavepoint(); } catch (SQLException e) { handleException(e); return null; } }
 
-    public java.sql.Savepoint setSavepoint(String name) throws SQLException
-    { checkOpen(); try { return _conn.setSavepoint(name); } catch (SQLException e) { handleException(e); return null; } }
+    public void setHoldability(int holdability) throws SQLException {
+        checkOpen();
+        try {
+            _conn.setHoldability(holdability);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
 
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException
-    { checkOpen(); try { _conn.rollback(savepoint); } catch (SQLException e) { handleException(e); } }
 
-    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException
-    { checkOpen(); try { _conn.releaseSavepoint(savepoint); } catch (SQLException e) { handleException(e); } }
+    public java.sql.Savepoint setSavepoint() throws SQLException {
+        checkOpen();
+        try {
+            return _conn.setSavepoint();
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+
+    public java.sql.Savepoint setSavepoint(String name) throws SQLException {
+        checkOpen();
+        try {
+            return _conn.setSavepoint(name);
+        } catch (SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+
+    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
+        checkOpen();
+        try {
+            _conn.rollback(savepoint);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
+
+    public void releaseSavepoint(java.sql.Savepoint savepoint)
+            throws SQLException {
+        checkOpen();
+        try {
+            _conn.releaseSavepoint(savepoint);
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
+
 
     public Statement createStatement(int resultSetType,
                                      int resultSetConcurrency,
