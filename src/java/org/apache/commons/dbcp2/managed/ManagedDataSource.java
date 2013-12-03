@@ -76,7 +76,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
         if (_pool == null) throw new IllegalStateException("Pool has not been set");
         if (transactionRegistry == null) throw new IllegalStateException("TransactionRegistry has not been set");
 
-        Connection connection = new ManagedConnection(_pool, transactionRegistry, isAccessToUnderlyingConnectionAllowed());
+        Connection connection = new ManagedConnection<>(_pool, transactionRegistry, isAccessToUnderlyingConnectionAllowed());
         return connection;
     }
 }
