@@ -43,8 +43,9 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement<PStmtKeyCP
      */
     public PoolablePreparedStatementStub(PreparedStatement stmt,
             PStmtKeyCPDS key,
-            KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS, PoolablePreparedStatementStub>> pool,
-            DelegatingConnection conn) {
+            KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS,
+            PoolablePreparedStatementStub>> pool,
+            DelegatingConnection<?> conn) {
         super(stmt, key, pool, conn);
     }
 
