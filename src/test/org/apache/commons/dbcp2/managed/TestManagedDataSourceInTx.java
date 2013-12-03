@@ -224,17 +224,10 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         Connection connection = newConnection();
 
-        // conection should be open
         assertFalse("Connection should be open", connection.isClosed());
 
-        // close the connection
         connection.close();
 
-        // conection should be open
-        assertTrue("Connection should be closed", connection.isClosed());
-
-
-        // conection should be open
         assertTrue("Connection should be closed", connection.isClosed());
     }
 
