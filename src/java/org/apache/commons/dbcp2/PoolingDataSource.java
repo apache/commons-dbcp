@@ -112,7 +112,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
             if (conn == null) {
                 return null;
             }
-            return  new PoolGuardConnectionWrapper<>(conn);
+            return new PoolGuardConnectionWrapper<>(conn);
         } catch(SQLException e) {
             throw e;
         } catch(NoSuchElementException e) {
