@@ -55,6 +55,11 @@ The <action> type attribute can be add,update,fix,remove.
         Correct implementation of DelegatingConnection.isWrapperFor() so it
         works correctly with older JDBC drivers.
       </action>
+      <action dev="markt" issue="DBCP-347" type="fix" due-to="Robert Poskrobek">
+        Correct implementation of DelegatingStatement.isWrapperFor(). Also fix
+        DelegatingDatabaseMetaData.isWrapperFor() and
+        DelegatingResultSet.isWrapperFor() that had the same problem.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">

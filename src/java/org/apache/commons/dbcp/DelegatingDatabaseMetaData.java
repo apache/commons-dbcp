@@ -1122,7 +1122,13 @@ public class DelegatingDatabaseMetaData extends AbandonedTrace
     /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(getClass()) || _meta.isWrapperFor(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        } else if (iface.isAssignableFrom(_meta.getClass())) {
+            return true;
+        } else {
+            return _meta.isWrapperFor(iface);
+        }
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {

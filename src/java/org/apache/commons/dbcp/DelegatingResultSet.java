@@ -623,7 +623,13 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 /* JDBC_4_ANT_KEY_BEGIN */
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(getClass()) || _res.isWrapperFor(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        } else if (iface.isAssignableFrom(_res.getClass())) {
+            return true;
+        } else {
+            return _res.isWrapperFor(iface);
+        }
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {
