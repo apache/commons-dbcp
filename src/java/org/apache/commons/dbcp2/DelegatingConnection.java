@@ -780,7 +780,13 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(getClass()) || _conn.isWrapperFor(iface);
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        } else if (iface.isAssignableFrom(_conn.getClass())) {
+            return true;
+        } else {
+            return _conn.isWrapperFor(iface);
+        }
     }
 
     @Override
