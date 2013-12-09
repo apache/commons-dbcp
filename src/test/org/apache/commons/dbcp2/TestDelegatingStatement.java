@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -106,6 +107,35 @@ public class TestDelegatingStatement extends TestCase {
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             // expected
+        }
+    }
+    
+    public void testIsWrapperFor() throws Exception {
+        TesterConnection tstConn = new TesterConnection("test", "test");
+        TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
+        DelegatingConnection<TesterConnection> conn = new DelegatingConnection<>(tstConn);
+        DelegatingStatement stmt = new DelegatingStatement(conn, tstStmt);
+
+        Class<?> stmtProxyClass = Proxy.getProxyClass(
+                this.getClass().getClassLoader(), 
+                Statement.class);
+        
+        assertTrue(stmt.isWrapperFor(DelegatingStatement.class));
+        assertTrue(stmt.isWrapperFor(TesterStatement.class));
+        assertFalse(stmt.isWrapperFor(stmtProxyClass));
+        
+        stmt.close();
+    }
+    
+    private static class TesterStatementNonWrapping extends TesterStatement {
+
+        public TesterStatementNonWrapping(Connection conn) {
+            super(conn);
+        }
+     
+        @Override
+        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+            return false;
         }
     }
 }
