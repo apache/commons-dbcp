@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,33 +68,33 @@ public class TestDelegatingStatement extends TestCase {
         assertEquals(stmt1.hashCode(), stmt2.hashCode());
         assertTrue(stmt1.hashCode() != stmt3.hashCode());
     }
-    
+
     public void testEquals() {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         DelegatingStatement stmt1 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt2 = new DelegatingStatement(conn, delegateStmt);
         DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
         DelegatingStatement stmt4 = new DelegatingStatement(conn, stmt1);
-        
+
         // not null
         assertTrue(!stmt1.equals(null));
-        
+
         // same innermost delegate
         assertTrue(stmt1.equals(stmt2));
         assertTrue(stmt1.equals(stmt4));
-        
+
         // innermost delegate itself - bugged behavior?
         assertTrue(stmt1.equals(delegateStmt));
-        
+
         // not same delegate
         assertTrue(!stmt1.equals(stmt3));
-        
+
         // reflexive
         assertTrue(stmt1.equals(stmt1));
         assertTrue(stmt2.equals(stmt2));
         assertTrue(stmt3.equals(stmt3));
     }
-    
+
     public void testCheckOpen() throws Exception {
         stmt.checkOpen();
         stmt.close();
@@ -102,6 +103,36 @@ public class TestDelegatingStatement extends TestCase {
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             // expected
-        }      
+        }
+    }
+
+
+    public void testIsWrapperFor() throws Exception {
+        TesterConnection tstConn = new TesterConnection("test", "test");
+        TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
+        DelegatingConnection conn = new DelegatingConnection(tstConn);
+        DelegatingStatement stmt = new DelegatingStatement(conn, tstStmt);
+
+        Class<?> stmtProxyClass = Proxy.getProxyClass(
+                this.getClass().getClassLoader(),
+                Statement.class);
+
+        assertTrue(stmt.isWrapperFor(DelegatingStatement.class));
+        assertTrue(stmt.isWrapperFor(TesterStatement.class));
+        assertFalse(stmt.isWrapperFor(stmtProxyClass));
+
+        stmt.close();
+    }
+
+    private static class TesterStatementNonWrapping extends TesterStatement {
+
+        public TesterStatementNonWrapping(Connection conn) {
+            super(conn);
+        }
+
+        @Override
+        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+            return false;
+        }
     }
 }
