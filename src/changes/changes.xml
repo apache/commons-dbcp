@@ -96,6 +96,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-396" type="fix">
         Expose all of the AbandonedConfig properties through a BasicDataSource.
       </action>
+      <action dev="markt" issue="DBCP-380" type="fix" due-to="Balazs Zsoldos">
+        Correct implementation of DelegatingConnection.isWrapperFor() so it
+        works correctly with older JDBC drivers.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
