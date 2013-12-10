@@ -10,7 +10,7 @@
 This document describes the process used to produce DBCP 2.0.x release
 candidates from the common source code maintained in DBCP's svn trunk.
 
-0.  Prepare and validate changes, testing with JDK 1.6 using Ant and the code in
+0.  Prepare and validate changes, testing with JDK 1.7 using Ant and the code in
     trunk.
 
 1.  Change the version numbers in pom.xml and build.xml to the new .x version.
