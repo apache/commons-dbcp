@@ -30,46 +30,46 @@
       </p><p>
          A: There are two primary ways to access the DBCP pool, as a
          {@link java.sql.Driver Driver}, or as a {@link javax.sql.DataSource DataSource}.
-         You'll want to create an instance of {@link org.apache.commons.dbcp.PoolingDriver} or
-         {@link org.apache.commons.dbcp.PoolingDataSource}.  When using one of these
+         You'll want to create an instance of {@link org.apache.commons.dbcp2.PoolingDriver} or
+         {@link org.apache.commons.dbcp2.PoolingDataSource}.  When using one of these
          interfaces, you can just use your JDBC objects the way you normally would.
          Closing a {@link java.sql.Connection} will simply return it to its pool.
       </p>
       <p>
-         Q: But {@link org.apache.commons.dbcp.PoolingDriver PoolingDriver} and
-         {@link org.apache.commons.dbcp.PoolingDataSource PoolingDataSource} both expect an
-         {@link org.apache.commons.pool.ObjectPool ObjectPool} as an input.  Where do I
+         Q: But {@link org.apache.commons.dbcp2.PoolingDriver PoolingDriver} and
+         {@link org.apache.commons.dbcp2.PoolingDataSource PoolingDataSource} both expect an
+         {@link org.apache.commons.pool2.ObjectPool ObjectPool} as an input.  Where do I
          get one of those?
       </p><p>
-         A: The {@link org.apache.commons.pool.ObjectPool ObjectPool} interface is defined
+         A: The {@link org.apache.commons.pool2.ObjectPool ObjectPool} interface is defined
          in the {@link org.apache.commons.pool} package (Commons-Pool).
-         The {@link org.apache.commons.pool.impl} package has a couple of implementations,
+         The {@link org.apache.commons.pool2.impl} package has a couple of implementations,
          and you can always create your own.
       </p>
       <p>
-         Q: Ok, I've found an {@link org.apache.commons.pool.ObjectPool ObjectPool}
+         Q: Ok, I've found an {@link org.apache.commons.pool2.ObjectPool ObjectPool}
          implementation that I think suits my connection pooling needs.  But it wants
-         a {@link org.apache.commons.pool.PoolableObjectFactory PoolableObjectFactory}.
+         a {@link org.apache.commons.pool2.PoolableObjectFactory PoolableObjectFactory}.
          What should I use for that?
       </p><p>
          A: The DBCP package provides a class for this purpose. It's called
-         {@link org.apache.commons.dbcp.PoolableConnectionFactory}.
+         {@link org.apache.commons.dbcp2.PoolableConnectionFactory}.
          It implements the factory and lifecycle methods of
-         {@link org.apache.commons.pool.PoolableObjectFactory}
+         {@link org.apache.commons.pool2.PoolableObjectFactory}
          for {@link java.sql.Connection}s.  But it doesn't create the actual database
          {@link java.sql.Connection}s itself, it uses a
-         {@link org.apache.commons.dbcp.ConnectionFactory} for that.
-         The {@link org.apache.commons.dbcp.PoolableConnectionFactory} will take
-         {@link java.sql.Connection}s created by the {@link org.apache.commons.dbcp.ConnectionFactory}
+         {@link org.apache.commons.dbcp2.ConnectionFactory} for that.
+         The {@link org.apache.commons.dbcp2.PoolableConnectionFactory} will take
+         {@link java.sql.Connection}s created by the {@link org.apache.commons.dbcp2.ConnectionFactory}
          and wrap them with classes that implement the pooling behaviour.
       </p><p>
-         Several implementations of {@link org.apache.commons.dbcp.ConnectionFactory} are
+         Several implementations of {@link org.apache.commons.dbcp2.ConnectionFactory} are
          provided--one that uses {@link java.sql.DriverManager} to create connections
-         ({@link org.apache.commons.dbcp.DriverManagerConnectionFactory}),
+         ({@link org.apache.commons.dbcp2.DriverManagerConnectionFactory}),
          one that uses a {@link java.sql.Driver} to create connections
-         ({@link org.apache.commons.dbcp.DriverConnectionFactory}),
+         ({@link org.apache.commons.dbcp2.DriverConnectionFactory}),
          one that uses a {@link javax.sql.DataSource} to create connections
-         ({@link org.apache.commons.dbcp.DataSourceConnectionFactory}).
+         ({@link org.apache.commons.dbcp2.DataSourceConnectionFactory}).
       </p>
       <p>
          Q: I think I'm starting to get it, but can you walk me though it again?
@@ -78,36 +78,36 @@
          that pools {@link java.sql.Connection}s.  Let's also assume that
          those pooled {@link java.sql.Connection}s should be obtained from
          the {@link java.sql.DriverManager}.
-         You'll want to create a {@link org.apache.commons.dbcp.PoolingDataSource}.
+         You'll want to create a {@link org.apache.commons.dbcp2.PoolingDataSource}.
       </p><p>
-         The {@link org.apache.commons.dbcp.PoolingDataSource} uses an underlying
-         {@link org.apache.commons.pool.ObjectPool} to create and store its
+         The {@link org.apache.commons.dbcp2.PoolingDataSource} uses an underlying
+         {@link org.apache.commons.pool2.ObjectPool} to create and store its
          {@link java.sql.Connection}.
       </p><p>
-         To create a {@link org.apache.commons.pool.ObjectPool}, you'll need
-         a {@link org.apache.commons.pool.PoolableObjectFactory} that creates
+         To create a {@link org.apache.commons.pool2.ObjectPool}, you'll need
+         a {@link org.apache.commons.pool2.PoolableObjectFactory} that creates
          the actual {@link java.sql.Connection}s.  That's what
-         {@link org.apache.commons.dbcp.PoolableConnectionFactory} is for.
+         {@link org.apache.commons.dbcp2.PoolableConnectionFactory} is for.
       </p><p>
-         To create the {@link org.apache.commons.dbcp.PoolableConnectionFactory},
+         To create the {@link org.apache.commons.dbcp2.PoolableConnectionFactory},
          you'll need at least two things:
          <ol>
           <li>
-            A {@link org.apache.commons.dbcp.ConnectionFactory} from which
+            A {@link org.apache.commons.dbcp2.ConnectionFactory} from which
             the actual database {@link java.sql.Connection}s will be obtained.
           </li>
           <li>
-            An empty and factory-less {@link org.apache.commons.pool.ObjectPool}
+            An empty and factory-less {@link org.apache.commons.pool2.ObjectPool}
             in which the {@link java.sql.Connection}s will be stored.
             <br></br>
-            When you pass an {@link org.apache.commons.pool.ObjectPool} into the
-            {@link org.apache.commons.dbcp.PoolableConnectionFactory}, it will
-            automatically register itself as the {@link org.apache.commons.pool.PoolableObjectFactory}
+            When you pass an {@link org.apache.commons.pool2.ObjectPool} into the
+            {@link org.apache.commons.dbcp2.PoolableConnectionFactory}, it will
+            automatically register itself as the {@link org.apache.commons.pool2.PoolableObjectFactory}
             for that pool.
           </li>
          </ol>
-         You can optionally provide a {@link org.apache.commons.pool.KeyedObjectPoolFactory}
-         that will be used to create {@link org.apache.commons.pool.KeyedObjectPool}s for
+         You can optionally provide a {@link org.apache.commons.pool2.KeyedObjectPoolFactory}
+         that will be used to create {@link org.apache.commons.pool2.KeyedObjectPool}s for
          pooling {@link java.sql.PreparedStatement}s for each {@link java.sql.Connection}.
       </p><p>
          In code, that might look like this:
@@ -116,9 +116,9 @@ ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:s
 PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
 PoolingDataSource dataSource = new PoolingDataSource(connectionPool);</pre>
       </p><p>
-         To create a {@link org.apache.commons.dbcp.PoolingDriver}, we do the same thing,
+         To create a {@link org.apache.commons.dbcp2.PoolingDriver}, we do the same thing,
          except that instead of creating a {@link javax.sql.DataSource} on the last line,
-         we create a {@link org.apache.commons.dbcp.PoolingDriver}, and register the
+         we create a {@link org.apache.commons.dbcp2.PoolingDriver}, and register the
          <tt>connectionPool</tt> with it.  E.g.,:
 <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
 ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
@@ -126,7 +126,7 @@ PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFact
 PoolingDriver driver = new PoolingDriver();
 driver.registerPool("example",connectionPool);</pre>
       </p><p>
-         Since the {@link org.apache.commons.dbcp.PoolingDriver} registers itself
+         Since the {@link org.apache.commons.dbcp2.PoolingDriver} registers itself
          with the {@link java.sql.DriverManager} when it is created, now you can just
          go to the {@link java.sql.DriverManager} to create your {@link java.sql.Connection}s,
          like you normally would:
