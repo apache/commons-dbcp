@@ -39,11 +39,11 @@ webapp:
 <code><pre>
 
  &lt;Resource name="jdbc/bookstore" auth="Container"
-            type="org.apache.commons.dbcp.datasources.PerUserPoolPoolDataSource"/&gt;
+            type="org.apache.commons.dbcp2.datasources.PerUserPoolPoolDataSource"/&gt;
   &lt;ResourceParams name="jdbc/bookstore"&gt;
     &lt;parameter&gt;
       &lt;name&gt;factory&lt;/name&gt;
-      &lt;value&gt;org.apache.commons.dbcp.datasources.PerUserPoolDataSourceFactory&lt;/value&gt;
+      &lt;value&gt;org.apache.commons.dbcp2.datasources.PerUserPoolDataSourceFactory&lt;/value&gt;
     &lt;/parameter&gt;
     &lt;parameter&gt;
       &lt;name&gt;dataSourceName&lt;/name&gt;&lt;value&gt;java:comp/env/jdbc/bookstoreCPDS&lt;/value&gt;
@@ -72,7 +72,7 @@ described in the servlet specification:
     jdbc/bookstore
   &lt;/res-ref-name&gt;
   &lt;res-type&gt;
-    org.apache.commons.dbcp.datasources.PerUserPoolDataSource
+    org.apache.commons.dbcp2.datasources.PerUserPoolDataSource
   &lt;/res-type&gt;
   &lt;res-auth&gt;
     Container

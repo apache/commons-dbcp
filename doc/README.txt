@@ -2,7 +2,7 @@
 
 Before running these examples make sure you have registered the database
 driver you want to use. If you don't you will get the following error:
-"org.apache.commons.dbcp.DbcpException: java.sql.SQLException: No suitable driver"
+"org.apache.commons.dbcp2.DbcpException: java.sql.SQLException: No suitable driver"
 
 The DriverManager class will attempt to load the driver classes referenced 
 in the "jdbc.drivers" system property. For example you might specify
