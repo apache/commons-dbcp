@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -39,12 +38,13 @@ public class DriverConnectionFactory implements ConnectionFactory {
         return _driver.connect(_connectUri,_props);
     }
 
-    protected Driver _driver = null; // TODO make final and private
-    protected String _connectUri = null; // TODO make final and private
-    protected Properties _props = null; // TODO make final and private
+    private final Driver _driver;
+    private final String _connectUri;
+    private final Properties _props;
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(_driver) + ";" + String.valueOf(_connectUri) + ";"  + String.valueOf(_props) + "]";
+        return this.getClass().getName() + " [" + String.valueOf(_driver) + ";" +
+                String.valueOf(_connectUri) + ";"  + String.valueOf(_props) + "]";
     }
 }
