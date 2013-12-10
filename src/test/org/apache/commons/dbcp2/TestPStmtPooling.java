@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.Statement;
 import java.sql.SQLException;
 
@@ -46,7 +47,8 @@ public class TestPStmtPooling extends TestCase {
     }
 
     public void testStmtPool() throws Exception {
-        new TesterDriver();
+        @SuppressWarnings("unused") // Ensure TesterDriver is registered
+        Driver d = new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
@@ -70,7 +72,8 @@ public class TestPStmtPooling extends TestCase {
     }
 
     public void testCallableStatementPooling() throws Exception {
-        new TesterDriver();
+        @SuppressWarnings("unused") // Ensure TesterDriver is registered
+        Driver d = new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
@@ -108,7 +111,8 @@ public class TestPStmtPooling extends TestCase {
     }
 
     public void testClosePool() throws Exception {
-        new TesterDriver();
+        @SuppressWarnings("unused") // Ensure TesterDriver is registered
+        Driver d = new TesterDriver();
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 

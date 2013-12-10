@@ -24,6 +24,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -98,7 +100,8 @@ public class TestPoolingDriver extends TestConnectionPool {
         pcf.setDefaultAutoCommit(true);
         GenericObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(pcf);
-        new PoolingDataSource<>(connectionPool);
+        @SuppressWarnings("unused") // Ensure PoolingDataSource can be created
+        DataSource ds = new PoolingDataSource<>(connectionPool);
     }
 
     public void test2() {
