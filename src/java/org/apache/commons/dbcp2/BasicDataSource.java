@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.io.PrintWriter;
@@ -31,6 +30,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -57,7 +59,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class BasicDataSource implements DataSource {
+public class BasicDataSource implements DataSource, MBeanRegistration {
 
     private static final Log log =
             LogFactory.getLog(BasicDataSource.class);
@@ -1882,15 +1884,16 @@ public class BasicDataSource implements DataSource {
      */
     protected void createConnectionPool(PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        updateJmxName(config);
         GenericObjectPool<PoolableConnection> gop;
         if (abandonedConfig != null &&
                 (abandonedConfig.getRemoveAbandonedOnBorrow() ||
                  abandonedConfig.getRemoveAbandonedOnMaintenance())) {
-            gop = new GenericObjectPool<>(factory, new GenericObjectPoolConfig(),
-                    abandonedConfig);
+            gop = new GenericObjectPool<>(factory, config, abandonedConfig);
         }
         else {
-            gop = new GenericObjectPool<>(factory);
+            gop = new GenericObjectPool<>(factory, config);
         }
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
@@ -2003,5 +2006,39 @@ public class BasicDataSource implements DataSource {
         if (logWriter != null) {
             logWriter.println(message);
         }
+    }
+
+    private ObjectName oname = null;
+    
+    @Override
+    public ObjectName preRegister(MBeanServer server, ObjectName name)
+            throws Exception {
+        oname = name;
+        return name;
+    }
+
+    @Override
+    public void postRegister(Boolean registrationDone) {
+        // NO-OP
+    }
+
+    @Override
+    public void preDeregister() throws Exception {
+        // NO-OP
+    }
+
+    @Override
+    public void postDeregister() {
+        // NO-OP
+    }
+    
+    private void updateJmxName(GenericObjectPoolConfig config) {
+        if (oname == null) {
+            return;
+        }
+        StringBuilder base = new StringBuilder(oname.toString());
+        base.append(",pool=");
+        config.setJmxNameBase(base.toString());
+        config.setJmxNamePrefix("connections");
     }
 }
