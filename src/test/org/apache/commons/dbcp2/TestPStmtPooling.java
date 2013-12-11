@@ -53,7 +53,7 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connFactory);
+            new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
@@ -78,7 +78,7 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connFactory);
+            new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
@@ -117,7 +117,7 @@ public class TestPStmtPooling extends TestCase {
                 "jdbc:apache:commons:testdriver","u1","p1");
 
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connFactory);
+            new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);

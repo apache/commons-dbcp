@@ -70,6 +70,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_USERNAME = "username";
     private final static String PROP_VALIDATIONQUERY = "validationQuery";
     private final static String PROP_VALIDATIONQUERY_TIMEOUT = "validationQueryTimeout";
+    private final static String PROP_JMX_NAME = "jmxName";
+
     /**
      * The property name for connectionInitSqls.
      * The associated value String must be of the form [query;]*
@@ -387,6 +389,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setMaxConnLifetimeMillis(Long.parseLong(value));
         }
 
+        value = properties.getProperty(PROP_JMX_NAME);
+        if (value != null) {
+            dataSource.setJmxName(value);
+        }
+        
         // DBCP-215
         // Trick to make sure that initialSize connections are created
         if (dataSource.getInitialSize() > 0) {

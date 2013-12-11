@@ -18,6 +18,8 @@
 package org.apache.commons.dbcp2.managed;
 import java.sql.Connection;
 
+import javax.management.ObjectName;
+
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolableConnection;
@@ -44,8 +46,9 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      *
      * @param connFactory XAConnectionFactory
      */
-    public PoolableManagedConnectionFactory(XAConnectionFactory connFactory) {
-        super(connFactory);
+    public PoolableManagedConnectionFactory(XAConnectionFactory connFactory,
+            ObjectName dataSourceJmxName) {
+        super(connFactory, dataSourceJmxName);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }
 

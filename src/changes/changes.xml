@@ -82,6 +82,11 @@ The <action> type attribute can be add,update,fix,remove.
         Fix threading issues with accessToUnderlyingConnectionAllowed attribute
         of PoolingDriver which is used to support unit testing.
       </action>
+      <action dev="markt" issue="DBCP-292" type="add">
+        BasicDataSource instances are now exposed via JMX. All the configuration
+        properties are available as is the connection pool and the statement
+        pools (if statement pooling is enabled).
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-405" type="fix">
