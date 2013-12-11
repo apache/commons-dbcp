@@ -23,6 +23,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import javax.management.ObjectName;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -54,16 +56,10 @@ public class PoolableConnectionFactory
      * @param connFactory the {@link ConnectionFactory} from which to obtain
      * base {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory) {
+    public PoolableConnectionFactory(ConnectionFactory connFactory,
+            ObjectName dataSourceJmxName) {
         _connFactory = connFactory;
-    }
-
-    /**
-     * Sets the {@link ConnectionFactory} from which to obtain base {@link Connection}s.
-     * @param connFactory the {@link ConnectionFactory} from which to obtain base {@link Connection}s
-     */
-    public void setConnectionFactory(ConnectionFactory connFactory) {
-        _connFactory = connFactory;
+        this.dataSourceJmxName = dataSourceJmxName;
     }
 
     /**
@@ -203,6 +199,12 @@ public class PoolableConnectionFactory
             config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
+            if (dataSourceJmxName != null) {
+                StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
+                base.append(",pool=statements,connection=");
+                config.setJmxNameBase(base.toString());
+                config.setJmxNamePrefix(Integer.toString(conn.hashCode()));
+            }
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                     new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
@@ -348,7 +350,8 @@ public class PoolableConnectionFactory
     }
 
 
-    protected volatile ConnectionFactory _connFactory = null;
+    protected final ConnectionFactory _connFactory;
+    private final ObjectName dataSourceJmxName;
     protected volatile String _validationQuery = null;
     protected volatile int _validationQueryTimeout = -1;
     protected Collection<String> _connectionInitSqls = null;

@@ -17,6 +17,7 @@
 package org.apache.commons.dbcp2;
 
 import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
 import java.util.Properties;
 import java.util.Collection;
 import java.util.List;
@@ -30,8 +31,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistration;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
 
@@ -59,7 +64,8 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class BasicDataSource implements DataSource, MBeanRegistration {
+public class BasicDataSource
+        implements DataSource, BasicDataSourceMXBean, MBeanRegistration {
 
     private static final Log log =
             LogFactory.getLog(BasicDataSource.class);
@@ -81,6 +87,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return true if default auto-commit is enabled
      */
+    @Override
     public boolean getDefaultAutoCommit() {
         return this.defaultAutoCommit;
     }
@@ -112,6 +119,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return true if connections are readOnly by default
      */
+    @Override
     public boolean getDefaultReadOnly() {
         Boolean val = defaultReadOnly;
         if (val != null) {
@@ -147,6 +155,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the default value for transaction isolation state
      * @see Connection#getTransactionIsolation
      */
+    @Override
     public int getDefaultTransactionIsolation() {
         return this.defaultTransactionIsolation;
     }
@@ -180,6 +189,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the default catalog
      */
+    @Override
     public String getDefaultCatalog() {
         return this.defaultCatalog;
     }
@@ -215,6 +225,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return  the state caching flag
      */
+    @Override
     public boolean getCacheState() {
         return cacheState;
     }
@@ -275,6 +286,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the jdbc driver class name
      */
+    @Override
     public synchronized String getDriverClassName() {
         return this.driverClassName;
     }
@@ -352,6 +364,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @see #lifo
      */
+    @Override
     public synchronized boolean getLifo() {
         return this.lifo;
     }
@@ -384,6 +397,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the maximum number of active connections
      */
+    @Override
     public synchronized int getMaxTotal() {
         return this.maxTotal;
     }
@@ -422,6 +436,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the maximum number of idle connections
      */
+    @Override
     public synchronized int getMaxIdle() {
         return this.maxIdle;
     }
@@ -458,6 +473,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the minimum number of idle connections
      * @see GenericObjectPool#getMinIdle()
      */
+    @Override
     public synchronized int getMinIdle() {
         return this.minIdle;
     }
@@ -491,6 +507,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the number of connections created when the pool is initialized
      */
+    @Override
     public synchronized int getInitialSize() {
         return this.initialSize;
     }
@@ -528,6 +545,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the maxWaitMillis property value
      */
+    @Override
     public synchronized long getMaxWaitMillis() {
         return this.maxWaitMillis;
     }
@@ -559,6 +577,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return true if prepared and callable statements are pooled
      */
+    @Override
     public synchronized boolean isPoolPreparedStatements() {
         return this.poolPreparedStatements;
     }
@@ -598,6 +617,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the maximum number of open statements
      * @see #maxOpenPreparedStatements
      */
+    @Override
     public synchronized int getMaxOpenPreparedStatements() {
         return this.maxOpenPreparedStatements;
     }
@@ -634,6 +654,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @see #testOnBorrow
      */
+    @Override
     public synchronized boolean getTestOnBorrow() {
         return this.testOnBorrow;
     }
@@ -700,6 +721,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the time (in milliseconds) between evictor runs
      * @see #timeBetweenEvictionRunsMillis
      */
+    @Override
     public synchronized long getTimeBetweenEvictionRunsMillis() {
         return this.timeBetweenEvictionRunsMillis;
     }
@@ -731,6 +753,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * runs
      * @see #numTestsPerEvictionRun
      */
+    @Override
     public synchronized int getNumTestsPerEvictionRun() {
         return this.numTestsPerEvictionRun;
     }
@@ -762,6 +785,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the value of the {@link #minEvictableIdleTimeMillis} property
      * @see #minEvictableIdleTimeMillis
      */
+    @Override
     public synchronized long getMinEvictableIdleTimeMillis() {
         return this.minEvictableIdleTimeMillis;
     }
@@ -828,6 +852,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * in the pool
      * @since 1.4.1
      */
+    @Override
     public synchronized long getSoftMinEvictableIdleTimeMillis() {
         return softMinEvictableIdleTimeMillis;
     }
@@ -846,6 +871,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * validated
      * @see #testWhileIdle
      */
+    @Override
     public synchronized boolean getTestWhileIdle() {
         return this.testWhileIdle;
     }
@@ -871,6 +897,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the current number of active connections
      */
+    @Override
     public synchronized int getNumActive() {
         if (connectionPool != null) {
             return connectionPool.getNumActive();
@@ -886,6 +913,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the current number of idle connections
      */
+    @Override
     public synchronized int getNumIdle() {
         if (connectionPool != null) {
             return connectionPool.getNumIdle();
@@ -905,6 +933,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return the connection password
      */
+    @Override
     public String getPassword() {
         return this.password;
     }
@@ -936,6 +965,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the {@link #url} passed to the JDBC driver to establish
      * connections
      */
+    @Override
     public synchronized String getUrl() {
         return this.url;
     }
@@ -967,6 +997,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the {@link #username} passed to the JDBC driver to establish
      * connections
      */
+    @Override
     public String getUsername() {
         return this.username;
     }
@@ -1001,6 +1032,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the SQL validation query
      * @see #validationQuery
      */
+    @Override
     public String getValidationQuery() {
         return this.validationQuery;
     }
@@ -1037,6 +1069,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return the timeout in seconds before connection validation queries fail.
      * @since 1.3
      */
+    @Override
     public int getValidationQueryTimeout() {
         return validationQueryTimeout;
     }
@@ -1089,6 +1122,16 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
     }
 
     /**
+     * Provides the same data as {@link #getConnectionInitSqls()} but in an
+     * array so it is accessible via JMX.
+     */
+    @Override
+    public String[] getConnectionInitSqlsAsArray() {
+        Collection<String> result = getConnectionInitSqls();
+        return result.toArray(new String[result.size()]);
+    }
+
+    /**
      * Sets the list of SQL statements to be executed when a physical
      * connection is first created.
      * <p>
@@ -1132,6 +1175,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * @return true if access to the underlying connection is allowed, false
      * otherwise.
      */
+    @Override
     public synchronized boolean isAccessToUnderlyingConnectionAllowed() {
         return this.accessToUnderlyingConnectionAllowed;
     }
@@ -1160,6 +1204,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * Returns the maximum permitted lifetime of a connection in milliseconds. A
      * value of zero or less indicates an infinite lifetime.
      */
+    @Override
     public long getMaxConnLifetimeMillis() {
         return maxConnLifetimeMillis;
     }
@@ -1175,6 +1220,27 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      */
     public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+
+    private String jmxName = null;
+    
+    /**
+     * Returns the JMX name that has been requested for this DataSource. If the
+     * requested name is not valid, an alternative may be chosen.
+     */
+    public String getJmxName() {
+        return jmxName;
+    }
+
+    /**
+     * Sets the JMX name that has been requested for this DataSource. If the
+     * requested name is not valid, an alternative may be chosen. This
+     * DataSource will attempt to register itself using this name. If another
+     * component registers this DataSource with JMX and this name is valid this
+     * name will be used in preference to any specified by the other component.
+     */
+    public void setJmxName(String jmxName) {
+        this.jmxName = jmxName;
     }
 
 
@@ -1357,6 +1423,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @see #getRemoveAbandonedTimeout()
      */
+    @Override
     public boolean getRemoveAbandonedOnBorrow() {
         if (abandonedConfig != null) {
             return abandonedConfig.getRemoveAbandonedOnBorrow();
@@ -1408,6 +1475,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @see #getRemoveAbandonedTimeout()
      */
+    @Override
     public boolean getRemoveAbandonedOnMaintenance() {
         if (abandonedConfig != null) {
             return abandonedConfig.getRemoveAbandonedOnMaintenance();
@@ -1454,6 +1522,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * <p>The default value is 300 seconds.</p>
      */
+    @Override
     public int getRemoveAbandonedTimeout() {
         if (abandonedConfig != null) {
             return abandonedConfig.getRemoveAbandonedTimeout();
@@ -1492,6 +1561,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * for every Connection open or new Statement because a stack
      * trace has to be generated. </p>
      */
+    @Override
     public boolean getLogAbandoned() {
         if (abandonedConfig != null) {
             return abandonedConfig.getLogAbandoned();
@@ -1543,6 +1613,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      *
      * @return <code>true</code> if usage tracking is enabled
      */
+    @Override
     public boolean getAbandonedUsageTracking() {
         if (abandonedConfig != null) {
             return abandonedConfig.getUseUsageTracking();
@@ -1668,6 +1739,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
      * If true, this data source is closed and no more connections can be retrieved from this datasource.
      * @return true, if the data source is closed; false otherwise
      */
+    @Override
     public synchronized boolean isClosed() {
         return closed;
     }
@@ -1714,6 +1786,8 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
             if (dataSource != null) {
                 return (dataSource);
             }
+
+            jmxRegister();
 
             // create factory which returns raw physical connections
             ConnectionFactory driverConnectionFactory = createConnectionFactory();
@@ -1959,8 +2033,7 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
             ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory =
-                new PoolableConnectionFactory(driverConnectionFactory);
+            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxName);
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -2008,13 +2081,54 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
         }
     }
 
-    private ObjectName oname = null;
+    /**
+     * Actual name under which this component has been registered.
+     */
+    private ObjectName registeredJmxName = null;
     
+    private void jmxRegister() {
+        // Return immediately if this DataSource has already been registered
+        if (registeredJmxName != null) {
+            return;
+        }
+        // Return immediately if no JMX name has been specified
+        String requestedName = getJmxName();
+        if (requestedName == null) {
+            return;
+        }
+        ObjectName oname;
+        try {
+             oname = new ObjectName(requestedName);
+        } catch (MalformedObjectNameException e) {
+            log.warn("The requested JMX name [" + requestedName +
+                    "] was not valid and will be ignored.");
+            return;
+        }
+        
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            mbs.registerMBean(this, oname);
+        } catch (InstanceAlreadyExistsException | MBeanRegistrationException
+                | NotCompliantMBeanException e) {
+            log.warn("Failed to complete JMX registration", e);
+        }
+    }
+
     @Override
-    public ObjectName preRegister(MBeanServer server, ObjectName name)
-            throws Exception {
-        oname = name;
-        return name;
+    public ObjectName preRegister(MBeanServer server, ObjectName name) {
+        String requestedName = getJmxName();
+        if (requestedName != null) {
+            try {
+                registeredJmxName = new ObjectName(requestedName);
+            } catch (MalformedObjectNameException e) {
+                log.warn("The requested JMX name [" + requestedName +
+                        "] was not valid and will be ignored.");
+            }
+        }
+        if (registeredJmxName == null) {
+            registeredJmxName = name;
+        }
+        return registeredJmxName;
     }
 
     @Override
@@ -2033,12 +2147,16 @@ public class BasicDataSource implements DataSource, MBeanRegistration {
     }
     
     private void updateJmxName(GenericObjectPoolConfig config) {
-        if (oname == null) {
+        if (registeredJmxName == null) {
             return;
         }
-        StringBuilder base = new StringBuilder(oname.toString());
+        StringBuilder base = new StringBuilder(registeredJmxName.toString());
         base.append(",pool=");
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix("connections");
+    }
+    
+    protected ObjectName getRegisteredJmxName() {
+        return registeredJmxName;
     }
 }

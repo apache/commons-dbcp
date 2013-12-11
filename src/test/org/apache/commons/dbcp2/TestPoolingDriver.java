@@ -60,7 +60,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         super.setUp();
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf);
+        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
         pcf.setPoolStatements(true);
         pcf.setMaxOpenPrepatedStatements(10);
         pcf.setValidationQuery("SELECT COUNT(*) FROM DUAL");
@@ -95,7 +95,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     public void test1() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connectionFactory);
+            new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
         GenericObjectPool<PoolableConnection> connectionPool =
@@ -107,7 +107,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     public void test2() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connectionFactory);
+            new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(false);
         pcf.setDefaultAutoCommit(true);
         GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
@@ -147,7 +147,7 @@ public class TestPoolingDriver extends TestConnectionPool {
             "username",
             "password");
         PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory);
+            new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(false);
         poolableConnectionFactory.setDefaultAutoCommit(true);
         ObjectPool<PoolableConnection> connectionPool =

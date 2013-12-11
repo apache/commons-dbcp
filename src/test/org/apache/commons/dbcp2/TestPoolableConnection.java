@@ -46,7 +46,8 @@ public class TestPoolableConnection extends TestCase {
     public void setUp() throws Exception {
         PoolableConnectionFactory factory = new PoolableConnectionFactory(
                 new DriverConnectionFactory(
-                        new TesterDriver(),"jdbc:apache:commons:testdriver", null));
+                        new TesterDriver(),"jdbc:apache:commons:testdriver", null),
+                null);
         factory.setDefaultAutoCommit(true);
         factory.setDefaultReadOnly(true);
 

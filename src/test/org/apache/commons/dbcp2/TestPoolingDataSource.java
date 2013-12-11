@@ -55,8 +55,9 @@ public class TestPoolingDataSource extends TestConnectionPool {
         props.setProperty("password", "password");
         PoolableConnectionFactory factory =
             new PoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(),
-                        "jdbc:apache:commons:testdriver", props));
+                    new DriverConnectionFactory(new TesterDriver(),
+                            "jdbc:apache:commons:testdriver", props),
+                    null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
         factory.setDefaultReadOnly(true);
         factory.setDefaultAutoCommit(true);

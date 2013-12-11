@@ -56,7 +56,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
                     "jdbc:apache:commons:testdriver",
                     "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory);
+            new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(false);
         poolableConnectionFactory.setDefaultAutoCommit(true);
 
