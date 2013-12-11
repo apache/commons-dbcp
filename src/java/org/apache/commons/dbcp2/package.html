@@ -42,20 +42,20 @@
          get one of those?
       </p><p>
          A: The {@link org.apache.commons.pool2.ObjectPool ObjectPool} interface is defined
-         in the {@link org.apache.commons.pool} package (Commons-Pool).
+         in the {@link org.apache.commons.pool2} package (Commons-Pool).
          The {@link org.apache.commons.pool2.impl} package has a couple of implementations,
          and you can always create your own.
       </p>
       <p>
          Q: Ok, I've found an {@link org.apache.commons.pool2.ObjectPool ObjectPool}
          implementation that I think suits my connection pooling needs.  But it wants
-         a {@link org.apache.commons.pool2.PoolableObjectFactory PoolableObjectFactory}.
+         a {@link org.apache.commons.pool2.PooledObjectFactory PooledObjectFactory}.
          What should I use for that?
       </p><p>
          A: The DBCP package provides a class for this purpose. It's called
          {@link org.apache.commons.dbcp2.PoolableConnectionFactory}.
          It implements the factory and lifecycle methods of
-         {@link org.apache.commons.pool2.PoolableObjectFactory}
+         {@link org.apache.commons.pool2.PooledObjectFactory}
          for {@link java.sql.Connection}s.  But it doesn't create the actual database
          {@link java.sql.Connection}s itself, it uses a
          {@link org.apache.commons.dbcp2.ConnectionFactory} for that.
@@ -85,7 +85,7 @@
          {@link java.sql.Connection}.
       </p><p>
          To create a {@link org.apache.commons.pool2.ObjectPool}, you'll need
-         a {@link org.apache.commons.pool2.PoolableObjectFactory} that creates
+         a {@link org.apache.commons.pool2.PooledObjectFactory} that creates
          the actual {@link java.sql.Connection}s.  That's what
          {@link org.apache.commons.dbcp2.PoolableConnectionFactory} is for.
       </p><p>
@@ -102,7 +102,7 @@
             <br></br>
             When you pass an {@link org.apache.commons.pool2.ObjectPool} into the
             {@link org.apache.commons.dbcp2.PoolableConnectionFactory}, it will
-            automatically register itself as the {@link org.apache.commons.pool2.PoolableObjectFactory}
+            automatically register itself as the {@link org.apache.commons.pool2.PooledObjectFactory}
             for that pool.
           </li>
          </ol>
