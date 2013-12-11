@@ -24,217 +24,217 @@ package org.apache.commons.dbcp2;
 public interface BasicDataSourceMXBean {
     
     /**
-     * @see {@link BasicDataSource#getAbandonedUsageTracking()}
+     * See {@link BasicDataSource#getAbandonedUsageTracking()}
      * @return {@link BasicDataSource#getAbandonedUsageTracking()}
      */
     boolean getAbandonedUsageTracking();
  
     /**
-     * @see {@link BasicDataSource#getDefaultAutoCommit()}
+     * See {@link BasicDataSource#getDefaultAutoCommit()}
      * @return {@link BasicDataSource#getDefaultAutoCommit()}
      */
     boolean getDefaultAutoCommit();
    
     /**
-     * @see {@link BasicDataSource#getDefaultReadOnly()}
+     * See {@link BasicDataSource#getDefaultReadOnly()}
      * @return {@link BasicDataSource#getDefaultReadOnly()}
      */
     boolean getDefaultReadOnly();
    
     /**
-     * @see {@link BasicDataSource#getDefaultTransactionIsolation()}
+     * See {@link BasicDataSource#getDefaultTransactionIsolation()}
      * @return {@link BasicDataSource#getDefaultTransactionIsolation()}
      */
     int getDefaultTransactionIsolation();
    
     /**
-     * @see {@link BasicDataSource#getDefaultCatalog()}
+     * See {@link BasicDataSource#getDefaultCatalog()}
      * @return {@link BasicDataSource#getDefaultCatalog()}
      */
     String getDefaultCatalog();
    
     /**
-     * @see {@link BasicDataSource#getCacheState()}
+     * See {@link BasicDataSource#getCacheState()}
      * @return {@link BasicDataSource#getCacheState()}
      */
     boolean getCacheState();
    
     /**
-     * @see {@link BasicDataSource#getDriverClassName()}
+     * See {@link BasicDataSource#getDriverClassName()}
      * @return {@link BasicDataSource#getDriverClassName()}
      */
     String getDriverClassName();
    
     /**
-     * @see {@link BasicDataSource#getLifo()}
+     * See {@link BasicDataSource#getLifo()}
      * @return {@link BasicDataSource#getLifo()}
      */
     boolean getLifo();
    
     /**
-     * @see {@link BasicDataSource#getMaxTotal()}
+     * See {@link BasicDataSource#getMaxTotal()}
      * @return {@link BasicDataSource#getMaxTotal()}
      */
     int getMaxTotal();
    
     /**
-     * @see {@link BasicDataSource#getMaxIdle()}
+     * See {@link BasicDataSource#getMaxIdle()}
      * @return {@link BasicDataSource#getMaxIdle()}
      */
     int getMaxIdle();
 
     /**
-     * @see {@link BasicDataSource#getMinIdle()}
+     * See {@link BasicDataSource#getMinIdle()}
      * @return {@link BasicDataSource#getMinIdle()}
      */
     int getMinIdle();
    
     /**
-     * @see {@link BasicDataSource#getInitialSize()}
+     * See {@link BasicDataSource#getInitialSize()}
      * @return {@link BasicDataSource#getInitialSize()}
      */
     int getInitialSize();
    
     /**
-     * @see {@link BasicDataSource#getMaxWaitMillis()}
+     * See {@link BasicDataSource#getMaxWaitMillis()}
      * @return {@link BasicDataSource#getMaxWaitMillis()}
      */
     long getMaxWaitMillis();
    
     /**
-     * @see {@link BasicDataSource#isPoolPreparedStatements()}
+     * See {@link BasicDataSource#isPoolPreparedStatements()}
      * @return {@link BasicDataSource#isPoolPreparedStatements()}
      */
     boolean isPoolPreparedStatements();
    
     /**
-     * @see {@link BasicDataSource#getMaxOpenPreparedStatements()}
+     * See {@link BasicDataSource#getMaxOpenPreparedStatements()}
      * @return {@link BasicDataSource#getMaxOpenPreparedStatements()}
      */
     int getMaxOpenPreparedStatements();
    
     /**
-     * @see {@link BasicDataSource#getTestOnBorrow()}
+     * See {@link BasicDataSource#getTestOnBorrow()}
      * @return {@link BasicDataSource#getTestOnBorrow()}
      */
     boolean getTestOnBorrow();
       
     /**
-     * @see {@link BasicDataSource#getTimeBetweenEvictionRunsMillis()}
+     * See {@link BasicDataSource#getTimeBetweenEvictionRunsMillis()}
      * @return {@link BasicDataSource#getTimeBetweenEvictionRunsMillis()}
      */
     long getTimeBetweenEvictionRunsMillis();
    
     /**
-     * @see {@link BasicDataSource#getNumTestsPerEvictionRun()}
+     * See {@link BasicDataSource#getNumTestsPerEvictionRun()}
      * @return {@link BasicDataSource#getNumTestsPerEvictionRun()}
      */
     int getNumTestsPerEvictionRun();
    
     /**
-     * @see {@link BasicDataSource#getMinEvictableIdleTimeMillis()}
+     * See {@link BasicDataSource#getMinEvictableIdleTimeMillis()}
      * @return {@link BasicDataSource#getMinEvictableIdleTimeMillis()}
      */
     long getMinEvictableIdleTimeMillis();
    
     /**
-     * @see {@link BasicDataSource#getSoftMinEvictableIdleTimeMillis()}
+     * See {@link BasicDataSource#getSoftMinEvictableIdleTimeMillis()}
      * @return {@link BasicDataSource#getSoftMinEvictableIdleTimeMillis()}
      */
     long getSoftMinEvictableIdleTimeMillis();
    
     /**
-     * @see {@link BasicDataSource#getTestWhileIdle()}
+     * See {@link BasicDataSource#getTestWhileIdle()}
      * @return {@link BasicDataSource#getTestWhileIdle()}
      */
     boolean getTestWhileIdle();
    
     /**
-     * @see {@link BasicDataSource#getNumActive()}
+     * See {@link BasicDataSource#getNumActive()}
      * @return {@link BasicDataSource#getNumActive()}
      */
     int getNumActive();
    
     /**
-     * @see {@link BasicDataSource#getNumIdle()}
+     * See {@link BasicDataSource#getNumIdle()}
      * @return {@link BasicDataSource#getNumIdle()}
      */
     int getNumIdle();
    
     /**
-     * @see {@link BasicDataSource#getPassword()}
+     * See {@link BasicDataSource#getPassword()}
      * @return {@link BasicDataSource#getPassword()}
      */
     String getPassword();
    
     /**
-     * @see {@link BasicDataSource#getUrl()}
+     * See {@link BasicDataSource#getUrl()}
      * @return {@link BasicDataSource#getUrl()}
      */
     String getUrl();
    
     /**
-     * @see {@link BasicDataSource#getUsername()}
+     * See {@link BasicDataSource#getUsername()}
      * @return {@link BasicDataSource#getUsername()}
      */
     String getUsername();
    
     /**
-     * @see {@link BasicDataSource#getValidationQuery()}
+     * See {@link BasicDataSource#getValidationQuery()}
      * @return {@link BasicDataSource#getValidationQuery()}
      */
     String getValidationQuery();
    
     /**
-     * @see {@link BasicDataSource#getValidationQueryTimeout()}
+     * See {@link BasicDataSource#getValidationQueryTimeout()}
      * @return {@link BasicDataSource#getValidationQueryTimeout()}
      */
     int getValidationQueryTimeout();
    
     /**
-     * @see {@link BasicDataSource#getConnectionInitSqlsAsArray()}
+     * See {@link BasicDataSource#getConnectionInitSqlsAsArray()}
      * @return {@link BasicDataSource#getConnectionInitSqlsAsArray()}
      */
     String[] getConnectionInitSqlsAsArray();
    
     /**
-     * @see {@link BasicDataSource#isAccessToUnderlyingConnectionAllowed()}
+     * See {@link BasicDataSource#isAccessToUnderlyingConnectionAllowed()}
      * @return {@link BasicDataSource#isAccessToUnderlyingConnectionAllowed()}
      */
     boolean isAccessToUnderlyingConnectionAllowed();
    
     /**
-     * @see {@link BasicDataSource#getMaxConnLifetimeMillis()}
+     * See {@link BasicDataSource#getMaxConnLifetimeMillis()}
      * @return {@link BasicDataSource#getMaxConnLifetimeMillis()}
      */
     long getMaxConnLifetimeMillis();
    
     /**
-     * @see {@link BasicDataSource#getRemoveAbandonedOnBorrow()}
+     * See {@link BasicDataSource#getRemoveAbandonedOnBorrow()}
      * @return {@link BasicDataSource#getRemoveAbandonedOnBorrow()}
      */
     boolean getRemoveAbandonedOnBorrow();
    
     /**
-     * @see {@link BasicDataSource#getRemoveAbandonedOnMaintenance()}
+     * See {@link BasicDataSource#getRemoveAbandonedOnMaintenance()}
      * @return {@link BasicDataSource#getRemoveAbandonedOnMaintenance()}
      */
     boolean getRemoveAbandonedOnMaintenance();
    
     /**
-     * @see {@link BasicDataSource#getRemoveAbandonedTimeout()}
+     * See {@link BasicDataSource#getRemoveAbandonedTimeout()}
      * @return {@link BasicDataSource#getRemoveAbandonedTimeout()}
      */
     int getRemoveAbandonedTimeout();
    
     /**
-     * @see {@link BasicDataSource#getLogAbandoned()}
+     * See {@link BasicDataSource#getLogAbandoned()}
      * @return {@link BasicDataSource#getLogAbandoned()}
      */
     boolean getLogAbandoned();
    
     /**
-     * @see {@link BasicDataSource#isClosed()}
+     * See {@link BasicDataSource#isClosed()}
      * @return {@link BasicDataSource#isClosed()}
      */
     boolean isClosed();
