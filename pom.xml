@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>24</version>
+    <version>32</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
@@ -202,11 +202,20 @@
   </dependencies>
 
   <properties>
-    <maven.compile.source>1.7</maven.compile.source>
-    <maven.compile.target>1.7</maven.compile.target>
-    <commons.componentid>dbcp</commons.componentid>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <commons.componentid>dbdp2</commons.componentid>
     <commons.release.version>2.0</commons.release.version>
-    <commons.release.desc>for JDBC 4.1 (JDK 1.7)</commons.release.desc>
+    <commons.release.desc>(Java 7.0+)</commons.release.desc>
+    <commons.release.2.version>1.5</commons.release.2.version>
+    <commons.release.2.desc>(Java 5.0+)</commons.release.2.desc>
+    <!-- override parent name, because 1.x uses different artifactId -->
+    <commons.release.2.name>commons-dbcp-${commons.release.2.version}</commons.release.2.name>
+    <commons.site.path>dbcp</commons.site.path>
+    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-dbcp</commons.scmPubUrl>
+    <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
   </properties> 
@@ -341,7 +350,7 @@
             <rulesets>
               <ruleset>checkstyle.xml</ruleset>
             </rulesets>
-            <targetJdk>${maven.compile.target}</targetJdk>
+            <targetJdk>${maven.compiler.target}</targetJdk>
           </configuration>
         </plugin>
         <plugin>
