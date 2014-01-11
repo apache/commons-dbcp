@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,11 +35,11 @@ import org.apache.commons.dbcp.SQLNestedException;
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
  * J2EE environment.  There are many configuration options, most of which are
- * defined in the parent class. All users (based on username) share a single 
+ * defined in the parent class. All users (based on username) share a single
  * maximum number of Connections in this datasource.</p>
- * 
+ *
  * <p>User passwords can be changed without re-initializing the datasource.
- * When a <code>getConnection(username, password)</code> request is processed 
+ * When a <code>getConnection(username, password)</code> request is processed
  * with a password that is different from those used to create connections in the
  * pool associated with <code>username</code>, an attempt is made to create a
  * new connection using the supplied password and if this succeeds, idle connections
@@ -82,7 +82,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      */
     public int getMaxActive() {
         return (this.maxActive);
@@ -90,7 +90,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * The default is 8.
      */
     public void setMaxActive(int maxActive) {
@@ -119,7 +119,7 @@ public class SharedPoolDataSource
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
      * The default is -1.
      */
@@ -130,7 +130,7 @@ public class SharedPoolDataSource
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
      * The default is -1.
      */
@@ -159,10 +159,10 @@ public class SharedPoolDataSource
     // ----------------------------------------------------------------------
     // Inherited abstract methods
 
-    protected PooledConnectionAndInfo 
+    protected PooledConnectionAndInfo
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
-        
+
         synchronized(this) {
             if (pool == null) {
                 try {
@@ -174,9 +174,9 @@ public class SharedPoolDataSource
         }
 
         PooledConnectionAndInfo info = null;
-        
+
         UserPassKey key = new UserPassKey(username, password);
-        
+
         try {
             info = (PooledConnectionAndInfo) pool.borrowObject(key);
         }
@@ -186,14 +186,14 @@ public class SharedPoolDataSource
         }
         return info;
     }
-    
+
     protected PooledConnectionManager getConnectionManager(UserPassKey upkey)  {
         return factory;
     }
 
     /**
      * Returns a <code>SharedPoolDataSource</code> {@link Reference}.
-     * 
+     *
      * @since 1.2.2
      */
     public Reference getReference() throws NamingException {
@@ -202,9 +202,9 @@ public class SharedPoolDataSource
         ref.add(new StringRefAddr("instanceKey", instanceKey));
         return ref;
     }
-    
+
     private void registerPool(
-        String username, String password) 
+        String username, String password)
         throws javax.naming.NamingException, SQLException {
 
         ConnectionPoolDataSource cpds = testCPDS(username, password);
@@ -256,7 +256,7 @@ public class SharedPoolDataSource
      */
     private void readObject(ObjectInputStream in)
         throws IOException, ClassNotFoundException {
-        try 
+        try
         {
             in.defaultReadObject();
             SharedPoolDataSource oldDS = (SharedPoolDataSource)

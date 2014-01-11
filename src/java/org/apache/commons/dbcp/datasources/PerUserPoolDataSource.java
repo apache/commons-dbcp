@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,20 +39,20 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
  * J2EE environment.  There are many configuration options, most of which are
- * defined in the parent class.  This datasource uses individual pools per 
- * user, and some properties can be set specifically for a given user, if the 
+ * defined in the parent class.  This datasource uses individual pools per
+ * user, and some properties can be set specifically for a given user, if the
  * deployment environment can support initialization of mapped properties.
  * So for example, a pool of admin or write-access Connections can be
  * guaranteed a certain number of connections, separate from a maximum
  * set for users with read-only connections.</p>
- * 
+ *
  * <p>User passwords can be changed without re-initializing the datasource.
- * When a <code>getConnection(username, password)</code> request is processed 
+ * When a <code>getConnection(username, password)</code> request is processed
  * with a password that is different from those used to create connections in the
  * pool associated with <code>username</code>, an attempt is made to create a
  * new connection using the supplied password and if this succeeds, the existing
  * pool is cleared and a new pool is created for connections using the new password.</p>
- * 
+ *
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
@@ -66,12 +66,12 @@ public class PerUserPoolDataSource
     private int defaultMaxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
     private int defaultMaxWait = (int)Math.min(Integer.MAX_VALUE,
         GenericObjectPool.DEFAULT_MAX_WAIT);
-    Map perUserDefaultAutoCommit = null;    
+    Map perUserDefaultAutoCommit = null;
     Map perUserDefaultTransactionIsolation = null;
-    Map perUserMaxActive = null;    
-    Map perUserMaxIdle = null;    
+    Map perUserMaxActive = null;
+    Map perUserMaxIdle = null;
     Map perUserMaxWait = null;
-    Map perUserDefaultReadOnly = null;    
+    Map perUserDefaultReadOnly = null;
 
     /**
      * Map to keep track of Pools for a given user
@@ -89,7 +89,7 @@ public class PerUserPoolDataSource
      */
     public void close() {
         for (Iterator poolIter = managers.values().iterator();
-             poolIter.hasNext();) {    
+             poolIter.hasNext();) {
             try {
               ((CPDSConnectionFactory) poolIter.next()).getPool().close();
             } catch (Exception closePoolException) {
@@ -104,7 +104,7 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * This value is used for any username which is not specified
      * in perUserMaxConnections.
      */
@@ -114,7 +114,7 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * This value is used for any username which is not specified
      * in perUserMaxConnections.  The default is 8.
      */
@@ -147,7 +147,7 @@ public class PerUserPoolDataSource
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
      * This value is used for any username which is not specified
      * in perUserMaxWait.  The default is -1.
@@ -159,7 +159,7 @@ public class PerUserPoolDataSource
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
      * This value is used for any username which is not specified
      * in perUserMaxWait.  The default is -1.
@@ -170,7 +170,7 @@ public class PerUserPoolDataSource
     }
 
     /**
-     * The keys are usernames and the value is the --.  Any 
+     * The keys are usernames and the value is the --.  Any
      * username specified here will override the value of defaultAutoCommit.
      */
     public Boolean getPerUserDefaultAutoCommit(String key) {
@@ -180,9 +180,9 @@ public class PerUserPoolDataSource
         }
         return value;
     }
-    
+
     /**
-     * The keys are usernames and the value is the --.  Any 
+     * The keys are usernames and the value is the --.  Any
      * username specified here will override the value of defaultAutoCommit.
      */
     public void setPerUserDefaultAutoCommit(String username, Boolean value) {
@@ -194,7 +194,7 @@ public class PerUserPoolDataSource
     }
 
     /**
-     * The isolation level of connections when returned from getConnection.  
+     * The isolation level of connections when returned from getConnection.
      * If null, the username will use the value of defaultTransactionIsolation.
      */
     public Integer getPerUserDefaultTransactionIsolation(String username) {
@@ -206,10 +206,10 @@ public class PerUserPoolDataSource
     }
 
     /**
-     * The isolation level of connections when returned from getConnection.  
+     * The isolation level of connections when returned from getConnection.
      * Valid values are the constants defined in Connection.
      */
-    public void setPerUserDefaultTransactionIsolation(String username, 
+    public void setPerUserDefaultTransactionIsolation(String username,
                                                       Integer value) {
         assertInitializationAllowed();
         if (perUserDefaultTransactionIsolation == null) {
@@ -220,8 +220,8 @@ public class PerUserPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * this pool at the same time, or negative for no limit.
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxActive.
      */
     public Integer getPerUserMaxActive(String username) {
@@ -231,11 +231,11 @@ public class PerUserPoolDataSource
         }
         return value;
     }
-    
+
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * this pool at the same time, or negative for no limit.
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxActive.
      */
     public void setPerUserMaxActive(String username, Integer value) {
@@ -250,7 +250,7 @@ public class PerUserPoolDataSource
     /**
      * The maximum number of active connections that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxIdle.
      */
     public Integer getPerUserMaxIdle(String username) {
@@ -260,11 +260,11 @@ public class PerUserPoolDataSource
         }
         return value;
     }
-    
+
     /**
      * The maximum number of active connections that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxIdle.
      */
     public void setPerUserMaxIdle(String username, Integer value) {
@@ -274,13 +274,13 @@ public class PerUserPoolDataSource
         }
         perUserMaxIdle.put(username, value);
     }
-    
+
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxWait.
      */
     public Integer getPerUserMaxWait(String username) {
@@ -290,13 +290,13 @@ public class PerUserPoolDataSource
         }
         return value;
     }
-    
+
     /**
      * The maximum number of milliseconds that the pool will wait (when there
      * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail 
+     * throwing an exception, or -1 to wait indefinitely.  Will fail
      * immediately if value is 0.
-     * The keys are usernames and the value is the maximum connections.  Any 
+     * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxWait.
      */
     public void setPerUserMaxWait(String username, Integer value) {
@@ -308,7 +308,7 @@ public class PerUserPoolDataSource
     }
 
     /**
-     * The keys are usernames and the value is the --.  Any 
+     * The keys are usernames and the value is the --.  Any
      * username specified here will override the value of defaultReadOnly.
      */
     public Boolean getPerUserDefaultReadOnly(String username) {
@@ -318,9 +318,9 @@ public class PerUserPoolDataSource
         }
         return value;
     }
-    
+
     /**
-     * The keys are usernames and the value is the --.  Any 
+     * The keys are usernames and the value is the --.  Any
      * username specified here will override the value of defaultReadOnly.
      */
     public void setPerUserDefaultReadOnly(String username, Boolean value) {
@@ -368,7 +368,7 @@ public class PerUserPoolDataSource
     // ----------------------------------------------------------------------
     // Inherited abstract methods
 
-    protected PooledConnectionAndInfo 
+    protected PooledConnectionAndInfo
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
 
@@ -425,7 +425,7 @@ public class PerUserPoolDataSource
         return info;
     }
 
-    protected void setupDefaults(Connection con, String username) 
+    protected void setupDefaults(Connection con, String username)
         throws SQLException {
         boolean defaultAutoCommit = isDefaultAutoCommit();
         if (username != null) {
@@ -433,7 +433,7 @@ public class PerUserPoolDataSource
             if (userMax != null) {
                 defaultAutoCommit = userMax.booleanValue();
             }
-        }    
+        }
 
         boolean defaultReadOnly = isDefaultReadOnly();
         if (username != null) {
@@ -441,7 +441,7 @@ public class PerUserPoolDataSource
             if (userMax != null) {
                 defaultReadOnly = userMax.booleanValue();
             }
-        }    
+        }
 
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (username != null) {
@@ -463,7 +463,7 @@ public class PerUserPoolDataSource
             con.setReadOnly(defaultReadOnly);
         }
     }
-    
+
     protected PooledConnectionManager getConnectionManager(UserPassKey upkey) {
         return (PooledConnectionManager) managers.get(getPoolKey(
                 upkey.getUsername(), upkey.getPassword()));
@@ -471,7 +471,7 @@ public class PerUserPoolDataSource
 
     /**
      * Returns a <code>PerUserPoolDataSource</code> {@link Reference}.
-     * 
+     *
      * @since 1.2.2
      */
     public Reference getReference() throws NamingException {
@@ -480,19 +480,19 @@ public class PerUserPoolDataSource
         ref.add(new StringRefAddr("instanceKey", instanceKey));
         return ref;
     }
-    
-    private PoolKey getPoolKey(String username, String password) { 
-        return new PoolKey(getDataSourceName(), username); 
+
+    private PoolKey getPoolKey(String username, String password) {
+        return new PoolKey(getDataSourceName(), username);
     }
 
     private synchronized void registerPool(
-        String username, String password) 
+        String username, String password)
         throws javax.naming.NamingException, SQLException {
 
         ConnectionPoolDataSource cpds = testCPDS(username, password);
 
         Integer userMax = getPerUserMaxActive(username);
-        int maxActive = (userMax == null) ? 
+        int maxActive = (userMax == null) ?
             getDefaultMaxActive() : userMax.intValue();
         userMax = getPerUserMaxIdle(username);
         int maxIdle =  (userMax == null) ?
@@ -514,13 +514,13 @@ public class PerUserPoolDataSource
         pool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         pool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
         pool.setTestWhileIdle(getTestWhileIdle());
-                
+
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
         // explicitly)
         CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, pool, getValidationQuery(),
                 isRollbackAfterValidation(), username, password);
-           
+
         Object old = managers.put(getPoolKey(username,password), factory);
         if (old != null) {
             throw new IllegalStateException("Pool already contains an entry for this user/password: "+username);
@@ -536,7 +536,7 @@ public class PerUserPoolDataSource
      */
     private void readObject(ObjectInputStream in)
         throws IOException, ClassNotFoundException {
-        try 
+        try
         {
             in.defaultReadObject();
             PerUserPoolDataSource oldDS = (PerUserPoolDataSource)
@@ -549,11 +549,11 @@ public class PerUserPoolDataSource
             throw new IOException("NamingException: " + e);
         }
     }
-    
+
     /**
      * Returns the object pool associated with the given PoolKey.
-     * 
-     * @param key PoolKey identifying the pool 
+     *
+     * @param key PoolKey identifying the pool
      * @return the GenericObjectPool pooling connections for the username and datasource
      * specified by the PoolKey
      */

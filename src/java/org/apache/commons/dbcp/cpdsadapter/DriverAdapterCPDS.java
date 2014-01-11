@@ -558,7 +558,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      */
     public int getMaxActive() {
         return (this.maxActive);
@@ -566,7 +566,7 @@ public class DriverAdapterCPDS
 
     /**
      * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * @param maxActive the maximum number of concurrent active statements allowed
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
