@@ -108,7 +108,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * This value is used for any username which is not specified
      * in perUserMaxConnections.
      */
@@ -118,7 +118,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * This value is used for any username which is not specified
      * in perUserMaxConnections.  The default is 8.
      */
@@ -246,7 +246,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxTotal.
      */
@@ -260,7 +260,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * The keys are usernames and the value is the maximum connections.  Any
      * username specified here will override the value of defaultMaxTotal.
      */

@@ -599,7 +599,7 @@ public class BasicDataSource
 
     /**
      * <p>The maximum number of open statements that can be allocated from
-     * the statement pool at the same time, or non-positive for no limit.  Since
+     * the statement pool at the same time, or negative for no limit.  Since
      * a connection usually only uses one or two statements at a time, this is
      * mostly used to help detect resource leaks.</p>
      *
@@ -1223,7 +1223,7 @@ public class BasicDataSource
     }
 
     private String jmxName = null;
-    
+
     /**
      * Returns the JMX name that has been requested for this DataSource. If the
      * requested name is not valid, an alternative may be chosen.
@@ -2085,7 +2085,7 @@ public class BasicDataSource
      * Actual name under which this component has been registered.
      */
     private ObjectName registeredJmxName = null;
-    
+
     private void jmxRegister() {
         // Return immediately if this DataSource has already been registered
         if (registeredJmxName != null) {
@@ -2104,7 +2104,7 @@ public class BasicDataSource
                     "] was not valid and will be ignored.");
             return;
         }
-        
+
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
             mbs.registerMBean(this, oname);
@@ -2145,7 +2145,7 @@ public class BasicDataSource
     public void postDeregister() {
         // NO-OP
     }
-    
+
     private void updateJmxName(GenericObjectPoolConfig config) {
         if (registeredJmxName == null) {
             return;
@@ -2155,7 +2155,7 @@ public class BasicDataSource
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix("connections");
     }
-    
+
     protected ObjectName getRegisteredJmxName() {
         return registeredJmxName;
     }

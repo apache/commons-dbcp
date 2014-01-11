@@ -83,7 +83,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      */
     public int getMaxTotal() {
         return (this.maxTotal);
@@ -91,7 +91,7 @@ public class SharedPoolDataSource
 
     /**
      * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
+     * this pool at the same time, or negative for no limit.
      * The default is 8.
      */
     public void setMaxTotal(int maxTotal) {
