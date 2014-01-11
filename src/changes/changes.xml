@@ -60,6 +60,12 @@ The <action> type attribute can be add,update,fix,remove.
         DelegatingDatabaseMetaData.isWrapperFor() and
         DelegatingResultSet.isWrapperFor() that had the same problem.
       </action>
+      <action dev="markt" issue="DBCP-400" type="fix">
+        Correct the documentation for the maxOpenPreparedStatements parameter
+        and review the use of the phrase non-positive throughout the
+        documentation and javadoc, replacing it with negative where that is the
+        correct definition to use.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">

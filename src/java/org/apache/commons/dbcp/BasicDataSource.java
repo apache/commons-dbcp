@@ -505,7 +505,7 @@ public class BasicDataSource implements DataSource {
 
     /**
      * <p>The maximum number of open statements that can be allocated from
-     * the statement pool at the same time, or non-positive for no limit.  Since
+     * the statement pool at the same time, or negative for no limit.  Since
      * a connection usually only uses one or two statements at a time, this is
      * mostly used to help detect resource leaks.</p>
      *
