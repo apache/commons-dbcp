@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import junit.framework.TestSuite;
 
 /**
  * Tests for DriverAdapterCPDS
- * 
+ *
  * @version $Revision:$ $Date:$
  */
 public class TestDriverAdapterCPDS extends TestCase {
@@ -57,7 +57,7 @@ public class TestDriverAdapterCPDS extends TestCase {
     /**
      * JIRA: DBCP-245
      */
-    public void testIncorrectPassword() throws Exception 
+    public void testIncorrectPassword() throws Exception
     {
         pcds.getPooledConnection("u2", "p2").close();
         try {
@@ -68,7 +68,7 @@ public class TestDriverAdapterCPDS extends TestCase {
             // should fail
 
         }
-        
+
         // Use good password
         pcds.getPooledConnection("u1", "p1").close();
         try {
@@ -81,7 +81,7 @@ public class TestDriverAdapterCPDS extends TestCase {
             }
             // else the exception was expected
         }
-        
+
         // Make sure we can still use our good password.
         pcds.getPooledConnection("u1", "p1").close();
     }
@@ -113,10 +113,9 @@ public class TestDriverAdapterCPDS extends TestCase {
         conn.close();
     }
 
-    public void testClosingWithUserName() 
+    public void testClosingWithUserName()
         throws Exception {
-        Connection[] c = new Connection[pcds.getMaxActive()];
-        // open the maximum connections
+        Connection[] c = new Connection[10];
         for (int i=0; i<c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
@@ -131,7 +130,7 @@ public class TestDriverAdapterCPDS extends TestCase {
             c[i].close();
         }
 
-        // open the maximum connections
+        // open all the connections
         for (int i=0; i<c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
@@ -139,7 +138,7 @@ public class TestDriverAdapterCPDS extends TestCase {
             c[i].close();
         }
     }
-    
+
     public void testSetProperties() throws Exception {
         // Set user property to bad value
         pcds.setUser("bad");
@@ -157,6 +156,6 @@ public class TestDriverAdapterCPDS extends TestCase {
         // Supply correct password in getPooledConnection
         // Call will succeed and overwrite property
         pcds.getPooledConnection("foo", "bar").close();
-        assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));     
+        assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
 }
