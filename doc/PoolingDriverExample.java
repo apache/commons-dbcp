@@ -163,7 +163,7 @@ public class PoolingDriverExample {
         // the classes that implement the pooling functionality.
         //
         PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory);
+            new PoolableConnectionFactory(connectionFactory, null);
 
         //
         // Now we'll need a ObjectPool that serves as the
