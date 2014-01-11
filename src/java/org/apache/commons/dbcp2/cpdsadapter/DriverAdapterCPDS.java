@@ -643,7 +643,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the minimum amount of time a statement may sit idle in the pool
-     * before it is eligable for eviction by the idle object evictor
+     * before it is eligible for eviction by the idle object evictor
      * (if any).
      * When non-positive, no objects will be evicted from the pool
      * due to idle time alone.
