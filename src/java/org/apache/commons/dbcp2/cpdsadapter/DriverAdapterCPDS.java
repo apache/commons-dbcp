@@ -118,7 +118,6 @@ public class DriverAdapterCPDS
 
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
-    private int maxActive = 10;
     private int maxIdle = 10;
     private int _timeBetweenEvictionRunsMillis = -1;
     private int _numTestsPerEvictionRun = -1;
@@ -250,8 +249,6 @@ public class DriverAdapterCPDS
 
         ref.add(new StringRefAddr("poolPreparedStatements",
                                   String.valueOf(isPoolPreparedStatements())));
-        ref.add(new StringRefAddr("maxActive",
-                                  String.valueOf(getMaxActive())));
         ref.add(new StringRefAddr("maxIdle",
                                   String.valueOf(getMaxIdle())));
         ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis",
@@ -310,11 +307,6 @@ public class DriverAdapterCPDS
                     setPoolPreparedStatements(Boolean.valueOf(
                         ra.getContent().toString()).booleanValue());
                 }
-                ra = ref.get("maxActive");
-                if (ra != null && ra.getContent() != null) {
-                    setMaxActive(Integer.parseInt(ra.getContent().toString()));
-                }
-
                 ra = ref.get("maxIdle");
                 if (ra != null && ra.getContent() != null) {
                     setMaxIdle(Integer.parseInt(ra.getContent().toString()));
@@ -558,25 +550,6 @@ public class DriverAdapterCPDS
     public void setPoolPreparedStatements(boolean v) {
         assertInitializationAllowed();
         this.poolPreparedStatements = v;
-    }
-
-    /**
-     * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
-     */
-    public int getMaxActive() {
-        return (this.maxActive);
-    }
-
-    /**
-     * The maximum number of active statements that can be allocated from
-     * this pool at the same time, or non-positive for no limit.
-     * @param maxActive the maximum number of concurrent active statements allowed
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
-     */
-    public void setMaxActive(int maxActive) {
-        assertInitializationAllowed();
-        this.maxActive = maxActive;
     }
 
     /**
