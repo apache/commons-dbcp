@@ -89,6 +89,12 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
+      <action dev="markt" issue="DBCP-400" type="fix">
+        Correct the documentation for the maxOpenPreparedStatements parameter
+        and review the use of the phrase non-positive throughout the
+        documentation and javadoc, replacing it with negative where that is the
+        correct definition to use.
+      </action>
       <action dev="markt" issue="DBCP-405" type="fix">
         Avoid multiple calls to Connection.getAutoCommit() in
         PoolableConnectionFactory.passivateObject() as it could be an expensive

@@ -309,7 +309,7 @@ one row.
    <td>unlimited</td>
    <td>
       The maximum number of open statements that can be allocated from
-      the statement pool at the same time, or zero for no limit.
+      the statement pool at the same time, or negative for no limit.
    </td>
 </tr>
 </table>
