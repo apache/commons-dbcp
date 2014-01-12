@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,25 +22,25 @@ import java.sql.PreparedStatement;
  * A key uniquely identifying {@link PreparedStatement}s.
  */
 public class PStmtKey {
-    
+
     /** SQL defining Prepared or Callable Statement */
     private final String _sql;
-    
+
     /** Result set type */
     private final Integer _resultSetType;
-    
+
     /** Result set concurrency */
     private final Integer _resultSetConcurrency;
-    
+
     /** Database catalog */
     private final String _catalog;
-    
-    /** 
+
+    /**
      *  Statement type. Either STATEMENT_PREPAREDSTMT (PreparedStatement)
-     *  or STATEMENT_CALLABLESTMT (CallableStatement) 
+     *  or STATEMENT_CALLABLESTMT (CallableStatement)
      */
     private final byte _stmtType;
-    
+
     public PStmtKey(String sql) {
         this(sql, null, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
@@ -48,7 +48,7 @@ public class PStmtKey {
     public PStmtKey(String sql, String catalog) {
         this(sql, catalog, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
-    
+
     public PStmtKey(String sql, String catalog, byte stmtType) {
         _sql = sql;
         _catalog = catalog;
@@ -64,16 +64,16 @@ public class PStmtKey {
     public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency) {
         this(sql, catalog, resultSetType, resultSetConcurrency, PoolingConnection.STATEMENT_PREPAREDSTMT);
     }
-    
+
     public PStmtKey(String sql, String catalog, int resultSetType, int resultSetConcurrency, byte stmtType) {
         _sql = sql;
         _catalog = catalog;
-        _resultSetType = new Integer(resultSetType);
-        _resultSetConcurrency = new Integer(resultSetConcurrency);
+        _resultSetType = Integer.valueOf(resultSetType);
+        _resultSetConcurrency = Integer.valueOf(resultSetConcurrency);
         _stmtType = stmtType;
     }
 
-    
+
     public String getSql() {
         return _sql;
     }
@@ -98,7 +98,7 @@ public class PStmtKey {
     public boolean equals(Object that) {
         try {
             PStmtKey key = (PStmtKey)that;
-            return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&  
+            return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
                     ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
                     ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
                     ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency)) &&
