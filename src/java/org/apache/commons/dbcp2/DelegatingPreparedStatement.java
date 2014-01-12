@@ -70,22 +70,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement
         super(c, s);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-    	if (this == obj) return true;
-        PreparedStatement delegate = (PreparedStatement) getInnermostDelegate();
-        if (delegate == null) {
-            return false;
-        }
-        if (obj instanceof DelegatingPreparedStatement) {
-            DelegatingPreparedStatement s = (DelegatingPreparedStatement) obj;
-            return delegate.equals(s.getInnermostDelegate());
-        }
-        else {
-            return delegate.equals(obj);
-        }
-    }
-
     /** Sets my delegate. */
     public void setDelegate(PreparedStatement s) {
         super.setDelegate(s);
