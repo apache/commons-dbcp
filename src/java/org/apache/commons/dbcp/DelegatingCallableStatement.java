@@ -71,21 +71,6 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         super(c, s);
     }
 
-    public boolean equals(Object obj) {
-    	if (this == obj) return true;
-        CallableStatement delegate = (CallableStatement) getInnermostDelegate();
-        if (delegate == null) {
-            return false;
-        }
-        if (obj instanceof DelegatingCallableStatement) {
-            DelegatingCallableStatement s = (DelegatingCallableStatement) obj;
-            return delegate.equals(s.getInnermostDelegate());
-        }
-        else {
-            return delegate.equals(obj);
-        }
-    }
-
     /** Sets my delegate. */
     public void setDelegate(CallableStatement s) {
         super.setDelegate(s);
