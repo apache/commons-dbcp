@@ -16,8 +16,10 @@
  */
 package org.apache.commons.dbcp2;
 
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.Collection;
 import java.util.List;
@@ -1289,7 +1291,8 @@ public class BasicDataSource
     /**
      * The PrintWriter to which log messages should be directed.
      */
-    protected PrintWriter logWriter = new PrintWriter(System.out);
+    protected PrintWriter logWriter = new PrintWriter(new OutputStreamWriter(
+            System.out, StandardCharsets.UTF_8));
 
 
     // ----------------------------------------------------- DataSource Methods

@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -393,7 +394,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setJmxName(value);
         }
-        
+
         // DBCP-215
         // Trick to make sure that initialSize connections are created
         if (dataSource.getInitialSize() > 0) {
@@ -413,7 +414,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
     static private Properties getProperties(String propText) throws Exception {
       Properties p = new Properties();
       if (propText != null) {
-        p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes()));
+        p.load(new ByteArrayInputStream(
+                propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
       }
       return p;
     }
