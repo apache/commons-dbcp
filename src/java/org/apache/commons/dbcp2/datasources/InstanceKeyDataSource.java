@@ -17,8 +17,10 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -369,7 +371,7 @@ public abstract class InstanceKeyDataSource
     protected String getInstanceKey() {
         return instanceKey;
     }
-    
+
     /**
      * Get the value of jndiEnvironment which is used when instantiating
      * a jndi InitialContext.  This InitialContext is used to locate the
@@ -399,7 +401,7 @@ public abstract class InstanceKeyDataSource
         }
         jndiEnvironment.setProperty(key, value);
     }
-    
+
     /**
      * Sets the JNDI environment to be used when instantiating a JNDI
      * InitialContext. This InitialContext is used to locate the backend
@@ -442,7 +444,8 @@ public abstract class InstanceKeyDataSource
     @Override
     public PrintWriter getLogWriter() {
         if (logWriter == null) {
-            logWriter = new PrintWriter(System.out);
+            logWriter = new PrintWriter(
+                    new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
         }
         return logWriter;
     }
