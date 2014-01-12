@@ -123,24 +123,21 @@ public class PoolingDriver implements Driver {
         if(acceptsURL(url)) {
             ObjectPool<? extends Connection> pool =
                 getConnectionPool(url.substring(URL_PREFIX_LEN));
-            if(null == pool) {
-                throw new SQLException("No pool found for " + url + ".");
-            } else {
-                try {
-                    Connection conn = pool.borrowObject();
-                    if (conn == null) {
-                        return null;
-                    }
-                    return new PoolGuardConnectionWrapper(pool, conn);
-                } catch(SQLException e) {
-                    throw e;
-                } catch(NoSuchElementException e) {
-                    throw (SQLException) new SQLException("Cannot get a connection, pool error: " + e.getMessage()).initCause(e);
-                } catch(RuntimeException e) {
-                    throw e;
-                } catch(Exception e) {
-                    throw (SQLException) new SQLException("Cannot get a connection, general error: " + e.getMessage()).initCause(e);
+
+            try {
+                Connection conn = pool.borrowObject();
+                if (conn == null) {
+                    return null;
                 }
+                return new PoolGuardConnectionWrapper(pool, conn);
+            } catch(SQLException e) {
+                throw e;
+            } catch(NoSuchElementException e) {
+                throw (SQLException) new SQLException("Cannot get a connection, pool error: " + e.getMessage()).initCause(e);
+            } catch(RuntimeException e) {
+                throw e;
+            } catch(Exception e) {
+                throw (SQLException) new SQLException("Cannot get a connection, general error: " + e.getMessage()).initCause(e);
             }
         } else {
             return null;
