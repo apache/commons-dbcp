@@ -226,7 +226,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            // Ignored
+        }
         return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency);
     }
 
@@ -241,7 +243,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            // Ignored
+        }
         return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, stmtType);
     }
 
@@ -253,7 +257,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            // Ignored
+        }
         return new PStmtKey(normalizeSQL(sql), catalog);
     }
 
@@ -266,7 +272,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            // Ignored
+        }
         return new PStmtKey(normalizeSQL(sql), catalog, stmtType);
     }
 
