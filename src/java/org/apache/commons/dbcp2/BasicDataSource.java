@@ -570,7 +570,7 @@ public class BasicDataSource
      * Prepared statement pooling for this pool. When this property is set to <code>true</code>
      * both PreparedStatements and CallableStatements are pooled.
      */
-    protected boolean poolPreparedStatements = false;
+    private boolean poolPreparedStatements = false;
 
     /**
      * Returns true if we are pooling statements.
@@ -608,7 +608,7 @@ public class BasicDataSource
      * and <code>maxOpenPreparedStatements</code> limits the total number of prepared or callable statements
      * that may be in use at a given time.</p>
      */
-    protected int maxOpenPreparedStatements =
+    private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
