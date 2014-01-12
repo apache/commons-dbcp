@@ -91,8 +91,7 @@ public class PoolableConnectionFactory
      * @param connectionInitSqls SQL statement to initialize {@link Connection}s.
      * @since 1.3
      */
-    synchronized public void setConnectionInitSql(
-            Collection<String> connectionInitSqls) {
+    public void setConnectionInitSql(Collection<String> connectionInitSqls) {
         _connectionInitSqls = connectionInitSqls;
     }
 
@@ -301,7 +300,7 @@ public class PoolableConnectionFactory
             conn.rollback();
         }
         conn.clearWarnings();
-        // DBCP-97 Idle connections in the pool should have autoCommit enabled 
+        // DBCP-97 Idle connections in the pool should have autoCommit enabled
         if(!connAutoCommit) {
             conn.setAutoCommit(true);
         }
