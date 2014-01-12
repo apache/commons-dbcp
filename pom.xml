@@ -28,10 +28,10 @@
   <groupId>commons-dbcp</groupId>
   <artifactId>commons-dbcp</artifactId>
   <version>1.4.1-SNAPSHOT</version>
-  <name>Commons DBCP</name>
+  <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
-  <description>Commons Database Connection Pooling</description>
+  <description>Apache Commons Database Connection Pooling</description>
   <url>http://commons.apache.org/dbcp/</url>
 
   <distributionManagement>
