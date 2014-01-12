@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import java.sql.SQLXML;
  * provided in my constructor.
  * <p>
  * Extends AbandonedTrace to implement Statement tracking and
- * logging of code which created the Statement. Tracking the 
+ * logging of code which created the Statement. Tracking the
  * Statement ensures that the Connection which created it can
  * close any open Statement's on Connection close.
  *
@@ -68,21 +68,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public DelegatingPreparedStatement(DelegatingConnection c,
                                        PreparedStatement s) {
         super(c, s);
-    }
-
-    public boolean equals(Object obj) {
-    	if (this == obj) return true;
-        PreparedStatement delegate = (PreparedStatement) getInnermostDelegate();
-        if (delegate == null) {
-            return false;
-        }
-        if (obj instanceof DelegatingPreparedStatement) {
-            DelegatingPreparedStatement s = (DelegatingPreparedStatement) obj;
-            return delegate.equals(s.getInnermostDelegate());
-        }
-        else {
-            return delegate.equals(obj);
-        }
     }
 
     /** Sets my delegate. */
@@ -166,7 +151,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     /** @deprecated */
     public void setUnicodeStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
     { checkOpen(); try { ((PreparedStatement)_stmt).setUnicodeStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
-    
+
     public void setBinaryStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
     { checkOpen(); try { ((PreparedStatement)_stmt).setBinaryStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
 
@@ -231,7 +216,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     /**
      * Returns a String representation of this object.
      *
-     * @return String 
+     * @return String
      * @since 1.2.2
      */
     public String toString() {
