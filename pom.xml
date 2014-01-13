@@ -48,9 +48,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/branches/DBCP_1_4_x_BRANCH</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/branches/DBCP_1_4_x_BRANCH</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/branches/DBCP_1_4_x_BRANCH</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/branches/DBCP_1_5_x_BRANCH</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/branches/DBCP_1_5_x_BRANCH</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/branches/DBCP_1_5_x_BRANCH</url>
   </scm>
 
   <developers>
