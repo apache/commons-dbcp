@@ -95,28 +95,32 @@ public class PStmtKey {
     }
 
     @Override
-    public boolean equals(Object that) {
-        try {
-            PStmtKey key = (PStmtKey)that;
-            return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
-                    ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
-                    ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
-                    ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency)) &&
-                    (_stmtType == key._stmtType)
-                  );
-        } catch(ClassCastException e) {
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
             return false;
-        } catch(NullPointerException e) {
+        if (getClass() != obj.getClass())
             return false;
-        }
+        PStmtKey key = (PStmtKey) obj;
+        return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
+                ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
+                ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
+                ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency)) &&
+                (_stmtType == key._stmtType)
+              );
     }
 
     @Override
     public int hashCode() {
-        if (_catalog==null)
-            return(null == _sql ? 0 : _sql.hashCode());
-        else
-            return(null == _sql ? _catalog.hashCode() : (_catalog + _sql).hashCode());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_catalog == null) ? 0 : _catalog.hashCode());
+        result = prime * result + ((_resultSetConcurrency == null) ? 0 : _resultSetConcurrency.hashCode());
+        result = prime * result + ((_resultSetType == null) ? 0 : _resultSetType.hashCode());
+        result = prime * result + ((_sql == null) ? 0 : _sql.hashCode());
+        result = prime * result + _stmtType;
+        return result;
     }
 
     @Override
