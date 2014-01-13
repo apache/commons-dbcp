@@ -96,19 +96,48 @@ public class PStmtKey {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        PStmtKey key = (PStmtKey) obj;
-        return( ((null == _sql && null == key._sql) || _sql.equals(key._sql)) &&
-                ((null == _catalog && null == key._catalog) || _catalog.equals(key._catalog)) &&
-                ((null == _resultSetType && null == key._resultSetType) || _resultSetType.equals(key._resultSetType)) &&
-                ((null == _resultSetConcurrency && null == key._resultSetConcurrency) || _resultSetConcurrency.equals(key._resultSetConcurrency)) &&
-                (_stmtType == key._stmtType)
-              );
+        }
+        PStmtKey other = (PStmtKey) obj;
+        if (_catalog == null) {
+            if (other._catalog != null) {
+                return false;
+            }
+        } else if (!_catalog.equals(other._catalog)) {
+            return false;
+        }
+        if (_resultSetConcurrency == null) {
+            if (other._resultSetConcurrency != null) {
+                return false;
+            }
+        } else if (!_resultSetConcurrency.equals(other._resultSetConcurrency)) {
+            return false;
+        }
+        if (_resultSetType == null) {
+            if (other._resultSetType != null) {
+                return false;
+            }
+        } else if (!_resultSetType.equals(other._resultSetType)) {
+            return false;
+        }
+        if (_sql == null) {
+            if (other._sql != null) {
+                return false;
+            }
+        } else if (!_sql.equals(other._sql)) {
+            return false;
+        }
+        if (_stmtType != other._stmtType) {
+            return false;
+        }
+        return true;
     }
 
     @Override
