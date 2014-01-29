@@ -363,8 +363,6 @@ public class BasicDataSource
      * Returns the LIFO property.
      *
      * @return true if connection pool behaves as a LIFO queue.
-     *
-     * @see #lifo
      */
     @Override
     public synchronized boolean getLifo() {
@@ -614,10 +612,9 @@ public class BasicDataSource
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
-     * Gets the value of the {@link #maxOpenPreparedStatements} property.
+     * Gets the value of the <code>maxOpenPreparedStatements</code> property.
      *
      * @return the maximum number of open statements
-     * @see #maxOpenPreparedStatements
      */
     @Override
     public synchronized int getMaxOpenPreparedStatements() {
@@ -625,7 +622,7 @@ public class BasicDataSource
     }
 
     /**
-     * <p>Sets the value of the {@link #maxOpenPreparedStatements}
+     * <p>Sets the value of the <code>maxOpenPreparedStatements</code>
      * property.</p>
      * <p>
      * Note: this method currently has no effect once the pool has been
@@ -634,7 +631,6 @@ public class BasicDataSource
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
      *
      * @param maxOpenStatements the new maximum number of prepared statements
-     * @see #maxOpenPreparedStatements
      */
     public synchronized void setMaxOpenPreparedStatements(int maxOpenStatements) {
         this.maxOpenPreparedStatements = maxOpenStatements;
