@@ -815,7 +815,7 @@ public abstract class InstanceKeyDataSource
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
                 }
-                if (info != null && password.equals(info.getPassword())) {
+                if (info != null && password != null && password.equals(info.getPassword())) {
                     break;
                 } else {
                     if (info != null) {
