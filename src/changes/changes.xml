@@ -70,6 +70,10 @@ The <action> type attribute can be add,update,fix,remove.
         Fix thread safety issues in the SharedPoolDataSource and the
         PerUserPoolDataSource. 
       </action>
+      <action dev="markt" issue="DBCP-382" type="fix" due-to="Stefan Rempfer">
+        Allow accessToUnderlyingConnectionAllowed to be configured when
+        configuration takes place via JNDI in a JavaEE container.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
