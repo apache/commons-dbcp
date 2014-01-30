@@ -113,18 +113,18 @@ public class TestDelegatingStatement extends TestCase {
     public void testIsWrapperFor() throws Exception {
         TesterConnection tstConn = new TesterConnection("test", "test");
         TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
-        DelegatingConnection<TesterConnection> conn = new DelegatingConnection<>(tstConn);
-        DelegatingStatement stmt = new DelegatingStatement(conn, tstStmt);
+        DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
+        DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
 
         Class<?> stmtProxyClass = Proxy.getProxyClass(
                 this.getClass().getClassLoader(), 
                 Statement.class);
         
-        assertTrue(stmt.isWrapperFor(DelegatingStatement.class));
-        assertTrue(stmt.isWrapperFor(TesterStatement.class));
-        assertFalse(stmt.isWrapperFor(stmtProxyClass));
+        assertTrue(stamt.isWrapperFor(DelegatingStatement.class));
+        assertTrue(stamt.isWrapperFor(TesterStatement.class));
+        assertFalse(stamt.isWrapperFor(stmtProxyClass));
         
-        stmt.close();
+        stamt.close();
     }
     
     private static class TesterStatementNonWrapping extends TesterStatement {
