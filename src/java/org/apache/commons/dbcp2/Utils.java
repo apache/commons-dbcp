@@ -29,8 +29,19 @@ import java.util.ResourceBundle;
  */
 public class Utils {
 
-    private static final ResourceBundle messages = ResourceBundle.getBundle(
-            Utils.class.getPackage().getName() + ".LocalStrings");
+    private static final ResourceBundle messages;
+    // Temporary hack to try and debu Continuum failure
+    static {
+        ResourceBundle msgs;
+        try {
+            msgs = ResourceBundle.getBundle(
+                Utils.class.getPackage().getName() + ".LocalStrings");
+        } catch (Exception e) {
+            msgs = null;
+            e.printStackTrace();
+        }
+        messages = msgs;
+    }
 
     private Utils() {
         // not instantiable
