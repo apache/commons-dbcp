@@ -74,6 +74,10 @@ The <action> type attribute can be add,update,fix,remove.
         Allow accessToUnderlyingConnectionAllowed to be configured when
         configuration takes place via JNDI in a JavaEE container.
       </action>
+      <action dev="markt" issue="DBCP-369" type="fix" due-to="Michael Pradel">
+        Fix threading issue when using multiple instances of the
+        SharedPoolDataSource concurrently.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
