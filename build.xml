@@ -157,12 +157,15 @@
       <javac destdir="${build.classes.dir}"
              srcdir="${src.java.dir}"
              classpath="${classpath}"
+             includeantruntime="false"
              debug="${javac.debug}"
              deprecation="${javac.deprecation}"
              optimize="${javac.optimize}"
              source="${javac.source}">
       </javac>
-   	  <copydir dest="${build.classes.dir}" src="${src.resource.dir}"/>
+   	  <copy todir="${build.classes.dir}" >
+   	  	<fileset dir="${src.resource.dir}"/>
+   	  </copy>
    </target>
    
    <target name="compile-test" depends="compile">
@@ -170,6 +173,7 @@
       <javac destdir="${build.test-classes.dir}"
              srcdir="${src.test.dir}"
              debug="${javac.debug}"
+             includeantruntime="false"
              deprecation="${javac.deprecation}"
              optimize="${javac.optimize}"
              source="${javac.source}">
