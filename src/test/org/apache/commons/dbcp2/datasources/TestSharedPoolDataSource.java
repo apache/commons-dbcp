@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
@@ -601,6 +602,46 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             con5.close();
         } finally {
             TesterDriver.addUser("foo","bar");
+        }
+    }
+
+    public void testDbcp369() {
+        final ArrayList<SharedPoolDataSource> dataSources = new ArrayList<>();
+        for (int j = 0; j < 10000; j++) {
+            SharedPoolDataSource dataSource = new SharedPoolDataSource();
+            dataSources.add(dataSource);
+        }
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (SharedPoolDataSource dataSource : dataSources) {
+                    dataSource.setDataSourceName("a");
+                }
+            }
+        });
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (SharedPoolDataSource dataSource : dataSources) {
+                    try {
+                        dataSource.close();
+                    } catch (Exception e) {
+                        // Ignore
+                    }
+                }
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException ie) {
+            // Ignore
         }
     }
 }
