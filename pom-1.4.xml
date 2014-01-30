@@ -223,30 +223,6 @@
   </properties> 
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/test</directory>
-        <includes>
-          <include>testpool.jocl</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>.</directory>
-        <targetPath>META-INF</targetPath>
-          <includes>
-            <include>NOTICE.txt</include>
-            <include>LICENSE.txt</include>
-          </includes>
-        </resource>
-      </resources>
-      <testResources>
-        <testResource>
-          <directory>${basedir}/src/test</directory>
-          <includes>
-            <include>testpool.jocl</include>
-          </includes>
-        </testResource>
-      </testResources>
       <plugins>
         <!-- Specify cobertura version for "cobertura:cobertura" goal -->
         <plugin>
