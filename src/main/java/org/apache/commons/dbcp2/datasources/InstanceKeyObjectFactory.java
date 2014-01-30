@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2.datasources;
 
 import java.io.ByteArrayInputStream;
@@ -23,10 +22,10 @@ import java.io.ObjectInputStream;
 
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -40,11 +39,10 @@ import javax.naming.spi.ObjectFactory;
  *
  * @version $Revision$ $Date$
  */
-abstract class InstanceKeyObjectFactory
-    implements ObjectFactory
-{
+abstract class InstanceKeyObjectFactory implements ObjectFactory {
+
     private static final Map<String, InstanceKeyDataSource> instanceMap =
-            new HashMap<>();
+            new ConcurrentHashMap<>();
 
     synchronized static String registerNewInstance(InstanceKeyDataSource ds) {
         int max = 0;
