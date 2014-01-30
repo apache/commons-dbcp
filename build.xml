@@ -56,6 +56,7 @@
    	
    	  <property name="src.dir" value="${basedir}/src"/>
    	  <property name="src.java.dir" value="${src.dir}/java"/>
+      <property name="src.resource.dir" value="${src.dir}/main/resources"/>
    	  <property name="src.test.dir" value="${src.dir}/test"/>
    	  <property name="javac.source" value="1.7" />
 
@@ -161,6 +162,7 @@
              optimize="${javac.optimize}"
              source="${javac.source}">
       </javac>
+   	  <copydir dest="${build.classes.dir}" src="${src.resource.dir}"/>
    </target>
    
    <target name="compile-test" depends="compile">
