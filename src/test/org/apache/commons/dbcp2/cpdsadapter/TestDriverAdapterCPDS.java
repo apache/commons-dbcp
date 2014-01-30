@@ -193,7 +193,7 @@ public class TestDriverAdapterCPDS extends TestCase {
 
         for (int i = 0; i < threads.length; i++) {
             threads[i].join();
-            Assert.assertFalse(threads[i].isFailed());
+            Assert.assertFalse("Thread " + i + " has failed",threads[i].isFailed());
         }
     }
 
