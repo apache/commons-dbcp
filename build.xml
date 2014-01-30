@@ -133,8 +133,8 @@
    <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
       <echo message="Commenting out the JDBC 4 and JDBC 4.1 additional methods since JDBC 4 was not detected."/>
       <property name="src.dir" value="${build.dir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="src.java.dir" value="${src.dir}/main/java"/>
+      <property name="src.test.dir" value="${src.dir}/test/java"/>
       <property name="javac.source" value="1.4" />
 
       <mkdir dir="${src.dir}"/>
@@ -154,8 +154,8 @@
    <target name="prepare-jdbc4" depends="init" if="jdbc4.present" unless="jdbc41.present">
       <echo message="JDBC 4 was detected. Commenting out the JDBC 4.1 additional methods."/>
       <property name="src.dir" value="${basedir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="src.java.dir" value="${src.dir}/main/java"/>
+      <property name="src.test.dir" value="${src.dir}/test/java"/>
       <property name="javac.source" value="1.5" />
 
       <mkdir dir="${src.dir}"/>
@@ -175,8 +175,8 @@
    <target name="prepare-jdbc41" depends="init" if="jdbc41.present">
       <echo message="JDBC 4.1 was detected."/>
 	  <property name="src.dir" value="${basedir}/src"/>
-      <property name="src.java.dir" value="${src.dir}/java"/>
-      <property name="src.test.dir" value="${src.dir}/test"/>
+      <property name="src.java.dir" value="${src.dir}/main/java"/>
+      <property name="src.test.dir" value="${src.dir}/test/java"/>
       <property name="javac.source" value="1.5" />
    </target>
 
@@ -242,7 +242,7 @@
           <pathelement path="${classpath}" /> 
         </classpath>
       </javac>
-      <copy todir="${build.test-classes.dir}" file="${src.test.dir}/testpool.jocl"/>
+      <copy todir="${build.test-classes.dir}" file="${src.dir}/test/resources/testpool.jocl"/>
    </target>
 
    <target name="test" depends="compile-test" description="runs (junit) unit tests">
