@@ -335,6 +335,12 @@ public class DriverAdapterCPDS
                         Integer.parseInt(ra.getContent().toString()));
                 }
 
+                ra = ref.get("accessToUnderlyingConnectionAllowed");
+                if (ra != null && ra.getContent() != null) {
+                    setAccessToUnderlyingConnectionAllowed(
+                            Boolean.valueOf(ra.getContent().toString()).booleanValue());
+                }
+
                 cpds = this;
             }
         }
