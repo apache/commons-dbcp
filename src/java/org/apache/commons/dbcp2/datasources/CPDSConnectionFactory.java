@@ -20,9 +20,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -63,13 +64,14 @@ class CPDSConnectionFactory
      * Map of PooledConnections for which close events are ignored.
      * Connections are muted when they are being validated.
      */
-    private final Set<PooledConnection> validatingSet = new HashSet<>();
+    private final Set<PooledConnection> validatingSet =
+            Collections.newSetFromMap(new ConcurrentHashMap<PooledConnection,Boolean>());
 
     /**
      * Map of PooledConnectionAndInfo instances
      */
-    private final WeakHashMap<PooledConnection, PooledConnectionAndInfo> pcMap =
-        new WeakHashMap<>();
+    private final Map<PooledConnection, PooledConnectionAndInfo> pcMap =
+        new ConcurrentHashMap<>();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.

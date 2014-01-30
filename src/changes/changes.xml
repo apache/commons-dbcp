@@ -87,6 +87,10 @@ The <action> type attribute can be add,update,fix,remove.
         properties are available as is the connection pool and the statement
         pools (if statement pooling is enabled).
       </action>
+      <action dev="markt" issue="DBCP-376" type="fix" due-to="Dave Oxley">
+        Fix thread safety issues in the SharedPoolDataSource and the
+        PerUserPoolDataSource. 
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
