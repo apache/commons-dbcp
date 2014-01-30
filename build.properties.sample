@@ -23,13 +23,13 @@
 # Repository base path
 repository=${user.home}/.m2/repository
 
-# commons-pool.jar - path to commons-pool2-2.0-SNAPSHOT.jar
-commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.0-SNAPSHOT
-commons-pool.jar=${commons-pool.home}/commons-pool2-2.0-SNAPSHOT.jar
+# commons-pool.jar - path to commons-pool2-2.1
+commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.1
+commons-pool.jar=${commons-pool.home}/commons-pool2-2.1.jar
 
 # JUnit
-junit.home=${repository}/junit/junit/4.8.2
-junit.jar=${junit.home}/junit-4.8.2.jar
+junit.home=${repository}/junit/junit/4.11
+junit.jar=${junit.home}/junit-4.11.jar
 
 # XML parser
 xerces.home=${repository}/xerces/xercesImpl/2.4.0
@@ -42,8 +42,8 @@ naming.java.home=${repository}/tomcat/naming-java/5.0.28
 naming-java.jar=${naming.java.home}/naming-java-5.0.28.jar
 
 # Commons logging - dependency of naming jars
-commons-logging.home=${repository}/commons-logging/commons-logging/1.1.1
-commons-logging.jar=${commons-logging.home}/commons-logging-1.1.1.jar
+commons-logging.home=${repository}/commons-logging/commons-logging/1.1.3
+commons-logging.jar=${commons-logging.home}/commons-logging-1.1.3.jar
 
 # JTA - needed for managed connections
 jta-spec.jar=${repository}/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1.jar
