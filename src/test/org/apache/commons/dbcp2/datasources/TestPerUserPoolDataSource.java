@@ -70,8 +70,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
         tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
-        tds.setPerUserMaxTotal("foo",new Integer(getMaxTotal()));
-        tds.setPerUserMaxWaitMillis("foo",new Integer((int)(getMaxWaitMillis())));
+        tds.setPerUserMaxTotal("foo", Integer.valueOf(getMaxTotal()));
+        tds.setPerUserMaxWaitMillis("foo", Integer.valueOf((int)(getMaxWaitMillis())));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -333,7 +333,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testMaxWaitMillisZero() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWaitMillis(0);
-        tds.setPerUserMaxTotal("u1", new Integer(1));
+        tds.setPerUserMaxTotal("u1", Integer.valueOf(1));
         Connection conn = tds.getConnection("u1", "p1");
         try {
             tds.getConnection("u1", "p1");
@@ -348,8 +348,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
         // you need to set maxActive otherwise there is no accounting
-        tds.setPerUserMaxTotal("u1", new Integer(5));
-        tds.setPerUserMaxTotal("u2", new Integer(5));
+        tds.setPerUserMaxTotal("u1", Integer.valueOf(5));
+        tds.setPerUserMaxTotal("u2", Integer.valueOf(5));
 
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumActive("u1", "p1"));
@@ -486,7 +486,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxTotal("jsmith", new Integer(2));
+        puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
         String[] users = {"mkh", "hanafey", "jsmith"};
         String password = "password";
         Connection[] c = new Connection[users.length];
@@ -506,7 +506,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxTotal("jsmith", new Integer(2));
+        puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
         String[] users = {"jsmith", "hanafey", "mkh"};
         String password = "password";
         Connection[] c = new Connection[users.length];
