@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -137,7 +138,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertNotNull(connection);
 
         // generate SQLWarning on connection
-        connection.prepareCall("warning");
+        CallableStatement statement = connection.prepareCall("warning");
         assertNotNull(connection.getWarnings());
 
         // create a new shared connection
@@ -154,6 +155,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertNotNull(connection.getWarnings());
         assertNotNull(sharedConnection.getWarnings());
 
+        statement.close();
         connection.close();
         sharedConnection.close();
     }
