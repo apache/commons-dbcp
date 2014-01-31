@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,9 +35,14 @@ import javax.sql.DataSource;
 /**
  * <p>JNDI object factory that creates an instance of
  * <code>BasicDataSource</code> that has been configured based on the
- * <code>RefAddr</code> values of the specified <code>Reference</code>,
- * which must match the names and data types of the
- * <code>BasicDataSource</code> bean properties.</p>
+ * <code>RefAddr</code> values of the specified <code>Reference</code>, which
+ * must match the names and data types of the <code>BasicDataSource</code> bean
+ * properties with the following exceptions:</p>
+ * <ul>
+ * <li><code>connectionInitSqls</code> must be passed to this factory as a
+ *     single String using semi-colon to delimt the statements whereas
+ *     <code>BasicDataSource</code> requires a collection of Strings.</li>
+ * </ul>>
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
@@ -163,7 +168,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     /**
      * Creates and configures a {@link BasicDataSource} instance based on the
      * given properties.
-     * 
+     *
      * @param properties the datasource configuration properties
      * @throws Exception if an error occurs creating the data source
      */
@@ -226,7 +231,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setLifo(Boolean.valueOf(value).booleanValue());
         }
-        
+
         value = properties.getProperty(PROP_MAXACTIVE);
         if (value != null) {
             dataSource.setMaxActive(Integer.parseInt(value));
@@ -276,7 +281,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(value));
         }
-        
+
         value = properties.getProperty(PROP_SOFTMINEVICTABLEIDLETIMEMILLIS);
         if (value != null) {
             dataSource.setSoftMinEvictableIdleTimeMillis(Long.parseLong(value));
@@ -311,7 +316,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setValidationQueryTimeout(Integer.parseInt(value));
         }
-        
+
         value = properties.getProperty(PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED);
         if (value != null) {
             dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.valueOf(value).booleanValue());
@@ -323,7 +328,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         value = properties.getProperty(PROP_REMOVEABANDONEDTIMEOUT);
-        if (value != null) {     
+        if (value != null) {
             dataSource.setRemoveAbandonedTimeout(Integer.parseInt(value));
         }
 
