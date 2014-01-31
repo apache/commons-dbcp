@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
@@ -33,7 +32,6 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolableConnection extends DelegatingConnection<Connection> {
     /** The pool to which I should return. */
-    // TODO: Correct use of the pool requires that this connection is only every returned to the pool once.
     protected ObjectPool<PoolableConnection> _pool = null;
 
     /**
@@ -63,7 +61,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
             isUnderlyingConectionClosed = getDelegateInternal().isClosed();
         } catch (SQLException e) {
             try {
-                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
+                _pool.invalidateObject(this);
             } catch(IllegalStateException ise) {
                 // pool is closed, so close the connection
                 passivate();
@@ -78,7 +76,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
             // Normal close: underlying connection is still open, so we
             // simply need to return this proxy to the pool
             try {
-                _pool.returnObject(this); // XXX should be guarded to happen at most once
+                _pool.returnObject(this);
             } catch(IllegalStateException e) {
                 // pool is closed, so close the connection
                 passivate();
@@ -94,7 +92,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
             // Abnormal close: underlying connection closed unexpectedly, so we
             // must destroy this proxy
             try {
-                _pool.invalidateObject(this); // XXX should be guarded to happen at most once
+                _pool.invalidateObject(this);
             } catch(IllegalStateException e) {
                 // pool is closed, so close the connection
                 passivate();
