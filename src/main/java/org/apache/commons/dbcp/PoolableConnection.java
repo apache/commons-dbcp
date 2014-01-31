@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,6 +55,24 @@ public class PoolableConnection extends DelegatingConnection {
     public PoolableConnection(Connection conn, ObjectPool pool, AbandonedConfig config) {
         super(conn, config);
         _pool = pool;
+    }
+
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        if (_closed) {
+            return true;
+        }
+
+        if (getDelegateInternal().isClosed()) {
+            // Something has gone wrong. The underlying connection has been
+            // closed without the connection being returned to the pool. Return
+            // it now.
+            close();
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -108,11 +126,11 @@ public class PoolableConnection extends DelegatingConnection {
                 // pool is closed, so close the connection
                 passivate();
                 getInnermostDelegate().close();
-            } catch (Exception ie) {
-                // DO NOTHING, "Already closed" exception thrown below
+            } catch (Exception e) {
+                throw (SQLException) new SQLException("Cannot close connection (invalidating pooled object failed)").initCause(e);
             }
-            throw new SQLException("Already closed.");
         }
+        _closed = true;
     }
 
     /**

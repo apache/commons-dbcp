@@ -78,6 +78,11 @@ The <action> type attribute can be add,update,fix,remove.
         Fix threading issue when using multiple instances of the
         SharedPoolDataSource concurrently.
       </action>
+      <action dev="markt" issue="DBCP-391" type="fix">
+        Ensure that the close state of a pooled connection and the underlying
+        connection is consistent when the underlying connection is closed as a
+        result of an error condition.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
