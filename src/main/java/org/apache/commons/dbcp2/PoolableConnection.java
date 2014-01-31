@@ -46,6 +46,26 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
     }
 
 
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        if (_closed) {
+            return true;
+        }
+
+        if (getDelegateInternal().isClosed()) {
+            // Something has gone wrong. The underlying connection has been
+            // closed without the connection being returned to the pool. Return
+            // it now.
+            close();
+            return true;
+        }
+
+        return false;
+    }
+
+
+
     /**
      * Returns me to my pool.
      */
@@ -97,10 +117,9 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
                 // pool is closed, so close the connection
                 passivate();
                 getInnermostDelegate().close();
-            } catch (Exception ie) {
-                // DO NOTHING, "Already closed" exception thrown below
+            } catch (Exception e) {
+                throw (SQLException) new SQLException("Cannot close connection (invalidating pooled object failed)").initCause(e);
             }
-            throw new SQLException("Already closed.");
         }
         _closed = true;
     }
