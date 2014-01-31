@@ -64,9 +64,10 @@ abstract class InstanceKeyObjectFactory implements ObjectFactory {
         return instanceKey;
     }
 
-    static void removeInstance(String key)
-    {
-        instanceMap.remove(key);
+    static void removeInstance(String key) {
+        if (key != null) {
+            instanceMap.remove(key);
+        }
     }
 
     /**
