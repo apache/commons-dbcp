@@ -37,9 +37,14 @@ import javax.sql.DataSource;
 /**
  * <p>JNDI object factory that creates an instance of
  * <code>BasicDataSource</code> that has been configured based on the
- * <code>RefAddr</code> values of the specified <code>Reference</code>,
- * which must match the names and data types of the
- * <code>BasicDataSource</code> bean properties.</p>
+ * <code>RefAddr</code> values of the specified <code>Reference</code>, which
+ * must match the names and data types of the <code>BasicDataSource</code> bean
+ * properties with the following exceptions:</p>
+ * <ul>
+ * <li><code>connectionInitSqls</code> must be passed to this factory as a
+ *     single String using semi-colon to delimt the statements whereas
+ *     <code>BasicDataSource</code> requires a collection of Strings.</li>
+ * </ul>
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
