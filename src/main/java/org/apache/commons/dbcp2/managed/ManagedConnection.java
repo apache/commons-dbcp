@@ -150,7 +150,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     @Override
     public void close() throws SQLException {
-        if (!_closed) {
+        if (!isClosedInternal()) {
             try {
                 // Don't actually close the connection if in a transaction. The
                 // connection will be closed by the transactionComplete method.
@@ -158,7 +158,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                     super.close();
                 }
             } finally {
-                _closed = true;
+                setClosedInternal(true);
             }
         }
     }
@@ -189,7 +189,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         // If this connection was closed during the transaction and there is
         // still a delegate present close it
         Connection delegate = getDelegateInternal();
-        if (_closed && delegate != null) {
+        if (isClosedInternal() && delegate != null) {
             try {
                 setDelegate(null);
 

@@ -49,7 +49,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
 
     @Override
     public boolean isClosed() throws SQLException {
-        if (_closed) {
+        if (isClosedInternal()) {
             return true;
         }
 
@@ -71,7 +71,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
      */
      @Override
     public synchronized void close() throws SQLException {
-        if (_closed) {
+        if (isClosedInternal()) {
             // already closed
             return;
         }
@@ -121,7 +121,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
                 throw (SQLException) new SQLException("Cannot close connection (invalidating pooled object failed)").initCause(e);
             }
         }
-        _closed = true;
+        setClosedInternal(true);
     }
 
     /**

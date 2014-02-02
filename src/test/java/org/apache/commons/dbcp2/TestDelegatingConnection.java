@@ -112,7 +112,7 @@ public class TestDelegatingConnection extends TestCase {
 
         try {
             conn = new DelegatingConnection<>(null);
-            conn._closed = true;
+            conn.setClosedInternal(true);
             conn.checkOpen();
             fail("Expecting SQLException");
         } catch (SQLException ex) {

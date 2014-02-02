@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
@@ -36,10 +35,10 @@ import java.sql.SQLException;
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
-    protected DatabaseMetaData _meta; // TODO make final and private?
+    private final DatabaseMetaData _meta;
 
     /** The connection that created me. **/
-    protected DelegatingConnection<?> _conn = null; // TODO make final and private?
+    private final DelegatingConnection<?> _conn;
 
     public DelegatingDatabaseMetaData(DelegatingConnection<?> c,
             DatabaseMetaData m) {

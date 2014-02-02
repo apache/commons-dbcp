@@ -75,7 +75,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     /** My delegate {@link Connection}. */
     private C _conn = null;
 
-    protected boolean _closed = false; // TODO make private and add getter/setter?
+    private boolean _closed = false;
 
     private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
@@ -247,6 +247,14 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         if (!_closed) {
             closeInternal();
         }
+    }
+
+    protected boolean isClosedInternal() {
+        return _closed;
+    }
+
+    protected void setClosedInternal(boolean closed) {
+        this._closed = closed;
     }
 
     protected final void closeInternal() throws SQLException {
