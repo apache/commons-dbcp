@@ -136,7 +136,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
 
                 this.currentXid = xid;
             } else if (flag == XAResource.TMRESUME) {
-                if (xid != this.currentXid) {
+                if (!xid.equals(this.currentXid)) {
                     throw new XAException("Attempting to resume in different transaction: expected " + this.currentXid + ", but was " + xid);
                 }
             } else {

@@ -83,6 +83,10 @@ The <action> type attribute can be add,update,fix,remove.
         connection is consistent when the underlying connection is closed as a
         result of an error condition.
       </action>
+      <action dev="markt" issue="DBCP-341" type="fix" due-to="Ioannis Canellos">
+        LocalXAConnectionFactory does not properly check if Xid is equal to
+        currentXid when resuming which may result in an XAException.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
