@@ -61,26 +61,25 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      */
     @Override
     synchronized public PooledObject<PoolableConnection> makeObject() throws Exception {
-        Connection conn = _connFactory.createConnection();
+        Connection conn = getConnectionFactory().createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
         initializeConnection(conn);
-        if(poolStatements) {
+        if(getPoolStatements()) {
             conn = new PoolingConnection(conn);
             GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(-1);
             config.setBlockWhenExhausted(false);
             config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(1);
-            config.setMaxTotal(maxOpenPreparedStatements);
+            config.setMaxTotal(getMaxOpenPreparedStatements());
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                 new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
-            ((PoolingConnection) conn).setCacheState(_cacheState);
+            ((PoolingConnection) conn).setCacheState(getCacheState());
         }
         return new DefaultPooledObject<PoolableConnection>(
-                new PoolableManagedConnection(transactionRegistry, conn, _pool));
+                new PoolableManagedConnection(transactionRegistry, conn, getPool()));
     }
-
 }

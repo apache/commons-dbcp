@@ -104,6 +104,9 @@ The <action> type attribute can be add,update,fix,remove.
         connection is consistent when the underlying connection is closed as a
         result of an error condition.
       </action>
+      <action dev="markt" issue="DBCP-404" type="fix">
+        Make all mutable fields private.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
