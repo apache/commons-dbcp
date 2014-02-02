@@ -96,7 +96,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             try {
                 getDelegateInternal().close();
             } finally {
-                _closed = true;
+                setClosedInternal(true);
             }
         }
     }

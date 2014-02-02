@@ -73,11 +73,11 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
      */
     @Override
     public void close() throws SQLException {
-        if (!_closed) {
+        if (!isClosedInternal()) {
             try {
                 passivate();
             } finally {
-                _closed = true;
+                setClosedInternal(true);
                 pooledConnection.notifyListeners();
             }
         }
