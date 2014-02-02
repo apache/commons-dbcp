@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 /**
  * TestSuite for BasicDataSourceFactory
- * 
+ *
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
@@ -40,11 +40,11 @@ public class TestBasicDataSourceFactory extends TestCase {
     public static Test suite() {
         return new TestSuite(TestBasicDataSourceFactory.class);
     }
-    
+
     public void testNoProperties() throws Exception {
         Properties properties = new Properties();
         DataSource ds = BasicDataSourceFactory.createDataSource(properties);
-        
+
         assertNotNull(ds);
         assertTrue(ds instanceof BasicDataSource);
     }
@@ -83,7 +83,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("lifo", "true");
 
         BasicDataSource ds = (BasicDataSource) BasicDataSourceFactory.createDataSource(properties);
-        
+
         assertEquals("org.apache.commons.dbcp2.TesterDriver", ds.getDriverClassName());
         assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
         assertEquals(10, ds.getMaxTotal());
@@ -102,9 +102,9 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals("password", ds.getPassword());
         assertEquals("SELECT DUMMY FROM DUAL", ds.getValidationQuery());
         assertEquals(100, ds.getValidationQueryTimeout());
-        assertEquals(2, ds.connectionInitSqls.size());
-        assertEquals("SELECT 1", ds.connectionInitSqls.get(0));
-        assertEquals("SELECT 2", ds.connectionInitSqls.get(1));
+        assertEquals(2, ds.getConnectionInitSqls().size());
+        assertEquals("SELECT 1", ds.getConnectionInitSqls().get(0));
+        assertEquals("SELECT 2", ds.getConnectionInitSqls().get(1));
         assertEquals(1000, ds.getTimeBetweenEvictionRunsMillis());
         assertEquals(2000, ds.getMinEvictableIdleTimeMillis());
         assertEquals(3000, ds.getSoftMinEvictableIdleTimeMillis());

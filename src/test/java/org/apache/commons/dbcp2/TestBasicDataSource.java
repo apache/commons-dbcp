@@ -134,44 +134,44 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testSetProperties() throws Exception {
         // normal
         ds.setConnectionProperties("name1=value1;name2=value2;name3=value3");
-        assertEquals(3, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
-        assertEquals("value2", ds.connectionProperties.getProperty("name2"));
-        assertEquals("value3", ds.connectionProperties.getProperty("name3"));
+        assertEquals(3, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
+        assertEquals("value2", ds.getConnectionProperties().getProperty("name2"));
+        assertEquals("value3", ds.getConnectionProperties().getProperty("name3"));
 
         // make sure all properties are replaced
         ds.setConnectionProperties("name1=value1;name2=value2");
-        assertEquals(2, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
-        assertEquals("value2", ds.connectionProperties.getProperty("name2"));
-        assertFalse(ds.connectionProperties.containsKey("name3"));
+        assertEquals(2, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
+        assertEquals("value2", ds.getConnectionProperties().getProperty("name2"));
+        assertFalse(ds.getConnectionProperties().containsKey("name3"));
 
         // no value is empty string
         ds.setConnectionProperties("name1=value1;name2");
-        assertEquals(2, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
-        assertEquals("", ds.connectionProperties.getProperty("name2"));
+        assertEquals(2, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
+        assertEquals("", ds.getConnectionProperties().getProperty("name2"));
 
         // no value (with equals) is empty string
         ds.setConnectionProperties("name1=value1;name2=");
-        assertEquals(2, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
-        assertEquals("", ds.connectionProperties.getProperty("name2"));
+        assertEquals(2, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
+        assertEquals("", ds.getConnectionProperties().getProperty("name2"));
 
         // single value
         ds.setConnectionProperties("name1=value1");
-        assertEquals(1, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
+        assertEquals(1, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
 
         // single value with trailing ;
         ds.setConnectionProperties("name1=value1;");
-        assertEquals(1, ds.connectionProperties.size());
-        assertEquals("value1", ds.connectionProperties.getProperty("name1"));
+        assertEquals(1, ds.getConnectionProperties().size());
+        assertEquals("value1", ds.getConnectionProperties().getProperty("name1"));
 
         // single value wit no value
         ds.setConnectionProperties("name1");
-        assertEquals(1, ds.connectionProperties.size());
-        assertEquals("", ds.connectionProperties.getProperty("name1"));
+        assertEquals(1, ds.getConnectionProperties().size());
+        assertEquals("", ds.getConnectionProperties().getProperty("name1"));
 
         // null should throw a NullPointerException
         try {
@@ -440,9 +440,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
 
-        assertEquals(false, ds.connectionPool.getTestOnBorrow());
-        assertEquals(false, ds.connectionPool.getTestWhileIdle());
-        assertEquals(true, ds.connectionPool.getTestOnReturn());
+        assertEquals(false, ds.getConnectionPool().getTestOnBorrow());
+        assertEquals(false, ds.getConnectionPool().getTestWhileIdle());
+        assertEquals(true, ds.getConnectionPool().getTestOnReturn());
     }
 
     /**
@@ -565,7 +565,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
 
         // make sure cleanup is complete
-        assertNull(ds.connectionPool);
+        assertNull(ds.getConnectionPool());
     }
 }
 

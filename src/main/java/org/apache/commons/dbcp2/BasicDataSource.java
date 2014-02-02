@@ -82,7 +82,7 @@ public class BasicDataSource
     /**
      * The default auto-commit state of connections created by this pool.
      */
-    protected volatile boolean defaultAutoCommit = true;
+    private volatile boolean defaultAutoCommit = true;
 
     /**
      * Returns the default auto-commit property.
@@ -114,7 +114,7 @@ public class BasicDataSource
     /**
      * The default read-only state of connections created by this pool.
      */
-    protected transient Boolean defaultReadOnly = null;
+    private transient Boolean defaultReadOnly = null;
 
     /**
      * Returns the default readOnly property.
@@ -128,6 +128,10 @@ public class BasicDataSource
             return val.booleanValue();
         }
         return false;
+    }
+
+    protected Boolean getDefaultReadOnlyBoolean() {
+        return defaultReadOnly;
     }
 
     /**
@@ -148,7 +152,7 @@ public class BasicDataSource
     /**
      * The default TransactionIsolation state of connections created by this pool.
      */
-    protected volatile int defaultTransactionIsolation =
+    private volatile int defaultTransactionIsolation =
         PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
 
     /**
@@ -184,7 +188,7 @@ public class BasicDataSource
     /**
      * The default "catalog" of connections created by this pool.
      */
-    protected volatile String defaultCatalog = null;
+    private volatile String defaultCatalog = null;
 
     /**
      * Returns the default catalog.
@@ -277,7 +281,7 @@ public class BasicDataSource
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
-    protected String driverClassName = null;
+    private String driverClassName = null;
 
     /**
      * Returns the jdbc driver class name.
@@ -319,7 +323,7 @@ public class BasicDataSource
      * If specified, {@link Class#forName(String, boolean, ClassLoader)} is
      * used.
      */
-    protected ClassLoader driverClassLoader = null;
+    private ClassLoader driverClassLoader = null;
 
     /**
      * Returns the class loader specified for loading the JDBC driver. Returns
@@ -387,7 +391,7 @@ public class BasicDataSource
      * The maximum number of active connections that can be allocated from
      * this pool at the same time, or negative for no limit.
      */
-    protected int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
      * <p>Returns the maximum number of active connections that can be
@@ -426,7 +430,7 @@ public class BasicDataSource
      * connections to rise above maxIdle. The best value for maxIdle for heavily
      * loaded system will vary but the default is a good starting point.
      */
-    protected int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
+    private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
 
     /**
      * <p>Returns the maximum number of connections that can remain idle in the
@@ -462,7 +466,7 @@ public class BasicDataSource
      * runs. The value of this property has no effect unless {@link #timeBetweenEvictionRunsMillis}
      * has a positive value.
      */
-    protected int minIdle = GenericObjectPoolConfig.DEFAULT_MIN_IDLE;
+    private int minIdle = GenericObjectPoolConfig.DEFAULT_MIN_IDLE;
 
     /**
      * Returns the minimum number of idle connections in the pool. The pool attempts
@@ -500,7 +504,7 @@ public class BasicDataSource
      *
      * @since 1.2
      */
-    protected int initialSize = 0;
+    private int initialSize = 0;
 
     /**
      * Returns the initial size of the connection pool.
@@ -533,7 +537,7 @@ public class BasicDataSource
      * are no available connections) for a connection to be returned before
      * throwing an exception, or <= 0 to wait indefinitely.
      */
-    protected long maxWaitMillis =
+    private long maxWaitMillis =
             GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
 
     /**
@@ -642,7 +646,7 @@ public class BasicDataSource
      * borrowed from the pool.  If the object fails to validate, it will be
      * dropped from the pool, and we will attempt to borrow another.
      */
-    protected boolean testOnBorrow = true;
+    private boolean testOnBorrow = true;
 
     /**
      * Returns the {@link #testOnBorrow} property.
@@ -676,7 +680,7 @@ public class BasicDataSource
      * The indication of whether objects will be validated before being
      * returned to the pool.
      */
-    protected boolean testOnReturn = false;
+    private boolean testOnReturn = false;
 
     /**
      * Returns the value of the {@link #testOnReturn} property.
@@ -709,7 +713,7 @@ public class BasicDataSource
      * evictor thread.  When non-positive, no idle object evictor thread will
      * be run.
      */
-    protected long timeBetweenEvictionRunsMillis =
+    private long timeBetweenEvictionRunsMillis =
         GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
 
     /**
@@ -741,7 +745,7 @@ public class BasicDataSource
      * The number of objects to examine during each run of the idle object
      * evictor thread (if any).
      */
-    protected int numTestsPerEvictionRun =
+    private int numTestsPerEvictionRun =
         GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
     /**
@@ -774,7 +778,7 @@ public class BasicDataSource
      * The minimum amount of time an object may sit idle in the pool before it
      * is eligible for eviction by the idle object evictor (if any).
      */
-    protected long minEvictableIdleTimeMillis =
+    private long minEvictableIdleTimeMillis =
         GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
     /**
@@ -860,7 +864,7 @@ public class BasicDataSource
      * evictor (if any).  If an object fails to validate, it will be dropped
      * from the pool.
      */
-    protected boolean testWhileIdle = false;
+    private boolean testWhileIdle = false;
 
     /**
      * Returns the value of the {@link #testWhileIdle} property.
@@ -924,7 +928,7 @@ public class BasicDataSource
      * The connection password to be passed to our JDBC driver to establish
      * a connection.
      */
-    protected volatile String password = null;
+    private volatile String password = null;
 
     /**
      * Returns the password passed to the JDBC driver to establish connections.
@@ -955,7 +959,7 @@ public class BasicDataSource
      * The connection URL to be passed to our JDBC driver to establish
      * a connection.
      */
-    protected String url = null;
+    private String url = null;
 
     /**
      * Returns the JDBC connection {@link #url} property.
@@ -987,7 +991,7 @@ public class BasicDataSource
      * The connection username to be passed to our JDBC driver to
      * establish a connection.
      */
-    protected String username = null;
+    private String username = null;
 
     /**
      * Returns the JDBC connection {@link #username} property.
@@ -1021,7 +1025,7 @@ public class BasicDataSource
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
      * one row.
      */
-    protected volatile String validationQuery = null;
+    private volatile String validationQuery = null;
 
     /**
      * Returns the validation query used to validate connections before
@@ -1059,7 +1063,7 @@ public class BasicDataSource
      *
      * @since 1.3
      */
-    protected volatile int validationQueryTimeout = -1;
+    private volatile int validationQueryTimeout = -1;
 
     /**
      * Returns the validation query timeout.
@@ -1101,7 +1105,7 @@ public class BasicDataSource
      *
      * @since 1.3
      */
-    protected volatile List<String> connectionInitSqls;
+    private volatile List<String> connectionInitSqls;
 
     /**
      * Returns the list of SQL statements executed when a physical connection
@@ -1111,8 +1115,8 @@ public class BasicDataSource
      * @return initialization SQL statements
      * @since 1.3
      */
-    public Collection<String> getConnectionInitSqls() {
-        Collection<String> result = connectionInitSqls;
+    public List<String> getConnectionInitSqls() {
+        List<String> result = connectionInitSqls;
         if (result == null) {
             return Collections.emptyList();
         }
@@ -1267,7 +1271,11 @@ public class BasicDataSource
     /**
      * The object pool that internally manages our connections.
      */
-    protected volatile GenericObjectPool<PoolableConnection> connectionPool = null;
+    private volatile GenericObjectPool<PoolableConnection> connectionPool = null;
+
+    protected GenericObjectPool<PoolableConnection> getConnectionPool() {
+        return connectionPool;
+    }
 
     /**
      * The connection properties that will be sent to our JDBC driver when
@@ -1275,19 +1283,24 @@ public class BasicDataSource
      * "password" properties will be passed explicitly, so they do not need
      * to be included here.
      */
-    protected Properties connectionProperties = new Properties();
+    private Properties connectionProperties = new Properties();
+
+    // For unit testing
+    Properties getConnectionProperties() {
+        return connectionProperties;
+    }
 
     /**
      * The data source we will use to manage connections.  This object should
      * be acquired <strong>ONLY</strong> by calls to the
      * <code>createDataSource()</code> method.
      */
-    protected volatile DataSource dataSource = null;
+    private volatile DataSource dataSource = null;
 
     /**
      * The PrintWriter to which log messages should be directed.
      */
-    protected PrintWriter logWriter = new PrintWriter(new OutputStreamWriter(
+    private PrintWriter logWriter = new PrintWriter(new OutputStreamWriter(
             System.out, StandardCharsets.UTF_8));
 
 
@@ -1700,7 +1713,7 @@ public class BasicDataSource
         this.restartNeeded = true;
     }
 
-    protected boolean closed;
+    private boolean closed;
 
     /**
      * <p>Closes and releases all idle connections that are currently stored in the connection pool
@@ -1818,7 +1831,7 @@ public class BasicDataSource
             // Create the pooling data source to manage connections
             success = false;
             try {
-                createDataSourceInstance();
+                dataSource = createDataSourceInstance();
                 success = true;
             } catch (SQLException se) {
                 throw se;
@@ -2014,11 +2027,11 @@ public class BasicDataSource
      *
      * @throws SQLException if unable to create a datasource instance
      */
-    protected void createDataSourceInstance() throws SQLException {
+    protected DataSource createDataSourceInstance() throws SQLException {
         PoolingDataSource<PoolableConnection> pds = new PoolingDataSource<>(connectionPool);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         pds.setLogWriter(logWriter);
-        dataSource = pds;
+        return pds;
     }
 
     /**
