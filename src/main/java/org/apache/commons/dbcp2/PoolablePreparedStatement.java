@@ -43,12 +43,12 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    protected KeyedObjectPool<K, PoolablePreparedStatement<K,S>> _pool = null;
+    private final KeyedObjectPool<K, PoolablePreparedStatement<K,S>> _pool;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
      */
-    protected K _key = null;
+    private final K _key;
 
     private volatile boolean batchAdded = false;
 

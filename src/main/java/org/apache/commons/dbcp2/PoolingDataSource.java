@@ -43,23 +43,11 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
     /** Controls access to the underlying connection */
     private boolean accessToUnderlyingConnectionAllowed = false;
 
-    public PoolingDataSource() {
-        this(null);
-    }
-
     public PoolingDataSource(ObjectPool<C> pool) {
-        _pool = pool;
-    }
-
-    public void setPool(ObjectPool<C> pool)
-            throws IllegalStateException, NullPointerException {
-        if(null != _pool) {
-            throw new IllegalStateException("Pool already set");
-        } else if(null == pool) {
+        if (null == pool) {
             throw new NullPointerException("Pool must not be null.");
-        } else {
-            _pool = pool;
         }
+        _pool = pool;
     }
 
     /**
@@ -173,9 +161,13 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
     }
 
     /** My log writer. */
-    protected PrintWriter _logWriter = null;
+    private PrintWriter _logWriter = null;
 
-    protected ObjectPool<C> _pool = null;
+    private final ObjectPool<C> _pool;
+
+    protected ObjectPool<C> getPool() {
+        return _pool;
+    }
 
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a

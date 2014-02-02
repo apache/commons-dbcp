@@ -49,7 +49,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         implements KeyedPooledObjectFactory<PStmtKey,DelegatingPreparedStatement> {
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    protected KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> _pstmtPool = null;
+    private KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> _pstmtPool = null;
 
     /** Prepared Statement type */
     protected static final byte STATEMENT_PREPAREDSTMT = 0;
