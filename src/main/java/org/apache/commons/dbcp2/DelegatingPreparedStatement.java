@@ -73,17 +73,16 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     /** Sets my delegate. */
     public void setDelegate(PreparedStatement s) {
         super.setDelegate(s);
-        _stmt = s;
     }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
         checkOpen();
-        if (_conn != null) {
-            _conn.setLastUsed();
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().setLastUsed();
         }
         try {
-            return DelegatingResultSet.wrapResultSet(this,((PreparedStatement)_stmt).executeQuery());
+            return DelegatingResultSet.wrapResultSet(this,((PreparedStatement)getDelegate()).executeQuery());
         }
         catch (SQLException e) {
             handleException(e);
@@ -94,11 +93,11 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     @Override
     public int executeUpdate() throws SQLException {
         checkOpen();
-        if (_conn != null) {
-            _conn.setLastUsed();
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().setLastUsed();
         }
         try {
-            return ((PreparedStatement) _stmt).executeUpdate();
+            return ((PreparedStatement) getDelegate()).executeUpdate();
         } catch (SQLException e) {
             handleException(e);
             return 0;
@@ -107,98 +106,98 @@ public class DelegatingPreparedStatement extends DelegatingStatement
 
     @Override
     public void setNull(int parameterIndex, int sqlType) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setNull(parameterIndex,sqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setNull(parameterIndex,sqlType); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setBoolean(int parameterIndex, boolean x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setBoolean(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setBoolean(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setByte(int parameterIndex, byte x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setByte(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setByte(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setShort(int parameterIndex, short x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setShort(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setShort(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setInt(int parameterIndex, int x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setInt(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setInt(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setLong(int parameterIndex, long x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setLong(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setLong(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setFloat(int parameterIndex, float x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setFloat(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setFloat(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setDouble(int parameterIndex, double x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setDouble(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setDouble(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setBigDecimal(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setBigDecimal(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setString(int parameterIndex, String x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setString(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setString(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setBytes(int parameterIndex, byte[] x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setBytes(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setBytes(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setDate(int parameterIndex, java.sql.Date x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setDate(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setDate(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setTime(int parameterIndex, java.sql.Time x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setTime(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setTime(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setTimestamp(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setTimestamp(parameterIndex,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setAsciiStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setAsciiStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setAsciiStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
 
     /** @deprecated */
     @Deprecated
     @Override
     public void setUnicodeStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setUnicodeStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setUnicodeStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setBinaryStream(int parameterIndex, java.io.InputStream x, int length) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setBinaryStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setBinaryStream(parameterIndex,x,length); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void clearParameters() throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).clearParameters(); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).clearParameters(); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(int parameterIndex, Object x, int targetSqlType, int scale) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setObject(parameterIndex, x, targetSqlType, scale); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setObject(parameterIndex, x, targetSqlType, scale); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setObject(parameterIndex, x, targetSqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setObject(parameterIndex, x, targetSqlType); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(int parameterIndex, Object x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setObject(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setObject(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public boolean execute() throws SQLException {
         checkOpen();
-        if (_conn != null) {
-            _conn.setLastUsed();
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().setLastUsed();
         }
         try {
-            return ((PreparedStatement) _stmt).execute();
+            return ((PreparedStatement) getDelegate()).execute();
         } catch (SQLException e) {
             handleException(e);
             return false;
@@ -207,47 +206,47 @@ public class DelegatingPreparedStatement extends DelegatingStatement
 
     @Override
     public void addBatch() throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).addBatch(); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).addBatch(); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setCharacterStream(int parameterIndex, java.io.Reader reader, int length) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setCharacterStream(parameterIndex,reader,length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setCharacterStream(parameterIndex,reader,length); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setRef(int i, Ref x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setRef(i,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setRef(i,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setBlob(int i, Blob x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setBlob(i,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setBlob(i,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setClob(int i, Clob x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setClob(i,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setClob(i,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setArray(int i, Array x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setArray(i,x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setArray(i,x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException
-    { checkOpen(); try { return ((PreparedStatement)_stmt).getMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
+    { checkOpen(); try { return ((PreparedStatement)getDelegate()).getMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
     @Override
     public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setDate(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setDate(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setTime(int parameterIndex, java.sql.Time x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setTime(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setTime(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setTimestamp(int parameterIndex, java.sql.Timestamp x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setTimestamp(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setTimestamp(parameterIndex,x,cal); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public void setNull(int paramIndex, int sqlType, String typeName) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setNull(paramIndex,sqlType,typeName); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setNull(paramIndex,sqlType,typeName); } catch (SQLException e) { handleException(e); } }
 
     /**
      * Returns a String representation of this object.
@@ -257,16 +256,16 @@ public class DelegatingPreparedStatement extends DelegatingStatement
      */
     @Override
     public String toString() {
-    return _stmt.toString();
+    return getDelegate().toString();
     }
 
     @Override
     public void setURL(int parameterIndex, java.net.URL x) throws SQLException
-    { checkOpen(); try { ((PreparedStatement)_stmt).setURL(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((PreparedStatement)getDelegate()).setURL(parameterIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException
-    { checkOpen(); try { return ((PreparedStatement)_stmt).getParameterMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
+    { checkOpen(); try { return ((PreparedStatement)getDelegate()).getParameterMetaData(); } catch (SQLException e) { handleException(e); throw new AssertionError(); } }
 
 /* JDBC_4_ANT_KEY_BEGIN */
 
@@ -274,7 +273,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setRowId(int parameterIndex, RowId value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setRowId(parameterIndex, value);
+            ((PreparedStatement)getDelegate()).setRowId(parameterIndex, value);
         }
         catch (SQLException e) {
             handleException(e);
@@ -285,7 +284,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNString(int parameterIndex, String value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNString(parameterIndex, value);
+            ((PreparedStatement)getDelegate()).setNString(parameterIndex, value);
         }
         catch (SQLException e) {
             handleException(e);
@@ -296,7 +295,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNCharacterStream(int parameterIndex, Reader value, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNCharacterStream(parameterIndex, value, length);
+            ((PreparedStatement)getDelegate()).setNCharacterStream(parameterIndex, value, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -307,7 +306,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNClob(int parameterIndex, NClob value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNClob(parameterIndex, value);
+            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, value);
         }
         catch (SQLException e) {
             handleException(e);
@@ -318,7 +317,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setClob(parameterIndex, reader, length);
+            ((PreparedStatement)getDelegate()).setClob(parameterIndex, reader, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -329,7 +328,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setBlob(parameterIndex, inputStream, length);
+            ((PreparedStatement)getDelegate()).setBlob(parameterIndex, inputStream, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -340,7 +339,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNClob(parameterIndex, reader, length);
+            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, reader, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -351,7 +350,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setSQLXML(int parameterIndex, SQLXML value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setSQLXML(parameterIndex, value);
+            ((PreparedStatement)getDelegate()).setSQLXML(parameterIndex, value);
         }
         catch (SQLException e) {
             handleException(e);
@@ -362,7 +361,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setAsciiStream(int parameterIndex, InputStream inputStream, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setAsciiStream(parameterIndex, inputStream, length);
+            ((PreparedStatement)getDelegate()).setAsciiStream(parameterIndex, inputStream, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -373,7 +372,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setBinaryStream(int parameterIndex, InputStream inputStream, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setBinaryStream(parameterIndex, inputStream, length);
+            ((PreparedStatement)getDelegate()).setBinaryStream(parameterIndex, inputStream, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -384,7 +383,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setCharacterStream(int parameterIndex, Reader reader, long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setCharacterStream(parameterIndex, reader, length);
+            ((PreparedStatement)getDelegate()).setCharacterStream(parameterIndex, reader, length);
         }
         catch (SQLException e) {
             handleException(e);
@@ -395,7 +394,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setAsciiStream(int parameterIndex, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setAsciiStream(parameterIndex, inputStream);
+            ((PreparedStatement)getDelegate()).setAsciiStream(parameterIndex, inputStream);
         }
         catch (SQLException e) {
             handleException(e);
@@ -406,7 +405,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setBinaryStream(int parameterIndex, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setBinaryStream(parameterIndex, inputStream);
+            ((PreparedStatement)getDelegate()).setBinaryStream(parameterIndex, inputStream);
         }
         catch (SQLException e) {
             handleException(e);
@@ -417,7 +416,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setCharacterStream(parameterIndex, reader);
+            ((PreparedStatement)getDelegate()).setCharacterStream(parameterIndex, reader);
         }
         catch (SQLException e) {
             handleException(e);
@@ -428,7 +427,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNCharacterStream(int parameterIndex, Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNCharacterStream(parameterIndex, reader);
+            ((PreparedStatement)getDelegate()).setNCharacterStream(parameterIndex, reader);
         }
         catch (SQLException e) {
             handleException(e);
@@ -439,7 +438,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setClob(int parameterIndex, Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setClob(parameterIndex, reader);
+            ((PreparedStatement)getDelegate()).setClob(parameterIndex, reader);
         }
         catch (SQLException e) {
             handleException(e);
@@ -450,7 +449,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setBlob(parameterIndex, inputStream);
+            ((PreparedStatement)getDelegate()).setBlob(parameterIndex, inputStream);
         }
         catch (SQLException e) {
             handleException(e);
@@ -461,7 +460,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)_stmt).setNClob(parameterIndex, reader);
+            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, reader);
         }
         catch (SQLException e) {
             handleException(e);

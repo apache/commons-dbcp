@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
@@ -45,9 +44,9 @@ import java.util.List;
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** My delegate. */
-    protected Statement _stmt = null;
+    private Statement _stmt = null;
     /** The connection that created me. **/
-    protected DelegatingConnection<?> _conn = null;
+    private DelegatingConnection<?> _conn = null;
 
     /**
      * Create a wrapper for the Statement which traces this
@@ -139,7 +138,15 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         _stmt = s;
     }
 
-    protected boolean _closed = false;
+    private boolean _closed = false;
+
+    protected boolean isClosedInternal() {
+        return _closed;
+    }
+
+    protected void setClosedInternal(boolean closed) {
+        this._closed = closed;
+    }
 
     protected void checkOpen() throws SQLException {
         if(isClosed()) {
@@ -212,7 +219,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     @Override
     public Connection getConnection() throws SQLException {
         checkOpen();
-        return _conn; // return the delegating connection that created this
+        return getConnectionInternal(); // return the delegating connection that created this
+    }
+
+    protected DelegatingConnection<?> getConnectionInternal() {
+        return _conn;
     }
 
     @Override
