@@ -23,8 +23,10 @@ import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
 
+import javax.sql.DataSource;
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
+
 import java.sql.SQLException;
 
 /**
@@ -157,18 +159,18 @@ public class BasicManagedDataSource extends BasicDataSource {
         }
 
         // finally, create the XAConectionFactory using the XA data source
-        XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSourceInstance, username, password);
+        XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSourceInstance, getUsername(), getPassword());
         transactionRegistry = xaConnectionFactory.getTransactionRegistry();
         return xaConnectionFactory;
     }
 
     @Override
-    protected void createDataSourceInstance() throws SQLException {
+    protected DataSource createDataSourceInstance() throws SQLException {
         PoolingDataSource<PoolableConnection> pds =
-                new ManagedDataSource<>(connectionPool, transactionRegistry);
+                new ManagedDataSource<>(getConnectionPool(), transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        pds.setLogWriter(logWriter);
-        dataSource = pds;
+        pds.setLogWriter(getLogWriter());
+        return pds;
     }
 
     /**
@@ -184,15 +186,15 @@ public class BasicManagedDataSource extends BasicDataSource {
         try {
             connectionFactory = new PoolableManagedConnectionFactory(
                     (XAConnectionFactory) driverConnectionFactory, getRegisteredJmxName());
-            connectionFactory.setValidationQuery(validationQuery);
-            connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
-            connectionFactory.setConnectionInitSql(connectionInitSqls);
-            if (defaultReadOnly != null) {
-                connectionFactory.setDefaultReadOnly(defaultReadOnly.booleanValue());
+            connectionFactory.setValidationQuery(getValidationQuery());
+            connectionFactory.setValidationQueryTimeout(getValidationQueryTimeout());
+            connectionFactory.setConnectionInitSql(getConnectionInitSqls());
+            if (getDefaultReadOnlyBoolean() != null) {
+                connectionFactory.setDefaultReadOnly(getDefaultReadOnly());
             }
-            connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
-            connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
-            connectionFactory.setDefaultCatalog(defaultCatalog);
+            connectionFactory.setDefaultAutoCommit(getDefaultAutoCommit());
+            connectionFactory.setDefaultTransactionIsolation(getDefaultTransactionIsolation());
+            connectionFactory.setDefaultCatalog(getDefaultCatalog());
             connectionFactory.setPoolStatements(isPoolPreparedStatements());
             connectionFactory.setMaxOpenPrepatedStatements(
                     getMaxOpenPreparedStatements());
