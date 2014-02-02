@@ -348,20 +348,35 @@ public class PoolableConnectionFactory
         }
     }
 
+    protected ConnectionFactory getConnectionFactory() {
+        return _connFactory;
+    }
 
-    protected final ConnectionFactory _connFactory;
+    protected boolean getPoolStatements() {
+        return poolStatements;
+    }
+
+    protected int getMaxOpenPreparedStatements() {
+        return maxOpenPreparedStatements;
+    }
+
+    protected boolean getCacheState() {
+        return _cacheState;
+    }
+
+    private final ConnectionFactory _connFactory;
     private final ObjectName dataSourceJmxName;
-    protected volatile String _validationQuery = null;
-    protected volatile int _validationQueryTimeout = -1;
-    protected Collection<String> _connectionInitSqls = null;
-    protected volatile ObjectPool<PoolableConnection> _pool = null;
-    protected Boolean _defaultReadOnly = null;
-    protected boolean _defaultAutoCommit = true;
-    protected int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    protected String _defaultCatalog;
-    protected boolean _cacheState;
-    protected boolean poolStatements = false;
-    protected int maxOpenPreparedStatements =
+    private volatile String _validationQuery = null;
+    private volatile int _validationQueryTimeout = -1;
+    private Collection<String> _connectionInitSqls = null;
+    private volatile ObjectPool<PoolableConnection> _pool = null;
+    private Boolean _defaultReadOnly = null;
+    private boolean _defaultAutoCommit = true;
+    private int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
+    private String _defaultCatalog;
+    private boolean _cacheState;
+    private boolean poolStatements = false;
+    private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
 
