@@ -169,7 +169,6 @@ public class BasicManagedDataSource extends BasicDataSource {
         PoolingDataSource<PoolableConnection> pds =
                 new ManagedDataSource<>(getConnectionPool(), transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        pds.setLogWriter(getLogWriter());
         return pds;
     }
 

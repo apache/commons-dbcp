@@ -1832,6 +1832,7 @@ public class BasicDataSource
             success = false;
             try {
                 dataSource = createDataSourceInstance();
+                dataSource.setLogWriter(logWriter);
                 success = true;
             } catch (SQLException se) {
                 throw se;
@@ -2030,7 +2031,6 @@ public class BasicDataSource
     protected DataSource createDataSourceInstance() throws SQLException {
         PoolingDataSource<PoolableConnection> pds = new PoolingDataSource<>(connectionPool);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        pds.setLogWriter(logWriter);
         return pds;
     }
 
