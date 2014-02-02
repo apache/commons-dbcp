@@ -33,13 +33,6 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
     private TransactionRegistry transactionRegistry;
 
     /**
-     * Creates an uninitialized datasource.  Before this data source can be used a pool and
-     * transaction registry must be set.
-     */
-    public ManagedDataSource() {
-    }
-
-    /**
      * Creates a ManagedDataSource which obtains connections from the specified pool and
      * manages them using the specified transaction registry.  The TransactionRegistry must
      * be the transaction registry obtained from the XAConnectionFactory used to create
@@ -73,10 +66,10 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
 
     @Override
     public Connection getConnection() throws SQLException {
-        if (_pool == null) throw new IllegalStateException("Pool has not been set");
+        if (getPool() == null) throw new IllegalStateException("Pool has not been set");
         if (transactionRegistry == null) throw new IllegalStateException("TransactionRegistry has not been set");
 
-        Connection connection = new ManagedConnection<>(_pool, transactionRegistry, isAccessToUnderlyingConnectionAllowed());
+        Connection connection = new ManagedConnection<>(getPool(), transactionRegistry, isAccessToUnderlyingConnectionAllowed());
         return connection;
     }
 }

@@ -32,7 +32,7 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolableConnection extends DelegatingConnection<Connection> {
     /** The pool to which I should return. */
-    protected ObjectPool<PoolableConnection> _pool = null;
+    private ObjectPool<PoolableConnection> _pool = null;
 
     /**
      *
