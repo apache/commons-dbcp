@@ -68,8 +68,8 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
 
         // Remove from trace now because this statement will be
         // added by the activate method.
-        if(_conn != null) {
-            _conn.removeTrace(this);
+        if(getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
         }
     }
 
@@ -112,18 +112,18 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
 
     @Override
     public void activate() throws SQLException{
-        _closed = false;
-        if(_conn != null) {
-            _conn.addTrace(this);
+        setClosedInternal(false);
+        if(getConnectionInternal() != null) {
+            getConnectionInternal().addTrace(this);
         }
         super.activate();
     }
 
     @Override
     public void passivate() throws SQLException {
-        _closed = true;
-        if(_conn != null) {
-            _conn.removeTrace(this);
+        setClosedInternal(true);
+        if(getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
         }
 
         // The JDBC spec requires that a statement closes any open
