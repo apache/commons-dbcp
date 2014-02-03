@@ -285,7 +285,7 @@ public class TesterStatement implements Statement {
     }
 
     public boolean isClosed() throws SQLException {
-        throw new SQLException("Not implemented.");
+        return !_open;
     }
 
     public void setPoolable(boolean poolable) throws SQLException {
