@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.SQLException;
 
@@ -30,6 +31,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.junit.Assert;
 
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
@@ -140,5 +142,31 @@ public class TestPStmtPooling extends TestCase {
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
         }
+    }
+
+    public void testBatchUpdate() throws Exception {
+        @SuppressWarnings("unused") // Ensure TesterDriver is registered
+        Driver d = new TesterDriver();
+        ConnectionFactory connFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver","u1","p1");
+
+        PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connFactory, null);
+        pcf.setPoolStatements(true);
+        pcf.setDefaultReadOnly(false);
+        pcf.setDefaultAutoCommit(true);
+        ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
+        pcf.setPool(connPool);
+
+        DataSource ds = new PoolingDataSource<>(connPool);
+
+        Connection conn = ds.getConnection();
+        PreparedStatement ps = conn.prepareStatement("select 1 from dual");
+        Statement inner = ((DelegatingPreparedStatement) ps).getInnermostDelegate();
+        // Check DBCP-372
+        ps.addBatch();
+        ps.close();
+        conn.close();
+        Assert.assertFalse(inner.isClosed());
     }
 }

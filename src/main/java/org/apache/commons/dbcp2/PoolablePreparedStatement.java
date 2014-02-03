@@ -121,6 +121,11 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
 
     @Override
     public void passivate() throws SQLException {
+        // DBCP-372. clearBatch with throw an exception if called when the
+        // connection is marked as closed.
+        if (batchAdded) {
+            clearBatch();
+        }
         setClosedInternal(true);
         if(getConnectionInternal() != null) {
             getConnectionInternal().removeTrace(this);
@@ -137,9 +142,6 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
                 set[i].close();
             }
             clearTrace();
-        }
-        if (batchAdded) {
-            clearBatch();
         }
 
         super.passivate();
