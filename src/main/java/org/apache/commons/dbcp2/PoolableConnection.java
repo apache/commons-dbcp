@@ -47,6 +47,14 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
 
 
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This method should not be used by a client to determine whether or not a
+     * connection should be return to the connection pool (by calling
+     * {@link #close()}). Clients should always attempt to return a connection
+     * to the pool once it is no longer required.
+     */
     @Override
     public boolean isClosed() throws SQLException {
         if (isClosedInternal()) {
