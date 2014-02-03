@@ -17,10 +17,14 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
+import javax.sql.PooledConnection;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -111,6 +115,30 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
         // register the xa resource for the connection
         transactionRegistry.registerConnection(connection, xaResource);
+
+        // The Connection we're returning is a handle on the XAConnection.
+        // When the pool calling us closes the Connection, we need to
+        // also close the XAConnection that holds the physical connection.
+        xaConnection.addConnectionEventListener(new ConnectionEventListener() {
+
+            @Override
+            public void connectionClosed(ConnectionEvent event) {
+                PooledConnection pc = (PooledConnection) event.getSource();
+                pc.removeConnectionEventListener(this);
+                try {
+                    pc.close();
+                } catch (SQLException e) {
+                    System.err.println("Failed to close XAConnection");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void connectionErrorOccurred(ConnectionEvent event) {
+                connectionClosed(event);
+            }
+        });
+
 
         return connection;
     }
