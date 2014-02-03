@@ -87,6 +87,10 @@ The <action> type attribute can be add,update,fix,remove.
         LocalXAConnectionFactory does not properly check if Xid is equal to
         currentXid when resuming which may result in an XAException.
       </action>
+      <action dev="markt" issue="DBCP-355" type="fix" due-to="Florent Guillaume">
+        Ensure that the XAConnection is closed when the associated Connection is
+        closed.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
