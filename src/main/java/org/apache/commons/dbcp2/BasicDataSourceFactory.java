@@ -32,7 +32,6 @@ import javax.naming.Name;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-import javax.sql.DataSource;
 
 /**
  * <p>JNDI object factory that creates an instance of
@@ -182,7 +181,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param properties the datasource configuration properties
      * @throws Exception if an error occurs creating the data source
      */
-    public static DataSource createDataSource(Properties properties) throws Exception {
+    public static BasicDataSource createDataSource(Properties properties) throws Exception {
         BasicDataSource dataSource = new BasicDataSource();
         String value = null;
 

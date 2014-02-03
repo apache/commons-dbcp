@@ -82,7 +82,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         properties.setProperty("maxOpenPreparedStatements", "10");
         properties.setProperty("lifo", "true");
 
-        BasicDataSource ds = (BasicDataSource) BasicDataSourceFactory.createDataSource(properties);
+        BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
 
         assertEquals("org.apache.commons.dbcp2.TesterDriver", ds.getDriverClassName());
         assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
