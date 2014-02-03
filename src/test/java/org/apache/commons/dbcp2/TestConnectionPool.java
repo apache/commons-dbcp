@@ -545,7 +545,7 @@ public abstract class TestConnectionPool extends TestCase {
                     // ignored
                 }
             }
-            if(threads[i].failed()) {
+            if(threads[i] != null && threads[i].failed()) {
                 fail();
             }
         }
