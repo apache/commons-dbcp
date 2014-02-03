@@ -152,6 +152,11 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-398" type="fix">
         Clarify Jaavdoc for isClosed() method of PoolableConnection.
       </action>
+      <action dev="markt" issue="DBCP-383" type="fix">
+        Avoid NullPointerException and throw an XAException if an attempt is
+        made to commit the current transaction for a connection when no
+        transaction has been started.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
