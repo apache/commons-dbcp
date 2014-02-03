@@ -107,6 +107,11 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-404" type="fix">
         Make all mutable fields private.
       </action>
+      <action dev="markt" issue="DBCP-364" type="fix">
+        Return BasicDataSource rather than DataSource from
+        BasicDataSourceFactory so a cast is not required to use BasicDataSource
+        specific methods.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
