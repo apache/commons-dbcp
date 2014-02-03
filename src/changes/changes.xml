@@ -91,6 +91,9 @@ The <action> type attribute can be add,update,fix,remove.
         Ensure that the XAConnection is closed when the associated Connection is
         closed.
       </action>
+      <action dev="markt" issue="DBCP-398" type="fix">
+        Clarify Jaavdoc for isClosed() method of PoolableConnection.
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-367" type="fix" due-to="Ken Tatsushita">
