@@ -197,8 +197,16 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          * @throws XAException if connection.commit() throws a SQLException
          */
         public synchronized void commit(Xid xid, boolean flag) throws XAException {
-            if (xid == null) throw new NullPointerException("xid is null");
-            if (!this.currentXid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
+            if (xid == null) {
+                throw new NullPointerException("xid is null");
+            }
+            if (this.currentXid == null) {
+                throw new XAException("There is no current transaction");
+            }
+            if (!this.currentXid.equals(xid)) {
+                throw new XAException("Invalid Xid: expected " +
+                        this.currentXid + ", but was " + xid);
+            }
 
             try {
                 // make sure the connection isn't already closed
