@@ -608,6 +608,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             getTimeBetweenEvictionRunsMillis());
         pool.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         pool.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
+        pool.setEvictionPolicyClassName(getEvictionPolicyClassName());
         pool.setTestWhileIdle(getTestWhileIdle());
         pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
 

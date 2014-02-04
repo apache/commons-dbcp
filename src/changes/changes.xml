@@ -122,6 +122,10 @@ The <action> type attribute can be add,update,fix,remove.
         part of the internal API) to allow classes extending this implementation
         to access the innermost delegate when required.
       </action>
+      <action dev="markt" issue="DBCP-368" type="add">
+        Expose the new Pool 2 property evictionPolicyClassName to enable more
+        sophisticated eviction strategies to be used.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
