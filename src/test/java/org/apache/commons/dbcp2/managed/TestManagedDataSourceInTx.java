@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.managed;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
+import org.junit.Assert;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -79,9 +80,13 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
                 // two connections should be distinct instances
-                assertNotSame(conn[j], conn[i]);
-                // but they should be equivalent since they are sharing the same underlying connection
-                assertEquals(conn[j], conn[i]);
+                Assert.assertNotSame(conn[j], conn[i]);
+                // neither should they should be equivalent even though they are
+                // sharing the same underlying connection
+                Assert.assertNotEquals(conn[j], conn[i]);
+                // Check underlying connection is the same
+                Assert.assertEquals(((DelegatingConnection<?>) conn[j]).getInnermostDelegateInternal(),
+                        ((DelegatingConnection<?>) conn[i]).getInnermostDelegateInternal());
             }
         }
         for(int i=0;i<conn.length;i++) {
@@ -96,8 +101,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         Connection conn2 = newConnection();
         assertNotNull(conn2);
 
-        // shared connections should have the same hashcode
-        assertEquals(conn1.hashCode(), conn2.hashCode());
+        // shared connections should not have the same hashcode
+        Assert.assertNotEquals(conn1.hashCode(), conn2.hashCode());
     }
 
     @Override
@@ -165,8 +170,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        assertTrue(connectionA.equals(connectionB));
-        assertTrue(connectionB.equals(connectionA));
+        assertFalse(connectionA.equals(connectionB));
+        assertFalse(connectionB.equals(connectionA));
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -178,9 +183,9 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        // in a transaction the connections should be equal
-        assertTrue(connectionA.equals(connectionB));
-        assertTrue(connectionB.equals(connectionA));
+        // in a transaction the inner connections should be equal
+        assertFalse(connectionA.equals(connectionB));
+        assertFalse(connectionB.equals(connectionA));
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -190,7 +195,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionA.getAutoCommit();
         connectionB.getAutoCommit();
 
-        // no there is no transaction so connections should not be equal
+        // no there is no transaction so inner connections should not be equal
         assertFalse(connectionA.equals(connectionB));
         assertFalse(connectionB.equals(connectionA));
         assertFalse(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
@@ -202,9 +207,9 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionA.getAutoCommit();
         connectionB.getAutoCommit();
 
-        // back in a transaction so should be equal again
-        assertTrue(connectionA.equals(connectionB));
-        assertTrue(connectionB.equals(connectionA));
+        // back in a transaction so inner connections should be equal again
+        assertFalse(connectionA.equals(connectionB));
+        assertFalse(connectionB.equals(connectionA));
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -216,8 +221,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        assertTrue(connectionA.equals(connectionB));
-        assertTrue(connectionB.equals(connectionA));
+        assertFalse(connectionA.equals(connectionB));
+        assertFalse(connectionB.equals(connectionA));
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 

@@ -164,38 +164,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         }
     }
 
-    /**
-     * This method considers two objects to be equal
-     * if the underlying jdbc objects are equal.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        Connection delegate = getInnermostDelegateInternal();
-        if (obj instanceof DelegatingConnection) {
-            DelegatingConnection<?> c = (DelegatingConnection<?>) obj;
-            Connection cDelegate = c.getInnermostDelegateInternal();
-            return delegate == cDelegate || (delegate != null && delegate.equals(cDelegate));
-        }
-        else {
-            return delegate.equals(obj);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        Object obj = getInnermostDelegateInternal();
-        if (obj == null) {
-            return 0;
-        }
-        return obj.hashCode();
-    }
-
 
     /**
      * If my underlying {@link Connection} is not a
@@ -216,7 +184,13 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         return getInnermostDelegateInternal();
     }
 
-    protected final Connection getInnermostDelegateInternal() {
+
+    /**
+     * Although this method is public, it is part of the internal API and should
+     * not be used by clients. The signature of this method may change at any
+     * time including in ways that break backwards compatibility.
+     */
+    public final Connection getInnermostDelegateInternal() {
         Connection c = _conn;
         while(c != null && c instanceof DelegatingConnection) {
             c = ((DelegatingConnection<?>)c).getDelegateInternal();

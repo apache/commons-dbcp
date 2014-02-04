@@ -20,8 +20,6 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -53,40 +51,6 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
 
     public void testGetDelegate() throws Exception {
         assertEquals(delegateMeta,meta.getDelegate());
-    }
-
-    public void testHashCode() {
-        try {
-            delegateMeta = conn.getMetaData();
-        } catch (SQLException e) {
-            fail("No exception expected retrieving meta data");
-        }
-        DelegatingDatabaseMetaData meta1 =
-            new DelegatingDatabaseMetaData(conn,delegateMeta);
-        DelegatingDatabaseMetaData meta2 =
-            new DelegatingDatabaseMetaData(conn,delegateMeta);
-        assertEquals(meta1.hashCode(), meta2.hashCode());
-    }
-
-    public void testEquals() {
-        try {
-            delegateMeta = conn.getMetaData();
-        } catch (SQLException e) {
-            fail("No exception expected retrieving meta data");
-        }
-        DelegatingDatabaseMetaData meta1 =
-            new DelegatingDatabaseMetaData(conn,delegateMeta);
-        DelegatingDatabaseMetaData meta2 =
-            new DelegatingDatabaseMetaData(conn,delegateMeta);
-        DelegatingDatabaseMetaData meta3 =
-            new DelegatingDatabaseMetaData(conn,null);
-
-        assertTrue(!meta1.equals(null));
-        assertTrue(meta1.equals(meta2));
-        assertTrue(!meta1.equals(meta3));
-        assertTrue(meta1.equals(meta1));
-        assertTrue(meta2.equals(meta2));
-        assertTrue(meta3.equals(meta3));
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
