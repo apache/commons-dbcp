@@ -51,7 +51,7 @@ abstract class InstanceKeyObjectFactory implements ObjectFactory {
             String s = i.next();
             if (s != null) {
                 try {
-                    max = Math.max(max, Integer.valueOf(s).intValue());
+                    max = Math.max(max, Integer.parseInt(s));
                 } catch (NumberFormatException e) {
                     // no sweat, ignore those keys
                 }

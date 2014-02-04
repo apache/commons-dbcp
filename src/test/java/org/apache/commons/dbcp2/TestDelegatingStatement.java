@@ -61,44 +61,6 @@ public class TestDelegatingStatement extends TestCase {
         assertEquals(delegateStmt,stmt.getDelegate());
     }
 
-    public void testHashCode() throws Exception {
-        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt1 = new DelegatingStatement(conn,delegateStmt);
-        DelegatingStatement stmt2 = new DelegatingStatement(conn,delegateStmt);
-        DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
-        assertEquals(stmt1.hashCode(), stmt2.hashCode());
-        assertTrue(stmt1.hashCode() != stmt3.hashCode());
-        stmt1.close();
-        stmt2.close();
-        stmt3.close();
-    }
-
-    public void testEquals() {
-        delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
-        DelegatingStatement stmt1 = new DelegatingStatement(conn, delegateStmt);
-        DelegatingStatement stmt2 = new DelegatingStatement(conn, delegateStmt);
-        DelegatingStatement stmt3 = new DelegatingStatement(conn, null);
-        DelegatingStatement stmt4 = new DelegatingStatement(conn, stmt1);
-
-        // not null
-        assertTrue(!stmt1.equals(null));
-
-        // same innermost delegate
-        assertTrue(stmt1.equals(stmt2));
-        assertTrue(stmt1.equals(stmt4));
-
-        // innermost delegate itself - bugged behavior?
-        assertTrue(stmt1.equals(delegateStmt));
-
-        // not same delegate
-        assertTrue(!stmt1.equals(stmt3));
-
-        // reflexive
-        assertTrue(stmt1.equals(stmt1));
-        assertTrue(stmt2.equals(stmt2));
-        assertTrue(stmt3.equals(stmt3));
-    }
-
     public void testCheckOpen() throws Exception {
         stmt.checkOpen();
         stmt.close();
@@ -109,7 +71,7 @@ public class TestDelegatingStatement extends TestCase {
             // expected
         }
     }
-    
+
     public void testIsWrapperFor() throws Exception {
         TesterConnection tstConn = new TesterConnection("test", "test");
         TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
@@ -117,22 +79,22 @@ public class TestDelegatingStatement extends TestCase {
         DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
 
         Class<?> stmtProxyClass = Proxy.getProxyClass(
-                this.getClass().getClassLoader(), 
+                this.getClass().getClassLoader(),
                 Statement.class);
-        
+
         assertTrue(stamt.isWrapperFor(DelegatingStatement.class));
         assertTrue(stamt.isWrapperFor(TesterStatement.class));
         assertFalse(stamt.isWrapperFor(stmtProxyClass));
-        
+
         stamt.close();
     }
-    
+
     private static class TesterStatementNonWrapping extends TesterStatement {
 
         public TesterStatementNonWrapping(Connection conn) {
             super(conn);
         }
-     
+
         @Override
         public boolean isWrapperFor(Class<?> iface) throws SQLException {
             return false;

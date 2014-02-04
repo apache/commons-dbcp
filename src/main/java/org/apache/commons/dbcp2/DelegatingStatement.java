@@ -71,40 +71,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _stmt;
     }
 
-    /**
-     * <p>This method considers two objects to be equal
-     * if the underlying jdbc objects are equal.</p>
-     *
-     * <p>If {@code obj} is a DelegatingStatement, this DelegatingStatement's
-     * {@link #getInnermostDelegate() innermostDelegate} is compared with
-     * the innermost delegate of obj; otherwise obj itself is compared with the
-     * the Statement returned by {@link #getInnermostDelegate()}.</p>
-     *
-     */
-    @Override
-    public boolean equals(Object obj) {
-    	if (obj == this) return true;
-        Statement delegate = getInnermostDelegate();
-        if (delegate == null) {
-            return false;
-        }
-        if (obj instanceof DelegatingStatement) {
-            DelegatingStatement s = (DelegatingStatement) obj;
-            return delegate.equals(s.getInnermostDelegate());
-        }
-        else {
-            return delegate.equals(obj);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        Object obj = getInnermostDelegate();
-        if (obj == null) {
-            return 0;
-        }
-        return obj.hashCode();
-    }
 
     /**
      * If my underlying {@link Statement} is not a

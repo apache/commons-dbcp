@@ -61,32 +61,6 @@ public class TestDelegatingConnection extends TestCase {
         assertTrue(s.length() > 0);
     }
 
-    public void testHashCodeEqual() throws Exception {
-        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn);
-        assertEquals(conn.hashCode(), conn2.hashCode());
-        conn2.close();
-    }
-
-    public void testHashCodeNotEqual() throws Exception {
-        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn2);
-        assertTrue(conn.hashCode() != conn2.hashCode());
-        conn2.close();
-    }
-
-    public void testEquals() {
-        DelegatingConnection<Connection> conn2 = new DelegatingConnection<>(delegateConn);
-        DelegatingConnection<Connection> conn3 = new DelegatingConnection<>(null);
-
-        assertTrue(!conn.equals(null));
-        assertTrue(conn.equals(conn2));
-        assertTrue(!conn.equals(conn3));
-        assertTrue(conn.equals(conn));
-        assertTrue(conn3.equals(conn3));
-        assertTrue(conn.equals(conn));
-        assertTrue(conn2.equals(conn2));
-        assertTrue(conn3.equals(new DelegatingConnection<>(null)));
-    }
-
     public void testCheckOpen() throws Exception {
         conn.checkOpen();
         conn.close();

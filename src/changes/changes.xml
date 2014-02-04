@@ -112,6 +112,16 @@ The <action> type attribute can be add,update,fix,remove.
         BasicDataSourceFactory so a cast is not required to use BasicDataSource
         specific methods.
       </action>
+      <action dev="markt" issue="DBCP-358" type="fix">
+        The equals() implementations of the DelegatingXxx classes are now
+        symmetric. There are some important API changes underlying this fix.
+        Firstly, two DelegatingXxx instances are no longer considered equal if
+        they have the same innermost delegate. Secondly, a DelegatingXxx
+        instance is not considered equal to its innermost delegate. The
+        getInnermostDelegateInternal() method has been made public (but remains
+        part of the internal API) to allow classes extending this implementation
+        to access the innermost delegate when required.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

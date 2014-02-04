@@ -28,6 +28,8 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
+import org.apache.commons.dbcp2.DelegatingConnection;
+
 
 /**
  * TransactionRegistry tracks Connections and XAResources in a transacted environment for a single XAConnectionFactory.
@@ -74,7 +76,8 @@ public class TransactionRegistry {
      */
     public synchronized XAResource getXAResource(Connection connection) throws SQLException {
         if (connection == null) throw new NullPointerException("connection is null");
-        XAResource xaResource = xaResources.get(connection);
+        Connection key = getConnectionKey(connection);
+        XAResource xaResource = xaResources.get(key);
         if (xaResource == null) {
             throw new SQLException("Connection does not have a registered XAResource " + connection);
         }
@@ -121,7 +124,19 @@ public class TransactionRegistry {
      * @param connection
      */
     public synchronized void unregisterConnection(Connection connection) {
-        xaResources.remove(connection);
+        Connection key = getConnectionKey(connection);
+        xaResources.remove(key);
+    }
+
+
+    private Connection getConnectionKey(Connection connection) {
+        Connection result;
+        if (connection instanceof DelegatingConnection) {
+            result = ((DelegatingConnection<?>) connection).getInnermostDelegateInternal();
+        } else {
+            result = connection;
+        }
+        return result;
     }
 }
 

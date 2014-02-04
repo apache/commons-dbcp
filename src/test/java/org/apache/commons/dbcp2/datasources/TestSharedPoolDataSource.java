@@ -28,6 +28,7 @@ import javax.sql.DataSource;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.apache.commons.dbcp2.DelegatingStatement;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
@@ -511,7 +512,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         stmt = callBack.getPreparedStatement();
         assertNotNull(stmt);
-        long l1HashCode = stmt.hashCode();
+        long l1HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
         rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
@@ -520,7 +521,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         stmt = callBack.getPreparedStatement();
         assertNotNull(stmt);
-        long l2HashCode = stmt.hashCode();
+        long l2HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
         rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
@@ -537,7 +538,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         stmt = callBack.getPreparedStatement();
         assertNotNull(stmt);
-        long l3HashCode = stmt.hashCode();
+        long l3HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
         rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
@@ -546,7 +547,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         stmt = callBack.getPreparedStatement();
         assertNotNull(stmt);
-        long l4HashCode = stmt.hashCode();
+        long l4HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
         rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());

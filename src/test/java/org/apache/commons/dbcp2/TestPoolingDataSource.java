@@ -24,6 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.junit.Assert;
 
 /**
  * TestSuite for PoolingDataSource
@@ -85,10 +86,12 @@ public class TestPoolingDataSource extends TestConnectionPool {
         ((DelegatingConnection<?>) c[0]).getDelegate().close();
 
         // Grab a new connection - should get c[0]'s closed connection
-        // so should be delegate-equivalent, so equal
+        // so should be delegate-equivalent
         Connection con = newConnection();
-        assertTrue(c[0].equals(con));
-        assertTrue(con.equals(c[0]));
+        Assert.assertNotEquals(c[0], con);
+        Assert.assertEquals(
+                ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
+                ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
         for (int i = 0; i < c.length; i++) {
             c[i].close();
         }
@@ -134,9 +137,9 @@ public class TestPoolingDataSource extends TestConnectionPool {
         Connection inner = con.getInnermostDelegate();
         ds.setAccessToUnderlyingConnectionAllowed(false);
         DelegatingConnection<Connection> con2 = new DelegatingConnection<>(inner);
-        assertTrue(con2.equals(con));
+        assertFalse(con2.equals(con));
         assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
         assertTrue(con2.innermostDelegateEquals(inner));
-        assertTrue(con.equals(con2));
+        assertFalse(con.equals(con2));
     }
 }

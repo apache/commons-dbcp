@@ -123,31 +123,6 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
         return _res;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-    	if (this == obj) return true;
-        ResultSet delegate = getInnermostDelegate();
-        if (delegate == null) {
-            return false;
-        }
-        if (obj instanceof DelegatingResultSet) {
-            DelegatingResultSet s = (DelegatingResultSet) obj;
-            return delegate.equals(s.getInnermostDelegate());
-        }
-        else {
-            return delegate.equals(obj);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        Object obj = getInnermostDelegate();
-        if (obj == null) {
-            return 0;
-        }
-        return obj.hashCode();
-    }
-
     /**
      * If my underlying {@link ResultSet} is not a
      * <tt>DelegatingResultSet</tt>, returns it,
