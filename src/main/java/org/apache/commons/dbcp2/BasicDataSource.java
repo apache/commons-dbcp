@@ -47,6 +47,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.UsageTracking;
 import org.apache.commons.pool2.impl.AbandonedConfig;
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -854,6 +855,34 @@ public class BasicDataSource
     @Override
     public synchronized long getSoftMinEvictableIdleTimeMillis() {
         return softMinEvictableIdleTimeMillis;
+    }
+
+    private String evictionPolicyClassName =
+            BaseObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
+
+    /**
+     * Gets the EvictionPolicy implementation in use with this connection pool.
+     *
+     * @since 2.0
+     */
+    public synchronized String getEvictionPolicyClassName() {
+        return evictionPolicyClassName;
+    }
+
+    /**
+     * Sets the EvictionPolicy implementation to use with this connection pool.
+     *
+     * @param evictionPolicyClassName   The fully qualified class name of the
+     *                                  EvictionPolicy implementation
+     *
+     * @since 2.0
+     */
+    public synchronized void setEvictionPolicyClassName(
+            String evictionPolicyClassName) {
+        if (connectionPool != null) {
+            connectionPool.setEvictionPolicyClassName(evictionPolicyClassName);
+        }
+        this.evictionPolicyClassName = evictionPolicyClassName;
     }
 
     /**

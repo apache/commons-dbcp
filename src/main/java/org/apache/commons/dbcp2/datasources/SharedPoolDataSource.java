@@ -235,6 +235,7 @@ public class SharedPoolDataSource
             getTimeBetweenEvictionRunsMillis());
         config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
         config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
+        config.setEvictionPolicyClassName(getEvictionPolicyClassName());
         config.setTestWhileIdle(getTestWhileIdle());
         KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> tmpPool =
                 new GenericKeyedObjectPool<>(factory, config);

@@ -126,19 +126,21 @@ public abstract class InstanceKeyDataSource
 
     // Pool properties
     private boolean _testOnBorrow =
-        GenericObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
+            GenericObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
     private boolean _testOnReturn =
-        GenericObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
+            GenericObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
     private int _timeBetweenEvictionRunsMillis = (int)
-        Math.min(Integer.MAX_VALUE,
-                 GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+            Math.min(Integer.MAX_VALUE,
+                     GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
     private int _numTestsPerEvictionRun =
-        GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+            GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
     private int _minEvictableIdleTimeMillis = (int)
-    Math.min(Integer.MAX_VALUE,
-            GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+            Math.min(Integer.MAX_VALUE,
+                    GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+    private String evictionPolicyClassName =
+            GenericObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
     private boolean _testWhileIdle =
-        GenericObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
+            GenericObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
     private String validationQuery = null;
     private boolean rollbackAfterValidation = false;
     private long maxConnLifetimeMillis = -1;
@@ -611,6 +613,29 @@ public abstract class InstanceKeyDataSource
     public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+
+    /**
+     * Gets the EvictionPolicy implementation in use with this connection pool.
+     *
+     * @since 2.0
+     */
+    public synchronized String getEvictionPolicyClassName() {
+        return evictionPolicyClassName;
+    }
+
+    /**
+     * Sets the EvictionPolicy implementation to use with this connection pool.
+     *
+     * @param evictionPolicyClassName   The fully qualified class name of the
+     *                                  EvictionPolicy implementation
+     *
+     * @since 2.0
+     */
+    public synchronized void setEvictionPolicyClassName(
+            String evictionPolicyClassName) {
+        assertInitializationAllowed();
+        this.evictionPolicyClassName = evictionPolicyClassName;
     }
 
     /**
