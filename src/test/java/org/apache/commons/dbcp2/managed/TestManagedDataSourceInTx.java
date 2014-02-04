@@ -67,7 +67,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
      */
     @Override
     public void testManagedConnectionEqualsFail() throws Exception {
-        // this test is invalid for managed conections since because
+        // this test is invalid for managed connections since because
         // two connections to the same datasource are supposed to share
         // a single connection
     }
@@ -80,7 +80,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             for(int j=0;j<i;j++) {
                 // two connections should be distinct instances
                 assertNotSame(conn[j], conn[i]);
-                // but they should be equivilant since they are sharing the same underlying connection
+                // but they should be equivalent since they are sharing the same underlying connection
                 assertEquals(conn[j], conn[i]);
             }
         }
@@ -178,7 +178,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        // in a transaciton the connections should be equal
+        // in a transaction the connections should be equal
         assertTrue(connectionA.equals(connectionB));
         assertTrue(connectionB.equals(connectionA));
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
@@ -258,7 +258,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     public void testCommit() throws Exception {
         Connection connection = newConnection();
 
-        // conection should be open
+        // connection should be open
         assertFalse("Connection should be open", connection.isClosed());
 
         // attempt commit directly
@@ -281,7 +281,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         // NOTE: This test class uses connections that are read-only by default
 
-        // conection should be read only
+        // connection should be read only
         assertTrue("Connection be read-only", connection.isReadOnly());
 
         // attempt to setReadOnly
