@@ -41,6 +41,7 @@ import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>
@@ -119,7 +120,8 @@ public class DriverAdapterCPDS
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
     private int maxIdle = 10;
-    private int _timeBetweenEvictionRunsMillis = -1;
+    private long _timeBetweenEvictionRunsMillis =
+            GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
     private int _numTestsPerEvictionRun = -1;
     private int _minEvictableIdleTimeMillis = -1;
     private int _maxPreparedStatements = -1;
@@ -585,9 +587,9 @@ public class DriverAdapterCPDS
      * When non-positive, no idle object evictor thread will be
      * run.
      * @return the value of the evictor thread timer
-     * @see #setTimeBetweenEvictionRunsMillis(int)
+     * @see #setTimeBetweenEvictionRunsMillis(long)
      */
-    public int getTimeBetweenEvictionRunsMillis() {
+    public long getTimeBetweenEvictionRunsMillis() {
         return _timeBetweenEvictionRunsMillis;
     }
 
@@ -601,7 +603,7 @@ public class DriverAdapterCPDS
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setTimeBetweenEvictionRunsMillis(
-            int timeBetweenEvictionRunsMillis) {
+            long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
         _timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
@@ -627,7 +629,7 @@ public class DriverAdapterCPDS
      *
      * @param numTestsPerEvictionRun number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
-     * @see #setTimeBetweenEvictionRunsMillis(int)
+     * @see #setTimeBetweenEvictionRunsMillis(long)
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
@@ -655,7 +657,7 @@ public class DriverAdapterCPDS
      * due to idle time alone.
      * @param minEvictableIdleTimeMillis minimum time to set (in ms)
      * @see #getMinEvictableIdleTimeMillis()
-     * @see #setTimeBetweenEvictionRunsMillis(int)
+     * @see #setTimeBetweenEvictionRunsMillis(long)
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
