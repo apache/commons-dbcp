@@ -58,9 +58,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * combine the <em>commons-dbcp</em> and <em>commons-pool</em> packages,
  * but provides a "one stop shopping" solution for basic requirements.</p>
  *
- * <p>Users extending this class should take care to use appropriate accessors
- * rather than accessing protected fields directly to ensure thread-safety.</p>
- *
  * @author Glenn L. Nielsen
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
