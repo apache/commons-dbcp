@@ -812,8 +812,8 @@ public abstract class InstanceKeyDataSource
                 throw new SQLException("Given password did not match password used"
                                        + " to create the PooledConnection.");
             } catch (javax.naming.NamingException ne) {
-                throw (SQLException) new SQLException(
-                        "NamingException encountered connecting to database").initCause(ne);
+                throw new SQLException(
+                        "NamingException encountered connecting to database", ne);
             }
             /*
              * Password must have changed -> destroy connection and keep retrying until we get a new, good one,

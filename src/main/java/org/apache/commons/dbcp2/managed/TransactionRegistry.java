@@ -105,7 +105,7 @@ public class TransactionRegistry {
                 return null;
             }
         } catch (SystemException e) {
-            throw (SQLException) new SQLException("Unable to determine current transaction ").initCause(e);
+            throw new SQLException("Unable to determine current transaction ", e);
         }
 
         // register the the context (or create a new one)

@@ -124,7 +124,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                     C connection = pool.borrowObject();
                     setDelegate(connection);
                 } catch (Exception e) {
-                    throw (SQLException) new SQLException("Unable to acquire a new connection from the pool").initCause(e);
+                    throw new SQLException("Unable to acquire a new connection from the pool", e);
                 }
             }
 

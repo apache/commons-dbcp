@@ -90,7 +90,7 @@ public class TransactionContext {
         } catch (RollbackException e) {
             // transaction was rolled back... proceed as if there never was a transaction
         } catch (SystemException e) {
-            throw (SQLException) new SQLException("Unable to enlist connection the transaction").initCause(e);
+            throw new SQLException("Unable to enlist connection the transaction", e);
         }
 
         this.sharedConnection = sharedConnection;
@@ -118,7 +118,7 @@ public class TransactionContext {
             // JTA spec doesn't let us register with a transaction marked rollback only
             // just ignore this and the tx state will be cleared another way.
         } catch (Exception e) {
-            throw (SQLException) new SQLException("Unable to register transaction context listener").initCause(e);
+            throw new SQLException("Unable to register transaction context listener", e);
         }
     }
 
@@ -136,7 +136,7 @@ public class TransactionContext {
             int status = transaction.getStatus();
             return status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK;
         } catch (SystemException e) {
-            throw (SQLException) new SQLException("Unable to get transaction status").initCause(e);
+            throw new SQLException("Unable to get transaction status", e);
         }
     }
 
