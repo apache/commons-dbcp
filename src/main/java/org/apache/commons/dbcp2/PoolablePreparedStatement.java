@@ -146,5 +146,4 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
 
         super.passivate();
     }
-
 }

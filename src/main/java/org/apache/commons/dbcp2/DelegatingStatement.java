@@ -536,4 +536,18 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             return false;
         }
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        // This is required because of statement pooling. The poolable
+        // statements will always be strongly held by the statement pool. If the
+        // delegating statements that wrap the poolable statement are not
+        // strongly held they will be garbage collected but at that point the
+        // poolable statements need to be returned to the pool else there will
+        // be a leak of statements from the pool. Closing this statement will
+        // close all the wrapped statements and return any poolable statements
+        // to the pool.
+        close();
+        super.finalize();
+    }
 }
