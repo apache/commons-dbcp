@@ -298,7 +298,7 @@ class CPDSConnectionFactory
             _pool.invalidateObject(pci);  // Destroy instance and update pool counters
             _pool.close();  // Clear any other instances in this pool and kill others as they come back
         } catch (Exception ex) {
-            throw (SQLException) new SQLException("Error invalidating connection").initCause(ex);
+            throw new SQLException("Error invalidating connection", ex);
         }
     }
 
@@ -336,7 +336,7 @@ class CPDSConnectionFactory
         try {
             _pool.close();
         } catch (Exception ex) {
-            throw (SQLException) new SQLException("Error closing connection pool").initCause(ex);
+            throw new SQLException("Error closing connection pool", ex);
         }
     }
 

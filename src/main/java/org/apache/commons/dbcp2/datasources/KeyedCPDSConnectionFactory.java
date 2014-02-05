@@ -310,7 +310,7 @@ class KeyedCPDSConnectionFactory
             _pool.invalidateObject(key, info);  // Destroy and update pool counters
             _pool.clear(key); // Remove any idle instances with this key
         } catch (Exception ex) {
-            throw (SQLException) new SQLException("Error invalidating connection").initCause(ex);
+            throw new SQLException("Error invalidating connection", ex);
         }
     }
 
@@ -341,7 +341,7 @@ class KeyedCPDSConnectionFactory
         try {
             _pool.clear(new UserPassKey(username, null));
         } catch (Exception ex) {
-            throw (SQLException) new SQLException("Error closing connection pool").initCause(ex);
+            throw new SQLException("Error closing connection pool", ex);
         }
     }
 

@@ -147,14 +147,14 @@ public class BasicManagedDataSource extends BasicDataSource {
                 xaDataSourceClass = Class.forName(xaDataSource);
             } catch (Exception t) {
                 String message = "Cannot load XA data source class '" + xaDataSource + "'";
-                throw (SQLException)new SQLException(message).initCause(t);
+                throw new SQLException(message, t);
             }
 
             try {
                 xaDataSourceInstance = (XADataSource) xaDataSourceClass.newInstance();
             } catch (Exception t) {
                 String message = "Cannot create XA data source of class '" + xaDataSource + "'";
-                throw (SQLException)new SQLException(message).initCause(t);
+                throw new SQLException(message, t);
             }
         }
 
@@ -202,7 +202,7 @@ public class BasicManagedDataSource extends BasicDataSource {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw (SQLException)new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")").initCause(e);
+            throw new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
         return connectionFactory;
     }

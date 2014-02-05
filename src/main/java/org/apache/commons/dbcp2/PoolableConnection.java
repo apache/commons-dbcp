@@ -97,7 +97,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
             } catch (Exception ie) {
                 // DO NOTHING the original exception will be rethrown
             }
-            throw (SQLException) new SQLException("Cannot close connection (isClosed check failed)").initCause(e);
+            throw new SQLException("Cannot close connection (isClosed check failed)", e);
         }
 
         if (!isUnderlyingConectionClosed) {
@@ -114,7 +114,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
             } catch(RuntimeException e) {
                 throw e;
             } catch(Exception e) {
-                throw (SQLException) new SQLException("Cannot close connection (return to pool failed)").initCause(e);
+                throw new SQLException("Cannot close connection (return to pool failed)", e);
             }
         } else {
             // Abnormal close: underlying connection closed unexpectedly, so we
@@ -126,7 +126,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
                 passivate();
                 getInnermostDelegate().close();
             } catch (Exception e) {
-                throw (SQLException) new SQLException("Cannot close connection (invalidating pooled object failed)").initCause(e);
+                throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
             }
         }
         setClosedInternal(true);

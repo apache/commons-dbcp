@@ -469,8 +469,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             try {
                 testCPDS(username, password);
             } catch (Exception ex) {
-                throw (SQLException) new SQLException(
-                        "Could not retrieve connection info from pool").initCause(ex);
+                throw new SQLException(
+                        "Could not retrieve connection info from pool", ex);
             }
             // New password works, so kill the old pool, create a new one, and borrow
             manager.closePool(username);
@@ -486,8 +486,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             try {
                 info = pool.borrowObject();
             } catch (Exception ex) {
-                throw (SQLException) new SQLException(
-                "Could not retrieve connection info from pool").initCause(ex);
+                throw new SQLException(
+                        "Could not retrieve connection info from pool", ex);
             }
         }
         return info;

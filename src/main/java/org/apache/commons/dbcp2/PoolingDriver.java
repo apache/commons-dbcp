@@ -99,7 +99,7 @@ public class PoolingDriver implements Driver {
                 pool.close();
             }
             catch (Exception e) {
-                throw (SQLException) new SQLException("Error closing pool " + name).initCause(e);
+                throw new SQLException("Error closing pool " + name, e);
             }
         }
     }
@@ -133,11 +133,11 @@ public class PoolingDriver implements Driver {
             } catch(SQLException e) {
                 throw e;
             } catch(NoSuchElementException e) {
-                throw (SQLException) new SQLException("Cannot get a connection, pool error: " + e.getMessage()).initCause(e);
+                throw new SQLException("Cannot get a connection, pool error: " + e.getMessage(), e);
             } catch(RuntimeException e) {
                 throw e;
             } catch(Exception e) {
-                throw (SQLException) new SQLException("Cannot get a connection, general error: " + e.getMessage()).initCause(e);
+                throw new SQLException("Cannot get a connection, general error: " + e.getMessage(), e);
             }
         } else {
             return null;
