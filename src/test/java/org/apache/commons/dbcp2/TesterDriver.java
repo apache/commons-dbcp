@@ -135,7 +135,7 @@ public class TesterDriver implements Driver {
     protected static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
 
     // version numbers
-    protected static final int MAJOR_VERSION = 1;
-    protected static final int MINOR_VERSION = 0;
+    private static final int MAJOR_VERSION = 1;
+    private static final int MINOR_VERSION = 0;
 
 }
