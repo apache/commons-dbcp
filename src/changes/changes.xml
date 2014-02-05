@@ -129,6 +129,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-406" type="add" due-to="Steeve Beroard">
         Add support for pooling PreparedStatements that use auto-generated keys.
       </action>
+      <action dev="markt" issue="DBCP-180" type="fix">
+        Enable JDBC resources that are no longer referenced by client code to be
+        eligible for garbage collection.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
