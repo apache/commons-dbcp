@@ -126,6 +126,9 @@ The <action> type attribute can be add,update,fix,remove.
         Expose the new Pool 2 property evictionPolicyClassName to enable more
         sophisticated eviction strategies to be used.
       </action>
+      <action dev="markt" issue="DBCP-406" type="add" due-to="Steeve Beroard">
+        Add support for pooling PreparedStatements that use auto-generated keys.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
