@@ -1326,7 +1326,7 @@ public class BasicDataSource
     /**
      * The PrintWriter to which log messages should be directed.
      */
-    private PrintWriter logWriter = new PrintWriter(new OutputStreamWriter(
+    private volatile PrintWriter logWriter = new PrintWriter(new OutputStreamWriter(
             System.out, StandardCharsets.UTF_8));
 
 
