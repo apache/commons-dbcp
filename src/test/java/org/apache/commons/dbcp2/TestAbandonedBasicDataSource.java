@@ -24,6 +24,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.junit.Assert;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -205,6 +208,55 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         checkLastUsedPreparedStatement(cs, conn);
         checkLastUsedStatement(st, conn);
     }
+
+    /**
+     * DBCP-180 - verify that a GC can clean up an unused Statement when it is
+     * no longer referenced even when it is tracked via the AbandonedTrace
+     * mechanism.
+     */
+    public void testGarbageCollectorCleanUp01() throws Exception {
+        DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        Assert.assertEquals(0, conn.getTrace().size());
+        createStatement(conn);
+        Assert.assertEquals(1, conn.getTrace().size());
+        System.gc();
+        Assert.assertEquals(0, conn.getTrace().size());
+    }
+
+    /**
+     * DBCP-180 - things get more interesting with statement pooling.
+     */
+    public void testGarbageCollectorCleanUp02() throws Exception {
+        ds.setPoolPreparedStatements(true);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
+        PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
+        @SuppressWarnings("unchecked")
+        GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>  gkop =
+                (GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "_pstmtPool");
+        Assert.assertEquals(0, conn.getTrace().size());
+        Assert.assertEquals(0, gkop.getNumActive());
+        createStatement(conn);
+        Assert.assertEquals(1, conn.getTrace().size());
+        Assert.assertEquals(1, gkop.getNumActive());
+        System.gc();
+        // Finalization happens in a separate thread. Give the test time for
+        // that to complete.
+        int count = 0;
+        while (count < 50 && gkop.getNumActive() > 0) {
+            Thread.sleep(100);
+            count++;
+        }
+        Assert.assertEquals(0, gkop.getNumActive());
+        Assert.assertEquals(0, conn.getTrace().size());
+    }
+
+    private void createStatement(Connection conn) throws Exception{
+        @SuppressWarnings("unused") // In a real use case it would be used then abandoned
+        PreparedStatement ps = conn.prepareStatement("");
+    }
+
 
     /**
      * Verifies that Statement executeXxx methods update lastUsed on the parent connection

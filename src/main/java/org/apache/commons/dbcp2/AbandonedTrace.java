@@ -16,7 +16,9 @@
  */
 package org.apache.commons.dbcp2;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.pool2.TrackedUse;
@@ -34,7 +36,7 @@ import org.apache.commons.pool2.TrackedUse;
 public class AbandonedTrace implements TrackedUse {
 
     /** A list of objects created by children of this object */
-    private final List<AbandonedTrace> traceList = new ArrayList<>();
+    private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
     /** Last time this connection was used */
     private volatile long lastUsed = 0;
 
@@ -101,7 +103,7 @@ public class AbandonedTrace implements TrackedUse {
      */
     protected void addTrace(AbandonedTrace trace) {
         synchronized (this.traceList) {
-            this.traceList.add(trace);
+            this.traceList.add(new WeakReference<>(trace));
         }
         setLastUsed();
     }
@@ -122,9 +124,20 @@ public class AbandonedTrace implements TrackedUse {
      * @return List of objects
      */
     protected List<AbandonedTrace> getTrace() {
+        ArrayList<AbandonedTrace> result = new ArrayList<>(traceList.size());
         synchronized (this.traceList) {
-            return new ArrayList<>(traceList);
+            Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
+            while (iter.hasNext()) {
+                WeakReference<AbandonedTrace> ref = iter.next();
+                if (ref.get() == null) {
+                    // Clean-up since we are here anyway
+                    iter.remove();
+                } else {
+                    result.add(ref.get());
+                }
+            }
         }
+        return result;
     }
 
     /**
@@ -134,7 +147,17 @@ public class AbandonedTrace implements TrackedUse {
      */
     protected void removeTrace(AbandonedTrace trace) {
         synchronized(this.traceList) {
-            this.traceList.remove(trace);
+            Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
+            while (iter.hasNext()) {
+                WeakReference<AbandonedTrace> ref = iter.next();
+                if (trace.equals(ref.get())) {
+                    iter.remove();
+                    break;
+                } else if (ref.get() == null) {
+                    // Clean-up since we are here anyway
+                    iter.remove();
+                }
+            }
         }
     }
 }
