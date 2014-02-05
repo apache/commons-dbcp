@@ -132,7 +132,7 @@ public class TesterDriver implements Driver {
         throw new SQLFeatureNotSupportedException();
     }
 
-    protected static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
+    private static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
 
     // version numbers
     private static final int MAJOR_VERSION = 1;

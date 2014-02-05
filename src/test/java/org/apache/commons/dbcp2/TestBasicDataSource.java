@@ -573,7 +573,7 @@ public class TestBasicDataSource extends TestConnectionPool {
  * TesterDriver that keeps a static count of connection requests.
  */
 class TesterConnRequestCountDriver extends TesterDriver {
-    protected static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
+    private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
     private static int connectionRequestCount = 0;
 
 	@Override
