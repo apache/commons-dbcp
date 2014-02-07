@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
 import java.util.logging.Logger;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -1341,7 +1344,21 @@ public class BasicDataSource
      */
     @Override
     public Connection getConnection() throws SQLException {
-        return createDataSource().getConnection();
+        if (Utils.IS_SECURITY_ENABLED) {
+            PrivilegedExceptionAction<Connection> action = new PaGetConnection();
+            try {
+                return AccessController.doPrivileged(action);
+            } catch (PrivilegedActionException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof SQLException) {
+                    throw (SQLException) cause;
+                } else {
+                    throw new SQLException(e);
+                }
+            }
+        } else {
+            return createDataSource().getConnection();
+        }
     }
 
 
@@ -2196,5 +2213,13 @@ public class BasicDataSource
 
     protected ObjectName getRegisteredJmxName() {
         return registeredJmxName;
+    }
+
+    private class PaGetConnection implements PrivilegedExceptionAction<Connection> {
+
+        @Override
+        public Connection run() throws SQLException {
+            return createDataSource().getConnection();
+        }
     }
 }
