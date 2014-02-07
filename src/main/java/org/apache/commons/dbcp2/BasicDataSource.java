@@ -76,6 +76,31 @@ public class BasicDataSource
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
         DriverManager.getDrivers();
+        try {
+            // Load classes now to prevent AccessControlExceptions later
+            // A number of classes are loaded when getConnection() is called
+            // but the following classes are not loaded and therefore require
+            // explicit loading.
+            if (Utils.IS_SECURITY_ENABLED) {
+                ClassLoader loader = BasicDataSource.class.getClassLoader();
+                String dbcpPackageName = BasicDataSource.class.getPackage().getName();
+                loader.loadClass(dbcpPackageName + ".BasicDataSource$PaGetConnection");
+                loader.loadClass(dbcpPackageName + ".DelegatingCallableStatement");
+                loader.loadClass(dbcpPackageName + ".DelegatingDatabaseMetaData");
+                loader.loadClass(dbcpPackageName + ".DelegatingPreparedStatement");
+                loader.loadClass(dbcpPackageName + ".DelegatingResultSet");
+                loader.loadClass(dbcpPackageName + ".PoolableCallableStatement");
+                loader.loadClass(dbcpPackageName + ".PoolablePreparedStatement");
+                loader.loadClass(dbcpPackageName + ".PoolingConnection$StatementType");
+                loader.loadClass(dbcpPackageName + ".PStmtKey");
+
+                String poolPackageName = PooledObject.class.getPackage().getName();
+                loader.loadClass(poolPackageName + ".impl.LinkedBlockingDeque$Node");
+                loader.loadClass(poolPackageName + ".impl.GenericKeyedObjectPool$ObjectDeque");
+            }
+        } catch (ClassNotFoundException cnfe) {
+            throw new IllegalStateException("Unable to pre-load classes", cnfe);
+        }
     }
 
     // ------------------------------------------------------------- Properties
