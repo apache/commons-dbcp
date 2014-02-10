@@ -137,6 +137,9 @@ The <action> type attribute can be add,update,fix,remove.
         Enable DBCP to work with a SecurityManager such that only DBCP needs to
         be granted the necessary permissions to communicate with the database.
       </action>
+      <action dev="markt" issue="DBCP-410" type="fix" due-to="Andreas Sturmlechner">
+        Correct path to Javadoc overview in build.xml.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
