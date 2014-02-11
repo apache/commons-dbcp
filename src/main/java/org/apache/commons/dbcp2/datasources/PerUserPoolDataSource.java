@@ -496,19 +496,19 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     @Override
     protected void setupDefaults(Connection con, String username)
         throws SQLException {
-        boolean defaultAutoCommit = isDefaultAutoCommit();
+        Boolean defaultAutoCommit = isDefaultAutoCommit();
         if (username != null) {
             Boolean userMax = getPerUserDefaultAutoCommit(username);
             if (userMax != null) {
-                defaultAutoCommit = userMax.booleanValue();
+                defaultAutoCommit = userMax;
             }
         }
 
-        boolean defaultReadOnly = isDefaultReadOnly();
+        Boolean defaultReadOnly = isDefaultReadOnly();
         if (username != null) {
             Boolean userMax = getPerUserDefaultReadOnly(username);
             if (userMax != null) {
-                defaultReadOnly = userMax.booleanValue();
+                defaultReadOnly = userMax;
             }
         }
 
@@ -520,16 +520,18 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             }
         }
 
-        if (con.getAutoCommit() != defaultAutoCommit) {
-            con.setAutoCommit(defaultAutoCommit);
+        if (defaultAutoCommit != null &&
+                con.getAutoCommit() != defaultAutoCommit.booleanValue()) {
+            con.setAutoCommit(defaultAutoCommit.booleanValue());
         }
 
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
 
-        if (con.isReadOnly() != defaultReadOnly) {
-            con.setReadOnly(defaultReadOnly);
+        if (defaultReadOnly != null &&
+                con.isReadOnly() != defaultReadOnly.booleanValue()) {
+            con.setReadOnly(defaultReadOnly.booleanValue());
         }
     }
 

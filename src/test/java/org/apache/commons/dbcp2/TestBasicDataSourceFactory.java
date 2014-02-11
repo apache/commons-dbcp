@@ -92,8 +92,8 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertEquals(500, ds.getMaxWaitMillis());
         assertEquals(5, ds.getInitialSize());
         assertEquals(5, ds.getNumIdle());
-        assertEquals(true, ds.getDefaultAutoCommit());
-        assertEquals(false, ds.getDefaultReadOnly());
+        assertEquals(Boolean.TRUE, ds.getDefaultAutoCommit());
+        assertEquals(Boolean.FALSE, ds.getDefaultReadOnly());
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, ds.getDefaultTransactionIsolation());
         assertEquals("test", ds.getDefaultCatalog());
         assertEquals(true, ds.getTestOnBorrow());

@@ -141,14 +141,12 @@ abstract class InstanceKeyObjectFactory implements ObjectFactory {
 
         ra = ref.get("defaultAutoCommit");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultAutoCommit(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultAutoCommit(Boolean.valueOf(ra.getContent().toString()));
         }
 
         ra = ref.get("defaultReadOnly");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultReadOnly(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultReadOnly(Boolean.valueOf(ra.getContent().toString()));
         }
 
         ra = ref.get("description");

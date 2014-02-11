@@ -81,8 +81,10 @@ testWhileIdle
 <hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
 <tr>
    <td>defaultAutoCommit</td>
-   <td>true</td>
-   <td>The default auto-commit state of connections created by this pool.</td>
+   <td>driver default</td>
+   <td>The default auto-commit state of connections created by this pool.
+       If not set then the setAutoCommit method will not be called.
+   </td>
 </tr>
 <tr>
    <td>defaultReadOnly</td>

@@ -245,9 +245,10 @@ public class SharedPoolDataSource
 
     @Override
     protected void setupDefaults(Connection con, String username) throws SQLException {
-        boolean defaultAutoCommit = isDefaultAutoCommit();
-        if (con.getAutoCommit() != defaultAutoCommit) {
-            con.setAutoCommit(defaultAutoCommit);
+        Boolean defaultAutoCommit = isDefaultAutoCommit();
+        if (defaultAutoCommit != null &&
+                con.getAutoCommit() != defaultAutoCommit.booleanValue()) {
+            con.setAutoCommit(defaultAutoCommit.booleanValue());
         }
 
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
@@ -255,9 +256,10 @@ public class SharedPoolDataSource
             con.setTransactionIsolation(defaultTransactionIsolation);
         }
 
-        boolean defaultReadOnly = isDefaultReadOnly();
-        if (con.isReadOnly() != defaultReadOnly) {
-            con.setReadOnly(defaultReadOnly);
+        Boolean defaultReadOnly = isDefaultReadOnly();
+        if (defaultReadOnly != null &&
+                con.isReadOnly() != defaultReadOnly.booleanValue()) {
+            con.setReadOnly(defaultReadOnly.booleanValue());
         }
     }
 

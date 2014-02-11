@@ -108,9 +108,9 @@ public abstract class InstanceKeyDataSource
     private String dataSourceName = null;
 
     // Default connection properties
-    private boolean defaultAutoCommit = false;
+    private Boolean defaultAutoCommit = null;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    private boolean defaultReadOnly = false;
+    private Boolean defaultReadOnly = null;
 
     /** Description */
     private String description = null;
@@ -156,7 +156,6 @@ public abstract class InstanceKeyDataSource
      * Default no-arg constructor for Serialization
      */
     public InstanceKeyDataSource() {
-        defaultAutoCommit = true;
     }
 
     /**
@@ -267,11 +266,12 @@ public abstract class InstanceKeyDataSource
      * Get the value of defaultAutoCommit, which defines the state of
      * connections handed out from this pool.  The value can be changed
      * on the Connection using Connection.setAutoCommit(boolean).
-     * The default is true.
+     * The default is <code>null</code> which will use the default value for the
+     * drive.
      *
      * @return value of defaultAutoCommit.
      */
-    public boolean isDefaultAutoCommit() {
+    public Boolean isDefaultAutoCommit() {
         return defaultAutoCommit;
     }
 
@@ -279,11 +279,12 @@ public abstract class InstanceKeyDataSource
      * Set the value of defaultAutoCommit, which defines the state of
      * connections handed out from this pool.  The value can be changed
      * on the Connection using Connection.setAutoCommit(boolean).
-     * The default is true.
+     * The default is <code>null</code> which will use the default value for the
+     * drive.
      *
      * @param v  Value to assign to defaultAutoCommit.
      */
-    public void setDefaultAutoCommit(boolean v) {
+    public void setDefaultAutoCommit(Boolean v) {
         assertInitializationAllowed();
         this.defaultAutoCommit = v;
     }
@@ -292,11 +293,12 @@ public abstract class InstanceKeyDataSource
      * Get the value of defaultReadOnly, which defines the state of
      * connections handed out from this pool.  The value can be changed
      * on the Connection using Connection.setReadOnly(boolean).
-     * The default is false.
+     * The default is <code>null</code> which will use the default value for the
+     * drive.
      *
      * @return value of defaultReadOnly.
      */
-    public boolean isDefaultReadOnly() {
+    public Boolean isDefaultReadOnly() {
         return defaultReadOnly;
     }
 
@@ -304,11 +306,12 @@ public abstract class InstanceKeyDataSource
      * Set the value of defaultReadOnly, which defines the state of
      * connections handed out from this pool.  The value can be changed
      * on the Connection using Connection.setReadOnly(boolean).
-     * The default is false.
+     * The default is <code>null</code> which will use the default value for the
+     * drive.
      *
      * @param v  Value to assign to defaultReadOnly.
      */
-    public void setDefaultReadOnly(boolean v) {
+    public void setDefaultReadOnly(Boolean v) {
         assertInitializationAllowed();
         this.defaultReadOnly = v;
     }
@@ -322,7 +325,7 @@ public abstract class InstanceKeyDataSource
      * @return value of defaultTransactionIsolation.
      */
     public int getDefaultTransactionIsolation() {
-            return defaultTransactionIsolation;
+        return defaultTransactionIsolation;
     }
 
     /**
