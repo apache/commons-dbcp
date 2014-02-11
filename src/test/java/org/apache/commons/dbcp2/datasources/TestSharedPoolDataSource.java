@@ -72,6 +72,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         tds.setMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
+        tds.setDefaultAutoCommit(Boolean.TRUE);
 
         ds = tds;
     }
