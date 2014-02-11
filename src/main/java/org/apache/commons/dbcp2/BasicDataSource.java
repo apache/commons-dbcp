@@ -133,7 +133,6 @@ public class BasicDataSource
      */
     public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
         this.defaultAutoCommit = defaultAutoCommit;
-        this.restartNeeded = true;
     }
 
 
@@ -164,7 +163,6 @@ public class BasicDataSource
      */
     public void setDefaultReadOnly(Boolean defaultReadOnly) {
         this.defaultReadOnly = defaultReadOnly;
-        this.restartNeeded = true;
     }
 
     /**
@@ -199,7 +197,6 @@ public class BasicDataSource
      */
     public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
-        this.restartNeeded = true;
     }
 
 
@@ -235,7 +232,6 @@ public class BasicDataSource
         else {
             this.defaultCatalog = null;
         }
-        this.restartNeeded = true;
     }
 
     /**
@@ -332,7 +328,6 @@ public class BasicDataSource
         else {
             this.driverClassName = null;
         }
-        this.restartNeeded = true;
     }
 
     /**
@@ -370,7 +365,6 @@ public class BasicDataSource
     public synchronized void setDriverClassLoader(
             ClassLoader driverClassLoader) {
         this.driverClassLoader = driverClassLoader;
-        this.restartNeeded = true;
     }
 
     /**
@@ -547,7 +541,6 @@ public class BasicDataSource
      */
     public synchronized void setInitialSize(int initialSize) {
         this.initialSize = initialSize;
-        this.restartNeeded = true;
     }
 
     /**
@@ -616,7 +609,6 @@ public class BasicDataSource
      */
     public synchronized void setPoolPreparedStatements(boolean poolingStatements) {
         this.poolPreparedStatements = poolingStatements;
-        this.restartNeeded = true;
     }
 
     /**
@@ -656,7 +648,6 @@ public class BasicDataSource
      */
     public synchronized void setMaxOpenPreparedStatements(int maxOpenStatements) {
         this.maxOpenPreparedStatements = maxOpenStatements;
-        this.restartNeeded = true;
     }
 
     /**
@@ -998,7 +989,6 @@ public class BasicDataSource
      */
     public void setPassword(String password) {
         this.password = password;
-        this.restartNeeded = true;
     }
 
     /**
@@ -1030,7 +1020,6 @@ public class BasicDataSource
      */
     public synchronized void setUrl(String url) {
         this.url = url;
-        this.restartNeeded = true;
     }
 
     /**
@@ -1062,7 +1051,6 @@ public class BasicDataSource
      */
     public void setUsername(String username) {
         this.username = username;
-        this.restartNeeded = true;
     }
 
     /**
@@ -1101,7 +1089,6 @@ public class BasicDataSource
         } else {
             this.validationQuery = null;
         }
-        this.restartNeeded = true;
     }
 
     /**
@@ -1138,7 +1125,6 @@ public class BasicDataSource
      */
     public void setValidationQueryTimeout(int timeout) {
         this.validationQueryTimeout = timeout;
-        restartNeeded = true;
     }
 
     /**
@@ -1208,7 +1194,6 @@ public class BasicDataSource
         } else {
             this.connectionInitSqls = null;
         }
-        this.restartNeeded = true;
     }
 
 
@@ -1242,7 +1227,6 @@ public class BasicDataSource
      */
     public synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
-        this.restartNeeded = true;
     }
 
 
@@ -1293,26 +1277,6 @@ public class BasicDataSource
 
 
     // ----------------------------------------------------- Instance Variables
-
-    // TODO: review & make isRestartNeeded() public, restartNeeded protected
-
-    /**
-     * A property setter has been invoked that will require the connection
-     * pool to be re-initialized. Currently, restart is not triggered, so
-     * this property has no effect.
-     */
-    private volatile boolean restartNeeded = false;
-
-    /**
-     * Returns whether or not a restart is needed.
-     *
-     * Note: restart is not currently triggered by property changes.
-     *
-     * @return true if a restart is needed
-     */
-    private boolean isRestartNeeded() {
-        return restartNeeded;
-    }
 
     /**
      * The object pool that internally manages our connections.
@@ -1525,7 +1489,6 @@ public class BasicDataSource
         }
         abandonedConfig.setRemoveAbandonedOnMaintenance(
                 removeAbandonedOnMaintenance);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1574,7 +1537,6 @@ public class BasicDataSource
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1620,7 +1582,6 @@ public class BasicDataSource
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1649,7 +1610,6 @@ public class BasicDataSource
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogAbandoned(logAbandoned);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1674,7 +1634,6 @@ public class BasicDataSource
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogWriter(logWriter);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1708,7 +1667,6 @@ public class BasicDataSource
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setUseUsageTracking(usageTracking);
-        this.restartNeeded = true;
     }
 
     // --------------------------------------------------------- Public Methods
@@ -1725,7 +1683,6 @@ public class BasicDataSource
      */
     public void addConnectionProperty(String name, String value) {
         connectionProperties.put(name, value);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1736,7 +1693,6 @@ public class BasicDataSource
      */
     public void removeConnectionProperty(String name) {
         connectionProperties.remove(name);
-        this.restartNeeded = true;
     }
 
     /**
@@ -1770,7 +1726,6 @@ public class BasicDataSource
             }
         }
         this.connectionProperties = properties;
-        this.restartNeeded = true;
     }
 
     private boolean closed;
