@@ -57,8 +57,8 @@ public class TestDriverManagerConnectionFactory extends TestCase {
                     "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, null);
-        poolableConnectionFactory.setDefaultReadOnly(false);
-        poolableConnectionFactory.setDefaultAutoCommit(true);
+        poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
+        poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
 
         GenericObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(poolableConnectionFactory, config);

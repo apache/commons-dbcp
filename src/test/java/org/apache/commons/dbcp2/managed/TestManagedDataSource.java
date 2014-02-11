@@ -81,8 +81,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         PoolableConnectionFactory factory =
             new PoolableConnectionFactory(xaConnectionFactory, null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
-        factory.setDefaultReadOnly(true);
-        factory.setDefaultAutoCommit(true);
+        factory.setDefaultReadOnly(Boolean.TRUE);
+        factory.setDefaultAutoCommit(Boolean.TRUE);
 
         // create the pool
         pool = new GenericObjectPool<>(factory);
