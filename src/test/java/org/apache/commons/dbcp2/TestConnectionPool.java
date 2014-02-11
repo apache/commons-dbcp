@@ -428,16 +428,16 @@ public abstract class TestConnectionPool extends TestCase {
 
     public void testAutoCommitBehavior() throws Exception {
         Connection conn = newConnection();
-        assertNotNull(conn);
-        assertTrue(conn.getAutoCommit());
+        assertNotNull("connection should not be null", conn);
+        assertTrue("autocommit should be true for conn", conn.getAutoCommit());
         conn.setAutoCommit(false);
         conn.close();
 
         Connection conn2 = newConnection();
-        assertTrue( conn2.getAutoCommit() );
+        assertTrue("autocommit should be true for conn2", conn2.getAutoCommit() );
 
         Connection conn3 = newConnection();
-        assertTrue( conn3.getAutoCommit() );
+        assertTrue("autocommit should be true for conn3", conn3.getAutoCommit() );
 
         conn2.close();
 
