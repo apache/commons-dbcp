@@ -122,15 +122,15 @@ public class PoolableConnectionFactory
      * Sets the default "read only" setting for borrowed {@link Connection}s
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
-    public void setDefaultReadOnly(boolean defaultReadOnly) {
-        _defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
+    public void setDefaultReadOnly(Boolean defaultReadOnly) {
+        _defaultReadOnly = defaultReadOnly;
     }
 
     /**
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for borrowed {@link Connection}s
      */
-    public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -317,8 +317,9 @@ public class PoolableConnectionFactory
         PoolableConnection conn = p.getObject();
         conn.activate();
 
-        if (conn.getAutoCommit() != _defaultAutoCommit) {
-            conn.setAutoCommit(_defaultAutoCommit);
+        if (_defaultAutoCommit != null &&
+                conn.getAutoCommit() != _defaultAutoCommit.booleanValue()) {
+            conn.setAutoCommit(_defaultAutoCommit.booleanValue());
         }
         if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION)
                 && (conn.getTransactionIsolation() !=
@@ -371,7 +372,7 @@ public class PoolableConnectionFactory
     private Collection<String> _connectionInitSqls = null;
     private volatile ObjectPool<PoolableConnection> _pool = null;
     private Boolean _defaultReadOnly = null;
-    private boolean _defaultAutoCommit = true;
+    private Boolean _defaultAutoCommit = null;
     private int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     private String _defaultCatalog;
     private boolean _cacheState;

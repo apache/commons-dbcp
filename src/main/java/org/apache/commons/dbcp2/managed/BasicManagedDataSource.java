@@ -188,9 +188,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setValidationQuery(getValidationQuery());
             connectionFactory.setValidationQueryTimeout(getValidationQueryTimeout());
             connectionFactory.setConnectionInitSql(getConnectionInitSqls());
-            if (getDefaultReadOnlyBoolean() != null) {
-                connectionFactory.setDefaultReadOnly(getDefaultReadOnly());
-            }
+            connectionFactory.setDefaultReadOnly(getDefaultReadOnly());
             connectionFactory.setDefaultAutoCommit(getDefaultAutoCommit());
             connectionFactory.setDefaultTransactionIsolation(getDefaultTransactionIsolation());
             connectionFactory.setDefaultCatalog(getDefaultCatalog());

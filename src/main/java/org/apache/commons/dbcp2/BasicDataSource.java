@@ -108,7 +108,7 @@ public class BasicDataSource
     /**
      * The default auto-commit state of connections created by this pool.
      */
-    private volatile boolean defaultAutoCommit = true;
+    private volatile Boolean defaultAutoCommit = null;
 
     /**
      * Returns the default auto-commit property.
@@ -116,8 +116,8 @@ public class BasicDataSource
      * @return true if default auto-commit is enabled
      */
     @Override
-    public boolean getDefaultAutoCommit() {
-        return this.defaultAutoCommit;
+    public Boolean getDefaultAutoCommit() {
+        return defaultAutoCommit;
     }
 
     /**
@@ -131,7 +131,7 @@ public class BasicDataSource
      *
      * @param defaultAutoCommit default auto-commit value
      */
-    public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
         this.defaultAutoCommit = defaultAutoCommit;
         this.restartNeeded = true;
     }
@@ -148,15 +148,7 @@ public class BasicDataSource
      * @return true if connections are readOnly by default
      */
     @Override
-    public boolean getDefaultReadOnly() {
-        Boolean val = defaultReadOnly;
-        if (val != null) {
-            return val.booleanValue();
-        }
-        return false;
-    }
-
-    protected Boolean getDefaultReadOnlyBoolean() {
+    public Boolean getDefaultReadOnly() {
         return defaultReadOnly;
     }
 
@@ -170,8 +162,8 @@ public class BasicDataSource
      *
      * @param defaultReadOnly default read-only value
      */
-    public void setDefaultReadOnly(boolean defaultReadOnly) {
-        this.defaultReadOnly = defaultReadOnly ? Boolean.TRUE : Boolean.FALSE;
+    public void setDefaultReadOnly(Boolean defaultReadOnly) {
+        this.defaultReadOnly = defaultReadOnly;
         this.restartNeeded = true;
     }
 
@@ -2117,9 +2109,7 @@ public class BasicDataSource
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
-            if (defaultReadOnly != null) {
-                connectionFactory.setDefaultReadOnly(defaultReadOnly.booleanValue());
-            }
+            connectionFactory.setDefaultReadOnly(defaultReadOnly);
             connectionFactory.setDefaultAutoCommit(defaultAutoCommit);
             connectionFactory.setDefaultTransactionIsolation(defaultTransactionIsolation);
             connectionFactory.setDefaultCatalog(defaultCatalog);

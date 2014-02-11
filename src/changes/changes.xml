@@ -140,6 +140,13 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-410" type="fix" due-to="Andreas Sturmlechner">
         Correct path to Javadoc overview in build.xml.
       </action>
+      <action dev="markt" issue="DBCP-234" type="fix">
+        The default values for readOnly, autoCommit and transactionIsolation are
+        now taken from the JDBC driver. No calls to setReadOnly(),
+        setAutoCommit() or setTransactionIsolation() will be made for a newly
+        borrowed connection unless a default is explicitly configured and the
+        connection is currently using a different setting. 
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

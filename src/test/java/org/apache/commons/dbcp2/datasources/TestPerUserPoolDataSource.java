@@ -74,7 +74,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setPerUserMaxWaitMillis("foo", Integer.valueOf((int)(getMaxWaitMillis())));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
-
+        tds.setDefaultAutoCommit(Boolean.TRUE);
         ds = tds;
     }
 

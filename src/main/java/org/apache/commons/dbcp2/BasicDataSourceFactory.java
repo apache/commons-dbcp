@@ -189,12 +189,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_DEFAULTAUTOCOMMIT);
         if (value != null) {
-            dataSource.setDefaultAutoCommit(Boolean.valueOf(value).booleanValue());
+            dataSource.setDefaultAutoCommit(Boolean.valueOf(value));
         }
 
         value = properties.getProperty(PROP_DEFAULTREADONLY);
         if (value != null) {
-            dataSource.setDefaultReadOnly(Boolean.valueOf(value).booleanValue());
+            dataSource.setDefaultReadOnly(Boolean.valueOf(value));
         }
 
         value = properties.getProperty(PROP_DEFAULTTRANSACTIONISOLATION);
