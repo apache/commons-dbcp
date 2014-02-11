@@ -48,8 +48,8 @@ public class TestPoolableConnection extends TestCase {
                 new DriverConnectionFactory(
                         new TesterDriver(),"jdbc:apache:commons:testdriver", null),
                 null);
-        factory.setDefaultAutoCommit(true);
-        factory.setDefaultReadOnly(true);
+        factory.setDefaultAutoCommit(Boolean.TRUE);
+        factory.setDefaultReadOnly(Boolean.TRUE);
 
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);

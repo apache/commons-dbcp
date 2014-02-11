@@ -59,8 +59,8 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
         ds.setMaxWaitMillis(getMaxWaitMillis());
-        ds.setDefaultAutoCommit(true);
-        ds.setDefaultReadOnly(false);
+        ds.setDefaultAutoCommit(Boolean.TRUE);
+        ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setDefaultCatalog(CATALOG);
         ds.setUsername("username");
@@ -377,7 +377,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     public void testSetAutoCommitTrueOnClose() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        ds.setDefaultAutoCommit(false);
+        ds.setDefaultAutoCommit(Boolean.FALSE);
 
         Connection conn = getConnection();
         assertNotNull(conn);
@@ -451,8 +451,8 @@ public class TestBasicDataSource extends TestConnectionPool {
      * trying to commit or rollback a readOnly connection.
      */
     public void testRollbackReadOnly() throws Exception {
-        ds.setDefaultReadOnly(true);
-        ds.setDefaultAutoCommit(false);
+        ds.setDefaultReadOnly(Boolean.TRUE);
+        ds.setDefaultAutoCommit(Boolean.FALSE);
 
         Connection conn = ds.getConnection();
         assertNotNull(conn);
@@ -488,8 +488,8 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
         ds.setMaxWaitMillis(getMaxWaitMillis());
-        ds.setDefaultAutoCommit(true);
-        ds.setDefaultReadOnly(false);
+        ds.setDefaultAutoCommit(Boolean.TRUE);
+        ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setDefaultCatalog(CATALOG);
         ds.setUsername("username");

@@ -60,8 +60,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
                             "jdbc:apache:commons:testdriver", props),
                     null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
-        factory.setDefaultReadOnly(true);
-        factory.setDefaultAutoCommit(true);
+        factory.setDefaultReadOnly(Boolean.TRUE);
+        factory.setDefaultAutoCommit(Boolean.TRUE);
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());

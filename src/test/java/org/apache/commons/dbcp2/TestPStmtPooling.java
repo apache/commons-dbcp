@@ -57,8 +57,8 @@ public class TestPStmtPooling extends TestCase {
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
-        pcf.setDefaultReadOnly(false);
-        pcf.setDefaultAutoCommit(true);
+        pcf.setDefaultReadOnly(Boolean.FALSE);
+        pcf.setDefaultAutoCommit(Boolean.TRUE);
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
         DataSource ds = new PoolingDataSource<>(connPool);
@@ -82,8 +82,8 @@ public class TestPStmtPooling extends TestCase {
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
-        pcf.setDefaultReadOnly(false);
-        pcf.setDefaultAutoCommit(true);
+        pcf.setDefaultReadOnly(Boolean.FALSE);
+        pcf.setDefaultAutoCommit(Boolean.TRUE);
 
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
@@ -121,8 +121,8 @@ public class TestPStmtPooling extends TestCase {
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
-        pcf.setDefaultReadOnly(false);
-        pcf.setDefaultAutoCommit(true);
+        pcf.setDefaultReadOnly(Boolean.FALSE);
+        pcf.setDefaultAutoCommit(Boolean.TRUE);
 
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
 
@@ -153,8 +153,8 @@ public class TestPStmtPooling extends TestCase {
         PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connFactory, null);
         pcf.setPoolStatements(true);
-        pcf.setDefaultReadOnly(false);
-        pcf.setDefaultAutoCommit(true);
+        pcf.setDefaultReadOnly(Boolean.FALSE);
+        pcf.setDefaultAutoCommit(Boolean.TRUE);
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connPool);
 

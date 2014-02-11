@@ -18,7 +18,6 @@
 package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.util.Properties;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -177,7 +176,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         spds.setMaxTotal(threads.length + 10);
         spds.setMaxWaitMillis(-1);
         spds.setMaxIdle(10);
-        spds.setDefaultAutoCommit(false);
+        spds.setDefaultAutoCommit(Boolean.FALSE);
 
         spds.setValidationQuery("SELECT 1");
         spds.setTimeBetweenEvictionRunsMillis(10000);
