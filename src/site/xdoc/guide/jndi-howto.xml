@@ -52,15 +52,15 @@
   System.setProperty(Context.PROVIDER_URL, "file:///tmp");
   InitialContext ic = new InitialContext();
 
-  // Construct BasicDataSource reference
-  Reference ref = new Reference("javax.sql.DataSource",
-    "org.apache.commons.dbcp.BasicDataSourceFactory", null);
-  ref.add(new StringRefAddr("driverClassName", "org.apache.commons.dbcp.TesterDriver"));
-  ref.add(new StringRefAddr("url", "jdbc:apache:commons:testdriver"));
-  ref.add(new StringRefAddr("username", "username"));
-  ref.add(new StringRefAddr("password", "password"));
-  ic.rebind("jdbc/basic", ref);
-   
+  // Construct BasicDataSource
+  BasicDataSource bds = new BasicDataSource();
+  bds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+  bds.setUrl("jdbc:apache:commons:testdriver");
+  bds.setUsername("username");
+  bds.setPassword("password");
+
+  ic.rebind("jdbc/basic", bds);
+      
   // Use
   InitialContext ic2 = new InitialContext();
   DataSource ds = (DataSource) ic2.lookup("jdbc/basic");
