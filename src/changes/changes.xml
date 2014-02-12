@@ -196,6 +196,9 @@ The <action> type attribute can be add,update,fix,remove.
         Using batchUpdate() should not invalidate the PreparedStatement when it
         is returned to the pool.
       </action>
+      <action dev="markt" issue="DBCP-309" type="fix">
+        Improve documentation for JNDI example using BasicDataSource. 
+      </action>
     </release>
     <release version="1.4.1" date="TBD" description="TBD">
       <action dev="psteitz" issue="DBCP-334" type="update" due-to="Alberto Mozzone">
