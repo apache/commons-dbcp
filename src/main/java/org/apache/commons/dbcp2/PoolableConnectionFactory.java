@@ -212,9 +212,10 @@ public class PoolableConnectionFactory
             config.setMaxTotal(maxOpenPreparedStatements);
             if (dataSourceJmxName != null) {
                 StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
-                base.append(",connection=");
+                base.append(Constants.JMX_CONNECTION_BASE_EXT);
+                base.append(Long.toString(connIndex));
                 config.setJmxNameBase(base.toString());
-                config.setJmxNamePrefix(Long.toString(connIndex) + ",pool=statements");
+                config.setJmxNamePrefix(Constants.JMX_STATEMENT_POOL_PREFIX);
             }
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                     new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
@@ -227,7 +228,7 @@ public class PoolableConnectionFactory
         // Register this connection with JMX
         if (dataSourceJmxName != null) {
             StringBuilder connectionJmxName = new StringBuilder(dataSourceJmxName.toString());
-            connectionJmxName.append(",connection=");
+            connectionJmxName.append(Constants.JMX_CONNECTION_BASE_EXT);
             connectionJmxName.append(connIndex);
             jmxRegister(pc, connectionJmxName.toString());
         }
