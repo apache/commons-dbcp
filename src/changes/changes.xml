@@ -147,6 +147,10 @@ The <action> type attribute can be add,update,fix,remove.
         borrowed connection unless a default is explicitly configured and the
         connection is currently using a different setting. 
       </action>
+      <action dev="markt" issue="DBCP-219" type="add">
+        Register pooled connections with JMX so that they may be forcibly closed
+        via JMX is required.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
