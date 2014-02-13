@@ -39,7 +39,7 @@ import javax.naming.spi.ObjectFactory;
  *
  * @version $Revision$ $Date$
  */
-abstract class InstanceKeyObjectFactory implements ObjectFactory {
+abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
     private static final Map<String, InstanceKeyDataSource> instanceMap =
             new ConcurrentHashMap<>();

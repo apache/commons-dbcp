@@ -29,7 +29,7 @@ import javax.naming.Reference;
  * @version $Revision$ $Date$
  */
 public class PerUserPoolDataSourceFactory
-    extends InstanceKeyObjectFactory
+    extends InstanceKeyDataSourceFactory
 {
     private static final String PER_USER_POOL_CLASSNAME =
         PerUserPoolDataSource.class.getName();

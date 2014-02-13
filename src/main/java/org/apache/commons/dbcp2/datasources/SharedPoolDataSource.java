@@ -75,7 +75,7 @@ public class SharedPoolDataSource
         if (pool != null) {
             pool.close();
         }
-        InstanceKeyObjectFactory.removeInstance(getInstanceKey());
+        InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
     // -------------------------------------------------------------------
