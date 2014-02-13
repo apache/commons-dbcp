@@ -149,7 +149,7 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="markt" issue="DBCP-219" type="add">
         Register pooled connections with JMX so that they may be forcibly closed
-        via JMX is required.
+        via JMX if required.
       </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
