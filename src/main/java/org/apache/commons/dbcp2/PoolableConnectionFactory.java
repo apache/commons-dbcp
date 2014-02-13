@@ -17,7 +17,6 @@
 
 package org.apache.commons.dbcp2;
 
-import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -25,11 +24,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
@@ -57,8 +51,6 @@ public class PoolableConnectionFactory
 
     private static final Log log =
             LogFactory.getLog(PoolableConnectionFactory.class);
-
-    private static MBeanServer MBEAN_SERVER = ManagementFactory.getPlatformMBeanServer();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
@@ -223,27 +215,18 @@ public class PoolableConnectionFactory
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
 
-        PoolableConnection pc = new PoolableConnection(conn,_pool);
-
         // Register this connection with JMX
-        if (dataSourceJmxName != null) {
-            StringBuilder connectionJmxName = new StringBuilder(dataSourceJmxName.toString());
-            connectionJmxName.append(Constants.JMX_CONNECTION_BASE_EXT);
-            connectionJmxName.append(connIndex);
-            jmxRegister(pc, connectionJmxName.toString());
+        ObjectName connJmxName;
+        if (dataSourceJmxName == null) {
+            connJmxName = null;
+        } else {
+            connJmxName = new ObjectName(dataSourceJmxName.toString() +
+                    Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
+
+        PoolableConnection pc = new PoolableConnection(conn,_pool, connJmxName);
 
         return new DefaultPooledObject<>(pc);
-    }
-
-    private void jmxRegister(PoolableConnection pc, String jmxName) {
-        try {
-            ObjectName oName = new ObjectName(jmxName);
-            MBEAN_SERVER.registerMBean(pc, oName);
-        } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
-                MBeanRegistrationException | NotCompliantMBeanException e) {
-            // For now, simply skip registration
-        }
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
