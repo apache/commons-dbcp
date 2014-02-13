@@ -18,6 +18,7 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import org.apache.commons.pool2.ObjectPool;
 
 /**
@@ -30,7 +31,9 @@ import org.apache.commons.pool2.ObjectPool;
  * @author James House
  * @version $Revision$ $Date$
  */
-public class PoolableConnection extends DelegatingConnection<Connection> {
+public class PoolableConnection extends DelegatingConnection<Connection>
+        implements PoolableConnectionMXBean {
+
     /** The pool to which I should return. */
     private ObjectPool<PoolableConnection> _pool = null;
 
@@ -135,8 +138,19 @@ public class PoolableConnection extends DelegatingConnection<Connection> {
     /**
      * Actually close my underlying {@link Connection}.
      */
+    @Override
     public void reallyClose() throws SQLException {
         super.closeInternal();
+    }
+
+
+    /**
+     * Expose the {@link #toString()} method via a bean getter so it can be read
+     * as a property via JMX.
+     */
+    @Override
+    public String getToString() {
+        return toString();
     }
 }
 
