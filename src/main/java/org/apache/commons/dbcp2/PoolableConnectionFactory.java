@@ -17,12 +17,19 @@
 
 package org.apache.commons.dbcp2;
 
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicLong;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
@@ -50,6 +57,8 @@ public class PoolableConnectionFactory
 
     private static final Log log =
             LogFactory.getLog(PoolableConnectionFactory.class);
+
+    private static MBeanServer MBEAN_SERVER = ManagementFactory.getPlatformMBeanServer();
 
     /**
      * Create a new <tt>PoolableConnectionFactory</tt>.
@@ -190,6 +199,9 @@ public class PoolableConnectionFactory
             // Rethrow original exception so it is visible to caller
             throw sqle;
         }
+
+        long connIndex = connectionIndex.getAndIncrement();
+
         if(poolStatements) {
             conn = new PoolingConnection(conn);
             GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
@@ -200,16 +212,37 @@ public class PoolableConnectionFactory
             config.setMaxTotal(maxOpenPreparedStatements);
             if (dataSourceJmxName != null) {
                 StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
-                base.append(",pool=statements,connection=");
+                base.append(",connection=");
                 config.setJmxNameBase(base.toString());
-                config.setJmxNamePrefix(Integer.toString(conn.hashCode()));
+                config.setJmxNamePrefix(Long.toString(connIndex) + ",pool=statements");
             }
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                     new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(_cacheState);
         }
-        return new DefaultPooledObject<>(new PoolableConnection(conn,_pool));
+
+        PoolableConnection pc = new PoolableConnection(conn,_pool);
+
+        // Register this connection with JMX
+        if (dataSourceJmxName != null) {
+            StringBuilder connectionJmxName = new StringBuilder(dataSourceJmxName.toString());
+            connectionJmxName.append(",connection=");
+            connectionJmxName.append(connIndex);
+            jmxRegister(pc, connectionJmxName.toString());
+        }
+
+        return new DefaultPooledObject<>(pc);
+    }
+
+    private void jmxRegister(PoolableConnection pc, String jmxName) {
+        try {
+            ObjectName oName = new ObjectName(jmxName);
+            MBEAN_SERVER.registerMBean(pc, oName);
+        } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
+                MBeanRegistrationException | NotCompliantMBeanException e) {
+            // For now, simply skip registration
+        }
     }
 
     protected void initializeConnection(Connection conn) throws SQLException {
@@ -380,6 +413,7 @@ public class PoolableConnectionFactory
     private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
+    private AtomicLong connectionIndex = new AtomicLong(0);
 
     /**
      * Internal constant to indicate the level is not set.
