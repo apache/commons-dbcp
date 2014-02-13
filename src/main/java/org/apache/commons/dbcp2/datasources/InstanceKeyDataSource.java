@@ -224,7 +224,7 @@ public abstract class InstanceKeyDataSource
                 "The CPDS has already been set. It cannot be altered.");
         }
         dataSource = v;
-        instanceKey = InstanceKeyObjectFactory.registerNewInstance(this);
+        instanceKey = InstanceKeyDataSourceFactory.registerNewInstance(this);
     }
 
     /**
@@ -259,7 +259,7 @@ public abstract class InstanceKeyDataSource
                 "It cannot be altered.");
         }
         this.dataSourceName = v;
-        instanceKey = InstanceKeyObjectFactory.registerNewInstance(this);
+        instanceKey = InstanceKeyDataSourceFactory.registerNewInstance(this);
     }
 
     /**

@@ -100,7 +100,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
                     //ignore and try to close others.
             }
         }
-        InstanceKeyObjectFactory.removeInstance(getInstanceKey());
+        InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
     // -------------------------------------------------------------------

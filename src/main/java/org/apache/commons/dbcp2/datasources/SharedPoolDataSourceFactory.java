@@ -25,7 +25,7 @@ import javax.naming.Reference;
  * @version $Revision$ $Date$
  */
 public class SharedPoolDataSourceFactory
-    extends InstanceKeyObjectFactory
+    extends InstanceKeyDataSourceFactory
 {
     private static final String SHARED_POOL_CLASSNAME =
         SharedPoolDataSource.class.getName();
