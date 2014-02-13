@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.SQLException;
 
+import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import junit.framework.Test;
@@ -31,6 +32,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Assert;
 
 /**
@@ -79,13 +81,19 @@ public class TestPStmtPooling extends TestCase {
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
 
+        ObjectName oName = new ObjectName("UnitTests:DataSource=test");
         PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connFactory, null);
+            new PoolableConnectionFactory(connFactory, oName);
         pcf.setPoolStatements(true);
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
 
-        ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        config.setJmxNameBase("UnitTests:DataSource=test,connectionpool=connections");
+        config.setJmxNamePrefix("");
+        ObjectPool<PoolableConnection> connPool =
+                new GenericObjectPool<>(pcf, config);
+        pcf.setPool(connPool);
 
         DataSource ds = new PoolingDataSource<>(connPool);
 
