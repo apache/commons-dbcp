@@ -151,6 +151,12 @@ The <action> type attribute can be add,update,fix,remove.
         Register pooled connections with JMX so that they may be forcibly closed
         via JMX if required.
       </action>
+      <action dev="markt" issue="DBCP-373" type="add">
+        Modify SharedPoolDataSource and PerUserPoolDataSource to expose all of
+        the configuration properties of the underlying connection pool(s). This
+        represents a significant refactoring of these classes and a number of
+        property names have changed as a result. 
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

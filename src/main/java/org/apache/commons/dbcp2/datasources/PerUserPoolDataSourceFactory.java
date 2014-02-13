@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import javax.naming.Reference;
 
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class PerUserPoolDataSourceFactory
@@ -39,9 +39,9 @@ public class PerUserPoolDataSourceFactory
         return PER_USER_POOL_CLASSNAME.equals(className);
     }
 
-    @SuppressWarnings("unchecked") // TODO is this needed? If so, why?
+    @SuppressWarnings("unchecked") // Avoid warnings on deserialization
     @Override
-    protected InstanceKeyDataSource getNewInstance(Reference ref) 
+    protected InstanceKeyDataSource getNewInstance(Reference ref)
         throws IOException, ClassNotFoundException {
         PerUserPoolDataSource pupds =  new PerUserPoolDataSource();
         RefAddr ra = ref.get("defaultMaxTotal");
@@ -72,7 +72,7 @@ public class PerUserPoolDataSourceFactory
         ra = ref.get("perUserDefaultTransactionIsolation");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
-            pupds.setPerUserDefaultTransactionIsolation( 
+            pupds.setPerUserDefaultTransactionIsolation(
                     (Map<String,Integer>) deserialize(serialized));
         }
 
@@ -82,21 +82,21 @@ public class PerUserPoolDataSourceFactory
             pupds.setPerUserMaxTotal(
                     (Map<String,Integer>) deserialize(serialized));
         }
-        
+
         ra = ref.get("perUserMaxIdle");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
             pupds.setPerUserMaxIdle(
                     (Map<String,Integer>) deserialize(serialized));
         }
-        
+
         ra = ref.get("perUserMaxWaitMillis");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
             pupds.setPerUserMaxWaitMillis(
-                    (Map<String,Integer>) deserialize(serialized));
+                    (Map<String,Long>) deserialize(serialized));
         }
-                
+
         ra = ref.get("perUserDefaultReadOnly");
         if (ra != null  && ra.getContent() != null) {
             byte[] serialized = (byte[]) ra.getContent();
@@ -104,6 +104,6 @@ public class PerUserPoolDataSourceFactory
                     (Map<String,Boolean>) deserialize(serialized));
         }
         return pupds;
-    }            
+    }
 }
 

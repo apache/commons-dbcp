@@ -174,16 +174,16 @@ public class TestDriverAdapterCPDS extends TestCase {
         SharedPoolDataSource spds = new SharedPoolDataSource();
         spds.setConnectionPoolDataSource(pcds);
         spds.setMaxTotal(threads.length + 10);
-        spds.setMaxWaitMillis(-1);
-        spds.setMaxIdle(10);
+        spds.setDefaultMaxWaitMillis(-1);
+        spds.setDefaultMaxIdle(10);
         spds.setDefaultAutoCommit(Boolean.FALSE);
 
         spds.setValidationQuery("SELECT 1");
-        spds.setTimeBetweenEvictionRunsMillis(10000);
-        spds.setNumTestsPerEvictionRun(-1);
-        spds.setTestWhileIdle(true);
-        spds.setTestOnBorrow(true);
-        spds.setTestOnReturn(false);
+        spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
+        spds.setDefaultNumTestsPerEvictionRun(-1);
+        spds.setDefaultTestWhileIdle(true);
+        spds.setDefaultTestOnBorrow(true);
+        spds.setDefaultTestOnReturn(false);
 
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new ThreadDbcp367(spds);

@@ -30,7 +30,6 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
@@ -49,15 +48,15 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author John D. McNally
  * @version $Revision$ $Date$
  */
-public class SharedPoolDataSource
-    extends InstanceKeyDataSource {
+public class SharedPoolDataSource extends InstanceKeyDataSource {
 
+    // TODO Re-calculate this
     private static final long serialVersionUID = -8132305535403690372L;
 
-    private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
-    private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
-    private int maxWaitMillis = (int)Math.min(Integer.MAX_VALUE,
-            GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
+    // Pool properties
+    private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
+
+
     private transient KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool = null;
     private transient KeyedCPDSConnectionFactory factory = null;
 
@@ -78,67 +77,25 @@ public class SharedPoolDataSource
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
+
     // -------------------------------------------------------------------
     // Properties
 
     /**
-     * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or negative for no limit.
+     * Set {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
     public int getMaxTotal() {
         return (this.maxTotal);
     }
 
     /**
-     * The maximum number of active connections that can be allocated from
-     * this pool at the same time, or negative for no limit.
-     * The default is 8.
+     * Get {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
     public void setMaxTotal(int maxTotal) {
         assertInitializationAllowed();
         this.maxTotal = maxTotal;
     }
 
-    /**
-     * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or negative for no limit.
-     */
-    public int getMaxIdle() {
-        return (this.maxIdle);
-    }
-
-    /**
-     * The maximum number of active connections that can remain idle in the
-     * pool, without extra ones being released, or negative for no limit.
-     * The default is 8.
-     */
-    public void setMaxIdle(int maxIdle) {
-        assertInitializationAllowed();
-        this.maxIdle = maxIdle;
-    }
-
-    /**
-     * The maximum number of milliseconds that the pool will wait (when there
-     * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail
-     * immediately if value is 0.
-     * The default is -1.
-     */
-    public int getMaxWaitMillis() {
-        return (this.maxWaitMillis);
-    }
-
-    /**
-     * The maximum number of milliseconds that the pool will wait (when there
-     * are no available connections) for a connection to be returned before
-     * throwing an exception, or -1 to wait indefinitely.  Will fail
-     * immediately if value is 0.
-     * The default is -1.
-     */
-    public void setMaxWaitMillis(int maxWaitMillis) {
-        assertInitializationAllowed();
-        this.maxWaitMillis = maxWaitMillis;
-    }
 
     // ----------------------------------------------------------------------
     // Instrumentation Methods
@@ -217,26 +174,28 @@ public class SharedPoolDataSource
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
                 isRollbackAfterValidation());
         factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
-        GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
-        config.setMaxTotalPerKey(getMaxTotal());
-        config.setMaxIdlePerKey(getMaxIdle());
-        config.setMaxWaitMillis(getMaxWaitMillis());
-        config.setBlockWhenExhausted(true);
-        if (maxTotal <= 0) {
-            config.setBlockWhenExhausted(false);
-            config.setMaxTotalPerKey(Integer.MAX_VALUE);
-        }
-        if (maxWaitMillis == 0) {
-            config.setBlockWhenExhausted(false);
-        }
-        config.setTestOnBorrow(getTestOnBorrow());
-        config.setTestOnReturn(getTestOnReturn());
+
+        GenericKeyedObjectPoolConfig config =
+                new GenericKeyedObjectPoolConfig();
+        config.setBlockWhenExhausted(getDefaultBlockWhenExhausted());
+        config.setEvictionPolicyClassName(getDefaultEvictionPolicyClassName());
+        config.setLifo(getDefaultLifo());
+        config.setMaxIdlePerKey(getDefaultMaxIdle());
+        config.setMaxTotal(getMaxTotal());
+        config.setMaxTotalPerKey(getDefaultMaxTotal());
+        config.setMaxWaitMillis(getDefaultMaxWaitMillis());
+        config.setMinEvictableIdleTimeMillis(
+                getDefaultMinEvictableIdleTimeMillis());
+        config.setMinIdlePerKey(getDefaultMinIdle());
+        config.setNumTestsPerEvictionRun(getDefaultNumTestsPerEvictionRun());
+        config.setSoftMinEvictableIdleTimeMillis(
+                getDefaultSoftMinEvictableIdleTimeMillis());
+        config.setTestOnBorrow(getDefaultTestOnBorrow());
+        config.setTestOnReturn(getDefaultTestOnReturn());
+        config.setTestWhileIdle(getDefaultTestWhileIdle());
         config.setTimeBetweenEvictionRunsMillis(
-            getTimeBetweenEvictionRunsMillis());
-        config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
-        config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
-        config.setEvictionPolicyClassName(getEvictionPolicyClassName());
-        config.setTestWhileIdle(getTestWhileIdle());
+                getDefaultTimeBetweenEvictionRunsMillis());
+
         KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> tmpPool =
                 new GenericKeyedObjectPool<>(factory, config);
         factory.setPool(tmpPool);
