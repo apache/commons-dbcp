@@ -2176,9 +2176,9 @@ public class BasicDataSource
             return;
         }
         StringBuilder base = new StringBuilder(registeredJmxName.toString());
-        base.append(",pool=");
+        base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
-        config.setJmxNamePrefix("connections");
+        config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
     }
 
     protected ObjectName getRegisteredJmxName() {
