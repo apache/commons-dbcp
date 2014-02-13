@@ -16,8 +16,16 @@
  */
 package org.apache.commons.dbcp2;
 
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
 
 import org.apache.commons.pool2.ObjectPool;
 
@@ -34,8 +42,12 @@ import org.apache.commons.pool2.ObjectPool;
 public class PoolableConnection extends DelegatingConnection<Connection>
         implements PoolableConnectionMXBean {
 
+    private static MBeanServer MBEAN_SERVER = ManagementFactory.getPlatformMBeanServer();
+
     /** The pool to which I should return. */
     private ObjectPool<PoolableConnection> _pool = null;
+
+    private final ObjectName _jmxName;
 
     /**
      *
@@ -43,11 +55,20 @@ public class PoolableConnection extends DelegatingConnection<Connection>
      * @param pool the pool to which I should return when closed
      */
     public PoolableConnection(Connection conn,
-            ObjectPool<PoolableConnection> pool) {
+            ObjectPool<PoolableConnection> pool, ObjectName jmxName) {
         super(conn);
         _pool = pool;
-    }
+        _jmxName = jmxName;
 
+        if (jmxName != null) {
+            try {
+                MBEAN_SERVER.registerMBean(this, jmxName);
+            } catch (InstanceAlreadyExistsException |
+                    MBeanRegistrationException | NotCompliantMBeanException e) {
+                // For now, simply skip registration
+            }
+        }
+    }
 
 
     /**
@@ -140,6 +161,13 @@ public class PoolableConnection extends DelegatingConnection<Connection>
      */
     @Override
     public void reallyClose() throws SQLException {
+        if (_jmxName != null) {
+            try {
+                MBEAN_SERVER.unregisterMBean(_jmxName);
+            } catch (MBeanRegistrationException | InstanceNotFoundException e) {
+                // Ignore
+            }
+        }
         super.closeInternal();
     }
 
