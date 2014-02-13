@@ -139,16 +139,6 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             ikds.setDataSourceName(ra.getContent().toString());
         }
 
-        ra = ref.get("defaultAutoCommit");
-        if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultAutoCommit(Boolean.valueOf(ra.getContent().toString()));
-        }
-
-        ra = ref.get("defaultReadOnly");
-        if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultReadOnly(Boolean.valueOf(ra.getContent().toString()));
-        }
-
         ra = ref.get("description");
         if (ra != null && ra.getContent() != null) {
             ikds.setDescription(ra.getContent().toString());
@@ -166,45 +156,128 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                 Integer.parseInt(ra.getContent().toString()));
         }
 
-        ra = ref.get("testOnBorrow");
+        // Pool properties
+        ra = ref.get("blockWhenExhausted");
         if (ra != null && ra.getContent() != null) {
-            ikds.setTestOnBorrow(Boolean.valueOf(
+            ikds.setDefaultBlockWhenExhausted(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
 
-        ra = ref.get("testOnReturn");
+        ra = ref.get("evictionPolicyClassName");
         if (ra != null && ra.getContent() != null) {
-            ikds.setTestOnReturn(Boolean.valueOf(
+            ikds.setDefaultEvictionPolicyClassName(ra.getContent().toString());
+        }
+
+        // Pool properties
+        ra = ref.get("lifo");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultLifo(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
 
-        ra = ref.get("timeBetweenEvictionRunsMillis");
+        ra = ref.get("maxIdlePerKey");
         if (ra != null && ra.getContent() != null) {
-            ikds.setTimeBetweenEvictionRunsMillis(
+            ikds.setDefaultMaxIdle(
+                Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("maxTotalPerKey");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultMaxTotal(
+                Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("maxWaitMillis");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultMaxWaitMillis(
+                Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("minEvictableIdleTimeMillis");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultMinEvictableIdleTimeMillis(
+                Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("minIdlePerKey");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultMinIdle(
                 Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("numTestsPerEvictionRun");
         if (ra != null && ra.getContent() != null) {
-            ikds.setNumTestsPerEvictionRun(
+            ikds.setDefaultNumTestsPerEvictionRun(
                 Integer.parseInt(ra.getContent().toString()));
         }
 
-        ra = ref.get("minEvictableIdleTimeMillis");
+        ra = ref.get("softMinEvictableIdleTimeMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setMinEvictableIdleTimeMillis(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultSoftMinEvictableIdleTimeMillis(
+                Long.parseLong(ra.getContent().toString()));
+        }
+
+        ra = ref.get("testOnBorrow");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultTestOnBorrow(Boolean.valueOf(
+                ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("testOnReturn");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultTestOnReturn(Boolean.valueOf(
+                ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("testWhileIdle");
         if (ra != null && ra.getContent() != null) {
-            ikds.setTestWhileIdle(Boolean.valueOf(
+            ikds.setDefaultTestWhileIdle(Boolean.valueOf(
                 ra.getContent().toString()).booleanValue());
         }
+
+        ra = ref.get("timeBetweenEvictionRunsMillis");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultTimeBetweenEvictionRunsMillis(
+                Long.parseLong(ra.getContent().toString()));
+        }
+
+
+        // Connection factory properties
 
         ra = ref.get("validationQuery");
         if (ra != null && ra.getContent() != null) {
             ikds.setValidationQuery(ra.getContent().toString());
+        }
+
+        ra = ref.get("rollbackAfterValidation");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setRollbackAfterValidation(Boolean.valueOf(
+                ra.getContent().toString()).booleanValue());
+        }
+
+        ra = ref.get("maxConnLifetimeMillis");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setMaxConnLifetimeMillis(
+                Long.parseLong(ra.getContent().toString()));
+        }
+
+
+        // Connection properties
+
+        ra = ref.get("defaultAutoCommit");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultAutoCommit(Boolean.valueOf(ra.getContent().toString()));
+        }
+
+        ra = ref.get("defaultTransactionIsolation");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultTransactionIsolation(
+                Integer.parseInt(ra.getContent().toString()));
+        }
+
+        ra = ref.get("defaultReadOnly");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultReadOnly(Boolean.valueOf(ra.getContent().toString()));
         }
     }
 

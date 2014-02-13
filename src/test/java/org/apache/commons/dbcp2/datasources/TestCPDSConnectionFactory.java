@@ -66,7 +66,7 @@ public class TestCPDSConnectionFactory extends TestCase {
        PerUserPoolDataSource ds = new PerUserPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
        ds.setPerUserMaxTotal("username", Integer.valueOf(10));
-       ds.setPerUserMaxWaitMillis("username", Integer.valueOf(50));
+       ds.setPerUserMaxWaitMillis("username", Long.valueOf(50));
        ds.setPerUserMaxIdle("username", Integer.valueOf(2));
        Connection conn1 = ds.getConnection("username", "password");
        Connection conn2 = ds.getConnection("username", "password");

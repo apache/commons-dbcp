@@ -71,7 +71,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setDefaultMaxTotal(getMaxTotal());
         tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setPerUserMaxTotal("foo", Integer.valueOf(getMaxTotal()));
-        tds.setPerUserMaxWaitMillis("foo", Integer.valueOf((int)(getMaxWaitMillis())));
+        tds.setPerUserMaxWaitMillis("foo", Long.valueOf(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
@@ -398,14 +398,14 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // some JVMs, e.g. Windows.
         final int defaultMaxWaitMillis = 430;
         ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Integer(defaultMaxWaitMillis));
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Long(defaultMaxWaitMillis));
         multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWaitMillis = 500;
         ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Integer(defaultMaxWaitMillis));
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis("foo",new Long(defaultMaxWaitMillis));
         multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 

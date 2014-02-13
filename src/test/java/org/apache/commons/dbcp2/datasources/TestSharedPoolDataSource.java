@@ -69,7 +69,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWaitMillis((int)(getMaxWaitMillis()));
+        tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
@@ -347,7 +347,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final int maxWaitMillis = 1000;
         final int theadCount = 20;
 
-        ((SharedPoolDataSource)ds).setMaxWaitMillis(maxWaitMillis);
+        ((SharedPoolDataSource)ds).setDefaultMaxWaitMillis(maxWaitMillis);
         // Obtain all the connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
@@ -392,13 +392,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
         final int defaultMaxWaitMillis = 430;
-        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWaitMillis);
+        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
         multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWaitMillis = 500;
-        ((SharedPoolDataSource) ds).setMaxWaitMillis(defaultMaxWaitMillis);
+        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
         multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 
@@ -498,7 +498,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setMaxWaitMillis((int)(getMaxWaitMillis()));
+        tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
