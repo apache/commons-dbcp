@@ -80,6 +80,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
     private Boolean _readOnlyCached = null;
+    private Integer defaultQueryTimeout = null;
 
     /**
      * Create a wrapper for the Connection which traces this
@@ -247,11 +248,21 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         throw e;
     }
 
+    private void initializeStatement(DelegatingStatement ds) throws SQLException {
+        if (defaultQueryTimeout != null &&
+                defaultQueryTimeout.intValue() != ds.getQueryTimeout()) {
+            ds.setQueryTimeout(defaultQueryTimeout.intValue());
+        }
+    }
+
     @Override
     public Statement createStatement() throws SQLException {
         checkOpen();
         try {
-            return new DelegatingStatement(this, _conn.createStatement());
+            DelegatingStatement ds =
+                    new DelegatingStatement(this, _conn.createStatement());
+            initializeStatement(ds);
+            return ds;
         }
         catch (SQLException e) {
             handleException(e);
@@ -264,8 +275,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                      int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingStatement
-                (this, _conn.createStatement(resultSetType,resultSetConcurrency));
+            DelegatingStatement ds = new DelegatingStatement(
+                    this, _conn.createStatement(resultSetType,resultSetConcurrency));
+            initializeStatement(ds);
+            return ds;
         }
         catch (SQLException e) {
             handleException(e);
@@ -277,8 +290,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement
-                (this, _conn.prepareStatement(sql));
+            DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
@@ -292,9 +307,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                               int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement
-                (this, _conn.prepareStatement
-                    (sql,resultSetType,resultSetConcurrency));
+            DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql,resultSetType,resultSetConcurrency));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
@@ -306,7 +322,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     public CallableStatement prepareCall(String sql) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingCallableStatement(this, _conn.prepareCall(sql));
+            DelegatingCallableStatement dcs =
+                    new DelegatingCallableStatement(this, _conn.prepareCall(sql));
+            initializeStatement(dcs);
+            return dcs;
         }
         catch (SQLException e) {
             handleException(e);
@@ -320,8 +339,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                          int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingCallableStatement
-                (this, _conn.prepareCall(sql, resultSetType,resultSetConcurrency));
+            DelegatingCallableStatement dcs = new DelegatingCallableStatement(
+                    this, _conn.prepareCall(sql, resultSetType,resultSetConcurrency));
+            initializeStatement(dcs);
+            return dcs;
         }
         catch (SQLException e) {
             handleException(e);
@@ -473,6 +494,26 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         } catch (SQLException e) {
             handleException(e);
         }
+    }
+
+
+    /**
+     * Obtain the default query timeout that will be used for {@link Statement}s
+     * created from this connection. <code>null</code> means that the driver
+     * default will be used.
+     */
+    public Integer getDefaultQueryTimeout() {
+        return defaultQueryTimeout;
+    }
+
+
+    /**
+     * Set the default query timeout that will be used for {@link Statement}s
+     * created from this connection. <code>null</code> means that the driver
+     * default will be used.
+     */
+    public void setDefaultQueryTimeout(Integer defaultQueryTimeout) {
+        this.defaultQueryTimeout = defaultQueryTimeout;
     }
 
 
@@ -682,8 +723,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                      int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingStatement(this, _conn.createStatement(
-                resultSetType, resultSetConcurrency, resultSetHoldability));
+            DelegatingStatement ds = new DelegatingStatement(this,
+                    _conn.createStatement(resultSetType, resultSetConcurrency,
+                            resultSetHoldability));
+            initializeStatement(ds);
+            return ds;
         }
         catch (SQLException e) {
             handleException(e);
@@ -697,8 +741,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                               int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-                sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+            DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql, resultSetType,
+                            resultSetConcurrency, resultSetHoldability));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
@@ -712,8 +759,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                                          int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingCallableStatement(this, _conn.prepareCall(
-                sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+            DelegatingCallableStatement dcs = new DelegatingCallableStatement(
+                    this, _conn.prepareCall(sql, resultSetType,
+                            resultSetConcurrency, resultSetHoldability));
+            initializeStatement(dcs);
+            return dcs;
         }
         catch (SQLException e) {
             handleException(e);
@@ -725,8 +775,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-                sql, autoGeneratedKeys));
+            DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql, autoGeneratedKeys));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
@@ -738,8 +790,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-                sql, columnIndexes));
+            DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql, columnIndexes));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
@@ -751,8 +805,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     public PreparedStatement prepareStatement(String sql, String columnNames[]) throws SQLException {
         checkOpen();
         try {
-            return new DelegatingPreparedStatement(this, _conn.prepareStatement(
-                sql, columnNames));
+            DelegatingPreparedStatement dps =  new DelegatingPreparedStatement(
+                    this, _conn.prepareStatement(sql, columnNames));
+            initializeStatement(dps);
+            return dps;
         }
         catch (SQLException e) {
             handleException(e);
