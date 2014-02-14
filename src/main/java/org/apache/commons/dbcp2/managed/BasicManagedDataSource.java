@@ -192,10 +192,13 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultAutoCommit(getDefaultAutoCommit());
             connectionFactory.setDefaultTransactionIsolation(getDefaultTransactionIsolation());
             connectionFactory.setDefaultCatalog(getDefaultCatalog());
+            connectionFactory.setCacheState(getCacheState());
             connectionFactory.setPoolStatements(isPoolPreparedStatements());
             connectionFactory.setMaxOpenPrepatedStatements(
                     getMaxOpenPreparedStatements());
             connectionFactory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
+            connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
+            connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

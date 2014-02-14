@@ -173,6 +173,25 @@ public class PoolableConnectionFactory
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
+
+    public boolean isEnableAutoCommitOnReturn() {
+        return enableAutoCommitOnReturn;
+    }
+
+    public void setEnableAutoCommitOnReturn(boolean enableAutoCommitOnReturn) {
+        this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
+    }
+
+
+    public boolean isRollbackOnReturn() {
+        return rollbackOnReturn;
+    }
+
+    public void setRollbackOnReturn(boolean rollbackOnReturn) {
+        this.rollbackOnReturn = rollbackOnReturn;
+    }
+
+
     @Override
     public PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = _connFactory.createConnection();
@@ -312,14 +331,25 @@ public class PoolableConnectionFactory
         validateLifetime(p);
 
         PoolableConnection conn = p.getObject();
-        boolean connAutoCommit = conn.getAutoCommit();
-        if(!connAutoCommit && !conn.isReadOnly()) {
-            conn.rollback();
+        Boolean connAutoCommit = null;
+        if (rollbackOnReturn) {
+            connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
+            if(!connAutoCommit.booleanValue() && !conn.isReadOnly()) {
+                conn.rollback();
+            }
         }
+
         conn.clearWarnings();
-        // DBCP-97 Idle connections in the pool should have autoCommit enabled
-        if(!connAutoCommit) {
-            conn.setAutoCommit(true);
+
+        // DBCP-97 / DBCP-399 / DBCP-351 Idle connections in the pool should
+        // have autoCommit enabled
+        if (enableAutoCommitOnReturn) {
+            if (connAutoCommit == null) {
+                connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
+            }
+            if(!connAutoCommit.booleanValue()) {
+                conn.setAutoCommit(true);
+            }
         }
 
         conn.passivate();
@@ -390,6 +420,8 @@ public class PoolableConnectionFactory
     private volatile ObjectPool<PoolableConnection> _pool = null;
     private Boolean _defaultReadOnly = null;
     private Boolean _defaultAutoCommit = null;
+    private boolean enableAutoCommitOnReturn = true;
+    private boolean rollbackOnReturn = true;
     private int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     private String _defaultCatalog;
     private boolean _cacheState;

@@ -1276,6 +1276,52 @@ public class BasicDataSource
     }
 
 
+    private boolean enableAutoCommitOnReturn = true;
+
+    /**
+     * Returns the value of the flag that controls whether or not connections
+     * being returned to the pool will checked and configured with
+     * {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)}
+     * if the auto commit setting is <code>false</false> when the connection
+     * is returned. It is <code>true</code> by default.
+     */
+    public boolean getEnableAutoCommitOnReturn() {
+        return enableAutoCommitOnReturn;
+    }
+
+    /**
+     * Sets the value of the flag that controls whether or not connections
+     * being returned to the pool will checked and configured with
+     * {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)}
+     * if the auto commit setting is <code>false</false> when the connection
+     * is returned. It is <code>true</code> by default.
+     */
+    public void setEnableAutoCommitOnReturn(boolean enableAutoCommitOnReturn) {
+        this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
+    }
+
+
+    private boolean rollbackOnReturn = true;
+
+    /**
+     * Gets the current value of the flag that controls if a connection will be
+     * rolled back when it is returned to the pool if auto commit is not enabled
+     * and the connection is not read only.
+     */
+    public boolean getRollbackOnReturn() {
+        return rollbackOnReturn;
+    }
+
+    /**
+     * Sets the flag that controls if a connection will be rolled back when it
+     * is returned to the pool if auto commit is not enabled and the connection
+     * is not read only.
+     */
+    public void setRollbackOnReturn(boolean rollbackOnReturn) {
+        this.rollbackOnReturn = rollbackOnReturn;
+    }
+
+
     // ----------------------------------------------------- Instance Variables
 
     /**
@@ -2073,6 +2119,8 @@ public class BasicDataSource
             connectionFactory.setMaxOpenPrepatedStatements(
                     maxOpenPreparedStatements);
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
+            connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
+            connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;
