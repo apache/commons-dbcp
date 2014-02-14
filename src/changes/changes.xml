@@ -157,6 +157,14 @@ The <action> type attribute can be add,update,fix,remove.
         represents a significant refactoring of these classes and a number of
         property names have changed as a result. 
       </action>
+      <action dev="markt" issue="DBCP-351" type="add">
+        Provide an option to control if autoCommit is always set to true when a
+        connection is returned to the connection pool.
+      </action>
+      <action dev="markt" issue="DBCP-399" type="add">
+        Provide an option to control if rollback is called when a connection is
+        returned to the poll with autoCommit disabled.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

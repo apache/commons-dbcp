@@ -93,6 +93,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
     private final static String PROP_CONNECTIONPROPERTIES = "connectionProperties";
     private final static String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
+    private final static String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
+    private final static String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
 
     private final static String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
@@ -129,7 +131,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_POOLPREPAREDSTATEMENTS,
         PROP_MAXOPENPREPAREDSTATEMENTS,
         PROP_CONNECTIONPROPERTIES,
-        PROP_MAXCONNLIFETIMEMILLIS
+        PROP_MAXCONNLIFETIMEMILLIS,
+        PROP_ROLLBACK_ON_RETURN,
+        PROP_ENABLE_AUTOCOMMIT_ON_RETURN
     };
 
     // -------------------------------------------------- ObjectFactory Methods
@@ -404,6 +408,16 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_JMX_NAME);
         if (value != null) {
             dataSource.setJmxName(value);
+        }
+
+        value = properties.getProperty(PROP_ENABLE_AUTOCOMMIT_ON_RETURN);
+        if (value != null) {
+            dataSource.setEnableAutoCommitOnReturn(Boolean.valueOf(value).booleanValue());
+        }
+
+        value = properties.getProperty(PROP_ROLLBACK_ON_RETURN);
+        if (value != null) {
+            dataSource.setRollbackOnReturn(Boolean.valueOf(value).booleanValue());
         }
 
         // DBCP-215
