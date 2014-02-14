@@ -165,6 +165,9 @@ The <action> type attribute can be add,update,fix,remove.
         Provide an option to control if rollback is called when a connection is
         returned to the poll with autoCommit disabled.
       </action>
+      <action dev="markt" issue="DBCP-340" type="add">
+        Provide an option to set the default query timeout.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

@@ -199,6 +199,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
+            connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

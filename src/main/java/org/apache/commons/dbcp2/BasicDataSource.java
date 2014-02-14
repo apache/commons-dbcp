@@ -35,6 +35,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistration;
@@ -197,6 +198,28 @@ public class BasicDataSource
      */
     public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
+    }
+
+
+    private Integer defaultQueryTimeout = null;
+
+    /**
+     * Obtain the default query timeout that will be used for {@link Statement}s
+     * created from this connection. <code>null</code> means that the driver
+     * default will be used.
+     */
+    public Integer getDefaultQueryTimeout() {
+        return defaultQueryTimeout;
+    }
+
+
+    /**
+     * Set the default query timeout that will be used for {@link Statement}s
+     * created from this connection. <code>null</code> means that the driver
+     * default will be used.
+     */
+    public void setDefaultQueryTimeout(Integer defaultQueryTimeout) {
+        this.defaultQueryTimeout = defaultQueryTimeout;
     }
 
 
@@ -2121,6 +2144,7 @@ public class BasicDataSource
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
+            connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

@@ -95,6 +95,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
     private final static String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
     private final static String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
+    private final static String PROP_DEFAULT_QUERYTIMEOUT = "defaultQueryTimeout";
 
     private final static String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
@@ -133,7 +134,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_CONNECTIONPROPERTIES,
         PROP_MAXCONNLIFETIMEMILLIS,
         PROP_ROLLBACK_ON_RETURN,
-        PROP_ENABLE_AUTOCOMMIT_ON_RETURN
+        PROP_ENABLE_AUTOCOMMIT_ON_RETURN,
+        PROP_DEFAULT_QUERYTIMEOUT
     };
 
     // -------------------------------------------------- ObjectFactory Methods
@@ -419,6 +421,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setRollbackOnReturn(Boolean.valueOf(value).booleanValue());
         }
+
+        value = properties.getProperty(PROP_DEFAULT_QUERYTIMEOUT);
+        if (value != null) {
+            dataSource.setDefaultQueryTimeout(Integer.valueOf(value));
+        }
+
 
         // DBCP-215
         // Trick to make sure that initialSize connections are created
