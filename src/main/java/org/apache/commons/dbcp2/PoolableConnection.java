@@ -18,6 +18,8 @@ package org.apache.commons.dbcp2;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -48,6 +50,11 @@ public class PoolableConnection extends DelegatingConnection<Connection>
     private ObjectPool<PoolableConnection> _pool = null;
 
     private final ObjectName _jmxName;
+
+    // Use a prepared statement for validation, retaining the last used SQL to
+    // check if the validation query has changed.
+    private PreparedStatement validationPreparedStatement = null;
+    private String lastValidationSql = null;
 
     /**
      *
@@ -168,6 +175,16 @@ public class PoolableConnection extends DelegatingConnection<Connection>
                 // Ignore
             }
         }
+
+
+        if (validationPreparedStatement != null) {
+            try {
+                validationPreparedStatement.close();
+            } catch (SQLException sqle) {
+                // Ignore
+            }
+        }
+
         super.closeInternal();
     }
 
@@ -179,6 +196,33 @@ public class PoolableConnection extends DelegatingConnection<Connection>
     @Override
     public String getToString() {
         return toString();
+    }
+
+
+    public void validate(String sql, int timeout) throws SQLException {
+        if (sql == null) {
+            return;
+        }
+
+        if (!sql.equals(lastValidationSql)) {
+            lastValidationSql = sql;
+            // Has to be the innermost delegate else the prepared statement will
+            // be closed when the pooled connection is passivated.
+            validationPreparedStatement =
+                    getInnermostDelegateInternal().prepareStatement(sql);
+        }
+
+        if (timeout > 0) {
+            validationPreparedStatement.setQueryTimeout(timeout);
+        }
+
+        try (ResultSet rs = validationPreparedStatement.executeQuery()) {
+            if(!rs.next()) {
+                throw new SQLException("validationQuery didn't return a row");
+            }
+        } catch (SQLException sqle) {
+            throw sqle;
+        }
     }
 }
 
