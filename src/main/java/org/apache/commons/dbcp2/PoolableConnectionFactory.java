@@ -19,7 +19,6 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
@@ -297,40 +296,11 @@ public class PoolableConnectionFactory
         }
     }
 
-    public void validateConnection(Connection conn) throws SQLException {
-        String query = _validationQuery;
+    public void validateConnection(PoolableConnection conn) throws SQLException {
         if(conn.isClosed()) {
             throw new SQLException("validateConnection: connection closed");
         }
-        if(null != query) {
-            Statement stmt = null;
-            ResultSet rset = null;
-            try {
-                stmt = conn.createStatement();
-                if (_validationQueryTimeout > 0) {
-                    stmt.setQueryTimeout(_validationQueryTimeout);
-                }
-                rset = stmt.executeQuery(query);
-                if(!rset.next()) {
-                    throw new SQLException("validationQuery didn't return a row");
-                }
-            } finally {
-                if (rset != null) {
-                    try {
-                        rset.close();
-                    } catch(Exception t) {
-                        // ignored
-                    }
-                }
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch(Exception t) {
-                        // ignored
-                    }
-                }
-            }
-        }
+        conn.validate(_validationQuery, _validationQueryTimeout);
     }
 
     @Override

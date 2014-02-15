@@ -75,7 +75,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     /** My delegate {@link Connection}. */
     private C _conn = null;
 
-    private boolean _closed = false;
+    private volatile boolean _closed = false;
 
     private boolean _cacheState = true;
     private Boolean _autoCommitCached = null;
