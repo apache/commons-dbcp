@@ -73,7 +73,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 /* JDBC_4_ANT_KEY_END */
 
     /** My delegate {@link Connection}. */
-    private C _conn = null;
+    private volatile C _conn = null;
 
     private volatile boolean _closed = false;
 
