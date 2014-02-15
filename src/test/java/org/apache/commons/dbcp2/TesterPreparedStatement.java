@@ -97,6 +97,9 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
         if("null".equals(_sql)) {
             return null;
+        } else if (_queryTimeout > 0 && _queryTimeout < 5) {
+            // Simulate timeout if queryTimout is set to less than 5 seconds
+            throw new SQLException("query timeout");
         } else {
             return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
         }
