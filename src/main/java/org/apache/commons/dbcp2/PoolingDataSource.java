@@ -203,5 +203,21 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
                 return null;
             }
         }
+
+        @Override
+        public void close() throws SQLException {
+            if (getDelegateInternal() != null) {
+                super.close();
+                super.setDelegate(null);
+            }
+        }
+
+        @Override
+        public boolean isClosed() throws SQLException {
+            if (getDelegateInternal() == null) {
+                return true;
+            }
+            return super.isClosed();
+        }
     }
 }
