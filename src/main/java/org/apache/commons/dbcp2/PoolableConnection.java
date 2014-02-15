@@ -78,6 +78,13 @@ public class PoolableConnection extends DelegatingConnection<Connection>
     }
 
 
+    @Override
+    protected void passivate() throws SQLException {
+        super.passivate();
+        setClosedInternal(true);
+    }
+
+
     /**
      * {@inheritDoc}
      * <p>
@@ -102,7 +109,6 @@ public class PoolableConnection extends DelegatingConnection<Connection>
 
         return false;
     }
-
 
 
     /**
@@ -131,6 +137,12 @@ public class PoolableConnection extends DelegatingConnection<Connection>
             throw new SQLException("Cannot close connection (isClosed check failed)", e);
         }
 
+        /* Can't set close before this code block since the connection needs to
+         * be open when validation runs. Can't set close after this code black
+         * since by then the connection will have been returned to the pool and
+         * may have been borrowed by another thread. Therefore, the close flag
+         * is set in passivate().
+         */
         if (!isUnderlyingConectionClosed) {
             // Normal close: underlying connection is still open, so we
             // simply need to return this proxy to the pool
@@ -160,7 +172,6 @@ public class PoolableConnection extends DelegatingConnection<Connection>
                 throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
             }
         }
-        setClosedInternal(true);
     }
 
     /**
