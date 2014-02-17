@@ -54,6 +54,7 @@ class KeyedCPDSConnectionFactory
 
     private final ConnectionPoolDataSource _cpds;
     private final String _validationQuery;
+    private final int _validationQueryTimeout;
     private final boolean _rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> _pool;
     private long maxConnLifetimeMillis = -1;
@@ -71,31 +72,25 @@ class KeyedCPDSConnectionFactory
     private final Map<PooledConnection, PooledConnectionAndInfo> pcMap =
         new ConcurrentHashMap<>();
 
-    /**
-     * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
-     * @param cpds the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery a query to use to {*link #validateObject validate} {*link Connection}s.
-     * Should return at least one row. May be <tt>null</tt>
-     */
-    public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
-                                      String validationQuery) {
-        this(cpds , validationQuery, false);
-    }
 
     /**
      * Create a new <tt>KeyedPoolableConnectionFactory</tt>.
      * @param cpds the ConnectionPoolDataSource from which to obtain
      * PooledConnections
      * @param validationQuery a query to use to {@link #validateObject validate}
-     * {@link Connection}s.  Should return at least one row. May be <tt>null</tt>
+     * {@link Connection}s.  Should return at least one row. May be
+     * <tt>null</tt> in which case3 {@link Connection#isValid(int)} will be used
+     * to validate connections.
      * @param rollbackAfterValidation whether a rollback should be issued after
      * {@link #validateObject validating} {@link Connection}s.
      */
     public KeyedCPDSConnectionFactory(ConnectionPoolDataSource cpds,
                                       String validationQuery,
+                                      int validationQueryTimeout,
                                       boolean rollbackAfterValidation) {
         _cpds = cpds;
         _validationQuery = validationQuery;
+        _validationQueryTimeout = validationQueryTimeout;
         _rollbackAfterValidation = rollbackAfterValidation;
     }
 
@@ -176,8 +171,17 @@ class KeyedCPDSConnectionFactory
         }
         boolean valid = false;
         PooledConnection pconn = p.getObject().getPooledConnection();
-        String query = _validationQuery;
-        if (null != query) {
+        if (null == _validationQuery) {
+            int timeout = _validationQueryTimeout;
+            if (timeout < 0) {
+                timeout = 0;
+            }
+            try {
+                valid = pconn.getConnection().isValid(timeout);
+            } catch (SQLException e) {
+                valid = false;
+            }
+        } else {
             Connection conn = null;
             Statement stmt = null;
             ResultSet rset = null;
@@ -189,7 +193,7 @@ class KeyedCPDSConnectionFactory
             try {
                 conn = pconn.getConnection();
                 stmt = conn.createStatement();
-                rset = stmt.executeQuery(query);
+                rset = stmt.executeQuery(_validationQuery);
                 if (rset.next()) {
                     valid = true;
                 } else {
@@ -206,8 +210,6 @@ class KeyedCPDSConnectionFactory
                 Utils.closeQuietly(conn);
                 validatingSet.remove(pconn);
             }
-        } else {
-            valid = true;
         }
         return valid;
     }

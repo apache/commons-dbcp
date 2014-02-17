@@ -64,8 +64,9 @@ public class PoolableConnectionFactory
 
     /**
      * Sets the query I use to {@link #validateObject validate} {@link Connection}s.
-     * Should return at least one row.
-     * Using <tt>null</tt> turns off validation.
+     * Should return at least one row. If not specified,
+     * {@link Connection#isValid(int)} will be used to validate connections.
+     *
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
      */
     public void setValidationQuery(String validationQuery) {

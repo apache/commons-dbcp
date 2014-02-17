@@ -172,6 +172,13 @@ The <action> type attribute can be add,update,fix,remove.
         Connection.isValid() should not throw an SQLException if the connection
         is closed.
       </action>
+      <action dev="markt" issue="DBCP-357" type="fix">
+        Use Connection.isValid() to validate connections unless a validation
+        query is explicitly configured. Note that this means it is no longer
+        necessary for a validation query to be specified in order for validation
+        to take place. When testing with Oracle, this resulted in database
+        validation being approximately 7 times faster.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">

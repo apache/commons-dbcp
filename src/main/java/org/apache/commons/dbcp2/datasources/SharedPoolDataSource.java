@@ -172,7 +172,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(),
-                isRollbackAfterValidation());
+                getValidationQueryTimeout(), isRollbackAfterValidation());
         factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
 
         GenericKeyedObjectPoolConfig config =
