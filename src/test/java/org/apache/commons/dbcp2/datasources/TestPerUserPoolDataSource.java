@@ -347,7 +347,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testPerUserMethods() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
-        // you need to set maxActive otherwise there is no accounting
+        // you need to set per user maxTotal otherwise there is no accounting
         tds.setPerUserMaxTotal("u1", Integer.valueOf(5));
         tds.setPerUserMaxTotal("u2", Integer.valueOf(5));
 

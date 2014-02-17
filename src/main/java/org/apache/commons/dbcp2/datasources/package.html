@@ -49,7 +49,7 @@ webapp:
       &lt;name&gt;dataSourceName&lt;/name&gt;&lt;value&gt;java:comp/env/jdbc/bookstoreCPDS&lt;/value&gt;
     &lt;/parameter&gt;
     &lt;parameter&gt;
-      &lt;name&gt;defaultMaxActive&lt;/name&gt;&lt;value&gt;30&lt;/value&gt;
+      &lt;name&gt;defaultMaxTotal&lt;/name&gt;&lt;value&gt;30&lt;/value&gt;
     &lt;/parameter&gt;
 
   &lt;/ResourceParams&gt;
@@ -150,7 +150,7 @@ public class Pool
 
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(cpds);
-        tds.setMaxActive(10);
+        tds.setMaxTotal(10);
         tds.setMaxWaitMillis(50);
 
         ds = tds;

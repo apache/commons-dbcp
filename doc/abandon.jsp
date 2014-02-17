@@ -38,7 +38,7 @@
       <parameter><name>removeAbandonedTimeout</name><value>0</value></parameter>
       <parameter><name>logAbandoned</name><value>true</value></parameter>
 
-      <parameter><name>maxActive</name><value>1</value></parameter>
+      <parameter><name>maxTotal</name><value>1</value></parameter>
     </ResourceParams>
 -->
 
