@@ -58,7 +58,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private final static String PROP_CACHESTATE ="cacheState";
     private final static String PROP_DRIVERCLASSNAME = "driverClassName";
     private final static String PROP_LIFO = "lifo";
-    private final static String PROP_MAXACTIVE = "maxActive";
+    private final static String PROP_MAXTOTAL = "maxTotal";
     private final static String PROP_MAXIDLE = "maxIdle";
     private final static String PROP_MINIDLE = "minIdle";
     private final static String PROP_INITIALSIZE = "initialSize";
@@ -105,7 +105,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_CACHESTATE,
         PROP_DRIVERCLASSNAME,
         PROP_LIFO,
-        PROP_MAXACTIVE,
+        PROP_MAXTOTAL,
         PROP_MAXIDLE,
         PROP_MINIDLE,
         PROP_INITIALSIZE,
@@ -254,7 +254,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setLifo(Boolean.valueOf(value).booleanValue());
         }
 
-        value = properties.getProperty(PROP_MAXACTIVE);
+        value = properties.getProperty(PROP_MAXTOTAL);
         if (value != null) {
             dataSource.setMaxTotal(Integer.parseInt(value));
         }

@@ -53,7 +53,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         Properties properties = new Properties();
         properties.setProperty("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
         properties.setProperty("url", "jdbc:apache:commons:testdriver");
-        properties.setProperty("maxActive", "10");
+        properties.setProperty("maxTotal", "10");
         properties.setProperty("maxIdle", "8");
         properties.setProperty("minIdle", "0");
         properties.setProperty("maxWaitMillis", "500");

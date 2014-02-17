@@ -1617,7 +1617,7 @@ public class BasicDataSource
      * <li>{@link #getRemoveAbandonedOnBorrow()} or
      *     {@link #getRemoveAbandonedOnMaintenance()} = true</li>
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
-     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxActive} - 3</li>
+     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
      * </ul></code></p>
      *
      * <p>The default value is 300 seconds.</p>

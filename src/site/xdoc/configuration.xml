@@ -32,7 +32,7 @@
 
 <!--
 <section name="Dynamic Properties">
-maxActive
+maxTotal
 maxIdle
 minIdle
 maxWaitMillis
@@ -140,7 +140,7 @@ testWhileIdle
    </td>
 </tr>
 <tr>
-   <td>maxActive</td>
+   <td>maxTotal</td>
    <td>8</td>
    <td>
       The maximum number of active connections that can be allocated from
@@ -392,11 +392,11 @@ Be carefull and only use when you need direct access to driver specific extentio
 <img src="images/icon_info_sml.gif"/>
 If you have enabled "removeAbandoned" then it is possible that a connection is reclaimed by the pool because
 it is considered to be abandoned. This mechanism is triggered when (getNumIdle() &lt; 2) and
-(getNumActive() &gt; getMaxActive() - 3)
+(getNumActive() &gt; getMaxTotal() - 3)
 </p>
 <p>
 <img src="images/icon_info_sml.gif"/>
-For example, maxActive=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
+For example, maxTotal=20 and 18 active connections and 1 idle connection would trigger the "removeAbandoned".
 But only the active connections that aren't used for more then "removeAbandonedTimeout" seconds are removed,
 default (300 sec). Traversing a resultset doesn't count as being used. Creating a Statement, PreparedStatement
 or CallableStatement or using one of these to execute a query (using one of the execute methods) resets
