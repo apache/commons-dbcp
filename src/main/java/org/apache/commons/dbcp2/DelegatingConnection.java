@@ -914,7 +914,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
     @Override
     public boolean isValid(int timeout) throws SQLException {
-        checkOpen();
+        if (isClosed()) {
+            return false;
+        }
         try {
             return _conn.isValid(timeout);
         }
