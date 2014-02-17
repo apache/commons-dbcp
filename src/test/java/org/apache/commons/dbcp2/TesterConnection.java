@@ -361,7 +361,7 @@ public class TesterConnection implements Connection {
 
     @Override
     public boolean isValid(int timeout) throws SQLException {
-        throw new SQLException("Not implemented.");
+        return _open;
     }
 
     @Override
