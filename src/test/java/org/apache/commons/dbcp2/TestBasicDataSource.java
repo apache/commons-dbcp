@@ -337,20 +337,6 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(false, ds.getTestWhileIdle());
     }
 
-    public void testNoValidationQuery() throws Exception {
-        ds.setTestOnBorrow(true);
-        ds.setTestOnReturn(true);
-        ds.setTestWhileIdle(true);
-        ds.setValidationQuery("");
-
-        Connection conn = ds.getConnection();
-        conn.close();
-
-        assertEquals(false, ds.getTestOnBorrow());
-        assertEquals(false, ds.getTestOnReturn());
-        assertEquals(false, ds.getTestWhileIdle());
-    }
-
     public void testDefaultCatalog() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
