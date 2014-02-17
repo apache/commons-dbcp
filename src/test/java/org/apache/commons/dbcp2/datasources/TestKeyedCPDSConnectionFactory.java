@@ -91,7 +91,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
         // Setup factory
         UserPassKey key = new UserPassKey("username", "password");
         KeyedCPDSConnectionFactory factory =
-            new KeyedCPDSConnectionFactory(cpds, null, false);
+            new KeyedCPDSConnectionFactory(cpds, null, -1, false);
         KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
         factory.setPool(pool);
 

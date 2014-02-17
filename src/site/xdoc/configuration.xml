@@ -193,7 +193,8 @@ loaded system will vary but the default is a good starting point.
 The SQL query that will be used to validate connections from this pool
 before returning them to the caller.  If specified, this query
 <strong>MUST</strong> be an SQL SELECT statement that returns at least
-one row.
+one row. If not specified, connections will be validation by calling the
+isValid() method.
    </td>
 </tr>
 <tr>
@@ -202,10 +203,7 @@ one row.
    <td>
       The indication of whether objects will be validated before being
       borrowed from the pool.  If the object fails to validate, it will be
-      dropped from the pool, and we will attempt to borrow another.<br/>
-      <strong>NOTE</strong> - for a <code>true</code> value to have any effect,
-      the <code>validationQuery</code> parameter must be set to a non-null
-      string.
+      dropped from the pool, and we will attempt to borrow another.
    </td>
 </tr>
 <tr>
@@ -213,9 +211,7 @@ one row.
    <td>false</td>
    <td>
       The indication of whether objects will be validated before being
-      returned to the pool. <br/> <strong>NOTE</strong> - for a 
-      <code>true</code> value to have any effect, the 
-      <code>validationQuery</code> parameter must be set to a non-null string.
+      returned to the pool.
    </td>
 </tr>
 <tr>
@@ -224,9 +220,7 @@ one row.
    <td>
       The indication of whether objects will be validated by the idle object
       evictor (if any).  If an object fails to validate, it will be dropped
-      from the pool. <br/> <strong>NOTE</strong> - for a <code>true</code>
-      value to have any effect, the <code>validationQuery</code> parameter
-      must be set to a non-null string.
+      from the pool.
    </td>
 </tr>
 <tr>

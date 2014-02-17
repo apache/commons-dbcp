@@ -211,7 +211,13 @@ public class PoolableConnection extends DelegatingConnection<Connection>
 
 
     public void validate(String sql, int timeout) throws SQLException {
-        if (sql == null) {
+        if (sql == null || sql.length() == 0) {
+            if (timeout < 0) {
+                timeout = 0;
+            }
+            if (!isValid(timeout)) {
+                throw new SQLException("isValid() returned false");
+            }
             return;
         }
 

@@ -696,8 +696,7 @@ public class BasicDataSource
     /**
      * Sets the {@link #testOnBorrow} property. This property determines
      * whether or not the pool will validate objects before they are borrowed
-     * from the pool. For a <code>true</code> value to have any effect, the
-     * <code>validationQuery</code> property must be set to a non-null string.
+     * from the pool.
      *
      * @param testOnBorrow new value for testOnBorrow property
      */
@@ -728,8 +727,7 @@ public class BasicDataSource
     /**
      * Sets the <code>testOnReturn</code> property. This property determines
      * whether or not the pool will validate objects before they are returned
-     * to the pool. For a <code>true</code> value to have any effect, the
-     * <code>validationQuery</code> property must be set to a non-null string.
+     * to the pool.
      *
      * @param testOnReturn new value for testOnReturn property
      */
@@ -940,9 +938,7 @@ public class BasicDataSource
 
     /**
      * Sets the <code>testWhileIdle</code> property. This property determines
-     * whether or not the idle object evictor will validate connections.  For a
-     * <code>true</code> value to have any effect, the
-     * <code>validationQuery</code> property must be set to a non-null string.
+     * whether or not the idle object evictor will validate connections.
      *
      * @param testWhileIdle new value for testWhileIdle property
      */
@@ -1080,7 +1076,8 @@ public class BasicDataSource
      * The SQL query that will be used to validate connections from this pool
      * before returning them to the caller.  If specified, this query
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
-     * one row.
+     * one row. If not specified, {@link Connection#isValid(int)} will be used
+     * to validate connections.
      */
     private volatile String validationQuery = null;
 
@@ -2014,13 +2011,6 @@ public class BasicDataSource
                 t.printStackTrace(logWriter);
                 throw new SQLException(message, t);
             }
-        }
-
-        // Can't test without a validationQuery
-        if (validationQuery == null) {
-            setTestOnBorrow(false);
-            setTestOnReturn(false);
-            setTestWhileIdle(false);
         }
 
         // Set up the driver connection factory we will use

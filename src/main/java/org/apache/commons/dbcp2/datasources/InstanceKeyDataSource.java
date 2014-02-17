@@ -156,6 +156,7 @@ public abstract class InstanceKeyDataSource
 
     // Connection factory properties
     private String validationQuery = null;
+    private int validationQueryTimeout = -1;
     private boolean rollbackAfterValidation = false;
     private long maxConnLifetimeMillis = -1;
 
@@ -772,7 +773,8 @@ public abstract class InstanceKeyDataSource
      * The SQL query that will be used to validate connections from this pool
      * before returning them to the caller.  If specified, this query
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
-     * one row.
+     * one row. If not specified, {@link Connection#isValid(int)} will be used
+     * to validate connections.
      */
     public String getValidationQuery() {
         return this.validationQuery;
@@ -782,12 +784,28 @@ public abstract class InstanceKeyDataSource
      * The SQL query that will be used to validate connections from this pool
      * before returning them to the caller.  If specified, this query
      * <strong>MUST</strong> be an SQL SELECT statement that returns at least
-     * one row. If none of the properties, testOnBorow, testOnReturn, testWhileIdle
-     * have been previously set, calling this method sets testOnBorrow to true.
+     * one row. If not specified, connections will be validated using
+     * {@link Connection#isValid(int)}.
      */
     public void setValidationQuery(String validationQuery) {
         assertInitializationAllowed();
         this.validationQuery = validationQuery;
+    }
+
+    /**
+     * Returns the timeout in seconds before the validation query fails.
+     */
+    public int getValidationQueryTimeout() {
+        return validationQueryTimeout;
+    }
+
+    /**
+     * Sets the timeout in seconds before the validation query fails.
+     *
+     * @param validationQueryTimeout    The new timeout in seconds
+     */
+    public void setValidationQueryTimeout(int validationQueryTimeout) {
+        this.validationQueryTimeout = validationQueryTimeout;
     }
 
     /**

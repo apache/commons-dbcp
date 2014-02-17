@@ -249,6 +249,12 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             ikds.setValidationQuery(ra.getContent().toString());
         }
 
+        ra = ref.get("validationQueryTimeout");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setValidationQueryTimeout(Integer.valueOf(
+                    ra.getContent().toString()).intValue());
+        }
+
         ra = ref.get("rollbackAfterValidation");
         if (ra != null && ra.getContent() != null) {
             ikds.setRollbackAfterValidation(Boolean.valueOf(
