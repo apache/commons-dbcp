@@ -168,6 +168,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" issue="DBCP-340" type="add">
         Provide an option to set the default query timeout.
       </action>
+      <action dev="markt" type="fix">
+        Connection.isValid() should not throw an SQLException if the connection
+        is closed.
+      </action>
     </release>
     <release version="1.5.1" date="TBD" description="TBD">
       <action dev="markt" issue="DBCP-400" type="fix">
