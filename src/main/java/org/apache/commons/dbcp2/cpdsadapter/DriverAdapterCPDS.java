@@ -39,6 +39,7 @@ import javax.naming.NamingException;
 
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -121,7 +122,7 @@ public class DriverAdapterCPDS
     private boolean poolPreparedStatements;
     private int maxIdle = 10;
     private long _timeBetweenEvictionRunsMillis =
-            GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
     private int _numTestsPerEvictionRun = -1;
     private int _minEvictableIdleTimeMillis = -1;
     private int _maxPreparedStatements = -1;
