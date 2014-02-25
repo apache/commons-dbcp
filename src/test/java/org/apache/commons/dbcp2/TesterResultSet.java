@@ -226,19 +226,19 @@ public class TesterResultSet implements ResultSet {
     @Override
     public byte getByte(String columnName) throws SQLException {
         checkOpen();
-        return (byte)(columnName.hashCode());
+        return (byte)columnName.hashCode();
     }
 
     @Override
     public short getShort(String columnName) throws SQLException {
         checkOpen();
-        return (short)(columnName.hashCode());
+        return (short)columnName.hashCode();
     }
 
     @Override
     public int getInt(String columnName) throws SQLException {
         checkOpen();
-        return (columnName.hashCode());
+        return columnName.hashCode();
     }
 
     @Override

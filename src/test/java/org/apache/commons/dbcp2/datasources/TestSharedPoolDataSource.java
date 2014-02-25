@@ -69,7 +69,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
+        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
@@ -374,7 +374,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
                 " ms. maxWaitMillis: "+maxWaitMillis);
 
         // Threads should time out in parallel - allow double that to be safe
-        assertTrue((end-start) < (2 * maxWaitMillis));
+        assertTrue(end-start < 2 * maxWaitMillis);
 
         // Put all the connections back in the pool
         for (Connection element : c) {
@@ -492,7 +492,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
+        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 

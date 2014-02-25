@@ -566,7 +566,7 @@ public class DriverAdapterCPDS
      * @return the value of maxIdle
      */
     public int getMaxIdle() {
-        return (this.maxIdle);
+        return this.maxIdle;
     }
 
     /**

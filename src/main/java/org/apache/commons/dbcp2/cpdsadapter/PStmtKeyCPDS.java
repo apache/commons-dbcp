@@ -107,7 +107,7 @@ public class PStmtKeyCPDS extends PStmtKey {
         int result = super.hashCode();
         result = prime * result + Arrays.hashCode(_columnIndexes);
         result = prime * result + Arrays.hashCode(_columnNames);
-        result = prime * result + ((_resultSetHoldability == null) ? 0 : _resultSetHoldability.hashCode());
+        result = prime * result + (_resultSetHoldability == null ? 0 : _resultSetHoldability.hashCode());
         return result;
     }
 

@@ -856,7 +856,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public int getNumActive(String username, String password) {
         ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username,password));
-        return (pool == null) ? 0 : pool.getNumActive();
+        return pool == null ? 0 : pool.getNumActive();
     }
 
     /**
@@ -872,7 +872,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public int getNumIdle(String username, String password) {
         ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username,password));
-        return (pool == null) ? 0 : pool.getNumIdle();
+        return pool == null ? 0 : pool.getNumIdle();
     }
 
 
