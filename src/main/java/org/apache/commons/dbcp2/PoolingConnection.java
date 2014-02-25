@@ -169,7 +169,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
         try {
-            return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT)));
+            return (CallableStatement) _pstmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT));
         } catch (NoSuchElementException e) {
             throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (RuntimeException e) {
@@ -191,8 +191,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         try {
-            return (CallableStatement) (_pstmtPool.borrowObject(createKey(sql, resultSetType,
-                            resultSetConcurrency, StatementType.CALLABLE_STATEMENT)));
+            return (CallableStatement) _pstmtPool.borrowObject(createKey(sql, resultSetType,
+                            resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
         } catch (NoSuchElementException e) {
             throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (RuntimeException e) {

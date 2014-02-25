@@ -838,7 +838,7 @@ public abstract class InstanceKeyDataSource
      * @since 1.2.2
      */
     public boolean isRollbackAfterValidation() {
-        return (this.rollbackAfterValidation);
+        return this.rollbackAfterValidation;
     }
 
     /**

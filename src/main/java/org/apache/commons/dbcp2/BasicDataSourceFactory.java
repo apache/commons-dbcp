@@ -163,7 +163,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         // We only know how to deal with <code>javax.naming.Reference</code>s
         // that specify a class name of "javax.sql.DataSource"
-        if ((obj == null) || !(obj instanceof Reference)) {
+        if (obj == null || !(obj instanceof Reference)) {
             return null;
         }
         Reference ref = (Reference) obj;

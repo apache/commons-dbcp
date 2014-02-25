@@ -69,7 +69,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)(getMaxWaitMillis()));
+        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
         tds.setPerUserMaxTotal("foo", Integer.valueOf(getMaxTotal()));
         tds.setPerUserMaxWaitMillis("foo", Long.valueOf(getMaxWaitMillis()));
         tds.setDefaultTransactionIsolation(

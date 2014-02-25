@@ -89,8 +89,8 @@ class UserPassKey implements Serializable {
      */
     @Override
     public int hashCode() {
-        return (this.username != null ?
-                (this.username).hashCode() : 0);
+        return this.username != null ?
+                this.username.hashCode() : 0;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class Utils {
             Utils.class.getPackage().getName() + ".LocalStrings");
 
     public static final boolean IS_SECURITY_ENABLED =
-            (System.getSecurityManager() != null);
+            System.getSecurityManager() != null;
 
 
     private Utils() {

@@ -248,7 +248,7 @@ public class BasicDataSource
      * @param defaultCatalog the default catalog
      */
     public void setDefaultCatalog(String defaultCatalog) {
-        if ((defaultCatalog != null) && (defaultCatalog.trim().length() > 0)) {
+        if (defaultCatalog != null && defaultCatalog.trim().length() > 0) {
             this.defaultCatalog = defaultCatalog;
         }
         else {
@@ -344,7 +344,7 @@ public class BasicDataSource
      * @param driverClassName the class name of the jdbc driver
      */
     public synchronized void setDriverClassName(String driverClassName) {
-        if ((driverClassName != null) && (driverClassName.trim().length() > 0)) {
+        if (driverClassName != null && driverClassName.trim().length() > 0) {
             this.driverClassName = driverClassName;
         }
         else {
@@ -1137,7 +1137,7 @@ public class BasicDataSource
      * @param validationQuery the new value for the validation query
      */
     public void setValidationQuery(String validationQuery) {
-        if ((validationQuery != null) && (validationQuery.trim().length() > 0)) {
+        if (validationQuery != null && validationQuery.trim().length() > 0) {
             this.validationQuery = validationQuery;
         } else {
             this.validationQuery = null;
@@ -1231,7 +1231,7 @@ public class BasicDataSource
      * on connection creation
      */
     public void setConnectionInitSqls(Collection<String> connectionInitSqls) {
-        if ((connectionInitSqls != null) && (connectionInitSqls.size() > 0)) {
+        if (connectionInitSqls != null && connectionInitSqls.size() > 0) {
             ArrayList<String> newVal = null;
             for (String s : connectionInitSqls) {
             if (s != null && s.trim().length() > 0) {
@@ -1905,11 +1905,11 @@ public class BasicDataSource
         // This is double-checked locking. This is safe since dataSource is
         // volatile and the code is targeted at Java 5 onwards.
         if (dataSource != null) {
-            return (dataSource);
+            return dataSource;
         }
         synchronized (this) {
             if (dataSource != null) {
-                return (dataSource);
+                return dataSource;
             }
 
             jmxRegister();
