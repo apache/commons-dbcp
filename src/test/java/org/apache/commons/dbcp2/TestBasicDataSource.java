@@ -531,23 +531,23 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         // Prevent concurrent execution of threads executing test subclasses
         synchronized (TesterConnRequestCountDriver.class) {
-    	    TesterConnRequestCountDriver.initConnRequestCount();
+            TesterConnRequestCountDriver.initConnRequestCount();
 
-    	    // user request 10 times
-    	    for (int i=0; i<10; i++) {
-    	        try {
-    	            @SuppressWarnings("unused")
-    	            DataSource ds2 = ds.createDataSource();
-    	        } catch (SQLException e) {
-    	            // Ignore
-    	        }
-    	    }
+            // user request 10 times
+            for (int i=0; i<10; i++) {
+                try {
+                    @SuppressWarnings("unused")
+                    DataSource ds2 = ds.createDataSource();
+                } catch (SQLException e) {
+                    // Ignore
+                }
+            }
 
-    	    // sleep 1000ms. evictor will be invoked 10 times if running.
-    	    Thread.sleep(1000);
+            // sleep 1000ms. evictor will be invoked 10 times if running.
+            Thread.sleep(1000);
 
-    	    // Make sure there have been no Evictor-generated requests (count should be 10, from requests above)
-    	    assertEquals(10, TesterConnRequestCountDriver.getConnectionRequestCount());
+            // Make sure there have been no Evictor-generated requests (count should be 10, from requests above)
+            assertEquals(10, TesterConnRequestCountDriver.getConnectionRequestCount());
         }
 
         // make sure cleanup is complete
@@ -562,7 +562,7 @@ class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
     private static int connectionRequestCount = 0;
 
-	@Override
+    @Override
     public Connection connect(String url, Properties info) throws SQLException {
         connectionRequestCount++;
         return super.connect(url, info);
@@ -573,11 +573,11 @@ class TesterConnRequestCountDriver extends TesterDriver {
         return CONNECT_STRING.startsWith(url);
     }
 
-	public static int getConnectionRequestCount() {
-	    return connectionRequestCount;
-	}
+    public static int getConnectionRequestCount() {
+        return connectionRequestCount;
+    }
 
     public static void initConnRequestCount() {
-	    connectionRequestCount = 0;
+        connectionRequestCount = 0;
     }
 }

@@ -35,8 +35,8 @@ import java.sql.SQLException;
  * @version $Revision$
  */
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
-	private final TransactionRegistry transactionRegistry;
-	private final XADataSource xaDataSource;
+    private final TransactionRegistry transactionRegistry;
+    private final XADataSource xaDataSource;
     private String username;
     private String password;
 
