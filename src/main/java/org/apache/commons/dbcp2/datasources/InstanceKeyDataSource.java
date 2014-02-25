@@ -35,6 +35,7 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -127,34 +128,34 @@ public abstract class InstanceKeyDataSource
 
     // Pool properties
     private boolean defaultBlockWhenExhausted =
-            GenericKeyedObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED;
+            BaseObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED;
     private String defaultEvictionPolicyClassName =
-            GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
-    private boolean defaultLifo = GenericKeyedObjectPoolConfig.DEFAULT_LIFO;
+            BaseObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
+    private boolean defaultLifo = BaseObjectPoolConfig.DEFAULT_LIFO;
     private int defaultMaxIdle =
             GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
     private int defaultMaxTotal =
             GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private long defaultMaxWaitMillis =
-            GenericKeyedObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
     private long defaultMinEvictableIdleTimeMillis =
-            GenericKeyedObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
     private int defaultMinIdle =
             GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
     private int defaultNumTestsPerEvictionRun =
-            GenericKeyedObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+            BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
     private long defaultSoftMinEvictableIdleTimeMillis =
-            GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
     private boolean defaultTestOnCreate =
-            GenericObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
+            BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
     private boolean defaultTestOnBorrow =
-            GenericObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
+            BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
     private boolean defaultTestOnReturn =
-            GenericObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
+            BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
     private boolean defaultTestWhileIdle =
-            GenericObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
+            BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
     private long defaultTimeBetweenEvictionRunsMillis =
-            GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
 
     // Connection factory properties
     private String validationQuery = null;
