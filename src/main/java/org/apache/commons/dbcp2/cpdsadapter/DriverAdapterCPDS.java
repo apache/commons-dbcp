@@ -17,32 +17,31 @@
 
 package org.apache.commons.dbcp2.cpdsadapter;
 
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.logging.Logger;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.logging.Logger;
 
-import javax.sql.PooledConnection;
-import javax.sql.ConnectionPoolDataSource;
-import javax.naming.Name;
 import javax.naming.Context;
-import javax.naming.Referenceable;
-import javax.naming.spi.ObjectFactory;
-import javax.naming.Reference;
-import javax.naming.RefAddr;
-import javax.naming.StringRefAddr;
+import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.naming.StringRefAddr;
+import javax.naming.spi.ObjectFactory;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>
