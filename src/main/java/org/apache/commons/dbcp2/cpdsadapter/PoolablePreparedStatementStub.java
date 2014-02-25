@@ -18,7 +18,6 @@
 package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.sql.PreparedStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.dbcp2.DelegatingConnection;
@@ -39,7 +38,7 @@ class PoolablePreparedStatementStub extends PoolablePreparedStatement<PStmtKeyCP
      * @param stmt my underlying {@link PreparedStatement}
      * @param key my key as used by {@link KeyedObjectPool}
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
-     * @param conn the {@link Connection} from which I was created
+     * @param conn the {@link java.sql.Connection Connection} from which I was created
      */
     public PoolablePreparedStatementStub(PreparedStatement stmt,
             PStmtKeyCPDS key,

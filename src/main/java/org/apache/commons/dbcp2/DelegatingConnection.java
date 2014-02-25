@@ -56,6 +56,8 @@ import java.util.concurrent.Executor;
  * is nearing exhaustion and this connection's last usage is
  * older than the removeAbandonedTimeout.
  *
+ * @param <C> the Connection type
+ *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House
