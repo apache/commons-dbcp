@@ -410,7 +410,7 @@ public class PoolableConnectionFactory
     private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
-    private AtomicLong connectionIndex = new AtomicLong(0);
+    private final AtomicLong connectionIndex = new AtomicLong(0);
     private Integer defaultQueryTimeout = null;
 
     /**

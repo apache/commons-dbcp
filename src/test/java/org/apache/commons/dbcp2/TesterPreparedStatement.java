@@ -42,7 +42,7 @@ import java.sql.SQLXML;
  * @version $Revision$ $Date$
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
-    private ResultSetMetaData _resultSetMetaData = null;
+    private final ResultSetMetaData _resultSetMetaData = null;
     private String _sql = null;
     private String _catalog = null;
 

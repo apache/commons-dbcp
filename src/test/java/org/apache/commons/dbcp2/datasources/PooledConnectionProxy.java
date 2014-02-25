@@ -43,7 +43,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * ConnectionEventListeners
      */
-    private Vector<EventListener> eventListeners = new Vector<>();
+    private final Vector<EventListener> eventListeners = new Vector<>();
     
     /** 
      * True means we will (dubiously) notify listeners with a
