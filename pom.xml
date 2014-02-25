@@ -231,6 +231,7 @@
     <!-- Override CP version until that is updated -->
     <!-- Version 1.0 requires Maven 3.0 or later -->
     <commons.scm-publish.version>1.0</commons.scm-publish.version>
+    <commons.checkstyle.version>2.11</commons.checkstyle.version>
   </properties> 
 
   <build>
@@ -244,6 +245,16 @@
             <ignorePathsToDelete>
               <ignorePathToDelete>javadocs</ignorePathToDelete>
             </ignorePathsToDelete>
+          </configuration>
+        </plugin>
+        <!-- Allow use of "mvn checkstyle:checkstyle" -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${commons.checkstyle.version}</version>
+          <configuration>
+            <configLocation>${basedir}/checkstyle.xml</configLocation>
+            <enableRulesSummary>false</enableRulesSummary>
           </configuration>
         </plugin>
       </plugins>
@@ -328,7 +339,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.11</version>
+          <version>${commons.checkstyle.version}</version>
           <configuration>
             <configLocation>${basedir}/checkstyle.xml</configLocation>
             <enableRulesSummary>false</enableRulesSummary>
