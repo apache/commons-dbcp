@@ -19,9 +19,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.RowIdLifetime;
-/* JDBC_4_ANT_KEY_END */
 import java.sql.SQLException;
 
 /**
