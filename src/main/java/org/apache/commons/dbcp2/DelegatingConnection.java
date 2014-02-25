@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.sql.ResultSet;
-/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.ClientInfoStatus;
@@ -40,7 +39,6 @@ import java.sql.Savepoint;
 import java.sql.Struct;
 import java.util.Collections;
 import java.util.Properties;
-/* JDBC_4_ANT_KEY_END */
 import java.util.concurrent.Executor;
 
 /**
@@ -67,10 +65,8 @@ import java.util.concurrent.Executor;
 public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         implements Connection {
 
-/* JDBC_4_ANT_KEY_BEGIN */
     private static final Map<String, ClientInfoStatus> EMPTY_FAILED_PROPERTIES =
         Collections.<String, ClientInfoStatus>emptyMap();
-/* JDBC_4_ANT_KEY_END */
 
     /** My delegate {@link Connection}. */
     private volatile C _conn = null;
@@ -816,7 +812,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         }
     }
 
-/* JDBC_4_ANT_KEY_BEGIN */
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -977,7 +972,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
             return null;
         }
     }
-/* JDBC_4_ANT_KEY_END */
 
     @Override
     public void setSchema(String schema) throws SQLException {

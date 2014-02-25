@@ -33,11 +33,9 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
-/* JDBC_4_ANT_KEY_BEGIN */
 import java.sql.NClob;
 import java.sql.RowId;
 import java.sql.SQLXML;
-/* JDBC_4_ANT_KEY_END */
 
 /**
  * Trivial implementation of a CallableStatement to avoid null pointer exceptions in tests.
@@ -426,7 +424,6 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     public URL getURL(String parameterName) throws SQLException {
         return null;
     }
-/* JDBC_4_ANT_KEY_BEGIN */
 
     @Override
     public RowId getRowId(int parameterIndex) throws SQLException {
@@ -567,7 +564,6 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     @Override
     public void setNClob(String parameterName, Reader reader) throws SQLException {
     }
-/* JDBC_4_ANT_KEY_END */
 
     @Override
     public <T> T getObject(int parameterIndex, Class<T> type) throws SQLException {

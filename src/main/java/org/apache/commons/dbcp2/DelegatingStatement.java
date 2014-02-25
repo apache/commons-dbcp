@@ -468,7 +468,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return _closed;
     }
 
-/* JDBC_4_ANT_KEY_BEGIN */
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -514,7 +513,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             return false;
         }
     }
-/* JDBC_4_ANT_KEY_END */
 
     @Override
     public void closeOnCompletion() throws SQLException {
