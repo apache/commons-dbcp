@@ -63,8 +63,12 @@ public class TransactionRegistry {
      * @param xaResource the XAResource which managed the connection within a transaction
      */
     public synchronized void registerConnection(Connection connection, XAResource xaResource) {
-        if (connection == null) throw new NullPointerException("connection is null");
-        if (xaResource == null) throw new NullPointerException("xaResource is null");
+        if (connection == null) {
+            throw new NullPointerException("connection is null");
+        }
+        if (xaResource == null) {
+            throw new NullPointerException("xaResource is null");
+        }
         xaResources.put(connection, xaResource);
     }
 
@@ -75,7 +79,9 @@ public class TransactionRegistry {
      * @throws SQLException if the connection does not have a registered XAResource
      */
     public synchronized XAResource getXAResource(Connection connection) throws SQLException {
-        if (connection == null) throw new NullPointerException("connection is null");
+        if (connection == null) {
+            throw new NullPointerException("connection is null");
+        }
         Connection key = getConnectionKey(connection);
         XAResource xaResource = xaResources.get(key);
         if (xaResource == null) {
