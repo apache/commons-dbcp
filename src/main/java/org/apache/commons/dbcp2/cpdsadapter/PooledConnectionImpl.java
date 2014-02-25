@@ -232,8 +232,8 @@ class PooledConnectionImpl implements PooledConnection,
     void notifyListeners() {
         ConnectionEvent event = new ConnectionEvent(this);
         Object[] listeners = eventListeners.toArray();
-        for (int i = 0; i < listeners.length; i++) {
-            ((ConnectionEventListener) listeners[i]).connectionClosed(event);
+        for (Object listener : listeners) {
+            ((ConnectionEventListener) listener).connectionClosed(event);
         }
     }
 

@@ -178,9 +178,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection("u1", "p1");
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
 
         // open the maximum connections
@@ -188,9 +187,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         {
             c[i] = ds.getConnection("u1", "p1");
         }
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -268,9 +266,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             }
         }
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -292,9 +289,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection();
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -320,9 +316,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             // throw an exception
         }
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 

@@ -154,8 +154,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         Assert.assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
@@ -176,8 +176,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         Assert.assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 

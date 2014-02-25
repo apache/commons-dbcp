@@ -138,8 +138,8 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
         List<AbandonedTrace> resultSets = getTrace();
         if( resultSets != null) {
             ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
-            for (int i = 0; i < set.length; i++) {
-                set[i].close();
+            for (ResultSet element : set) {
+                element.close();
             }
             clearTrace();
         }

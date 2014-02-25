@@ -89,8 +89,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
                         ((DelegatingConnection<?>) conn[i]).getInnermostDelegateInternal());
             }
         }
-        for(int i=0;i<conn.length;i++) {
-            conn[i].close();
+        for (Connection element : conn) {
+            element.close();
         }
     }
 

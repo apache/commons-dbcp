@@ -130,16 +130,16 @@ public class TestDriverAdapterCPDS extends TestCase {
         // get a new connection
         c[0] = pcds.getPooledConnection("u1", "p1").getConnection();
 
-        for (int i=0; i<c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
 
         // open all the connections
         for (int i=0; i<c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
-        for (int i=0; i<c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 

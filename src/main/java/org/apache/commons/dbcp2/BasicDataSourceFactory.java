@@ -172,8 +172,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         Properties properties = new Properties();
-        for (int i = 0 ; i < ALL_PROPERTIES.length ; i++) {
-            String propertyName = ALL_PROPERTIES[i];
+        for (String propertyName : ALL_PROPERTIES) {
             RefAddr ra = ref.get(propertyName);
             if (ra != null) {
                 String propertyValue = ra.getContent().toString();

@@ -183,9 +183,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection("u1", "p1");
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
 
         // open the maximum connections
@@ -193,9 +192,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         {
             c[i] = ds.getConnection("u1", "p1");
         }
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -273,9 +271,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             }
         }
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -297,9 +294,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection();
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -337,9 +333,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             // throw an exception
         }
 
-        for (int i=0; i<c.length; i++)
-        {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -368,8 +363,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
 
         // Wait for all the threads to complete
-        for (int i = 0; i < pts.length; i++) {
-            final PoolTest poolTest = pts[i];
+        for (final PoolTest poolTest : pts) {
             poolTest.getThread().join();
         }
 
@@ -383,8 +377,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue((end-start) < (2 * maxWaitMillis));
 
         // Put all the connections back in the pool
-        for (int i=0; i<c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
