@@ -20,12 +20,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.Properties;
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.logging.Logger;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -35,6 +29,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistration;
@@ -395,7 +395,7 @@ public class BasicDataSource
      * means that the pool behaves as a FIFO queue - connections are taken from
      * the idle instance pool in the order that they are returned to the pool.
      */
-    private boolean lifo = GenericObjectPoolConfig.DEFAULT_LIFO;
+    private boolean lifo = BaseObjectPoolConfig.DEFAULT_LIFO;
 
     /**
      * Returns the LIFO property.
