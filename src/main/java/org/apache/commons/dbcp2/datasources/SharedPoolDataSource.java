@@ -190,6 +190,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         config.setNumTestsPerEvictionRun(getDefaultNumTestsPerEvictionRun());
         config.setSoftMinEvictableIdleTimeMillis(
                 getDefaultSoftMinEvictableIdleTimeMillis());
+        config.setTestOnCreate(getDefaultTestOnCreate());
         config.setTestOnBorrow(getDefaultTestOnBorrow());
         config.setTestOnReturn(getDefaultTestOnReturn());
         config.setTestWhileIdle(getDefaultTestWhileIdle());

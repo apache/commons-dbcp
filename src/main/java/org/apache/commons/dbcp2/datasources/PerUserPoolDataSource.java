@@ -75,6 +75,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private Map<String,Integer> perUserMinIdle = null;
     private Map<String,Integer> perUserNumTestsPerEvictionRun = null;
     private Map<String,Long> perUserSoftMinEvictableIdleTimeMillis = null;
+    private Map<String,Boolean> perUserTestOnCreate = null;
     private Map<String,Boolean> perUserTestOnBorrow = null;
     private Map<String,Boolean> perUserTestOnReturn = null;
     private Map<String,Boolean> perUserTestWhileIdle = null;
@@ -524,6 +525,46 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             perUserSoftMinEvictableIdleTimeMillis.clear();
         }
         perUserSoftMinEvictableIdleTimeMillis.putAll(userDefaultSoftMinEvictableIdleTimeMillis);
+    }
+
+
+    /**
+     * Gets the user specific value for
+     * {@link GenericObjectPool#getTestOnCreate()} for the
+     * specified user's pool or the default if no user specific value is defined.
+     */
+    public boolean getPerUserTestOnCreate(String key) {
+        Boolean value = null;
+        if (perUserTestOnCreate != null) {
+            value = perUserTestOnCreate.get(key);
+        }
+        if (value == null) {
+            return getDefaultTestOnCreate();
+        }
+        return value.booleanValue();
+    }
+
+    /**
+     * Sets a user specific value for
+     * {@link GenericObjectPool#getTestOnCreate()} for the specified
+     * user's pool.
+     */
+    public void setPerUserTestOnCreate(String username, Boolean value) {
+        assertInitializationAllowed();
+        if (perUserTestOnCreate == null) {
+            perUserTestOnCreate = new HashMap<>();
+        }
+        perUserTestOnCreate.put(username, value);
+    }
+
+    void setPerUserTestOnCreate(Map<String,Boolean> userDefaultTestOnCreate) {
+        assertInitializationAllowed();
+        if (perUserTestOnCreate == null) {
+            perUserTestOnCreate = new HashMap<>();
+        } else {
+            perUserTestOnCreate.clear();
+        }
+        perUserTestOnCreate.putAll(userDefaultTestOnCreate);
     }
 
 
@@ -999,6 +1040,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
                 getPerUserNumTestsPerEvictionRun(username));
         pool.setSoftMinEvictableIdleTimeMillis(
                 getPerUserSoftMinEvictableIdleTimeMillis(username));
+        pool.setTestOnCreate(getPerUserTestOnCreate(username));
         pool.setTestOnBorrow(getPerUserTestOnBorrow(username));
         pool.setTestOnReturn(getPerUserTestOnReturn(username));
         pool.setTestWhileIdle(getPerUserTestWhileIdle(username));
