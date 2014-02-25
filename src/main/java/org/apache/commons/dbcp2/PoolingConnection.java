@@ -411,6 +411,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         return "PoolingConnection: null";
     }
 
+    /**
+     * The possible statement types
+     */
     protected static enum StatementType {
         CALLABLE_STATEMENT,
         PREPARED_STATEMENT

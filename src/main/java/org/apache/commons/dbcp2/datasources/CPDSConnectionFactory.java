@@ -30,7 +30,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
@@ -38,7 +37,8 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {@link PooledObjectFactory} that creates {@link PoolableConnection}s.
+ * A {@link PooledObjectFactory} that creates
+ * {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
