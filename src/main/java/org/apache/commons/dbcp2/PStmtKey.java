@@ -16,12 +16,10 @@
  */
 package org.apache.commons.dbcp2;
 
-import java.sql.PreparedStatement;
-
 import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 
 /**
- * A key uniquely identifying {@link PreparedStatement}s.
+ * A key uniquely identifying {@link java.sql.PreparedStatement PreparedStatement}s.
  */
 public class PStmtKey {
 

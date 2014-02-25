@@ -28,7 +28,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,7 +47,6 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.UsageTracking;
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -203,7 +201,7 @@ public class BasicDataSource
     private Integer defaultQueryTimeout = null;
 
     /**
-     * Obtain the default query timeout that will be used for {@link Statement}s
+     * Obtain the default query timeout that will be used for {@link java.sql.Statement Statement}s
      * created from this connection. <code>null</code> means that the driver
      * default will be used.
      */
@@ -213,7 +211,7 @@ public class BasicDataSource
 
 
     /**
-     * Set the default query timeout that will be used for {@link Statement}s
+     * Set the default query timeout that will be used for {@link java.sql.Statement Statement}s
      * created from this connection. <code>null</code> means that the driver
      * default will be used.
      */
@@ -1730,7 +1728,7 @@ public class BasicDataSource
     }
 
     /**
-     * If the connection pool implements {@link UsageTracking}, should the
+     * If the connection pool implements {@link org.apache.commons.pool2.UsageTracking UsageTracking}, should the
      * connection pool record a stack trace every time a method is called on a
      * pooled connection and retain the most recent stack trace to aid debugging
      * of abandoned connections?
@@ -1746,7 +1744,7 @@ public class BasicDataSource
     }
 
     /**
-     * If the connection pool implements {@link UsageTracking}, configure
+     * If the connection pool implements {@link org.apache.commons.pool2.UsageTracking UsageTracking}, configure
      * whether the connection pool should record a stack trace every time a
      * method is called on a pooled connection and retain the most recent stack
      * trace to aid debugging of abandoned connections.

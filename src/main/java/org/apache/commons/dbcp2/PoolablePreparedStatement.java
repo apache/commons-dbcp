@@ -17,7 +17,6 @@
 
 package org.apache.commons.dbcp2;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,6 +29,9 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * {@link PoolingConnection} to implement a pool of {@link PreparedStatement}s.
  * <p>
  * My {@link #close} method returns me to my containing pool. (See {@link PoolingConnection}.)
+ *
+ * @param <K> the key type
+ * @param <S> the statement type
  *
  * @see PoolingConnection
  * @author Rodney Waldhoff
@@ -57,7 +59,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
      * @param stmt my underlying {@link PreparedStatement}
      * @param key my key" as used by {@link KeyedObjectPool}
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
-     * @param conn the {@link Connection} from which I was created
+     * @param conn the {@link java.sql.Connection Connection} from which I was created
      */
     public PoolablePreparedStatement(PreparedStatement stmt, K key,
             KeyedObjectPool<K, PoolablePreparedStatement<K,S>> pool,
