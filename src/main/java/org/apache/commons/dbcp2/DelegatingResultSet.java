@@ -59,7 +59,7 @@ import java.sql.SQLXML;
 public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 
     /** My delegate. **/
-    private ResultSet _res;
+    private final ResultSet _res;
 
     /** The Statement that created me, if any. **/
     private Statement _stmt;

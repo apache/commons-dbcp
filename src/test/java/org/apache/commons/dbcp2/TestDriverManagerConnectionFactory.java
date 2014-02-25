@@ -87,7 +87,7 @@ public class TestDriverManagerConnectionFactory extends TestCase {
     }
 
     private static final class ConnectionThread implements Runnable {
-        private DataSource ds;
+        private final DataSource ds;
         private volatile boolean result = true;
 
         private ConnectionThread(DataSource ds) {

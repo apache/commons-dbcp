@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class TesterClassLoader extends ClassLoader {
 
-    private Set<String> loadedClasses = new HashSet<>();
+    private final Set<String> loadedClasses = new HashSet<>();
 
     @Override
     protected synchronized Class<?> loadClass(String name, boolean resolve)
