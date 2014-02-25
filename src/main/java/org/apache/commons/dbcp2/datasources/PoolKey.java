@@ -39,9 +39,8 @@ class PoolKey implements Serializable {
             PoolKey pk = (PoolKey)obj;
             return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
                 (null == username ? null == pk.username : username.equals(pk.username));
-        } else {
-            return false;   
         }
+        return false;
     }
 
     @Override
