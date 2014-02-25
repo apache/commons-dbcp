@@ -345,9 +345,9 @@ public class TestBasicDataSource extends TestConnectionPool {
             assertEquals(CATALOG, c[i].getCatalog());
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].setCatalog("error");
-            c[i].close();
+        for (Connection element : c) {
+            element.setCatalog("error");
+            element.close();
         }
 
         for (int i = 0; i < c.length; i++) {
@@ -356,8 +356,8 @@ public class TestBasicDataSource extends TestConnectionPool {
             assertEquals(CATALOG, c[i].getCatalog());
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 

@@ -24,7 +24,6 @@ import java.util.Properties;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collections;
 import java.util.logging.Logger;
 import java.security.AccessController;
@@ -1234,9 +1233,7 @@ public class BasicDataSource
     public void setConnectionInitSqls(Collection<String> connectionInitSqls) {
         if ((connectionInitSqls != null) && (connectionInitSqls.size() > 0)) {
             ArrayList<String> newVal = null;
-            for (Iterator<String> iterator = connectionInitSqls.iterator();
-            iterator.hasNext();) {
-            String s = iterator.next();
+            for (String s : connectionInitSqls) {
             if (s != null && s.trim().length() > 0) {
                     if (newVal == null) {
                         newVal = new ArrayList<>();
@@ -1813,8 +1810,7 @@ public class BasicDataSource
 
         String[] entries = connectionProperties.split(";");
         Properties properties = new Properties();
-        for (int i = 0; i < entries.length; i++) {
-            String entry = entries[i];
+        for (String entry : entries) {
             if (entry.length() > 0) {
                 int index = entry.indexOf('=');
                 if (index > 0) {

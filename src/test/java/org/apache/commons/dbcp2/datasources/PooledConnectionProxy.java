@@ -19,7 +19,6 @@ package org.apache.commons.dbcp2.datasources;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.Vector;
@@ -103,8 +102,8 @@ public class PooledConnectionProxy implements PooledConnection,
     void notifyListeners() {
         ConnectionEvent event = new ConnectionEvent(this);
         Object[] listeners = eventListeners.toArray();
-        for (int i = 0; i < listeners.length; i++) {
-            ((ConnectionEventListener) listeners[i]).connectionClosed(event);
+        for (Object listener : listeners) {
+            ((ConnectionEventListener) listener).connectionClosed(event);
         }
     }
     
@@ -141,8 +140,8 @@ public class PooledConnectionProxy implements PooledConnection,
     @Override
     public void connectionErrorOccurred(ConnectionEvent event) {
         Object[] listeners = eventListeners.toArray();
-        for (int i = 0; i < listeners.length; i++) {
-            ((ConnectionEventListener) listeners[i]).connectionErrorOccurred(event);
+        for (Object listener : listeners) {
+            ((ConnectionEventListener) listener).connectionErrorOccurred(event);
         } 
     }
     

@@ -106,25 +106,25 @@ public abstract class TestConnectionPool extends TestCase {
             c[i].prepareCall("warning");
         }
 
-        for (int i = 0; i < c.length; i++) {
-            assertNotNull(c[i].getWarnings());
+        for (Connection element : c) {
+            assertNotNull(element.getWarnings());
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
 
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
         }
 
-        for (int i = 0; i < c.length; i++) {
+        for (Connection element : c) {
             // warnings should have been cleared by putting the connection back in the pool
-            assertNull(c[i].getWarnings());
+            assertNull(element.getWarnings());
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -408,8 +408,8 @@ public abstract class TestConnectionPool extends TestCase {
         }
         // Close connections one at a time and get new ones, making sure
         // the new ones come from the pool
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
             Connection con = newConnection();
             Connection underCon =
                 ((DelegatingConnection<?>) con).getInnermostDelegate();
@@ -461,8 +461,8 @@ public abstract class TestConnectionPool extends TestCase {
                 assertTrue(!conn[j].equals(conn[i]));
             }
         }
-        for(int i=0;i<conn.length;i++) {
-            conn[i].close();
+        for (Connection element : conn) {
+            element.close();
         }
     }
 
@@ -478,8 +478,8 @@ public abstract class TestConnectionPool extends TestCase {
             }
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -497,8 +497,8 @@ public abstract class TestConnectionPool extends TestCase {
         // get a new connection
         c[0] = newConnection();
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -517,8 +517,8 @@ public abstract class TestConnectionPool extends TestCase {
             // throw an exception
         }
 
-        for (int i = 0; i < c.length; i++) {
-            c[i].close();
+        for (Connection element : c) {
+            element.close();
         }
     }
 
@@ -721,8 +721,8 @@ public abstract class TestConnectionPool extends TestCase {
                 ThreadGroup threadGroup = new ThreadGroup("foo") {
                     @Override
                     public void uncaughtException(Thread t, Throwable e) {
-                        for (int i = 0; i < pts.length; i++) {
-                            pts[i].stop();
+                        for (PoolTest pt : pts) {
+                            pt.stop();
                         }
                     }
                 };
@@ -731,16 +731,16 @@ public abstract class TestConnectionPool extends TestCase {
                     pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce);
                 }
                 // Start all the threads
-                for (int i = 0; i < pts.length; i++) {
-                    pts[i].start();
+                for (PoolTest pt : pts) {
+                    pt.start();
                 }
 
                 // Give all threads a chance to start and succeed
                 Thread.sleep(300L);
 
                 // Stop threads
-                for (int i = 0; i < pts.length; i++) {
-                    pts[i].stop();
+                for (PoolTest pt : pts) {
+                    pt.stop();
                 }
 
                 /*
@@ -752,8 +752,7 @@ public abstract class TestConnectionPool extends TestCase {
                 int failed=0;
                 int didNotRun = 0;
                 int loops=0;
-                for (int i = 0; i < pts.length; i++) {
-                    final PoolTest poolTest = pts[i];
+                for (final PoolTest poolTest : pts) {
                     poolTest.thread.join();
                     loops += poolTest.loops;
                     final String state = poolTest.state;
