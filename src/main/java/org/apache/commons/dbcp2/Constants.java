@@ -16,6 +16,9 @@
  */
 package org.apache.commons.dbcp2;
 
+/**
+ * Constants for use with JMX 
+ */
 public class Constants {
     public static final String JMX_CONNECTION_POOL_BASE_EXT = ",connectionpool=";
     public static final String JMX_CONNECTION_POOL_PREFIX = "connections";
