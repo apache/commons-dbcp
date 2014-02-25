@@ -674,6 +674,40 @@ public class BasicDataSource
     }
 
     /**
+     * The indication of whether objects will be validated as soon as they have
+     * been created by the pool. If the object fails to validate, the borrow
+     * operation that triggered the creation will fail.
+     */
+    private boolean testOnCreate = false;
+
+    /**
+     * Returns the {@link #testOnCreate} property.
+     *
+     * @return true if objects are validated immediately after they are created
+     * by the pool
+     *
+     * @see #testOnCreate
+     */
+    @Override
+    public synchronized boolean getTestOnCreate() {
+        return this.testOnCreate;
+    }
+
+    /**
+     * Sets the {@link #testOnCreate} property. This property determines
+     * whether or not the pool will validate objects immediately after they are
+     * created by the pool
+     *
+     * @param testOnCreate new value for testOnCreate property
+     */
+    public synchronized void setTestOnCreate(boolean testOnCreate) {
+        this.testOnCreate = testOnCreate;
+        if (connectionPool != null) {
+            connectionPool.setTestOnCreate(testOnCreate);
+        }
+    }
+
+    /**
      * The indication of whether objects will be validated before being
      * borrowed from the pool.  If the object fails to validate, it will be
      * dropped from the pool, and we will attempt to borrow another.
@@ -2060,6 +2094,7 @@ public class BasicDataSource
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
         gop.setMaxWaitMillis(maxWaitMillis);
+        gop.setTestOnCreate(testOnCreate);
         gop.setTestOnBorrow(testOnBorrow);
         gop.setTestOnReturn(testOnReturn);
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);

@@ -198,6 +198,15 @@ isValid() method.
    </td>
 </tr>
 <tr>
+   <td>testOnCreate</td>
+   <td>false</td>
+   <td>
+      The indication of whether objects will be validated after creation. If the
+      object fails to validate, the borrow attempt that triggered the object
+      creation will fail.
+   </td>
+</tr>
+<tr>
    <td>testOnBorrow</td>
    <td>true</td>
    <td>

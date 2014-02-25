@@ -145,6 +145,8 @@ public abstract class InstanceKeyDataSource
             GenericKeyedObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
     private long defaultSoftMinEvictableIdleTimeMillis =
             GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+    private boolean defaultTestOnCreate =
+            GenericObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
     private boolean defaultTestOnBorrow =
             GenericObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
     private boolean defaultTestOnReturn =
@@ -408,6 +410,24 @@ public abstract class InstanceKeyDataSource
             long softMinEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         this.defaultSoftMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
+    }
+
+
+    /**
+     * Gets the default value for
+     * {@link GenericObjectPool#getTestOnCreate()} for each per user pool.
+     */
+    public boolean getDefaultTestOnCreate() {
+        return this.defaultTestOnCreate;
+    }
+
+    /**
+     * Sets the default value for
+     * {@link GenericObjectPool#getTestOnCreate()} for each per user pool.
+     */
+    public void setDefaultTestOnCreate(boolean testOnCreate) {
+        assertInitializationAllowed();
+        this.defaultTestOnCreate = testOnCreate;
     }
 
 

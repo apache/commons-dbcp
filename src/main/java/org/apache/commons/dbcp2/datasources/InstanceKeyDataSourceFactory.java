@@ -217,6 +217,12 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                 Long.parseLong(ra.getContent().toString()));
         }
 
+        ra = ref.get("testOnCreate");
+        if (ra != null && ra.getContent() != null) {
+            ikds.setDefaultTestOnCreate(Boolean.valueOf(
+                ra.getContent().toString()).booleanValue());
+        }
+
         ra = ref.get("testOnBorrow");
         if (ra != null && ra.getContent() != null) {
             ikds.setDefaultTestOnBorrow(Boolean.valueOf(

@@ -114,6 +114,12 @@ public interface BasicDataSourceMXBean {
     int getMaxOpenPreparedStatements();
 
     /**
+     * See {@link BasicDataSource#getTestOnCreate()}
+     * @return {@link BasicDataSource#getTestOnCreate()}
+     */
+    boolean getTestOnCreate();
+
+    /**
      * See {@link BasicDataSource#getTestOnBorrow()}
      * @return {@link BasicDataSource#getTestOnBorrow()}
      */
