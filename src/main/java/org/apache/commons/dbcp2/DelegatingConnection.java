@@ -156,9 +156,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         Connection innerCon = getInnermostDelegateInternal();
         if (innerCon == null) {
             return c == null;
-        } else {
-            return innerCon.equals(c);
         }
+        return innerCon.equals(c);
     }
 
 
@@ -605,10 +604,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
                 }
                 throw new SQLException
                     ("Connection " + label + " is closed.");
-            } else {
-                throw new SQLException
-                    ("Connection is null.");
             }
+            throw new SQLException
+                ("Connection is null.");
         }
     }
 

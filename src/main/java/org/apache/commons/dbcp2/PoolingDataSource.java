@@ -187,9 +187,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
         public D getDelegate() {
             if (isAccessToUnderlyingConnectionAllowed()) {
                 return super.getDelegate();
-            } else {
-                return null;
             }
+            return null;
         }
 
         /**
@@ -199,9 +198,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
         public Connection getInnermostDelegate() {
             if (isAccessToUnderlyingConnectionAllowed()) {
                 return super.getInnermostDelegate();
-            } else {
-                return null;
             }
+            return null;
         }
 
         @Override

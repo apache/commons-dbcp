@@ -992,9 +992,8 @@ public class BasicDataSource
     public synchronized int getNumActive() {
         if (connectionPool != null) {
             return connectionPool.getNumActive();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
 
@@ -1008,9 +1007,8 @@ public class BasicDataSource
     public synchronized int getNumIdle() {
         if (connectionPool != null) {
             return connectionPool.getNumIdle();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -1430,13 +1428,11 @@ public class BasicDataSource
                 Throwable cause = e.getCause();
                 if (cause instanceof SQLException) {
                     throw (SQLException) cause;
-                } else {
-                    throw new SQLException(e);
                 }
+                throw new SQLException(e);
             }
-        } else {
-            return createDataSource().getConnection();
         }
+        return createDataSource().getConnection();
     }
 
 

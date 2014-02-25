@@ -102,9 +102,8 @@ public class Utils {
         String msg =  messages.getString(key);
         if (args == null || args.length == 0) {
             return msg;
-        } else {
-            MessageFormat mf = new MessageFormat(msg);
-            return mf.format(args, new StringBuffer(), null).toString();
         }
+        MessageFormat mf = new MessageFormat(msg);
+        return mf.format(args, new StringBuffer(), null).toString();
     }
 }

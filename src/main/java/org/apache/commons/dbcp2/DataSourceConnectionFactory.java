@@ -41,9 +41,8 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     public Connection createConnection() throws SQLException {
         if(null == _uname && null == _passwd) {
             return _source.getConnection();
-        } else {
-            return _source.getConnection(_uname,_passwd);
         }
+        return _source.getConnection(_uname,_passwd);
     }
 
     private final String _uname;
