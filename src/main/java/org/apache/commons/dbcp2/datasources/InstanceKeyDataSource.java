@@ -18,8 +18,8 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,7 +38,6 @@ import javax.sql.PooledConnection;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and
