@@ -34,6 +34,11 @@
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
   <url>http://commons.apache.org/proper/commons-dbcp/</url>
 
+  <!-- Maven 3.0 needed for scmpublish 1.0 -->
+  <prerequisites>
+      <maven>3.0</maven>
+  </prerequisites>
+
   <distributionManagement>
     <site>
       <id>people.apache.org</id>
@@ -186,6 +191,11 @@
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
       <artifactId>geronimo-transaction</artifactId>
+       <!-- 
+       Cannot update this currently; anything later causes failures:
+       java.lang.NoClassDefFoundError: 
+       Could not initialize class org.apache.geronimo.transaction.manager.TransactionManagerImpl
+        -->
        <version>1.2-beta</version>
        <scope>test</scope>
        <exclusions>
@@ -218,6 +228,9 @@
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
+    <!-- Override CP version until that is updated -->
+    <!-- Version 1.0 requires Maven 3.0 or later -->
+    <commons.scm-publish.version>1.0</commons.scm-publish.version>
   </properties> 
 
   <build>
@@ -226,6 +239,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>${commons.scm-publish.version}</version>
           <configuration>
             <ignorePathsToDelete>
               <ignorePathToDelete>javadocs</ignorePathToDelete>
@@ -274,7 +288,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.4.0</version>
+          <version>2.5.3</version>
           <configuration>
             <threshold>Normal</threshold>
             <effort>Default</effort>
@@ -314,7 +328,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.9.1</version>
+          <version>2.11</version>
           <configuration>
             <configLocation>${basedir}/checkstyle.xml</configLocation>
             <enableRulesSummary>false</enableRulesSummary>
@@ -323,7 +337,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.7.1</version>
+          <version>3.0.1</version>
           <configuration>
             <rulesets>
               <ruleset>checkstyle.xml</ruleset>
