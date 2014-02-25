@@ -19,6 +19,9 @@ package org.apache.commons.dbcp2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.pool2.SwallowedExceptionListener;
 
+/**
+ * Class for logging swallowed exceptions 
+ */
 public class SwallowedExceptionLogger implements SwallowedExceptionListener{
 
     private final Log log;
