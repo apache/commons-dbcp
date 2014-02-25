@@ -38,10 +38,10 @@
 <p>If you use the defaultReadOnly property in a JRE &lt;1.4, you will get the following error:
 <source>
 java.lang.NoSuchMethodError
-	at org.apache.commons.dbcp.BasicDataSource.setDefaultReadOnly(BasicDataSource.java:75)
-	at org.apache.commons.dbcp.BasicDataSourceFactory.createDataSource(BasicDataSourceFactory.java:162)
-	at org.apache.commons.dbcp.BasicDataSourceFactory.getObjectInstance(BasicDataSourceFactory.java:144)
-	at org.apache.naming.factory.ResourceFactory.getObjectInstance(ResourceFactory.java:176)
+    at org.apache.commons.dbcp.BasicDataSource.setDefaultReadOnly(BasicDataSource.java:75)
+    at org.apache.commons.dbcp.BasicDataSourceFactory.createDataSource(BasicDataSourceFactory.java:162)
+    at org.apache.commons.dbcp.BasicDataSourceFactory.getObjectInstance(BasicDataSourceFactory.java:144)
+    at org.apache.naming.factory.ResourceFactory.getObjectInstance(ResourceFactory.java:176)
 </source>
 </p>
 

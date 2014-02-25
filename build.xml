@@ -40,8 +40,8 @@
       <property name="classpath" 
        value="${cp}:${commons-pool.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${jta-spec.jar}:${jta-impl.jar}:
-      	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
+        ${jta-spec.jar}:${jta-impl.jar}:
+        ${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
       <property name="name" value="commons-dbcp2"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
@@ -52,13 +52,13 @@
       <property name="build.classes.dir" value="${build.dir}/classes"/>
       <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
       <property name="dist.dir" value="${basedir}/dist"/>
-   	  <property name="dist.jar" value="${dist.dir}/${name}-${version}.jar"/>
-   	
-   	  <property name="src.dir" value="${basedir}/src"/>
-   	  <property name="src.java.dir" value="${src.dir}/main/java"/>
+      <property name="dist.jar" value="${dist.dir}/${name}-${version}.jar"/>
+
+      <property name="src.dir" value="${basedir}/src"/>
+      <property name="src.java.dir" value="${src.dir}/main/java"/>
       <property name="src.resource.dir" value="${src.dir}/main/resources"/>
-   	  <property name="src.test.dir" value="${src.dir}/test/java"/>
-   	  <property name="javac.source" value="1.7" />
+      <property name="src.test.dir" value="${src.dir}/test/java"/>
+      <property name="javac.source" value="1.7" />
 
       <property name="test.failonerror" value="true" /> 
       <property name="test.runner" value="junit.textui.TestRunner" /> 
@@ -73,11 +73,11 @@
    </target>
 
    <target name="check_jar">
-   	   <available file="${file}" property="found"/>
-   	   <antcall target="check_message"/>
+       <available file="${file}" property="found"/>
+       <antcall target="check_message"/>
    </target>
 
-	<target name="check_message" unless="found">
+    <target name="check_message" unless="found">
         <!-- echo could be replaced with fail if required -->
         <echo message="Could not find ${file}"/>
    </target>
@@ -119,7 +119,7 @@
    <target name="clean" depends="init" description="removes generated files">
       <delete dir="${build.dir}"/>
       <delete dir="${dist.dir}"/>
-   	  <echo>${classpath}</echo>
+      <echo>${classpath}</echo>
    </target>
 
    <target name="prepare" depends="init"/>
@@ -163,9 +163,9 @@
              optimize="${javac.optimize}"
              source="${javac.source}">
       </javac>
-   	  <copy todir="${build.classes.dir}" >
-   	  	<fileset dir="${src.resource.dir}"/>
-   	  </copy>
+      <copy todir="${build.classes.dir}" >
+        <fileset dir="${src.resource.dir}"/>
+      </copy>
    </target>
    
    <target name="compile-test" depends="compile">
@@ -202,7 +202,7 @@
             <include name="**/*Test*.java"/>
             <!-- Test support files -->
             <exclude name="**/Tester*.java"/>
-          	<!-- Ant JUnit does not handle abstract classes -->
+            <!-- Ant JUnit does not handle abstract classes -->
             <exclude name="**/TestConnectionPool.java"/>
           </fileset>
         </batchtest>
@@ -233,7 +233,7 @@
    </target>
 
    <target name="dist" depends="build" description="gump target"/>
-	
+
    <target name="mock-jar" depends="compile-test" description="Bundles mock JDBC objects">
       <mkdir dir="${dist.dir}"/>
       <jar jarfile="${mock.jar}">

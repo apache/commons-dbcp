@@ -44,14 +44,14 @@
       <property file="${user-propfile}"/>
 
       <property name="commons-pool.jar" value="${basedir}/../pool/dist/commons-pool.jar"/>
-   	  <property name="commons-dbcp.jar" value="${basedir}/../../commons-dbcp-1.3-SNAPSHOT.jar"/>
+      <property name="commons-dbcp.jar" value="${basedir}/../../commons-dbcp-1.3-SNAPSHOT.jar"/>
 
       <!-- now combine the classpaths -->
       <property name="classpath" 
        value="${cp}:${commons-pool.jar}:${commons-dbcp.jar}:${jdbc20ext.jar}:${junit.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
-      	${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}:
-      	${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
+        ${xerces.jar}:${xml-apis.jar}:${jta-spec.jar}:${jta-impl.jar}:
+        ${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
 
       <property name="build.dir" value="${basedir}/build"/>
       <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
@@ -64,17 +64,17 @@
       <property name="javac.debug" value="true"/>
       <property name="javac.deprecation" value="false"/>
       
-   	  <available property="jndi.present" classname="javax.naming.Context"/>
+      <available property="jndi.present" classname="javax.naming.Context"/>
       <available property="jdbc4.present" classname="java.sql.Wrapper"/>
    </target>
 
    <target name="check_jar">
-   	   <available file="${file}" property="found"/>
-   	   <antcall target="check_message"/>
+       <available file="${file}" property="found"/>
+       <antcall target="check_message"/>
    </target>
 
-	<target name="check_message" unless="found">
-		<!-- echo could be replaced with fail if required -->
+    <target name="check_message" unless="found">
+        <!-- echo could be replaced with fail if required -->
         <echo message="Could not find ${file}"/>
    </target>
 
@@ -120,34 +120,34 @@
       <delete dir="${dist.dir}"/>
    </target>
 
-	<target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
-	   <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
-	   <property name="src.dir" value="${build.dir}/src"/>
-	   <property name="src.java.dir" value="${src.dir}/java"/>
-	   <property name="src.test.dir" value="${src.dir}/test"/>
-	   <property name="javac.source" value="1.4" />
+    <target name="prepare-nojdbc4" depends="init" unless="jdbc4.present">
+       <echo message="Commenting out the jdbc4 additional methods since JDBC 4 was not detected."/>
+       <property name="src.dir" value="${build.dir}/src"/>
+       <property name="src.java.dir" value="${src.dir}/java"/>
+       <property name="src.test.dir" value="${src.dir}/test"/>
+       <property name="javac.source" value="1.4" />
 
-	   <mkdir dir="${src.dir}"/> 
-	   <copy todir="${src.dir}" filtering="yes">
-	      <fileset dir="${basedir}/src" defaultexcludes="no">
-	         <include name="**/*.java"/>
-	         <include name="**/*.xml"/>
-	         <include name="**/*.properties"/>
-	         <include name="**/*.jocl"/>
-	         <include name="**/package.html"/>
-	      </fileset>
-	   </copy>
-	   <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
-	   <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
-	</target>
+       <mkdir dir="${src.dir}"/> 
+       <copy todir="${src.dir}" filtering="yes">
+          <fileset dir="${basedir}/src" defaultexcludes="no">
+             <include name="**/*.java"/>
+             <include name="**/*.xml"/>
+             <include name="**/*.properties"/>
+             <include name="**/*.jocl"/>
+             <include name="**/package.html"/>
+          </fileset>
+       </copy>
+       <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_BEGIN */" value="/*"/>
+       <replace dir="${src.dir}" token="/* JDBC_4_ANT_KEY_END */" value="*/"/>
+    </target>
 
-	<target name="prepare-jdbc4" depends="init" if="jdbc4.present">
-	  <echo message="JDBC 4 was detected."/>
-	      <property name="src.dir" value="${basedir}/src"/>
-	      <property name="src.java.dir" value="${src.dir}/java"/>
-	      <property name="src.test.dir" value="${src.dir}/test"/>
-	      <property name="javac.source" value="1.5" />
-	   </target>
+    <target name="prepare-jdbc4" depends="init" if="jdbc4.present">
+      <echo message="JDBC 4 was detected."/>
+          <property name="src.dir" value="${basedir}/src"/>
+          <property name="src.java.dir" value="${src.dir}/java"/>
+          <property name="src.test.dir" value="${src.dir}/test"/>
+          <property name="javac.source" value="1.5" />
+       </target>
 
    <target name="prepare" depends="init,prepare-nojdbc4,prepare-jdbc4"/>
 
@@ -177,7 +177,7 @@
           <pathelement path="${classpath}" /> 
         </classpath>
         <test name="${test.entry}"/>
-      	<formatter type="plain"/>
+        <formatter type="plain"/>
       </junit>
    </target>
    

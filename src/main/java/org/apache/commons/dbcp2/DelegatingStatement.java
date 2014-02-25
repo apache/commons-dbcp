@@ -149,7 +149,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                 }
 
                 if (_stmt != null) {
-                	_stmt.close();
+                    _stmt.close();
                 }
             }
             catch (SQLException e) {
