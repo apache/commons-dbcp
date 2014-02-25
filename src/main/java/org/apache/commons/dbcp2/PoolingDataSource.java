@@ -32,6 +32,8 @@ import org.apache.commons.pool2.ObjectPool;
  * A simple {@link DataSource} implementation that obtains
  * {@link Connection}s from the specified {@link ObjectPool}.
  *
+ * @param <C> The connection type
+ *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
  * @author James House

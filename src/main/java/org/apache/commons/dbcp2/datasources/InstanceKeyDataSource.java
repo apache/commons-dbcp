@@ -37,7 +37,6 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>The base class for <code>SharedPoolDataSource</code> and
@@ -395,7 +394,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each
      * per user pool.
      */
     public long getDefaultSoftMinEvictableIdleTimeMillis() {
@@ -404,7 +403,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      */
     public void setDefaultSoftMinEvictableIdleTimeMillis(
             long softMinEvictableIdleTimeMillis) {
@@ -415,7 +414,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getTestOnCreate()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnCreate()} for each per user pool.
      */
     public boolean getDefaultTestOnCreate() {
         return this.defaultTestOnCreate;
@@ -423,7 +422,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getTestOnCreate()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnCreate()} for each per user pool.
      */
     public void setDefaultTestOnCreate(boolean testOnCreate) {
         assertInitializationAllowed();
@@ -433,7 +432,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getTestOnBorrow()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnBorrow()} for each per user pool.
      */
     public boolean getDefaultTestOnBorrow() {
         return this.defaultTestOnBorrow;
@@ -441,7 +440,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getTestOnBorrow()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnBorrow()} for each per user pool.
      */
     public void setDefaultTestOnBorrow(boolean testOnBorrow) {
         assertInitializationAllowed();
@@ -451,7 +450,7 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getTestOnReturn()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnReturn()} for each per user pool.
      */
     public boolean getDefaultTestOnReturn() {
         return this.defaultTestOnReturn;
@@ -459,17 +458,17 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getTestOnReturn()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestOnReturn()} for each per user pool.
      */
-    public void setDefaultTestOnReturn(boolean TestOnReturn) {
+    public void setDefaultTestOnReturn(boolean testOnReturn) {
         assertInitializationAllowed();
-        this.defaultTestOnReturn = TestOnReturn;
+        this.defaultTestOnReturn = testOnReturn;
     }
 
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getTestWhileIdle()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestWhileIdle()} for each per user pool.
      */
     public boolean getDefaultTestWhileIdle() {
         return this.defaultTestWhileIdle;
@@ -477,17 +476,17 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getTestWhileIdle()} for each per user pool.
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTestWhileIdle()} for each per user pool.
      */
-    public void setDefaultTestWhileIdle(boolean TestWhileIdle) {
+    public void setDefaultTestWhileIdle(boolean testWhileIdle) {
         assertInitializationAllowed();
-        this.defaultTestWhileIdle = TestWhileIdle;
+        this.defaultTestWhileIdle = testWhileIdle;
     }
 
 
     /**
      * Gets the default value for
-     * {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each
      * per user pool.
      */
     public long getDefaultTimeBetweenEvictionRunsMillis () {
@@ -496,13 +495,13 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Sets the default value for
-     * {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each
+     * {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each
      * per user pool.
      */
     public void setDefaultTimeBetweenEvictionRunsMillis (
-            long TimeBetweenEvictionRunsMillis ) {
+            long timeBetweenEvictionRunsMillis ) {
         assertInitializationAllowed();
-        this.defaultTimeBetweenEvictionRunsMillis = TimeBetweenEvictionRunsMillis ;
+        this.defaultTimeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis ;
     }
 
 

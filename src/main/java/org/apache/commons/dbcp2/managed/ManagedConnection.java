@@ -37,6 +37,8 @@ import java.sql.SQLException;
  * When enlisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods
  * throw a SQLException.  This is necessary to assure that the transaction completes as a single unit.
  *
+ * @param <C> the Connection type
+ *
  * @author Dain Sundstrom
  * @version $Revision$
  */
