@@ -104,17 +104,15 @@ public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
     public static ResultSet wrapResultSet(Statement stmt, ResultSet rset) {
         if(null == rset) {
             return null;
-        } else {
-            return new DelegatingResultSet(stmt,rset);
         }
+        return new DelegatingResultSet(stmt,rset);
     }
 
     public static ResultSet wrapResultSet(Connection conn, ResultSet rset) {
         if(null == rset) {
             return null;
-        } else {
-            return new DelegatingResultSet(conn,rset);
         }
+        return new DelegatingResultSet(conn,rset);
     }
 
     public ResultSet getDelegate() {

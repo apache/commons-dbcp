@@ -211,9 +211,8 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
     public Connection getDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
             return getDelegateInternal();
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -225,9 +224,8 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
     public Connection getInnermostDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
             return super.getInnermostDelegateInternal();
-        } else {
-            return null;
         }
+        return null;
     }
 
 }

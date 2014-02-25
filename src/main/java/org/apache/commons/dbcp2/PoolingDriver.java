@@ -139,9 +139,8 @@ public class PoolingDriver implements Driver {
             } catch(Exception e) {
                 throw new SQLException("Cannot get a connection, general error: " + e.getMessage(), e);
             }
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -223,9 +222,8 @@ public class PoolingDriver implements Driver {
         public Connection getDelegate() {
             if (isAccessToUnderlyingConnectionAllowed()) {
                 return super.getDelegate();
-            } else {
-                return null;
             }
+            return null;
         }
 
         /**
@@ -235,9 +233,8 @@ public class PoolingDriver implements Driver {
         public Connection getInnermostDelegate() {
             if (isAccessToUnderlyingConnectionAllowed()) {
                 return super.getInnermostDelegate();
-            } else {
-                return null;
             }
+            return null;
         }
     }
 }

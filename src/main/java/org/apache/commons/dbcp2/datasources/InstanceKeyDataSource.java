@@ -969,12 +969,11 @@ public abstract class InstanceKeyDataSource
                 }
                 if (info != null && password != null && password.equals(info.getPassword())) {
                     break;
-                } else {
-                    if (info != null) {
-                        manager.invalidate(info.getPooledConnection());
-                    }
-                    info = null;
                 }
+                if (info != null) {
+                    manager.invalidate(info.getPooledConnection());
+                }
+                info = null;
             }
             if (info == null) {
                 throw new SQLException("Cannot borrow connection from pool - password change failure.");
