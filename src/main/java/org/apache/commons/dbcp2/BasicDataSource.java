@@ -571,7 +571,7 @@ public class BasicDataSource
      * throwing an exception, or <= 0 to wait indefinitely.
      */
     private long maxWaitMillis =
-            GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
+            BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
 
     /**
      * <p>Returns the maximum number of milliseconds that the pool will wait
@@ -777,7 +777,7 @@ public class BasicDataSource
      * be run.
      */
     private long timeBetweenEvictionRunsMillis =
-        GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+        BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
 
     /**
      * Returns the value of the {@link #timeBetweenEvictionRunsMillis}
@@ -809,7 +809,7 @@ public class BasicDataSource
      * evictor thread (if any).
      */
     private int numTestsPerEvictionRun =
-        GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+        BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
     /**
      * Returns the value of the {@link #numTestsPerEvictionRun} property.
@@ -842,7 +842,7 @@ public class BasicDataSource
      * is eligible for eviction by the idle object evictor (if any).
      */
     private long minEvictableIdleTimeMillis =
-        GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+        BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
     /**
      * Returns the {@link #minEvictableIdleTimeMillis} property.
@@ -877,7 +877,7 @@ public class BasicDataSource
      * parameter.  See {@link #getSoftMinEvictableIdleTimeMillis()}.
      */
     private long softMinEvictableIdleTimeMillis =
-        GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+        BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 
     /**
      * Sets the minimum amount of time a connection may sit idle in the pool
