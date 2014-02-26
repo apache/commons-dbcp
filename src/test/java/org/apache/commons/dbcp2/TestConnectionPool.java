@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,7 +104,8 @@ public abstract class TestConnectionPool extends TestCase {
             assertTrue(c[i] != null);
 
             // generate SQLWarning on connection
-            c[i].prepareCall("warning");
+            try (CallableStatement cs = c[i].prepareCall("warning")){
+            }
         }
 
         for (Connection element : c) {
@@ -360,8 +362,7 @@ public abstract class TestConnectionPool extends TestCase {
             stmt.close();
         }
         conn.close();
-        try {
-            conn.createStatement();
+        try (Statement s = conn.createStatement()){
             fail("Can't use closed connections");
         } catch(SQLException e) {
             // expected
@@ -593,13 +594,10 @@ public abstract class TestConnectionPool extends TestCase {
                 } catch(Exception e) {
                     // ignored
                 }
-                Connection conn = null;
-                PreparedStatement stmt = null;
-                ResultSet rset = null;
-                try {
-                    conn = newConnection();
-                    stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
-                    rset = stmt.executeQuery();
+                try (Connection conn = newConnection();
+                        PreparedStatement stmt = conn.prepareStatement(
+                                "select 'literal', SYSDATE from dual");
+                        ResultSet rset = stmt.executeQuery();) {
                     try {
                         Thread.sleep(_random.nextInt(_delay));
                     } catch(Exception e) {
@@ -610,10 +608,6 @@ public abstract class TestConnectionPool extends TestCase {
                     _failed = true;
                     _complete = true;
                     break;
-                } finally {
-                    try { if (rset != null) rset.close(); } catch(Exception e) { }
-                    try { if (stmt != null) stmt.close(); } catch(Exception e) { }
-                    try { if (conn != null) conn.close(); } catch(Exception e) { }
                 }
             }
             _complete = true;
