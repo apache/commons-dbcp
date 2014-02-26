@@ -95,8 +95,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     /**
      * Returns a string representation of the metadata associated with
      * the innnermost delegate connection.
-     *
-     * @since 1.2.2
      */
     @Override
     public String toString() {
@@ -152,7 +150,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      *
      * @param c connection to compare innermost delegate with
      * @return true if innermost delegate equals <code>c</code>
-     * @since 1.2.2
      */
     public boolean innermostDelegateEquals(Connection c) {
         Connection innerCon = getInnermostDelegateInternal();

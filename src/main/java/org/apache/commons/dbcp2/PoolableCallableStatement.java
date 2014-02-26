@@ -33,7 +33,6 @@ import org.apache.commons.pool2.KeyedObjectPool;
  *
  * @see PoolingConnection
  * @version $Revision$ $Date$
- * @since 1.3
  */
 public class PoolableCallableStatement extends DelegatingCallableStatement {
 

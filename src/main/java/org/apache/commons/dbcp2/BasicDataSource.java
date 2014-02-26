@@ -531,8 +531,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The initial number of connections that are created when the pool
      * is started.
-     *
-     * @since 1.2
      */
     private int initialSize = 0;
 
@@ -879,7 +877,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param softMinEvictableIdleTimeMillis minimum amount of time a
      * connection may sit idle in the pool before it is eligible for eviction,
      * assuming there are minIdle idle connections in the pool.
-     * @since 1.4.1
      * @see #getSoftMinEvictableIdleTimeMillis
      */
     public synchronized void setSoftMinEvictableIdleTimeMillis(long softMinEvictableIdleTimeMillis) {
@@ -907,7 +904,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return minimum amount of time a connection may sit idle in the pool before
      * it is eligible for eviction, assuming there are minIdle idle connections
      * in the pool
-     * @since 1.4.1
      */
     @Override
     public synchronized long getSoftMinEvictableIdleTimeMillis() {
@@ -919,8 +915,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Gets the EvictionPolicy implementation in use with this connection pool.
-     *
-     * @since 2.0
      */
     public synchronized String getEvictionPolicyClassName() {
         return evictionPolicyClassName;
@@ -931,8 +925,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @param evictionPolicyClassName   The fully qualified class name of the
      *                                  EvictionPolicy implementation
-     *
-     * @since 2.0
      */
     public synchronized void setEvictionPolicyClassName(
             String evictionPolicyClassName) {
@@ -1136,8 +1128,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Timeout in seconds before connection validation queries fail.
-     *
-     * @since 1.3
      */
     private volatile int validationQueryTimeout = -1;
 
@@ -1145,7 +1135,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Returns the validation query timeout.
      *
      * @return the timeout in seconds before connection validation queries fail.
-     * @since 1.3
      */
     @Override
     public int getValidationQueryTimeout() {
@@ -1164,7 +1153,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
      *
      * @param timeout new validation query timeout value in seconds
-     * @since 1.3
      */
     public void setValidationQueryTimeout(int timeout) {
         this.validationQueryTimeout = timeout;
@@ -1177,8 +1165,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * NLS_SORT=XCYECH in an Oracle Database only once after connection
      * creation.
      * </p>
-     *
-     * @since 1.3
      */
     private volatile List<String> connectionInitSqls;
 
@@ -1188,7 +1174,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * statements configured.
      *
      * @return initialization SQL statements
-     * @since 1.3
      */
     public List<String> getConnectionInitSqls() {
         List<String> result = connectionInitSqls;

@@ -985,8 +985,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Returns a <code>PerUserPoolDataSource</code> {@link Reference}.
-     *
-     * @since 1.2.2
      */
     @Override
     public Reference getReference() throws NamingException {

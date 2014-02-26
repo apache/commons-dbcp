@@ -366,7 +366,6 @@ public class DriverAdapterCPDS
      * Get the connection properties passed to the JDBC driver.
      *
      * @return the JDBC connection properties used when creating connections.
-     * @since 1.3
      */
     public Properties getConnectionProperties() {
         return connectionProperties;
@@ -385,7 +384,6 @@ public class DriverAdapterCPDS
      * of these properties if <code>connectionProperties</code> is not null.</p>
      *
      * @param props Connection properties to use when creating new connections.
-     * @since 1.3
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setConnectionProperties(Properties props) {
@@ -689,7 +687,6 @@ public class DriverAdapterCPDS
      * Returns the maximun number of prepared statements.
      *
      * @return maxPrepartedStatements value
-     * @since 1.2.2
      */
     public int getMaxPreparedStatements()
     {
@@ -700,8 +697,6 @@ public class DriverAdapterCPDS
      * Sets the maximum number of prepared statements.
      * @param maxPreparedStatements the new maximum number of prepared
      * statements
-     *
-     * @since 1.2.2
      */
     public void setMaxPreparedStatements(int maxPreparedStatements)
     {
