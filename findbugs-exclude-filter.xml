@@ -22,4 +22,10 @@
   put here to instruct findbugs it must ignore them.
 -->
 <FindBugsFilter>
+  <!-- Unit tests -->
+  <Match>
+    <!--  Mock objects often return null for unimplemented methods. -->
+    <Class name="~.*\.Tester.*"/>
+    <Bug pattern="NP_NONNULL_RETURN_VIOLATION" />
+  </Match>
 </FindBugsFilter>
