@@ -42,9 +42,11 @@
          get one of those?
       </p><p>
          A: The {@link org.apache.commons.pool2.ObjectPool ObjectPool} interface is defined
-         in the {@link org.apache.commons.pool2} package (Commons-Pool).
-         The {@link org.apache.commons.pool2.impl} package has a couple of implementations,
-         and you can always create your own.
+         in Commons Pool. You can use one of the provided implementations such as
+         {@link org.apache.commons.pool2.impl.GenericObjectPool GenericObjectPool},
+         {@link org.apache.commons.pool2.proxy.ProxiedObjectPool ProxiedObjectPool} or
+         {@link org.apache.commons.pool2.impl.SoftReferenceObjectPool SoftReferenceObjectPool}
+         or you can create your own.
       </p>
       <p>
          Q: Ok, I've found an {@link org.apache.commons.pool2.ObjectPool ObjectPool}
