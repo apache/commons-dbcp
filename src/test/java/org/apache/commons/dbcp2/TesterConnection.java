@@ -52,12 +52,11 @@ public class TesterConnection implements Connection {
     protected boolean _readOnly = false;
     protected SQLWarning warnings = null;
     protected String username = null;
-    protected String password = null;
     protected Exception failure;
 
-    public TesterConnection(String username, String password) {
+    public TesterConnection(String username,
+            @SuppressWarnings("unused") String password) {
         this.username = username;
-        this.password = password;
     }
 
     public String getUsername() {
