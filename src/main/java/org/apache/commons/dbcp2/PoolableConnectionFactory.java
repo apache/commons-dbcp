@@ -348,17 +348,16 @@ public class PoolableConnectionFactory
                 conn.getAutoCommit() != _defaultAutoCommit.booleanValue()) {
             conn.setAutoCommit(_defaultAutoCommit.booleanValue());
         }
-        if ((_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION)
-                && (conn.getTransactionIsolation() !=
-                _defaultTransactionIsolation)) {
+        if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION &&
+                conn.getTransactionIsolation() != _defaultTransactionIsolation) {
             conn.setTransactionIsolation(_defaultTransactionIsolation);
         }
-        if ((_defaultReadOnly != null) &&
-                (conn.isReadOnly() != _defaultReadOnly.booleanValue())) {
+        if (_defaultReadOnly != null &&
+                conn.isReadOnly() != _defaultReadOnly.booleanValue()) {
             conn.setReadOnly(_defaultReadOnly.booleanValue());
         }
-        if ((_defaultCatalog != null) &&
-                (!_defaultCatalog.equals(conn.getCatalog()))) {
+        if (_defaultCatalog != null &&
+                !_defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(_defaultCatalog);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeout);
