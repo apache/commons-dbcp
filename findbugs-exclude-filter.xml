@@ -23,8 +23,8 @@
 -->
 <FindBugsFilter>
   <!-- Unit tests -->
+  <!--  Mock objects often return null for unimplemented methods. -->
   <Match>
-    <!--  Mock objects often return null for unimplemented methods. -->
     <Class name="~.*\.Tester.*"/>
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION" />
   </Match>
