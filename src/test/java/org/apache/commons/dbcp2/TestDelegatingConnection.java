@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import junit.framework.Test;
@@ -99,7 +100,7 @@ public class TestDelegatingConnection extends TestCase {
             conn = new DelegatingConnection<>(pc);
             pc.close();
             conn.close();
-            conn.prepareStatement("");
+            try (PreparedStatement ps = conn.prepareStatement("")){}
             fail("Expecting SQLException");
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
