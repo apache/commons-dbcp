@@ -71,13 +71,13 @@ public class TestCPDSConnectionFactory extends TestCase {
        Connection conn1 = ds.getConnection("username", "password");
        Connection conn2 = ds.getConnection("username", "password");
        Connection conn3 = ds.getConnection("username", "password");
-       assertEquals(3, ds.getNumActive("username", "password"));
+       assertEquals(3, ds.getNumActive("username"));
        conn1.close();
-       assertEquals(1, ds.getNumIdle("username", "password"));
+       assertEquals(1, ds.getNumIdle("username"));
        conn2.close();
-       assertEquals(2, ds.getNumIdle("username", "password"));
+       assertEquals(2, ds.getNumIdle("username"));
        conn3.close(); // Return to pool will trigger destroy -> close sequence
-       assertEquals(2, ds.getNumIdle("username", "password"));
+       assertEquals(2, ds.getNumIdle("username"));
     }
 
     /**

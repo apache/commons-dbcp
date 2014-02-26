@@ -342,45 +342,45 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setPerUserMaxTotal("u2", Integer.valueOf(5));
 
         assertEquals(0, tds.getNumActive());
-        assertEquals(0, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumActive("u2"));
         assertEquals(0, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        assertEquals(0, tds.getNumIdle("u1"));
+        assertEquals(0, tds.getNumIdle("u2"));
 
         Connection conn = tds.getConnection();
         assertNotNull(conn);
         assertEquals(1, tds.getNumActive());
-        assertEquals(0, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumActive("u2"));
         assertEquals(0, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        assertEquals(0, tds.getNumIdle("u1"));
+        assertEquals(0, tds.getNumIdle("u2"));
 
         conn.close();
         assertEquals(0, tds.getNumActive());
-        assertEquals(0, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumActive("u2"));
         assertEquals(1, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        assertEquals(0, tds.getNumIdle("u1"));
+        assertEquals(0, tds.getNumIdle("u2"));
 
         conn = tds.getConnection("u1", "p1");
         assertNotNull(conn);
         assertEquals(0, tds.getNumActive());
-        assertEquals(1, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(1, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumActive("u2"));
         assertEquals(1, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        assertEquals(0, tds.getNumIdle("u1"));
+        assertEquals(0, tds.getNumIdle("u2"));
 
         conn.close();
         assertEquals(0, tds.getNumActive());
-        assertEquals(0, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumActive("u2", "p2"));
+        assertEquals(0, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumActive("u2"));
         assertEquals(1, tds.getNumIdle());
-        assertEquals(1, tds.getNumIdle("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u2", "p2"));
+        assertEquals(1, tds.getNumIdle("u1"));
+        assertEquals(0, tds.getNumIdle("u2"));
     }
 
     public void testMultipleThreads1() throws Exception {
@@ -459,14 +459,14 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNotNull(conn);
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
-        assertEquals(1, tds.getNumActive("u1", "p1"));
-        assertEquals(0, tds.getNumIdle("u1", "p1"));
+        assertEquals(1, tds.getNumActive("u1"));
+        assertEquals(0, tds.getNumIdle("u1"));
 
         conn.close();
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
-        assertEquals(0, tds.getNumActive("u1", "p1"));
-        assertEquals(1, tds.getNumIdle("u1", "p1"));
+        assertEquals(0, tds.getNumActive("u1"));
+        assertEquals(1, tds.getNumIdle("u1"));
     }
 
     // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
@@ -526,11 +526,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             Connection con4 = ds.getConnection("foo", "bay"); // new password
             // Idle instances with old password should have been cleared
             assertEquals("Should be no idle connections in the pool",
-                    0, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bar"));
+                    0, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
             con4.close();
             // Should be one idle instance with new pwd
             assertEquals("Should be one idle connection in the pool",
-                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bay"));
+                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
             try {
                 ds.getConnection("foo", "bar"); // old password
                 fail("Should have generated SQLException");
@@ -540,7 +540,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             con3.close(); // Return a connection with the old password
             ds.getConnection("foo", "bay").close();  // will try bad returned connection and destroy it
             assertEquals("Should be one idle connection in the pool",
-                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo", "bar"));
+                    1, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
             con5.close();
         } finally {
             TesterDriver.addUser("foo","bar");

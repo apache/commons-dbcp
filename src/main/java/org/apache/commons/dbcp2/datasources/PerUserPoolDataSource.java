@@ -846,15 +846,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Get the number of active connections in the default pool.
      */
     public int getNumActive() {
-        return getNumActive(null, null);
+        return getNumActive(null);
     }
 
     /**
      * Get the number of active connections in the pool for a given user.
      */
-    public int getNumActive(String username, String password) {
+    public int getNumActive(String username) {
         ObjectPool<PooledConnectionAndInfo> pool =
-            getPool(getPoolKey(username,password));
+            getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumActive();
     }
 
@@ -862,15 +862,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Get the number of idle connections in the default pool.
      */
     public int getNumIdle() {
-        return getNumIdle(null, null);
+        return getNumIdle(null);
     }
 
     /**
      * Get the number of idle connections in the pool for a given user.
      */
-    public int getNumIdle(String username, String password) {
+    public int getNumIdle(String username) {
         ObjectPool<PooledConnectionAndInfo> pool =
-            getPool(getPoolKey(username,password));
+            getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumIdle();
     }
 
@@ -883,7 +883,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         getPooledConnectionAndInfo(String username, String password)
         throws SQLException {
 
-        final PoolKey key = getPoolKey(username,password);
+        final PoolKey key = getPoolKey(username);
         ObjectPool<PooledConnectionAndInfo> pool;
         PooledConnectionManager manager;
         synchronized(this) {
@@ -980,8 +980,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     @Override
     protected PooledConnectionManager getConnectionManager(UserPassKey upkey) {
-        return managers.get(
-                getPoolKey(upkey.getUsername(), upkey.getPassword()));
+        return managers.get(getPoolKey(upkey.getUsername()));
     }
 
     /**
@@ -1001,10 +1000,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Create a pool key from the provided parameters.
      *
      * @param username  User name
-     * @param password  Not currently used
      * @return  The pool key
      */
-    private PoolKey getPoolKey(String username, String password) {
+    private PoolKey getPoolKey(String username) {
         return new PoolKey(getDataSourceName(), username);
     }
 
@@ -1048,7 +1046,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
         pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
 
-        Object old = managers.put(getPoolKey(username,password), factory);
+        Object old = managers.put(getPoolKey(username), factory);
         if (old != null) {
             throw new IllegalStateException("Pool already contains an entry for this user/password: " + username);
         }
