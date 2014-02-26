@@ -18,7 +18,6 @@
     <id>src</id>
     <formats>
         <format>tar.gz</format>
-        <format>zip</format>
     </formats>
     <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
     <fileSets>
@@ -36,12 +35,15 @@
                 <include>test-jar.xml</include>
                 <include>findbugs-exclude-filter.xml</include>
             </includes>
+            <lineEnding>lf</lineEnding>
         </fileSet>
         <fileSet>
             <directory>doc</directory>
+            <lineEnding>lf</lineEnding>
         </fileSet>
         <fileSet>
             <directory>src</directory>
+            <lineEnding>lf</lineEnding>
         </fileSet>
     </fileSets>
 </assembly>
