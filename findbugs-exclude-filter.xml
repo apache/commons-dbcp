@@ -28,4 +28,10 @@
     <Class name="~.*\.Tester.*"/>
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION" />
   </Match>
+  <!-- Not worth coding around for test code -->
+  <Match>
+    <Class name="org.apache.commons.dbcp2.TesterResultSet"/>
+    <Method name="&lt;init&gt;"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
 </FindBugsFilter>
