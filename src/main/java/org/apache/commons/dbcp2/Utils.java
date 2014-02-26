@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 /**
  * Utility methods
  */
-public class Utils {
+public final class Utils {
 
     private static final ResourceBundle messages = ResourceBundle.getBundle(
             Utils.class.getPackage().getName() + ".LocalStrings");

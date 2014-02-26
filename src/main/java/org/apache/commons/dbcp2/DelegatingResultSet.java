@@ -56,7 +56,7 @@ import java.sql.SQLXML;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class DelegatingResultSet extends AbandonedTrace implements ResultSet {
+public final class DelegatingResultSet extends AbandonedTrace implements ResultSet {
 
     /** My delegate. **/
     private final ResultSet _res;
