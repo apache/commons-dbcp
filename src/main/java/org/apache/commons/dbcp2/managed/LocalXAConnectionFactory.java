@@ -87,6 +87,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      * </p>
      * It is assumed that the wrapper around a managed connection disables the setAutoCommit(),
      * commit(), rollback() and setReadOnly() methods while a transaction is in progress.
+     * @since 2.0
      */
     protected static class LocalXAResource implements XAResource {
         private final Connection connection;

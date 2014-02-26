@@ -167,6 +167,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     /**
      * Delegates to {@link ManagedConnection#transactionComplete()}
      * for transaction completion events.
+     * @since 2.0
      */
     protected class CompletionListener implements TransactionContextListener {
         @Override
