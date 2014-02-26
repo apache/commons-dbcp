@@ -175,6 +175,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
      * closed connection cannot be used anymore.
+     * @since 2.0
      */
     private class PoolGuardConnectionWrapper<D extends Connection>
             extends DelegatingConnection<D> {

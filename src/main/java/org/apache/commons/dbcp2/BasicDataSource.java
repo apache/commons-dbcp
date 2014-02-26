@@ -2257,6 +2257,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return registeredJmxName;
     }
 
+    /**
+     * @since 2.0
+     */
     private class PaGetConnection implements PrivilegedExceptionAction<Connection> {
 
         @Override
