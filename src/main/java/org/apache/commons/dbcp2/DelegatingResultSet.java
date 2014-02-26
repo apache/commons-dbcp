@@ -48,7 +48,7 @@ import java.sql.SQLXML;
  * <p>
  * Extends AbandonedTrace to implement result set tracking and
  * logging of code which created the ResultSet. Tracking the
- * ResultSet ensures that the Statment which created it can
+ * ResultSet ensures that the Statement which created it can
  * close any open ResultSet's on Statement close.
  *
  * @author Glenn L. Nielsen

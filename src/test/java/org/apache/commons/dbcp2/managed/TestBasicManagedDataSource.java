@@ -43,11 +43,6 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         return basicManagedDataSource;
     }
 
-    @Override
-    public void testHashCode() throws Exception {
-        // TODO reenable... hashcode doesn't work when accessToUnderlyingConnectionAllowed is false
-    }
-
     /**
      * JIRA: DBCP-294
      * Verify that PoolableConnections created by BasicManagedDataSource unregister themselves
