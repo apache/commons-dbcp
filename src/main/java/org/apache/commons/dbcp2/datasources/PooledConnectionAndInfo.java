@@ -24,6 +24,7 @@ import javax.sql.PooledConnection;
  * used to create the connection.
  *
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 final class PooledConnectionAndInfo {
     private final PooledConnection pooledConnection;

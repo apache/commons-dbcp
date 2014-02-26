@@ -25,6 +25,7 @@ import javax.sql.DataSource;
  *
  * @author Rodney Waldhoff
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(DataSource source) {

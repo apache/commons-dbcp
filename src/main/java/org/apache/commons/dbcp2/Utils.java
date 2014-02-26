@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 
 /**
  * Utility methods
+ * @since 2.0
  */
 public final class Utils {
 

@@ -38,6 +38,7 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 class ConnectionImpl extends DelegatingConnection<Connection> {
 

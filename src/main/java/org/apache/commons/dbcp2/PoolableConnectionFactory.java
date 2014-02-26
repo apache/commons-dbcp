@@ -44,6 +44,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @author James House
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class PoolableConnectionFactory
         implements PooledObjectFactory<PoolableConnection> {

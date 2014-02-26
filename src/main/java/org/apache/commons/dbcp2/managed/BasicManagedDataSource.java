@@ -50,7 +50,7 @@ import java.sql.SQLException;
  *
  * @see BasicDataSource
  * @see ManagedConnection
- * @version $Revision$
+ * @since 2.0
  */
 public class BasicManagedDataSource extends BasicDataSource {
     /** Transaction Registry */

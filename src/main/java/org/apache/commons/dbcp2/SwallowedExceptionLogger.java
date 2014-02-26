@@ -20,7 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.pool2.SwallowedExceptionListener;
 
 /**
- * Class for logging swallowed exceptions 
+ * Class for logging swallowed exceptions
+ * @since 2.0
  */
 public class SwallowedExceptionLogger implements SwallowedExceptionListener{
 

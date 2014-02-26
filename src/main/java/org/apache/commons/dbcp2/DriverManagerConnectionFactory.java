@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import java.util.Properties;
  * @author Ignacio J. Ortega
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
@@ -43,10 +44,10 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param connectUri a database url of the form 
+     * @param connectUri a database url of the form
      * <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @param props a list of arbitrary string tag/value pairs as
-     * connection arguments; normally at least a "user" and "password" 
+     * connection arguments; normally at least a "user" and "password"
      * property should be included.
      */
     public DriverManagerConnectionFactory(String connectUri, Properties props) {
@@ -56,7 +57,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param connectUri a database url of the form 
+     * @param connectUri a database url of the form
      * <code>jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @param uname the database user
      * @param passwd the user's password

@@ -39,6 +39,7 @@ import org.apache.commons.pool2.ObjectPool;
  * @author James House
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class PoolingDataSource<C extends Connection> implements DataSource {
 

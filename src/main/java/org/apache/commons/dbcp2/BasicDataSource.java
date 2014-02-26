@@ -64,6 +64,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration {
 

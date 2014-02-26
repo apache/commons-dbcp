@@ -32,7 +32,7 @@ import java.sql.SQLException;
  * An implementation of XAConnectionFactory which uses a real XADataSource to obtain connections and XAResources.
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @since 2.0
  */
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     private final TransactionRegistry transactionRegistry;
