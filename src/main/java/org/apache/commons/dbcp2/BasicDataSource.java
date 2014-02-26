@@ -2097,7 +2097,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                 oldpool.close();
             }
         } catch(Exception e) {
-            // Do not propagate
+            /* Ignore */
         }
     }
 

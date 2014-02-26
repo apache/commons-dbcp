@@ -691,7 +691,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
+    public void rollback(Savepoint savepoint) throws SQLException {
         checkOpen();
         try {
             _conn.rollback(savepoint);
@@ -702,7 +702,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void releaseSavepoint(java.sql.Savepoint savepoint)
+    public void releaseSavepoint(Savepoint savepoint)
             throws SQLException {
         checkOpen();
         try {

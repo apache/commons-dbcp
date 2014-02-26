@@ -711,35 +711,35 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.getURL(columnName); } catch (SQLException e) { handleException(e); return null; } }
 
     @Override
-    public void updateRef(int columnIndex, java.sql.Ref x) throws SQLException
+    public void updateRef(int columnIndex, Ref x) throws SQLException
     { try { _res.updateRef(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateRef(String columnName, java.sql.Ref x) throws SQLException
+    public void updateRef(String columnName, Ref x) throws SQLException
     { try { _res.updateRef(columnName, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBlob(int columnIndex, java.sql.Blob x) throws SQLException
+    public void updateBlob(int columnIndex, Blob x) throws SQLException
     { try { _res.updateBlob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBlob(String columnName, java.sql.Blob x) throws SQLException
+    public void updateBlob(String columnName, Blob x) throws SQLException
     { try { _res.updateBlob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateClob(int columnIndex, java.sql.Clob x) throws SQLException
+    public void updateClob(int columnIndex, Clob x) throws SQLException
     { try { _res.updateClob(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateClob(String columnName, java.sql.Clob x) throws SQLException
+    public void updateClob(String columnName, Clob x) throws SQLException
     { try { _res.updateClob(columnName, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateArray(int columnIndex, java.sql.Array x) throws SQLException
+    public void updateArray(int columnIndex, Array x) throws SQLException
     { try { _res.updateArray(columnIndex, x); } catch (SQLException e) { handleException(e); } }
 
     @Override
-    public void updateArray(String columnName, java.sql.Array x) throws SQLException
+    public void updateArray(String columnName, Array x) throws SQLException
     { try { _res.updateArray(columnName, x); } catch (SQLException e) { handleException(e); } }
 
 

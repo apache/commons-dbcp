@@ -69,11 +69,6 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         super(c, s);
     }
 
-    /** Sets my delegate. */
-    public void setDelegate(CallableStatement s) {
-        super.setDelegate(s);
-    }
-
     @Override
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException
     { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( parameterIndex,  sqlType); } catch (SQLException e) { handleException(e); } }
