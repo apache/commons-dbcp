@@ -31,7 +31,6 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * My {@link #close} method returns me to my containing pool. (See {@link PoolingConnection}.)
  *
  * @param <K> the key type
- * @param <S> the statement type
  *
  * @see PoolingConnection
  * @author Rodney Waldhoff
@@ -40,12 +39,11 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,S>>
-        extends DelegatingPreparedStatement {
+public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    private final KeyedObjectPool<K, PoolablePreparedStatement<K,S>> _pool;
+    private final KeyedObjectPool<K,PoolablePreparedStatement<K>> _pool;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
@@ -62,7 +60,7 @@ public class PoolablePreparedStatement<K, S extends PoolablePreparedStatement<K,
      * @param conn the {@link java.sql.Connection Connection} from which I was created
      */
     public PoolablePreparedStatement(PreparedStatement stmt, K key,
-            KeyedObjectPool<K, PoolablePreparedStatement<K,S>> pool,
+            KeyedObjectPool<K, PoolablePreparedStatement<K>> pool,
             DelegatingConnection<?> conn) {
         super(conn, stmt);
         _pool = pool;
