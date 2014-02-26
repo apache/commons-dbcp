@@ -37,7 +37,10 @@
     
     <!-- Checks for Size Violations.                    -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
-    <module name="FileLength"/>
+    <module name="FileLength">
+        <!-- Increase default -->
+        <property name="max" value="2500"/>
+    </module>
     
     <!-- No tabs allowed! -->
     <module name="FileTabCharacter"/>
