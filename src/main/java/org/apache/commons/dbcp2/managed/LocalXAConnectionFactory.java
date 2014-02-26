@@ -32,7 +32,7 @@ import java.sql.SQLException;
  * the 2-phase protocol.
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @since 2.0
  */
 public class LocalXAConnectionFactory implements XAConnectionFactory {
     private final TransactionRegistry transactionRegistry;

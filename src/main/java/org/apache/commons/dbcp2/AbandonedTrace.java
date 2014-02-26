@@ -32,6 +32,7 @@ import org.apache.commons.pool2.TrackedUse;
  *
  * @author Glenn L. Nielsen
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class AbandonedTrace implements TrackedUse {
 

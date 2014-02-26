@@ -23,6 +23,7 @@ import javax.naming.Reference;
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class SharedPoolDataSourceFactory
     extends InstanceKeyDataSourceFactory

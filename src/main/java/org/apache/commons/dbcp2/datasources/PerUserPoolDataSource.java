@@ -55,6 +55,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class PerUserPoolDataSource extends InstanceKeyDataSource {
 

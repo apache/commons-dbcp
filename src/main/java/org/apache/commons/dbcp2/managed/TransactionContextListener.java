@@ -21,7 +21,7 @@ package org.apache.commons.dbcp2.managed;
  * A listener for transaction completion events.
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @since 2.0
  */
 public interface TransactionContextListener {
     /**

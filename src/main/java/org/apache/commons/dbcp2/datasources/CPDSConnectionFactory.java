@@ -42,6 +42,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 class CPDSConnectionFactory
         implements PooledObjectFactory<PooledConnectionAndInfo>,

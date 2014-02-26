@@ -40,6 +40,7 @@ import org.apache.commons.pool2.ObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public class PoolableConnection extends DelegatingConnection<Connection>
         implements PoolableConnectionMXBean {

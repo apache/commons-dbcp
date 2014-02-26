@@ -27,8 +27,8 @@ import java.sql.SQLException;
  * The ManagedDataSource is a PoolingDataSource that creates ManagedConnections.
  *
  * @author Dain Sundstrom
- * @version $Revision$
  * @param <C> The kind of {@link Connection} to manage.
+ * @since 2.0
  */
 public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C> {
     private TransactionRegistry transactionRegistry;

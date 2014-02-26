@@ -24,6 +24,7 @@ import java.sql.SQLException;
  *
  * @author Rodney Waldhoff
  * @version $Revision$ $Date$
+ * @since 2.0
  */
 public interface ConnectionFactory {
     /**

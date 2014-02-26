@@ -40,7 +40,7 @@ import java.sql.SQLException;
  * @param <C> the Connection type
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @since 2.0
  */
 public class ManagedConnection<C extends Connection> extends DelegatingConnection<C> {
     private final ObjectPool<C> pool;
