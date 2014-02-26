@@ -80,7 +80,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         if("null".equals(sql)) {
             return null;
         } else {
-            return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
+            return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);
         }
     }
 
@@ -99,7 +99,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
             // Simulate timeout if queryTimout is set to less than 5 seconds
             throw new SQLException("query timeout");
         } else {
-            return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
+            return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);
         }
     }
 
@@ -285,7 +285,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        return new TesterResultSet(this, null, _resultSetType, _resultSetConcurrency);
+        return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);
     }
 
     @Override
