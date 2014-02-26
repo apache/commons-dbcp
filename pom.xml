@@ -148,7 +148,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
-      <version>2.2</version>
+      <version>${commons.pool.version}</version>
     </dependency>
 
     <dependency>
@@ -236,6 +236,8 @@
     <!-- Version 1.0 requires Maven 3.0 or later -->
     <commons.scm-publish.version>1.0</commons.scm-publish.version>
     <commons.checkstyle.version>2.11</commons.checkstyle.version>
+    <!-- Constant for Commons Pool version (used in multiple places -->
+    <commons.pool.version>2.2</commons.pool.version>
   </properties> 
 
   <build>
@@ -268,6 +270,10 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
+            <systemPropertyVariables>
+                <!-- Ensure that logging messges are seen -->
+                <xorg.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog</xorg.apache.commons.logging.Log>
+            </systemPropertyVariables>
             <reportFormat>plain</reportFormat>
               <excludes>
                 <!-- Test support files -->
@@ -304,7 +310,7 @@
           <configuration>
             <links>
               <link>http://docs.oracle.com/javase/7/docs/api</link>
-              <link>http://commons.apache.org/proper/commons-pool/api-2.2</link>
+              <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
               <link>http://docs.oracle.com/javaee/7/api/</link>
             </links>
           </configuration>
@@ -330,7 +336,7 @@
           <configuration>
             <links>
               <link>http://docs.oracle.com/javase/7/docs/api</link>
-              <link>http://commons.apache.org/proper/commons-pool/api-2.2</link>
+              <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
               <link>http://docs.oracle.com/javaee/7/api/</link>
             </links>
           </configuration>
