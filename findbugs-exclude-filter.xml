@@ -28,6 +28,24 @@
     <Class name="~.*\.Tester.*"/>
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION" />
   </Match>
+  <!-- Tests aren't run with a security manager configured -->
+  <Match>
+    <Class name="org.apache.commons.dbcp2.TestBasicDataSource"/>
+    <Method name="setUp"/>
+    <Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED"/>
+  </Match>
+  <!-- Sleep is intentional and short -->
+  <Match>
+    <Class name="org.apache.commons.dbcp2.TestBasicDataSource"/>
+    <Method name="testCreateDataSourceCleanupEvictor"/>
+    <Bug pattern="SWL_SLEEP_WITH_LOCK_HELD"/>
+  </Match>
+  <!-- Write to static is intentional -->
+  <Match>
+    <Class name="org.apache.commons.dbcp2.TestBasicDataSource.TesterConnRequestCountDriver"/>
+    <Method name="connect"/>
+    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD "/>
+  </Match>
   <!-- Not worth coding around for test code -->
   <Match>
     <Class name="org.apache.commons.dbcp2.TesterResultSet"/>
