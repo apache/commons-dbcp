@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -85,9 +86,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     public void testIncorrectPassword() throws Exception {
-        try {
-            // Use bad password
-            ds.getConnection("u1", "zlsafjk");
+        // Use bad password
+        try (Connection c = ds.getConnection("u1", "zlsafjk");){
             fail("Able to retrieve connection with incorrect password");
         } catch (SQLException e1) {
             // should fail
@@ -96,15 +96,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         // Use good password
         ds.getConnection("u1", "p1").close();
-        try
-        {
-            ds.getConnection("u1", "x");
+        try (Connection c = ds.getConnection("u1", "x")){
             fail("Able to retrieve connection with incorrect password");
-        }
-        catch (SQLException e)
-        {
-            if (!e.getMessage().startsWith("Given password did not match"))
-            {
+        } catch (SQLException e) {
+            if (!e.getMessage().startsWith("Given password did not match")) {
                 throw e;
             }
             // else the exception was expected
@@ -115,13 +110,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         // Try related users and passwords
         ds.getConnection("foo", "bar").close();
-        try {
-            ds.getConnection("foob", "ar");
+        try (Connection c = ds.getConnection("foob", "ar")) {
             fail("Should have caused an SQLException");
         } catch (SQLException expected) {
         }
-        try {
-            ds.getConnection("foo", "baz");
+        try (Connection c = ds.getConnection("foo", "baz")){
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
@@ -212,13 +205,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         conn.close();
-        try
-        {
-            conn.createStatement();
+        try (Statement s = conn.createStatement()){
             fail("Can't use closed connections");
-        }
-        catch(SQLException e)
-        {
+        } catch(SQLException e) {
             // expected
         }
 
@@ -290,23 +279,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
-    public void testMaxTotal()
-        throws Exception
-    {
+    public void testMaxTotal() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection();
             assertTrue(c[i] != null);
         }
 
-        try
-        {
-            ds.getConnection();
+        try (Connection conn = ds.getConnection()){
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        }
-        catch(java.sql.SQLException e)
-        {
+        } catch(java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }
@@ -325,8 +307,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setDefaultMaxWaitMillis(0);
         tds.setPerUserMaxTotal("u1", Integer.valueOf(1));
         Connection conn = tds.getConnection("u1", "p1");
-        try {
-            tds.getConnection("u1", "p1");
+        try (Connection c2 = tds.getConnection("u1", "p1")){
             fail("Expecting Pool Exhausted exception");
         } catch (SQLException ex) {
             // expected
@@ -511,8 +492,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     // See DBCP-8
     public void testChangePassword() throws Exception {
-        try {
-            ds.getConnection("foo", "bay");
+        try (Connection c = ds.getConnection("foo", "bay")){
             fail("Should have generated SQLException");
         } catch (SQLException expected) {
         }
@@ -531,8 +511,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             // Should be one idle instance with new pwd
             assertEquals("Should be one idle connection in the pool",
                     1, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
-            try {
-                ds.getConnection("foo", "bar"); // old password
+            try (Connection c = ds.getConnection("foo", "bar")) { // old password
                 fail("Should have generated SQLException");
             } catch (SQLException expected) {
             }
