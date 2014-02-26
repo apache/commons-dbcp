@@ -293,6 +293,18 @@
             </ignorePathsToDelete>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${commons.javadoc.version}</version>
+          <configuration>
+            <links>
+              <link>http://docs.oracle.com/javase/7/docs/api</link>
+              <link>http://commons.apache.org/proper/commons-pool/api-2.2</link>
+              <link>http://docs.oracle.com/javaee/7/api/</link>
+            </links>
+          </configuration>
+        </plugin>
       </plugins>
     </build>
     <reporting>
