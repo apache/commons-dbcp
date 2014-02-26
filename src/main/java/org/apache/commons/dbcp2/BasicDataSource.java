@@ -53,7 +53,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
-
 /**
  * <p>Basic implementation of <code>javax.sql.DataSource</code> that is
  * configured via JavaBeans properties.  This is not the only way to
@@ -65,11 +64,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Dirk Verbeeck
  * @version $Revision$ $Date$
  */
-public class BasicDataSource
-        implements DataSource, BasicDataSourceMXBean, MBeanRegistration {
+public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration {
 
-    private static final Log log =
-            LogFactory.getLog(BasicDataSource.class);
+    private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
@@ -572,11 +569,9 @@ public class BasicDataSource
             BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
 
     /**
-     * <p>Returns the maximum number of milliseconds that the pool will wait
-     * for a connection to be returned before throwing an exception.
-     * </p>
-     * <p>A value less than or equal to zero means the pool is set to wait
-     * indefinitely.</p>
+     * Returns the maximum number of milliseconds that the pool will wait
+     * for a connection to be returned before throwing an exception. A value
+     * less than or equal to zero means the pool is set to wait indefinitely.
      *
      * @return the maxWaitMillis property value
      */
@@ -586,10 +581,8 @@ public class BasicDataSource
     }
 
     /**
-     * <p>Sets the MaxWaitMillis property.
-     * </p>
-     * <p>Use -1 to make the pool wait indefinitely.
-     * </p>
+     * Sets the MaxWaitMillis property. Use -1 to make the pool wait
+     * indefinitely.
      *
      * @param maxWaitMillis the new value for MaxWaitMillis
      * @see #getMaxWaitMillis()
@@ -1450,7 +1443,6 @@ public class BasicDataSource
         // This method isn't supported by the PoolingDataSource returned by
         // the createDataSource
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
-        // return createDataSource().getConnection(username, password);
     }
 
 
@@ -1472,7 +1464,6 @@ public class BasicDataSource
         // This method isn't supported by the PoolingDataSource returned by
         // the createDataSource
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
-        //return createDataSource().getLoginTimeout();
     }
 
 
@@ -1510,7 +1501,6 @@ public class BasicDataSource
         // This method isn't supported by the PoolingDataSource returned by
         // the createDataSource
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
-        //createDataSource().setLoginTimeout(loginTimeout);
     }
 
 
@@ -1863,7 +1853,6 @@ public class BasicDataSource
         return closed;
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
@@ -1873,7 +1862,6 @@ public class BasicDataSource
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException("BasicDataSource is not a wrapper.");
     }
-    /* JDBC_4_ANT_KEY_END */
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
@@ -2118,8 +2106,7 @@ public class BasicDataSource
      */
     protected void startPoolMaintenance() {
         if (connectionPool != null && timeBetweenEvictionRunsMillis > 0) {
-            connectionPool.setTimeBetweenEvictionRunsMillis(
-                    timeBetweenEvictionRunsMillis);
+            connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
         }
     }
 
@@ -2156,8 +2143,7 @@ public class BasicDataSource
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setCacheState(cacheState);
             connectionFactory.setPoolStatements(poolPreparedStatements);
-            connectionFactory.setMaxOpenPrepatedStatements(
-                    maxOpenPreparedStatements);
+            connectionFactory.setMaxOpenPrepatedStatements(maxOpenPreparedStatements);
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
