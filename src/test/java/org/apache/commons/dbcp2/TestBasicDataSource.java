@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
@@ -244,12 +245,10 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     public void testInvalidValidationQuery() {
-        try {
-            ds.setValidationQuery("invalid");
-            ds.getConnection();
+        ds.setValidationQuery("invalid");
+        try (Connection c = ds.getConnection()) {
             fail("expected SQLException");
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             if (e.toString().indexOf("invalid") < 0) {
                 fail("expected detailed error message");
             }
@@ -259,8 +258,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testValidationQueryTimoutFail() {
         ds.setTestOnBorrow(true);
         ds.setValidationQueryTimeout(3); // Too fast for TesterStatement
-        try {
-            ds.getConnection();
+        try (Connection c = ds.getConnection()) {
             fail("expected SQLException");
         } catch (SQLException ex) {
             if (ex.toString().indexOf("timeout") < 0) {
@@ -306,7 +304,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testInvalidConnectionInitSql() {
         try {
             ds.setConnectionInitSqls(Arrays.asList(new String[]{"SELECT 1","invalid"}));
-            ds.getConnection();
+            try (Connection c = ds.getConnection()) {}
             fail("expected SQLException");
         }
         catch (SQLException e) {
@@ -486,8 +484,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
         int threadCount = Thread.activeCount();
         for (int i = 0; i < 10; i++) {
-            try {
-                ds.getConnection();
+            try (Connection c = ds.getConnection()){
             } catch (SQLException ex) {
                 // ignore
             }
@@ -560,11 +557,11 @@ public class TestBasicDataSource extends TestConnectionPool {
  */
 class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
-    private static int connectionRequestCount = 0;
+    private static AtomicInteger connectionRequestCount = new AtomicInteger(0);
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        connectionRequestCount++;
+        connectionRequestCount.incrementAndGet();
         return super.connect(url, info);
     }
 
@@ -574,10 +571,10 @@ class TesterConnRequestCountDriver extends TesterDriver {
     }
 
     public static int getConnectionRequestCount() {
-        return connectionRequestCount;
+        return connectionRequestCount.get();
     }
 
     public static void initConnRequestCount() {
-        connectionRequestCount = 0;
+        connectionRequestCount.set(0);
     }
 }

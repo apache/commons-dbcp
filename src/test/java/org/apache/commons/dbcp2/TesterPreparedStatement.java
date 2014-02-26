@@ -50,7 +50,9 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         super(conn);
         try {
             _catalog = conn.getCatalog();
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            // Ignored
+        }
     }
 
     public TesterPreparedStatement(Connection conn, String sql) {
@@ -58,7 +60,9 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         _sql = sql;
         try {
             _catalog = conn.getCatalog();
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            // Ignored
+        }
     }
 
     public TesterPreparedStatement(Connection conn, String sql, int resultSetType, int resultSetConcurrency) {
@@ -66,7 +70,9 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         _sql = sql;
         try {
             _catalog = conn.getCatalog();
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            // Ignored
+        }
     }
 
     /** for junit test only */
