@@ -163,9 +163,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         return ref;
     }
 
-    private void registerPool(
-        String username, String password)
-        throws javax.naming.NamingException, SQLException {
+    private void registerPool(String username, String password)
+            throws NamingException, SQLException {
 
         ConnectionPoolDataSource cpds = testCPDS(username, password);
 

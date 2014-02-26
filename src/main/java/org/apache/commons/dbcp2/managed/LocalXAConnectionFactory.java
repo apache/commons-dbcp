@@ -289,8 +289,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void forget(Xid xid) {
-            if (xid != null && this.currentXid.equals(xid)) {
-                this.currentXid = null;
+            if (xid != null && xid.equals(currentXid)) {
+                currentXid = null;
             }
         }
 

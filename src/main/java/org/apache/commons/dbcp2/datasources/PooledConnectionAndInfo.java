@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,9 @@ package org.apache.commons.dbcp2.datasources;
 import javax.sql.PooledConnection;
 
 /**
- * Immutable poolable object holding a PooledConnection along with the username and password 
+ * Immutable poolable object holding a PooledConnection along with the username and password
  * used to create the connection.
- * 
+ *
  * @version $Revision$ $Date$
  */
 final class PooledConnectionAndInfo {
@@ -30,7 +30,7 @@ final class PooledConnectionAndInfo {
     private final String password;
     private final String username;
     private final UserPassKey upkey;
-    
+
     PooledConnectionAndInfo(PooledConnection pc, String username, String password) {
         this.pooledConnection = pc;
         this.username = username;
@@ -38,11 +38,11 @@ final class PooledConnectionAndInfo {
         upkey = new UserPassKey(username, password);
     }
 
-    final PooledConnection getPooledConnection() {
+    PooledConnection getPooledConnection() {
         return pooledConnection;
     }
 
-    final UserPassKey getUserPassKey() {
+    UserPassKey getUserPassKey() {
         return upkey;
     }
 
@@ -50,16 +50,15 @@ final class PooledConnectionAndInfo {
      * Get the value of password.
      * @return value of password.
      */
-    final String getPassword() {
+    String getPassword() {
         return password;
     }
-    
+
     /**
      * Get the value of username.
      * @return value of username.
      */
-    final String getUsername() {
+    String getUsername() {
         return username;
     }
-    
 }

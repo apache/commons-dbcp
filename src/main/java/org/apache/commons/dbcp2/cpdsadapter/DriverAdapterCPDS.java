@@ -533,7 +533,7 @@ public class DriverAdapterCPDS
      * Set the log writer for this data source. NOT USED.
      */
     @Override
-    public void setLogWriter(java.io.PrintWriter out) {
+    public void setLogWriter(PrintWriter out) {
         logWriter = out;
     }
 
