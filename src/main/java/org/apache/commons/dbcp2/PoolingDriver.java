@@ -50,7 +50,7 @@ public class PoolingDriver implements Driver {
     }
 
     /** The map of registered pools. */
-    protected static final HashMap<String,ObjectPool<? extends Connection>> _pools =
+    protected static final HashMap<String,ObjectPool<? extends Connection>> pools =
             new HashMap<>();
 
     /** Controls access to the underlying connection */
@@ -79,7 +79,7 @@ public class PoolingDriver implements Driver {
 
     public synchronized ObjectPool<? extends Connection> getConnectionPool(String name)
             throws SQLException {
-        ObjectPool<? extends Connection> pool = _pools.get(name);
+        ObjectPool<? extends Connection> pool = pools.get(name);
         if (null == pool) {
             throw new SQLException("Pool not registered.");
         }
@@ -88,13 +88,13 @@ public class PoolingDriver implements Driver {
 
     public synchronized void registerPool(String name,
             ObjectPool<? extends Connection> pool) {
-        _pools.put(name,pool);
+        pools.put(name,pool);
     }
 
     public synchronized void closePool(String name) throws SQLException {
-        ObjectPool<? extends Connection> pool = _pools.get(name);
+        ObjectPool<? extends Connection> pool = pools.get(name);
         if (pool != null) {
-            _pools.remove(name);
+            pools.remove(name);
             try {
                 pool.close();
             }
@@ -105,7 +105,7 @@ public class PoolingDriver implements Driver {
     }
 
     public synchronized String[] getPoolNames(){
-        Set<String> names = _pools.keySet();
+        Set<String> names = pools.keySet();
         return names.toArray(new String[names.size()]);
     }
 
