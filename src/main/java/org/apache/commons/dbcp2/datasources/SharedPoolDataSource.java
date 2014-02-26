@@ -152,8 +152,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Returns a <code>SharedPoolDataSource</code> {@link Reference}.
-     *
-     * @since 1.2.2
      */
     @Override
     public Reference getReference() throws NamingException {

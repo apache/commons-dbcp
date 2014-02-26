@@ -155,7 +155,6 @@ public class PoolingDriver implements Driver {
      * @throws SQLException if the connection is not a
      * <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
      * the connection
-     * @since 1.2.2
      */
     public void invalidateConnection(Connection conn) throws SQLException {
         if (conn instanceof PoolGuardConnectionWrapper) { // normal case

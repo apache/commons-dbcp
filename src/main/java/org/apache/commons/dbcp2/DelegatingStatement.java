@@ -348,7 +348,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * Returns a String representation of this object.
      *
      * @return String
-     * @since 1.2.2
      */
     @Override
     public String toString() {

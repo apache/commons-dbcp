@@ -82,7 +82,6 @@ public class BasicDataSourceFactory implements ObjectFactory {
     /**
      * The property name for connectionInitSqls.
      * The associated value String must be of the form [query;]*
-     * @since 1.3
      */
     private final static String PROP_CONNECTIONINITSQLS = "connectionInitSqls";
     private final static String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";

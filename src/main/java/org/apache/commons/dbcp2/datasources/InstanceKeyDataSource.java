@@ -833,7 +833,6 @@ public abstract class InstanceKeyDataSource
      *
      * @return true if a rollback will be issued after executing the
      * validation query
-     * @since 1.2.2
      */
     public boolean isRollbackAfterValidation() {
         return this.rollbackAfterValidation;
@@ -847,7 +846,6 @@ public abstract class InstanceKeyDataSource
      * if a validation query is set
      *
      * @param rollbackAfterValidation new property value
-     * @since 1.2.2
      */
     public void setRollbackAfterValidation(boolean rollbackAfterValidation) {
         assertInitializationAllowed();

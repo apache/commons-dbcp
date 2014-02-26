@@ -80,7 +80,6 @@ public class PoolableConnectionFactory
      * no timeout.
      *
      * @param timeout new validation query timeout value in seconds
-     * @since 1.3
      */
     public void setValidationQueryTimeout(int timeout) {
         _validationQueryTimeout = timeout;
@@ -90,7 +89,6 @@ public class PoolableConnectionFactory
      * Sets the SQL statements I use to initialize newly created {@link Connection}s.
      * Using <tt>null</tt> turns off connection initialization.
      * @param connectionInitSqls SQL statement to initialize {@link Connection}s.
-     * @since 1.3
      */
     public void setConnectionInitSql(Collection<String> connectionInitSqls) {
         _connectionInitSqls = connectionInitSqls;

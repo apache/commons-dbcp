@@ -164,7 +164,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param sql the sql string used to define the CallableStatement
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
-     * @since 1.3
      */
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
@@ -186,7 +185,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param resultSetConcurrency result set concurrency
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
-     * @since 1.3
      */
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
