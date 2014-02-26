@@ -50,8 +50,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class SharedPoolDataSource extends InstanceKeyDataSource {
 
-    // TODO Re-calculate this
-    private static final long serialVersionUID = -8132305535403690372L;
+    private static final long serialVersionUID = -1458539734480586454L;
 
     // Pool properties
     private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;

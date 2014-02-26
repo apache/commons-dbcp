@@ -78,11 +78,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
 
-    @Override
-    public void testBackPointers() throws Exception {
-        // todo disabled until a wrapping issuen in SharedPoolDataSource are resolved
-    }
-
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in

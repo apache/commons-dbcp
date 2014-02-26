@@ -58,8 +58,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  */
 public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
-    // TODO Re-calculate this
-    private static final long serialVersionUID = -3104731034410444060L;
+    private static final long serialVersionUID = 7872747993848065028L;
 
     private static final Log log =
             LogFactory.getLog(PerUserPoolDataSource.class);

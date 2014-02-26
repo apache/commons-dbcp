@@ -78,18 +78,13 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds = tds;
     }
 
-    @Override
-    public void testBackPointers() throws Exception {
-        // todo disabled until a wrapping issuen in PerUserPoolDataSource are resolved
-    }
 
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
-    public void testIncorrectPassword() throws Exception
-    {
+    public void testIncorrectPassword() throws Exception {
         try {
             // Use bad password
             ds.getConnection("u1", "zlsafjk");

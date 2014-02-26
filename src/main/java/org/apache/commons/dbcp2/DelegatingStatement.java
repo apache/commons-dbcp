@@ -460,8 +460,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /*
      * Note was protected prior to JDBC 4
-     * TODO Consider adding build flags to make this protected unless we are
-     *      using JDBC 4.
      */
     @Override
     public boolean isClosed() throws SQLException {
