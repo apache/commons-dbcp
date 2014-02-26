@@ -314,7 +314,7 @@
           <configuration>
             <links>
               <link>http://docs.oracle.com/javase/7/docs/api</link>
-              <link>http://commons.apache.org/proper/commons-pool/api-2.0</link>
+              <link>http://commons.apache.org/proper/commons-pool/api-2.2</link>
               <link>http://docs.oracle.com/javaee/7/api/</link>
             </links>
           </configuration>
