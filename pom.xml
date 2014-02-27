@@ -347,18 +347,12 @@
           <artifactId>maven-changes-plugin</artifactId>
           <version>${commons.changes.version}</version>
           <configuration>
-            <xmlPath>${basedir}/src/changes/changes.xml</xmlPath>
-            <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
-            <template>dbcp-release-notes.vm</template>
-            <templateDirectory>src/template</templateDirectory>
+            <template>release-notes.vm</template>
+            <templateDirectory>src/changes</templateDirectory>
+            <!-- Limit this to released, supported versions else there are -->
+            <!-- to many issues in the report                              -->
+            <fixVersionIds>12311977,12312615,12313721</fixVersionIds>
           </configuration>
-          <reportSets>
-            <reportSet>
-              <reports>
-                <report>changes-report</report>
-              </reports>
-            </reportSet>
-          </reportSets>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
