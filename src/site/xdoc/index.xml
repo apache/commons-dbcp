@@ -63,9 +63,9 @@ JDBC. Here is how it works:
 <p>DBCP 2.x is based on Commons Pool 2 and provides increased performance, JMX
 support as well as numerous other new features compared to DBCP 1.x. Users
 upgrading to 2.x should be aware that the Java package name has changed, as well
-as the Maven co-ordinates as DBCP 2.x is not binary compatible with DBCP 1.x.
-Users should also be aware that some configuration options (e.g. maxActive to
-maxTotal) have been renamed to align them with the new names used by Commons
+as the Maven co-ordinates, since DBCP 2.x is not binary compatible with DBCP
+1.x. Users should also be aware that some configuration options (e.g. maxActive
+to maxTotal) have been renamed to align them with the new names used by Commons
 Pool 2.</p>
 
 <p>There is no difference in the codebase supporting DBCP 1.4.x and 1.3.x other
