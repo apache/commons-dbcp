@@ -23,9 +23,9 @@
 # Repository base path
 repository=${user.home}/.m2/repository
 
-# commons-pool.jar - path to commons-pool2-2.1
-commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.1
-commons-pool.jar=${commons-pool.home}/commons-pool2-2.1.jar
+# commons-pool.jar - path to commons-pool2-2.2
+commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.2
+commons-pool.jar=${commons-pool.home}/commons-pool2-2.2.jar
 
 # JUnit
 junit.home=${repository}/junit/junit/4.11
