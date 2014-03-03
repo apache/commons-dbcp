@@ -623,7 +623,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         // Statement's when it is closed.
         // DBCP-288. Not all the traced objects will be statements
         List<AbandonedTrace> traces = getTrace();
-        if(traces != null) {
+        if(traces != null && traces.size() > 0) {
             Iterator<AbandonedTrace> traceIter = traces.iterator();
             while (traceIter.hasNext()) {
                 Object trace = traceIter.next();
