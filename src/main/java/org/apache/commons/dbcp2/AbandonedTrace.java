@@ -18,6 +18,7 @@ package org.apache.commons.dbcp2;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -125,7 +126,11 @@ public class AbandonedTrace implements TrackedUse {
      * @return List of objects
      */
     protected List<AbandonedTrace> getTrace() {
-        ArrayList<AbandonedTrace> result = new ArrayList<>(traceList.size());
+        int size = traceList.size();
+        if (size == 0) {
+            return Collections.emptyList();
+        }
+        ArrayList<AbandonedTrace> result = new ArrayList<>(size);
         synchronized (this.traceList) {
             Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
