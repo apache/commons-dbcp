@@ -139,12 +139,24 @@ public class PoolableConnection extends DelegatingConnection<Connection>
         }
 
         /* Can't set close before this code block since the connection needs to
-         * be open when validation runs. Can't set close after this code black
+         * be open when validation runs. Can't set close after this code block
          * since by then the connection will have been returned to the pool and
          * may have been borrowed by another thread. Therefore, the close flag
          * is set in passivate().
          */
-        if (!isUnderlyingConectionClosed) {
+        if (isUnderlyingConectionClosed) {
+            // Abnormal close: underlying connection closed unexpectedly, so we
+            // must destroy this proxy
+            try {
+                _pool.invalidateObject(this);
+            } catch(IllegalStateException e) {
+                // pool is closed, so close the connection
+                passivate();
+                getInnermostDelegate().close();
+            } catch (Exception e) {
+                throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
+            }
+        } else {
             // Normal close: underlying connection is still open, so we
             // simply need to return this proxy to the pool
             try {
@@ -159,18 +171,6 @@ public class PoolableConnection extends DelegatingConnection<Connection>
                 throw e;
             } catch(Exception e) {
                 throw new SQLException("Cannot close connection (return to pool failed)", e);
-            }
-        } else {
-            // Abnormal close: underlying connection closed unexpectedly, so we
-            // must destroy this proxy
-            try {
-                _pool.invalidateObject(this);
-            } catch(IllegalStateException e) {
-                // pool is closed, so close the connection
-                passivate();
-                getInnermostDelegate().close();
-            } catch (Exception e) {
-                throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
             }
         }
     }

@@ -60,6 +60,11 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
+    <release version="2.0.1" date="TBD" description="This is a bug fix release">
+      <action dev="markt" type="fix">
+        Small performance improvement when returning connections to the pool.
+      </action>
+    </release>
     <release version="2.0" date="3 March 2014" description=
 "This release includes new features as well as bug fixes and enhancements.
  Version 2.0.x supports JDBC 4.1, so requires Java 7.
