@@ -47,15 +47,14 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 
 //
 // To compile this example, you'll want:
-//  * commons-pool-1.5.4.jar
-//  * commons-dbcp-1.2.2.jar
-//  * j2ee.jar (for the javax.sql classes)
+//  * commons-pool2-2.2.jar
+//  * commons-dbcp2-2.0.jar
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool-1.5.6.jar
-//  * commons-dbcp-1.3.jar (JDK 1.4-1.5) or commons-dbcp-1.4 (JDK 1.6+)
-//  * j2ee.jar (for the javax.sql classes)
+//  * commons-pool2-2.2.jar
+//  * commons-dbcp2-2.0.jar
+//  * commons-logging-1.1.3.jar
 //  * the classes for your (underlying) JDBC driver
 // in your classpath.
 //
@@ -67,11 +66,11 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 // property to do this.
 //
 // For example:
-//  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:j2ee.jar:oracle-jdbc.jar:. \
+//  java -Djdbc.drivers=org.h2.Driver \
+//       -classpath commons-pool2-2.2.jar:commons-dbcp2-2.0.jar:commons-logging-1.1.3.jar:h2-1.3.152.jar:. \
 //       PoolingDataSourceExample \
-//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
-//       "SELECT * FROM DUAL"
+//       "jdbc:h2:~/test" \
+//       "SELECT 1"
 //
 public class PoolingDataSourceExample {
 
@@ -83,7 +82,7 @@ public class PoolingDataSourceExample {
         //
         System.out.println("Loading underlying JDBC driver.");
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -158,6 +157,9 @@ public class PoolingDataSourceExample {
         //
         ObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(poolableConnectionFactory);
+        
+        // Set the factory's pool property to the owning pool
+        poolableConnectionFactory.setPool(connectionPool);
 
         //
         // Finally, we create the PoolingDriver itself,
