@@ -218,7 +218,7 @@ The <action> type attribute can be add,update,fix,remove.
         to take place. When testing with Oracle, this resulted in database
         validation being approximately 7 times faster.
       </action>
-      <action dev="markt" issue="249" type="add">
+      <action dev="markt" issue="DBCP-249" type="add">
         Add support for validation testing database connections on creation.
       </action>
     </release>
