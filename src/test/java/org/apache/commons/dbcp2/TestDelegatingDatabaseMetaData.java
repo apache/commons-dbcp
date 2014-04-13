@@ -20,9 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Test suite for {@link DelegatingDatabaseMetaData}.
@@ -30,10 +28,6 @@ import junit.framework.TestSuite;
 public class TestDelegatingDatabaseMetaData extends TestCase {
     public TestDelegatingDatabaseMetaData(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDelegatingDatabaseMetaData.class);
     }
 
     private DelegatingConnection<Connection> conn = null;

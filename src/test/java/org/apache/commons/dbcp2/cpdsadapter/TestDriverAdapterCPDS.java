@@ -28,9 +28,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.junit.Assert;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Tests for DriverAdapterCPDS
@@ -40,10 +38,6 @@ import junit.framework.TestSuite;
 public class TestDriverAdapterCPDS extends TestCase {
     public TestDriverAdapterCPDS(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDriverAdapterCPDS.class);
     }
 
     private DriverAdapterCPDS pcds;

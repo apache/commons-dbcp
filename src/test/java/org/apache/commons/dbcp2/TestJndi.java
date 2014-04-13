@@ -24,10 +24,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.dbcp2.datasources.PerUserPoolDataSource;
 
@@ -57,10 +54,6 @@ public class TestJndi extends TestCase {
      */
     public TestJndi(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestJndi.class);
     }
 
     /**

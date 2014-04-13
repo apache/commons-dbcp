@@ -27,9 +27,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -44,10 +41,6 @@ import org.junit.Assert;
 public class TestPoolingDriver extends TestConnectionPool {
     public TestPoolingDriver(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPoolingDriver.class);
     }
 
     @Override

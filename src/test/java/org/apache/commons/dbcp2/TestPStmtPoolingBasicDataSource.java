@@ -22,9 +22,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  *
@@ -34,10 +31,6 @@ import junit.framework.TestSuite;
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public TestPStmtPoolingBasicDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPStmtPoolingBasicDataSource.class);
     }
 
     @Override

@@ -20,10 +20,7 @@ package org.apache.commons.dbcp2.datasources;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 
 /**
@@ -33,11 +30,6 @@ public class TestInstanceKeyDataSource extends TestCase {
     public TestInstanceKeyDataSource(String testName) {
         super(testName);
     }
-
-    public static Test suite() {
-        return new TestSuite(TestInstanceKeyDataSource.class);
-    }
-
 
     @Override
     public void setUp() throws Exception {

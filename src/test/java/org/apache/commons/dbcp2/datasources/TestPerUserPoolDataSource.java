@@ -29,9 +29,6 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
@@ -44,10 +41,6 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 public class TestPerUserPoolDataSource extends TestConnectionPool {
     public TestPerUserPoolDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPerUserPoolDataSource.class);
     }
 
     @Override

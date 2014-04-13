@@ -27,9 +27,6 @@ import java.sql.Statement;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.Assert;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 /**
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  *
@@ -39,10 +36,6 @@ import junit.framework.TestSuite;
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public TestAbandonedBasicDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestAbandonedBasicDataSource.class);
     }
 
     @Override

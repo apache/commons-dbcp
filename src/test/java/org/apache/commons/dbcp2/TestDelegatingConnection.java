@@ -21,10 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
@@ -34,10 +31,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 public class TestDelegatingConnection extends TestCase {
     public TestDelegatingConnection(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDelegatingConnection.class);
     }
 
     private DelegatingConnection<? extends Connection> conn = null;

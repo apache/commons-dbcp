@@ -20,9 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @version $Revision$ $Date$
@@ -30,10 +28,6 @@ import junit.framework.TestSuite;
 public class TestDelegatingCallableStatement extends TestCase {
     public TestDelegatingCallableStatement(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDelegatingCallableStatement.class);
     }
 
     private DelegatingConnection<Connection> conn = null;

@@ -27,9 +27,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @author Dirk Verbeeck
@@ -38,10 +36,6 @@ import junit.framework.TestSuite;
 public class TestFactory extends TestCase {
     public TestFactory(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestFactory.class);
     }
 
     // Bugzilla Bug 24082: bug in InstanceKeyDataSourceFactory

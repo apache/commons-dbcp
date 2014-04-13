@@ -19,10 +19,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.Assert;
@@ -34,10 +31,6 @@ import org.junit.Assert;
 public class TestPoolableConnection extends TestCase {
     public TestPoolableConnection(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPoolableConnection.class);
     }
 
     private ObjectPool<PoolableConnection> pool = null;

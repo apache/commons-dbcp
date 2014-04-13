@@ -26,9 +26,6 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.DelegatingStatement;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
@@ -42,10 +39,6 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 public class TestSharedPoolDataSource extends TestConnectionPool {
     public TestSharedPoolDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestSharedPoolDataSource.class);
     }
 
     @Override
