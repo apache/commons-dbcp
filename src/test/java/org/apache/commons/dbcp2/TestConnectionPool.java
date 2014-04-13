@@ -695,9 +695,9 @@ public abstract class TestConnectionPool extends TestCase {
 
     /**
      * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection
-     * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
-     * threads will continue this process indefinitely.  If <expectError> is true, exactly 1/2 of the
-     * threads are expected to either throw exceptions or fail to complete. If <expectError> is false,
+     * from the pool, hold it for {@code holdTime} ms, and then return it to the pool.  If {@code loopOnce} is false,
+     * threads will continue this process indefinitely.  If {@code expectError} is true, exactly 1/2 of the
+     * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
      * all threads are expected to complete successfully.
      *
      * @param holdTime time in ms that a thread holds a connection before returning it to the pool
@@ -714,11 +714,11 @@ public abstract class TestConnectionPool extends TestCase {
     }
     
     /**
-     * Launches a group of <numThreads> threads, each of which will attempt to obtain a connection
-     * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
-     * threads will continue this process indefinitely.  If <expectError> is true, exactly 1/2 of the
-     * threads are expected to either throw exceptions or fail to complete. If <expectError> is false,
-     * all threads are expected to complete successfully.  Threads are stopped after <duration> ms.
+     * Launches a group of {@code numThreads} threads, each of which will attempt to obtain a connection
+     * from the pool, hold it for {@code holdTime} ms, and then return it to the pool.  If {@code loopOnce} is false,
+     * threads will continue this process indefinitely.  If {@code expectError} is true, exactly 1/2 of the
+     * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
+     * all threads are expected to complete successfully.  Threads are stopped after {@code duration} ms.
      *
      * @param holdTime time in ms that a thread holds a connection before returning it to the pool
      * @param expectError whether or not an error is expected
