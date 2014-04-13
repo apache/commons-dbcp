@@ -28,9 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 
@@ -42,10 +39,6 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
 
     public TestDataSourceXAConnectionFactory(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDataSourceXAConnectionFactory.class);
     }
 
     protected BasicManagedDataSource bmds;

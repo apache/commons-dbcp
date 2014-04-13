@@ -22,9 +22,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
@@ -34,10 +32,6 @@ import junit.framework.TestSuite;
 public class TestDelegatingStatement extends TestCase {
     public TestDelegatingStatement(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDelegatingStatement.class);
     }
 
     private DelegatingConnection<Connection> conn = null;

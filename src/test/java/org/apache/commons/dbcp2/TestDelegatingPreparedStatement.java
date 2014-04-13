@@ -20,9 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @author Rodney Waldhoff
@@ -32,10 +30,6 @@ import junit.framework.TestSuite;
 public class TestDelegatingPreparedStatement extends TestCase {
     public TestDelegatingPreparedStatement(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDelegatingPreparedStatement.class);
     }
 
     private DelegatingConnection<Connection> conn = null;

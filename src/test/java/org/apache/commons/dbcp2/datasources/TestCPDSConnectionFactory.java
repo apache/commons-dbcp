@@ -22,10 +22,7 @@ import java.sql.SQLException;
 
 import javax.sql.PooledConnection;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -39,10 +36,6 @@ public class TestCPDSConnectionFactory extends TestCase {
 
     public TestCPDSConnectionFactory(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestCPDSConnectionFactory.class);
     }
 
     @Override

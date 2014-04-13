@@ -17,9 +17,6 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
@@ -46,10 +43,6 @@ import java.util.Properties;
 public class TestManagedDataSource extends TestConnectionPool {
     public TestManagedDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestManagedDataSource.class);
     }
 
     @Override

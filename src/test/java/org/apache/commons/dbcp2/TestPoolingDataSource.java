@@ -20,9 +20,6 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.util.Properties;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.Assert;
 
@@ -34,10 +31,6 @@ import org.junit.Assert;
 public class TestPoolingDataSource extends TestConnectionPool {
     public TestPoolingDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPoolingDataSource.class);
     }
 
     @Override

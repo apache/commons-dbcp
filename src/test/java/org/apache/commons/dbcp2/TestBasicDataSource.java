@@ -26,9 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 /**
  * TestSuite for BasicDataSource
  *
@@ -38,10 +35,6 @@ import junit.framework.TestSuite;
 public class TestBasicDataSource extends TestConnectionPool {
     public TestBasicDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestBasicDataSource.class);
     }
 
     @Override

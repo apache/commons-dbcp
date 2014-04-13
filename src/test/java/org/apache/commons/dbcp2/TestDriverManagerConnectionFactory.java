@@ -24,9 +24,7 @@ import javax.sql.DataSource;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * This test *must* execute before all other tests to be effective as it tests
@@ -39,10 +37,6 @@ public class TestDriverManagerConnectionFactory extends TestCase {
 
     public TestDriverManagerConnectionFactory(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestDriverManagerConnectionFactory.class);
     }
 
     public void testDriverManagerInit() throws Exception {

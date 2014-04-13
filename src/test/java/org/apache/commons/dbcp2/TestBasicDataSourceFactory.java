@@ -20,9 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.util.Properties;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * TestSuite for BasicDataSourceFactory
@@ -33,10 +31,6 @@ import junit.framework.TestSuite;
 public class TestBasicDataSourceFactory extends TestCase {
     public TestBasicDataSourceFactory(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestBasicDataSourceFactory.class);
     }
 
     public void testNoProperties() throws Exception {

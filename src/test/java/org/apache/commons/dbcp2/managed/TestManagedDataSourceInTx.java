@@ -27,9 +27,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import javax.transaction.Transaction;
 
 /**
@@ -42,10 +39,6 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     public TestManagedDataSourceInTx(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestManagedDataSourceInTx.class);
     }
 
     @Override

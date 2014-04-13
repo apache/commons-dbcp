@@ -21,8 +21,6 @@ import java.sql.SQLException;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * TestSuite for BasicManagedDataSource
@@ -30,10 +28,6 @@ import junit.framework.TestSuite;
 public class TestBasicManagedDataSource extends TestBasicDataSource {
     public TestBasicManagedDataSource(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestBasicManagedDataSource.class);
     }
 
     @Override

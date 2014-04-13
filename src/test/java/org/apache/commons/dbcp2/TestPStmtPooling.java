@@ -26,9 +26,7 @@ import java.sql.SQLException;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -44,10 +42,6 @@ import org.junit.Assert;
 public class TestPStmtPooling extends TestCase {
     public TestPStmtPooling(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TestPStmtPooling.class);
     }
 
     public void testStmtPool() throws Exception {
