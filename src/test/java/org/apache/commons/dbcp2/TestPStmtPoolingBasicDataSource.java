@@ -235,12 +235,13 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         assertSame(inner1, inner2);
     }
-    /*
-    public void testMultipleThreads1() throws Exception {
+
+    // currently fails with AssertionFailedError: Did not expect any threads to fail expected:<0> but was:<1>
+    // The following appears in the console: Unexpected error: ResultSet is closed.
+    public void IGNOREDtestMultipleThreads1() throws Exception {
         ds.setMaxWaitMillis(-1);
         ds.setMaxTotal(5);
         ds.setMaxOpenPreparedStatements(-1);
         multipleThreads(5, false, false, -1, 3, 100, 10000);
     }
-    */
 }
