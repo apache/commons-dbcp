@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.Stack;
 
 import junit.framework.TestCase;
@@ -707,10 +708,32 @@ public abstract class TestConnectionPool extends TestCase {
      * @throws Exception
      */
     protected void multipleThreads(final int holdTime,
+        final boolean expectError, final boolean loopOnce,
+        final long maxWaitMillis) throws Exception {
+        multipleThreads(holdTime, expectError, loopOnce, maxWaitMillis, 1, 2 * getMaxTotal(), 300);
+    }
+    
+    /**
+     * Launches a group of <numThreads> threads, each of which will attempt to obtain a connection
+     * from the pool, hold it for <holdTime> ms, and then return it to the pool.  If <loopOnce> is false,
+     * threads will continue this process indefinitely.  If <expectError> is true, exactly 1/2 of the
+     * threads are expected to either throw exceptions or fail to complete. If <expectError> is false,
+     * all threads are expected to complete successfully.  Threads are stopped after <duration> ms.
+     *
+     * @param holdTime time in ms that a thread holds a connection before returning it to the pool
+     * @param expectError whether or not an error is expected
+     * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
+     * @param maxWaitMillis passed in by client - has no impact on the test itself, but does get reported
+     * @param numThreads the number of threads
+     * @param duration duration in ms of test
+     *
+     * @throws Exception
+     */
+    protected void multipleThreads(final int holdTime,
             final boolean expectError, final boolean loopOnce,
-            final long maxWaitMillis) throws Exception {
+            final long maxWaitMillis, int numStatements, int numThreads, long duration) throws Exception {
                 long startTime = timeStamp();
-                final PoolTest[] pts = new PoolTest[2 * getMaxTotal()];
+                final PoolTest[] pts = new PoolTest[numThreads];
                 // Catch Exception so we can stop all threads if one fails
                 ThreadGroup threadGroup = new ThreadGroup("foo") {
                     @Override
@@ -722,7 +745,7 @@ public abstract class TestConnectionPool extends TestCase {
                 };
                 // Create all the threads
                 for (int i = 0; i < pts.length; i++) {
-                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce);
+                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce, numStatements);
                 }
                 // Start all the threads
                 for (PoolTest pt : pts) {
@@ -730,7 +753,7 @@ public abstract class TestConnectionPool extends TestCase {
                 }
 
                 // Give all threads a chance to start and succeed
-                Thread.sleep(300L);
+                Thread.sleep(duration);
 
                 // Stop threads
                 for (PoolTest pt : pts) {
@@ -817,6 +840,8 @@ public abstract class TestConnectionPool extends TestCase {
          * The number of milliseconds to hold onto a database connection
          */
         private final int connHoldTime;
+        
+        private final int numStatements;
 
         private volatile boolean isRun;
 
@@ -825,6 +850,8 @@ public abstract class TestConnectionPool extends TestCase {
         private final Thread thread;
 
         private Throwable thrown;
+        
+        private final Random random = new Random();
 
         // Debug for DBCP-318
         private final long created; // When object was created
@@ -841,10 +868,14 @@ public abstract class TestConnectionPool extends TestCase {
         private final boolean loopOnce; // If true, don't repeat loop
 
         public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException) {
-            this(threadGroup, connHoldTime, isStopOnException, false);
+            this(threadGroup, connHoldTime, isStopOnException, false, 1);
+        }
+        
+        public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, int numStatements) {
+            this(threadGroup, connHoldTime, isStopOnException, false, numStatements);
         }
 
-        private PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, boolean once) {
+        private PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, boolean once, int numStatements) {
             this.loopOnce = once;
             this.connHoldTime = connHoldTime;
             stopOnException = isStopOnException;
@@ -854,6 +885,7 @@ public abstract class TestConnectionPool extends TestCase {
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
             created = timeStamp();
+            this.numStatements = numStatements;
         }
 
         public void start(){
@@ -873,8 +905,9 @@ public abstract class TestConnectionPool extends TestCase {
                     connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);
+                    final String sql = numStatements == 1 ? "select * from dual" : "select count " + random.nextInt(numStatements - 1);
                     PreparedStatement stmt =
-                        conn.prepareStatement("select * from dual");
+                        conn.prepareStatement(sql);
                     assertNotNull(stmt);
                     ResultSet rset = stmt.executeQuery();
                     assertNotNull(rset);

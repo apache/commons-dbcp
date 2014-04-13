@@ -235,4 +235,12 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         assertSame(inner1, inner2);
     }
+    /*
+    public void testMultipleThreads1() throws Exception {
+        ds.setMaxWaitMillis(-1);
+        ds.setMaxTotal(5);
+        ds.setMaxOpenPreparedStatements(-1);
+        multipleThreads(5, false, false, -1, 3, 100, 10000);
+    }
+    */
 }
