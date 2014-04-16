@@ -254,7 +254,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement
     @Override
     public String toString() {
         Statement statement = getDelegate();
-        return statement == null ? "NULL" : getDelegate().toString();
+        return statement == null ? "NULL" : statement.toString();
     }
 
     @Override
