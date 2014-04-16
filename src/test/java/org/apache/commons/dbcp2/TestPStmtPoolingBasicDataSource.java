@@ -155,7 +155,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         conn.setCatalog("catalog1");
         DelegatingPreparedStatement stmt3 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
-        TesterPreparedStatement inner3 = (TesterPreparedStatement) stmt1.getInnermostDelegate();
+        TesterPreparedStatement inner3 = (TesterPreparedStatement) stmt3.getInnermostDelegate();
         assertEquals("catalog1", inner3.getCatalog());
         stmt3.close();
 
@@ -231,7 +231,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
     // currently fails with AssertionFailedError: Did not expect any threads to fail expected:<0> but was:<1>
     // The following appears in the console: Unexpected error: ResultSet is closed.
-    public void IGNOREDtestMultipleThreads1() throws Exception {
+    public void testMultipleThreads1() throws Exception {
         ds.setMaxWaitMillis(-1);
         ds.setMaxTotal(5);
         ds.setMaxOpenPreparedStatements(-1);
