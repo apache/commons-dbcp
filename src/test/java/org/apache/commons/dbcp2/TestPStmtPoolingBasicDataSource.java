@@ -229,8 +229,10 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner2);
     }
 
-    // currently fails with AssertionFailedError: Did not expect any threads to fail expected:<0> but was:<1>
-    // The following appears in the console: Unexpected error: ResultSet is closed.
+    /** 
+     * Tests high-concurrency contention for connections and pooled prepared statements.
+     * DBCP-414
+     */
     public void testMultipleThreads1() throws Exception {
         ds.setMaxWaitMillis(-1);
         ds.setMaxTotal(5);
