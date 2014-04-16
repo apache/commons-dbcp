@@ -129,6 +129,9 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      */
     @Override
     public void close() throws SQLException {
+        if (isClosed()) {
+            return;
+        }
         try {
             try {
                 if (_conn != null) {
@@ -159,6 +162,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
         finally {
             _closed = true;
+            _stmt = null;
         }
     }
 
@@ -352,7 +356,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      */
     @Override
     public String toString() {
-    return _stmt.toString();
+    return _stmt == null ? "NULL" : _stmt.toString();
     }
 
     @Override
