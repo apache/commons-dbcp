@@ -45,6 +45,44 @@ public class TestPStmtPooling extends TestCase {
     }
 
     public void testStmtPool() throws Exception {
+        DataSource ds = createPDS();
+        try (Connection conn = ds.getConnection()) {
+            Statement stmt1 = conn.prepareStatement("select 1 from dual");
+            Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
+            stmt1.close();
+            Statement stmt2 = conn.prepareStatement("select 1 from dual");
+            Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
+            stmt2.close();
+            assertSame(ustmt1, ustmt2);
+        }
+    }
+    
+    /**
+     * Verifies that executing close() on an already closed DelegatingStatement
+     * that wraps a PoolablePreparedStatement does not "re-close" the PPS
+     * (which could be in use by another client - see DBCP-414).
+     */
+    public void testMultipleClose() throws Exception {
+       DataSource ds = createPDS();
+       PreparedStatement stmt1 = null;
+       Connection conn = ds.getConnection();
+       stmt1 = conn.prepareStatement("select 1 from dual");
+       conn.close();
+       assertTrue(stmt1.isClosed());  // Closing conn should close stmt
+       stmt1.close(); // Should already be closed - no-op
+       assertTrue(stmt1.isClosed());
+       Connection conn2 = ds.getConnection();
+       PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
+       // stmt2 now wraps the same PPS wrapped by stmt1
+       stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
+       assertTrue(!stmt2.isClosed());
+       stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
+       conn2.close();
+       assertTrue(stmt1.isClosed());
+       assertTrue(stmt2.isClosed());  
+    }
+    
+    private DataSource createPDS() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
@@ -57,17 +95,8 @@ public class TestPStmtPooling extends TestCase {
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connPool);
 
-        DataSource ds = new PoolingDataSource<>(connPool);
-
-        try (Connection conn = ds.getConnection()) {
-            Statement stmt1 = conn.prepareStatement("select 1 from dual");
-            Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
-            stmt1.close();
-            Statement stmt2 = conn.prepareStatement("select 1 from dual");
-            Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
-            stmt2.close();
-            assertSame(ustmt1, ustmt2);
-        }
+        return new PoolingDataSource<>(connPool);
+        
     }
 
     public void testCallableStatementPooling() throws Exception {
