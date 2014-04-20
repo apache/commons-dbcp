@@ -156,6 +156,7 @@ public class TestPStmtPooling extends TestCase {
         pcf.setDefaultAutoCommit(Boolean.TRUE);
 
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
+        pcf.setPool(connPool);
 
         DataSource ds = new PoolingDataSource<>(connPool);
         ((PoolingDataSource<?>) ds).setAccessToUnderlyingConnectionAllowed(true);

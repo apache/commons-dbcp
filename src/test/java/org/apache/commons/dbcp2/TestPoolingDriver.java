@@ -95,6 +95,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         pcf.setDefaultAutoCommit(Boolean.TRUE);
         GenericObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(pcf);
+        pcf.setPool(connectionPool);
         DataSource ds = new PoolingDataSource<>(connectionPool);
         Assert.assertNotNull(ds);
     }
