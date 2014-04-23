@@ -56,7 +56,7 @@ public class TestPStmtPooling extends TestCase {
             assertSame(ustmt1, ustmt2);
         }
     }
-    
+
     /**
      * Verifies that executing close() on an already closed DelegatingStatement
      * that wraps a PoolablePreparedStatement does not "re-close" the PPS
@@ -67,21 +67,40 @@ public class TestPStmtPooling extends TestCase {
        PreparedStatement stmt1 = null;
        Connection conn = ds.getConnection();
        stmt1 = conn.prepareStatement("select 1 from dual");
+       PoolablePreparedStatement<?> pps1 = getPoolablePreparedStatement(stmt1);
        conn.close();
        assertTrue(stmt1.isClosed());  // Closing conn should close stmt
        stmt1.close(); // Should already be closed - no-op
        assertTrue(stmt1.isClosed());
        Connection conn2 = ds.getConnection();
        PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
-       // stmt2 now wraps the same PPS wrapped by stmt1
+       // Confirm stmt2 now wraps the same PPS wrapped by stmt1
+       Assert.assertSame(pps1, getPoolablePreparedStatement(stmt2));
        stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
        assertTrue(!stmt2.isClosed());
        stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
        conn2.close();
        assertTrue(stmt1.isClosed());
-       assertTrue(stmt2.isClosed());  
+       assertTrue(stmt2.isClosed());
     }
-    
+
+
+    private PoolablePreparedStatement<?> getPoolablePreparedStatement(Statement s) {
+
+        while (s != null) {
+            if (s instanceof PoolablePreparedStatement) {
+                return (PoolablePreparedStatement<?>) s;
+            }
+            if (s instanceof DelegatingPreparedStatement) {
+                s = ((DelegatingPreparedStatement) s).getDelegate();
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
     private DataSource createPDS() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -96,7 +115,7 @@ public class TestPStmtPooling extends TestCase {
         pcf.setPool(connPool);
 
         return new PoolingDataSource<>(connPool);
-        
+
     }
 
     public void testCallableStatementPooling() throws Exception {
