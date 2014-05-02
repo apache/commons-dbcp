@@ -17,7 +17,6 @@
 package org.apache.commons.dbcp2;
 
 import java.io.PrintWriter;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -26,7 +25,10 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * A simple {@link DataSource} implementation that obtains
@@ -43,6 +45,8 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolingDataSource<C extends Connection> implements DataSource {
 
+    private static final Log log = LogFactory.getLog(PoolingDataSource.class);
+    
     /** Controls access to the underlying connection */
     private boolean accessToUnderlyingConnectionAllowed = false;
 
@@ -51,6 +55,19 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
             throw new NullPointerException("Pool must not be null.");
         }
         _pool = pool;
+        // Verify that _pool's factory refers back to it.  If not, log a warning and try to fix.
+        if (_pool instanceof GenericObjectPool<?>) {
+            PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) _pool).getFactory();
+            if (pcf == null) {
+                throw new NullPointerException("PoolableConnectionFactory must not be null.");
+            }
+            if (pcf.getPool() != _pool) {
+                log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
+                @SuppressWarnings("unchecked") // PCF must have a pool of PCs
+                ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) _pool;
+                pcf.setPool(p);
+            }
+        }
     }
 
     /**

@@ -135,4 +135,29 @@ public class TestPoolingDataSource extends TestConnectionPool {
         assertTrue(con2.innermostDelegateEquals(inner));
         assertFalse(con.equals(con2));
     }
+    
+    /**
+     * DBCP-412
+     * Verify that omitting factory.setPool(pool) when setting up PDS does not
+     * result in NPE.
+     */
+    public void testFixFactoryConfig() throws Exception {
+        Properties props = new Properties();
+        props.setProperty("user", "username");
+        props.setProperty("password", "password");
+        PoolableConnectionFactory f =
+            new PoolableConnectionFactory(
+                    new DriverConnectionFactory(new TesterDriver(),
+                            "jdbc:apache:commons:testdriver", props),
+                    null);
+        f.setValidationQuery("SELECT DUMMY FROM DUAL");
+        f.setDefaultReadOnly(Boolean.TRUE);
+        f.setDefaultAutoCommit(Boolean.TRUE);
+        GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
+        p.setMaxTotal(getMaxTotal());
+        p.setMaxWaitMillis(getMaxWaitMillis());
+        ds = new PoolingDataSource<>(p);
+        assertTrue(f.getPool().equals(p));
+        ds.getConnection();
+    }
 }
