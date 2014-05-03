@@ -73,6 +73,9 @@ The <action> type attribute can be add,update,fix,remove.
         Added check in PoolingDataSource constructor to ensure that the connection factory
         and pool are properly linked.
       </action>
+      <action issue="DBCP-417" dev="psteitz" type="fix">
+        Fixed connection leak when managed connections are closed during transactions.
+      </action>
     </release>
     <release version="2.0" date="3 March 2014" description=
 "This release includes new features as well as bug fixes and enhancements.

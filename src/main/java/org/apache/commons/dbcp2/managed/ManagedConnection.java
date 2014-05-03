@@ -196,7 +196,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                 setDelegate(null);
 
                 if (!delegate.isClosed()) {
-                    super.close();
+                    delegate.close();
                 }
             } catch (SQLException ignored) {
                 // Not a whole lot we can do here as connection is closed

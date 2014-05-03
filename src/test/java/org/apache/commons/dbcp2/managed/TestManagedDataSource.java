@@ -114,7 +114,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     /**
-     * Verify that conection sharing is working (or not working) as expected.
+     * Verify that connection sharing is working (or not working) as expected.
      */
     public void testSharedConnection() throws Exception {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
@@ -128,7 +128,18 @@ public class TestManagedDataSource extends TestConnectionPool {
         connectionA.close();
         connectionB.close();
     }
+    
+    public void testConnectionReturnOnCommit() throws Exception {
+        transactionManager.begin();
+        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        connectionA.close();
+        transactionManager.commit();
+        assertEquals(1, pool.getBorrowedCount());
+        assertEquals(1, pool.getReturnedCount());
+        assertEquals(0, pool.getNumActive());
+    }
 
+    
     public void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
