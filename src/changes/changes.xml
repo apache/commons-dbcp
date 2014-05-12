@@ -76,6 +76,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-417" dev="psteitz" type="fix">
         Fixed connection leak when managed connections are closed during transactions.
       </action>
+      <action issue="DBCP-418" dev="psteitz" type="fix">
+        Enable PoolableConnection class to load without JMX.
+      </action>
     </release>
     <release version="2.0" date="3 March 2014" description=
 "This release includes new features as well as bug fixes and enhancements.
