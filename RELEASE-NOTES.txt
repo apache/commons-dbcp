@@ -1,105 +1,27 @@
               Apache Apache Commons DBCP
-                  Version 2.0
+                  Version 2.0.1
                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.0
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.0.1.
 
-Apache Commons DBCP software implements Database Connection Pooling
+Apache Commons DBCP software implements Database Connection Pooling.
 
-This release includes new features as well as bug fixes and enhancements.
-Version 2.0.x supports JDBC 4.1, so requires Java 7.
-
-The Java package name has been changed from 'org.apache.commons.dbcp' to 'org.apache.commons.dbcp2'.
-Also the Maven groupId is now 'org.apache.commons' and the artifactId is 'commons-dbcp2'
-These changes are necessary because the API is not strictly binary compatible with the 1.x releases.
-To convert from the earlier releases, update the package name in imports, update the dependencies and recompile.
-There may be a few other changes to be made (TBA)
-
-Java 6 users should use DBCP 1.4.x which supports JDBC 4.
-Java 1.4 and Java 5 users should use DBCP 1.3.x which supports JDBC 3.
-Applications running under Java 7 should use DBCP 2.0.x.
+This is a bug fix release.
 
 Changes in this version include:
 
-New features:
-o            Provide a new option (cacheState) to cache current values of autoCommit
-             and readOnly so database queries are not required for every call to the
-             associated getters. This option is enabled by default.
-o DBCP-292:  BasicDataSource instances are now exposed via JMX. All the configuration
-             properties are available as is the connection pool and the statement
-             pools (if statement pooling is enabled).
-o DBCP-368:  Expose the new Pool 2 property evictionPolicyClassName to enable more
-             sophisticated eviction strategies to be used.
-o DBCP-406:  Add support for pooling PreparedStatements that use auto-generated keys. Thanks to Steeve Beroard.
-o DBCP-177:  Enable DBCP to work with a SecurityManager such that only DBCP needs to
-             be granted the necessary permissions to communicate with the database.
-o DBCP-219:  Register pooled connections with JMX so that they may be forcibly closed
-             via JMX if required.
-o DBCP-373:  Modify SharedPoolDataSource and PerUserPoolDataSource to expose all of
-             the configuration properties of the underlying connection pool(s). This
-             represents a significant refactoring of these classes and a number of
-             property names have changed as a result.
-o DBCP-351:  Provide an option to control if autoCommit is always set to true when a
-             connection is returned to the connection pool.
-o DBCP-399:  Provide an option to control if rollback is called when a connection is
-             returned to the poll with autoCommit disabled.
-o DBCP-340:  Provide an option to set the default query timeout.
-o 249:    Add support for validation testing database connections on creation.
 
 Fixed Bugs:
-o DBCP-411:  BasicManagedDataSource - unregister from JMX on close().
-o DBCP-154:  Log validation failures of poolable connections.
-o DBCP-403:  DelegatingStatement.close() fails with NPE if statement is null
-o DBCP-322:  CPDSConnectionFactory.validateObject(Object) ignores Throwable.
-o DBCP-300:  Removed unnecessary synchronisation in BasicDataSource#createDataSource.
-o DBCP-384:  Fix threading issues with accessToUnderlyingConnectionAllowed attribute
-             of PoolingDriver which is used to support unit testing.
-o DBCP-376:  Fix thread safety issues in the SharedPoolDataSource and the
-             PerUserPoolDataSource. Thanks to Dave Oxley.
-o DBCP-382:  Allow accessToUnderlyingConnectionAllowed to be configured when
-             configuration takes place via JNDI in a JavaEE container. Thanks to Stefan Rempfer.
-o DBCP-369:  Fix threading issue when using multiple instances of the
-             SharedPoolDataSource concurrently. Thanks to Michael Pradel.
-o DBCP-391:  Ensure that the close state of a pooled connection and the underlying
-             connection is consistent when the underlying connection is closed as a
-             result of an error condition.
-o DBCP-404:  Make all mutable fields private.
-o DBCP-364:  Return BasicDataSource rather than DataSource from
-             BasicDataSourceFactory so a cast is not required to use BasicDataSource
-             specific methods.
-o DBCP-358:  The equals() implementations of the DelegatingXxx classes are now
-             symmetric. There are some important API changes underlying this fix.
-             Firstly, two DelegatingXxx instances are no longer considered equal if
-             they have the same innermost delegate. Secondly, a DelegatingXxx
-             instance is not considered equal to its innermost delegate. The
-             getInnermostDelegateInternal() method has been made public (but remains
-             part of the internal API) to allow classes extending this implementation
-             to access the innermost delegate when required.
-o DBCP-180:  Enable JDBC resources that are no longer referenced by client code to be
-             eligible for garbage collection.
-o DBCP-410:  Correct path to Javadoc overview in build.xml. Thanks to Andreas Sturmlechner.
-o DBCP-234:  The default values for readOnly, autoCommit and transactionIsolation are
-             now taken from the JDBC driver. No calls to setReadOnly(),
-             setAutoCommit() or setTransactionIsolation() will be made for a newly
-             borrowed connection unless a default is explicitly configured and the
-             connection is currently using a different setting.
-o            Connection.isValid() should not throw an SQLException if the connection
-             is closed.
-o DBCP-357:  Use Connection.isValid() to validate connections unless a validation
-             query is explicitly configured. Note that this means it is no longer
-             necessary for a validation query to be specified in order for validation
-             to take place. When testing with Oracle, this resulted in database
-             validation being approximately 7 times faster.
+o            Small performance improvements when returning connections to the pool.
+o DBCP-414:  Fixed DelegatingStatement close to ensure closed statements do not retain references
+             to pooled prepared statements. Due to finalization code added in 2.0, this was causing
+             pooled prepared statements to be closed by GC while in use by clients. Thanks to Pasi Eronen.
+o DBCP-417:  Fixed connection leak when managed connections are closed during transactions.
+o DBCP-418:  Enable PoolableConnection class to load without JMX.
 
 Changes:
-o            The Java package name has been changed from org.apache.commons.dbcp to
-             org.apache.commons.dbcp2.
-o            Update to Commons Pool 2 (based on java.util.concurrent) to provide
-             pooling functionality.
-o            Updated source code for Java 1.6 (added @Override & @Deprecated
-             annotations).
-o            Removed JOCL support.
-o DBCP-143:  Remove deprecated SQLNestedException.
+o DBCP-412:  Added check in PoolingDataSource constructor to ensure that the connection factory
+             and pool are properly linked.
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
