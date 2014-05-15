@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.0.1" date="TBD" description="This is a bug fix release">
+    <release version="2.0.1" date="TBD" description="This is a bug fix release.">
       <action dev="markt" type="fix">
         Small performance improvements when returning connections to the pool.
       </action>
@@ -75,6 +75,9 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action issue="DBCP-417" dev="psteitz" type="fix">
         Fixed connection leak when managed connections are closed during transactions.
+      </action>
+      <action issue="DBCP-418" dev="psteitz" type="fix">
+        Enable PoolableConnection class to load without JMX.
       </action>
     </release>
     <release version="2.0" date="3 March 2014" description=

@@ -18,10 +18,10 @@
                   Version ${version}
                  RELEASE NOTES
 
-The ${developmentTeam} is pleased to announce the release of Apache ${project.name} ${version}
+The ${developmentTeam} is pleased to announce the release of Apache ${project.name} ${version}.
 
 $introduction.replaceAll("(?<!\015)\012", "
-").replaceAll("(?m)^ +","")
+").replaceAll("(?m)^ +","").
 
 ## N.B. the available variables are described here:
 ## http://maven.apache.org/plugins/maven-changes-plugin/examples/using-a-custom-announcement-template.html
