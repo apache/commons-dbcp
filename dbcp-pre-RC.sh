@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,12 +14,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-connectionFactory.lifetimeExceeded=The lifetime of the connection [{0}] milliseconds exceeds the maximum permitted value of [{1}] milliseconds
-
-poolableConnectionFactory.validateObject.fail=Failed to validate a poolable connection
-
-swallowedExceptionLogger.onSwallowedException=An internal object pool swallowed an Exception
-
-poolingDataSource.factoryConfig=PoolableConnectionFactory not linked to pool. Calling setPool() to fix the configuration.
-
+# -----------------------------------------------------------------------------
+#
+# Shell script to update download page and release notes prior
+# to preparing a commons pool release candidate.
+#
+# Note: RELEASE-NOTES.txt may need a little reformatting prior
+# to checkin.  Both RELEASE-NOTES.txt and the generated download
+# page need to be checked in after review.
+#
+# $Revision$ $Date$
+# ----------------------------------------------------------------------------
+version=2.0.1
+mvn changes:announcement-generate -Prelease-notes -Dchanges.version=${version}
+mvn commons:download-page -Dcommons.componentid=dbcp  # Override to get download_dbcp
