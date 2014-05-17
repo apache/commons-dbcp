@@ -33,8 +33,8 @@
 # Set script variables
 version=2.0.1        # version being released
 last_version=2.0   # previous version, will be replaced in README.html
-rc_path=~/dbcp-rc  # checkout of https://dist.apache.org/repos/dist/dev/commons/pool
-release_path=~/dbcp-release #https://dist.apache.org/repos/dist/release/commons/pool
+rc_path=~/dbcp-rc  # checkout of https://dist.apache.org/repos/dist/dev/commons/dbcp
+release_path=~/dbcp-release #https://dist.apache.org/repos/dist/release/commons/dbcp
 #
 # Move release notes
 cp $rc_path/RELEASE-NOTES.txt $release_path
