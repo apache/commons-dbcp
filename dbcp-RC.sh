@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------------
-# Generates a pool RC and publishes (a superset of) maven artifacts to Nexus.
+# Generates a dbcp RC and publishes (a superset of) maven artifacts to Nexus.
 # Should be run from top-level directory of a fresh checkout of the RC tag.
 #
 # Preconditions:

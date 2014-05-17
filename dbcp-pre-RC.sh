@@ -17,7 +17,7 @@
 # -----------------------------------------------------------------------------
 #
 # Shell script to update download page and release notes prior
-# to preparing a commons pool release candidate.
+# to preparing a commons dbcp release candidate.
 #
 # Note: RELEASE-NOTES.txt may need a little reformatting prior
 # to checkin.  Both RELEASE-NOTES.txt and the generated download
