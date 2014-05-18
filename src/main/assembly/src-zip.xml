@@ -38,10 +38,39 @@
         </fileSet>
         <fileSet>
             <directory>doc</directory>
+            <!-- once this diagram is updated, add it back without lf -->
+            <excludes>
+               <exclude>static_structure_dia.gif</exclude>
+            </excludes>
             <lineEnding>crlf</lineEnding>
         </fileSet>
         <fileSet>
-            <directory>src</directory>
+            <directory>src/site/resources</directory>
+        </fileSet>
+        <fileSet>
+            <directory>src/site/xdoc</directory>
+            <lineEnding>crlf</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/site</directory>
+            <includes>
+              <include>site.xml</include>
+            </includes>
+            <lineEnding>crlf</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/media</directory>
+        </fileSet>
+        <fileSet>
+            <directory>src/changes</directory>
+            <lineEnding>crlf</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/main</directory>
+            <lineEnding>crlf</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/test</directory>
             <lineEnding>crlf</lineEnding>
         </fileSet>
     </fileSets>
