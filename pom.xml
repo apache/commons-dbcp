@@ -316,6 +316,13 @@
             </links>
           </configuration>
         </plugin>
+        <!-- Workaround MASSEMBLY-637 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        <!-- Remomve when 2.5 is released and cp upgrades -->
       </plugins>
     </build>
     <reporting>
