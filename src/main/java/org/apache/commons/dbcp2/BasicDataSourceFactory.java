@@ -52,53 +52,53 @@ import javax.naming.spi.ObjectFactory;
  */
 public class BasicDataSourceFactory implements ObjectFactory {
 
-    private final static String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";
-    private final static String PROP_DEFAULTREADONLY = "defaultReadOnly";
-    private final static String PROP_DEFAULTTRANSACTIONISOLATION = "defaultTransactionIsolation";
-    private final static String PROP_DEFAULTCATALOG = "defaultCatalog";
-    private final static String PROP_CACHESTATE ="cacheState";
-    private final static String PROP_DRIVERCLASSNAME = "driverClassName";
-    private final static String PROP_LIFO = "lifo";
-    private final static String PROP_MAXTOTAL = "maxTotal";
-    private final static String PROP_MAXIDLE = "maxIdle";
-    private final static String PROP_MINIDLE = "minIdle";
-    private final static String PROP_INITIALSIZE = "initialSize";
-    private final static String PROP_MAXWAITMILLIS = "maxWaitMillis";
-    private final static String PROP_TESTONCREATE = "testOnCreate";
-    private final static String PROP_TESTONBORROW = "testOnBorrow";
-    private final static String PROP_TESTONRETURN = "testOnReturn";
-    private final static String PROP_TIMEBETWEENEVICTIONRUNSMILLIS = "timeBetweenEvictionRunsMillis";
-    private final static String PROP_NUMTESTSPEREVICTIONRUN = "numTestsPerEvictionRun";
-    private final static String PROP_MINEVICTABLEIDLETIMEMILLIS = "minEvictableIdleTimeMillis";
-    private final static String PROP_SOFTMINEVICTABLEIDLETIMEMILLIS = "softMinEvictableIdleTimeMillis";
-    private final static String PROP_EVICTIONPOLICYCLASSNAME = "evictionPolicyClassName";
-    private final static String PROP_TESTWHILEIDLE = "testWhileIdle";
-    private final static String PROP_PASSWORD = "password";
-    private final static String PROP_URL = "url";
-    private final static String PROP_USERNAME = "username";
-    private final static String PROP_VALIDATIONQUERY = "validationQuery";
-    private final static String PROP_VALIDATIONQUERY_TIMEOUT = "validationQueryTimeout";
-    private final static String PROP_JMX_NAME = "jmxName";
+    private static final String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";
+    private static final String PROP_DEFAULTREADONLY = "defaultReadOnly";
+    private static final String PROP_DEFAULTTRANSACTIONISOLATION = "defaultTransactionIsolation";
+    private static final String PROP_DEFAULTCATALOG = "defaultCatalog";
+    private static final String PROP_CACHESTATE ="cacheState";
+    private static final String PROP_DRIVERCLASSNAME = "driverClassName";
+    private static final String PROP_LIFO = "lifo";
+    private static final String PROP_MAXTOTAL = "maxTotal";
+    private static final String PROP_MAXIDLE = "maxIdle";
+    private static final String PROP_MINIDLE = "minIdle";
+    private static final String PROP_INITIALSIZE = "initialSize";
+    private static final String PROP_MAXWAITMILLIS = "maxWaitMillis";
+    private static final String PROP_TESTONCREATE = "testOnCreate";
+    private static final String PROP_TESTONBORROW = "testOnBorrow";
+    private static final String PROP_TESTONRETURN = "testOnReturn";
+    private static final String PROP_TIMEBETWEENEVICTIONRUNSMILLIS = "timeBetweenEvictionRunsMillis";
+    private static final String PROP_NUMTESTSPEREVICTIONRUN = "numTestsPerEvictionRun";
+    private static final String PROP_MINEVICTABLEIDLETIMEMILLIS = "minEvictableIdleTimeMillis";
+    private static final String PROP_SOFTMINEVICTABLEIDLETIMEMILLIS = "softMinEvictableIdleTimeMillis";
+    private static final String PROP_EVICTIONPOLICYCLASSNAME = "evictionPolicyClassName";
+    private static final String PROP_TESTWHILEIDLE = "testWhileIdle";
+    private static final String PROP_PASSWORD = "password";
+    private static final String PROP_URL = "url";
+    private static final String PROP_USERNAME = "username";
+    private static final String PROP_VALIDATIONQUERY = "validationQuery";
+    private static final String PROP_VALIDATIONQUERY_TIMEOUT = "validationQueryTimeout";
+    private static final String PROP_JMX_NAME = "jmxName";
 
     /**
      * The property name for connectionInitSqls.
      * The associated value String must be of the form [query;]*
      */
-    private final static String PROP_CONNECTIONINITSQLS = "connectionInitSqls";
-    private final static String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";
-    private final static String PROP_REMOVEABANDONEDONBORROW = "removeAbandonedOnBorrow";
-    private final static String PROP_REMOVEABANDONEDONMAINTENANCE = "removeAbandonedOnMaintenance";
-    private final static String PROP_REMOVEABANDONEDTIMEOUT = "removeAbandonedTimeout";
-    private final static String PROP_LOGABANDONED = "logAbandoned";
-    private final static String PROP_POOLPREPAREDSTATEMENTS = "poolPreparedStatements";
-    private final static String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
-    private final static String PROP_CONNECTIONPROPERTIES = "connectionProperties";
-    private final static String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
-    private final static String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
-    private final static String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
-    private final static String PROP_DEFAULT_QUERYTIMEOUT = "defaultQueryTimeout";
+    private static final String PROP_CONNECTIONINITSQLS = "connectionInitSqls";
+    private static final String PROP_ACCESSTOUNDERLYINGCONNECTIONALLOWED = "accessToUnderlyingConnectionAllowed";
+    private static final String PROP_REMOVEABANDONEDONBORROW = "removeAbandonedOnBorrow";
+    private static final String PROP_REMOVEABANDONEDONMAINTENANCE = "removeAbandonedOnMaintenance";
+    private static final String PROP_REMOVEABANDONEDTIMEOUT = "removeAbandonedTimeout";
+    private static final String PROP_LOGABANDONED = "logAbandoned";
+    private static final String PROP_POOLPREPAREDSTATEMENTS = "poolPreparedStatements";
+    private static final String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
+    private static final String PROP_CONNECTIONPROPERTIES = "connectionProperties";
+    private static final String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
+    private static final String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
+    private static final String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
+    private static final String PROP_DEFAULT_QUERYTIMEOUT = "defaultQueryTimeout";
 
-    private final static String[] ALL_PROPERTIES = {
+    private static final String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
         PROP_DEFAULTREADONLY,
         PROP_DEFAULTTRANSACTIONISOLATION,
@@ -450,7 +450,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @return Properties
      * @throws Exception
      */
-    static private Properties getProperties(String propText) throws Exception {
+    private static Properties getProperties(String propText) throws Exception {
       Properties p = new Properties();
       if (propText != null) {
         p.load(new ByteArrayInputStream(
