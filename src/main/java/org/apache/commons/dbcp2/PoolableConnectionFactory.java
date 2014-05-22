@@ -18,8 +18,8 @@
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -99,7 +99,7 @@ public class PoolableConnectionFactory
      * Sets the {@link ObjectPool} in which to pool {@link Connection}s.
      * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
-    synchronized public void setPool(ObjectPool<PoolableConnection> pool) {
+    public synchronized void setPool(ObjectPool<PoolableConnection> pool) {
         if(null != _pool && pool != _pool) {
             try {
                 _pool.close();
