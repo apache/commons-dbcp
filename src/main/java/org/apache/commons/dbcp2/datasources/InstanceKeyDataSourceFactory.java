@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,7 +45,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     private static final Map<String, InstanceKeyDataSource> instanceMap =
             new ConcurrentHashMap<>();
 
-    synchronized static String registerNewInstance(InstanceKeyDataSource ds) {
+    static synchronized String registerNewInstance(InstanceKeyDataSource ds) {
         int max = 0;
         Iterator<String> i = instanceMap.keySet().iterator();
         while (i.hasNext()) {
