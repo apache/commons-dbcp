@@ -61,6 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.0.1" date="TBD" description="This is a bug fix release.">
+      <action issue="DBCP-420" dev="sebb" type="fix">
+        InstanceKeyDataSource discards native SQLException when given password does not match password used to create the connection
+      </action>
       <action dev="markt" type="fix">
         Small performance improvements when returning connections to the pool.
       </action>
