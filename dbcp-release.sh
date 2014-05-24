@@ -44,8 +44,9 @@ svn rm $rc_path/RELEASE-NOTES.txt
 sed -i "" "s/$last_version/$version/g" $release_path/README.html
 # OSX  ^^ required suffix
 #
-cp $release_path/README.html $release_path/source
-cp $release_path/README.html $release_path/binaries
+# DBCP uses symlinks, so below not needed unless this changes.
+#cp $release_path/README.html $release_path/source
+#cp $release_path/README.html $release_path/binaries
 # ^^^^^^^^^^ Maybe we can toss these? ^^^^^^^
 #
 # Move release artifacts
