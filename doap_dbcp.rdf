@@ -39,6 +39,16 @@
     </repository>
     <release>
       <Version>
+        <name>commons-dbcp2</name>
+        <created>2014-05-24</created>
+        <revision>2.0.1</revision>
+      </Version>
+      <Version>
+        <name>commons-dbcp2</name>
+        <created>2014-03-03</created>
+        <revision>2.0</revision>
+      </Version>
+      <Version>
         <name>commons-dbcp</name>
         <created>2010-02-14</created>
         <revision>1.3</revision>
