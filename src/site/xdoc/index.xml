@@ -44,8 +44,8 @@ within Apache products and elsewhere.  This Commons package provides an
 opportunity to coordinate the efforts required to create and maintain an
 efficient, feature-rich package under the ASF license.</p>
 
-<p>The <code>commons-dbcp</code> package relies on code in the
-<code>commons-pool</code> package to provide the underlying object pool
+<p>The <code>commons-dbcp2</code> package relies on code in the
+<code>commons-pool2</code> package to provide the underlying object pool
 mechanisms that it utilizes.</p>
 
 <p>DBCP now comes in three different versions to support different versions of
