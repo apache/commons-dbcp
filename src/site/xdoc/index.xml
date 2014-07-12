@@ -87,11 +87,11 @@ filtered out of the DBCP 1.3 sources.</p>
 <a href="apidocs/index.html">JavaDoc API documents</a> 
 are available online.  In particular, you should
 read the package overview of the 
-<code><a href="apidocs/org/apache/commons/dbcp/package-summary.html#package_description">org.apache.commons.dbcp</a></code>
+<code><a href="apidocs/org/apache/commons/dbcp2/package-summary.html#package_description">org.apache.commons.dbcp2</a></code>
 package for an overview of how to use DBCP.</p>
 
 <p>There are 
-<a href="http://svn.apache.org/viewvc/commons/proper/dbcp/trunk/doc/">several examples</a> 
+<a href="http://svn.apache.org/viewvc/commons/proper/dbcp2/trunk/doc/">several examples</a> 
 of using DBCP available.</p>
 
 </section>
