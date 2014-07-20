@@ -462,7 +462,7 @@ class PooledConnectionImpl implements PooledConnection,
      * {*link PreparedStatement}s.
      * @param key ignored
      * @param p ignored
-     * @return <tt>true</tt>
+     * @return {@code true}
      */
     @Override
     public boolean validateObject(PStmtKeyCPDS key,
