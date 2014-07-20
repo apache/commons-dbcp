@@ -38,7 +38,7 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {@link PoolableObjectFactory} that creates
+ * A {@link KeyedPooledObjectFactory} that creates
  * {@link PoolableConnection}s.
  *
  * @author John D. McNally
