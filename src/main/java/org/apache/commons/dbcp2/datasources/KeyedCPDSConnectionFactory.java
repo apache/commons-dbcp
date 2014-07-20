@@ -38,8 +38,8 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {*link PoolableObjectFactory} that creates
- * {*link PoolableConnection}s.
+ * A {@link PoolableObjectFactory} that creates
+ * {@link PoolableConnection}s.
  *
  * @author John D. McNally
  * @version $Revision$ $Date$
