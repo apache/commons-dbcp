@@ -344,10 +344,10 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         resultSet.getStatement().getConnection().close();
     }
-    
+
+    @Override
     public void testConnectionReturnOnCommit() throws Exception {
          // override with no-op test
          return;
     }
-
 }
