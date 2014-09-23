@@ -72,6 +72,10 @@ The <action> type attribute can be add,update,fix,remove.
         Correct some Javadoc references to Apache Commons Pool 2 classes that
         have changed names since Pool 1.x. 
       </action>
+      <action dev="markt" type="fix">
+        Do not ignore the configured custom eviction policy when creating a
+        BasicDataSource.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
