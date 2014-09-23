@@ -68,6 +68,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-422" dev="ggregory" type="update">
         Update Apache Commons Logging to 1.2 from 1.1.3.
       </action>
+      <action dev="markt" type="fix">
+        Correct some Javadoc references to Apache Commons Pool 2 classes that
+        have changed names since Pool 1.x. 
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
