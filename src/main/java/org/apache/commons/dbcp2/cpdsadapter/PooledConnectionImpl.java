@@ -415,7 +415,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for creating
+     * My {@link KeyedPooledObjectFactory} method for creating
      * {@link PreparedStatement}s.
      * @param key the key for the {@link PreparedStatement} to be created
      */
@@ -445,7 +445,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for destroying
+     * My {@link KeyedPooledObjectFactory} method for destroying
      * {@link PreparedStatement}s.
      * @param key ignored
      * @param p the wrapped {@link PreparedStatement} to be destroyed.
@@ -458,7 +458,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for validating
+     * My {@link KeyedPooledObjectFactory} method for validating
      * {@link PreparedStatement}s.
      * @param key ignored
      * @param p ignored
@@ -471,7 +471,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for activating
+     * My {@link KeyedPooledObjectFactory} method for activating
      * {@link PreparedStatement}s.
      * @param key ignored
      * @param p ignored
@@ -484,7 +484,7 @@ class PooledConnectionImpl implements PooledConnection,
     }
 
     /**
-     * My {@link KeyedPoolableObjectFactory} method for passivating
+     * My {@link KeyedPooledObjectFactory} method for passivating
      * {@link PreparedStatement}s.  Currently invokes {@link PreparedStatement#clearParameters}.
      * @param key ignored
      * @param p a wrapped {@link PreparedStatement}
