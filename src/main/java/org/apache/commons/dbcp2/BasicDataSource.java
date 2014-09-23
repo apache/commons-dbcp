@@ -2079,6 +2079,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
         gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
+        gop.setEvictionPolicyClassName(evictionPolicyClassName);
         factory.setPool(gop);
         connectionPool = gop;
     }
