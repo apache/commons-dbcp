@@ -1865,6 +1865,47 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         throw new SQLFeatureNotSupportedException();
     }
 
+    /**
+     * Manually invalidates a connection, effectively requesting the pool to try
+     * to close it, remove it from the pool and reclaim pool capacity.
+     *
+     * @throws IllegalStateException
+     *             if invalidating the connection failed.
+     * @since 2.1
+     */
+    public void invalidateConnection(Connection connection) throws IllegalStateException {
+        if (connection == null) {
+            return;
+        }
+        if (connectionPool == null) {
+            throw new IllegalStateException("Cannot invalidate connection: ConnectionPool is null.");
+        }
+
+        final PoolableConnection poolableConnection;
+        try {
+            poolableConnection = connection.unwrap(PoolableConnection.class);
+            if (poolableConnection == null) {
+                throw new IllegalStateException(
+                        "Cannot invalidate connection: Connection is not a poolable connection.");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot invalidate connection: Unwrapping poolable connection failed.", e);
+        }
+
+        // attempt to close the connection for good measure
+        try {
+            connection.close();
+        } catch (Exception e) {
+            // ignore any exceptions here
+        }
+
+        try {
+            connectionPool.invalidateObject(poolableConnection);
+        } catch (Exception e) {
+            throw new IllegalStateException("Invalidating connection threw unexpected exception", e);
+        }
+    }
+
     // ------------------------------------------------------ Protected Methods
 
 

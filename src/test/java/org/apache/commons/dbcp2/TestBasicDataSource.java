@@ -453,6 +453,20 @@ public class TestBasicDataSource extends TestConnectionPool {
             // test OK
         }
     }
+    
+    public void testInvalidateConnection() throws Exception {
+    	ds.setMaxTotal(2);
+    	Connection conn1 = ds.getConnection();
+    	Connection conn2 = ds.getConnection();
+    	ds.invalidateConnection(conn1);
+    	assertTrue(conn1.isClosed());
+    	assertEquals(1, ds.getNumActive());
+    	assertEquals(0, ds.getNumIdle());
+    	Connection conn3 = ds.getConnection();
+    	conn2.close();
+    	conn3.close();
+    }
+    
     /**
      * JIRA DBCP-93: If an SQLException occurs after the GenericObjectPool is
      * initialized in createDataSource, the evictor task is not cleaned up.
