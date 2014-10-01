@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.0.2" date="TBD" description="This is a bug fix release.">
+    <release version="2.1" date="TBD" description="This is minor release, including bug fixes and enhancements.">
       <action issue="DBCP-420" dev="sebb" type="fix">
         InstanceKeyDataSource discards native SQLException when given password does not match
         password used to create the connection.
@@ -75,6 +75,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" type="fix">
         Do not ignore the configured custom eviction policy when creating a
         BasicDataSource.
+      </action>
+      <action dev="psteitz" type="add" issue="DBCP-426" due-to="Kasper Sørensen">
+        Added invalidateConnection method to BasicDataSource.
       </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
