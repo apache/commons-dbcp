@@ -1519,11 +1519,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
      *
      * <p>Abandoned connections are identified and removed when
-     * {@link #getConnection()} is invoked and the following conditions hold
+     * {@link #getConnection()} is invoked and the following conditions hold:
+     * </p>
      * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
      *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
-     *     <li>{@link #getNumActive()} > {@link #getMaxTotal()} - 3 </li>
-     *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
+     *     <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3 </li>
+     *     <li>{@link #getNumIdle()} &lt; 2 </li></ul>
      *
      * @see #getRemoveAbandonedTimeout()
      */
@@ -1570,11 +1571,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
      *
      * <p>Abandoned connections are identified and removed when
-     * {@link #getConnection()} is invoked and the following conditions hold
+     * {@link #getConnection()} is invoked and the following conditions hold:
+     * </p>
      * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
      *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
-     *     <li>{@link #getNumActive()} > {@link #getMaxTotal()} - 3 </li>
-     *     <li>{@link #getNumIdle()} < 2 </li></ul></p>
+     *     <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3 </li>
+     *     <li>{@link #getNumIdle()} &lt; 2 </li></ul>
      *
      * @see #getRemoveAbandonedTimeout()
      */
@@ -1614,13 +1616,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * one of these to execute a query (using one of the execute methods)
      * resets the lastUsed property of the parent connection.</p>
      *
-     * <p>Abandoned connection cleanup happens when
-     * <code><ul>
+     * <p>Abandoned connection cleanup happens when:</p>
+     * <ul>
      * <li>{@link #getRemoveAbandonedOnBorrow()} or
      *     {@link #getRemoveAbandonedOnMaintenance()} = true</li>
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
      * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
-     * </ul></code></p>
+     * </ul>
      *
      * <p>The default value is 300 seconds.</p>
      */
