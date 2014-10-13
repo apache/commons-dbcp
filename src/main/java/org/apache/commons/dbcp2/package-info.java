@@ -106,11 +106,12 @@
  *    </ol>
  * <p>
  *    In code, that might look like this:
+ * </p>
  * <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
  * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
  * PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
  * PoolingDataSource dataSource = new PoolingDataSource(connectionPool);</pre>
- * </p><p>
+ * <p>
  *    To create a {@link org.apache.commons.dbcp2.PoolingDriver}, we do the same thing,
  *    except that instead of creating a {@link javax.sql.DataSource} on the last line,
  *    we create a {@link org.apache.commons.dbcp2.PoolingDriver}, and register the
