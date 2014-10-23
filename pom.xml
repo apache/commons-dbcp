@@ -277,9 +277,9 @@
                         <Export-Package>
                             *
                         </Export-Package>
-                        <Dynamic-Import>
+                        <DynamicImport-Package>
                         	*
-                        </Dynamic-Import>
+                        </DynamicImport-Package>
                         <Import-Package>
                             *
                         </Import-Package>
