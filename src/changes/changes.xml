@@ -79,6 +79,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="add" issue="DBCP-426" due-to="Kasper Sørensen">
         Added invalidateConnection method to BasicDataSource.
       </action>
+      <action issue="DBCP-428" dev="psteitz" type="fix" due-to="Vladimir Konkov">
+        Unsuccessful Connection enlistment in XA Transaction ignored by TransactionContext.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">

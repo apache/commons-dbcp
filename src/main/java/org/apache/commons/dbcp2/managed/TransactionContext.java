@@ -90,7 +90,9 @@ public class TransactionContext {
         Transaction transaction = getTransaction();
         try {
             XAResource xaResource = transactionRegistry.getXAResource(sharedConnection);
-            transaction.enlistResource(xaResource);
+            if ( !transaction.enlistResource(xaResource) ) {
+                throw new SQLException("Unable to enlist connection in transaction: enlistResource returns 'false'.");
+            }
         } catch (RollbackException e) {
             // transaction was rolled back... proceed as if there never was a transaction
         } catch (SystemException e) {
