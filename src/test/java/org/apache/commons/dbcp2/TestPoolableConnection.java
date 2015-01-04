@@ -30,7 +30,7 @@ import org.junit.Test;
 
 /**
  * @author James Ring
- * @version $Id:$
+ * @version $Id$
  */
 public class TestPoolableConnection {
 

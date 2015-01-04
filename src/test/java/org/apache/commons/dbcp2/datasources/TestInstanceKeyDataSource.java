@@ -27,7 +27,7 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.junit.Test;
 
 /**
- * @version $Id:$
+ * @version $Id$
  */
 public class TestInstanceKeyDataSource {
 

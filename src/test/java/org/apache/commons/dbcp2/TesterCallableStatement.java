@@ -41,7 +41,7 @@ import java.sql.SQLXML;
  * Trivial implementation of a CallableStatement to avoid null pointer exceptions in tests.
  *
  * @author Dain Sundstrom
- * @version $Id:$
+ * @version $Id$
  */
 public class TesterCallableStatement extends TesterPreparedStatement implements CallableStatement {
 
