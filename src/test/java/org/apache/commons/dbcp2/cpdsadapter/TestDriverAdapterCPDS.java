@@ -17,6 +17,11 @@
 
 package org.apache.commons.dbcp2.cpdsadapter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Properties;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,22 +32,19 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.junit.Assert;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for DriverAdapterCPDS
  *
- * @version $Revision:$ $Date:$
+ * @version $Id:$
  */
-public class TestDriverAdapterCPDS extends TestCase {
-    public TestDriverAdapterCPDS(String testName) {
-        super(testName);
-    }
+public class TestDriverAdapterCPDS {
 
     private DriverAdapterCPDS pcds;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
@@ -55,6 +57,7 @@ public class TestDriverAdapterCPDS extends TestCase {
     /**
      * JIRA: DBCP-245
      */
+    @Test
     public void testIncorrectPassword() throws Exception
     {
         pcds.getPooledConnection("u2", "p2").close();
@@ -84,7 +87,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         pcds.getPooledConnection("u1", "p1").close();
     }
 
-
+    @Test
     public void testSimple() throws Exception {
         Connection conn = pcds.getPooledConnection().getConnection();
         assertNotNull(conn);
@@ -98,6 +101,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testSimpleWithUsername() throws Exception {
         Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
         assertNotNull(conn);
@@ -111,6 +115,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testClosingWithUserName()
         throws Exception {
         Connection[] c = new Connection[10];
@@ -137,6 +142,7 @@ public class TestDriverAdapterCPDS extends TestCase {
         }
     }
 
+    @Test
     public void testSetProperties() throws Exception {
         // Set user property to bad value
         pcds.setUser("bad");
@@ -158,6 +164,7 @@ public class TestDriverAdapterCPDS extends TestCase {
     }
 
     // https://issues.apache.org/jira/browse/DBCP-376
+    @Test
     public void testDbcp367() throws Exception {
         ThreadDbcp367[] threads = new ThreadDbcp367[200];
 

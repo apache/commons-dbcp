@@ -27,7 +27,16 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Stack;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 // XXX FIX ME XXX
 // this class still needs some cleanup, but at least
@@ -42,16 +51,12 @@ import junit.framework.TestCase;
  * @author Sean C. Sullivan
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public abstract class TestConnectionPool extends TestCase {
-    public TestConnectionPool(String testName) {
-        super(testName);
-    }
+public abstract class TestConnectionPool {
 
-    @Override
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
         // Close any connections opened by the test
         while (!connections.isEmpty()) {
             Connection conn = connections.pop();
@@ -98,6 +103,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     // ----------- tests ---------------------------------
 
+    @Test
     public void testClearWarnings() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
@@ -131,6 +137,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testIsClosed() throws Exception {
         for(int i=0;i<getMaxTotal();i++) {
             Connection conn = newConnection();
@@ -152,6 +159,7 @@ public abstract class TestConnectionPool extends TestCase {
      * Verify the close method can be called multiple times on a single connection without
      * an exception being thrown.
      */
+    @Test
     public void testCanCloseConnectionTwice() throws Exception {
         for (int i = 0; i < getMaxTotal(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             Connection conn = newConnection();
@@ -164,6 +172,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testCanCloseStatementTwice() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -182,6 +191,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testCanClosePreparedStatementTwice() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -200,6 +210,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testCanCloseCallableStatementTwice() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -218,6 +229,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testCanCloseResultSetTwice() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -238,6 +250,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testBackPointers() throws Exception {
         // normal statement
         Connection conn = newConnection();
@@ -313,6 +326,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testSimple() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -326,6 +340,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn.close();
     }
 
+    @Test
     public void testRepeatedBorrowAndReturn() throws Exception {
         for(int i=0;i<100;i++) {
             Connection conn = newConnection();
@@ -341,6 +356,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testSimple2() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -393,6 +409,7 @@ public abstract class TestConnectionPool extends TestCase {
         conn = null;
     }
 
+    @Test
     public void testPooling() throws Exception {
         // Grab a maximal set of open connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
@@ -428,6 +445,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testAutoCommitBehavior() throws Exception {
         Connection conn0 = newConnection();
         assertNotNull("connection should not be null", conn0);
@@ -454,6 +472,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    @Test
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
@@ -468,7 +487,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
-
+    @Test
     public void testOpening() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
@@ -485,6 +504,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testClosing() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
@@ -504,6 +524,7 @@ public abstract class TestConnectionPool extends TestCase {
         }
     }
 
+    @Test
     public void testMaxTotal() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
@@ -528,6 +549,7 @@ public abstract class TestConnectionPool extends TestCase {
      * DBCP-128: BasicDataSource.getConnection()
      * Connections don't work as hashtable keys
      */
+    @Test
     public void testHashing() throws Exception {
         Connection con = getConnection();
         Hashtable<Connection, String> hash = new Hashtable<>();
@@ -539,6 +561,7 @@ public abstract class TestConnectionPool extends TestCase {
         con.close();
     }
 
+    @Test
     public void testThreaded() {
         TestThread[] threads = new TestThread[getMaxTotal()];
         for(int i=0;i<threads.length;i++) {
@@ -618,6 +641,7 @@ public abstract class TestConnectionPool extends TestCase {
     // Bugzilla Bug 24328: PooledConnectionImpl ignores resultsetType
     // and Concurrency if statement pooling is not enabled
     // http://issues.apache.org/bugzilla/show_bug.cgi?id=24328
+    @Test
     public void testPrepareStatementOptions() throws Exception
     {
         Connection conn = newConnection();
@@ -639,6 +663,7 @@ public abstract class TestConnectionPool extends TestCase {
 
     // Bugzilla Bug 24966: NullPointer with Oracle 9 driver
     // wrong order of passivate/close when a rset isn't closed
+    @Test
     public void testNoRsetClose() throws Exception {
         Connection conn = newConnection();
         assertNotNull(conn);
@@ -652,6 +677,7 @@ public abstract class TestConnectionPool extends TestCase {
     }
 
     // Bugzilla Bug 26966: Connectionpool's connections always returns same
+    @Test
     public void testHashCode() throws Exception {
         Connection conn1 = newConnection();
         assertNotNull(conn1);

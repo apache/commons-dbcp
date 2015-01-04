@@ -17,6 +17,12 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
@@ -27,7 +33,10 @@ import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.transaction.TransactionManager;
 
@@ -38,12 +47,9 @@ import java.util.Properties;
  * TestSuite for ManagedDataSource without a transaction in progress.
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @version $Id:$
  */
 public class TestManagedDataSource extends TestConnectionPool {
-    public TestManagedDataSource(String testName) {
-        super(testName);
-    }
 
     @Override
     protected Connection getConnection() throws Exception {
@@ -54,10 +60,8 @@ public class TestManagedDataSource extends TestConnectionPool {
     private GenericObjectPool<PoolableConnection> pool = null;
     protected TransactionManager transactionManager;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
-
         // create a GeronimoTransactionManager for testing
         transactionManager = new TransactionManagerImpl();
 
@@ -88,15 +92,16 @@ public class TestManagedDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         pool.close();
         super.tearDown();
     }
 
     /**
-     * Verify the accessToUnderlyingConnectionAllowed propertly limits access to the physical connection.
+     * Verify the accessToUnderlyingConnectionAllowed properly limits access to the physical connection.
      */
+    @Test
     public void testAccessToUnderlyingConnectionAllowed() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         ManagedConnection<?> connection = (ManagedConnection<?>) newConnection();
@@ -116,6 +121,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     /**
      * Verify that connection sharing is working (or not working) as expected.
      */
+    @Test
     public void testSharedConnection() throws Exception {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
@@ -128,7 +134,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         connectionA.close();
         connectionB.close();
     }
-    
+
+    @Test
     public void testConnectionReturnOnCommit() throws Exception {
         transactionManager.begin();
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
@@ -139,7 +146,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         assertEquals(0, pool.getNumActive());
     }
 
-    
+    @Test
     public void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
@@ -164,6 +171,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Test
     public void testManagedConnectionEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
@@ -185,10 +193,10 @@ public class TestManagedDataSource extends TestConnectionPool {
         }
     }
 
-
     /*
     * JIRA: DBCP-198
     */
+    @Test
     public void testManagedConnectionEqualsReflexive() throws Exception {
         Connection con = ds.getConnection();
         Connection con2 = con;
@@ -197,6 +205,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         con.close();
     }
 
+    @Test
     public void testManagedConnectionEqualsFail() throws Exception {
         Connection con1 = ds.getConnection();
         Connection con2 = ds.getConnection();
@@ -205,6 +214,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         con2.close();
     }
 
+    @Test
     public void testManagedConnectionEqualsNull() throws Exception {
         Connection con1 = ds.getConnection();
         Connection con2 = null;
@@ -212,6 +222,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         con1.close();
     }
 
+    @Test
     public void testManagedConnectionEqualsType() throws Exception {
         Connection con1 = ds.getConnection();
         Integer con2 = Integer.valueOf(0);
@@ -219,6 +230,7 @@ public class TestManagedDataSource extends TestConnectionPool {
         con1.close();
     }
 
+    @Test
     public void testManagedConnectionEqualInnermost() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         DelegatingConnection<?> con = (DelegatingConnection<?>) ds.getConnection();

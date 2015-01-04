@@ -17,6 +17,11 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -32,16 +37,15 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
-    public TestPerUserPoolDataSource(String testName) {
-        super(testName);
-    }
 
     @Override
     protected Connection getConnection() throws SQLException {
@@ -50,9 +54,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     private DataSource ds;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         DriverAdapterCPDS pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
@@ -72,12 +75,12 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds = tds;
     }
 
-
     /**
      * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
      * exhibit the bug detailed in
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
+    @Test
     public void testIncorrectPassword() throws Exception {
         // Use bad password
         try (Connection c = ds.getConnection("u1", "zlsafjk");){
@@ -113,8 +116,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
-
     @Override
+    @Test
     public void testSimple() throws Exception
     {
         Connection conn = ds.getConnection();
@@ -129,6 +132,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    @Test
     public void testSimpleWithUsername() throws Exception
     {
         Connection conn = ds.getConnection("u1", "p1");
@@ -143,6 +147,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    @Test
     public void testClosingWithUserName()
         throws Exception
     {
@@ -174,6 +179,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testSimple2()
         throws Exception
     {
@@ -228,6 +234,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testOpening()
         throws Exception
     {
@@ -249,6 +256,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testClosing()
         throws Exception
     {
@@ -272,6 +280,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testMaxTotal() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
@@ -295,6 +304,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      * Verify that defaultMaxWaitMillis = 0 means immediate failure when
      * pool is exhausted.
      */
+    @Test
     public void testMaxWaitMillisZero() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWaitMillis(0);
@@ -308,6 +318,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    @Test
     public void testPerUserMethods() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
@@ -357,6 +368,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumIdle("u2"));
     }
 
+    @Test
     public void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
@@ -366,6 +378,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
+    @Test
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWaitMillis = 500;
         ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
@@ -373,6 +386,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 
+    @Test
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
         assertNotNull(conn);
@@ -392,6 +406,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn3.close();
     }
 
+    @Test
     public void testSerialization() throws Exception {
         // make sure the pool has initialized
         Connection conn = ds.getConnection();
@@ -414,6 +429,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     // unregistered user is in the same pool as without username
+    @Test
     public void testUnregisteredUser() throws Exception {
         PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
@@ -444,6 +460,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
+    @Test
     public void testDefaultUser1() throws Exception {
         TesterDriver.addUser("mkh", "password");
         TesterDriver.addUser("hanafey", "password");
@@ -464,6 +481,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
+    @Test
     public void testDefaultUser2() throws Exception {
         TesterDriver.addUser("mkh", "password");
         TesterDriver.addUser("hanafey", "password");
@@ -484,6 +502,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     // See DBCP-8
+    @Test
     public void testChangePassword() throws Exception {
         try (Connection c = ds.getConnection("foo", "bay")){
             fail("Should have generated SQLException");

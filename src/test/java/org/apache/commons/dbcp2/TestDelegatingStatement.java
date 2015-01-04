@@ -17,29 +17,33 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestDelegatingStatement extends TestCase {
-    public TestDelegatingStatement(String testName) {
-        super(testName);
-    }
+public class TestDelegatingStatement {
 
     private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingStatement stmt = null;
     private Statement delegateStmt = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateStmt = new TesterStatement(delegateConn);
@@ -47,14 +51,17 @@ public class TestDelegatingStatement extends TestCase {
         stmt = new DelegatingStatement(conn,delegateStmt);
     }
 
+    @Test
     public void testExecuteQueryReturnsNull() throws Exception {
         assertNull(stmt.executeQuery("null"));
     }
 
+    @Test
     public void testGetDelegate() throws Exception {
         assertEquals(delegateStmt,stmt.getDelegate());
     }
 
+    @Test
     public void testCheckOpen() throws Exception {
         stmt.checkOpen();
         stmt.close();
@@ -66,6 +73,7 @@ public class TestDelegatingStatement extends TestCase {
         }
     }
 
+    @Test
     public void testIsWrapperFor() throws Exception {
         TesterConnection tstConn = new TesterConnection("test", "test");
         TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);

@@ -17,44 +17,49 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestDelegatingConnection extends TestCase {
-    public TestDelegatingConnection(String testName) {
-        super(testName);
-    }
+public class TestDelegatingConnection {
 
     private DelegatingConnection<? extends Connection> conn = null;
     private Connection delegateConn = null;
     private Connection delegateConn2 = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateConn2 = new TesterConnection("test", "test");
         conn = new DelegatingConnection<>(delegateConn);
     }
 
-
+    @Test
     public void testGetDelegate() throws Exception {
         assertEquals(delegateConn,conn.getDelegate());
     }
 
+    @Test
     public void testConnectionToString() throws Exception {
         String s = conn.toString();
         assertNotNull(s);
         assertTrue(s.length() > 0);
     }
 
+    @Test
     public void testCheckOpen() throws Exception {
         conn.checkOpen();
         conn.close();
@@ -69,6 +74,7 @@ public class TestDelegatingConnection extends TestCase {
     /**
      * Verify fix for DBCP-241
      */
+    @Test
     public void testCheckOpenNull() throws Exception {
         try {
             conn.close();

@@ -17,6 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.CallableStatement;
@@ -26,22 +30,20 @@ import java.sql.Statement;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  *
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
-    public TestAbandonedBasicDataSource(String testName) {
-        super(testName);
-    }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
-
         // abandoned enabled but should not affect the basic tests
         // (very high timeout)
         ds.setLogAbandoned(true);
@@ -50,14 +52,9 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setRemoveAbandonedTimeout(10000);
     }
 
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        // nothing to do here
-    }
-
     // ---------- Abandoned Test -----------
 
+    @Test
     public void testAbandoned() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
@@ -68,6 +65,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         }
     }
 
+    @Test
     public void testAbandonedClose() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
@@ -94,6 +92,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertEquals(0, ds.getNumActive());
     }
 
+    @Test
     public void testAbandonedCloseWithExceptions() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(0);
@@ -129,7 +128,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * Verify that lastUsed property is updated when a connection
      * creates or prepares a statement
      */
-    public void testlastUsed() throws Exception {
+    @Test
+    public void testLastUsed() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
@@ -151,7 +151,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * Verify that lastUsed property is updated when a connection
      * prepares a callable statement.
      */
-    public void testlastUsedPrepareCall() throws Exception {
+    @Test
+    public void testLastUsedPrepareCall() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
@@ -173,6 +174,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-343 - verify that using a DelegatingStatement updates
      * the lastUsed on the parent connection
      */
+    @Test
     public void testLastUsedPreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(1);
         ds.setMaxTotal(2);
@@ -197,6 +199,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-343 - verify additional operations reset lastUsed on
      * the parent connection
      */
+    @Test
     public void testLastUsedUpdate() throws Exception {
         DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
         PreparedStatement ps = conn.prepareStatement("");
@@ -214,6 +217,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * no longer referenced even when it is tracked via the AbandonedTrace
      * mechanism.
      */
+    @Test
     public void testGarbageCollectorCleanUp01() throws Exception {
         DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
         Assert.assertEquals(0, conn.getTrace().size());
@@ -226,6 +230,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     /**
      * DBCP-180 - things get more interesting with statement pooling.
      */
+    @Test
     public void testGarbageCollectorCleanUp02() throws Exception {
         ds.setPoolPreparedStatements(true);
         ds.setAccessToUnderlyingConnectionAllowed(true);

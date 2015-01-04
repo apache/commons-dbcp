@@ -17,22 +17,23 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSourceFactory
  *
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestBasicDataSourceFactory extends TestCase {
-    public TestBasicDataSourceFactory(String testName) {
-        super(testName);
-    }
+public class TestBasicDataSourceFactory {
 
+    @Test
     public void testNoProperties() throws Exception {
         Properties properties = new Properties();
         BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
@@ -40,6 +41,7 @@ public class TestBasicDataSourceFactory extends TestCase {
         assertNotNull(ds);
     }
 
+    @Test
     public void testProperties() throws Exception {
         Properties properties = new Properties();
         properties.setProperty("driverClassName", "org.apache.commons.dbcp2.TesterDriver");

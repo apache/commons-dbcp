@@ -17,29 +17,26 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
+import org.junit.Test;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Id:$
  */
-public class TestInstanceKeyDataSource extends TestCase {
-    public TestInstanceKeyDataSource(String testName) {
-        super(testName);
-    }
+public class TestInstanceKeyDataSource {
 
-    @Override
-    public void setUp() throws Exception {
-    }
-    
     /**
      * Verify that exception on setupDefaults does not leak PooledConnection
      * 
      * JIRA: DBCP-237
      */
+    @Test
     public void testExceptionOnSetupDefaults() throws Exception {
         DriverAdapterCPDS pcds;
         pcds = new DriverAdapterCPDS();

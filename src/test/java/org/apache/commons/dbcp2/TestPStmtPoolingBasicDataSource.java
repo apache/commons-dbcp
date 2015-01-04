@@ -17,37 +17,38 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  *
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
-    public TestPStmtPoolingBasicDataSource(String testName) {
-        super(testName);
-    }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
-
         // PoolPreparedStatements enabled, should not affect the basic tests
         ds.setPoolPreparedStatements(true);
         ds.setMaxOpenPreparedStatements(2);
     }
 
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        // nothing to do here
-    }
-
+    @Test
     public void testPreparedStatementPooling() throws Exception {
         Connection conn = getConnection();
         assertNotNull(conn);
@@ -87,6 +88,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * closing least-recently-used statements idle in the pool to make room
      * for new ones if necessary.
      */
+    @Test
     public void testLRUBehavior() throws Exception {
         ds.setMaxOpenPreparedStatements(3);
 
@@ -139,6 +141,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
     // Bugzilla Bug 27246
     // PreparedStatement cache should be different depending on the Catalog
+    @Test
     public void testPStmtCatalog() throws Exception {
         Connection conn = getConnection();
         conn.setCatalog("catalog1");
@@ -163,6 +166,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner3);
     }
 
+    @Test
     public void testPStmtPoolingWithNoClose() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
@@ -194,6 +198,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner2);
     }
 
+    @Test
     public void testPStmtPoolingAccrossClose() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
@@ -233,6 +238,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * Tests high-concurrency contention for connections and pooled prepared statements.
      * DBCP-414
      */
+    @Test
     public void testMultipleThreads1() throws Exception {
         ds.setMaxWaitMillis(-1);
         ds.setMaxTotal(5);

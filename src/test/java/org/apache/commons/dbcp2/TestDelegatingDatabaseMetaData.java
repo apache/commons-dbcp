@@ -17,25 +17,27 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test suite for {@link DelegatingDatabaseMetaData}.
  */
-public class TestDelegatingDatabaseMetaData extends TestCase {
-    public TestDelegatingDatabaseMetaData(String testName) {
-        super(testName);
-    }
+public class TestDelegatingDatabaseMetaData {
 
     private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingDatabaseMetaData meta = null;
     private DatabaseMetaData delegateMeta = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateMeta = delegateConn.getMetaData();
@@ -43,10 +45,12 @@ public class TestDelegatingDatabaseMetaData extends TestCase {
         meta = new DelegatingDatabaseMetaData(conn,delegateMeta);
     }
 
+    @Test
     public void testGetDelegate() throws Exception {
         assertEquals(delegateMeta,meta.getDelegate());
     }
 
+    @Test
     /* JDBC_4_ANT_KEY_BEGIN */
     public void testCheckOpen() throws Exception {
         ResultSet rst = meta.getSchemas();

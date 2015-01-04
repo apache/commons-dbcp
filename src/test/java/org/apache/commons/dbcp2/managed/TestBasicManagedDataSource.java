@@ -17,18 +17,20 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.sql.SQLException;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
+import org.junit.Test;
 
 /**
  * TestSuite for BasicManagedDataSource
  */
 public class TestBasicManagedDataSource extends TestBasicDataSource {
-    public TestBasicManagedDataSource(String testName) {
-        super(testName);
-    }
 
     @Override
     protected BasicDataSource createDataSource() throws Exception {
@@ -42,6 +44,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
      * Verify that PoolableConnections created by BasicManagedDataSource unregister themselves
      * when reallyClosed.
      */
+    @Test
     public void testReallyClose() throws Exception {
         BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());

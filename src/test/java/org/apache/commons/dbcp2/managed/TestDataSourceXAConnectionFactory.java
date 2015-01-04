@@ -17,6 +17,8 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +32,8 @@ import javax.sql.XADataSource;
 
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TestSuite for BasicManagedDataSource when using a
@@ -37,15 +41,11 @@ import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
  */
 public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
 
-    public TestDataSourceXAConnectionFactory(String testName) {
-        super(testName);
-    }
-
     protected BasicManagedDataSource bmds;
 
     public AtomicInteger closeCounter = new AtomicInteger();
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         bmds = new BasicManagedDataSource();
@@ -93,6 +93,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
     /**
      * JIRA: DBCP-355
      */
+    @Test
     public void testPhysicalClose() throws Exception {
         bmds.setMaxIdle(1);
         Connection conn1 = bmds.getConnection();

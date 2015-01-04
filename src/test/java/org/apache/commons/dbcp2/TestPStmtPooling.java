@@ -17,6 +17,11 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,24 +31,21 @@ import java.sql.SQLException;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  *
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestPStmtPooling extends TestCase {
-    public TestPStmtPooling(String testName) {
-        super(testName);
-    }
+public class TestPStmtPooling {
 
+    @Test
     public void testStmtPool() throws Exception {
         DataSource ds = createPDS();
         try (Connection conn = ds.getConnection()) {
@@ -62,6 +64,7 @@ public class TestPStmtPooling extends TestCase {
      * that wraps a PoolablePreparedStatement does not "re-close" the PPS
      * (which could be in use by another client - see DBCP-414).
      */
+    @Test
     public void testMultipleClose() throws Exception {
        DataSource ds = createPDS();
        PreparedStatement stmt1 = null;
@@ -118,6 +121,7 @@ public class TestPStmtPooling extends TestCase {
 
     }
 
+    @Test
     public void testCallableStatementPooling() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -163,6 +167,7 @@ public class TestPStmtPooling extends TestCase {
         }
     }
 
+    @Test
     public void testClosePool() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -194,6 +199,7 @@ public class TestPStmtPooling extends TestCase {
         }
     }
 
+    @Test
     public void testBatchUpdate() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         ConnectionFactory connFactory = new DriverManagerConnectionFactory(

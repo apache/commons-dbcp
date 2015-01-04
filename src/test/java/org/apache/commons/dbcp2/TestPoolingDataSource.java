@@ -17,21 +17,24 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Connection;
 import java.util.Properties;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TestSuite for PoolingDataSource
  *
- * @version $Revision: 392677 $ $Date: 2006-04-08 21:42:24 -0700 (Sat, 08 Apr 2006) $
+ * @version $Id:$
  */
 public class TestPoolingDataSource extends TestConnectionPool {
-    public TestPoolingDataSource(String testName) {
-        super(testName);
-    }
 
     @Override
     protected Connection getConnection() throws Exception {
@@ -41,9 +44,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
     protected PoolingDataSource<PoolableConnection> ds = null;
     private GenericObjectPool<PoolableConnection> pool = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         Properties props = new Properties();
         props.setProperty("user", "username");
         props.setProperty("password", "password");
@@ -63,12 +65,13 @@ public class TestPoolingDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         pool.close();
         super.tearDown();
     }
 
+    @Test
     public void testPoolGuardConnectionWrapperEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         Connection[] c = new Connection[getMaxTotal()];
@@ -93,6 +96,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     /*
      * JIRA: DBCP-198
      */
+    @Test
     public void testPoolGuardConnectionWrapperEqualsReflexive()
         throws Exception {
         Connection con = ds.getConnection();
@@ -102,6 +106,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         con.close();
     }
 
+    @Test
     public void testPoolGuardConnectionWrapperEqualsFail() throws Exception {
         Connection con1 = ds.getConnection();
         Connection con2 = ds.getConnection();
@@ -110,6 +115,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         con2.close();
     }
 
+    @Test
     public void testPoolGuardConnectionWrapperEqualsNull() throws Exception {
         Connection con1 = ds.getConnection();
         Connection con2 = null;
@@ -117,6 +123,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         con1.close();
     }
 
+    @Test
     public void testPoolGuardConnectionWrapperEqualsType() throws Exception {
         Connection con1 = ds.getConnection();
         Integer con2 = Integer.valueOf(0);
@@ -124,7 +131,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
         con1.close();
     }
 
-    public void testestPoolGuardConnectionWrapperEqualInnermost() throws Exception {
+    @Test
+    public void testPoolGuardConnectionWrapperEqualInnermost() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         DelegatingConnection<?> con = (DelegatingConnection<?>) ds.getConnection();
         Connection inner = con.getInnermostDelegate();
@@ -141,6 +149,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
      * Verify that omitting factory.setPool(pool) when setting up PDS does not
      * result in NPE.
      */
+    @Test
     public void testFixFactoryConfig() throws Exception {
         Properties props = new Properties();
         props.setProperty("user", "username");

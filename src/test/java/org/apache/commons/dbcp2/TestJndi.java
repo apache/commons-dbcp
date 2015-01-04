@@ -17,6 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.fail;
+
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -24,17 +26,17 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.dbcp2.datasources.PerUserPoolDataSource;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests JNID bind and lookup for DataSource implementations.
  * Demonstrates problem indicated in BZ #38073.
- *
  */
-
-public class TestJndi extends TestCase {
+public class TestJndi {
     /**
      * The subcontext where the data source is bound.
      */
@@ -50,17 +52,11 @@ public class TestJndi extends TestCase {
     protected Context context = null;
 
     /**
-     * Creates a new instance.
-     */
-    public TestJndi(String name) {
-        super(name);
-    }
-
-    /**
      * Test BasicDatsource bind and lookup
      * 
      * @throws Exception
      */
+    @Test
     public void testBasicDataSourceBind() throws Exception {
         BasicDataSource dataSource = new BasicDataSource();
         checkBind(dataSource);      
@@ -71,6 +67,7 @@ public class TestJndi extends TestCase {
      * 
      * @throws Exception
      */
+    @Test
     public void testSharedPoolDataSourceBind() throws Exception {
         SharedPoolDataSource dataSource = new SharedPoolDataSource();
         checkBind(dataSource);      
@@ -81,18 +78,19 @@ public class TestJndi extends TestCase {
      * 
      * @throws Exception
      */
+    @Test
     public void testPerUserPoolDataSourceBind() throws Exception {
         PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
         checkBind(dataSource);      
     }
     
-    @Override
+    @Before
     public void setUp() throws Exception {
         context = getInitialContext();
         context.createSubcontext(JNDI_SUBCONTEXT);  
     }
     
-    @Override
+    @After
     public void tearDown() throws Exception {
         context.unbind(JNDI_PATH);
         context.destroySubcontext(JNDI_SUBCONTEXT);    
