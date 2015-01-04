@@ -39,7 +39,7 @@ import java.sql.SQLXML;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
     private final ResultSetMetaData _resultSetMetaData = null;

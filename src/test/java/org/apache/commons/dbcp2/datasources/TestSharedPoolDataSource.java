@@ -17,6 +17,11 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,16 +35,15 @@ import org.apache.commons.dbcp2.DelegatingStatement;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
-    public TestSharedPoolDataSource(String testName) {
-        super(testName);
-    }
 
     @Override
     protected Connection getConnection() throws Exception {
@@ -49,9 +53,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private DriverAdapterCPDS pcds;
     private DataSource ds;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
@@ -81,6 +84,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * then correct password for same user illustrates
      * JIRA: DBCP-245
      */
+    @Test
     public void testIncorrectPassword() throws Exception {
 
         ds.getConnection("u2", "p2").close();
@@ -118,6 +122,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
 
     @Override
+    @Test
     public void testSimple() throws Exception
     {
         Connection conn = ds.getConnection();
@@ -132,6 +137,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    @Test
     public void testSimpleWithUsername() throws Exception
     {
         Connection conn = ds.getConnection("u1", "p1");
@@ -146,6 +152,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    @Test
     public void testClosingWithUserName()
         throws Exception
     {
@@ -177,6 +184,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testSimple2()
         throws Exception
     {
@@ -231,6 +239,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testOpening()
         throws Exception
     {
@@ -252,6 +261,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testClosing()
         throws Exception
     {
@@ -279,6 +289,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      *
      * @throws Exception
      */
+    @Test
     public void testClosePool() throws Exception {
       ((SharedPoolDataSource)ds).close();
       SharedPoolDataSource tds = new SharedPoolDataSource();
@@ -287,6 +298,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Override
+    @Test
     public void testMaxTotal() throws Exception {
         Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
@@ -306,6 +318,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
     public void testMaxWaitMillis() throws Exception {
         final int maxWaitMillis = 1000;
         final int theadCount = 20;
@@ -350,6 +363,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
     public void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
@@ -358,12 +372,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
+    @Test
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWaitMillis = 500;
         ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
         multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 
+    @Test
     public void testTransactionIsolationBehavior() throws Exception {
         Connection conn = getConnection();
         assertNotNull(conn);
@@ -385,6 +401,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
     // when setPoolPreparedStatements(true)
+    @Test
     public void testPoolPrepareStatement() throws Exception
     {
         pcds.setPoolPreparedStatements(true);
@@ -522,6 +539,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
         conn = null;
     }
+
+    @Test
     public void testPoolPreparedStatements() throws Exception {
         doTestPoolPreparedStatements(new PscbString());
         doTestPoolPreparedStatements(new PscbStringIntInt());
@@ -532,6 +551,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     // See DBCP-8
+    @Test
     public void testChangePassword() throws Exception {
         try (Connection c = ds.getConnection("foo", "bay")){
             fail("Should have generated SQLException");
@@ -566,6 +586,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
     public void testDbcp369() {
         final ArrayList<SharedPoolDataSource> dataSources = new ArrayList<>();
         for (int j = 0; j < 10000; j++) {

@@ -17,28 +17,26 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * This test *must* execute before all other tests to be effective as it tests
  * the initialisation of DriverManager.
  * Based on the test case for DBCP-212 written by Marcos Sanz
  *
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestDriverManagerConnectionFactory extends TestCase {
+public class TestDriverManagerConnectionFactory {
 
-    public TestDriverManagerConnectionFactory(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testDriverManagerInit() throws Exception {
         System.setProperty("jdbc.drivers",
                 "org.apache.commons.dbcp2.TesterDriver");

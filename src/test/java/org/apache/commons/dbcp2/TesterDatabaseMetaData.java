@@ -24,7 +24,7 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 /**
- * Dummy {@link DatabaseMetaData} for tetsing purposes. Implements only those
+ * Dummy {@link DatabaseMetaData} for testing purposes. Implements only those
  * methods required by the test cases.
  */
 public class TesterDatabaseMetaData implements DatabaseMetaData {

@@ -17,44 +17,49 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  */
-public class TestDelegatingPreparedStatement extends TestCase {
-    public TestDelegatingPreparedStatement(String testName) {
-        super(testName);
-    }
+public class TestDelegatingPreparedStatement {
 
     private DelegatingConnection<Connection> conn = null;
     private Connection delegateConn = null;
     private DelegatingPreparedStatement stmt = null;
     private PreparedStatement delegateStmt = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         conn = new DelegatingConnection<>(delegateConn);
     }
 
+    @Test
     public void testExecuteQueryReturnsNull() throws Exception {
         delegateStmt = new TesterPreparedStatement(delegateConn,"null");
         stmt = new DelegatingPreparedStatement(conn,delegateStmt);
         assertNull(stmt.executeQuery());
     }
 
+    @Test
     public void testExecuteQueryReturnsNotNull() throws Exception {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         stmt = new DelegatingPreparedStatement(conn,delegateStmt);
         assertTrue(null != stmt.executeQuery());
     }
 
+    @Test
     public void testGetDelegate() throws Exception {
         delegateStmt = new TesterPreparedStatement(delegateConn,"select * from foo");
         stmt = new DelegatingPreparedStatement(conn,delegateStmt);

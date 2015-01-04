@@ -17,8 +17,17 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.apache.commons.dbcp2.DelegatingConnection;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -33,22 +42,17 @@ import javax.transaction.Transaction;
  * TestSuite for ManagedDataSource with an active transaction in progress.
  *
  * @author Dain Sundstrom
- * @version $Revision$
+ * @version $Id:$
  */
 public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
-    public TestManagedDataSourceInTx(String testName) {
-        super(testName);
-    }
-
-    @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
-
         transactionManager.begin();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         if (transactionManager.getTransaction() != null) {
             transactionManager.commit();
@@ -60,6 +64,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
      * @see #testSharedConnection()
      */
     @Override
+    @Test
     public void testManagedConnectionEqualsFail() throws Exception {
         // this test is invalid for managed connections since because
         // two connections to the same datasource are supposed to share
@@ -67,6 +72,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
@@ -88,6 +94,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testHashCode() throws Exception {
         Connection conn1 = newConnection();
         assertNotNull(conn1);
@@ -99,6 +106,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testMaxTotal() throws Exception {
         Transaction[] transactions = new Transaction[getMaxTotal()];
         Connection[] c = new Connection[getMaxTotal()];
@@ -130,6 +138,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testClearWarnings() throws Exception {
         // open a connection
         Connection connection = newConnection();
@@ -159,6 +168,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testSharedConnection() throws Exception {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
@@ -172,6 +182,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionB.close();
     }
 
+    @Test
     public void testSharedTransactionConversion() throws Exception {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
@@ -210,6 +221,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionB.close();
     }
 
+    @Test
     public void testCloseInTransaction() throws Exception {
         DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
@@ -232,6 +244,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testAutoCommitBehavior() throws Exception {
         Connection connection = newConnection();
 
@@ -253,6 +266,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connection.close();
     }
 
+    @Test
     public void testCommit() throws Exception {
         Connection connection = newConnection();
 
@@ -274,6 +288,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connection.close();
     }
 
+    @Test
     public void testReadOnly() throws Exception {
         Connection connection = newConnection();
 
@@ -346,6 +361,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Override
+    @Test
     public void testConnectionReturnOnCommit() throws Exception {
          // override with no-op test
          return;

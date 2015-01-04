@@ -17,6 +17,12 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -30,18 +36,18 @@ import javax.sql.DataSource;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
  * @author Rodney Waldhoff
  * @author Sean C. Sullivan
- * @version $Revision$ $Date$
+ * @version $Id$
  */
 public class TestPoolingDriver extends TestConnectionPool {
-    public TestPoolingDriver(String testName) {
-        super(testName);
-    }
 
     @Override
     protected Connection getConnection() throws Exception {
@@ -50,9 +56,8 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     private PoolingDriver driver = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
         PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
@@ -81,12 +86,13 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver.registerPool("test",pool);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         driver.closePool("test");
         super.tearDown();
     }
 
+    @Test
     public void test1() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         PoolableConnectionFactory pcf =
@@ -100,6 +106,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         Assert.assertNotNull(ds);
     }
 
+    @Test
     public void test2() {
         ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
         PoolableConnectionFactory pcf =
@@ -111,8 +118,8 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver2.registerPool("example",connectionPool);
     }
 
-
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
+    @Test
     public void testReportedBug28912() throws Exception {
         Connection conn1 = getConnection();
         assertNotNull(conn1);
@@ -133,6 +140,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    @Test
     public void testReportedBug12400() throws Exception {
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(70);
@@ -165,6 +173,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         }
     }
 
+    @Test
     public void testClosePool() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
@@ -181,6 +190,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         }
     }
 
+    @Test
     public void testInvalidateConnection() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
@@ -197,6 +207,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         assertTrue(conn.isClosed());
     }
 
+    @Test
     public void testLogWriter() throws Exception {
         PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, "UTF-8");
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), "UTF-8"));

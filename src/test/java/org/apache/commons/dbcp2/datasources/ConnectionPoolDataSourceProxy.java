@@ -29,7 +29,7 @@ import javax.sql.PooledConnection;
  * ConnectionPoolDataSource implementation that proxies another 
  * ConnectionPoolDataSource.
  * 
- * @version $Revision$ $Date$
+ * @version $Id:$
  */
 public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 

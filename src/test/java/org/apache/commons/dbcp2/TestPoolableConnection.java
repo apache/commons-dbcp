@@ -16,26 +16,27 @@
  */
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author James Ring
- * @version $Revision$ $Date$
+ * @version $Id:$
  */
-public class TestPoolableConnection extends TestCase {
-    public TestPoolableConnection(String testName) {
-        super(testName);
-    }
+public class TestPoolableConnection {
 
     private ObjectPool<PoolableConnection> pool = null;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         PoolableConnectionFactory factory = new PoolableConnectionFactory(
                 new DriverConnectionFactory(
@@ -48,6 +49,7 @@ public class TestPoolableConnection extends TestCase {
         factory.setPool(pool);
     }
 
+    @Test
     public void testConnectionPool() throws Exception {
         // Grab a new connection from the pool
         Connection c = pool.borrowObject();
@@ -63,6 +65,7 @@ public class TestPoolableConnection extends TestCase {
 
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the
     // delegated connection closes itself.
+    @Test
     public void testPoolableConnectionLeak() throws Exception {
         // 'Borrow' a connection from the pool
         Connection conn = pool.borrowObject();
@@ -87,6 +90,7 @@ public class TestPoolableConnection extends TestCase {
             0, pool.getNumActive());
     }
 
+    @Test
     public void testClosingWrappedInDelegate() throws Exception {
         Assert.assertEquals(0, pool.getNumActive());
 

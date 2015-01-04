@@ -19,13 +19,11 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestUtils extends TestCase {
-    public TestUtils(String testName) {
-        super(testName);
-    }
+public class TestUtils {
 
+    @Test
     public void testClassLoads() {
         Utils.closeQuietly((Connection) null); 
     }

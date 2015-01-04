@@ -17,29 +17,29 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.PooledConnection;
 
-import junit.framework.TestCase;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
-
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Id:$
  */
-public class TestKeyedCPDSConnectionFactory extends TestCase {
+public class TestKeyedCPDSConnectionFactory {
 
     protected ConnectionPoolDataSourceProxy cpds = null;
 
-    public TestKeyedCPDSConnectionFactory(String testName) {
-        super(testName);
-    }
-
-    @Override
+    @Before
     public void setUp() throws Exception {
         cpds = new ConnectionPoolDataSourceProxy(new DriverAdapterCPDS());
         DriverAdapterCPDS delegate = (DriverAdapterCPDS) cpds.getDelegate();
@@ -56,6 +56,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
      * properly. PooledConnectionProxy (dubiously) fires connectionClosed
      * when PooledConnection itself is closed.
      */
+    @Test
     public void testSharedPoolDSDestroyOnReturn() throws Exception {
        SharedPoolDataSource ds = new SharedPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
@@ -80,6 +81,7 @@ public class TestKeyedCPDSConnectionFactory extends TestCase {
      * Verify that pool counters are maintained properly and listeners are
      * cleaned up when a PooledConnection throws a connectionError event.
      */
+    @Test
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         UserPassKey key = new UserPassKey("username", "password");
