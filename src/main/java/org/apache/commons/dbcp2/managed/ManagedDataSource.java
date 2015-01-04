@@ -28,6 +28,7 @@ import java.sql.SQLException;
  *
  * @author Dain Sundstrom
  * @param <C> The kind of {@link Connection} to manage.
+ * @version $Id$
  * @since 2.0
  */
 public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C> {

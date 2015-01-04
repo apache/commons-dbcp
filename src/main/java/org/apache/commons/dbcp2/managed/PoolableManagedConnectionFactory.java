@@ -34,6 +34,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.
  *
+ * @version $Id$
  * @since 2.0
  */
 public class PoolableManagedConnectionFactory extends PoolableConnectionFactory {

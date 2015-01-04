@@ -18,6 +18,7 @@ package org.apache.commons.dbcp2;
 
 /**
  * Constants for use with JMX
+ * @version $Id$
  * @since 2.0
  */
 public class Constants {

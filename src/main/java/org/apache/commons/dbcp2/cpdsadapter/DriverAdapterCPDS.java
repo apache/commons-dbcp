@@ -88,7 +88,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * </p>
  *
  * @author John D. McNally
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class DriverAdapterCPDS

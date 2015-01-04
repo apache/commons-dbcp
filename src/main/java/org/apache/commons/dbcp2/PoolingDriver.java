@@ -38,7 +38,7 @@ import org.apache.commons.pool2.ObjectPool;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class PoolingDriver implements Driver {

@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 /**
  * Defines the methods that will be made available via JMX.
  *
+ * @version $Id$
  * @since 2.0
  */
 public interface BasicDataSourceMXBean {

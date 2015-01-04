@@ -38,6 +38,7 @@ import org.apache.commons.dbcp2.DelegatingConnection;
  * the ManagedConnection a way to enlist connections in a transaction, allowing for the maximal rescue of DBCP.
  *
  * @author Dain Sundstrom
+ * @version $Id$
  * @since 2.0
  */
 public class TransactionRegistry {

@@ -54,7 +54,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * new password.</p>
  *
  * @author John D. McNally
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class PerUserPoolDataSource extends InstanceKeyDataSource {

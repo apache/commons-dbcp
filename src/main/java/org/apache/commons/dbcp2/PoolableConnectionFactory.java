@@ -43,7 +43,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class PoolableConnectionFactory

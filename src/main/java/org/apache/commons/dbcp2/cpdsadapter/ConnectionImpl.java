@@ -37,7 +37,7 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
  * underlying connection.
  *
  * @author John D. McNally
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 class ConnectionImpl extends DelegatingConnection<Connection> {

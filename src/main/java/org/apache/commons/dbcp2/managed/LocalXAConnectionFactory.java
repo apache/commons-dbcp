@@ -32,6 +32,7 @@ import java.sql.SQLException;
  * the 2-phase protocol.
  *
  * @author Dain Sundstrom
+ * @version $Id$
  * @since 2.0
  */
 public class LocalXAConnectionFactory implements XAConnectionFactory {

@@ -20,6 +20,7 @@ import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 
 /**
  * A key uniquely identifying {@link java.sql.PreparedStatement PreparedStatement}s.
+ * @version $Id$
  * @since 2.0
  */
 public class PStmtKey {
