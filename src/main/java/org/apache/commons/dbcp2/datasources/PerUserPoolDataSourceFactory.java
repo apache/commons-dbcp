@@ -26,7 +26,7 @@ import javax.naming.Reference;
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
  *
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class PerUserPoolDataSourceFactory

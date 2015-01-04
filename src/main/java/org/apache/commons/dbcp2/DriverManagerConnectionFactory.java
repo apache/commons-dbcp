@@ -27,7 +27,7 @@ import java.util.Properties;
  * @author Rodney Waldhoff
  * @author Ignacio J. Ortega
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {

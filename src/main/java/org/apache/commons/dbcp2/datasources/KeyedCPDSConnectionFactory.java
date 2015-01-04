@@ -42,7 +42,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * {@link PoolableConnection}s.
  *
  * @author John D. McNally
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 class KeyedCPDSConnectionFactory

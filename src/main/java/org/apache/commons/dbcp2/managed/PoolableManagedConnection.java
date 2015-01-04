@@ -27,6 +27,7 @@ import org.apache.commons.pool2.ObjectPool;
  * PoolableConnection that unregisters from TransactionRegistry on Connection real destroy.
  *
  * @see PoolableConnection
+ * @version $Id$
  * @since 2.0
  */
 public class PoolableManagedConnection extends PoolableConnection {

@@ -37,7 +37,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {

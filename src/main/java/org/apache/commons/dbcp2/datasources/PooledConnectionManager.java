@@ -23,7 +23,7 @@ import javax.sql.PooledConnection;
 /**
  * Methods to manage PoolableConnections and the connection pools that source them.
  *
- * @version $Revision$ $Date$
+ * @version $Id$
  * @since 2.0
  */
 interface PooledConnectionManager {

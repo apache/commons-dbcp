@@ -25,7 +25,8 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 /**
- * Utility methods
+ * Utility methods.
+ * @version $Id$
  * @since 2.0
  */
 public final class Utils {
