@@ -47,7 +47,7 @@ import java.util.Properties;
  * TestSuite for ManagedDataSource without a transaction in progress.
  *
  * @author Dain Sundstrom
- * @version $Id:$
+ * @version $Id$
  */
 public class TestManagedDataSource extends TestConnectionPool {
 
