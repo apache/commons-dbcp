@@ -38,7 +38,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
      * Creates a ManagedDataSource which obtains connections from the specified pool and
      * manages them using the specified transaction registry.  The TransactionRegistry must
      * be the transaction registry obtained from the XAConnectionFactory used to create
-     * the connection pool.  If not an error will occure when attempting to use the connection
+     * the connection pool.  If not, an error will occur when attempting to use the connection
      * in a global transaction because the XAResource object associated with the connection
      * will be unavailable.
      *
