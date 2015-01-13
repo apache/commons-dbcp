@@ -94,6 +94,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_MAXOPENPREPAREDSTATEMENTS = "maxOpenPreparedStatements";
     private static final String PROP_CONNECTIONPROPERTIES = "connectionProperties";
     private static final String PROP_MAXCONNLIFETIMEMILLIS = "maxConnLifetimeMillis";
+    private static final String PROP_LOGEXPIREDCONNECTIONS = "logExpiredConnections";
     private static final String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
     private static final String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
     private static final String PROP_DEFAULT_QUERYTIMEOUT = "defaultQueryTimeout";
@@ -135,6 +136,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_MAXOPENPREPAREDSTATEMENTS,
         PROP_CONNECTIONPROPERTIES,
         PROP_MAXCONNLIFETIMEMILLIS,
+        PROP_LOGEXPIREDCONNECTIONS,
         PROP_ROLLBACK_ON_RETURN,
         PROP_ENABLE_AUTOCOMMIT_ON_RETURN,
         PROP_DEFAULT_QUERYTIMEOUT
@@ -411,6 +413,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
         value = properties.getProperty(PROP_MAXCONNLIFETIMEMILLIS);
         if (value != null) {
             dataSource.setMaxConnLifetimeMillis(Long.parseLong(value));
+        }
+        
+        value = properties.getProperty(PROP_LOGEXPIREDCONNECTIONS);
+        if (value != null) {
+            dataSource.setLogExpiredConnections(Boolean.valueOf(value).booleanValue());
         }
 
         value = properties.getProperty(PROP_JMX_NAME);

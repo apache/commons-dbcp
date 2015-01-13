@@ -590,6 +590,42 @@ public class TestBasicDataSource extends TestConnectionPool {
         // make sure cleanup is complete
         assertNull(ds.getConnectionPool());
     }
+    
+    @Test
+    public void testMaxConnLifetimeExceeded() throws Exception {
+        try {
+            StackMessageLog.lock();
+            ds.setMaxConnLifetimeMillis(100);
+            Connection conn = ds.getConnection();
+            assertEquals(1, ds.getNumActive());
+            Thread.sleep(500);
+            conn.close();
+            assertEquals(0, ds.getNumIdle());
+            String message = StackMessageLog.popMessage();
+            assertTrue(message.indexOf("exceeds the maximum permitted value") > 0);
+        } finally {
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }
+    
+    @Test
+    public void testMaxConnLifetimeExceededMutedLog() throws Exception {
+        try {
+            StackMessageLog.lock();
+            ds.setMaxConnLifetimeMillis(100);
+            ds.setLogExpiredConnections(false);
+            Connection conn = ds.getConnection();
+            assertEquals(1, ds.getNumActive());
+            Thread.sleep(500);
+            conn.close();
+            assertEquals(0, ds.getNumIdle());
+            assertTrue(StackMessageLog.isEmpty());
+        } finally {
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }
 }
 
 /**

@@ -367,7 +367,7 @@ public class PoolableConnectionFactory
         if (maxConnLifetimeMillis > 0) {
             long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
-                throw new Exception(Utils.getMessage(
+                throw new LifetimeExceededException(Utils.getMessage(
                         "connectionFactory.lifetimeExceeded",
                         Long.valueOf(lifetime),
                         Long.valueOf(maxConnLifetimeMillis)));

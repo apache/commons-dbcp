@@ -82,6 +82,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-428" dev="psteitz" type="fix" due-to="Vladimir Konkov">
         Unsuccessful Connection enlistment in XA Transaction ignored by TransactionContext.
       </action>
+      <action issue="DBCP-424" dev="psteitz" type="update">
+        Made expired connection logging configurable in BasicDataSource.  Setting
+        logExpiredConnections to false suppresses expired connection log messages.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">

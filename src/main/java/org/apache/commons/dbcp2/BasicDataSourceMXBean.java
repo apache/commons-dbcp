@@ -215,6 +215,12 @@ public interface BasicDataSourceMXBean {
      * @return {@link BasicDataSource#getMaxConnLifetimeMillis()}
      */
     long getMaxConnLifetimeMillis();
+    
+    /**
+     * See {@link BasicDataSource#isLogExpiredConnections()}
+     * @return {@link BasicDataSource#isLogExpiredConnections()}
+     */
+    boolean isLogExpiredConnections();
 
     /**
      * See {@link BasicDataSource#getRemoveAbandonedOnBorrow()}
