@@ -1267,6 +1267,18 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public long getMaxConnLifetimeMillis() {
         return maxConnLifetimeMillis;
     }
+    
+    private boolean logExpiredConnections = true;
+    
+    /**
+     * When {@link #getMaxConnLifetimeMillis()} is set to limit connection lifetime,
+     * this property determines whether or not log messages are generated when the
+     * pool closes connections due to maximum lifetime exceeded. 
+     */
+    @Override
+    public boolean isLogExpiredConnections() {
+        return logExpiredConnections;
+    }
 
     /**
      * <p>Sets the maximum permitted lifetime of a connection in
@@ -1279,6 +1291,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+    }
+    
+    /**
+     * When {@link #getMaxConnLifetimeMillis()} is set to limit connection lifetime,
+     * this property determines whether or not log messages are generated when the
+     * pool closes connections due to maximum lifetime exceeded.  Set this property
+     * to false to suppress log messages when connections expire.
+     */
+    public void setLogExpiredConnections(boolean logExpiredConnections) {
+        this.logExpiredConnections = logExpiredConnections;
     }
 
     private String jmxName = null;
@@ -2121,7 +2143,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
-        gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
+        gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log, logExpiredConnections));
         gop.setEvictionPolicyClassName(evictionPolicyClassName);
         factory.setPool(gop);
         connectionPool = gop;

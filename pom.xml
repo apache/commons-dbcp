@@ -272,8 +272,8 @@
           <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
             <systemPropertyVariables>
-                <!-- Ensure that logging messges are seen -->
-                <xorg.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog</xorg.apache.commons.logging.Log>
+                <!-- Ensure that logging messges can be inspected -->
+                <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
             </systemPropertyVariables>
             <reportFormat>plain</reportFormat>
               <excludes>

@@ -18,7 +18,7 @@
 <document>
 
  <properties>
-  <title>Configuration</title>
+  <title>BasicDataSource Configuration</title>
   <author email="dev@commons.apache.org">Commons Documentation Team</author>
  </properties>
 
@@ -46,7 +46,7 @@ testWhileIdle
 </section>
 -->
 
-<section name="Parameters">
+<section name="BasicDataSource Configuration Parameters">
 
 <table>
 <hr><th>Parameter</th><th>Description</th></hr>
@@ -280,6 +280,15 @@ isValid() method.
       exceeded the connection will fail the next activation, passivation or
       validation test. A value of zero or less means the connection has an
       infinite lifetime.
+   </td>
+</tr>
+<tr>
+   <td>logExpiredConnections</td>
+   <td>true</td>
+   <td>
+      Flag to log a message indicating that a connection is being closed by the
+      pool due to maxConnLifetimeMillis exceeded. Set this property to false
+      to suppress expired connection logging that is turned on by default.
    </td>
 </tr>
 <tr>
