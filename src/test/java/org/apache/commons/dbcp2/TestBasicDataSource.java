@@ -416,7 +416,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertNotNull(conn);
         assertEquals(1, ds.getNumActive());
 
-        // set an IO failure causing the isClosed mathod to fail
+        // set an IO failure causing the isClosed method to fail
         TesterConnection tconn = (TesterConnection) ((DelegatingConnection<?>)conn).getInnermostDelegate();
         tconn.setFailure(new IOException("network error"));
 
