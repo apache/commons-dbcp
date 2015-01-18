@@ -17,7 +17,9 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
@@ -67,7 +69,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
 
     @After
     public void tearDown() throws Exception {
-        pool.close();
+        ds.close();
         super.tearDown();
     }
 
@@ -168,5 +170,35 @@ public class TestPoolingDataSource extends TestConnectionPool {
         ds = new PoolingDataSource<>(p);
         assertTrue(f.getPool().equals(p));
         ds.getConnection();
+    }
+    
+    @Test
+    public void testClose() throws Exception {
+
+        Properties props = new Properties();
+        props.setProperty("user", "username");
+        props.setProperty("password", "password");
+        PoolableConnectionFactory f =
+            new PoolableConnectionFactory(
+                    new DriverConnectionFactory(new TesterDriver(),
+                            "jdbc:apache:commons:testdriver", props),
+                    null);
+        f.setValidationQuery("SELECT DUMMY FROM DUAL");
+        f.setDefaultReadOnly(Boolean.TRUE);
+        f.setDefaultAutoCommit(Boolean.TRUE);
+        GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
+        p.setMaxTotal(getMaxTotal());
+        p.setMaxWaitMillis(getMaxWaitMillis());
+
+        try ( PoolingDataSource<PoolableConnection> dataSource =
+                new PoolingDataSource<PoolableConnection>(p) ) {
+            Connection connection = dataSource.getConnection();
+            assertNotNull(connection);
+            connection.close();
+        }
+        
+        assertTrue(p.isClosed());
+        assertEquals(0, p.getNumIdle());
+        assertEquals(0, p.getNumActive());
     }
 }

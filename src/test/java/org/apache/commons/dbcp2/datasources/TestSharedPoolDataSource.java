@@ -538,6 +538,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         assertTrue(l3HashCode == l4HashCode);
         conn.close();
         conn = null;
+        tds.close();
     }
 
     @Test

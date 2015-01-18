@@ -43,7 +43,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * @version $Id$
  * @since 2.0
  */
-public class PoolingDataSource<C extends Connection> implements DataSource {
+public class PoolingDataSource<C extends Connection> implements DataSource, AutoCloseable {
 
     private static final Log log = LogFactory.getLog(PoolingDataSource.class);
     
@@ -67,6 +67,21 @@ public class PoolingDataSource<C extends Connection> implements DataSource {
                 ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) _pool;
                 pcf.setPool(p);
             }
+        }
+    }
+
+    /**
+     * Close and free all {@link Connections}s from the pool.
+     * @since 2.1
+     */
+    @Override
+    public void close() throws Exception {
+        try {
+            _pool.close();
+        } catch(RuntimeException rte) {
+            throw new RuntimeException(Utils.getMessage("pool.close.fail"), rte);
+        } catch(Exception e) {
+            throw new SQLException(Utils.getMessage("pool.close.fail"), e);
         }
     }
 

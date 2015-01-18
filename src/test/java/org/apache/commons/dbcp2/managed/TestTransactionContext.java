@@ -46,6 +46,7 @@ public class TestTransactionContext {
         final TransactionContext transactionContext =
                 new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
         transactionContext.setSharedConnection(conn);
+        basicManagedDataSource.close();
     }
     
     /**

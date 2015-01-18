@@ -141,7 +141,7 @@ public class TestPStmtPooling {
                 new GenericObjectPool<>(pcf, config);
         pcf.setPool(connPool);
 
-        DataSource ds = new PoolingDataSource<>(connPool);
+        PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
 
         try (Connection conn = ds.getConnection()) {
             Statement stmt1 = conn.prepareStatement("select 1 from dual");
@@ -165,6 +165,7 @@ public class TestPStmtPooling {
             assertNotSame(ustmt1, ustmt3);
             assertNotSame(ustmt3, ucstmt1);
         }
+        ds.close();
     }
 
     @Test
@@ -182,7 +183,7 @@ public class TestPStmtPooling {
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connPool);
 
-        DataSource ds = new PoolingDataSource<>(connPool);
+        PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
         ((PoolingDataSource<?>) ds).setAccessToUnderlyingConnectionAllowed(true);
 
         Connection conn = ds.getConnection();
@@ -197,6 +198,7 @@ public class TestPStmtPooling {
         } catch (SQLException ex) {
             assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
         }
+        ds.close();
     }
 
     @Test
@@ -213,7 +215,7 @@ public class TestPStmtPooling {
         ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connPool);
 
-        DataSource ds = new PoolingDataSource<>(connPool);
+        PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
 
         Connection conn = ds.getConnection();
         PreparedStatement ps = conn.prepareStatement("select 1 from dual");
@@ -223,5 +225,6 @@ public class TestPStmtPooling {
         ps.close();
         conn.close();
         Assert.assertFalse(inner.isClosed());
+        ds.close();
     }
 }

@@ -85,7 +85,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @since 2.0
  */
 public abstract class InstanceKeyDataSource
-        implements DataSource, Referenceable, Serializable {
+        implements DataSource, Referenceable, Serializable, AutoCloseable {
 
     private static final long serialVersionUID = -6819270431752240878L;
 
