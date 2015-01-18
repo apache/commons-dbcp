@@ -66,7 +66,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @version $Id$
  * @since 2.0
  */
-public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration {
+public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable {
 
     private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
@@ -1861,7 +1861,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         } catch(RuntimeException e) {
             throw e;
         } catch(Exception e) {
-            throw new SQLException("Cannot close connection pool", e);
+            throw new SQLException(Utils.getMessage("pool.close.fail"), e);
         }
     }
 

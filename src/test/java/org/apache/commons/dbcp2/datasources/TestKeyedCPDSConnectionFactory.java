@@ -73,6 +73,7 @@ public class TestKeyedCPDSConnectionFactory {
        assertEquals(2, ds.getNumIdle());
        conn3.close(); // Return to pool will trigger destroy -> close sequence
        assertEquals(2, ds.getNumIdle());
+       ds.close();
     }
 
     /**

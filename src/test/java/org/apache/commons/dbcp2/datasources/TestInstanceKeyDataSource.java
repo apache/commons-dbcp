@@ -54,7 +54,8 @@ public class TestInstanceKeyDataSource {
         } catch (SQLException ex) {
            //Expected
         }
-        assertEquals(numConnections,tds.getNumActive());     
+        assertEquals(numConnections,tds.getNumActive());  
+        tds.close();
     }
     
     private static class ThrowOnSetupDefaultsDataSource
