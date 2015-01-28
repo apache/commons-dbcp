@@ -18,7 +18,7 @@ package org.apache.commons.dbcp2;
 
 /**
  * Exception thrown when a connection's maximum lifetime has been exceeded.
- * 
+ *
  * @since 2.1
  */
  class LifetimeExceededException extends Exception {
