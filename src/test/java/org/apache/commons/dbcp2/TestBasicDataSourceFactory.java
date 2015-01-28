@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.util.Properties;
@@ -74,6 +75,8 @@ public class TestBasicDataSourceFactory {
         properties.setProperty("poolPreparedStatements", "true");
         properties.setProperty("maxOpenPreparedStatements", "10");
         properties.setProperty("lifo", "true");
+        properties.setProperty("fastFailValidation", "true");
+        properties.setProperty("disconnectionSqlCodes", "XXX,YYY");
 
         BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
 
@@ -111,5 +114,8 @@ public class TestBasicDataSourceFactory {
         assertEquals(true, ds.isPoolPreparedStatements());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
         assertEquals(true, ds.getLifo());
+        assertEquals(true, ds.isFastFailValidation());
+        assertTrue(ds.getDisconnectionSqlCodes().contains("XXX"));
+        assertTrue(ds.getDisconnectionSqlCodes().contains("YYY"));
     }
 }

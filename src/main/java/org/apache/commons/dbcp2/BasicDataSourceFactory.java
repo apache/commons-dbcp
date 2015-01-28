@@ -98,6 +98,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_ROLLBACK_ON_RETURN = "rollbackOnReturn";
     private static final String PROP_ENABLE_AUTOCOMMIT_ON_RETURN = "enableAutoCommitOnReturn";
     private static final String PROP_DEFAULT_QUERYTIMEOUT = "defaultQueryTimeout";
+    private static final String PROP_FASTFAIL_VALIDATION = "fastFailValidation";
+
+    /**
+     * Value string must be of the form [STATE_CODE;]*
+     */
+    private static final String PROP_DISCONNECTION_SQL_CODES = "disconnectionSqlCodes";
 
     private static final String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
@@ -139,7 +145,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_LOGEXPIREDCONNECTIONS,
         PROP_ROLLBACK_ON_RETURN,
         PROP_ENABLE_AUTOCOMMIT_ON_RETURN,
-        PROP_DEFAULT_QUERYTIMEOUT
+        PROP_DEFAULT_QUERYTIMEOUT,
+        PROP_FASTFAIL_VALIDATION,
+        PROP_DISCONNECTION_SQL_CODES
     };
 
     // -------------------------------------------------- ObjectFactory Methods
@@ -389,15 +397,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_CONNECTIONINITSQLS);
         if (value != null) {
-            StringTokenizer tokenizer = new StringTokenizer(value, ";");
-            // Have to jump through these hoops as StringTokenizer implements
-            // Enumeration<Object> rather than Enumeration<String>
-            Collection<String> tokens =
-                    new ArrayList<>(tokenizer.countTokens());
-            while (tokenizer.hasMoreTokens()) {
-                tokens.add(tokenizer.nextToken());
-            }
-            dataSource.setConnectionInitSqls(tokens);
+            dataSource.setConnectionInitSqls(parseList(value, ';'));
         }
 
         value = properties.getProperty(PROP_CONNECTIONPROPERTIES);
@@ -414,7 +414,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setMaxConnLifetimeMillis(Long.parseLong(value));
         }
-        
+
         value = properties.getProperty(PROP_LOGEXPIREDCONNECTIONS);
         if (value != null) {
             dataSource.setLogExpiredConnections(Boolean.valueOf(value).booleanValue());
@@ -440,6 +440,15 @@ public class BasicDataSourceFactory implements ObjectFactory {
             dataSource.setDefaultQueryTimeout(Integer.valueOf(value));
         }
 
+        value = properties.getProperty(PROP_FASTFAIL_VALIDATION);
+        if (value != null) {
+            dataSource.setFastFailValidation(Boolean.valueOf(value).booleanValue());
+        }
+
+        value = properties.getProperty(PROP_DISCONNECTION_SQL_CODES);
+        if (value != null) {
+            dataSource.setDisconnectionSqlCodes(parseList(value, ','));
+        }
 
         // DBCP-215
         // Trick to make sure that initialSize connections are created
@@ -464,5 +473,21 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
       }
       return p;
+    }
+
+    /**
+     * Parse list of property values from a delimited string
+     * @param value delimited list of values
+     * @param delimiter character used to separate values in the list
+     * @return String Collection of values
+     */
+    private static Collection<String> parseList(String value, char delimiter) {
+        StringTokenizer tokenizer = new StringTokenizer(value, Character.toString(delimiter));
+        Collection<String> tokens =
+                new ArrayList<String>(tokenizer.countTokens());
+        while (tokenizer.hasMoreTokens()) {
+            tokens.add(tokenizer.nextToken());
+        }
+        return tokens;
     }
 }

@@ -18,12 +18,14 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +36,7 @@ import org.junit.Test;
  */
 public class TestPoolableConnection {
 
-    private ObjectPool<PoolableConnection> pool = null;
+    private GenericObjectPool<PoolableConnection> pool = null;
 
     @Before
     public void setUp() throws Exception {
@@ -45,8 +47,14 @@ public class TestPoolableConnection {
         factory.setDefaultAutoCommit(Boolean.TRUE);
         factory.setDefaultReadOnly(Boolean.TRUE);
 
+
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
+    }
+    
+    @After
+    public void tearDown() {
+        pool.close();
     }
 
     @Test
@@ -107,5 +115,83 @@ public class TestPoolableConnection {
         Assert.assertTrue(conn.isClosed());
         Assert.assertEquals(0, pool.getNumActive());
         Assert.assertEquals(1, pool.getNumIdle());
+    }
+
+    @Test
+    public void testFastFailValidation() throws Exception {
+        pool.setTestOnReturn(true);
+        PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        factory.setFastFailValidation(true);
+        PoolableConnection conn = pool.borrowObject();
+        TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+        
+        // Set up non-fatal exception
+        nativeConnection.setFailure(new SQLException("Not fatal error.", "Invalid syntax."));
+        try {
+            conn.createStatement();
+            fail("Should throw SQL exception.");
+        } catch (SQLException ignored) {
+            // cleanup failure
+            nativeConnection.setFailure(null);
+        }
+
+        // validate should not fail - error was not fatal and condition was cleaned up
+        conn.validate("SELECT 1", 1000);
+
+        // now set up fatal failure
+        nativeConnection.setFailure(new SQLException("Fatal connection error.", "01002"));
+
+        try {
+            conn.createStatement();
+            fail("Should throw SQL exception.");
+        } catch (SQLException ignored) {
+            // cleanup failure
+            nativeConnection.setFailure(null);
+        }
+
+        // validate should now fail because of previous fatal error, despite cleanup
+        try {
+            conn.validate("SELECT 1", 1000);
+            fail("Should throw SQL exception on validation.");
+        } catch (SQLException notValid){
+            // expected - fatal error && fastFailValidation
+        }
+
+        // verify that bad connection does not get returned to the pool
+        conn.close();  // testOnReturn triggers validate, which should fail
+        assertEquals("The pool should have no active connections",
+                0, pool.getNumActive());
+        assertEquals("The pool should have no idle connections",
+                0, pool.getNumIdle());
+    }
+    
+    @Test
+    public void testFastFailValidationCustomCodes() throws Exception {
+        pool.setTestOnReturn(true);
+        PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        factory.setFastFailValidation(true);
+        ArrayList<String> disconnectionSqlCodes = new ArrayList<String>();
+        disconnectionSqlCodes.add("XXX");
+        factory.setDisconnectionSqlCodes(disconnectionSqlCodes);
+        PoolableConnection conn = pool.borrowObject();
+        TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+        
+        // Set up fatal exception
+        nativeConnection.setFailure(new SQLException("Fatal connection error.", "XXX"));
+        
+        try {
+            conn.createStatement();
+            fail("Should throw SQL exception.");
+        } catch (SQLException ignored) {
+            // cleanup failure
+            nativeConnection.setFailure(null);
+        }
+        
+        // verify that bad connection does not get returned to the pool
+        conn.close();  // testOnReturn triggers validate, which should fail
+        assertEquals("The pool should have no active connections",
+                0, pool.getNumActive());
+        assertEquals("The pool should have no idle connections",
+                0, pool.getNumIdle());
     }
 }
