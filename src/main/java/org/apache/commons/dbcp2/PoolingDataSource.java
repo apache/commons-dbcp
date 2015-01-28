@@ -46,7 +46,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 public class PoolingDataSource<C extends Connection> implements DataSource, AutoCloseable {
 
     private static final Log log = LogFactory.getLog(PoolingDataSource.class);
-    
+
     /** Controls access to the underlying connection */
     private boolean accessToUnderlyingConnectionAllowed = false;
 
@@ -71,7 +71,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Close and free all {@link Connections}s from the pool.
+     * Close and free all {@link Connection}s from the pool.
      * @since 2.1
      */
     @Override
