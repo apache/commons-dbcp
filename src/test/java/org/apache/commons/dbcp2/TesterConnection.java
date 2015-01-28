@@ -234,7 +234,11 @@ public class TesterConnection implements Connection {
 
     protected void checkFailure() throws SQLException {
         if (failure != null) {
-            throw new SQLException("TesterConnection failure", failure);
+            if(failure instanceof SQLException) {
+                throw (SQLException)failure;
+            } else {
+                throw new SQLException("TesterConnection failure", failure);
+            }
         }
     }
 

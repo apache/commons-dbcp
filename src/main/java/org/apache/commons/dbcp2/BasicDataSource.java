@@ -31,8 +31,10 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -1267,13 +1269,15 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public long getMaxConnLifetimeMillis() {
         return maxConnLifetimeMillis;
     }
-    
+
     private boolean logExpiredConnections = true;
-    
+
     /**
      * When {@link #getMaxConnLifetimeMillis()} is set to limit connection lifetime,
      * this property determines whether or not log messages are generated when the
-     * pool closes connections due to maximum lifetime exceeded. 
+     * pool closes connections due to maximum lifetime exceeded.
+     *
+     * @since 2.1
      */
     @Override
     public boolean isLogExpiredConnections() {
@@ -1292,7 +1296,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
-    
+
     /**
      * When {@link #getMaxConnLifetimeMillis()} is set to limit connection lifetime,
      * this property determines whether or not log messages are generated when the
@@ -1349,7 +1353,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
     }
 
-
     private boolean rollbackOnReturn = true;
 
     /**
@@ -1370,6 +1373,97 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.rollbackOnReturn = rollbackOnReturn;
     }
 
+    private volatile Set<String> disconnectionSqlCodes;
+
+    /**
+     * Returns the set of SQL_STATE codes considered to signal fatal conditions.
+     * @return fatal disconnection state codes
+     * @see #setDisconnectionSqlCodes(Collection)
+     * @since 2.1
+     */
+    public Set<String> getDisconnectionSqlCodes() {
+        Set<String> result = disconnectionSqlCodes;
+        if (result == null) {
+            return Collections.emptySet();
+        }
+        return result;
+    }
+
+    /**
+     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an
+     * array so it is accessible via JMX.
+     * @since 2.1
+     */
+    @Override
+    public String[] getDisconnectionSqlCodesAsArray() {
+        Collection<String> result = getDisconnectionSqlCodes();
+        return result.toArray(new String[result.size()]);
+    }
+
+    /**
+     * Sets the SQL_STATE codes considered to signal fatal conditions.
+     * <p>
+     * Overrides the defaults in {@link Utils#DISCONNECTION_SQL_CODES}
+     * (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
+     * If this property is non-null and {@link #isFastFailValidation()} is
+     * {@code true}, whenever connections created by this datasource generate exceptions
+     * with SQL_STATE codes in this list, they will be marked as "fatally disconnected"
+     * and subsequent validations will fail fast (no attempt at isValid or validation
+     * query).</p>
+     * <p>
+     * If {@link #isFastFailValidation()} is {@code false} setting this property has no
+     * effect.</p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been
+     * initialized.  The pool is initialized the first time one of the
+     * following methods is invoked: {@code getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter}.</p>
+     *
+     * @param disconnectionSqlCodes SQL_STATE codes considered to signal fatal conditions
+     * @since 2.1
+     */
+    public void setDisconnectionSqlCodes(Collection<String> disconnectionSqlCodes) {
+        if (disconnectionSqlCodes != null && disconnectionSqlCodes.size() > 0) {
+            HashSet<String> newVal = null;
+            for (String s : disconnectionSqlCodes) {
+            if (s != null && s.trim().length() > 0) {
+                    if (newVal == null) {
+                        newVal = new HashSet<String>();
+                    }
+                    newVal.add(s);
+                }
+            }
+            this.disconnectionSqlCodes = newVal;
+        } else {
+            this.disconnectionSqlCodes = null;
+        }
+    }
+
+    private boolean fastFailValidation;
+
+    /**
+     * True means that validation will fail immediately for connections that
+     * have previously thrown SQLExceptions with SQL_STATE indicating fatal
+     * disconnection errors.
+     *
+     * @return true if connections created by this datasource will fast fail validation.
+     * @see #setDisconnectionSqlCodes(Collection)
+     * @since 2.1
+     */
+    @Override
+    public boolean isFastFailValidation() {
+        return fastFailValidation;
+    }
+
+    /**
+     * @see #isFastFailValidation()
+     * @param fastFailValidation true means connections created by this factory will
+     * fast fail validation
+     * @since 2.1
+     */
+    public void setFastFailValidation(boolean fastFailValidation) {
+        this.fastFailValidation = fastFailValidation;
+    }
 
     // ----------------------------------------------------- Instance Variables
 

@@ -215,10 +215,11 @@ public interface BasicDataSourceMXBean {
      * @return {@link BasicDataSource#getMaxConnLifetimeMillis()}
      */
     long getMaxConnLifetimeMillis();
-    
+
     /**
      * See {@link BasicDataSource#isLogExpiredConnections()}
      * @return {@link BasicDataSource#isLogExpiredConnections()}
+     * @since 2.1
      */
     boolean isLogExpiredConnections();
 
@@ -251,4 +252,18 @@ public interface BasicDataSourceMXBean {
      * @return {@link BasicDataSource#isClosed()}
      */
     boolean isClosed();
+
+    /**
+     * See {@link BasicDataSource#isFastFailValidation()}
+     * @return {@link BasicDataSource#isFastFailValidation()}
+     * @since 2.1
+     */
+    boolean isFastFailValidation();
+
+    /**
+     * See {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}
+     * @return {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}
+     * @since 2.1
+     */
+    String[] getDisconnectionSqlCodesAsArray();
 }

@@ -363,8 +363,8 @@ value less than the maximum number of cursors that can be open on a Connection.
 </source>
 <p>
 <img src="images/icon_info_sml.gif"/>
-Default is false, it is a potential dangerous operation and misbehaving programs can do harmfull things. (closing the underlying or continue using it when the guarded connection is already closed)
-Be carefull and only use when you need direct access to driver specific extentions.
+Default is false, it is a potential dangerous operation and misbehaving programs can do harmful things. (closing the underlying or continue using it when the guarded connection is already closed)
+Be careful and only use when you need direct access to driver specific extensions.
 </p>
 <p>
 <img src="images/icon_warning_sml.gif"/>
@@ -420,6 +420,39 @@ default (300 sec). Traversing a resultset doesn't count as being used. Creating 
 or CallableStatement or using one of these to execute a query (using one of the execute methods) resets
 the lastUsed property of the parent connection.
 </p>
+<table>
+<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr>
+   <td>fastFailValidation</td>
+   <td>false</td>
+   <td>
+      When this property is true, validation fails fast for connections that have
+      thrown "fatal" SQLExceptions. Requests to validate disconnected connections
+      fail immediately, with no call to the driver's isValid method or attempt to
+      execute a validation query.<br/>
+      The SQL_STATE codes considered to signal fatal errors are by default the following:
+      <ul>
+        <li>57P01 (ADMIN SHUTDOWN)</li>
+        <li>57P02 (CRASH SHUTDOWN)</li>
+        <li>57P03 (CANNOT CONNECT NOW)</li>
+        <li>01002 (SQL92 disconnect error)</li>
+        <li>JZ0C0 (Sybase disconnect error)</li>
+        <li>JZ0C1 (Sybase disconnect error)</li>
+        <li>Any SQL_STATE code that starts with "08"</li>
+      </ul>
+      To override this default set of disconnection codes, set the
+      <code>disconnectionSqlCodes</code> property.
+   </td>
+</tr>
+<tr>
+   <td>disconnectionSqlCodes</td>
+   <td>null</td>
+   <td>Comma-delimited list of SQL_STATE codes considered to signal fatal disconnection
+       errors. Setting this property has no effect unless
+      <code>fastFailValidation</code> is set to <code>true.</code>
+   </td>
+</tr>
+</table>
 
 </section>
 
