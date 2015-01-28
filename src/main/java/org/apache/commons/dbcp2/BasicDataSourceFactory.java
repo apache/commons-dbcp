@@ -101,7 +101,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_FASTFAIL_VALIDATION = "fastFailValidation";
 
     /**
-     * Value string must be of the form [STATE_CODE;]*
+     * Value string must be of the form [STATE_CODE,]*
      */
     private static final String PROP_DISCONNECTION_SQL_CODES = "disconnectionSqlCodes";
 
