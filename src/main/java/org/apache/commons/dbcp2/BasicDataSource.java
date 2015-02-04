@@ -2080,10 +2080,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             }
 
             // Create the pooling data source to manage connections
+            DataSource newDataSource; 
             success = false;
             try {
-                dataSource = createDataSourceInstance();
-                dataSource.setLogWriter(logWriter);
+                newDataSource = createDataSourceInstance();
+                newDataSource.setLogWriter(logWriter);
                 success = true;
             } catch (SQLException se) {
                 throw se;
@@ -2110,6 +2111,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor task
             startPoolMaintenance();
 
+            dataSource = newDataSource;
             return dataSource;
         }
     }

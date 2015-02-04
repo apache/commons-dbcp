@@ -682,6 +682,32 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.unLock();
         }
     }
+    
+    @Test
+    public void testConcurrentInitBorrow() throws Exception {
+        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
+        ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:50");
+        ds.setInitialSize(8);
+        
+        // Launch a request to trigger pool initialization
+        TestThread testThread = new TestThread(1,0);
+        Thread t = new Thread(testThread);
+        t.start();
+        
+        // Get another connection (should wait for pool init)
+        Thread.sleep(100); // Make sure t gets into init first
+        ds.getConnection();
+        
+        // Pool should have at least 6 idle connections now
+        // Use underlying pool getNumIdle to avoid waiting for ds lock
+        assertTrue(ds.getConnectionPool().getNumIdle() > 5);
+        
+        // Make sure t completes successfully
+        t.join();
+        assertFalse(testThread.failed());
+        
+        ds.close();
+    }
 }
 
 /**
@@ -708,5 +734,30 @@ class TesterConnRequestCountDriver extends TesterDriver {
 
     public static void initConnRequestCount() {
         connectionRequestCount.set(0);
+    }
+}
+
+/**
+ * TesterDriver that adds latency to connection requests. Latency (in ms) is the
+ * last component of the URL.
+ */
+class TesterConnectionDelayDriver extends TesterDriver {
+    private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnectionDelayDriver";
+
+    @Override
+    public Connection connect(String url, Properties info) throws SQLException {
+        String[] parsedUrl = url.split(":");
+        int delay = Integer.parseInt(parsedUrl[parsedUrl.length - 1]);
+        try {
+            Thread.sleep(delay);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        return super.connect(url, info);
+    }
+
+    @Override
+    public boolean acceptsURL(String url) throws SQLException {
+        return url.startsWith(CONNECT_STRING);
     }
 }
