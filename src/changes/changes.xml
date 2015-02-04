@@ -98,7 +98,11 @@ The <action> type attribute can be add,update,fix,remove.
         Added fastFailValidation property to PooloableConnection, configurable in
         BasicDataSource.  When set to true, connections that have previously thrown
         fatal disconnection errors will fail validation immediately (no driver calls).
-      </action>  
+      </action>
+      <action issue="DBCP-432" dev="psteitz" type="fix">
+        Changed BasicDataSource createDataSource method to ensure that initialization
+        completes before clients get reference to newly created instances.
+      </action> 
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
