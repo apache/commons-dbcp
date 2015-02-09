@@ -93,7 +93,7 @@ public class TransactionRegistry {
 
     /**
      * Gets the active TransactionContext or null if not Transaction is active.
-     * @return the active TransactionContext or null if not Transaction is active
+     * @return the active TransactionContext or null if no Transaction is active
      * @throws SQLException if an error occurs while fetching the transaction
      */
     public TransactionContext getActiveTransactionContext() throws SQLException {
