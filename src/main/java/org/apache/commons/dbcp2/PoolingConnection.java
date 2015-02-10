@@ -296,7 +296,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Normalize the given SQL statement, producing a
-     * cannonical form that is semantically equivalent to the original.
+     * canonical form that is semantically equivalent to the original.
      */
     protected String normalizeSQL(String sql) {
         return sql.trim();

@@ -260,7 +260,7 @@ public class PoolableConnection extends DelegatingConnection<Connection>
      *       this connection has previously thrown a fatal disconnection exception,
      *       a {@code SQLException} is thrown. </li>
      *   <li>If {@code sql} is null, the driver's
-     *       #{@link Connection#isValid(int) isvalid(timeout)} is called.
+     *       #{@link Connection#isValid(int) isValid(timeout)} is called.
      *       If it returns {@code false}, {@code SQLException} is thrown;
      *       otherwise, this method returns successfully.</li>
      *   <li>If {@code sql} is not null, it is executed as a query and if the resulting
