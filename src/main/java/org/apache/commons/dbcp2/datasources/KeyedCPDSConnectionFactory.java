@@ -31,7 +31,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -40,7 +39,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link KeyedPooledObjectFactory} that creates
- * {@link PoolableConnection}s.
+ * {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
  *
  * @author John D. McNally
  * @version $Id$
