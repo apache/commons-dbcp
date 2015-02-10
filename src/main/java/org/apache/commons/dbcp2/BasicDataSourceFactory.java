@@ -41,7 +41,7 @@ import javax.naming.spi.ObjectFactory;
  * properties with the following exceptions:</p>
  * <ul>
  * <li><code>connectionInitSqls</code> must be passed to this factory as a
- *     single String using semi-colon to delimt the statements whereas
+ *     single String using semi-colon to delimit the statements whereas
  *     <code>BasicDataSource</code> requires a collection of Strings.</li>
  * </ul>
  *

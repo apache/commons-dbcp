@@ -31,6 +31,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -160,7 +161,7 @@ class KeyedCPDSConnectionFactory
      * @param key ignored
      * @param p wrapped {@link PooledConnectionAndInfo} containing the
      *          connection to validate
-     * @return true if validation suceeds
+     * @return true if validation succeeds
      */
     @Override
     public boolean validateObject(UserPassKey key,

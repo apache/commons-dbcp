@@ -17,14 +17,14 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import org.apache.commons.dbcp2.ConnectionFactory;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.commons.dbcp2.ConnectionFactory;
+
 /**
  * XAConnectionFactory is an extension of ConnectionFactory used to create connections
- * in a transaction managed environment.  The XAConnectionFactory opperates like a normal
+ * in a transaction managed environment.  The XAConnectionFactory operates like a normal
  * ConnectionFactory except an TransactionRegistry is provided from which the XAResource
  * for a connection can be obtained.  This allows the existing DBCP pool code to work with
  * XAConnections and gives a the ManagedConnection a way to enlist a connection in the

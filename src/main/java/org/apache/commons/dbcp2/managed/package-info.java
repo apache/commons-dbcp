@@ -20,7 +20,7 @@
  * This package provides support for pooling of ManagedConnections. A managed
  * connection is responsible for managing a database connection in a
  * transactional environment (typically called <i>Container Managed</i>).
- * A managed connection opperates like any other connection when no gloabal
+ * A managed connection operates like any other connection when no global
  * transaction (a.k.a. XA transaction or JTA Transaction) is in progress.
  * When a global transaction is active a single physical connection to the
  * database is used by all ManagedConnections accessed in the scope of the
