@@ -43,6 +43,7 @@ public class StackMessageLog extends SimpleLog  {
     /**
      * Ignores type.  Pushes message followed by stack trace of t onto the stack.
      */
+    @Override
     protected void log(int type, Object message, Throwable t) {
         lock.lock();
         try {
