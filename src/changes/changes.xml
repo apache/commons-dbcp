@@ -103,6 +103,10 @@ The <action> type attribute can be add,update,fix,remove.
         Changed BasicDataSource createDataSource method to ensure that initialization
         completes before clients get reference to newly created instances.
       </action> 
+      <action issue="DBCP-433" dev="psteitz" type="fix" due-to="Vladimir Konkov">
+        Fixed connection leak when SQLException is thrown while enlisting an XA
+        transaction.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">

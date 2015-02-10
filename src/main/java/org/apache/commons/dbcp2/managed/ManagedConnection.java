@@ -119,11 +119,12 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // transaction completes
             isSharedConnection = true;
         } else {
+            C connection = getDelegateInternal();
             // if our delegate is null, create one
-            if (getDelegateInternal() == null) {
+            if (connection == null) {
                 try {
                     // borrow a new connection from the pool
-                    C connection = pool.borrowObject();
+                    connection = pool.borrowObject();
                     setDelegate(connection);
                 } catch (Exception e) {
                     throw new SQLException("Unable to acquire a new connection from the pool", e);
@@ -137,10 +138,15 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
                 // register our connection as the shared connection
                 try {
-                    transactionContext.setSharedConnection(getDelegateInternal());
+                    transactionContext.setSharedConnection(connection);
                 } catch (SQLException e) {
                     // transaction is hosed
                     transactionContext = null;
+                    try {
+                        pool.invalidateObject(connection);
+                    } catch (Exception e1) {
+                        // we are try but no luck
+                    }
                     throw e;
                 }
             }
