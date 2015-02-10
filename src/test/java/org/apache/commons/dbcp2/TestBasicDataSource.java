@@ -17,12 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,8 +28,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -52,6 +49,12 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     protected BasicDataSource ds = null;
     private static final String CATALOG = "test catalog";
+
+    @BeforeClass
+    public static void setUpClass() {
+        // register a custom logger which supports inspection of the log messages
+        LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -76,6 +79,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         return new BasicDataSource();
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         super.tearDown();
