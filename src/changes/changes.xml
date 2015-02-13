@@ -107,6 +107,10 @@ The <action> type attribute can be add,update,fix,remove.
         Fixed connection leak when SQLException is thrown while enlisting an XA
         transaction.
       </action>
+      <action issue="DBCP-434" dev="psteitz" type="fix">
+        Setting jmxName to null should suppress JMX registration of connection
+        and statement pools.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
