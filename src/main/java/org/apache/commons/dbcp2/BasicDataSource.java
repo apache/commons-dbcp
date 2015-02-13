@@ -2219,6 +2219,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         // Create an object pool to contain our active connections
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         updateJmxName(config);
+        config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
         GenericObjectPool<PoolableConnection> gop;
         if (abandonedConfig != null &&
                 (abandonedConfig.getRemoveAbandonedOnBorrow() ||

@@ -20,12 +20,16 @@ package org.apache.commons.dbcp2;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
@@ -711,6 +715,26 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertFalse(testThread.failed());
         
         ds.close();
+    }
+    
+    /**
+     * Make sure setting jmxName to null suppresses JMX registration of connection and statement pools.
+     * JIRA: DBCP-434
+     */
+    @Test
+    public void testJmxDisabled() throws Exception {
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        // Unregister leftovers from other tests (TODO: worry about concurrent test execution)
+        ObjectName commons = new ObjectName("org.apache.commons.*:*");
+        Set<ObjectName> results = mbs.queryNames(commons, null);
+        for (ObjectName result : results) {
+            mbs.unregisterMBean(result);
+        }
+        ds.setJmxName(null);  // Should disable JMX for both connection and statement pools
+        ds.setPoolPreparedStatements(true);
+        ds.getConnection();  // Trigger initialization
+        // Nothing should be registered
+        assertEquals(0, mbs.queryNames(commons, null).size());
     }
 }
 

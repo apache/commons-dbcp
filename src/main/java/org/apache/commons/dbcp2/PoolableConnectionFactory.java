@@ -286,6 +286,8 @@ public class PoolableConnectionFactory
                 base.append(Long.toString(connIndex));
                 config.setJmxNameBase(base.toString());
                 config.setJmxNamePrefix(Constants.JMX_STATEMENT_POOL_PREFIX);
+            } else {
+                config.setJmxEnabled(false);
             }
             KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                     new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
@@ -441,6 +443,14 @@ public class PoolableConnectionFactory
 
     protected boolean getCacheState() {
         return _cacheState;
+    }
+    
+    protected ObjectName getDataSourceJmxName() {
+        return dataSourceJmxName;
+    }
+    
+    protected AtomicLong getConnectionIndex() {
+        return connectionIndex;
     }
 
     private final ConnectionFactory _connFactory;
