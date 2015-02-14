@@ -976,9 +976,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return the current number of active connections
      */
     @Override
-    public synchronized int getNumActive() {
-        if (connectionPool != null) {
-            return connectionPool.getNumActive();
+    public int getNumActive() {
+        // Copy reference to avoid NPE if close happens after null check
+        GenericObjectPool<PoolableConnection> pool = connectionPool;
+        if (pool != null) {
+            return pool.getNumActive();
         }
         return 0;
     }
@@ -991,9 +993,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return the current number of idle connections
      */
     @Override
-    public synchronized int getNumIdle() {
-        if (connectionPool != null) {
-            return connectionPool.getNumIdle();
+    public int getNumIdle() {
+        // Copy reference to avoid NPE if close happens after null check
+        GenericObjectPool<PoolableConnection> pool = connectionPool;
+        if (pool != null) {
+            return pool.getNumIdle();
         }
         return 0;
     }

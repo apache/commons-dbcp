@@ -115,6 +115,9 @@ The <action> type attribute can be add,update,fix,remove.
         Added check to make sure that the PoolingConnectionFactory associated with
         a PoolingDataSource is correctly linked with its owning pool.
       </action>
+      <action dev="psteitz" type="update">
+        Eliminated synchronization in BasicDataSource getNumActive, getNumIdle methods.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
