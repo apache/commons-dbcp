@@ -47,14 +47,14 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 
 //
 // To compile this example, you'll want:
-//  * commons-pool2-2.2.jar
-//  * commons-dbcp2-2.0.jar
+//  * commons-pool2-2.3.jar
+//  * commons-dbcp2-2.1.jar
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-pool2-2.2.jar
-//  * commons-dbcp2-2.0.jar
-//  * commons-logging-1.1.3.jar
+//  * commons-pool2-2.3.jar
+//  * commons-dbcp2-2.1.jar
+//  * commons-logging-1.2.jar
 //  * the classes for your (underlying) JDBC driver
 // in your classpath.
 //
@@ -67,7 +67,7 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 //
 // For example:
 //  java -Djdbc.drivers=org.h2.Driver \
-//       -classpath commons-pool2-2.2.jar:commons-dbcp2-2.0.jar:commons-logging-1.1.3.jar:h2-1.3.152.jar:. \
+//       -classpath commons-pool2-2.3.jar:commons-dbcp2-2.1.jar:commons-logging-1.2.jar:h2-1.3.152.jar:. \
 //       PoolingDataSourceExample \
 //       "jdbc:h2:~/test" \
 //       "SELECT 1"

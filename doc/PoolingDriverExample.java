@@ -39,17 +39,15 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 // Here's a simple example of how to use the PoolingDriver.
 //
 
-//
 // To compile this example, you'll want:
-//  * commons-pool-1.5.6.jar
-//  * commons-dbcp-1.3.jar (JDK 1.4-1.5) or commons-dbcp-1.4 (JDK 1.6+)
+//  * commons-pool-2.3.jar
+//  * commons-dbcp-2.1.jar 
 // in your classpath.
 //
 // To run this example, you'll want:
-//  * commons-collections.jar
-//  * commons-pool-1.5.6.jar
-//  * commons-dbcp-1.3.jar (JDK 1.4-1.5) or commons-dbcp-1.4 (JDK 1.6+)
-//  * the classes for your (underlying) JDBC driver
+//  * commons-pool-2.3.jar
+//  * commons-dbcp-2.1.jar 
+//  * commons-logging-1.2.jar
 // in your classpath.
 //
 // Invoke the class using two arguments:
@@ -61,7 +59,7 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 //
 // For example:
 //  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-1.5.6.jar:commons-dbcp-1.4.jar:oracle-jdbc.jar:. \
+//       -classpath commons-pool-2.3.jar:commons-dbcp-2.1.jar:oracle-jdbc.jar:commons-logging-1.2.jar. \
 //       PoolingDriverExample \
 //       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
 //       "SELECT * FROM DUAL"
@@ -174,6 +172,9 @@ public class PoolingDriverExample {
         //
         ObjectPool<PoolableConnection> connectionPool =
             new GenericObjectPool<>(poolableConnectionFactory);
+        
+        // Set the factory's pool property to the owning pool
+        poolableConnectionFactory.setPool(connectionPool);
 
         //
         // Finally, we create the PoolingDriver itself...
