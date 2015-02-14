@@ -111,6 +111,10 @@ The <action> type attribute can be add,update,fix,remove.
         Setting jmxName to null should suppress JMX registration of connection
         and statement pools.
       </action>
+      <action issue="DBCP-412" dev="psteitz" type="update">
+        Added check to make sure that the PoolingConnectionFactory associated with
+        a PoolingDataSource is correctly linked with its owning pool.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">
