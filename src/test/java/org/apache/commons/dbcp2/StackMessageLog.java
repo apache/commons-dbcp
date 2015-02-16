@@ -17,7 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,7 +33,7 @@ import org.apache.commons.logging.impl.SimpleLog;
  *
  * @version $Id$
  */
-public class StackMessageLog extends SimpleLog  {
+public class StackMessageLog extends SimpleLog {
     
     private static final long serialVersionUID = 1L;
     private static Stack<String> messageStack = new Stack<String>();
@@ -79,6 +82,18 @@ public class StackMessageLog extends SimpleLog  {
             lock.unlock();
         }
         return ret;
+    }
+    
+    /**
+     * Note: iterator is fail-fast, lock the stack first.
+     */
+    public static List<String> getAll() {
+        final Iterator<String> iterator = messageStack.iterator();
+        final List<String> messages = new ArrayList<String>();
+        while (iterator.hasNext()) {
+            messages.add(iterator.next());
+        }
+        return messages;
     }
 
     public static void clear() {

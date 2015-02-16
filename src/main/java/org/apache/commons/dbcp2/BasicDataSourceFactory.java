@@ -17,13 +17,22 @@
 
 package org.apache.commons.dbcp2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -51,6 +60,8 @@ import javax.naming.spi.ObjectFactory;
  * @since 2.0
  */
 public class BasicDataSourceFactory implements ObjectFactory {
+
+    private static final Log log = LogFactory.getLog(BasicDataSourceFactory.class);
 
     private static final String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";
     private static final String PROP_DEFAULTREADONLY = "defaultReadOnly";
@@ -105,6 +116,24 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private static final String PROP_DISCONNECTION_SQL_CODES = "disconnectionSqlCodes";
 
+    /*
+     * Block with obsolete properties from DBCP 1.x.
+     * Warn users that these are ignored and they should use the 2.x properties.
+     */
+    private static final String NUPROP_MAXACTIVE = "maxActive";
+    private static final String NUPROP_REMOVEABANDONED = "removeAbandoned";
+    private static final String NUPROP_MAXWAIT = "maxWait";
+
+    /*
+     * Block with properties expected in a DataSource
+     * This props will not be listed as ignored - we know that they may appear in Resource,
+     * and not listing them as ignored.
+     */
+    private static final String SILENTPROP_FACTORY = "factory";
+    private static final String SILENTPROP_SCOPE = "scope";
+    private static final String SILENTPROP_SINGLETON = "singleton";
+    private static final String SILENTPROP_AUTH = "auth";
+
     private static final String[] ALL_PROPERTIES = {
         PROP_DEFAULTAUTOCOMMIT,
         PROP_DEFAULTREADONLY,
@@ -150,6 +179,46 @@ public class BasicDataSourceFactory implements ObjectFactory {
         PROP_DISCONNECTION_SQL_CODES
     };
 
+    /**
+     * Obsolete properties from DBCP 1.x. with warning strings suggesting
+     * new properties. LinkedHashMap will guarantee that properties will be listed
+     * to output in order of insertion into map.
+     */
+    private static final Map<String, String> NUPROP_WARNTEXT = new LinkedHashMap<>();
+
+    static {
+        NUPROP_WARNTEXT.put(
+                NUPROP_MAXACTIVE,
+                "Property " + NUPROP_MAXACTIVE + " is not used in DBCP2, use " + PROP_MAXTOTAL + " instead. "
+                        + PROP_MAXTOTAL + " default value is " + GenericObjectPoolConfig.DEFAULT_MAX_TOTAL+".");
+        NUPROP_WARNTEXT.put(
+                NUPROP_REMOVEABANDONED,
+                "Property " + NUPROP_REMOVEABANDONED + " is not used in DBCP2,"
+                        + " use one or both of "
+                        + PROP_REMOVEABANDONEDONBORROW + " or " + PROP_REMOVEABANDONEDONMAINTENANCE + " instead. "
+                        + "Both have default value set to false.");
+        NUPROP_WARNTEXT.put(
+                NUPROP_MAXWAIT,
+                "Property " + NUPROP_MAXWAIT + " is not used in DBCP2"
+                        + " , use " + PROP_MAXWAITMILLIS + " instead. "
+                        + PROP_MAXWAITMILLIS + " default value is " + BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS+".");
+    }
+
+    /**
+     * Silent Properties.
+     * These properties will not be listed as ignored - we know that they may appear in JDBC Resource references,
+     * and we will not list them as ignored.
+     */
+    private static final List<String> SILENT_PROPERTIES = new ArrayList<>();
+
+    static {
+        SILENT_PROPERTIES.add(SILENTPROP_FACTORY);
+        SILENT_PROPERTIES.add(SILENTPROP_SCOPE);
+        SILENT_PROPERTIES.add(SILENTPROP_SINGLETON);
+        SILENT_PROPERTIES.add(SILENTPROP_AUTH);
+
+    }
+
     // -------------------------------------------------- ObjectFactory Methods
 
     /**
@@ -181,6 +250,17 @@ public class BasicDataSourceFactory implements ObjectFactory {
             return null;
         }
 
+        // Check property names and log warnings about obsolete and / or unknown properties
+        final List<String> warnings = new ArrayList<String>();
+        final List<String> infoMessages = new ArrayList<String>();
+        validatePropertyNames(ref, name, warnings, infoMessages);
+        for (String warning : warnings) {
+            log.warn(warning);
+        }
+        for (String infoMessage : infoMessages) {
+            log.info(infoMessage);
+        }
+
         Properties properties = new Properties();
         for (String propertyName : ALL_PROPERTIES) {
             RefAddr ra = ref.get(propertyName);
@@ -191,6 +271,58 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         return createDataSource(properties);
+    }
+
+    /**
+     * Collects warnings and info messages.  Warnings are generated when an obsolete
+     * property is set.  Unknown properties generate info messages.
+     *
+     * @param ref Reference to check properties of
+     * @param name Name provided to getObject
+     * @param warnings container for warning messages
+     * @param infoMessasges container for info messages
+     */
+    private void validatePropertyNames(Reference ref, Name name, List<String> warnings,
+                                      List<String> infoMessages) {
+        final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
+        final String nameString = name != null ? "Name = " + name.toString() + " " : ""; 
+        if (NUPROP_WARNTEXT!=null && !NUPROP_WARNTEXT.keySet().isEmpty()) {
+            for (String propertyName : NUPROP_WARNTEXT.keySet()) {
+                final RefAddr ra = ref.get(propertyName);
+                if (ra != null && !allPropsAsList.contains(ra.getType())) {
+                    final StringBuilder stringBuilder = new StringBuilder(nameString);
+                    final String propertyValue = ra.getContent().toString();
+                    stringBuilder.append(NUPROP_WARNTEXT.get(propertyName))
+                            .append(" You have set value of \"")
+                            .append(propertyValue)
+                            .append("\" for \"")
+                            .append(propertyName)
+                            .append("\" property, which is being ignored.");
+                    warnings.add(stringBuilder.toString());
+                }
+            }
+        }
+
+        final Enumeration<RefAddr> allRefAddrs = ref.getAll();
+        while (allRefAddrs.hasMoreElements()) {
+            final RefAddr ra = allRefAddrs.nextElement();
+            final String propertyName = ra.getType();
+            // If property name is not in the properties list, we haven't warned on it
+            // and it is not in the "silent" list, tell user we are ignoring it.
+            if (!(allPropsAsList.contains(propertyName)
+                    || NUPROP_WARNTEXT.keySet().contains(propertyName)
+                    || SILENT_PROPERTIES.contains(propertyName))) {
+                final String propertyValue = ra.getContent().toString();
+                final StringBuilder stringBuilder = new StringBuilder(nameString);
+                stringBuilder.append("Ignoring unknown property: ")
+                        .append("value of \"")
+                        .append(propertyValue)
+                        .append("\" for \"")
+                        .append(propertyName)
+                        .append("\" property");
+                infoMessages.add(stringBuilder.toString());
+            }
+        }
     }
 
     /**
