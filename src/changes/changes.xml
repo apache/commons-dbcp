@@ -114,6 +114,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="update">
         Eliminated synchronization in BasicDataSource getNumActive, getNumIdle methods.
       </action>
+      <action issue="DBCP-435" type="update" due-to="Denixx Baykin">
+        Added property name verification to BasicDataSourceFactory. References including
+        obsolete or unrecognized properties now generate log messages.
+      </action>
     </release>
     <release version="2.0.1" date="24 May 2014" description="This is a bug fix release.">
       <action dev="markt" type="fix">

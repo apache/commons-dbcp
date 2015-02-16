@@ -22,7 +22,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Properties;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 
 import org.junit.Test;
 
@@ -118,4 +121,31 @@ public class TestBasicDataSourceFactory {
         assertTrue(ds.getDisconnectionSqlCodes().contains("XXX"));
         assertTrue(ds.getDisconnectionSqlCodes().contains("YYY"));
     }
+    
+    @Test
+    public void testValidateProperties() throws Exception {
+        try {
+            StackMessageLog.lock();
+            final Reference ref = new Reference("javax.sql.DataSource",
+                                          BasicDataSourceFactory.class.getName(), null);
+            ref.add(new StringRefAddr("foo", "bar"));     // Unknown
+            ref.add(new StringRefAddr("maxWait", "100")); // Changed
+            ref.add(new StringRefAddr("driverClassName", "org.apache.commons.dbcp2.TesterDriver")); //OK
+            final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
+            basicDataSourceFactory.getObjectInstance(ref, null, null, null);
+            final List<String> messages = StackMessageLog.getAll();
+            assertEquals(2,messages.size());
+            for (String message : messages) {
+                if (message.contains("maxWait")) {
+                    assertTrue(message.contains("use maxWaitMillis"));
+                } else {
+                    assertTrue(message.contains("foo"));
+                    assertTrue(message.contains("Ignoring unknown property"));
+                }
+            }
+        } finally {
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }   
 }
