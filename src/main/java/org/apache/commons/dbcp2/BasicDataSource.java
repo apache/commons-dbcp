@@ -1639,10 +1639,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
      *
      * <p>Abandoned connections are identified and removed when
-     * {@link #getConnection()} is invoked and the following conditions hold:
+     * {@link #getConnection()} is invoked and all of the following conditions hold:
      * </p>
-     * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
-     *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
+     * <ul><li>{@link #getRemoveAbandonedOnBorrow()} </li>
      *     <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3 </li>
      *     <li>{@link #getNumIdle()} &lt; 2 </li></ul>
      *
@@ -1657,19 +1656,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * <p>Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimeout when borrowObject is invoked.</p>
-     *
-     * <p>If set to true a connection is considered abandoned and eligible
-     * for removal if it has been idle longer than the
-     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout}.</p>
-     *
-     * <p>Setting this to true can recover db connections from poorly written
-     * applications which fail to close a connection.</p>
-     *
-     * @param removeAbandonedOnMaintenance true means abandoned connections will
-     *                                     be removed when borrowObject is
-     *                                     invoked
+     * @param removeAbandonedOnMaintenance true means abandoned connections may
+     *                                     be removed on pool maintenance.
+     * @see #getRemoveAbandonedOnMaintenance()
      */
     public void setRemoveAbandonedOnMaintenance(
             boolean removeAbandonedOnMaintenance) {
@@ -1690,14 +1679,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * for removal if it has not been used for more than
      * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout} seconds.</p>
      *
-     * <p>Abandoned connections are identified and removed when
-     * {@link #getConnection()} is invoked and the following conditions hold:
-     * </p>
-     * <ul><li>{@link #getRemoveAbandonedOnBorrow()} or
-     *         {@link #getRemoveAbandonedOnMaintenance()} = true</li>
-     *     <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3 </li>
-     *     <li>{@link #getNumIdle()} &lt; 2 </li></ul>
-     *
      * @see #getRemoveAbandonedTimeout()
      */
     @Override
@@ -1709,18 +1690,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * <p>Flag to remove abandoned connections if they exceed the
-     * removeAbandonedTimeout during pool maintenance.</p>
-     *
-     * <p>If set to true a connection is considered abandoned and eligible
-     * for removal if it has been idle longer than the
-     * {@link #getRemoveAbandonedTimeout() removeAbandonedTimeout}.</p>
-     *
-     * <p>Setting this to true can recover db connections from poorly written
-     * applications which fail to close a connection.</p>
-     *
-     * @param removeAbandonedOnBorrow true means abandoned connections will be
-     *                                removed during pool maintenance
+     * @param removeAbandonedOnBorrow true means abandoned connections may be
+     *                                removed when connections are borrowed from the pool.
+     * @see #getRemoveAbandonedOnBorrow()
      */
     public void setRemoveAbandonedOnBorrow(boolean removeAbandonedOnBorrow) {
         if (abandonedConfig == null) {
