@@ -38,7 +38,7 @@
 
       <!-- now combine the classpaths -->
       <property name="classpath" 
-       value="${cp}:${commons-pool.jar}:${junit.jar}:
+       value="${cp}:${commons-pool.jar}:${junit.jar}:${hamcrest.jar}:
         ${naming-common.jar}:${naming-java.jar}:${commons-logging.jar}:
         ${jta-spec.jar}:${jta-impl.jar}:
         ${backport-util-concurrent.jar}:${ejb-spec.jar}"/>
@@ -64,7 +64,7 @@
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2014 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2015 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/main/java/org/apache/commons/dbcp2/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
@@ -194,6 +194,8 @@
           <pathelement location="${build.test-classes.dir}" /> 
           <pathelement path="${classpath}" /> 
         </classpath>
+      	<sysproperty key="org.apache.commons.logging.Log" 
+      	   	               value="org.apache.commons.dbcp2.StackMessageLog"/>
         <formatter type="plain" usefile="true" />
         <!-- If test.entry is defined, run a single test, otherwise run all valid tests -->
         <test name="${test.entry}" if="test.entry"/>
