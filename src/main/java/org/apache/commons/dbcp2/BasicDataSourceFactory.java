@@ -280,7 +280,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param ref Reference to check properties of
      * @param name Name provided to getObject
      * @param warnings container for warning messages
-     * @param infoMessasges container for info messages
+     * @param infoMessages container for info messages
      */
     private void validatePropertyNames(Reference ref, Name name, List<String> warnings,
                                       List<String> infoMessages) {
