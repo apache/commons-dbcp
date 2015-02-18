@@ -239,6 +239,9 @@
     <commons.checkstyle.version>2.11</commons.checkstyle.version>
     <!-- Constant for Commons Pool version (used in multiple places -->
     <commons.pool.version>2.3</commons.pool.version>
+
+    <!-- Temporary fix to support Java 8 -->
+    <commons.jacoco.version>0.7.2.201409121644</commons.jacoco.version>
   </properties> 
 
   <build>
