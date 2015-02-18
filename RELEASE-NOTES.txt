@@ -47,4 +47,4 @@ o DBCP-435:  Added property name verification to BasicDataSourceFactory. Referen
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/proper/commons-dbcp/
+http://commons.apache.org/dbcp/
