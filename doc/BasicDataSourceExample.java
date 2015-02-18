@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 //
 // Here are the dbcp-specific classes.
@@ -34,7 +35,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 //
 
 //
-// Note that this example is very similiar to the PoolingDriver
+// Note that this example is very similar to the PoolingDriver
 // example.
 
 //
@@ -58,11 +59,11 @@ import org.apache.commons.dbcp2.BasicDataSource;
 // property to do this.
 //
 // For example:
-//  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-2.3.jar:commons-dbcp-2.1.jar:oracle-jdbc.jar:commons-logging-1.2.jar. \
-//       PoolingDataSourceExample
-//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid"
-//       "SELECT * FROM DUAL"
+//  java -Djdbc.drivers=org.h2.Driver \
+//       -classpath commons-pool2-2.3.jar:commons-dbcp2-2.1.jar:commons-logging-1.2.jar:h2-1.3.152.jar:. \
+//       BasicDataSourceExample \
+//       "jdbc:h2:~/test" \
+//       "SELECT 1"
 //
 public class BasicDataSourceExample {
 
@@ -109,9 +110,7 @@ public class BasicDataSourceExample {
 
     public static DataSource setupDataSource(String connectURI) {
         BasicDataSource ds = new BasicDataSource();
-        ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        ds.setUsername("scott");
-        ds.setPassword("tiger");
+        ds.setDriverClassName("org.h2.Driver");
         ds.setUrl(connectURI);
         return ds;
     }

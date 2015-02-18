@@ -15,12 +15,17 @@
  * limitations under the License.
  */
 
-import java.sql.DriverManager;
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDriver;
 //
 // Here are the dbcp-specific classes.
 // Note that they are only used in the setupDriver
@@ -29,11 +34,6 @@ import java.sql.SQLException;
 //
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.dbcp2.ConnectionFactory;
-import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.dbcp2.PoolingDriver;
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
-import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 
 //
 // Here's a simple example of how to use the PoolingDriver.
@@ -58,11 +58,11 @@ import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
 // property to do this.
 //
 // For example:
-//  java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver \
-//       -classpath commons-pool-2.3.jar:commons-dbcp-2.1.jar:oracle-jdbc.jar:commons-logging-1.2.jar. \
+//  java -Djdbc.drivers=org.h2.Driver \
+//       -classpath commons-pool2-2.3.jar:commons-dbcp2-2.1.jar:commons-logging-1.2.jar:h2-1.3.152.jar:. \
 //       PoolingDriverExample \
-//       "jdbc:oracle:thin:scott/tiger@myhost:1521:mysid" \
-//       "SELECT * FROM DUAL"
+//       "jdbc:h2:~/test" \
+//       "SELECT 1"
 //
 public class PoolingDriverExample {
 
@@ -74,7 +74,7 @@ public class PoolingDriverExample {
         //
         System.out.println("Loading underlying JDBC driver.");
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
