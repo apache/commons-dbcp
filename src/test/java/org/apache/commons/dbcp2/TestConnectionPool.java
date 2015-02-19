@@ -471,7 +471,7 @@ public abstract class TestConnectionPool {
         conn3.close();
     }
 
-    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testConnectionsAreDistinct() throws Exception {
         Connection[] conn = new Connection[getMaxTotal()];

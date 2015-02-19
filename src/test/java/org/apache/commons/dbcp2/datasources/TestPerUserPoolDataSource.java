@@ -76,7 +76,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Switching 'u1 -> 'u2' and 'p1' -> 'p2' will
+     * Switching 'u1 to 'u2' and 'p1' to 'p2' will
      * exhibit the bug detailed in
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
