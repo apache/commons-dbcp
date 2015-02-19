@@ -117,7 +117,7 @@ public class TestBasicDataSourceFactory {
         assertEquals(true, ds.isPoolPreparedStatements());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
         assertEquals(true, ds.getLifo());
-        assertEquals(true, ds.isFastFailValidation());
+        assertEquals(true, ds.getFastFailValidation());
         assertTrue(ds.getDisconnectionSqlCodes().contains("XXX"));
         assertTrue(ds.getDisconnectionSqlCodes().contains("YYY"));
     }
