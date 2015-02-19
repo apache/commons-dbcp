@@ -118,7 +118,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver2.registerPool("example",connectionPool);
     }
 
-    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
+    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
     @Test
     public void testReportedBug28912() throws Exception {
         Connection conn1 = getConnection();
@@ -139,7 +139,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         assertFalse(conn2.isClosed());
     }
 
-    /** @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testReportedBug12400() throws Exception {
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();

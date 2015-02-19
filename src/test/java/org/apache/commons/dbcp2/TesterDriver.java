@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * Returns <code>TestConnection</code>'s from getConnection methods.  
  * Valid username, password combinations are:
  *
- * <table>
+ * <table summary="valid credentials">
  * <tr><th>user</th><th>password</th></tr>
  * <tr><td>foo</td><td>bar</td></tr>
  * <tr><td>u1</td><td>p1</td></tr>
