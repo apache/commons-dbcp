@@ -1284,7 +1284,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.1
      */
     @Override
-    public boolean isLogExpiredConnections() {
+    public boolean getLogExpiredConnections() {
         return logExpiredConnections;
     }
 
@@ -1409,13 +1409,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>
      * Overrides the defaults in {@link Utils#DISCONNECTION_SQL_CODES}
      * (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
-     * If this property is non-null and {@link #isFastFailValidation()} is
+     * If this property is non-null and {@link #getFastFailValidation()} is
      * {@code true}, whenever connections created by this datasource generate exceptions
      * with SQL_STATE codes in this list, they will be marked as "fatally disconnected"
      * and subsequent validations will fail fast (no attempt at isValid or validation
      * query).</p>
      * <p>
-     * If {@link #isFastFailValidation()} is {@code false} setting this property has no
+     * If {@link #getFastFailValidation()} is {@code false} setting this property has no
      * effect.</p>
      * <p>
      * Note: this method currently has no effect once the pool has been
@@ -1455,12 +1455,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.1
      */
     @Override
-    public boolean isFastFailValidation() {
+    public boolean getFastFailValidation() {
         return fastFailValidation;
     }
 
     /**
-     * @see #isFastFailValidation()
+     * @see #getFastFailValidation()
      * @param fastFailValidation true means connections created by this factory will
      * fast fail validation
      * @since 2.1
@@ -1632,7 +1632,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>Flag to remove abandoned connections if they exceed the
      * removeAbandonedTimeout when borrowObject is invoked.</p>
      *
-     * <p>The default value is false.<p>
+     * <p>The default value is false.</p>
      *
      * <p>If set to true a connection is considered abandoned and eligible
      * for removal if it has not been used for more than
@@ -1673,7 +1673,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>Flag to remove abandoned connections if they exceed the
      * removeAbandonedTimeout during pool maintenance.</p>
      *
-     * <p>The default value is false.<p>
+     * <p>The default value is false.</p>
      *
      * <p>If set to true a connection is considered abandoned and eligible
      * for removal if it has not been used for more than
@@ -1902,7 +1902,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * these connections to the pool, the underlying JDBC connections are closed.</p>
      *
      * <p>Attempts to acquire connections using {@link #getConnection()} after this method has been
-     * invoked result in SQLExceptions.<p>
+     * invoked result in SQLExceptions.</p>
      *
      * <p>This method is idempotent - i.e., closing an already closed BasicDataSource has no effect
      * and does not generate exceptions.</p>
