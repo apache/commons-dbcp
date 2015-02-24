@@ -357,7 +357,7 @@
             <templateDirectory>src/changes</templateDirectory>
             <!-- Limit this to released, supported versions else there are -->
             <!-- to many issues in the report                              -->
-            <fixVersionIds>12311977,12312615,12313721</fixVersionIds>
+            <fixVersionIds>12313721,12326766,12328750</fixVersionIds>
           </configuration>
         </plugin>
         <plugin>
