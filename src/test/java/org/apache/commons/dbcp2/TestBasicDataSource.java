@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
@@ -736,6 +737,26 @@ public class TestBasicDataSource extends TestConnectionPool {
         // Nothing should be registered
         assertEquals(0, mbs.queryNames(commons, null).size());
     }
+    
+    /**
+     * JIRA: DBCP-437
+     * Verify that BasicDataSource sets disconnect codes properties.
+     * Functionality is verified in pcf tests.
+     */
+    @Test
+    public void testDisconnectSqlCodes() throws Exception {
+        ArrayList<String> disconnectionSqlCodes = new ArrayList<String>();
+        disconnectionSqlCodes.add("XXX");
+        ds.setDisconnectionSqlCodes(disconnectionSqlCodes);
+        ds.setFastFailValidation(true);
+        ds.getConnection();  // Triggers initialization - pcf creation
+        // Make sure factory got the properties
+        PoolableConnectionFactory pcf = 
+                (PoolableConnectionFactory) ds.getConnectionPool().getFactory();
+        assertTrue(pcf.isFastFailValidation());
+        assertTrue(pcf.getDisconnectionSqlCodes().contains("XXX"));
+        assertEquals(1, pcf.getDisconnectionSqlCodes().size());   
+    }
 }
 
 /**
@@ -788,4 +809,5 @@ class TesterConnectionDelayDriver extends TesterDriver {
     public boolean acceptsURL(String url) throws SQLException {
         return url.startsWith(CONNECT_STRING);
     }
+    
 }
