@@ -2284,6 +2284,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());
             connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
+            connectionFactory.setFastFailValidation(fastFailValidation);
+            connectionFactory.setDisconnectionSqlCodes(disconnectionSqlCodes);
             validateConnectionFactory(connectionFactory);
         } catch (RuntimeException e) {
             throw e;

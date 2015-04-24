@@ -60,6 +60,11 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
+    <release version="2.1.1" date="TBD" description="Bug fixes.">
+    <action issue="DBCP-437" dev="psteitz" type="fix">
+      BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
+    </action>
+    </release>
     <release version="2.1" date="23 Feb 2015" description=
  "This is minor release, including bug fixes and enhancements. Note that
   one of the enhancements (DBCP-423) is to implement AutoCloseable in
