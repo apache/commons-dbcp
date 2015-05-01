@@ -88,7 +88,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
      *
-     * @return true if access to the underlying is allowed, false otherwise.
+     * @return true if access to the underlying {@link Connection} is allowed, false otherwise.
      */
     public boolean isAccessToUnderlyingConnectionAllowed() {
         return this.accessToUnderlyingConnectionAllowed;
