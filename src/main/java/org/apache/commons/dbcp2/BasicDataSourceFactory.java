@@ -251,8 +251,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         // Check property names and log warnings about obsolete and / or unknown properties
-        final List<String> warnings = new ArrayList<String>();
-        final List<String> infoMessages = new ArrayList<String>();
+        final List<String> warnings = new ArrayList<>();
+        final List<String> infoMessages = new ArrayList<>();
         validatePropertyNames(ref, name, warnings, infoMessages);
         for (String warning : warnings) {
             log.warn(warning);
