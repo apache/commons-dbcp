@@ -1432,7 +1432,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             for (String s : disconnectionSqlCodes) {
             if (s != null && s.trim().length() > 0) {
                     if (newVal == null) {
-                        newVal = new HashSet<String>();
+                        newVal = new HashSet<>();
                     }
                     newVal.add(s);
                 }
