@@ -616,7 +616,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static Collection<String> parseList(String value, char delimiter) {
         StringTokenizer tokenizer = new StringTokenizer(value, Character.toString(delimiter));
         Collection<String> tokens =
-                new ArrayList<String>(tokenizer.countTokens());
+                new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
             tokens.add(tokenizer.nextToken());
         }
