@@ -64,6 +64,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-437" dev="psteitz" type="fix">
         BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
       </action>
+      <action issue="DBCP-439" dev="ggregory" type="update">
+        Update tests from JUnit 4.11 to 4.12.
+      </action>
     </release>
     <release version="2.1" date="23 Feb 2015" description=
  "This is minor release, including bug fixes and enhancements. Note that
