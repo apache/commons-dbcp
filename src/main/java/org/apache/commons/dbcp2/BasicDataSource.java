@@ -1909,6 +1909,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @throws SQLException if an error occurs closing idle connections
      */
+    @Override
     public synchronized void close() throws SQLException {
         if (registeredJmxName != null) {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
