@@ -56,7 +56,7 @@ public final class Utils {
     public static final Set<String> DISCONNECTION_SQL_CODES;
 
     static {
-        DISCONNECTION_SQL_CODES = new HashSet<String>();
+        DISCONNECTION_SQL_CODES = new HashSet<>();
         DISCONNECTION_SQL_CODES.add("57P01"); // ADMIN SHUTDOWN
         DISCONNECTION_SQL_CODES.add("57P02"); // CRASH SHUTDOWN
         DISCONNECTION_SQL_CODES.add("57P03"); // CANNOT CONNECT NOW
