@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-439" dev="ggregory" type="update">
         Update tests from JUnit 4.11 to 4.12.
       </action>
+      <action issue="DBCP-440" dev="ggregory" type="update">
+        Update tests from Jacoco 0.7.2 to 0.7.4.
+      </action>
     </release>
     <release version="2.1" date="23 Feb 2015" description=
  "This is minor release, including bug fixes and enhancements. Note that
