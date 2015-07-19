@@ -61,6 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.1.1" date="TBD" description="Bug fixes.">
+      <action issue="DBCP-438" dev="psteitz" type="fix" due-to="Raihan Kibria">
+        Nested connections in a transaction (local) throws null pointer. 
+      </action>
       <action issue="DBCP-437" dev="psteitz" type="fix">
         BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
       </action>

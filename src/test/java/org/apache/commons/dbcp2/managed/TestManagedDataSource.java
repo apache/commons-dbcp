@@ -242,4 +242,20 @@ public class TestManagedDataSource extends TestConnectionPool {
         assertTrue(con2.innermostDelegateEquals(inner));
         assertFalse(con.equals(con2));
     }
+    
+    @Test
+    public void testNestedConnections() throws Exception {
+        transactionManager.begin();
+        
+        Connection c1 = null;
+        Connection c2 = null;
+        
+        c1 = newConnection();
+        c2 = newConnection();
+        
+        transactionManager.commit();
+        
+        c1.close();
+        c2.close();
+    }   
 }
