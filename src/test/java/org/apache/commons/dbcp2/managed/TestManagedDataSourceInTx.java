@@ -70,6 +70,12 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         // two connections to the same datasource are supposed to share
         // a single connection
     }
+    
+    @Override
+    @Test
+    public void testNestedConnections() {
+        // Not supported
+    }
 
     @Override
     @Test
