@@ -210,6 +210,32 @@
         </batchtest>
       </junit>
    </target>
+	
+   <!-- Target to test that maven-generated jar works against test sources. -->
+   <target name="test-jar" depends="compile-test" description="runs (junit) unit tests">
+      <echo message="${classpath}"/>
+      <mkdir dir="${build.dir}/ant-reports"/>
+      <junit printsummary="true" showoutput="true" fork="yes" haltonfailure="${test.failonerror}">
+        <classpath>
+          <pathelement location="${build.test-classes.dir}" /> 
+          <pathelement path="${classpath}:${dbcp.jar}" /> 
+        </classpath>
+      	<sysproperty key="org.apache.commons.logging.Log" 
+      	   	               value="org.apache.commons.dbcp2.StackMessageLog"/>
+        <formatter type="plain" usefile="true" />
+        <!-- If test.entry is defined, run a single test, otherwise run all valid tests -->
+        <test name="${test.entry}" if="test.entry"/>
+        <batchtest todir="${build.dir}/ant-reports" unless="test.entry">
+          <fileset dir="${src.test.dir}">
+            <include name="**/*Test*.java"/>
+            <!-- Test support files -->
+            <exclude name="**/Tester*.java"/>
+            <!-- Ant JUnit does not handle abstract classes -->
+            <exclude name="**/TestConnectionPool.java"/>
+          </fileset>
+        </batchtest>
+      </junit>
+   </target>
 
    <target name="build-jar" depends="compile">
       <mkdir dir="${dist.dir}"/>
