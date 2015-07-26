@@ -162,6 +162,19 @@ public class TestDriverAdapterCPDS {
         pcds.getPooledConnection("foo", "bar").close();
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
+    
+    /**
+     * JIRA: DBCP-442
+     */
+    @Test
+    public void testNullValidationQuery() throws Exception {
+        final SharedPoolDataSource spds = new SharedPoolDataSource();
+        spds.setConnectionPoolDataSource(pcds);
+        spds.setDefaultTestOnBorrow(true);
+        final Connection c = spds.getConnection();
+        c.close();
+        spds.close();
+    }
 
     // https://issues.apache.org/jira/browse/DBCP-376
     @Test
