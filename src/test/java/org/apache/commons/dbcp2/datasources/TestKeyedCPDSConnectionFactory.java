@@ -151,5 +151,20 @@ public class TestKeyedCPDSConnectionFactory {
         factory.getPool().clear();
         assertEquals(0, pool.getNumIdle(key));
     }
-
+    
+    /**
+     * JIRA: DBCP-442
+     */
+    @Test
+    public void testNullValidationQuery() throws Exception {
+        UserPassKey key = new UserPassKey("username", "password");
+        KeyedCPDSConnectionFactory factory =
+                new KeyedCPDSConnectionFactory(cpds, null, -1, false);
+        GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
+        factory.setPool(pool);
+        pool.setTestOnBorrow(true);
+        PooledConnection pcon = pool.borrowObject(key).getPooledConnection();
+        Connection con = pcon.getConnection();
+        con.close();
+    }
 }
