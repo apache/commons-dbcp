@@ -143,5 +143,20 @@ public class TestCPDSConnectionFactory {
         factory.getPool().clear();
         assertEquals(0, pool.getNumIdle());
     }
+    
+    /**
+     * JIRA: DBCP-442
+     */
+    @Test
+    public void testNullValidationQuery() throws Exception {
+        CPDSConnectionFactory factory =
+                new CPDSConnectionFactory(cpds, null, -1, false, "username", "password");
+        GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
+        factory.setPool(pool);
+        pool.setTestOnBorrow(true);
+        PooledConnection pcon = pool.borrowObject().getPooledConnection();
+        Connection con = pcon.getConnection();
+        con.close();
+    }
 
 }
