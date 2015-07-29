@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -41,6 +43,8 @@ import org.junit.Test;
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
+    private StringWriter sw;
+
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -50,6 +54,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setRemoveAbandonedOnBorrow(true);
         ds.setRemoveAbandonedOnMaintenance(true);
         ds.setRemoveAbandonedTimeout(10000);
+        sw = new StringWriter();
+        ds.setAbandonedLogWriter(new PrintWriter(sw));
     }
 
     // ---------- Abandoned Test -----------
@@ -90,6 +96,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         // Second close on conn1 is OK as of dbcp 1.3
         conn1.close();
         assertEquals(0, ds.getNumActive());
+        assertTrue(sw.toString().contains("testAbandonedClose"));
     }
 
     @Test
@@ -122,6 +129,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
         try { conn1.close(); } catch (SQLException ex) { }
         assertEquals(0, ds.getNumActive());
+        assertTrue(sw.toString().contains("testAbandonedCloseWithExceptions"));
     }
 
     /**
