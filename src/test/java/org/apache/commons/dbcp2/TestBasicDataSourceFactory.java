@@ -75,6 +75,7 @@ public class TestBasicDataSourceFactory {
         properties.setProperty("removeAbandoned", "true");
         properties.setProperty("removeAbandonedTimeout", "3000");
         properties.setProperty("logAbandoned", "true");
+        properties.setProperty("abandonedUsageTracking", "true");
         properties.setProperty("poolPreparedStatements", "true");
         properties.setProperty("maxOpenPreparedStatements", "10");
         properties.setProperty("lifo", "true");
@@ -114,6 +115,7 @@ public class TestBasicDataSourceFactory {
         assertEquals(false, ds.getRemoveAbandonedOnMaintenance());
         assertEquals(3000, ds.getRemoveAbandonedTimeout());
         assertEquals(true, ds.getLogAbandoned());
+        assertEquals(true, ds.getAbandonedUsageTracking());
         assertEquals(true, ds.isPoolPreparedStatements());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
         assertEquals(true, ds.getLifo());
