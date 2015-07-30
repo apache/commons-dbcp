@@ -61,6 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.1.1" date="TBD" description="Bug fixes.">
+      <action issue="DBCP-441" dev="psteitz" type="fix">
+        Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
+      </action>
       <action issue="DBCP-442" dev="psteitz" type="fix">
         SharedPoolDataSource getConnection fails when testOnBorrow is set with
         a null validation query.
