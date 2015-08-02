@@ -27,8 +27,8 @@ repository=${user.home}/.m2/repository
 dbcp.jar=./target/commons-dbcp2-2.1.1-SNAPSHOT.jar
 
 # commons-pool.jar - path to commons-pool2-2.4
-commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.4.1
-commons-pool.jar=${commons-pool.home}/commons-pool2-2.4.1.jar
+commons-pool.home=${repository}/org/apache/commons/commons-pool2/2.4.2
+commons-pool.jar=${commons-pool.home}/commons-pool2-2.4.2.jar
 
 # JUnit
 junit.home=${repository}/junit/junit/4.11
