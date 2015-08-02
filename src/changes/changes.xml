@@ -60,7 +60,8 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.1.1" date="TBD" description="Bug fixes.">
+    <release version="2.1.1" date="TBD" description=
+ "This is a patch release, including bug fixes only.">
       <action dev="psteitz" type="update">
         Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
         users to see more reports of abandoned connections (if removal and logging
