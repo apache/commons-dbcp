@@ -62,7 +62,10 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.1.1" date="TBD" description="Bug fixes.">
       <action dev="psteitz" type="update">
-        Updated pool version to 2.4.2.
+        Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
+        users to see more reports of abandoned connections (if removal and logging
+        are configured).  Prior to the fix for POOL-300, the PrintWriter used to log
+        abandoned connection stack traces was not being flushed on each log event.
       </action>
       <action issue="DBCP-441" dev="psteitz" type="fix">
         Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
