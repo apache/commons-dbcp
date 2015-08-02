@@ -125,6 +125,27 @@ testWhileIdle
       values will not reflect the current state. In this case, caching should be
       disabled by setting this attribute to false.</td>
 </tr>
+<tr>
+  <td>defaultQueryTimeout</td>
+  <td>null</td>
+  <td>If non-null, the value of this <code>Integer</code> property determines
+      the query timeout that will be used for Statements created from
+      connections managed by the pool. <code>null</code> means that the driver
+      default will be used.</td>
+</tr>
+<tr>
+  <td>enableAutocommitOnReturn</td>
+  <td>true</td>
+  <td>If true, connections being returned to the pool will be checked and configured with
+      <code>Connection.setAutoCommit(true)</code> if the auto commit setting is
+      <code>false</code> when the connection is returned.</td>
+</tr>
+<tr>
+  <td>rollbackOnReturn</td>
+  <td>true</td>
+  <td>True means a connection will be rolled back when returned to the pool if
+      auto commit is not enabled and the connection is not read-only.</td>
+</tr>
 </table>
 
 
@@ -196,6 +217,14 @@ before returning them to the caller.  If specified, this query
 one row. If not specified, connections will be validation by calling the
 isValid() method.
    </td>
+</tr>
+<tr>
+  <td>validationQueryTimeout</td>
+  <td>no timeout</td>
+  <td>The timeout in seconds before connection validation queries fail. If set
+      to a positive value, this value is passed to the driver via the
+      <code>setQueryTimeout</code> method of the <code>Statement</code>
+      used to execute the validation query.</td>
 </tr>
 <tr>
    <td>testOnCreate</td>
@@ -412,6 +441,16 @@ Be careful and only use when you need direct access to driver specific extension
       Logging of abandoned Statements and Connections adds overhead
       for every Connection open or new Statement because a stack   
       trace has to be generated.  
+   </td>
+</tr>
+<tr>
+   <td>abandonedUsageTracking</td>
+   <td>false</td>
+   <td>
+      If true, the connection pool records a stack trace every time a method is called on a
+      pooled connection and retains the most recent stack trace to aid debugging
+      of abandoned connections. There is significant overhead added by setting this
+      to true.
    </td>
 </tr>
 </table>
