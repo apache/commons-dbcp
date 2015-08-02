@@ -1337,7 +1337,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Returns the value of the flag that controls whether or not connections
-     * being returned to the pool will checked and configured with
+     * being returned to the pool will be checked and configured with
      * {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)}
      * if the auto commit setting is {@code false} when the connection
      * is returned. It is <code>true</code> by default.
@@ -1348,7 +1348,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Sets the value of the flag that controls whether or not connections
-     * being returned to the pool will checked and configured with
+     * being returned to the pool will be checked and configured with
      * {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)}
      * if the auto commit setting is {@code false} when the connection
      * is returned. It is <code>true</code> by default.
