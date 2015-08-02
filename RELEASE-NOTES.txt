@@ -1,47 +1,28 @@
               Apache Apache Commons DBCP
-                  Version 2.1
+                  Version 2.1.1
                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
-This is minor release, including bug fixes and enhancements. Note that
- one of the enhancements (DBCP-423) is to implement AutoCloseable in
- BasicDataSource, PoolingDataSource and the InstanceKeyDataSource
- implementations.
+This is a patch release, including bug fixes only.
 
 Changes in this version include:
 
-New features:
-o DBCP-426:  Added invalidateConnection method to BasicDataSource. Thanks to Kasper Sørensen.
-o DBCP-427:  Added fastFailValidation property to PooloableConnection, configurable in
-             BasicDataSource.  When set to true, connections that have previously thrown
-             fatal disconnection errors will fail validation immediately (no driver calls). Thanks to Vladimir Konkov.
 
 Fixed Bugs:
-o DBCP-420:  InstanceKeyDataSource discards native SQLException when given password does not match
-             password used to create the connection.
-o            Correct some Javadoc references to Apache Commons Pool 2 classes that
-             have changed names since Pool 1.x.
-o            Do not ignore the configured custom eviction policy when creating a
-             BasicDataSource.
-o DBCP-428:  Unsuccessful Connection enlistment in XA Transaction ignored by TransactionContext. Thanks to Vladimir Konkov.
-o DBCP-432:  Changed BasicDataSource createDataSource method to ensure that initialization
-             completes before clients get reference to newly created instances.
-o DBCP-433:  Fixed connection leak when SQLException is thrown while enlisting an XA
-             transaction. Thanks to Vladimir Konkov.
-o DBCP-434:  Setting jmxName to null should suppress JMX registration of connection
-             and statement pools.
+o DBCP-441:  Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
+o DBCP-442:  SharedPoolDataSource getConnection fails when testOnBorrow is set with
+             a null validation query.
+o DBCP-438:  Nested connections in a transaction (local) throws null pointer. Thanks to Raihan Kibria.
+o DBCP-437:  BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
 
 Changes:
-o DBCP-422:  Update Apache Commons Logging to 1.2 from 1.1.3.
-o DBCP-424:  Made expired connection logging configurable in BasicDataSource.  Setting
-             logExpiredConnections to false suppresses expired connection log messages.
-o DBCP-423:  Made Datasources implement AutoCloseable.
-o            Eliminated synchronization in BasicDataSource getNumActive, getNumIdle methods.
-o DBCP-435:  Added property name verification to BasicDataSourceFactory. References including
-             obsolete or unrecognized properties now generate log messages. Thanks to Denixx Baykin.
+o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
+             users to see more reports of abandoned connections (if removal and logging
+             are configured).  Prior to the fix for POOL-300, the PrintWriter used to log
+             abandoned connection stack traces was not being flushed on each log event.
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
