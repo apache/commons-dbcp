@@ -27,4 +27,4 @@
 # ----------------------------------------------------------------------------
 version=2.1.1
 mvn changes:announcement-generate -Prelease-notes -Dchanges.version=${version}
-mvn commons:download-page -Dcommons.componentid=dbcp  # Override to get download_dbcp
+mvn commons:download-page -Dcommons.componentid=dbcp -Dcommons.release.version=${version}
