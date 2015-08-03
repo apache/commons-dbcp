@@ -45,7 +45,7 @@
 
       <property name="name" value="commons-dbcp2"/>
       <property name="title" value="Apache Commons Database Pooling Package"/>
-      <property name="version" value="2.1.1-SNAPSHOT"/>
+      <property name="version" value="2.1.1"/>
       <property name="package" value="org.apache.commons.dbcp2.*"/>
 
       <property name="build.dir" value="${basedir}/build"/>
