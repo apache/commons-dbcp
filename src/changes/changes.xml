@@ -60,7 +60,9 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.1.1" date="TBD" description=
+    <release version="2.1.2" date="TBD" description="TBD">
+    </release>
+    <release version="2.1.1" date="6 Aug 2015" description=
  "This is a patch release, including bug fixes only.">
       <action dev="psteitz" type="update">
         Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
