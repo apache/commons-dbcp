@@ -1987,13 +1987,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             throw new IllegalStateException("Cannot invalidate connection: Unwrapping poolable connection failed.", e);
         }
 
-        // attempt to close the connection for good measure
-        try {
-            connection.close();
-        } catch (Exception e) {
-            // ignore any exceptions here
-        }
-
         try {
             connectionPool.invalidateObject(poolableConnection);
         } catch (Exception e) {

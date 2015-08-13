@@ -719,6 +719,43 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
     
     /**
+     * JIRA: DBCP-444
+     * Verify that invalidate does not return closed connection to the pool.
+     */
+    @Test
+    public void testConcurrentInvalidateBorrow() throws Exception {
+        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnRequestCountDriver");
+        ds.setUrl("jdbc:apache:commons:testerConnRequestCountDriver");
+        ds.setTestOnBorrow(true);
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+        ds.setMaxTotal(8);
+        ds.setLifo(true);
+        ds.setMaxWaitMillis(-1);
+        
+        // Threads just borrow and return - validation will trigger close check
+        TestThread testThread1 = new TestThread(1000,0);
+        Thread t1 = new Thread(testThread1);
+        t1.start();
+        TestThread testThread2 = new TestThread(1000,0);
+        Thread t2 = new Thread(testThread1);
+        t2.start();
+        
+        // Grab and invalidate connections
+        for (int i = 0; i < 1000; i++) {
+            Connection conn = ds.getConnection();
+            ds.invalidateConnection(conn);
+        }
+        
+        // Make sure borrow threads complete successfully
+        t1.join();
+        t2.join();
+        assertFalse(testThread1.failed());
+        assertFalse(testThread2.failed());
+        
+        ds.close();
+    }
+    
+    /**
      * Make sure setting jmxName to null suppresses JMX registration of connection and statement pools.
      * JIRA: DBCP-434
      */

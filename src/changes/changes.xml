@@ -61,6 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.1.2" date="TBD" description="TBD">
+      <action dev="psteitz" type="fix" issue="DBCP-444">
+        InvalidateConnection can result in closed connection returned by getConnection.
+      <action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
  "This is a patch release, including bug fixes only.">
