@@ -86,6 +86,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver.registerPool("test",pool);
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         driver.closePool("test");

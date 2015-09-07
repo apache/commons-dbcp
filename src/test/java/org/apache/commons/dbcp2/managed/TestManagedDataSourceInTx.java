@@ -46,12 +46,14 @@ import javax.transaction.Transaction;
  */
 public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         transactionManager.begin();
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         if (transactionManager.getTransaction() != null) {
@@ -70,7 +72,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         // two connections to the same datasource are supposed to share
         // a single connection
     }
-    
+
     @Override
     @Test
     public void testNestedConnections() {

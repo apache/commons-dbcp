@@ -40,6 +40,7 @@ import org.junit.Test;
  */
 public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -234,7 +235,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner2);
     }
 
-    /** 
+    /**
      * Tests high-concurrency contention for connections and pooled prepared statements.
      * DBCP-414
      */

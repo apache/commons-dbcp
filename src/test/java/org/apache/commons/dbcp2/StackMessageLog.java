@@ -34,11 +34,11 @@ import org.apache.commons.logging.impl.SimpleLog;
  * @version $Id$
  */
 public class StackMessageLog extends SimpleLog {
-    
+
     private static final long serialVersionUID = 1L;
-    private static Stack<String> messageStack = new Stack<String>();
+    private static Stack<String> messageStack = new Stack<>();
     private static Lock lock = new ReentrantLock();
-    
+
     public StackMessageLog(String name) {
         super(name);
     }
@@ -66,8 +66,8 @@ public class StackMessageLog extends SimpleLog {
         } finally {
             lock.unlock();
         }
-    } 
-    
+    }
+
     /**
      * @return the most recent log message, or null if the log is empty
      */
@@ -83,13 +83,13 @@ public class StackMessageLog extends SimpleLog {
         }
         return ret;
     }
-    
+
     /**
      * Note: iterator is fail-fast, lock the stack first.
      */
     public static List<String> getAll() {
         final Iterator<String> iterator = messageStack.iterator();
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
             messages.add(iterator.next());
         }
