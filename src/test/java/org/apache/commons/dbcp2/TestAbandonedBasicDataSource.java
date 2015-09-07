@@ -45,6 +45,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
     private StringWriter sw;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();

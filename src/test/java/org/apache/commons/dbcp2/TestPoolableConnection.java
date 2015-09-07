@@ -51,7 +51,7 @@ public class TestPoolableConnection {
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
     }
-    
+
     @After
     public void tearDown() {
         pool.close();
@@ -124,7 +124,7 @@ public class TestPoolableConnection {
         factory.setFastFailValidation(true);
         PoolableConnection conn = pool.borrowObject();
         TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
-        
+
         // Set up non-fatal exception
         nativeConnection.setFailure(new SQLException("Not fatal error.", "Invalid syntax."));
         try {
@@ -164,21 +164,21 @@ public class TestPoolableConnection {
         assertEquals("The pool should have no idle connections",
                 0, pool.getNumIdle());
     }
-    
+
     @Test
     public void testFastFailValidationCustomCodes() throws Exception {
         pool.setTestOnReturn(true);
         PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
-        ArrayList<String> disconnectionSqlCodes = new ArrayList<String>();
+        ArrayList<String> disconnectionSqlCodes = new ArrayList<>();
         disconnectionSqlCodes.add("XXX");
         factory.setDisconnectionSqlCodes(disconnectionSqlCodes);
         PoolableConnection conn = pool.borrowObject();
         TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
-        
+
         // Set up fatal exception
         nativeConnection.setFailure(new SQLException("Fatal connection error.", "XXX"));
-        
+
         try {
             conn.createStatement();
             fail("Should throw SQL exception.");
@@ -186,7 +186,7 @@ public class TestPoolableConnection {
             // cleanup failure
             nativeConnection.setFailure(null);
         }
-        
+
         // verify that bad connection does not get returned to the pool
         conn.close();  // testOnReturn triggers validate, which should fail
         assertEquals("The pool should have no active connections",

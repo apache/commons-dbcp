@@ -45,6 +45,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
 
     public AtomicInteger closeCounter = new AtomicInteger();
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();

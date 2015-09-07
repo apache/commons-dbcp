@@ -67,6 +67,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         ds.close();
@@ -145,7 +146,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         assertTrue(con2.innermostDelegateEquals(inner));
         assertFalse(con.equals(con2));
     }
-    
+
     /**
      * DBCP-412
      * Verify that omitting factory.setPool(pool) when setting up PDS does not
@@ -171,7 +172,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         assertTrue(f.getPool().equals(p));
         ds.getConnection();
     }
-    
+
     @Test
     public void testClose() throws Exception {
 
@@ -190,13 +191,12 @@ public class TestPoolingDataSource extends TestConnectionPool {
         p.setMaxTotal(getMaxTotal());
         p.setMaxWaitMillis(getMaxWaitMillis());
 
-        try ( PoolingDataSource<PoolableConnection> dataSource =
-                new PoolingDataSource<PoolableConnection>(p) ) {
+        try ( PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p) ) {
             Connection connection = dataSource.getConnection();
             assertNotNull(connection);
             connection.close();
         }
-        
+
         assertTrue(p.isClosed());
         assertEquals(0, p.getNumIdle());
         assertEquals(0, p.getNumActive());
