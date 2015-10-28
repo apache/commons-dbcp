@@ -63,10 +63,10 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.1.2" date="TBD" description="This is a patch release, including bug fixes only.">
       <action dev="psteitz" type="fix" issue="DBCP-444">
         InvalidateConnection can result in closed connection returned by getConnection.
-      <action>
+      </action>
       <action dev="ggregory" type="fix" issue="DBCP-449" due-to="Grzegorz D.">
         Cannot use DBCP on Google App Engine.
-      <action>
+      </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">
