@@ -291,9 +291,6 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <!-- Remove version override when 2.5 is released and parent is upgraded -->
-          <!-- Workaround for MASSEMBLY-637 -->
-          <version>2.3</version>
           <configuration>
             <descriptors>
               <descriptor>src/main/assembly/bin.xml</descriptor>
