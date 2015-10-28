@@ -64,9 +64,12 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="fix" issue="DBCP-444">
         InvalidateConnection can result in closed connection returned by getConnection.
       <action>
+      <action dev="ggregory" type="fix" issue="DBCP-449" due-to="Grzegorz D.">
+        Cannot use DBCP on Google App Engine.
+      <action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
- "This is a patch release, including bug fixes only.">
+"This is a patch release, including bug fixes only.">
       <action dev="psteitz" type="update">
         Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
         users to see more reports of abandoned connections (if removal and logging
