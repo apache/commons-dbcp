@@ -67,7 +67,7 @@ public class TesterDriver implements Driver {
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
-        return CONNECT_STRING.startsWith(url);
+        return url != null && url.startsWith(CONNECT_STRING);
     }
 
     private void assertValidUserPassword(String user, String password) 
@@ -99,6 +99,13 @@ public class TesterDriver implements Driver {
             {
                 username = info.getProperty("user");
                 password = info.getProperty("password");
+                if (username == null) {
+                    String[] parts = url.split(";");
+                    username = parts[1];
+                    username = username.split("=")[1];
+                    password = parts[2];
+                    password = password.split("=")[1];
+                }
                 assertValidUserPassword(username, password);
             }
             conn = new TesterConnection(username, password);

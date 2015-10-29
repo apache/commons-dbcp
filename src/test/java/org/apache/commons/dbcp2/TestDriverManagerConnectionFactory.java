@@ -26,6 +26,8 @@ import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,6 +38,25 @@ import org.junit.Test;
  * @version $Id$
  */
 public class TestDriverManagerConnectionFactory {
+
+    private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
+
+    @BeforeClass 
+    public static void beforeClass() {
+        System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
+    }
+    
+    @AfterClass
+    public static void afterClass() {
+        System.clearProperty(KEY_JDBC_DRIVERS);
+    }
+    
+    @Test
+    public void testDriverManagerInitWithEmptyProperties() throws Exception {
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver;user=foo;password=bar");
+        connectionFactory.createConnection();
+    }
 
     @Test
     public void testDriverManagerInitWithProperties() throws Exception {
@@ -48,8 +69,6 @@ public class TestDriverManagerConnectionFactory {
     }
 
     public void testDriverManagerInit(final boolean withProperties) throws Exception {
-        System.setProperty("jdbc.drivers",
-                "org.apache.commons.dbcp2.TesterDriver");
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
