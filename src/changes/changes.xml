@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" issue="DBCP-449" due-to="Grzegorz D.">
         Cannot use DBCP on Google App Engine.
       </action>
+      <action dev="ggregory" type="add" issue="DBCP-451">
+        Add constructor DriverManagerConnectionFactory(String).
+      </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">
