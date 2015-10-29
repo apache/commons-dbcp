@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -37,16 +38,28 @@ import org.junit.Test;
 public class TestDriverManagerConnectionFactory {
 
     @Test
-    public void testDriverManagerInit() throws Exception {
+    public void testDriverManagerInitWithProperties() throws Exception {
+        testDriverManagerInit(true);
+    }
+
+    @Test
+    public void testDriverManagerInitWithCredentials() throws Exception {
+        testDriverManagerInit(false);
+    }
+
+    public void testDriverManagerInit(final boolean withProperties) throws Exception {
         System.setProperty("jdbc.drivers",
                 "org.apache.commons.dbcp2.TesterDriver");
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
-        final ConnectionFactory connectionFactory =
-            new DriverManagerConnectionFactory(
-                    "jdbc:apache:commons:testdriver",
-                    "foo", "bar");
+        Properties properties = new Properties();
+        // The names "user" and "password" are specified in java.sql.DriverManager.getConnection(String, String, String)
+        properties.put("user", "foo");
+        properties.put("password", "bar");
+        final ConnectionFactory connectionFactory = withProperties ? 
+                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties) : 
+                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
@@ -73,7 +86,7 @@ public class TestDriverManagerConnectionFactory {
                 Thread.sleep(100);
             }
             if (!connectionThreads[i].getResult()) {
-                fail("Exception during getConnection");
+                fail("Exception during getConnection(): " + connectionThreads[i]);
             }
         }
     }
@@ -108,6 +121,11 @@ public class TestDriverManagerConnectionFactory {
 
         public boolean getResult() {
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "ConnectionThread [ds=" + ds + ", result=" + result + "]";
         }
     }
 
