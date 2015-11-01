@@ -46,7 +46,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
      * Constructor for DriverManagerConnectionFactory.
      * @param connectUri a database url of the form
      * <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
-     * @since 2.1.2
+     * @since 2.2
      */
     public DriverManagerConnectionFactory(String connectUri) {
         _connectUri = connectUri;

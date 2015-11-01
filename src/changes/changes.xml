@@ -60,12 +60,14 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.1.2" date="TBD" description="This is a patch release, including bug fixes only.">
+    <release version="2.2" date="TBD" description=
+"This is a minor release, including bug fixes and enhancements.">
       <action dev="psteitz" type="fix" issue="DBCP-444">
         InvalidateConnection can result in closed connection returned by getConnection.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-449" due-to="Grzegorz D.">
-        Cannot use DBCP on Google App Engine.
+        Complete the fix for DBCP-418, enabling PoolableConnection class to load in environments
+        (such as GAE) where the JMX ManagementFactory is not available.
       </action>
       <action dev="ggregory" type="add" issue="DBCP-451">
         Add constructor DriverManagerConnectionFactory(String).
