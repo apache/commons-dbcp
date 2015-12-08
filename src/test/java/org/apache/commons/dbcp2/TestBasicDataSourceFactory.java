@@ -26,7 +26,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.MBeanServer;
 import javax.naming.Reference;
@@ -41,8 +40,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class TestBasicDataSourceFactory {
-
-    private static AtomicInteger instanceCounter = new AtomicInteger(0);
 
     @Test
     public void testNoProperties() throws Exception {
