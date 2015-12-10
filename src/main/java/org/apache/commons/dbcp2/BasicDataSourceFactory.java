@@ -17,11 +17,6 @@
 
 package org.apache.commons.dbcp2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -41,6 +36,11 @@ import javax.naming.Name;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * <p>JNDI object factory that creates an instance of
@@ -288,7 +288,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private void validatePropertyNames(Reference ref, Name name, List<String> warnings,
                                       List<String> infoMessages) {
         final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
-        final String nameString = name != null ? "Name = " + name.toString() + " " : ""; 
+        final String nameString = name != null ? "Name = " + name.toString() + " " : "";
         if (NUPROP_WARNTEXT!=null && !NUPROP_WARNTEXT.keySet().isEmpty()) {
             for (String propertyName : NUPROP_WARNTEXT.keySet()) {
                 final RefAddr ra = ref.get(propertyName);
@@ -519,7 +519,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (value != null) {
             dataSource.setLogAbandoned(Boolean.valueOf(value).booleanValue());
         }
-        
+
         value = properties.getProperty(PROP_ABANDONEDUSAGETRACKING);
         if (value != null) {
             dataSource.setAbandonedUsageTracking(Boolean.valueOf(value).booleanValue());
