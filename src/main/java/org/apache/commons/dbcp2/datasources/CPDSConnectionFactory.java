@@ -87,8 +87,8 @@ class CPDSConnectionFactory
      * @param validationQueryTimeout Timeout in seconds before validation fails
      * @param rollbackAfterValidation whether a rollback should be issued
      * after {@link #validateObject validating} {@link Connection}s.
-     * @param username
-     * @param password
+     * @param username The user name to use to create connections
+     * @param password The password to use to create connections
      */
     public CPDSConnectionFactory(ConnectionPoolDataSource cpds,
                                  String validationQuery,
@@ -186,7 +186,7 @@ class CPDSConnectionFactory
                 valid = false;
             } finally {
                 Utils.closeQuietly(conn);
-                validatingSet.remove(pconn); 
+                validatingSet.remove(pconn);
             }
         } else {
             Statement stmt = null;
@@ -332,9 +332,10 @@ class CPDSConnectionFactory
 
     /**
      * Sets the maximum lifetime in milliseconds of a connection after which the
-     * connection will always fail activation, passivation and validation. A
-     * value of zero or less indicates an infinite lifetime. The default value
-     * is -1.
+     * connection will always fail activation, passivation and validation.
+     *
+     * @param maxConnLifetimeMillis A value of zero or less indicates an
+     *        infinite lifetime. The default value is -1.
      */
     public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
