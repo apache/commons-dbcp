@@ -43,7 +43,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * <code>PerUserPoolDataSource</code>.  Many of the configuration properties
  * are shared and defined here.  This class is declared public in order
  * to allow particular usage with commons-beanutils; do not make direct
- * use of it outside of commons-dbcp.
+ * use of it outside of <em>commons-dbcp2</em>.
  * </p>
  *
  * <p>
