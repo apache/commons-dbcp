@@ -65,7 +65,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" tyoe="fix" issue="DBCP-452">
         Add jmxName to properties set by BasicDataSourceFactory.  This
         enables container-managed pools created from JNDI Resource
-        definitions to enable JMX by supplying a valid root jmx name.  
+        definitions to enable JMX by supplying a valid root JMX name.  
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-444">
         InvalidateConnection can result in closed connection returned by getConnection.
