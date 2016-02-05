@@ -319,13 +319,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private String driverClassName = null;
 
     /**
-     * Returns the jdbc driver class name.
+     * Returns the JDBC driver class name.
      * <p>
      * Note: This getter only returns the last value set by a call to
      * {@link #setDriverClassName(String)}. It does not return the class name of
      * any driver that may have been set via {@link #setDriver(Driver)}.
      *
-     * @return the jdbc driver class name
+     * @return the JDBC driver class name
      */
     @Override
     public synchronized String getDriverClassName() {
@@ -333,14 +333,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * <p>Sets the jdbc driver class name.</p>
+     * <p>Sets the JDBC driver class name.</p>
      * <p>
      * Note: this method currently has no effect once the pool has been
      * initialized.  The pool is initialized the first time one of the
      * following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code></p>
      *
-     * @param driverClassName the class name of the jdbc driver
+     * @param driverClassName the class name of the JDBC driver
      */
     public synchronized void setDriverClassName(String driverClassName) {
         if (driverClassName != null && driverClassName.trim().length() > 0) {

@@ -45,7 +45,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
  * <p>
- * An adapter for jdbc drivers that do not include an implementation
+ * An adapter for JDBC drivers that do not include an implementation
  * of {@link javax.sql.ConnectionPoolDataSource}, but still include a
  * {@link java.sql.DriverManager} implementation.
  * <code>ConnectionPoolDataSource</code>s are not used within general
