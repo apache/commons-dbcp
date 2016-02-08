@@ -161,7 +161,7 @@ public class TestManagedConnection {
     private class UncooperativeTransaction
         implements Transaction {
 
-        private Transaction wrappedTransaction;
+        private final Transaction wrappedTransaction;
 
         public UncooperativeTransaction(Transaction transaction) {
             this.wrappedTransaction = transaction;
