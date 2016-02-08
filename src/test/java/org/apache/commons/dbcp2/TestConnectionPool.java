@@ -62,7 +62,7 @@ public abstract class TestConnectionPool {
             Connection conn = connections.pop();
             try {
                 conn.close();
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 // ignore
             } finally {
                 conn = null;
@@ -85,7 +85,7 @@ public abstract class TestConnectionPool {
 
     /** Acquire a connection and push it onto the connections stack */
     protected Connection newConnection() throws Exception {
-        Connection connection = getConnection();
+        final Connection connection = getConnection();
         connections.push(connection);
         return connection;
     }
@@ -93,8 +93,8 @@ public abstract class TestConnectionPool {
     // ----------- Utility Methods ---------------------------------
 
     protected String getUsername(Connection conn) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("select username");
+        final Statement stmt = conn.createStatement();
+        final ResultSet rs = stmt.executeQuery("select username");
         if (rs.next()) {
             return rs.getString(1);
         }
@@ -105,7 +105,7 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testClearWarnings() throws Exception {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             assertTrue(c[i] != null);
@@ -115,11 +115,11 @@ public abstract class TestConnectionPool {
             }
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             assertNotNull(element.getWarnings());
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
 
@@ -127,12 +127,12 @@ public abstract class TestConnectionPool {
             c[i] = newConnection();
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             // warnings should have been cleared by putting the connection back in the pool
             assertNull(element.getWarnings());
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -140,12 +140,12 @@ public abstract class TestConnectionPool {
     @Test
     public void testIsClosed() throws Exception {
         for(int i=0;i<getMaxTotal();i++) {
-            Connection conn = newConnection();
+            final Connection conn = newConnection();
             assertNotNull(conn);
             assertTrue(!conn.isClosed());
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
@@ -162,7 +162,7 @@ public abstract class TestConnectionPool {
     @Test
     public void testCanCloseConnectionTwice() throws Exception {
         for (int i = 0; i < getMaxTotal(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            Connection conn = newConnection();
+            final Connection conn = newConnection();
             assertNotNull(conn);
             assertTrue(!conn.isClosed());
             conn.close();
@@ -174,11 +174,11 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testCanCloseStatementTwice() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            Statement stmt = conn.createStatement();
+            final Statement stmt = conn.createStatement();
             assertNotNull(stmt);
             assertFalse(isClosed(stmt));
             stmt.close();
@@ -193,11 +193,11 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testCanClosePreparedStatementTwice() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
             assertFalse(isClosed(stmt));
             stmt.close();
@@ -212,11 +212,11 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testCanCloseCallableStatementTwice() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            PreparedStatement stmt = conn.prepareCall("select * from dual");
+            final PreparedStatement stmt = conn.prepareCall("select * from dual");
             assertNotNull(stmt);
             assertFalse(isClosed(stmt));
             stmt.close();
@@ -231,13 +231,13 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testCanCloseResultSetTwice() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
         assertTrue(!conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertFalse(isClosed(rset));
             rset.close();
@@ -290,24 +290,24 @@ public abstract class TestConnectionPool {
         assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
                 conn, statement.getConnection());
 
-        ResultSet resultSet = statement.getResultSet();
+        final ResultSet resultSet = statement.getResultSet();
         assertFalse(isClosed(resultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, resultSet.getStatement());
 
-        ResultSet executeResultSet = statement.executeQuery("select * from dual");
+        final ResultSet executeResultSet = statement.executeQuery("select * from dual");
         assertFalse(isClosed(executeResultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, executeResultSet.getStatement());
 
-        ResultSet keysResultSet = statement.getGeneratedKeys();
+        final ResultSet keysResultSet = statement.getGeneratedKeys();
         assertFalse(isClosed(keysResultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, keysResultSet.getStatement());
 
         ResultSet preparedResultSet = null;
         if (statement instanceof PreparedStatement) {
-            PreparedStatement preparedStatement = (PreparedStatement) statement;
+            final PreparedStatement preparedStatement = (PreparedStatement) statement;
             preparedResultSet = preparedStatement.executeQuery();
             assertFalse(isClosed(preparedResultSet));
             assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
@@ -328,11 +328,11 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testSimple() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -343,11 +343,11 @@ public abstract class TestConnectionPool {
     @Test
     public void testRepeatedBorrowAndReturn() throws Exception {
         for(int i=0;i<100;i++) {
-            Connection conn = newConnection();
+            final Connection conn = newConnection();
             assertNotNull(conn);
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
@@ -361,18 +361,18 @@ public abstract class TestConnectionPool {
         Connection conn = newConnection();
         assertNotNull(conn);
         {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
         {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
@@ -381,25 +381,25 @@ public abstract class TestConnectionPool {
         conn.close();
         try (Statement s = conn.createStatement()){
             fail("Can't use closed connections");
-        } catch(SQLException e) {
+        } catch(final SQLException e) {
             // expected
         }
 
         conn = newConnection();
         assertNotNull(conn);
         {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
             stmt.close();
         }
         {
-            PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
-            ResultSet rset = stmt.executeQuery();
+            final ResultSet rset = stmt.executeQuery();
             assertNotNull(rset);
             assertTrue(rset.next());
             rset.close();
@@ -412,8 +412,8 @@ public abstract class TestConnectionPool {
     @Test
     public void testPooling() throws Exception {
         // Grab a maximal set of open connections from the pool
-        Connection[] c = new Connection[getMaxTotal()];
-        Connection[] u = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] u = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             if (c[i] instanceof DelegatingConnection) {
@@ -427,10 +427,10 @@ public abstract class TestConnectionPool {
         }
         // Close connections one at a time and get new ones, making sure
         // the new ones come from the pool
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
-            Connection con = newConnection();
-            Connection underCon =
+            final Connection con = newConnection();
+            final Connection underCon =
                 ((DelegatingConnection<?>) con).getInnermostDelegate();
             assertTrue("Failed to get connection", underCon != null);
             boolean found = false;
@@ -447,11 +447,11 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testAutoCommitBehavior() throws Exception {
-        Connection conn0 = newConnection();
+        final Connection conn0 = newConnection();
         assertNotNull("connection should not be null", conn0);
         assertTrue("autocommit should be true for conn0", conn0.getAutoCommit());
 
-        Connection conn1 = newConnection();
+        final Connection conn1 = newConnection();
         assertTrue("autocommit should be true for conn1", conn1.getAutoCommit() );
         conn1.close();
 
@@ -460,10 +460,10 @@ public abstract class TestConnectionPool {
         assertFalse("autocommit should be false for conn0", conn0.getAutoCommit());
         conn0.close();
 
-        Connection conn2 = newConnection();
+        final Connection conn2 = newConnection();
         assertTrue("autocommit should be true for conn2", conn2.getAutoCommit() );
 
-        Connection conn3 = newConnection();
+        final Connection conn3 = newConnection();
         assertTrue("autocommit should be true for conn3", conn3.getAutoCommit() );
 
         conn2.close();
@@ -474,7 +474,7 @@ public abstract class TestConnectionPool {
     /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testConnectionsAreDistinct() throws Exception {
-        Connection[] conn = new Connection[getMaxTotal()];
+        final Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
@@ -482,14 +482,14 @@ public abstract class TestConnectionPool {
                 assertTrue(!conn[j].equals(conn[i]));
             }
         }
-        for (Connection element : conn) {
+        for (final Connection element : conn) {
             element.close();
         }
     }
 
     @Test
     public void testOpening() throws Exception {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
@@ -499,14 +499,14 @@ public abstract class TestConnectionPool {
             }
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
 
     @Test
     public void testClosing() throws Exception {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
@@ -519,14 +519,14 @@ public abstract class TestConnectionPool {
         // get a new connection
         c[0] = newConnection();
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
 
     @Test
     public void testMaxTotal() throws Exception {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
             assertTrue(c[i] != null);
@@ -535,12 +535,12 @@ public abstract class TestConnectionPool {
         try {
             newConnection();
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (java.sql.SQLException e) {
+        } catch (final java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -551,8 +551,8 @@ public abstract class TestConnectionPool {
      */
     @Test
     public void testHashing() throws Exception {
-        Connection con = getConnection();
-        Hashtable<Connection, String> hash = new Hashtable<>();
+        final Connection con = getConnection();
+        final Hashtable<Connection, String> hash = new Hashtable<>();
         hash.put(con, "test");
         assertEquals("test", hash.get(con));
         assertTrue(hash.containsKey(con));
@@ -563,17 +563,17 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testThreaded() {
-        TestThread[] threads = new TestThread[getMaxTotal()];
+        final TestThread[] threads = new TestThread[getMaxTotal()];
         for(int i=0;i<threads.length;i++) {
             threads[i] = new TestThread(50,50);
-            Thread t = new Thread(threads[i]);
+            final Thread t = new Thread(threads[i]);
             t.start();
         }
         for(int i=0;i<threads.length;i++) {
             while(!(threads[i]).complete()) {
                 try {
                     Thread.sleep(100L);
-                } catch(Exception e) {
+                } catch(final Exception e) {
                     // ignored
                 }
             }
@@ -615,7 +615,7 @@ public abstract class TestConnectionPool {
             for(int i=0;i<_iter;i++) {
                 try {
                     Thread.sleep(_random.nextInt(_delay));
-                } catch(Exception e) {
+                } catch(final Exception e) {
                     // ignored
                 }
                 try (Connection conn = newConnection();
@@ -624,10 +624,10 @@ public abstract class TestConnectionPool {
                         ResultSet rset = stmt.executeQuery();) {
                     try {
                         Thread.sleep(_random.nextInt(_delay));
-                    } catch(Exception e) {
+                    } catch(final Exception e) {
                         // ignored
                     }
-                } catch(Exception e) {
+                } catch(final Exception e) {
                     e.printStackTrace();
                     _failed = true;
                     _complete = true;
@@ -644,12 +644,12 @@ public abstract class TestConnectionPool {
     @Test
     public void testPrepareStatementOptions() throws Exception
     {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual",
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual",
             ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
 
@@ -665,11 +665,11 @@ public abstract class TestConnectionPool {
     // wrong order of passivate/close when a rset isn't closed
     @Test
     public void testNoRsetClose() throws Exception {
-        Connection conn = newConnection();
+        final Connection conn = newConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("test");
+        final PreparedStatement stmt = conn.prepareStatement("test");
         assertNotNull(stmt);
-        ResultSet rset = stmt.getResultSet();
+        final ResultSet rset = stmt.getResultSet();
         assertNotNull(rset);
         // forget to close the resultset: rset.close();
         stmt.close();
@@ -679,9 +679,9 @@ public abstract class TestConnectionPool {
     // Bugzilla Bug 26966: Connectionpool's connections always returns same
     @Test
     public void testHashCode() throws Exception {
-        Connection conn1 = newConnection();
+        final Connection conn1 = newConnection();
         assertNotNull(conn1);
-        Connection conn2 = newConnection();
+        final Connection conn2 = newConnection();
         assertNotNull(conn2);
 
         assertTrue(conn1.hashCode() != conn2.hashCode());
@@ -691,7 +691,7 @@ public abstract class TestConnectionPool {
         try {
             statement.getWarnings();
             return false;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // getWarnings throws an exception if the statement is
             // closed, but could throw an exception for other reasons
             // in this case it is good enought to assume the statement
@@ -704,7 +704,7 @@ public abstract class TestConnectionPool {
         try {
             resultSet.getWarnings();
             return false;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // getWarnings throws an exception if the statement is
             // closed, but could throw an exception for other reasons
             // in this case it is good enought to assume the result set
@@ -758,13 +758,13 @@ public abstract class TestConnectionPool {
     protected void multipleThreads(final int holdTime,
             final boolean expectError, final boolean loopOnce,
             final long maxWaitMillis, int numStatements, int numThreads, long duration) throws Exception {
-                long startTime = timeStamp();
+                final long startTime = timeStamp();
                 final PoolTest[] pts = new PoolTest[numThreads];
                 // Catch Exception so we can stop all threads if one fails
-                ThreadGroup threadGroup = new ThreadGroup("foo") {
+                final ThreadGroup threadGroup = new ThreadGroup("foo") {
                     @Override
                     public void uncaughtException(Thread t, Throwable e) {
-                        for (PoolTest pt : pts) {
+                        for (final PoolTest pt : pts) {
                             pt.stop();
                         }
                     }
@@ -774,7 +774,7 @@ public abstract class TestConnectionPool {
                     pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce, numStatements);
                 }
                 // Start all the threads
-                for (PoolTest pt : pts) {
+                for (final PoolTest pt : pts) {
                     pt.start();
                 }
 
@@ -782,7 +782,7 @@ public abstract class TestConnectionPool {
                 Thread.sleep(duration);
 
                 // Stop threads
-                for (PoolTest pt : pts) {
+                for (final PoolTest pt : pts) {
                     pt.stop();
                 }
 
@@ -814,7 +814,7 @@ public abstract class TestConnectionPool {
                     }
                 }
 
-                long time = timeStamp() - startTime;
+                final long time = timeStamp() - startTime;
                 System.out.println("Multithread test time = " + time
                         + " ms. Threads: " + pts.length
                         + ". Loops: " + loops
@@ -827,10 +827,10 @@ public abstract class TestConnectionPool {
                         );
                 if (expectError) {
                     if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
-                        long offset = pts[0].created - 1000; // To reduce size of output numbers, but ensure they have 4 digits
+                        final long offset = pts[0].created - 1000; // To reduce size of output numbers, but ensure they have 4 digits
                         System.out.println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
-                            PoolTest pt = pts[i];
+                            final PoolTest pt = pts[i];
                             System.out.println(
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
                                     + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
@@ -926,16 +926,16 @@ public abstract class TestConnectionPool {
                     loops++;
                     state = "Getting Connection";
                     preconnected = timeStamp();
-                    Connection conn = getConnection();
+                    final Connection conn = getConnection();
                     connHash = System.identityHashCode(((DelegatingConnection<?>)conn).getInnermostDelegate());
                     connected = timeStamp();
                     state = "Using Connection";
                     assertNotNull(conn);
                     final String sql = numStatements == 1 ? "select * from dual" : "select count " + random.nextInt(numStatements - 1);
-                    PreparedStatement stmt =
+                    final PreparedStatement stmt =
                         conn.prepareStatement(sql);
                     assertNotNull(stmt);
-                    ResultSet rset = stmt.executeQuery();
+                    final ResultSet rset = stmt.executeQuery();
                     assertNotNull(rset);
                     assertTrue(rset.next());
                     state = "Holding Connection";
@@ -953,7 +953,7 @@ public abstract class TestConnectionPool {
                     }
                 }
                 state = DONE;
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 thrown = t;
                 if (!stopOnException) {
                     throw new RuntimeException();

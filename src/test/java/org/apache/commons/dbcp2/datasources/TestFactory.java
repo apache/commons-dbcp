@@ -43,19 +43,19 @@ public class TestFactory {
     // http://issues.apache.org/bugzilla/show_bug.cgi?id=24082
     @Test
     public void testJNDI2Pools() throws Exception {
-        Reference refObj = new Reference(SharedPoolDataSource.class.getName());
+        final Reference refObj = new Reference(SharedPoolDataSource.class.getName());
         refObj.add(new StringRefAddr("dataSourceName","java:comp/env/jdbc/bookstoreCPDS"));
-        Context context = new InitialContext();
-        Hashtable<?, ?> env = new Hashtable<>();
+        final Context context = new InitialContext();
+        final Hashtable<?, ?> env = new Hashtable<>();
         
-        ObjectFactory factory = new SharedPoolDataSourceFactory();
+        final ObjectFactory factory = new SharedPoolDataSourceFactory();
         
-        Name name = new CompositeName("myDB");
-        Object obj = factory.getObjectInstance(refObj, name, context, env);
+        final Name name = new CompositeName("myDB");
+        final Object obj = factory.getObjectInstance(refObj, name, context, env);
         assertNotNull(obj);
         
-        Name name2 = new CompositeName("myDB2");
-        Object obj2 = factory.getObjectInstance(refObj, name2, context, env);
+        final Name name2 = new CompositeName("myDB2");
+        final Object obj2 = factory.getObjectInstance(refObj, name2, context, env);
         assertNotNull(obj2);
     }
 }

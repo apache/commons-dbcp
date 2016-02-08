@@ -182,7 +182,7 @@ public class DriverAdapterCPDS
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         }
-        catch (ClassCircularityError e)
+        catch (final ClassCircularityError e)
         {
             if (connectionProperties != null) {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
@@ -195,7 +195,7 @@ public class DriverAdapterCPDS
         }
         KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS>> stmtPool = null;
         if (isPoolPreparedStatements()) {
-            GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+            final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
             config.setBlockWhenExhausted(false);
             config.setMaxWaitMillis(0);
@@ -238,9 +238,9 @@ public class DriverAdapterCPDS
     @Override
     public Reference getReference() throws NamingException {
         // this class implements its own factory
-        String factory = getClass().getName();
+        final String factory = getClass().getName();
 
-        Reference ref = new Reference(getClass().getName(), factory, null);
+        final Reference ref = new Reference(getClass().getName(), factory, null);
 
         ref.add(new StringRefAddr("description", getDescription()));
         ref.add(new StringRefAddr("driver", getDriver()));
@@ -281,7 +281,7 @@ public class DriverAdapterCPDS
         // of the reference
         DriverAdapterCPDS cpds = null;
         if (refObj instanceof Reference) {
-            Reference ref = (Reference)refObj;
+            final Reference ref = (Reference)refObj;
             if (ref.getClassName().equals(getClass().getName())) {
                 RefAddr ra = ref.get("description");
                 if (ra != null && ra.getContent() != null) {

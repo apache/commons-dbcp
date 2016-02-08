@@ -70,16 +70,16 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
         initializeConnection(conn);
         if (getPoolStatements()) {
             conn = new PoolingConnection(conn);
-            GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+            final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(-1);
             config.setBlockWhenExhausted(false);
             config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(getMaxOpenPreparedStatements());
-            ObjectName dataSourceJmxName = getDataSourceJmxName();
-            long connIndex = getConnectionIndex().getAndIncrement();
+            final ObjectName dataSourceJmxName = getDataSourceJmxName();
+            final long connIndex = getConnectionIndex().getAndIncrement();
             if (dataSourceJmxName != null) {
-                StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
+                final StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
                 base.append(Constants.JMX_CONNECTION_BASE_EXT);
                 base.append(Long.toString(connIndex));
                 config.setJmxNameBase(base.toString());
@@ -87,7 +87,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             } else {
                 config.setJmxEnabled(false);
             }
-            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
+            final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                 new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(getCacheState());

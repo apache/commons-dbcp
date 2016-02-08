@@ -72,209 +72,209 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
 
     @Override
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( parameterIndex,  sqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( parameterIndex,  sqlType); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void registerOutParameter(int parameterIndex, int sqlType, int scale) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( parameterIndex,  sqlType,  scale); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( parameterIndex,  sqlType,  scale); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public boolean wasNull() throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).wasNull(); } catch (SQLException e) { handleException(e); return false; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).wasNull(); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
     public String getString(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getString( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getString( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public boolean getBoolean(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBoolean( parameterIndex); } catch (SQLException e) { handleException(e); return false; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBoolean( parameterIndex); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
     public byte getByte(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getByte( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getByte( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public short getShort(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getShort( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getShort( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public int getInt(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getInt( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getInt( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public long getLong(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getLong( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getLong( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public float getFloat(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getFloat( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getFloat( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public double getDouble(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDouble( parameterIndex); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDouble( parameterIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     /** @deprecated Use {@link #getBigDecimal(int)} or {@link #getBigDecimal(String)} */
     @Override
     @Deprecated
     public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal( parameterIndex,  scale); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal( parameterIndex,  scale); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public byte[] getBytes(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBytes( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBytes( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Date getDate(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Time getTime(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Timestamp getTimestamp(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Object getObject(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public BigDecimal getBigDecimal(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal( parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal( parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Object getObject(int i, Map<String,Class<?>> map) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject( i, map); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject( i, map); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Ref getRef(int i) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getRef( i); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getRef( i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Blob getBlob(int i) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBlob( i); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBlob( i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Clob getClob(int i) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getClob( i); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getClob( i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Array getArray(int i) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getArray( i); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getArray( i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Date getDate(int parameterIndex, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate( parameterIndex,  cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Time getTime(int parameterIndex, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime( parameterIndex,  cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Timestamp getTimestamp(int parameterIndex, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp( parameterIndex,  cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp( parameterIndex,  cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public void registerOutParameter(int paramIndex, int sqlType, String typeName) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( paramIndex,  sqlType,  typeName); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter( paramIndex,  sqlType,  typeName); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void registerOutParameter(String parameterName, int sqlType) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void registerOutParameter(String parameterName, int sqlType, int scale) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType, scale); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType, scale); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void registerOutParameter(String parameterName, int sqlType, String typeName) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType, typeName); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).registerOutParameter(parameterName, sqlType, typeName); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public URL getURL(int parameterIndex) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getURL(parameterIndex); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getURL(parameterIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public void setURL(String parameterName, URL val) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setURL(parameterName, val); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setURL(parameterName, val); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setNull(String parameterName, int sqlType) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setNull(parameterName, sqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setNull(parameterName, sqlType); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setBoolean(String parameterName, boolean x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setBoolean(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setBoolean(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setByte(String parameterName, byte x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setByte(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setByte(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setShort(String parameterName, short x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setShort(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setShort(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setInt(String parameterName, int x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setInt(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setInt(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setLong(String parameterName, long x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setLong(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setLong(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setFloat(String parameterName, float x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setFloat(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setFloat(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setDouble(String parameterName, double x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setDouble(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setDouble(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setBigDecimal(String parameterName, BigDecimal x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setBigDecimal(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setBigDecimal(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setString(String parameterName, String x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setString(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setString(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setBytes(String parameterName, byte [] x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setBytes(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setBytes(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setDate(String parameterName, Date x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setDate(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setDate(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setTime(String parameterName, Time x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setTime(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setTime(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setTimestamp(String parameterName, Timestamp x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setTimestamp(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setTimestamp(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setAsciiStream(String parameterName, InputStream x, int length) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setAsciiStream(parameterName, x, length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setAsciiStream(parameterName, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setBinaryStream(String parameterName, InputStream x, int length) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setBinaryStream(parameterName, x, length); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setBinaryStream(parameterName, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(String parameterName, Object x, int targetSqlType, int scale) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x, targetSqlType, scale); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x, targetSqlType, scale); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(String parameterName, Object x, int targetSqlType) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x, targetSqlType); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x, targetSqlType); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setObject(String parameterName, Object x) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setObject(parameterName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setCharacterStream(String parameterName, Reader reader, int length) throws SQLException
@@ -282,111 +282,111 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
 
     @Override
     public void setDate(String parameterName, Date x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setDate(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setDate(parameterName, x, cal); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setTime(String parameterName, Time x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setTime(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setTime(parameterName, x, cal); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setTimestamp(String parameterName, Timestamp x, Calendar cal) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setTimestamp(parameterName, x, cal); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setTimestamp(parameterName, x, cal); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public void setNull(String parameterName, int sqlType, String typeName) throws SQLException
-    { checkOpen(); try { ((CallableStatement)getDelegate()).setNull(parameterName, sqlType, typeName); } catch (SQLException e) { handleException(e); } }
+    { checkOpen(); try { ((CallableStatement)getDelegate()).setNull(parameterName, sqlType, typeName); } catch (final SQLException e) { handleException(e); } }
 
     @Override
     public String getString(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getString(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getString(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public boolean getBoolean(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBoolean(parameterName); } catch (SQLException e) { handleException(e); return false; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBoolean(parameterName); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
     public byte getByte(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getByte(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getByte(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public short getShort(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getShort(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getShort(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public int getInt(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getInt(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getInt(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public long getLong(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getLong(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getLong(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public float getFloat(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getFloat(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getFloat(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public double getDouble(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDouble(parameterName); } catch (SQLException e) { handleException(e); return 0; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDouble(parameterName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
     public byte[] getBytes(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBytes(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBytes(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Date getDate(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Time getTime(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Timestamp getTimestamp(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Object getObject(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public BigDecimal getBigDecimal(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBigDecimal(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Object getObject(String parameterName, Map<String,Class<?>> map) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject(parameterName, map); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getObject(parameterName, map); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Ref getRef(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getRef(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getRef(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Blob getBlob(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBlob(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getBlob(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Clob getClob(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getClob(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getClob(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Array getArray(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getArray(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getArray(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Date getDate(String parameterName, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getDate(parameterName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Time getTime(String parameterName, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTime(parameterName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public Timestamp getTimestamp(String parameterName, Calendar cal) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp(parameterName, cal); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getTimestamp(parameterName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
     public URL getURL(String parameterName) throws SQLException
-    { checkOpen(); try { return ((CallableStatement)getDelegate()).getURL(parameterName); } catch (SQLException e) { handleException(e); return null; } }
+    { checkOpen(); try { return ((CallableStatement)getDelegate()).getURL(parameterName); } catch (final SQLException e) { handleException(e); return null; } }
 
 
     @Override
@@ -395,7 +395,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getRowId(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -407,7 +407,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getRowId(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -419,7 +419,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setRowId(parameterName, value);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -430,7 +430,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNString(parameterName, value);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -441,7 +441,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNCharacterStream(parameterName, reader, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -452,7 +452,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNClob(parameterName, value);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -463,7 +463,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setClob(parameterName, reader, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -474,7 +474,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setBlob(parameterName, inputStream, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -485,7 +485,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNClob(parameterName, reader, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -496,7 +496,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNClob(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -508,7 +508,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNClob(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -520,7 +520,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setSQLXML(parameterName, value);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -531,7 +531,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getSQLXML(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -543,7 +543,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getSQLXML(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -555,7 +555,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNString(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -567,7 +567,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNString(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -579,7 +579,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNCharacterStream(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -591,7 +591,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getNCharacterStream(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -603,7 +603,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getCharacterStream(parameterIndex);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -615,7 +615,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getCharacterStream(parameterName);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -627,7 +627,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setBlob(parameterName, blob);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -638,7 +638,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setClob(parameterName, clob);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -649,7 +649,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setAsciiStream(parameterName, inputStream, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -660,7 +660,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setBinaryStream(parameterName, inputStream, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -671,7 +671,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setCharacterStream(parameterName, reader, length);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -682,7 +682,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setAsciiStream(parameterName, inputStream);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -693,7 +693,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setBinaryStream(parameterName, inputStream);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -704,7 +704,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setCharacterStream(parameterName, reader);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -715,7 +715,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNCharacterStream(parameterName, reader);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -726,7 +726,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setClob(parameterName, reader);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -737,7 +737,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setBlob(parameterName, inputStream);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -748,7 +748,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             ((CallableStatement)getDelegate()).setNClob(parameterName, reader);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -760,7 +760,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getObject(parameterIndex, type);
 }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }
@@ -773,7 +773,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement
         try {
             return ((CallableStatement)getDelegate()).getObject(parameterName, type);
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             handleException(e);
             return null;
         }

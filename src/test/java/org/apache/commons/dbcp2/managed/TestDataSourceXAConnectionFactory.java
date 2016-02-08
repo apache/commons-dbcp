@@ -52,8 +52,8 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
         bmds = new BasicManagedDataSource();
         bmds.setTransactionManager(new TransactionManagerImpl());
         bmds.setXADataSource("notnull");
-        XADataSourceHandle handle = new XADataSourceHandle();
-        XADataSource xads = (XADataSource) Proxy.newProxyInstance(
+        final XADataSourceHandle handle = new XADataSourceHandle();
+        final XADataSource xads = (XADataSource) Proxy.newProxyInstance(
                 XADataSourceHandle.class.getClassLoader(),
                 new Class[] { XADataSource.class }, handle);
         bmds.setXaDataSourceInstance(xads);
@@ -68,7 +68,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
-            String methodName = method.getName();
+            final String methodName = method.getName();
             if (methodName.equals("hashCode")) {
                 return Integer.valueOf(System.identityHashCode(proxy));
             }
@@ -81,7 +81,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
             }
             try {
                 return method.invoke(ds, args);
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 throw e.getTargetException();
             }
         }
@@ -97,8 +97,8 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
     @Test
     public void testPhysicalClose() throws Exception {
         bmds.setMaxIdle(1);
-        Connection conn1 = bmds.getConnection();
-        Connection conn2 = bmds.getConnection();
+        final Connection conn1 = bmds.getConnection();
+        final Connection conn2 = bmds.getConnection();
         closeCounter.set(0);
         conn1.close();
         assertEquals(0, closeCounter.get()); // stays idle in the pool

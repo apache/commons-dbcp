@@ -42,7 +42,7 @@ public class TestKeyedCPDSConnectionFactory {
     @Before
     public void setUp() throws Exception {
         cpds = new ConnectionPoolDataSourceProxy(new DriverAdapterCPDS());
-        DriverAdapterCPDS delegate = (DriverAdapterCPDS) cpds.getDelegate();
+        final DriverAdapterCPDS delegate = (DriverAdapterCPDS) cpds.getDelegate();
         delegate.setDriver("org.apache.commons.dbcp2.TesterDriver");
         delegate.setUrl("jdbc:apache:commons:testdriver");
         delegate.setUser("username");
@@ -58,14 +58,14 @@ public class TestKeyedCPDSConnectionFactory {
      */
     @Test
     public void testSharedPoolDSDestroyOnReturn() throws Exception {
-       SharedPoolDataSource ds = new SharedPoolDataSource();
+       final SharedPoolDataSource ds = new SharedPoolDataSource();
        ds.setConnectionPoolDataSource(cpds);
        ds.setMaxTotal(10);
        ds.setDefaultMaxWaitMillis(50);
        ds.setDefaultMaxIdle(2);
-       Connection conn1 = ds.getConnection("username", "password");
-       Connection conn2 = ds.getConnection("username", "password");
-       Connection conn3 = ds.getConnection("username", "password");
+       final Connection conn1 = ds.getConnection("username", "password");
+       final Connection conn2 = ds.getConnection("username", "password");
+       final Connection conn3 = ds.getConnection("username", "password");
        assertEquals(3, ds.getNumActive());
        conn1.close();
        assertEquals(1, ds.getNumIdle());
@@ -85,25 +85,25 @@ public class TestKeyedCPDSConnectionFactory {
     @Test
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        UserPassKey key = new UserPassKey("username", "password");
-        KeyedCPDSConnectionFactory factory =
+        final UserPassKey key = new UserPassKey("username", "password");
+        final KeyedCPDSConnectionFactory factory =
             new KeyedCPDSConnectionFactory(cpds, null, -1, false);
-        KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
+        final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
         factory.setPool(pool);
 
         // Checkout a pair of connections
-        PooledConnection pcon1 =
+        final PooledConnection pcon1 =
             pool.borrowObject(key)
                 .getPooledConnection();
-        Connection con1 = pcon1.getConnection();
-        PooledConnection pcon2 =
+        final Connection con1 = pcon1.getConnection();
+        final PooledConnection pcon2 =
             pool.borrowObject(key)
                 .getPooledConnection();
         assertEquals(2, pool.getNumActive(key));
         assertEquals(0, pool.getNumIdle(key));
 
         // Verify listening
-        PooledConnectionProxy pc = (PooledConnectionProxy) pcon1;
+        final PooledConnectionProxy pc = (PooledConnectionProxy) pcon1;
         assertTrue(pc.getListeners().contains(factory));
 
         // Throw connectionError event
@@ -120,7 +120,7 @@ public class TestKeyedCPDSConnectionFactory {
 
         // Ask for another connection - should trigger makeObject, which causes
         // cleanup, removing listeners.
-        PooledConnection pcon3 =
+        final PooledConnection pcon3 =
             pool.borrowObject(key)
                 .getPooledConnection();
         assertTrue(!pcon3.equals(pcon1)); // better not get baddie back
@@ -138,7 +138,7 @@ public class TestKeyedCPDSConnectionFactory {
         try {
            pc.getConnection();
            fail("Expecting SQLException using closed PooledConnection");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             // expected
         }
 
@@ -157,14 +157,14 @@ public class TestKeyedCPDSConnectionFactory {
      */
     @Test
     public void testNullValidationQuery() throws Exception {
-        UserPassKey key = new UserPassKey("username", "password");
-        KeyedCPDSConnectionFactory factory =
+        final UserPassKey key = new UserPassKey("username", "password");
+        final KeyedCPDSConnectionFactory factory =
                 new KeyedCPDSConnectionFactory(cpds, null, -1, false);
-        GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
+        final GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
         factory.setPool(pool);
         pool.setTestOnBorrow(true);
-        PooledConnection pcon = pool.borrowObject(key).getPooledConnection();
-        Connection con = pcon.getConnection();
+        final PooledConnection pcon = pool.borrowObject(key).getPooledConnection();
+        final Connection con = pcon.getConnection();
         con.close();
     }
 }

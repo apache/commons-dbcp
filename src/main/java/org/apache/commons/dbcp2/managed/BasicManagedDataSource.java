@@ -135,8 +135,8 @@ public class BasicManagedDataSource extends BasicDataSource {
 
         // If xa data source is not specified a DriverConnectionFactory is created and wrapped with a LocalXAConnectionFactory
         if (xaDataSource == null) {
-            ConnectionFactory connectionFactory = super.createConnectionFactory();
-            XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(getTransactionManager(), connectionFactory);
+            final ConnectionFactory connectionFactory = super.createConnectionFactory();
+            final XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(getTransactionManager(), connectionFactory);
             transactionRegistry = xaConnectionFactory.getTransactionRegistry();
             return xaConnectionFactory;
         }
@@ -146,28 +146,28 @@ public class BasicManagedDataSource extends BasicDataSource {
             Class<?> xaDataSourceClass = null;
             try {
                 xaDataSourceClass = Class.forName(xaDataSource);
-            } catch (Exception t) {
-                String message = "Cannot load XA data source class '" + xaDataSource + "'";
+            } catch (final Exception t) {
+                final String message = "Cannot load XA data source class '" + xaDataSource + "'";
                 throw new SQLException(message, t);
             }
 
             try {
                 xaDataSourceInstance = (XADataSource) xaDataSourceClass.newInstance();
-            } catch (Exception t) {
-                String message = "Cannot create XA data source of class '" + xaDataSource + "'";
+            } catch (final Exception t) {
+                final String message = "Cannot create XA data source of class '" + xaDataSource + "'";
                 throw new SQLException(message, t);
             }
         }
 
         // finally, create the XAConectionFactory using the XA data source
-        XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSourceInstance, getUsername(), getPassword());
+        final XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(), xaDataSourceInstance, getUsername(), getPassword());
         transactionRegistry = xaConnectionFactory.getTransactionRegistry();
         return xaConnectionFactory;
     }
 
     @Override
     protected DataSource createDataSourceInstance() throws SQLException {
-        PoolingDataSource<PoolableConnection> pds =
+        final PoolingDataSource<PoolableConnection> pds =
                 new ManagedDataSource<>(getConnectionPool(), transactionRegistry);
         pds.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         return pds;
@@ -204,9 +204,9 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setFastFailValidation(getFastFailValidation());
             connectionFactory.setDisconnectionSqlCodes(getDisconnectionSqlCodes());
             validateConnectionFactory(connectionFactory);
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
         return connectionFactory;

@@ -142,7 +142,7 @@ class CPDSConnectionFactory
             pc.addConnectionEventListener(this);
             pci = new PooledConnectionAndInfo(pc, _username, _password);
             pcMap.put(pc, pci);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
         return new DefaultPooledObject<>(pci);
@@ -157,7 +157,7 @@ class CPDSConnectionFactory
     }
 
     private void doDestroyObject(PooledConnectionAndInfo pci) throws Exception{
-        PooledConnection pc = pci.getPooledConnection();
+        final PooledConnection pc = pci.getPooledConnection();
         pc.removeConnectionEventListener(this);
         pcMap.remove(pc);
         pc.close();
@@ -167,11 +167,11 @@ class CPDSConnectionFactory
     public boolean validateObject(PooledObject<PooledConnectionAndInfo> p) {
         try {
             validateLifetime(p);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
         boolean valid = false;
-        PooledConnection pconn = p.getObject().getPooledConnection();
+        final PooledConnection pconn = p.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == _validationQuery) {
@@ -182,7 +182,7 @@ class CPDSConnectionFactory
             try {
                 conn = pconn.getConnection();
                 valid = conn.isValid(timeout);
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 valid = false;
             } finally {
                 Utils.closeQuietly(conn);
@@ -208,7 +208,7 @@ class CPDSConnectionFactory
                 if (_rollbackAfterValidation) {
                     conn.rollback();
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 valid = false;
             } finally {
                 Utils.closeQuietly(rset);
@@ -244,24 +244,24 @@ class CPDSConnectionFactory
      */
     @Override
     public void connectionClosed(ConnectionEvent event) {
-        PooledConnection pc = (PooledConnection) event.getSource();
+        final PooledConnection pc = (PooledConnection) event.getSource();
         // if this event occurred because we were validating, ignore it
         // otherwise return the connection to the pool.
         if (!validatingSet.contains(pc)) {
-            PooledConnectionAndInfo pci = pcMap.get(pc);
+            final PooledConnectionAndInfo pci = pcMap.get(pc);
             if (pci == null) {
                 throw new IllegalStateException(NO_KEY_MESSAGE);
             }
 
             try {
                 _pool.returnObject(pci);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD "
                         + "NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
                     doDestroyObject(pci);
-                } catch (Exception e2) {
+                } catch (final Exception e2) {
                     System.err.println("EXCEPTION WHILE DESTROYING OBJECT "
                             + pci);
                     e2.printStackTrace();
@@ -276,7 +276,7 @@ class CPDSConnectionFactory
      */
     @Override
     public void connectionErrorOccurred(ConnectionEvent event) {
-        PooledConnection pc = (PooledConnection)event.getSource();
+        final PooledConnection pc = (PooledConnection)event.getSource();
         if (null != event.getSQLException()) {
             System.err.println(
                     "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR ("
@@ -284,13 +284,13 @@ class CPDSConnectionFactory
         }
         pc.removeConnectionEventListener(this);
 
-        PooledConnectionAndInfo pci = pcMap.get(pc);
+        final PooledConnectionAndInfo pci = pcMap.get(pc);
         if (pci == null) {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
             _pool.invalidateObject(pci);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + pci);
             e.printStackTrace();
         }
@@ -308,14 +308,14 @@ class CPDSConnectionFactory
      */
     @Override
     public void invalidate(PooledConnection pc) throws SQLException {
-        PooledConnectionAndInfo pci = pcMap.get(pc);
+        final PooledConnectionAndInfo pci = pcMap.get(pc);
         if (pci == null) {
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
             _pool.invalidateObject(pci);  // Destroy instance and update pool counters
             _pool.close();  // Clear any other instances in this pool and kill others as they come back
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new SQLException("Error invalidating connection", ex);
         }
     }
@@ -354,7 +354,7 @@ class CPDSConnectionFactory
         }
         try {
             _pool.close();
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new SQLException("Error closing connection pool", ex);
         }
     }
@@ -362,7 +362,7 @@ class CPDSConnectionFactory
     private void validateLifetime(PooledObject<PooledConnectionAndInfo> p)
             throws Exception {
         if (maxConnLifetimeMillis > 0) {
-            long lifetime = System.currentTimeMillis() - p.getCreateTime();
+            final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
                 throw new Exception(Utils.getMessage(
                         "connectionFactory.lifetimeExceeded",

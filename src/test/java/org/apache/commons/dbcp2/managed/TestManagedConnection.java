@@ -64,16 +64,16 @@ public class TestManagedConnection {
         transactionManager = new TransactionManagerImpl();
 
         // create a driver connection factory
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty("user", "username");
         properties.setProperty("password", "password");
-        ConnectionFactory connectionFactory = new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties);
+        final ConnectionFactory connectionFactory = new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties);
 
         // wrap it with a LocalXAConnectionFactory
-        XAConnectionFactory xaConnectionFactory = new UncooperativeLocalXAConnectionFactory(transactionManager, connectionFactory);
+        final XAConnectionFactory xaConnectionFactory = new UncooperativeLocalXAConnectionFactory(transactionManager, connectionFactory);
 
         // create the pool object factory
-        PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
         factory.setDefaultReadOnly(Boolean.TRUE);
         factory.setDefaultAutoCommit(Boolean.TRUE);
@@ -107,9 +107,9 @@ public class TestManagedConnection {
 
         transactionManager.begin();
         try {
-            DelegatingConnection<?> connectionA = (DelegatingConnection<?>) getConnection();
+            final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) getConnection();
             connectionA.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
         transactionManager.commit();
@@ -127,10 +127,10 @@ public class TestManagedConnection {
 
             try {
                 // inject our own TransactionRegistry which returns Uncooperative Transactions which always fail to enlist a XAResource
-                Field field = LocalXAConnectionFactory.class.getDeclaredField("transactionRegistry");
+                final Field field = LocalXAConnectionFactory.class.getDeclaredField("transactionRegistry");
                 field.setAccessible(true);
                 field.set(this, new UncooperativeTransactionRegistry(transactionManager));
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -148,7 +148,7 @@ public class TestManagedConnection {
             throws SQLException {
             try {
                 return new TransactionContext(this, new UncooperativeTransaction(transactionManager.getTransaction()));
-            } catch (SystemException e) {
+            } catch (final SystemException e) {
                 return null;
             }
         }

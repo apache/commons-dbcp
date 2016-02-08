@@ -90,16 +90,16 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // in the transaction, replace our delegate with the enrolled connection
 
             // return current connection to the pool
-            C connection = getDelegateInternal();
+            final C connection = getDelegateInternal();
             setDelegate(null);
             if (connection != null) {
                 try {
                     pool.returnObject(connection);
-                } catch (Exception ignored) {
+                } catch (final Exception ignored) {
                     // whatever... try to invalidate the connection
                     try {
                         pool.invalidateObject(connection);
-                    } catch (Exception ignore) {
+                    } catch (final Exception ignore) {
                         // no big deal
                     }
                 }
@@ -112,6 +112,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // always be of type C since it has been shared by another
             // connection from the same pool.
             @SuppressWarnings("unchecked")
+            final
             C shared = (C) transactionContext.getSharedConnection();
             setDelegate(shared);
 
@@ -126,7 +127,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                     // borrow a new connection from the pool
                     connection = pool.borrowObject();
                     setDelegate(connection);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new SQLException("Unable to acquire a new connection from the pool", e);
                 }
             }
@@ -139,12 +140,12 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                 // register our connection as the shared connection
                 try {
                     transactionContext.setSharedConnection(connection);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     // transaction is hosed
                     transactionContext = null;
                     try {
                         pool.invalidateObject(connection);
-                    } catch (Exception e1) {
+                    } catch (final Exception e1) {
                         // we are try but no luck
                     }
                     throw e;
@@ -197,7 +198,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
         // If this connection was closed during the transaction and there is
         // still a delegate present close it
-        Connection delegate = getDelegateInternal();
+        final Connection delegate = getDelegateInternal();
         if (isClosedInternal() && delegate != null) {
             try {
                 setDelegate(null);
@@ -205,7 +206,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                 if (!delegate.isClosed()) {
                     delegate.close();
                 }
-            } catch (SQLException ignored) {
+            } catch (final SQLException ignored) {
                 // Not a whole lot we can do here as connection is closed
                 // and this is a transaction callback so there is no
                 // way to report the error.

@@ -65,7 +65,7 @@ public class TestDriverAdapterCPDS {
             // Use bad password
             pcds.getPooledConnection("u1", "zlsafjk");
             fail("Able to retrieve connection with incorrect password");
-        } catch (SQLException e1) {
+        } catch (final SQLException e1) {
             // should fail
 
         }
@@ -76,7 +76,7 @@ public class TestDriverAdapterCPDS {
             pcds.getPooledConnection("u1", "x");
             fail("Able to retrieve connection with incorrect password");
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             if (!e.getMessage().startsWith("x is not the correct password")) {
                 throw e;
             }
@@ -89,11 +89,11 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testSimple() throws Exception {
-        Connection conn = pcds.getPooledConnection().getConnection();
+        final Connection conn = pcds.getPooledConnection().getConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -103,11 +103,11 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testSimpleWithUsername() throws Exception {
-        Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
+        final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -118,7 +118,7 @@ public class TestDriverAdapterCPDS {
     @Test
     public void testClosingWithUserName()
         throws Exception {
-        Connection[] c = new Connection[10];
+        final Connection[] c = new Connection[10];
         for (int i=0; i<c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
@@ -129,7 +129,7 @@ public class TestDriverAdapterCPDS {
         // get a new connection
         c[0] = pcds.getPooledConnection("u1", "p1").getConnection();
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
 
@@ -137,7 +137,7 @@ public class TestDriverAdapterCPDS {
         for (int i=0; i<c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -148,7 +148,7 @@ public class TestDriverAdapterCPDS {
         pcds.setUser("bad");
         // Supply correct value in connection properties
         // This will overwrite field value
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.put("user", "foo");
         pcds.setConnectionProperties(properties);
         pcds.getPooledConnection().close();
@@ -179,13 +179,13 @@ public class TestDriverAdapterCPDS {
     // https://issues.apache.org/jira/browse/DBCP-376
     @Test
     public void testDbcp367() throws Exception {
-        ThreadDbcp367[] threads = new ThreadDbcp367[200];
+        final ThreadDbcp367[] threads = new ThreadDbcp367[200];
 
         pcds.setPoolPreparedStatements(true);
         pcds.setMaxPreparedStatements(-1);
         pcds.setAccessToUnderlyingConnectionAllowed(true);
 
-        SharedPoolDataSource spds = new SharedPoolDataSource();
+        final SharedPoolDataSource spds = new SharedPoolDataSource();
         spds.setConnectionPoolDataSource(pcds);
         spds.setMaxTotal(threads.length + 10);
         spds.setDefaultMaxWaitMillis(-1);
@@ -228,7 +228,7 @@ public class TestDriverAdapterCPDS {
                     c = ds.getConnection();
                     c.close();
                 }
-            } catch (SQLException sqle) {
+            } catch (final SQLException sqle) {
                 failed = true;
                 sqle.printStackTrace();
             }

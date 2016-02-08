@@ -83,8 +83,8 @@ public class TransactionRegistry {
         if (connection == null) {
             throw new NullPointerException("connection is null");
         }
-        Connection key = getConnectionKey(connection);
-        XAResource xaResource = xaResources.get(key);
+        final Connection key = getConnectionKey(connection);
+        final XAResource xaResource = xaResources.get(key);
         if (xaResource == null) {
             throw new SQLException("Connection does not have a registered XAResource " + connection);
         }
@@ -107,11 +107,11 @@ public class TransactionRegistry {
             }
 
             // is it active
-            int status = transaction.getStatus();
+            final int status = transaction.getStatus();
             if (status != Status.STATUS_ACTIVE && status != Status.STATUS_MARKED_ROLLBACK) {
                 return null;
             }
-        } catch (SystemException e) {
+        } catch (final SystemException e) {
             throw new SQLException("Unable to determine current transaction ", e);
         }
 
@@ -131,7 +131,7 @@ public class TransactionRegistry {
      * @param connection
      */
     public synchronized void unregisterConnection(Connection connection) {
-        Connection key = getConnectionKey(connection);
+        final Connection key = getConnectionKey(connection);
         xaResources.remove(key);
     }
 

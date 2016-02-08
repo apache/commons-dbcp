@@ -273,7 +273,7 @@ public class TesterResultSet implements ResultSet {
         checkOpen();
         try {
             return columnName.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // Impossible. JVMs are required to support UTF-8
             return null;
         }

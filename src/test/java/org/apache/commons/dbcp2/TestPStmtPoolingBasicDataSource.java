@@ -51,13 +51,13 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
     @Test
     public void testPreparedStatementPooling() throws Exception {
-        Connection conn = getConnection();
+        final Connection conn = getConnection();
         assertNotNull(conn);
 
-        PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt1);
 
-        PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        final PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
         assertNotNull(stmt2);
 
         assertTrue(stmt1 != stmt2);
@@ -67,7 +67,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
             fail("expected SQLException");
         }
-        catch (SQLException e) {}
+        catch (final SQLException e) {}
 
         // make idle
         stmt2.close();
@@ -80,7 +80,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         // normal reuse of statement
         stmt1.close();
-        PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
         assertNotNull(stmt4);
     }
 
@@ -93,16 +93,16 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     public void testLRUBehavior() throws Exception {
         ds.setMaxOpenPreparedStatements(3);
 
-        Connection conn = getConnection();
+        final Connection conn = getConnection();
         assertNotNull(conn);
 
         // Open 3 statements and then close them into the pool
-        PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
-        PreparedStatement inner1 = (PreparedStatement) ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
-        PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
-        PreparedStatement inner2 = (PreparedStatement) ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
-        PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
-        PreparedStatement inner3 = (PreparedStatement) ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
+        final PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        final PreparedStatement inner1 = (PreparedStatement) ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        final PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        final PreparedStatement inner2 = (PreparedStatement) ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        final PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
+        final PreparedStatement inner3 = (PreparedStatement) ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
         stmt1.close();
         Thread.sleep(100); // Make sure return timestamps are different
         stmt2.close();
@@ -110,14 +110,14 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         stmt3.close();
 
         // Pool now has three idle statements, getting another one will force oldest (stmt1) out
-        PreparedStatement stmt4 = conn.prepareStatement("select 'd' from dual");
+        final PreparedStatement stmt4 = conn.prepareStatement("select 'd' from dual");
         assertNotNull(stmt4);
 
         // Verify that inner1 has been closed
         try {
             inner1.clearParameters();
             fail("expecting SQLExcption - statement should be closed");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             //Expected
         }
         // But others are still open
@@ -125,15 +125,15 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         inner3.clearParameters();
 
         // Now make sure stmt1 does not come back from the dead
-        PreparedStatement stmt5 = conn.prepareStatement("select 'a' from dual");
-        PreparedStatement inner5 = (PreparedStatement) ((DelegatingPreparedStatement) stmt5).getInnermostDelegate();
+        final PreparedStatement stmt5 = conn.prepareStatement("select 'a' from dual");
+        final PreparedStatement inner5 = (PreparedStatement) ((DelegatingPreparedStatement) stmt5).getInnermostDelegate();
         assertNotSame(inner5, inner1);
 
         // inner2 should be closed now
         try {
             inner2.clearParameters();
             fail("expecting SQLExcption - statement should be closed");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             //Expected
         }
         // But inner3 should still be open
@@ -144,22 +144,22 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     // PreparedStatement cache should be different depending on the Catalog
     @Test
     public void testPStmtCatalog() throws Exception {
-        Connection conn = getConnection();
+        final Connection conn = getConnection();
         conn.setCatalog("catalog1");
-        DelegatingPreparedStatement stmt1 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
-        TesterPreparedStatement inner1 = (TesterPreparedStatement) stmt1.getInnermostDelegate();
+        final DelegatingPreparedStatement stmt1 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        final TesterPreparedStatement inner1 = (TesterPreparedStatement) stmt1.getInnermostDelegate();
         assertEquals("catalog1", inner1.getCatalog());
         stmt1.close();
 
         conn.setCatalog("catalog2");
-        DelegatingPreparedStatement stmt2 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
-        TesterPreparedStatement inner2 = (TesterPreparedStatement) stmt2.getInnermostDelegate();
+        final DelegatingPreparedStatement stmt2 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        final TesterPreparedStatement inner2 = (TesterPreparedStatement) stmt2.getInnermostDelegate();
         assertEquals("catalog2", inner2.getCatalog());
         stmt2.close();
 
         conn.setCatalog("catalog1");
-        DelegatingPreparedStatement stmt3 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
-        TesterPreparedStatement inner3 = (TesterPreparedStatement) stmt3.getInnermostDelegate();
+        final DelegatingPreparedStatement stmt3 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
+        final TesterPreparedStatement inner3 = (TesterPreparedStatement) stmt3.getInnermostDelegate();
         assertEquals("catalog1", inner3.getCatalog());
         stmt3.close();
 
@@ -172,28 +172,28 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        Connection conn1 = getConnection();
+        final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
-        PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
         assertNotNull(stmt1);
 
-        Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
         assertNotNull(inner1);
 
         stmt1.close();
 
-        Connection conn2 = conn1;
+        final Connection conn2 = conn1;
         assertNotNull(conn2);
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
-        PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
         assertNotNull(stmt2);
 
-        Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
         assertNotNull(inner2);
 
         assertSame(inner1, inner2);
@@ -204,15 +204,15 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        Connection conn1 = getConnection();
+        final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
-        PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
         assertNotNull(stmt1);
 
-        Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
         assertNotNull(inner1);
 
         stmt1.close();
@@ -221,15 +221,15 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertEquals(0, ds.getNumActive());
         assertEquals(1, ds.getNumIdle());
 
-        Connection conn2 = getConnection();
+        final Connection conn2 = getConnection();
         assertNotNull(conn2);
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
-        PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
         assertNotNull(stmt2);
 
-        Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
         assertNotNull(inner2);
 
         assertSame(inner1, inner2);

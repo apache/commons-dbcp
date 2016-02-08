@@ -48,7 +48,7 @@ public class TesterDriver implements Driver {
     static {
         try {
             DriverManager.registerDriver(new TesterDriver());
-        } catch(Exception e) {
+        } catch(final Exception e) {
         }
         validUserPasswords.put("foo", "bar");
         validUserPasswords.put("u1", "p1");
@@ -76,7 +76,7 @@ public class TesterDriver implements Driver {
             throw new SQLException("username cannot be null.");            
         }
         synchronized (validUserPasswords) {
-            String realPassword = validUserPasswords.getProperty(user);
+            final String realPassword = validUserPasswords.getProperty(user);
             if (realPassword == null) {
                 throw new SQLException(user + " is not a valid username.");
             }
@@ -100,7 +100,7 @@ public class TesterDriver implements Driver {
                 username = info.getProperty("user");
                 password = info.getProperty("password");
                 if (username == null) {
-                    String[] parts = url.split(";");
+                    final String[] parts = url.split(";");
                     username = parts[1];
                     username = username.split("=")[1];
                     password = parts[2];

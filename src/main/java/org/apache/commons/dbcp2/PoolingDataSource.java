@@ -57,13 +57,14 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         _pool = pool;
         // Verify that _pool's factory refers back to it.  If not, log a warning and try to fix.
         if (_pool instanceof GenericObjectPool<?>) {
-            PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) _pool).getFactory();
+            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) _pool).getFactory();
             if (pcf == null) {
                 throw new NullPointerException("PoolableConnectionFactory must not be null.");
             }
             if (pcf.getPool() != _pool) {
                 log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
                 @SuppressWarnings("unchecked") // PCF must have a pool of PCs
+                final
                 ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) _pool;
                 pcf.setPool(p);
             }
@@ -78,9 +79,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     public void close() throws Exception {
         try {
             _pool.close();
-        } catch(RuntimeException rte) {
+        } catch(final RuntimeException rte) {
             throw new RuntimeException(Utils.getMessage("pool.close.fail"), rte);
-        } catch(Exception e) {
+        } catch(final Exception e) {
             throw new SQLException(Utils.getMessage("pool.close.fail"), e);
         }
     }
@@ -131,18 +132,18 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     @Override
     public Connection getConnection() throws SQLException {
         try {
-            C conn = _pool.borrowObject();
+            final C conn = _pool.borrowObject();
             if (conn == null) {
                 return null;
             }
             return new PoolGuardConnectionWrapper<>(conn);
-        } catch(SQLException e) {
+        } catch(final SQLException e) {
             throw e;
-        } catch(NoSuchElementException e) {
+        } catch(final NoSuchElementException e) {
             throw new SQLException("Cannot get a connection, pool error " + e.getMessage(), e);
-        } catch(RuntimeException e) {
+        } catch(final RuntimeException e) {
             throw e;
-        } catch(Exception e) {
+        } catch(final Exception e) {
             throw new SQLException("Cannot get a connection, general error", e);
         }
     }

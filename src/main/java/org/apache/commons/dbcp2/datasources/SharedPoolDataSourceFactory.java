@@ -38,8 +38,8 @@ public class SharedPoolDataSourceFactory
 
     @Override
     protected InstanceKeyDataSource getNewInstance(Reference ref) {
-        SharedPoolDataSource spds = new SharedPoolDataSource();
-        RefAddr ra = ref.get("maxTotal");
+        final SharedPoolDataSource spds = new SharedPoolDataSource();
+        final RefAddr ra = ref.get("maxTotal");
         if (ra != null && ra.getContent() != null) {
             spds.setMaxTotal(
                 Integer.parseInt(ra.getContent().toString()));

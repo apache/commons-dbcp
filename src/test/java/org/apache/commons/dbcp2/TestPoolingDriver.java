@@ -58,16 +58,16 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Before
     public void setUp() throws Exception {
-        DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
+        final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
-        PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
+        final PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
         pcf.setPoolStatements(true);
         pcf.setMaxOpenPrepatedStatements(10);
         pcf.setValidationQuery("SELECT COUNT(*) FROM DUAL");
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
 
-        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxTotal(getMaxTotal());
         poolConfig.setMaxWaitMillis(getMaxWaitMillis());
         poolConfig.setMinIdle(10);
@@ -78,7 +78,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         poolConfig.setNumTestsPerEvictionRun(5);
         poolConfig.setMinEvictableIdleTimeMillis(5000L);
 
-        GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(pcf, poolConfig);
+        final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(pcf, poolConfig);
         pcf.setPool(pool);
 
         assertNotNull(pcf);
@@ -95,39 +95,39 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void test1() {
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory pcf =
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        final PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
-        GenericObjectPool<PoolableConnection> connectionPool =
+        final GenericObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(pcf);
         pcf.setPool(connectionPool);
-        DataSource ds = new PoolingDataSource<>(connectionPool);
+        final DataSource ds = new PoolingDataSource<>(connectionPool);
         Assert.assertNotNull(ds);
     }
 
     @Test
     public void test2() {
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
-        PoolableConnectionFactory pcf =
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        final PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
-        GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
-        PoolingDriver driver2 = new PoolingDriver();
+        final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
+        final PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example",connectionPool);
     }
 
     /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
     @Test
     public void testReportedBug28912() throws Exception {
-        Connection conn1 = getConnection();
+        final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertFalse(conn1.isClosed());
         conn1.close();
 
-        Connection conn2 = getConnection();
+        final Connection conn2 = getConnection();
         assertNotNull(conn2);
 
         assertTrue(conn1.isClosed());
@@ -143,25 +143,25 @@ public class TestPoolingDriver extends TestConnectionPool {
     /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testReportedBug12400() throws Exception {
-        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(70);
         config.setMaxWaitMillis(60000);
         config.setMaxIdle(10);
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver",
             "username",
             "password");
-        PoolableConnectionFactory poolableConnectionFactory =
+        final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
         poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
-        ObjectPool<PoolableConnection> connectionPool =
+        final ObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(poolableConnectionFactory,config);
         poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
-        PoolingDriver driver2 = new PoolingDriver();
+        final PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("neusoftim",connectionPool);
-        Connection[] conn = new Connection[25];
+        final Connection[] conn = new Connection[25];
         for(int i=0;i<25;i++) {
             conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
             for(int j=0;j<i;j++) {
@@ -176,31 +176,31 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void testClosePool() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        final Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
         conn.close();
 
-        PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        final PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
         driver2.closePool("test");
 
         try (Connection c = DriverManager.getConnection("jdbc:apache:commons:dbcp:test")) {
             fail("expected SQLException");
         }
-        catch (SQLException e) {
+        catch (final SQLException e) {
             // OK
         }
     }
 
     @Test
     public void testInvalidateConnection() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        final Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
 
-        ObjectPool<?> pool = driver.getConnectionPool("test");
+        final ObjectPool<?> pool = driver.getConnectionPool("test");
         assertEquals(1, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
 
-        PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+        final PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
         driver2.invalidateConnection(conn);
 
         assertEquals(0, pool.getNumActive());
@@ -210,8 +210,8 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void testLogWriter() throws Exception {
-        PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, "UTF-8");
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), "UTF-8"));
+        final PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, "UTF-8");
+        final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), "UTF-8"));
         System.setErr(new PrintStream(new ByteArrayOutputStream(), false, "UTF-8"));
         SQLException ex;
 

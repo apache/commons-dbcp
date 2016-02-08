@@ -40,7 +40,7 @@ public class TestPoolableConnection {
 
     @Before
     public void setUp() throws Exception {
-        PoolableConnectionFactory factory = new PoolableConnectionFactory(
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(
                 new DriverConnectionFactory(
                         new TesterDriver(),"jdbc:apache:commons:testdriver", null),
                 null);
@@ -60,7 +60,7 @@ public class TestPoolableConnection {
     @Test
     public void testConnectionPool() throws Exception {
         // Grab a new connection from the pool
-        Connection c = pool.borrowObject();
+        final Connection c = pool.borrowObject();
 
         assertNotNull("Connection should be created and should not be null", c);
         assertEquals("There should be exactly one active object in the pool", 1, pool.getNumActive());
@@ -76,7 +76,7 @@ public class TestPoolableConnection {
     @Test
     public void testPoolableConnectionLeak() throws Exception {
         // 'Borrow' a connection from the pool
-        Connection conn = pool.borrowObject();
+        final Connection conn = pool.borrowObject();
 
         // Now close our innermost delegate, simulating the case where the
         // underlying connection closes itself
@@ -89,7 +89,7 @@ public class TestPoolableConnection {
 
         try {
             conn.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // Here we expect 'connection already closed', but the connection
             // should *NOT* be returned to the pool
         }
@@ -102,8 +102,8 @@ public class TestPoolableConnection {
     public void testClosingWrappedInDelegate() throws Exception {
         Assert.assertEquals(0, pool.getNumActive());
 
-        Connection conn = pool.borrowObject();
-        DelegatingConnection<Connection> outer = new DelegatingConnection<>(conn);
+        final Connection conn = pool.borrowObject();
+        final DelegatingConnection<Connection> outer = new DelegatingConnection<>(conn);
 
         Assert.assertFalse(outer.isClosed());
         Assert.assertFalse(conn.isClosed());
@@ -120,17 +120,17 @@ public class TestPoolableConnection {
     @Test
     public void testFastFailValidation() throws Exception {
         pool.setTestOnReturn(true);
-        PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
-        PoolableConnection conn = pool.borrowObject();
-        TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+        final PoolableConnection conn = pool.borrowObject();
+        final TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
 
         // Set up non-fatal exception
         nativeConnection.setFailure(new SQLException("Not fatal error.", "Invalid syntax."));
         try {
             conn.createStatement();
             fail("Should throw SQL exception.");
-        } catch (SQLException ignored) {
+        } catch (final SQLException ignored) {
             // cleanup failure
             nativeConnection.setFailure(null);
         }
@@ -144,7 +144,7 @@ public class TestPoolableConnection {
         try {
             conn.createStatement();
             fail("Should throw SQL exception.");
-        } catch (SQLException ignored) {
+        } catch (final SQLException ignored) {
             // cleanup failure
             nativeConnection.setFailure(null);
         }
@@ -153,7 +153,7 @@ public class TestPoolableConnection {
         try {
             conn.validate("SELECT 1", 1000);
             fail("Should throw SQL exception on validation.");
-        } catch (SQLException notValid){
+        } catch (final SQLException notValid){
             // expected - fatal error && fastFailValidation
         }
 
@@ -168,13 +168,13 @@ public class TestPoolableConnection {
     @Test
     public void testFastFailValidationCustomCodes() throws Exception {
         pool.setTestOnReturn(true);
-        PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
-        ArrayList<String> disconnectionSqlCodes = new ArrayList<>();
+        final ArrayList<String> disconnectionSqlCodes = new ArrayList<>();
         disconnectionSqlCodes.add("XXX");
         factory.setDisconnectionSqlCodes(disconnectionSqlCodes);
-        PoolableConnection conn = pool.borrowObject();
-        TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+        final PoolableConnection conn = pool.borrowObject();
+        final TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
 
         // Set up fatal exception
         nativeConnection.setFailure(new SQLException("Fatal connection error.", "XXX"));
@@ -182,7 +182,7 @@ public class TestPoolableConnection {
         try {
             conn.createStatement();
             fail("Should throw SQL exception.");
-        } catch (SQLException ignored) {
+        } catch (final SQLException ignored) {
             // cleanup failure
             nativeConnection.setFailure(null);
         }

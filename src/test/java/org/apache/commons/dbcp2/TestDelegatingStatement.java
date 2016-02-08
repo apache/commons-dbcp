@@ -68,19 +68,19 @@ public class TestDelegatingStatement {
         try {
             stmt.checkOpen();
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             // expected
         }
     }
 
     @Test
     public void testIsWrapperFor() throws Exception {
-        TesterConnection tstConn = new TesterConnection("test", "test");
-        TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
-        DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
-        DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
+        final TesterConnection tstConn = new TesterConnection("test", "test");
+        final TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
+        final DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
+        final DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
 
-        Class<?> stmtProxyClass = Proxy.getProxyClass(
+        final Class<?> stmtProxyClass = Proxy.getProxyClass(
                 this.getClass().getClassLoader(),
                 Statement.class);
 

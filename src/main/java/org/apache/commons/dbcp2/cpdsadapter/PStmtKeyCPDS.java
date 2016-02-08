@@ -85,7 +85,7 @@ public class PStmtKeyCPDS extends PStmtKey {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        PStmtKeyCPDS other = (PStmtKeyCPDS) obj;
+        final PStmtKeyCPDS other = (PStmtKeyCPDS) obj;
         if (!Arrays.equals(_columnIndexes, other._columnIndexes)) {
             return false;
         }
@@ -116,7 +116,7 @@ public class PStmtKeyCPDS extends PStmtKey {
 
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         buf.append("PStmtKey: sql=");
         buf.append(getSql());
         buf.append(", catalog=");

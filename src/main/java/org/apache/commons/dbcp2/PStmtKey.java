@@ -118,7 +118,7 @@ public class PStmtKey {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        PStmtKey other = (PStmtKey) obj;
+        final PStmtKey other = (PStmtKey) obj;
         if (_catalog == null) {
             if (other._catalog != null) {
                 return false;
@@ -175,7 +175,7 @@ public class PStmtKey {
 
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         buf.append("PStmtKey: sql=");
         buf.append(_sql);
         buf.append(", catalog=");

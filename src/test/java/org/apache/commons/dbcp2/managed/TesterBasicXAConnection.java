@@ -62,7 +62,7 @@ public class TesterBasicXAConnection implements XAConnection {
     @Override
     public Connection getConnection() throws SQLException {
         if (conn == null) {
-            SQLException e = new SQLException("XAConnection closed");
+            final SQLException e = new SQLException("XAConnection closed");
             notifyConnectionErrorOccurred(e);
             throw e;
         }
@@ -72,12 +72,12 @@ public class TesterBasicXAConnection implements XAConnection {
                 closeHandle();
                 conn.clearWarnings();
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             notifyConnectionErrorOccurred(e);
             throw e;
         }
         handle = new ConnectionHandle(conn, this);
-        Connection proxy = (Connection) Proxy.newProxyInstance(
+        final Connection proxy = (Connection) Proxy.newProxyInstance(
                 getClass().getClassLoader(), new Class[] { Connection.class },
                 handle);
         return proxy;
@@ -88,7 +88,7 @@ public class TesterBasicXAConnection implements XAConnection {
         if (!conn.getAutoCommit()) {
             try {
                 conn.rollback();
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -138,19 +138,19 @@ public class TesterBasicXAConnection implements XAConnection {
     }
 
     protected void notifyConnectionClosed() {
-        ConnectionEvent event = new ConnectionEvent(this);
-        List<ConnectionEventListener> copy = new ArrayList<>(
+        final ConnectionEvent event = new ConnectionEvent(this);
+        final List<ConnectionEventListener> copy = new ArrayList<>(
                 listeners);
-        for (ConnectionEventListener listener : copy) {
+        for (final ConnectionEventListener listener : copy) {
             listener.connectionClosed(event);
         }
     }
 
     protected void notifyConnectionErrorOccurred(SQLException e) {
-        ConnectionEvent event = new ConnectionEvent(this, e);
-        List<ConnectionEventListener> copy = new ArrayList<>(
+        final ConnectionEvent event = new ConnectionEvent(this, e);
+        final List<ConnectionEventListener> copy = new ArrayList<>(
                 listeners);
-        for (ConnectionEventListener listener : copy) {
+        for (final ConnectionEventListener listener : copy) {
             listener.connectionErrorOccurred(event);
         }
     }
@@ -173,7 +173,7 @@ public class TesterBasicXAConnection implements XAConnection {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
-            String methodName = method.getName();
+            final String methodName = method.getName();
             if (methodName.equals("hashCode")) {
                 return Integer.valueOf(System.identityHashCode(proxy));
             }
@@ -191,8 +191,8 @@ public class TesterBasicXAConnection implements XAConnection {
             }
             try {
                 return method.invoke(conn, args);
-            } catch (InvocationTargetException e) {
-                Throwable te = e.getTargetException();
+            } catch (final InvocationTargetException e) {
+                final Throwable te = e.getTargetException();
                 if (te instanceof SQLException) {
                     xaconn.notifyConnectionErrorOccurred((SQLException) te);
                 }

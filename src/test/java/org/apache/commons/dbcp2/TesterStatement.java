@@ -69,8 +69,8 @@ public class TesterStatement implements Statement {
             throw new SQLException("broken connection");
         }
         if("select username".equals(sql)) {
-            String username = ((TesterConnection) _connection).getUsername();
-            Object[][] data = {{username}};
+            final String username = ((TesterConnection) _connection).getUsername();
+            final Object[][] data = {{username}};
             return new TesterResultSet(this, data);
         } else {
             // Simulate timeout if queryTimout is set to less than 5 seconds

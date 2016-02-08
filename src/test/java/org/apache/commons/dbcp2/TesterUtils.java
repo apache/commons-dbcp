@@ -30,8 +30,8 @@ public class TesterUtils {
      */
     public static Object getField(Object target, String fieldName)
             throws Exception {
-        Class<?> clazz = target.getClass();
-        Field f = clazz.getDeclaredField(fieldName);
+        final Class<?> clazz = target.getClass();
+        final Field f = clazz.getDeclaredField(fieldName);
         f.setAccessible(true);
         return f.get(target);
     }

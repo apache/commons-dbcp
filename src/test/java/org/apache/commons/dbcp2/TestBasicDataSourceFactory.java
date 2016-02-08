@@ -43,15 +43,15 @@ public class TestBasicDataSourceFactory {
 
     @Test
     public void testNoProperties() throws Exception {
-        Properties properties = new Properties();
-        BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
+        final Properties properties = new Properties();
+        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
 
         assertNotNull(ds);
     }
 
     @Test
     public void testProperties() throws Exception {
-        BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties());
+        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties());
         checkDataSourceProperties(ds);
     }
 
@@ -69,7 +69,7 @@ public class TestBasicDataSourceFactory {
             basicDataSourceFactory.getObjectInstance(ref, null, null, null);
             final List<String> messages = StackMessageLog.getAll();
             assertEquals(2,messages.size());
-            for (String message : messages) {
+            for (final String message : messages) {
                 if (message.contains("maxWait")) {
                     assertTrue(message.contains("use maxWaitMillis"));
                 } else {
@@ -90,12 +90,12 @@ public class TestBasicDataSourceFactory {
             StackMessageLog.clear();
             final Reference ref = new Reference("javax.sql.DataSource",
                                           BasicDataSourceFactory.class.getName(), null);
-            Properties properties = getTestProperties();
-            for (Entry<Object, Object> entry : properties.entrySet()) {
+            final Properties properties = getTestProperties();
+            for (final Entry<Object, Object> entry : properties.entrySet()) {
                 ref.add(new StringRefAddr((String) entry.getKey(), (String) entry.getValue()));
             }
             final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
-            BasicDataSource ds = (BasicDataSource) basicDataSourceFactory.getObjectInstance(ref, null, null, null);
+            final BasicDataSource ds = (BasicDataSource) basicDataSourceFactory.getObjectInstance(ref, null, null, null);
             checkDataSourceProperties(ds);
             final List<String> messages = StackMessageLog.getAll();
             assertEquals(0,messages.size());
@@ -106,7 +106,7 @@ public class TestBasicDataSourceFactory {
     }
 
     private Properties getTestProperties() {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
         properties.setProperty("url", "jdbc:apache:commons:testdriver");
         properties.setProperty("maxTotal", "10");
@@ -187,7 +187,7 @@ public class TestBasicDataSourceFactory {
         assertEquals("org.apache.commons.dbcp2:name=test", ds.getJmxName());
 
         // Unregister so subsequent calls to getTestProperties can re-register
-        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.unregisterMBean(ds.getRegisteredJmxName());
     }
 }
