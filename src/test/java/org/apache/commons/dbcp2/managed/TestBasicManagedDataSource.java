@@ -34,7 +34,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
 
     @Override
     protected BasicDataSource createDataSource() throws Exception {
-        BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
+        final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
         return basicManagedDataSource;
     }
@@ -46,7 +46,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
      */
     @Test
     public void testReallyClose() throws Exception {
-        BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
+        final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
         basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
@@ -54,15 +54,15 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         basicManagedDataSource.setPassword("password");
         basicManagedDataSource.setMaxIdle(1);
         // Create two connections
-        ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+        final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
         assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
-        ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+        final ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
         conn2.close(); // Return one connection to the pool
         conn.close();  // No room at the inn - this will trigger reallyClose(), which should unregister
         try {
             basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
             fail("Expecting SQLException - XAResources orphaned");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             // expected
         }
         conn2.close();

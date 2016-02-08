@@ -78,7 +78,7 @@ public final class Utils {
         if (rset != null) {
             try {
                 rset.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // ignored
             }
         }
@@ -93,7 +93,7 @@ public final class Utils {
         if (conn != null) {
             try {
                 conn.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // ignored
             }
         }
@@ -108,7 +108,7 @@ public final class Utils {
         if (stmt != null) {
             try {
                 stmt.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // ignored
             }
         }
@@ -128,11 +128,11 @@ public final class Utils {
      * replaced by the supplied arguments.
      */
     public static String getMessage(String key, Object... args) {
-        String msg =  messages.getString(key);
+        final String msg =  messages.getString(key);
         if (args == null || args.length == 0) {
             return msg;
         }
-        MessageFormat mf = new MessageFormat(msg);
+        final MessageFormat mf = new MessageFormat(msg);
         return mf.format(args, new StringBuffer(), null).toString();
     }
 }

@@ -883,16 +883,16 @@ public abstract class InstanceKeyDataSource
         PooledConnectionAndInfo info = null;
         try {
             info = getPooledConnectionAndInfo(username, password);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             closeDueToException(info);
             throw new SQLException("Cannot borrow connection from pool", e);
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             closeDueToException(info);
             throw e;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             closeDueToException(info);
             throw e;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             closeDueToException(info);
             throw new SQLException("Cannot borrow connection from pool", e);
         }
@@ -901,12 +901,12 @@ public abstract class InstanceKeyDataSource
                 : password.equals(info.getPassword()))) {  // Password on PooledConnectionAndInfo does not match
             try { // See if password has changed by attempting connection
                 testCPDS(username, password);
-            } catch (SQLException ex) {
+            } catch (final SQLException ex) {
                 // Password has not changed, so refuse client, but return connection to the pool
                 closeDueToException(info);
                 throw new SQLException("Given password did not match password used"
                                        + " to create the PooledConnection.", ex);
-            } catch (javax.naming.NamingException ne) {
+            } catch (final javax.naming.NamingException ne) {
                 throw new SQLException(
                         "NamingException encountered connecting to database", ne);
             }
@@ -922,16 +922,16 @@ public abstract class InstanceKeyDataSource
             for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return
                 try {
                     info = getPooledConnectionAndInfo(username, password);
-                } catch (NoSuchElementException e) {
+                } catch (final NoSuchElementException e) {
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
-                } catch (RuntimeException e) {
+                } catch (final RuntimeException e) {
                     closeDueToException(info);
                     throw e;
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     closeDueToException(info);
                     throw e;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
                 }
@@ -948,15 +948,15 @@ public abstract class InstanceKeyDataSource
             }
         }
 
-        Connection con = info.getPooledConnection().getConnection();
+        final Connection con = info.getPooledConnection().getConnection();
         try {
             setupDefaults(con, username);
             con.clearWarnings();
             return con;
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             try {
                 con.close();
-            } catch (Exception exc) {
+            } catch (final Exception exc) {
                 getLogWriter().println(
                      "ignoring exception during close: " + exc);
             }
@@ -976,7 +976,7 @@ public abstract class InstanceKeyDataSource
         if (info != null) {
             try {
                 info.getPooledConnection().getConnection().close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // do not throw this exception because we are in the middle
                 // of handling another exception.  But record it because
                 // it potentially leaks connections from the pool.
@@ -998,7 +998,7 @@ public abstract class InstanceKeyDataSource
             } else {
                 ctx = new InitialContext(jndiEnvironment);
             }
-            Object ds = ctx.lookup(dataSourceName);
+            final Object ds = ctx.lookup(dataSourceName);
             if (ds instanceof ConnectionPoolDataSource) {
                 cpds = (ConnectionPoolDataSource) ds;
             } else {
@@ -1028,7 +1028,7 @@ public abstract class InstanceKeyDataSource
                 try {
                     conn.close();
                 }
-                catch (SQLException e) {
+                catch (final SQLException e) {
                     // at least we could connect
                 }
             }

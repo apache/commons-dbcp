@@ -58,7 +58,7 @@ public class TestJndi {
      */
     @Test
     public void testBasicDataSourceBind() throws Exception {
-        BasicDataSource dataSource = new BasicDataSource();
+        final BasicDataSource dataSource = new BasicDataSource();
         checkBind(dataSource);      
     }
     
@@ -69,7 +69,7 @@ public class TestJndi {
      */
     @Test
     public void testSharedPoolDataSourceBind() throws Exception {
-        SharedPoolDataSource dataSource = new SharedPoolDataSource();
+        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
         checkBind(dataSource);      
     }
     
@@ -80,7 +80,7 @@ public class TestJndi {
      */
     @Test
     public void testPerUserPoolDataSourceBind() throws Exception {
-        PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
+        final PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
         checkBind(dataSource);      
     }
     
@@ -122,8 +122,8 @@ public class TestJndi {
      * @throws Exception if the jndi lookup fails or no DataSource is bound.
      */
     protected DataSource retrieveDataSource() throws Exception {
-        Context ctx = getInitialContext();
-        DataSource dataSource = (DataSource) ctx.lookup(JNDI_PATH);
+        final Context ctx = getInitialContext();
+        final DataSource dataSource = (DataSource) ctx.lookup(JNDI_PATH);
 
         if (dataSource == null) {
             fail("DataSource should not be null");
@@ -139,10 +139,10 @@ public class TestJndi {
      *         or created.
      */
     protected InitialContext getInitialContext() throws NamingException {
-        Hashtable<String, String> environment = new Hashtable<>();
+        final Hashtable<String, String> environment = new Hashtable<>();
         environment.put(Context.INITIAL_CONTEXT_FACTORY,
                 org.apache.naming.java.javaURLContextFactory.class.getName());
-        InitialContext ctx = new InitialContext(environment);
+        final InitialContext ctx = new InitialContext(environment);
         return ctx;
     }
 }

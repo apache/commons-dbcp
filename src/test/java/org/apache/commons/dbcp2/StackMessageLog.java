@@ -76,7 +76,7 @@ public class StackMessageLog extends SimpleLog {
         lock.lock();
         try {
             ret = messageStack.pop();
-        } catch (EmptyStackException ex) {
+        } catch (final EmptyStackException ex) {
             // ignore, return null
         } finally {
             lock.unlock();
@@ -122,7 +122,7 @@ public class StackMessageLog extends SimpleLog {
     public static void unLock() {
         try {
             lock.unlock();
-        } catch (IllegalMonitorStateException ex) {
+        } catch (final IllegalMonitorStateException ex) {
             // ignore
         }
     }

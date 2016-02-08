@@ -56,14 +56,14 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Before
     public void setUp() throws Exception {
-        DriverAdapterCPDS pcds = new DriverAdapterCPDS();
+        final DriverAdapterCPDS pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         pcds.setUrl("jdbc:apache:commons:testdriver");
         pcds.setUser("foo");
         pcds.setPassword("bar");
         pcds.setAccessToUnderlyingConnectionAllowed(true);
 
-        PerUserPoolDataSource tds = new PerUserPoolDataSource();
+        final PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
         tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
@@ -85,7 +85,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // Use bad password
         try (Connection c = ds.getConnection("u1", "zlsafjk");){
             fail("Able to retrieve connection with incorrect password");
-        } catch (SQLException e1) {
+        } catch (final SQLException e1) {
             // should fail
 
         }
@@ -94,7 +94,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.getConnection("u1", "p1").close();
         try (Connection c = ds.getConnection("u1", "x")){
             fail("Able to retrieve connection with incorrect password");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (!e.getMessage().startsWith("Given password did not match")) {
                 throw e;
             }
@@ -108,11 +108,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.getConnection("foo", "bar").close();
         try (Connection c = ds.getConnection("foob", "ar")) {
             fail("Should have caused an SQLException");
-        } catch (SQLException expected) {
+        } catch (final SQLException expected) {
         }
         try (Connection c = ds.getConnection("foo", "baz")){
             fail("Should have generated SQLException");
-        } catch (SQLException expected) {
+        } catch (final SQLException expected) {
         }
     }
 
@@ -120,11 +120,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     public void testSimple() throws Exception
     {
-        Connection conn = ds.getConnection();
+        final Connection conn = ds.getConnection();
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -135,11 +135,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     public void testSimpleWithUsername() throws Exception
     {
-        Connection conn = ds.getConnection("u1", "p1");
+        final Connection conn = ds.getConnection("u1", "p1");
         assertNotNull(conn);
-        PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
+        final ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -151,7 +151,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testClosingWithUserName()
         throws Exception
     {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++)
         {
@@ -164,7 +164,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection("u1", "p1");
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
 
@@ -173,7 +173,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         {
             c[i] = ds.getConnection("u1", "p1");
         }
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -206,7 +206,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         conn.close();
         try (Statement s = conn.createStatement()){
             fail("Can't use closed connections");
-        } catch(SQLException e) {
+        } catch(final SQLException e) {
             // expected
         }
 
@@ -238,7 +238,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testOpening()
         throws Exception
     {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
         for (int i=0; i<c.length; i++)
         {
@@ -250,7 +250,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             }
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -260,7 +260,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testClosing()
         throws Exception
     {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i=0; i<c.length; i++)
         {
@@ -274,7 +274,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // get a new connection
         c[0] = ds.getConnection();
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -282,7 +282,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Override
     @Test
     public void testMaxTotal() throws Exception {
-        Connection[] c = new Connection[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection();
             assertTrue(c[i] != null);
@@ -290,12 +290,12 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         try (Connection conn = ds.getConnection()){
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch(java.sql.SQLException e) {
+        } catch(final java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }
 
-        for (Connection element : c) {
+        for (final Connection element : c) {
             element.close();
         }
     }
@@ -306,13 +306,13 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      */
     @Test
     public void testMaxWaitMillisZero() throws Exception {
-        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWaitMillis(0);
         tds.setPerUserMaxTotal("u1", Integer.valueOf(1));
-        Connection conn = tds.getConnection("u1", "p1");
+        final Connection conn = tds.getConnection("u1", "p1");
         try (Connection c2 = tds.getConnection("u1", "p1")){
             fail("Expecting Pool Exhausted exception");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             // expected
         }
         conn.close();
@@ -320,7 +320,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     public void testPerUserMethods() throws Exception {
-        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
         // you need to set per user maxTotal otherwise there is no accounting
         tds.setPerUserMaxTotal("u1", Integer.valueOf(5));
@@ -388,18 +388,18 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     public void testTransactionIsolationBehavior() throws Exception {
-        Connection conn = getConnection();
+        final Connection conn = getConnection();
         assertNotNull(conn);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn.getTransactionIsolation());
         conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
         conn.close();
 
-        Connection conn2 = getConnection();
+        final Connection conn2 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn2.getTransactionIsolation());
 
-        Connection conn3 = getConnection();
+        final Connection conn3 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED,
                      conn3.getTransactionIsolation());
         conn2.close();
@@ -409,19 +409,19 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     public void testSerialization() throws Exception {
         // make sure the pool has initialized
-        Connection conn = ds.getConnection();
+        final Connection conn = ds.getConnection();
         conn.close();
 
         // serialize
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(baos);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ObjectOutputStream out = new ObjectOutputStream(baos);
         out.writeObject(ds);
-        byte[] b = baos.toByteArray();
+        final byte[] b = baos.toByteArray();
         out.close();
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(b);
-        ObjectInputStream in = new ObjectInputStream(bais);
-        Object obj = in.readObject();
+        final ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        final ObjectInputStream in = new ObjectInputStream(bais);
+        final Object obj = in.readObject();
         in.close();
 
         assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
@@ -431,7 +431,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // unregistered user is in the same pool as without username
     @Test
     public void testUnregisteredUser() throws Exception {
-        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumIdle());
@@ -466,11 +466,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("hanafey", "password");
         TesterDriver.addUser("jsmith", "password");
 
-        PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
         puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
-        String[] users = {"mkh", "hanafey", "jsmith"};
-        String password = "password";
-        Connection[] c = new Connection[users.length];
+        final String[] users = {"mkh", "hanafey", "jsmith"};
+        final String password = "password";
+        final Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
             c[i] = puds.getConnection(users[i], password);
             assertEquals(users[i], getUsername(c[i]));
@@ -487,11 +487,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("hanafey", "password");
         TesterDriver.addUser("jsmith", "password");
 
-        PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
         puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
-        String[] users = {"jsmith", "hanafey", "mkh"};
-        String password = "password";
-        Connection[] c = new Connection[users.length];
+        final String[] users = {"jsmith", "hanafey", "mkh"};
+        final String password = "password";
+        final Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
             c[i] = puds.getConnection(users[i], password);
             assertEquals(users[i], getUsername(c[i]));
@@ -506,16 +506,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testChangePassword() throws Exception {
         try (Connection c = ds.getConnection("foo", "bay")){
             fail("Should have generated SQLException");
-        } catch (SQLException expected) {
+        } catch (final SQLException expected) {
         }
-        Connection con1 = ds.getConnection("foo", "bar");
-        Connection con2 = ds.getConnection("foo", "bar");
-        Connection con3 = ds.getConnection("foo", "bar");
+        final Connection con1 = ds.getConnection("foo", "bar");
+        final Connection con2 = ds.getConnection("foo", "bar");
+        final Connection con3 = ds.getConnection("foo", "bar");
         con1.close();
         con2.close();
         TesterDriver.addUser("foo","bay"); // change the user/password setting
         try {
-            Connection con4 = ds.getConnection("foo", "bay"); // new password
+            final Connection con4 = ds.getConnection("foo", "bay"); // new password
             // Idle instances with old password should have been cleared
             assertEquals("Should be no idle connections in the pool",
                     0, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
@@ -525,9 +525,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
                     1, ((PerUserPoolDataSource) ds).getNumIdle("foo"));
             try (Connection c = ds.getConnection("foo", "bar")) { // old password
                 fail("Should have generated SQLException");
-            } catch (SQLException expected) {
+            } catch (final SQLException expected) {
             }
-            Connection con5 = ds.getConnection("foo", "bay"); // take the idle one
+            final Connection con5 = ds.getConnection("foo", "bay"); // take the idle one
             con3.close(); // Return a connection with the old password
             ds.getConnection("foo", "bay").close();  // will try bad returned connection and destroy it
             assertEquals("Should be one idle connection in the pool",

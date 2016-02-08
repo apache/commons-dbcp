@@ -66,10 +66,10 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
     @Override
     public Connection createConnection() throws SQLException {
         // create a new connection
-        Connection connection = connectionFactory.createConnection();
+        final Connection connection = connectionFactory.createConnection();
 
         // create a XAResource to manage the connection during XA transactions
-        XAResource xaResource = new LocalXAResource(connection);
+        final XAResource xaResource = new LocalXAResource(connection);
 
         // register the xa resource for the connection
         transactionRegistry.registerConnection(connection, xaResource);
@@ -131,7 +131,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 // save off the current auto commit flag so it can be restored after the transaction completes
                 try {
                     originalAutoCommit = connection.getAutoCommit();
-                } catch (SQLException ignored) {
+                } catch (final SQLException ignored) {
                     // no big deal, just assume it was off
                     originalAutoCommit = true;
                 }
@@ -139,7 +139,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 // update the auto commit flag
                 try {
                     connection.setAutoCommit(false);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     throw (XAException) new XAException("Count not turn off auto commit for a XA transaction").initCause(e);
                 }
 
@@ -196,7 +196,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                     // tell the transaction manager we are read only
                     return XAResource.XA_RDONLY;
                 }
-            } catch (SQLException ignored) {
+            } catch (final SQLException ignored) {
                 // no big deal
             }
 
@@ -234,12 +234,12 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 if (!connection.isReadOnly()) {
                     connection.commit();
                 }
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 throw (XAException) new XAException().initCause(e);
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                 }
                 this.currentXid = null;
             }
@@ -262,12 +262,12 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
 
             try {
                 connection.rollback();
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 throw (XAException) new XAException().initCause(e);
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                 }
                 this.currentXid = null;
             }

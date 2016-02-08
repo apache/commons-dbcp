@@ -89,7 +89,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
      * Create a TesterPooledConnection with notifyOnClose turned on
      */
     protected PooledConnection wrapPooledConnection(PooledConnection pc) {
-        PooledConnectionProxy tpc = new PooledConnectionProxy(pc);
+        final PooledConnectionProxy tpc = new PooledConnectionProxy(pc);
         tpc.setNotifyOnClose(true);
         return tpc; 
     }

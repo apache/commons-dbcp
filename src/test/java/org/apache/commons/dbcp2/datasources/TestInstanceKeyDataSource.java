@@ -45,13 +45,13 @@ public class TestInstanceKeyDataSource {
         pcds.setUser("foo");
         pcds.setPassword("bar");
         pcds.setPoolPreparedStatements(false);
-        ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource();
+        final ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource();
         tds.setConnectionPoolDataSource(pcds);
-        int numConnections = tds.getNumActive();
+        final int numConnections = tds.getNumActive();
         try {
             tds.getConnection("foo", "bar");
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
            //Expected
         }
         assertEquals(numConnections,tds.getNumActive());  

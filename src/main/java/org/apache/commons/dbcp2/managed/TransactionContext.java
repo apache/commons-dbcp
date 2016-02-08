@@ -88,15 +88,15 @@ public class TransactionContext {
 
         // This is the first use of the connection in this transaction, so we must
         // enlist it in the transaction
-        Transaction transaction = getTransaction();
+        final Transaction transaction = getTransaction();
         try {
-            XAResource xaResource = transactionRegistry.getXAResource(sharedConnection);
+            final XAResource xaResource = transactionRegistry.getXAResource(sharedConnection);
             if ( !transaction.enlistResource(xaResource) ) {
                 throw new SQLException("Unable to enlist connection in transaction: enlistResource returns 'false'.");
             }
-        } catch (RollbackException e) {
+        } catch (final RollbackException e) {
             // transaction was rolled back... proceed as if there never was a transaction
-        } catch (SystemException e) {
+        } catch (final SystemException e) {
             throw new SQLException("Unable to enlist connection the transaction", e);
         }
 
@@ -121,10 +121,10 @@ public class TransactionContext {
                     listener.afterCompletion(TransactionContext.this, status == Status.STATUS_COMMITTED);
                 }
             });
-        } catch (RollbackException e) {
+        } catch (final RollbackException e) {
             // JTA spec doesn't let us register with a transaction marked rollback only
             // just ignore this and the tx state will be cleared another way.
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Unable to register transaction context listener", e);
         }
     }
@@ -136,19 +136,19 @@ public class TransactionContext {
      */
     public boolean isActive() throws SQLException {
         try {
-            Transaction transaction = this.transactionRef.get();
+            final Transaction transaction = this.transactionRef.get();
             if (transaction == null) {
                 return false;
             }
-            int status = transaction.getStatus();
+            final int status = transaction.getStatus();
             return status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK;
-        } catch (SystemException e) {
+        } catch (final SystemException e) {
             throw new SQLException("Unable to get transaction status", e);
         }
     }
 
     private Transaction getTransaction() throws SQLException {
-        Transaction transaction = this.transactionRef.get();
+        final Transaction transaction = this.transactionRef.get();
         if (transaction == null) {
             throw new SQLException("Unable to enlist connection because the transaction has been garbage collected");
         }

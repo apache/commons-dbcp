@@ -101,11 +101,11 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         if (!isClosed()) {
             try {
                 _pool.returnObject(_key, this);
-            } catch(SQLException e) {
+            } catch(final SQLException e) {
                 throw e;
-            } catch(RuntimeException e) {
+            } catch(final RuntimeException e) {
                 throw e;
-            } catch(Exception e) {
+            } catch(final Exception e) {
                 throw new SQLException("Cannot close preparedstatement (return to pool failed)", e);
             }
         }
@@ -136,10 +136,10 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
         // See bug 17301 for what could happen when ResultSets are closed twice.
-        List<AbandonedTrace> resultSets = getTrace();
+        final List<AbandonedTrace> resultSets = getTrace();
         if( resultSets != null) {
-            ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
-            for (ResultSet element : set) {
+            final ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
+            for (final ResultSet element : set) {
                 element.close();
             }
             clearTrace();

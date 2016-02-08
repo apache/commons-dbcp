@@ -82,7 +82,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testConnectionsAreDistinct() throws Exception {
-        Connection[] conn = new Connection[getMaxTotal()];
+        final Connection[] conn = new Connection[getMaxTotal()];
         for(int i=0;i<conn.length;i++) {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
@@ -96,7 +96,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
                         ((DelegatingConnection<?>) conn[i]).getInnermostDelegateInternal());
             }
         }
-        for (Connection element : conn) {
+        for (final Connection element : conn) {
             element.close();
         }
     }
@@ -104,9 +104,9 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testHashCode() throws Exception {
-        Connection conn1 = newConnection();
+        final Connection conn1 = newConnection();
         assertNotNull(conn1);
-        Connection conn2 = newConnection();
+        final Connection conn2 = newConnection();
         assertNotNull(conn2);
 
         // shared connections should not have the same hashcode
@@ -116,8 +116,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testMaxTotal() throws Exception {
-        Transaction[] transactions = new Transaction[getMaxTotal()];
-        Connection[] c = new Connection[getMaxTotal()];
+        final Transaction[] transactions = new Transaction[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             // create a new connection in the current transaction
             c[i] = newConnection();
@@ -132,7 +132,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         try {
             newConnection();
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (java.sql.SQLException e) {
+        } catch (final java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         } finally {
@@ -153,11 +153,11 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertNotNull(connection);
 
         // generate SQLWarning on connection
-        CallableStatement statement = connection.prepareCall("warning");
+        final CallableStatement statement = connection.prepareCall("warning");
         assertNotNull(connection.getWarnings());
 
         // create a new shared connection
-        Connection sharedConnection = newConnection();
+        final Connection sharedConnection = newConnection();
 
         // shared connection should see warning
         assertNotNull(sharedConnection.getWarnings());
@@ -178,8 +178,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testSharedConnection() throws Exception {
-        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
-        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         assertFalse(connectionA.equals(connectionB));
         assertFalse(connectionB.equals(connectionA));
@@ -192,8 +192,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testSharedTransactionConversion() throws Exception {
-        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
-        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         // in a transaction the inner connections should be equal
         assertFalse(connectionA.equals(connectionB));
@@ -231,8 +231,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testCloseInTransaction() throws Exception {
-        DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
-        DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+        final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         assertFalse(connectionA.equals(connectionB));
         assertFalse(connectionB.equals(connectionA));
@@ -242,7 +242,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionA.close();
         connectionB.close();
 
-        Connection connection = newConnection();
+        final Connection connection = newConnection();
 
         assertFalse("Connection should be open", connection.isClosed());
 
@@ -254,7 +254,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testAutoCommitBehavior() throws Exception {
-        Connection connection = newConnection();
+        final Connection connection = newConnection();
 
         // auto commit should be off
         assertFalse("Auto-commit should be disabled", connection.getAutoCommit());
@@ -263,7 +263,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         try {
             connection.setAutoCommit(true);
             fail("setAutoCommit method should be disabled while enlisted in a transaction");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -276,7 +276,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testCommit() throws Exception {
-        Connection connection = newConnection();
+        final Connection connection = newConnection();
 
         // connection should be open
         assertFalse("Connection should be open", connection.isClosed());
@@ -285,7 +285,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         try {
             connection.commit();
             fail("commit method should be disabled while enlisted in a transaction");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -298,7 +298,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testReadOnly() throws Exception {
-        Connection connection = newConnection();
+        final Connection connection = newConnection();
 
         // NOTE: This test class uses connections that are read-only by default
 
@@ -309,7 +309,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         try {
             connection.setReadOnly(true);
             fail("setReadOnly method should be disabled while enlisted in a transaction");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -320,7 +320,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         try {
             connection.setReadOnly(false);
             fail("setReadOnly method should be disabled while enlisted in a transaction");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -340,24 +340,24 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
                 conn, statement.getConnection());
 
-        ResultSet resultSet = statement.getResultSet();
+        final ResultSet resultSet = statement.getResultSet();
         assertFalse(isClosed(resultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, resultSet.getStatement());
 
-        ResultSet executeResultSet = statement.executeQuery("select * from dual");
+        final ResultSet executeResultSet = statement.executeQuery("select * from dual");
         assertFalse(isClosed(executeResultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, executeResultSet.getStatement());
 
-        ResultSet keysResultSet = statement.getGeneratedKeys();
+        final ResultSet keysResultSet = statement.getGeneratedKeys();
         assertFalse(isClosed(keysResultSet));
         assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
                 statement, keysResultSet.getStatement());
 
         ResultSet preparedResultSet = null;
         if (statement instanceof PreparedStatement) {
-            PreparedStatement preparedStatement = (PreparedStatement) statement;
+            final PreparedStatement preparedStatement = (PreparedStatement) statement;
             preparedResultSet = preparedStatement.executeQuery();
             assertFalse(isClosed(preparedResultSet));
             assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",

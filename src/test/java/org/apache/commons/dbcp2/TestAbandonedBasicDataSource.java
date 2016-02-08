@@ -79,11 +79,11 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
-        Connection conn1 = getConnection();
+        final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
 
-        Connection conn2 = getConnection();
+        final Connection conn2 = getConnection();
         // Attempt to borrow object triggers abandoned cleanup
         // conn1 should be closed by the pool to make room
         assertNotNull(conn2);
@@ -107,28 +107,28 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
-        Connection conn1 = getConnection();
+        final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
 
-        Connection conn2 = getConnection();
+        final Connection conn2 = getConnection();
         assertNotNull(conn2);
         assertEquals(1, ds.getNumActive());
 
         // set an IO failure causing the isClosed mathod to fail
-        TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection<?>)conn1).getInnermostDelegate();
+        final TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection<?>)conn1).getInnermostDelegate();
         tconn1.setFailure(new IOException("network error"));
-        TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection<?>)conn2).getInnermostDelegate();
+        final TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection<?>)conn2).getInnermostDelegate();
         tconn2.setFailure(new IOException("network error"));
 
         try {
             conn2.close();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             /* Ignore */
         }
         assertEquals(0, ds.getNumActive());
 
-        try { conn1.close(); } catch (SQLException ex) { }
+        try { conn1.close(); } catch (final SQLException ex) { }
         assertEquals(0, ds.getNumActive());
         assertTrue(sw.toString().contains("testAbandonedCloseWithExceptions"));
     }
@@ -145,7 +145,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             Thread.sleep(500);
             try (Statement s = conn1.createStatement()) {} // Should reset lastUsed
             Thread.sleep(800);
-            Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
             try (Statement s = conn1.createStatement()) {} // Should still be OK
             conn2.close();
             Thread.sleep(500);
@@ -168,7 +168,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             Thread.sleep(500);
             try (CallableStatement cs = conn1.prepareCall("{call home}")) {} // Should reset lastUsed
             Thread.sleep(800);
-            Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
             try (CallableStatement cs = conn1.prepareCall("{call home}")) {} // Should still be OK
             conn2.close();
             Thread.sleep(500);
@@ -189,11 +189,11 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection();
                 Statement st = conn1.createStatement()) {
-            String querySQL = "SELECT 1 FROM DUAL";
+            final String querySQL = "SELECT 1 FROM DUAL";
             Thread.sleep(500);
             Assert.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
             Thread.sleep(800);
-            Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
             Assert.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
             conn2.close();
             Thread.sleep(500);
@@ -210,10 +210,10 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsedUpdate() throws Exception {
-        DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        PreparedStatement ps = conn.prepareStatement("");
-        CallableStatement cs = conn.prepareCall("");
-        Statement st = conn.prepareStatement("");
+        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        final PreparedStatement ps = conn.prepareStatement("");
+        final CallableStatement cs = conn.prepareCall("");
+        final Statement st = conn.prepareStatement("");
         checkLastUsedStatement(ps, conn);
         checkLastUsedPreparedStatement(ps, conn);
         checkLastUsedStatement(cs, conn);
@@ -228,7 +228,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testGarbageCollectorCleanUp01() throws Exception {
-        DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
         Assert.assertEquals(0, conn.getTrace().size());
         createStatement(conn);
         Assert.assertEquals(1, conn.getTrace().size());
@@ -243,10 +243,11 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public void testGarbageCollectorCleanUp02() throws Exception {
         ds.setPoolPreparedStatements(true);
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
-        PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
+        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
+        final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
         @SuppressWarnings("unchecked")
+        final
         GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>  gkop =
                 (GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "_pstmtPool");
         Assert.assertEquals(0, conn.getTrace().size());
@@ -267,7 +268,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     private void createStatement(Connection conn) throws Exception{
-        PreparedStatement ps = conn.prepareStatement("");
+        final PreparedStatement ps = conn.prepareStatement("");
         Assert.assertNotNull(ps);
     }
 

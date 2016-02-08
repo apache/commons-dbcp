@@ -115,8 +115,8 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         }
 
         // get the real connection and XAResource from the connection
-        Connection connection = xaConnection.getConnection();
-        XAResource xaResource = xaConnection.getXAResource();
+        final Connection connection = xaConnection.getConnection();
+        final XAResource xaResource = xaConnection.getXAResource();
 
         // register the xa resource for the connection
         transactionRegistry.registerConnection(connection, xaResource);
@@ -128,11 +128,11 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
             @Override
             public void connectionClosed(ConnectionEvent event) {
-                PooledConnection pc = (PooledConnection) event.getSource();
+                final PooledConnection pc = (PooledConnection) event.getSource();
                 pc.removeConnectionEventListener(this);
                 try {
                     pc.close();
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     System.err.println("Failed to close XAConnection");
                     e.printStackTrace();
                 }

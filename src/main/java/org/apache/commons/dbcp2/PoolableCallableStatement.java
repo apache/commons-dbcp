@@ -78,11 +78,11 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
         if (!isClosed()) {
             try {
                 _pool.returnObject(_key,this);
-            } catch(SQLException e) {
+            } catch(final SQLException e) {
                 throw e;
-            } catch(RuntimeException e) {
+            } catch(final RuntimeException e) {
                 throw e;
-            } catch(Exception e) {
+            } catch(final Exception e) {
                 throw new SQLException("Cannot close CallableStatement (return to pool failed)", e);
             }
         }
@@ -116,10 +116,10 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
         // See DBCP-10 for what could happen when ResultSets are closed twice.
-        List<AbandonedTrace> resultSets = getTrace();
+        final List<AbandonedTrace> resultSets = getTrace();
         if(resultSets != null) {
-            ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
-            for (ResultSet element : set) {
+            final ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
+            for (final ResultSet element : set) {
                 element.close();
             }
             clearTrace();

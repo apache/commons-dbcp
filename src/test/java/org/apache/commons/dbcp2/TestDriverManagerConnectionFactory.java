@@ -69,10 +69,10 @@ public class TestDriverManagerConnectionFactory {
     }
 
     public void testDriverManagerInit(final boolean withProperties) throws Exception {
-        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         // The names "user" and "password" are specified in java.sql.DriverManager.getConnection(String, String, String)
         properties.put("user", "foo");
         properties.put("password", "bar");
@@ -84,14 +84,14 @@ public class TestDriverManagerConnectionFactory {
         poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
         poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
 
-        GenericObjectPool<PoolableConnection> connectionPool =
+        final GenericObjectPool<PoolableConnection> connectionPool =
                 new GenericObjectPool<>(poolableConnectionFactory, config);
         poolableConnectionFactory.setPool(connectionPool);
-        PoolingDataSource<PoolableConnection> dataSource =
+        final PoolingDataSource<PoolableConnection> dataSource =
                 new PoolingDataSource<>(connectionPool);
 
-        ConnectionThread[] connectionThreads = new ConnectionThread[10];
-        Thread[] threads = new Thread[10];
+        final ConnectionThread[] connectionThreads = new ConnectionThread[10];
+        final Thread[] threads = new Thread[10];
 
         for (int i = 0; i < 10; i++) {
             connectionThreads[i] = new ConnectionThread(dataSource);
@@ -123,14 +123,14 @@ public class TestDriverManagerConnectionFactory {
             Connection conn = null;
             try {
                 conn = ds.getConnection();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
                 result = false;
             } finally {
                 if (conn != null) {
                     try {
                         conn.close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         e.printStackTrace();
                         result = false;
                     }

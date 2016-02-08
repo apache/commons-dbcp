@@ -29,7 +29,7 @@ public class TesterClassLoader extends ClassLoader {
     @Override
     protected synchronized Class<?> loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
-        Class<?> clazz =  super.loadClass(name, resolve);
+        final Class<?> clazz =  super.loadClass(name, resolve);
         loadedClasses.add(name);
         return clazz;
     }

@@ -103,10 +103,10 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     @Override
     public void close() {
-        for (PooledConnectionManager manager : managers.values()) {
+        for (final PooledConnectionManager manager : managers.values()) {
             try {
               ((CPDSConnectionFactory) manager).getPool().close();
-            } catch (Exception closePoolException) {
+            } catch (final Exception closePoolException) {
                     //ignore and try to close others.
             }
         }
@@ -854,7 +854,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Get the number of active connections in the pool for a given user.
      */
     public int getNumActive(String username) {
-        ObjectPool<PooledConnectionAndInfo> pool =
+        final ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumActive();
     }
@@ -870,7 +870,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Get the number of idle connections in the pool for a given user.
      */
     public int getNumIdle(String username) {
-        ObjectPool<PooledConnectionAndInfo> pool =
+        final ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumIdle();
     }
@@ -893,7 +893,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
                 try {
                     registerPool(username, password);
                     manager = managers.get(key);
-                } catch (NamingException e) {
+                } catch (final NamingException e) {
                     throw new SQLException("RegisterPool failed", e);
                 }
             }
@@ -904,15 +904,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         try {
             info = pool.borrowObject();
         }
-        catch (NoSuchElementException ex) {
+        catch (final NoSuchElementException ex) {
             throw new SQLException(
                     "Could not retrieve connection info from pool", ex);
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             // See if failure is due to CPDSConnectionFactory authentication failure
             try {
                 testCPDS(username, password);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new SQLException(
                         "Could not retrieve connection info from pool", ex);
             }
@@ -924,12 +924,12 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             try {
                 registerPool(username, password);
                 pool = getPool(key);
-            } catch (NamingException ne) {
+            } catch (final NamingException ne) {
                 throw new SQLException("RegisterPool failed", ne);
             }
             try {
                 info = pool.borrowObject();
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new SQLException(
                         "Could not retrieve connection info from pool", ex);
             }
@@ -942,7 +942,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         throws SQLException {
         Boolean defaultAutoCommit = isDefaultAutoCommit();
         if (username != null) {
-            Boolean userMax = getPerUserDefaultAutoCommit(username);
+            final Boolean userMax = getPerUserDefaultAutoCommit(username);
             if (userMax != null) {
                 defaultAutoCommit = userMax;
             }
@@ -950,7 +950,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
         Boolean defaultReadOnly = isDefaultReadOnly();
         if (username != null) {
-            Boolean userMax = getPerUserDefaultReadOnly(username);
+            final Boolean userMax = getPerUserDefaultReadOnly(username);
             if (userMax != null) {
                 defaultReadOnly = userMax;
             }
@@ -958,7 +958,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
         int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (username != null) {
-            Integer userMax = getPerUserDefaultTransactionIsolation(username);
+            final Integer userMax = getPerUserDefaultTransactionIsolation(username);
             if (userMax != null) {
                 defaultTransactionIsolation = userMax.intValue();
             }
@@ -989,7 +989,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     @Override
     public Reference getReference() throws NamingException {
-        Reference ref = new Reference(getClass().getName(),
+        final Reference ref = new Reference(getClass().getName(),
                 PerUserPoolDataSourceFactory.class.getName(), null);
         ref.add(new StringRefAddr("instanceKey", getInstanceKey()));
         return ref;
@@ -1008,18 +1008,18 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private synchronized void registerPool(String username, String password)
             throws NamingException, SQLException {
 
-        ConnectionPoolDataSource cpds = testCPDS(username, password);
+        final ConnectionPoolDataSource cpds = testCPDS(username, password);
 
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
         // explicitly)
-        CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds,
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds,
                 getValidationQuery(), getValidationQueryTimeout(),
                 isRollbackAfterValidation(), username, password);
         factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
 
         // Create an object pool to contain our PooledConnections
-        GenericObjectPool<PooledConnectionAndInfo> pool =
+        final GenericObjectPool<PooledConnectionAndInfo> pool =
                 new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setBlockWhenExhausted(getPerUserBlockWhenExhausted(username));
@@ -1045,7 +1045,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
         pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
 
-        Object old = managers.put(getPoolKey(username), factory);
+        final Object old = managers.put(getPoolKey(username), factory);
         if (old != null) {
             throw new IllegalStateException("Pool already contains an entry for this user/password: " + username);
         }
@@ -1063,12 +1063,12 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         try
         {
             in.defaultReadObject();
-            PerUserPoolDataSource oldDS = (PerUserPoolDataSource)
+            final PerUserPoolDataSource oldDS = (PerUserPoolDataSource)
                 new PerUserPoolDataSourceFactory()
                     .getObjectInstance(getReference(), null, null, null);
             this.managers = oldDS.managers;
         }
-        catch (NamingException e)
+        catch (final NamingException e)
         {
             throw new IOException("NamingException: " + e);
         }
@@ -1082,7 +1082,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * specified by the PoolKey
      */
     private ObjectPool<PooledConnectionAndInfo> getPool(PoolKey key) {
-        CPDSConnectionFactory mgr = (CPDSConnectionFactory) managers.get(key);
+        final CPDSConnectionFactory mgr = (CPDSConnectionFactory) managers.get(key);
         return mgr == null ? null : mgr.getPool();
     }
 }

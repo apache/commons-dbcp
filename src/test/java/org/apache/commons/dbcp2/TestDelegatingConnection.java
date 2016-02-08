@@ -54,7 +54,7 @@ public class TestDelegatingConnection {
 
     @Test
     public void testConnectionToString() throws Exception {
-        String s = conn.toString();
+        final String s = conn.toString();
         assertNotNull(s);
         assertTrue(s.length() > 0);
     }
@@ -66,7 +66,7 @@ public class TestDelegatingConnection {
         try {
             conn.checkOpen();
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             // expected
         }
     }
@@ -80,7 +80,7 @@ public class TestDelegatingConnection {
             conn.close();
             conn.checkOpen();
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
 
@@ -89,19 +89,19 @@ public class TestDelegatingConnection {
             conn.setClosedInternal(true);
             conn.checkOpen();
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is null."));
         }
 
         try {
-            PoolingConnection pc = new PoolingConnection(delegateConn2);
+            final PoolingConnection pc = new PoolingConnection(delegateConn2);
             pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
             conn = new DelegatingConnection<>(pc);
             pc.close();
             conn.close();
             try (PreparedStatement ps = conn.prepareStatement("")){}
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
 
@@ -110,7 +110,7 @@ public class TestDelegatingConnection {
             conn.close();
             conn.checkOpen();
             fail("Expecting SQLException");
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
     }
