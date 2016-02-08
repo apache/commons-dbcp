@@ -48,8 +48,8 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      *
      * @param connFactory XAConnectionFactory
      */
-    public PoolableManagedConnectionFactory(XAConnectionFactory connFactory,
-            ObjectName dataSourceJmxName) {
+    public PoolableManagedConnectionFactory(final XAConnectionFactory connFactory,
+            final ObjectName dataSourceJmxName) {
         super(connFactory, dataSourceJmxName);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }

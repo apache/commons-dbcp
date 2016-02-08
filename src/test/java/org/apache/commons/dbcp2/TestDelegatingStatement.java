@@ -93,12 +93,12 @@ public class TestDelegatingStatement {
 
     private static class TesterStatementNonWrapping extends TesterStatement {
 
-        public TesterStatementNonWrapping(Connection conn) {
+        public TesterStatementNonWrapping(final Connection conn) {
             super(conn);
         }
 
         @Override
-        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
             return false;
         }
     }

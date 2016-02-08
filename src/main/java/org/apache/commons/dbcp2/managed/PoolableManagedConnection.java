@@ -41,8 +41,8 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param conn underlying connection
      * @param pool connection pool
      */
-    public PoolableManagedConnection(TransactionRegistry transactionRegistry,
-            Connection conn, ObjectPool<PoolableConnection> pool) {
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry,
+            final Connection conn, final ObjectPool<PoolableConnection> pool) {
         super(conn, pool, null);
         this.transactionRegistry = transactionRegistry;
     }

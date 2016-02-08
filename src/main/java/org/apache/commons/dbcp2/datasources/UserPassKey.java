@@ -36,7 +36,7 @@ class UserPassKey implements Serializable {
     private final String password;
     private final String username;
 
-    UserPassKey(String username, String password) {
+    UserPassKey(final String username, final String password) {
         this.username = username;
         this.password = password;
     }
@@ -65,7 +65,7 @@ class UserPassKey implements Serializable {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

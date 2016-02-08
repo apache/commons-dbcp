@@ -57,8 +57,8 @@ public class PoolableConnectionFactory
      * @param connFactory the {@link ConnectionFactory} from which to obtain
      * base {@link Connection}s
      */
-    public PoolableConnectionFactory(ConnectionFactory connFactory,
-            ObjectName dataSourceJmxName) {
+    public PoolableConnectionFactory(final ConnectionFactory connFactory,
+            final ObjectName dataSourceJmxName) {
         _connFactory = connFactory;
         this.dataSourceJmxName = dataSourceJmxName;
     }
@@ -70,7 +70,7 @@ public class PoolableConnectionFactory
      *
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
      */
-    public void setValidationQuery(String validationQuery) {
+    public void setValidationQuery(final String validationQuery) {
         _validationQuery = validationQuery;
     }
 
@@ -82,7 +82,7 @@ public class PoolableConnectionFactory
      *
      * @param timeout new validation query timeout value in seconds
      */
-    public void setValidationQueryTimeout(int timeout) {
+    public void setValidationQueryTimeout(final int timeout) {
         _validationQueryTimeout = timeout;
     }
 
@@ -91,7 +91,7 @@ public class PoolableConnectionFactory
      * Using {@code null} turns off connection initialization.
      * @param connectionInitSqls SQL statement to initialize {@link Connection}s.
      */
-    public void setConnectionInitSql(Collection<String> connectionInitSqls) {
+    public void setConnectionInitSql(final Collection<String> connectionInitSqls) {
         _connectionInitSqls = connectionInitSqls;
     }
 
@@ -99,7 +99,7 @@ public class PoolableConnectionFactory
      * Sets the {@link ObjectPool} in which to pool {@link Connection}s.
      * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
-    public synchronized void setPool(ObjectPool<PoolableConnection> pool) {
+    public synchronized void setPool(final ObjectPool<PoolableConnection> pool) {
         if(null != _pool && pool != _pool) {
             try {
                 _pool.close();
@@ -122,7 +122,7 @@ public class PoolableConnectionFactory
      * Sets the default "read only" setting for borrowed {@link Connection}s
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
-    public void setDefaultReadOnly(Boolean defaultReadOnly) {
+    public void setDefaultReadOnly(final Boolean defaultReadOnly) {
         _defaultReadOnly = defaultReadOnly;
     }
 
@@ -130,7 +130,7 @@ public class PoolableConnectionFactory
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
      * @param defaultAutoCommit the default "auto commit" setting for borrowed {@link Connection}s
      */
-    public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
+    public void setDefaultAutoCommit(final Boolean defaultAutoCommit) {
         _defaultAutoCommit = defaultAutoCommit;
     }
 
@@ -138,7 +138,7 @@ public class PoolableConnectionFactory
      * Sets the default "Transaction Isolation" setting for borrowed {@link Connection}s
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      */
-    public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
+    public void setDefaultTransactionIsolation(final int defaultTransactionIsolation) {
         _defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
@@ -146,19 +146,19 @@ public class PoolableConnectionFactory
      * Sets the default "catalog" setting for borrowed {@link Connection}s
      * @param defaultCatalog the default "catalog" setting for borrowed {@link Connection}s
      */
-    public void setDefaultCatalog(String defaultCatalog) {
+    public void setDefaultCatalog(final String defaultCatalog) {
         _defaultCatalog = defaultCatalog;
     }
 
-    public void setCacheState(boolean cacheState) {
+    public void setCacheState(final boolean cacheState) {
         this._cacheState = cacheState;
     }
 
-    public void setPoolStatements(boolean poolStatements) {
+    public void setPoolStatements(final boolean poolStatements) {
         this.poolStatements = poolStatements;
     }
 
-    public void setMaxOpenPrepatedStatements(int maxOpenPreparedStatements) {
+    public void setMaxOpenPrepatedStatements(final int maxOpenPreparedStatements) {
         this.maxOpenPreparedStatements = maxOpenPreparedStatements;
     }
 
@@ -168,7 +168,7 @@ public class PoolableConnectionFactory
      * value of zero or less indicates an infinite lifetime. The default value
      * is -1.
      */
-    public void setMaxConnLifetimeMillis(long maxConnLifetimeMillis) {
+    public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
@@ -177,7 +177,7 @@ public class PoolableConnectionFactory
         return enableAutoCommitOnReturn;
     }
 
-    public void setEnableAutoCommitOnReturn(boolean enableAutoCommitOnReturn) {
+    public void setEnableAutoCommitOnReturn(final boolean enableAutoCommitOnReturn) {
         this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
     }
 
@@ -186,7 +186,7 @@ public class PoolableConnectionFactory
         return rollbackOnReturn;
     }
 
-    public void setRollbackOnReturn(boolean rollbackOnReturn) {
+    public void setRollbackOnReturn(final boolean rollbackOnReturn) {
         this.rollbackOnReturn = rollbackOnReturn;
     }
 
@@ -194,7 +194,7 @@ public class PoolableConnectionFactory
         return defaultQueryTimeout;
     }
 
-    public void setDefaultQueryTimeout(Integer defaultQueryTimeout) {
+    public void setDefaultQueryTimeout(final Integer defaultQueryTimeout) {
         this.defaultQueryTimeout = defaultQueryTimeout;
     }
 
@@ -224,7 +224,7 @@ public class PoolableConnectionFactory
      * @param disconnectionSqlCodes
      * @since 2.1
      */
-    public void setDisconnectionSqlCodes(Collection<String> disconnectionSqlCodes) {
+    public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         _disconnectionSqlCodes = disconnectionSqlCodes;
     }
 
@@ -247,7 +247,7 @@ public class PoolableConnectionFactory
      * fast fail validation
      * @since 2.1
      */
-    public void setFastFailValidation(boolean fastFailValidation) {
+    public void setFastFailValidation(final boolean fastFailValidation) {
         _fastFailValidation = fastFailValidation;
     }
 
@@ -310,7 +310,7 @@ public class PoolableConnectionFactory
         return new DefaultPooledObject<>(pc);
     }
 
-    protected void initializeConnection(Connection conn) throws SQLException {
+    protected void initializeConnection(final Connection conn) throws SQLException {
         final Collection<String> sqls = _connectionInitSqls;
         if(conn.isClosed()) {
             throw new SQLException("initializeConnection: connection closed");
@@ -329,13 +329,13 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void destroyObject(PooledObject<PoolableConnection> p)
+    public void destroyObject(final PooledObject<PoolableConnection> p)
             throws Exception {
         p.getObject().reallyClose();
     }
 
     @Override
-    public boolean validateObject(PooledObject<PoolableConnection> p) {
+    public boolean validateObject(final PooledObject<PoolableConnection> p) {
         try {
             validateLifetime(p);
 
@@ -350,7 +350,7 @@ public class PoolableConnectionFactory
         }
     }
 
-    public void validateConnection(PoolableConnection conn) throws SQLException {
+    public void validateConnection(final PoolableConnection conn) throws SQLException {
         if(conn.isClosed()) {
             throw new SQLException("validateConnection: connection closed");
         }
@@ -358,7 +358,7 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void passivateObject(PooledObject<PoolableConnection> p)
+    public void passivateObject(final PooledObject<PoolableConnection> p)
             throws Exception {
 
         validateLifetime(p);
@@ -389,7 +389,7 @@ public class PoolableConnectionFactory
     }
 
     @Override
-    public void activateObject(PooledObject<PoolableConnection> p)
+    public void activateObject(final PooledObject<PoolableConnection> p)
             throws Exception {
 
         validateLifetime(p);
@@ -416,7 +416,7 @@ public class PoolableConnectionFactory
         conn.setDefaultQueryTimeout(defaultQueryTimeout);
     }
 
-    private void validateLifetime(PooledObject<PoolableConnection> p)
+    private void validateLifetime(final PooledObject<PoolableConnection> p)
             throws Exception {
         if (maxConnLifetimeMillis > 0) {
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();

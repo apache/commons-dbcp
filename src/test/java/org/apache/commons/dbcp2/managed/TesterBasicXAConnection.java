@@ -50,12 +50,12 @@ public class TesterBasicXAConnection implements XAConnection {
 
     public AtomicInteger closeCounter;
 
-    public TesterBasicXAConnection(Connection conn, AtomicInteger closeCounter) {
+    public TesterBasicXAConnection(final Connection conn, final AtomicInteger closeCounter) {
         this.conn = conn;
         this.closeCounter = closeCounter;
     }
 
-    public TesterBasicXAConnection(Connection conn) {
+    public TesterBasicXAConnection(final Connection conn) {
         this(conn, null);
     }
 
@@ -117,23 +117,23 @@ public class TesterBasicXAConnection implements XAConnection {
 
     @Override
     public void addConnectionEventListener(
-            ConnectionEventListener connectionEventListener) {
+            final ConnectionEventListener connectionEventListener) {
         listeners.add(connectionEventListener);
     }
 
     @Override
     public void removeConnectionEventListener(
-            ConnectionEventListener connectionEventListener) {
+            final ConnectionEventListener connectionEventListener) {
         listeners.remove(connectionEventListener);
     }
 
     @Override
-    public void addStatementEventListener(StatementEventListener listener) {
+    public void addStatementEventListener(final StatementEventListener listener) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeStatementEventListener(StatementEventListener listener) {
+    public void removeStatementEventListener(final StatementEventListener listener) {
         throw new UnsupportedOperationException();
     }
 
@@ -146,7 +146,7 @@ public class TesterBasicXAConnection implements XAConnection {
         }
     }
 
-    protected void notifyConnectionErrorOccurred(SQLException e) {
+    protected void notifyConnectionErrorOccurred(final SQLException e) {
         final ConnectionEvent event = new ConnectionEvent(this, e);
         final List<ConnectionEventListener> copy = new ArrayList<>(
                 listeners);
@@ -165,13 +165,13 @@ public class TesterBasicXAConnection implements XAConnection {
 
         public TesterBasicXAConnection xaconn;
 
-        public ConnectionHandle(Connection conn, TesterBasicXAConnection xaconn) {
+        public ConnectionHandle(final Connection conn, final TesterBasicXAConnection xaconn) {
             this.conn = conn;
             this.xaconn = xaconn;
         }
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args)
+        public Object invoke(final Object proxy, final Method method, final Object[] args)
                 throws Throwable {
             final String methodName = method.getName();
             if (methodName.equals("hashCode")) {

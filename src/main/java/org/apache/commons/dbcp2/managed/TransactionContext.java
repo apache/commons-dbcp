@@ -51,7 +51,7 @@ public class TransactionContext {
      * shared connection
      * @param transaction the transaction
      */
-    public TransactionContext(TransactionRegistry transactionRegistry, Transaction transaction) {
+    public TransactionContext(final TransactionRegistry transactionRegistry, final Transaction transaction) {
         if (transactionRegistry == null) {
             throw new NullPointerException("transactionRegistry is null");
         }
@@ -81,7 +81,7 @@ public class TransactionContext {
      * could not be found in the transaction registry, or if there was a problem enlisting the
      * connection in the transaction
      */
-    public void setSharedConnection(Connection sharedConnection) throws SQLException {
+    public void setSharedConnection(final Connection sharedConnection) throws SQLException {
         if (this.sharedConnection != null) {
             throw new IllegalStateException("A shared connection is already set");
         }
@@ -117,7 +117,7 @@ public class TransactionContext {
                 }
 
                 @Override
-                public void afterCompletion(int status) {
+                public void afterCompletion(final int status) {
                     listener.afterCompletion(TransactionContext.this, status == Status.STATUS_COMMITTED);
                 }
             });

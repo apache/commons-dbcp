@@ -74,7 +74,7 @@ public final class Utils {
      *
      * @param rset a ResultSet, may be {@code null}
      */
-    public static void closeQuietly(ResultSet rset) {
+    public static void closeQuietly(final ResultSet rset) {
         if (rset != null) {
             try {
                 rset.close();
@@ -89,7 +89,7 @@ public final class Utils {
      *
      * @param conn a Connection, may be {@code null}
      */
-    public static void closeQuietly(Connection conn) {
+    public static void closeQuietly(final Connection conn) {
         if (conn != null) {
             try {
                 conn.close();
@@ -104,7 +104,7 @@ public final class Utils {
      *
      * @param stmt a Statement, may be {@code null}
      */
-    public static void closeQuietly(Statement stmt) {
+    public static void closeQuietly(final Statement stmt) {
         if (stmt != null) {
             try {
                 stmt.close();
@@ -118,7 +118,7 @@ public final class Utils {
     /**
      * Obtain the correct i18n message for the given key.
      */
-    public static String getMessage(String key) {
+    public static String getMessage(final String key) {
         return getMessage(key, (Object[]) null);
     }
 
@@ -127,7 +127,7 @@ public final class Utils {
      * Obtain the correct i18n message for the given key with placeholders
      * replaced by the supplied arguments.
      */
-    public static String getMessage(String key, Object... args) {
+    public static String getMessage(final String key, final Object... args) {
         final String msg =  messages.getString(key);
         if (args == null || args.length == 0) {
             return msg;

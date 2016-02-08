@@ -64,7 +64,7 @@ public class PoolingDriver implements Driver {
     /**
      * For unit testing purposes.
      */
-    protected PoolingDriver(boolean accessToUnderlyingConnectionAllowed) {
+    protected PoolingDriver(final boolean accessToUnderlyingConnectionAllowed) {
         this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
     }
 
@@ -78,7 +78,7 @@ public class PoolingDriver implements Driver {
         return accessToUnderlyingConnectionAllowed;
     }
 
-    public synchronized ObjectPool<? extends Connection> getConnectionPool(String name)
+    public synchronized ObjectPool<? extends Connection> getConnectionPool(final String name)
             throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
         if (null == pool) {
@@ -87,12 +87,12 @@ public class PoolingDriver implements Driver {
         return pool;
     }
 
-    public synchronized void registerPool(String name,
-            ObjectPool<? extends Connection> pool) {
+    public synchronized void registerPool(final String name,
+            final ObjectPool<? extends Connection> pool) {
         pools.put(name,pool);
     }
 
-    public synchronized void closePool(String name) throws SQLException {
+    public synchronized void closePool(final String name) throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
         if (pool != null) {
             pools.remove(name);
@@ -111,7 +111,7 @@ public class PoolingDriver implements Driver {
     }
 
     @Override
-    public boolean acceptsURL(String url) throws SQLException {
+    public boolean acceptsURL(final String url) throws SQLException {
         try {
             return url.startsWith(URL_PREFIX);
         } catch(final NullPointerException e) {
@@ -120,7 +120,7 @@ public class PoolingDriver implements Driver {
     }
 
     @Override
-    public Connection connect(String url, Properties info) throws SQLException {
+    public Connection connect(final String url, final Properties info) throws SQLException {
         if(acceptsURL(url)) {
             final ObjectPool<? extends Connection> pool =
                 getConnectionPool(url.substring(URL_PREFIX_LEN));
@@ -157,7 +157,7 @@ public class PoolingDriver implements Driver {
      * <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
      * the connection
      */
-    public void invalidateConnection(Connection conn) throws SQLException {
+    public void invalidateConnection(final Connection conn) throws SQLException {
         if (conn instanceof PoolGuardConnectionWrapper) { // normal case
             final PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
             @SuppressWarnings("unchecked")
@@ -190,7 +190,7 @@ public class PoolingDriver implements Driver {
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) {
+    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
         return new DriverPropertyInfo[0];
     }
 
@@ -211,8 +211,8 @@ public class PoolingDriver implements Driver {
 
         private final ObjectPool<? extends Connection> pool;
 
-        PoolGuardConnectionWrapper(ObjectPool<? extends Connection> pool,
-                Connection delegate) {
+        PoolGuardConnectionWrapper(final ObjectPool<? extends Connection> pool,
+                final Connection delegate) {
             super(delegate);
             this.pool = pool;
         }

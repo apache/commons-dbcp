@@ -35,7 +35,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 
     protected ConnectionPoolDataSource delegate = null;
     
-    public ConnectionPoolDataSourceProxy(ConnectionPoolDataSource cpds) {
+    public ConnectionPoolDataSourceProxy(final ConnectionPoolDataSource cpds) {
         this.delegate = cpds;
     }
     
@@ -65,18 +65,18 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
      * Return a TesterPooledConnection with notifyOnClose turned on
      */
     @Override
-    public PooledConnection getPooledConnection(String user, String password)
+    public PooledConnection getPooledConnection(final String user, final String password)
             throws SQLException {
         return wrapPooledConnection(delegate.getPooledConnection(user, password));
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
+    public void setLoginTimeout(final int seconds) throws SQLException {
         delegate.setLoginTimeout(seconds);     
     }
 
     @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
+    public void setLogWriter(final PrintWriter out) throws SQLException {
         delegate.setLogWriter(out);     
     }
     
@@ -88,7 +88,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     /**
      * Create a TesterPooledConnection with notifyOnClose turned on
      */
-    protected PooledConnection wrapPooledConnection(PooledConnection pc) {
+    protected PooledConnection wrapPooledConnection(final PooledConnection pc) {
         final PooledConnectionProxy tpc = new PooledConnectionProxy(pc);
         tpc.setNotifyOnClose(true);
         return tpc; 

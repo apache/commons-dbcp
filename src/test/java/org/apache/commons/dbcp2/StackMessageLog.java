@@ -39,7 +39,7 @@ public class StackMessageLog extends SimpleLog {
     private static Stack<String> messageStack = new Stack<>();
     private static Lock lock = new ReentrantLock();
 
-    public StackMessageLog(String name) {
+    public StackMessageLog(final String name) {
         super(name);
     }
 
@@ -47,7 +47,7 @@ public class StackMessageLog extends SimpleLog {
      * Ignores type.  Pushes message followed by stack trace of t onto the stack.
      */
     @Override
-    protected void log(int type, Object message, Throwable t) {
+    protected void log(final int type, final Object message, final Throwable t) {
         lock.lock();
         try {
             final StringBuffer buf = new StringBuffer();

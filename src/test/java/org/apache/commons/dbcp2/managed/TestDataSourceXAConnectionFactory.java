@@ -66,7 +66,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
     public class XADataSourceHandle implements InvocationHandler {
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args)
+        public Object invoke(final Object proxy, final Method method, final Object[] args)
                 throws Throwable {
             final String methodName = method.getName();
             if (methodName.equals("hashCode")) {

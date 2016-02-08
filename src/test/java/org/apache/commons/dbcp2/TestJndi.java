@@ -102,7 +102,7 @@ public class TestJndi {
      * 
      * @throws Exception if the bind, lookup or connect fails
      */
-    protected void checkBind(DataSource dataSource) throws Exception {
+    protected void checkBind(final DataSource dataSource) throws Exception {
         bindDataSource(dataSource);
         retrieveDataSource();
     }
@@ -112,7 +112,7 @@ public class TestJndi {
      * 
      * @throws Exception if creation or binding fails.
      */
-    protected void bindDataSource(DataSource dataSource) throws Exception {
+    protected void bindDataSource(final DataSource dataSource) throws Exception {
         context.bind(JNDI_PATH, dataSource);
     }
 

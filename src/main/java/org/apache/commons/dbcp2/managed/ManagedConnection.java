@@ -50,9 +50,9 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     private TransactionContext transactionContext;
     private boolean isSharedConnection;
 
-    public ManagedConnection(ObjectPool<C> pool,
-            TransactionRegistry transactionRegistry,
-            boolean accessToUnderlyingConnectionAllowed) throws SQLException {
+    public ManagedConnection(final ObjectPool<C> pool,
+            final TransactionRegistry transactionRegistry,
+            final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
         this.pool = pool;
         this.transactionRegistry = transactionRegistry;
@@ -179,7 +179,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
      */
     protected class CompletionListener implements TransactionContextListener {
         @Override
-        public void afterCompletion(TransactionContext completedContext, boolean commited) {
+        public void afterCompletion(final TransactionContext completedContext, final boolean commited) {
             if (completedContext == transactionContext) {
                 transactionComplete();
             }
@@ -219,7 +219,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     //
 
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
         if (transactionContext != null) {
             throw new SQLException("Auto-commit can not be set while enrolled in a transaction");
         }
@@ -245,7 +245,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
         if (transactionContext != null) {
             throw new SQLException("Read-only can not be set while enrolled in a transaction");
         }

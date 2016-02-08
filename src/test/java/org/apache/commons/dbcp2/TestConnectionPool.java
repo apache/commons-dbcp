@@ -92,7 +92,7 @@ public abstract class TestConnectionPool {
 
     // ----------- Utility Methods ---------------------------------
 
-    protected String getUsername(Connection conn) throws SQLException {
+    protected String getUsername(final Connection conn) throws SQLException {
         final Statement stmt = conn.createStatement();
         final ResultSet rs = stmt.executeQuery("select username");
         if (rs.next()) {
@@ -283,7 +283,7 @@ public abstract class TestConnectionPool {
         assertBackPointers(conn, conn.prepareCall("select * from dual", 0, 0, 0));
     }
 
-    protected void assertBackPointers(Connection conn, Statement statement) throws SQLException {
+    protected void assertBackPointers(final Connection conn, final Statement statement) throws SQLException {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));
 
@@ -593,11 +593,11 @@ public abstract class TestConnectionPool {
         public TestThread() {
         }
 
-        public TestThread(int iter) {
+        public TestThread(final int iter) {
             _iter = iter;
         }
 
-        public TestThread(int iter, int delay) {
+        public TestThread(final int iter, final int delay) {
             _iter = iter;
             _delay = delay;
         }
@@ -687,7 +687,7 @@ public abstract class TestConnectionPool {
         assertTrue(conn1.hashCode() != conn2.hashCode());
     }
 
-    protected boolean isClosed(Statement statement) {
+    protected boolean isClosed(final Statement statement) {
         try {
             statement.getWarnings();
             return false;
@@ -700,7 +700,7 @@ public abstract class TestConnectionPool {
         }
     }
 
-    protected boolean isClosed(ResultSet resultSet) {
+    protected boolean isClosed(final ResultSet resultSet) {
         try {
             resultSet.getWarnings();
             return false;
@@ -757,13 +757,13 @@ public abstract class TestConnectionPool {
      */
     protected void multipleThreads(final int holdTime,
             final boolean expectError, final boolean loopOnce,
-            final long maxWaitMillis, int numStatements, int numThreads, long duration) throws Exception {
+            final long maxWaitMillis, final int numStatements, final int numThreads, final long duration) throws Exception {
                 final long startTime = timeStamp();
                 final PoolTest[] pts = new PoolTest[numThreads];
                 // Catch Exception so we can stop all threads if one fails
                 final ThreadGroup threadGroup = new ThreadGroup("foo") {
                     @Override
-                    public void uncaughtException(Thread t, Throwable e) {
+                    public void uncaughtException(final Thread t, final Throwable e) {
                         for (final PoolTest pt : pts) {
                             pt.stop();
                         }
@@ -893,15 +893,15 @@ public abstract class TestConnectionPool {
 
         private final boolean loopOnce; // If true, don't repeat loop
 
-        public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException) {
+        public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException) {
             this(threadGroup, connHoldTime, isStopOnException, false, 1);
         }
         
-        public PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, int numStatements) {
+        public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException, final int numStatements) {
             this(threadGroup, connHoldTime, isStopOnException, false, numStatements);
         }
 
-        private PoolTest(ThreadGroup threadGroup, int connHoldTime, boolean isStopOnException, boolean once, int numStatements) {
+        private PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException, final boolean once, final int numStatements) {
             this.loopOnce = once;
             this.connHoldTime = connHoldTime;
             stopOnException = isStopOnException;

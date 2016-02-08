@@ -36,13 +36,13 @@ public class PerUserPoolDataSourceFactory
         PerUserPoolDataSource.class.getName();
 
     @Override
-    protected boolean isCorrectClass(String className) {
+    protected boolean isCorrectClass(final String className) {
         return PER_USER_POOL_CLASSNAME.equals(className);
     }
 
     @SuppressWarnings("unchecked") // Avoid warnings on deserialization
     @Override
-    protected InstanceKeyDataSource getNewInstance(Reference ref)
+    protected InstanceKeyDataSource getNewInstance(final Reference ref)
         throws IOException, ClassNotFoundException {
         final PerUserPoolDataSource pupds =  new PerUserPoolDataSource();
         RefAddr ra = ref.get("defaultMaxTotal");

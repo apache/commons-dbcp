@@ -79,7 +79,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @param stmt Statement which created this ResultSet
      * @param res ResultSet to wrap
      */
-    private DelegatingResultSet(Statement stmt, ResultSet res) {
+    private DelegatingResultSet(final Statement stmt, final ResultSet res) {
         super((AbandonedTrace)stmt);
         this._stmt = stmt;
         this._res = res;
@@ -96,20 +96,20 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @param conn Connection which created this ResultSet
      * @param res ResultSet to wrap
      */
-    private DelegatingResultSet(Connection conn, ResultSet res) {
+    private DelegatingResultSet(final Connection conn, final ResultSet res) {
         super((AbandonedTrace)conn);
         this._conn = conn;
         this._res = res;
     }
 
-    public static ResultSet wrapResultSet(Statement stmt, ResultSet rset) {
+    public static ResultSet wrapResultSet(final Statement stmt, final ResultSet rset) {
         if(null == rset) {
             return null;
         }
         return new DelegatingResultSet(stmt,rset);
     }
 
-    public static ResultSet wrapResultSet(Connection conn, ResultSet rset) {
+    public static ResultSet wrapResultSet(final Connection conn, final ResultSet rset) {
         if(null == rset) {
             return null;
         }
@@ -174,7 +174,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
-    protected void handleException(SQLException e) throws SQLException {
+    protected void handleException(final SQLException e) throws SQLException {
         if (_stmt != null && _stmt instanceof DelegatingStatement) {
             ((DelegatingStatement)_stmt).handleException(e);
         }
@@ -195,139 +195,139 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.wasNull(); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public String getString(int columnIndex) throws SQLException
+    public String getString(final int columnIndex) throws SQLException
     { try { return _res.getString(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public boolean getBoolean(int columnIndex) throws SQLException
+    public boolean getBoolean(final int columnIndex) throws SQLException
     { try { return _res.getBoolean(columnIndex); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public byte getByte(int columnIndex) throws SQLException
+    public byte getByte(final int columnIndex) throws SQLException
     { try { return _res.getByte(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public short getShort(int columnIndex) throws SQLException
+    public short getShort(final int columnIndex) throws SQLException
     { try { return _res.getShort(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public int getInt(int columnIndex) throws SQLException
+    public int getInt(final int columnIndex) throws SQLException
     { try { return _res.getInt(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public long getLong(int columnIndex) throws SQLException
+    public long getLong(final int columnIndex) throws SQLException
     { try { return _res.getLong(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public float getFloat(int columnIndex) throws SQLException
+    public float getFloat(final int columnIndex) throws SQLException
     { try { return _res.getFloat(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public double getDouble(int columnIndex) throws SQLException
+    public double getDouble(final int columnIndex) throws SQLException
     { try { return _res.getDouble(columnIndex); } catch (final SQLException e) { handleException(e); return 0; } }
 
     /** @deprecated Use {@link #getBigDecimal(int)} */
     @Deprecated
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException
+    public BigDecimal getBigDecimal(final int columnIndex, final int scale) throws SQLException
     { try { return _res.getBigDecimal(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public byte[] getBytes(int columnIndex) throws SQLException
+    public byte[] getBytes(final int columnIndex) throws SQLException
     { try { return _res.getBytes(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Date getDate(int columnIndex) throws SQLException
+    public Date getDate(final int columnIndex) throws SQLException
     { try { return _res.getDate(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Time getTime(int columnIndex) throws SQLException
+    public Time getTime(final int columnIndex) throws SQLException
     { try { return _res.getTime(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex) throws SQLException
+    public Timestamp getTimestamp(final int columnIndex) throws SQLException
     { try { return _res.getTimestamp(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public InputStream getAsciiStream(int columnIndex) throws SQLException
+    public InputStream getAsciiStream(final int columnIndex) throws SQLException
     { try { return _res.getAsciiStream(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     /** @deprecated Use {@link #getCharacterStream(int)} */
     @Deprecated
     @Override
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException
+    public InputStream getUnicodeStream(final int columnIndex) throws SQLException
     { try { return _res.getUnicodeStream(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public InputStream getBinaryStream(int columnIndex) throws SQLException
+    public InputStream getBinaryStream(final int columnIndex) throws SQLException
     { try { return _res.getBinaryStream(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public String getString(String columnName) throws SQLException
+    public String getString(final String columnName) throws SQLException
     { try { return _res.getString(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public boolean getBoolean(String columnName) throws SQLException
+    public boolean getBoolean(final String columnName) throws SQLException
     { try { return _res.getBoolean(columnName); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public byte getByte(String columnName) throws SQLException
+    public byte getByte(final String columnName) throws SQLException
     { try { return _res.getByte(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public short getShort(String columnName) throws SQLException
+    public short getShort(final String columnName) throws SQLException
     { try { return _res.getShort(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public int getInt(String columnName) throws SQLException
+    public int getInt(final String columnName) throws SQLException
     { try { return _res.getInt(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public long getLong(String columnName) throws SQLException
+    public long getLong(final String columnName) throws SQLException
     { try { return _res.getLong(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public float getFloat(String columnName) throws SQLException
+    public float getFloat(final String columnName) throws SQLException
     { try { return _res.getFloat(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public double getDouble(String columnName) throws SQLException
+    public double getDouble(final String columnName) throws SQLException
     { try { return _res.getDouble(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     /** @deprecated Use {@link #getBigDecimal(String)} */
     @Deprecated
     @Override
-    public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException
+    public BigDecimal getBigDecimal(final String columnName, final int scale) throws SQLException
     { try { return _res.getBigDecimal(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public byte[] getBytes(String columnName) throws SQLException
+    public byte[] getBytes(final String columnName) throws SQLException
     { try { return _res.getBytes(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Date getDate(String columnName) throws SQLException
+    public Date getDate(final String columnName) throws SQLException
     { try { return _res.getDate(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Time getTime(String columnName) throws SQLException
+    public Time getTime(final String columnName) throws SQLException
     { try { return _res.getTime(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Timestamp getTimestamp(String columnName) throws SQLException
+    public Timestamp getTimestamp(final String columnName) throws SQLException
     { try { return _res.getTimestamp(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public InputStream getAsciiStream(String columnName) throws SQLException
+    public InputStream getAsciiStream(final String columnName) throws SQLException
     { try { return _res.getAsciiStream(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     /** @deprecated Use {@link #getCharacterStream(String)} */
     @Deprecated
     @Override
-    public InputStream getUnicodeStream(String columnName) throws SQLException
+    public InputStream getUnicodeStream(final String columnName) throws SQLException
     { try { return _res.getUnicodeStream(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public InputStream getBinaryStream(String columnName) throws SQLException
+    public InputStream getBinaryStream(final String columnName) throws SQLException
     { try { return _res.getBinaryStream(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
@@ -347,31 +347,31 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.getMetaData(); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Object getObject(int columnIndex) throws SQLException
+    public Object getObject(final int columnIndex) throws SQLException
     { try { return _res.getObject(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Object getObject(String columnName) throws SQLException
+    public Object getObject(final String columnName) throws SQLException
     { try { return _res.getObject(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public int findColumn(String columnName) throws SQLException
+    public int findColumn(final String columnName) throws SQLException
     { try { return _res.findColumn(columnName); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public Reader getCharacterStream(int columnIndex) throws SQLException
+    public Reader getCharacterStream(final int columnIndex) throws SQLException
     { try { return _res.getCharacterStream(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Reader getCharacterStream(String columnName) throws SQLException
+    public Reader getCharacterStream(final String columnName) throws SQLException
     { try { return _res.getCharacterStream(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex) throws SQLException
+    public BigDecimal getBigDecimal(final int columnIndex) throws SQLException
     { try { return _res.getBigDecimal(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public BigDecimal getBigDecimal(String columnName) throws SQLException
+    public BigDecimal getBigDecimal(final String columnName) throws SQLException
     { try { return _res.getBigDecimal(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
@@ -411,11 +411,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.getRow(); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public boolean absolute(int row) throws SQLException
+    public boolean absolute(final int row) throws SQLException
     { try { return _res.absolute(row); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public boolean relative(int rows) throws SQLException
+    public boolean relative(final int rows) throws SQLException
     { try { return _res.relative(rows); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
@@ -423,7 +423,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.previous(); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public void setFetchDirection(int direction) throws SQLException
+    public void setFetchDirection(final int direction) throws SQLException
     { try { _res.setFetchDirection(direction); } catch (final SQLException e) { handleException(e); } }
 
     @Override
@@ -431,7 +431,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.getFetchDirection(); } catch (final SQLException e) { handleException(e); return 0; } }
 
     @Override
-    public void setFetchSize(int rows) throws SQLException
+    public void setFetchSize(final int rows) throws SQLException
     { try { _res.setFetchSize(rows); } catch (final SQLException e) { handleException(e); } }
 
     @Override
@@ -459,155 +459,155 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { return _res.rowDeleted(); } catch (final SQLException e) { handleException(e); return false; } }
 
     @Override
-    public void updateNull(int columnIndex) throws SQLException
+    public void updateNull(final int columnIndex) throws SQLException
     { try { _res.updateNull(columnIndex); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBoolean(int columnIndex, boolean x) throws SQLException
+    public void updateBoolean(final int columnIndex, final boolean x) throws SQLException
     { try { _res.updateBoolean(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateByte(int columnIndex, byte x) throws SQLException
+    public void updateByte(final int columnIndex, final byte x) throws SQLException
     { try { _res.updateByte(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateShort(int columnIndex, short x) throws SQLException
+    public void updateShort(final int columnIndex, final short x) throws SQLException
     { try { _res.updateShort(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateInt(int columnIndex, int x) throws SQLException
+    public void updateInt(final int columnIndex, final int x) throws SQLException
     { try { _res.updateInt(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateLong(int columnIndex, long x) throws SQLException
+    public void updateLong(final int columnIndex, final long x) throws SQLException
     { try { _res.updateLong(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateFloat(int columnIndex, float x) throws SQLException
+    public void updateFloat(final int columnIndex, final float x) throws SQLException
     { try { _res.updateFloat(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateDouble(int columnIndex, double x) throws SQLException
+    public void updateDouble(final int columnIndex, final double x) throws SQLException
     { try { _res.updateDouble(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException
+    public void updateBigDecimal(final int columnIndex, final BigDecimal x) throws SQLException
     { try { _res.updateBigDecimal(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateString(int columnIndex, String x) throws SQLException
+    public void updateString(final int columnIndex, final String x) throws SQLException
     { try { _res.updateString(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBytes(int columnIndex, byte[] x) throws SQLException
+    public void updateBytes(final int columnIndex, final byte[] x) throws SQLException
     { try { _res.updateBytes(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateDate(int columnIndex, Date x) throws SQLException
+    public void updateDate(final int columnIndex, final Date x) throws SQLException
     { try { _res.updateDate(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateTime(int columnIndex, Time x) throws SQLException
+    public void updateTime(final int columnIndex, final Time x) throws SQLException
     { try { _res.updateTime(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException
+    public void updateTimestamp(final int columnIndex, final Timestamp x) throws SQLException
     { try { _res.updateTimestamp(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException
+    public void updateAsciiStream(final int columnIndex, final InputStream x, final int length) throws SQLException
     { try { _res.updateAsciiStream(columnIndex, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException
+    public void updateBinaryStream(final int columnIndex, final InputStream x, final int length) throws SQLException
     { try { _res.updateBinaryStream(columnIndex, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException
+    public void updateCharacterStream(final int columnIndex, final Reader x, final int length) throws SQLException
     { try { _res.updateCharacterStream(columnIndex, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateObject(int columnIndex, Object x, int scale) throws SQLException
+    public void updateObject(final int columnIndex, final Object x, final int scale) throws SQLException
     { try { _res.updateObject(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateObject(int columnIndex, Object x) throws SQLException
+    public void updateObject(final int columnIndex, final Object x) throws SQLException
     { try { _res.updateObject(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateNull(String columnName) throws SQLException
+    public void updateNull(final String columnName) throws SQLException
     { try { _res.updateNull(columnName); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBoolean(String columnName, boolean x) throws SQLException
+    public void updateBoolean(final String columnName, final boolean x) throws SQLException
     { try { _res.updateBoolean(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateByte(String columnName, byte x) throws SQLException
+    public void updateByte(final String columnName, final byte x) throws SQLException
     { try { _res.updateByte(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateShort(String columnName, short x) throws SQLException
+    public void updateShort(final String columnName, final short x) throws SQLException
     { try { _res.updateShort(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateInt(String columnName, int x) throws SQLException
+    public void updateInt(final String columnName, final int x) throws SQLException
     { try { _res.updateInt(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateLong(String columnName, long x) throws SQLException
+    public void updateLong(final String columnName, final long x) throws SQLException
     { try { _res.updateLong(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateFloat(String columnName, float x) throws SQLException
+    public void updateFloat(final String columnName, final float x) throws SQLException
     { try { _res.updateFloat(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateDouble(String columnName, double x) throws SQLException
+    public void updateDouble(final String columnName, final double x) throws SQLException
     { try { _res.updateDouble(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException
+    public void updateBigDecimal(final String columnName, final BigDecimal x) throws SQLException
     { try { _res.updateBigDecimal(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateString(String columnName, String x) throws SQLException
+    public void updateString(final String columnName, final String x) throws SQLException
     { try { _res.updateString(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBytes(String columnName, byte[] x) throws SQLException
+    public void updateBytes(final String columnName, final byte[] x) throws SQLException
     { try { _res.updateBytes(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateDate(String columnName, Date x) throws SQLException
+    public void updateDate(final String columnName, final Date x) throws SQLException
     { try { _res.updateDate(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateTime(String columnName, Time x) throws SQLException
+    public void updateTime(final String columnName, final Time x) throws SQLException
     { try { _res.updateTime(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateTimestamp(String columnName, Timestamp x) throws SQLException
+    public void updateTimestamp(final String columnName, final Timestamp x) throws SQLException
     { try { _res.updateTimestamp(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateAsciiStream(String columnName, InputStream x, int length) throws SQLException
+    public void updateAsciiStream(final String columnName, final InputStream x, final int length) throws SQLException
     { try { _res.updateAsciiStream(columnName, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBinaryStream(String columnName, InputStream x, int length) throws SQLException
+    public void updateBinaryStream(final String columnName, final InputStream x, final int length) throws SQLException
     { try { _res.updateBinaryStream(columnName, x, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateCharacterStream(String columnName, Reader reader, int length) throws SQLException
+    public void updateCharacterStream(final String columnName, final Reader reader, final int length) throws SQLException
     { try { _res.updateCharacterStream(columnName, reader, length); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateObject(String columnName, Object x, int scale) throws SQLException
+    public void updateObject(final String columnName, final Object x, final int scale) throws SQLException
     { try { _res.updateObject(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateObject(String columnName, Object x) throws SQLException
+    public void updateObject(final String columnName, final Object x) throws SQLException
     { try { _res.updateObject(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
@@ -639,113 +639,113 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     { try { _res.moveToCurrentRow(); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public Object getObject(int i, Map<String,Class<?>> map) throws SQLException
+    public Object getObject(final int i, final Map<String,Class<?>> map) throws SQLException
     { try { return _res.getObject(i, map); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Ref getRef(int i) throws SQLException
+    public Ref getRef(final int i) throws SQLException
     { try { return _res.getRef(i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Blob getBlob(int i) throws SQLException
+    public Blob getBlob(final int i) throws SQLException
     { try { return _res.getBlob(i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Clob getClob(int i) throws SQLException
+    public Clob getClob(final int i) throws SQLException
     { try { return _res.getClob(i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Array getArray(int i) throws SQLException
+    public Array getArray(final int i) throws SQLException
     { try { return _res.getArray(i); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Object getObject(String colName, Map<String,Class<?>> map) throws SQLException
+    public Object getObject(final String colName, final Map<String,Class<?>> map) throws SQLException
     { try { return _res.getObject(colName, map); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Ref getRef(String colName) throws SQLException
+    public Ref getRef(final String colName) throws SQLException
     { try { return _res.getRef(colName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Blob getBlob(String colName) throws SQLException
+    public Blob getBlob(final String colName) throws SQLException
     { try { return _res.getBlob(colName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Clob getClob(String colName) throws SQLException
+    public Clob getClob(final String colName) throws SQLException
     { try { return _res.getClob(colName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Array getArray(String colName) throws SQLException
+    public Array getArray(final String colName) throws SQLException
     { try { return _res.getArray(colName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Date getDate(int columnIndex, Calendar cal) throws SQLException
+    public Date getDate(final int columnIndex, final Calendar cal) throws SQLException
     { try { return _res.getDate(columnIndex, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Date getDate(String columnName, Calendar cal) throws SQLException
+    public Date getDate(final String columnName, final Calendar cal) throws SQLException
     { try { return _res.getDate(columnName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Time getTime(int columnIndex, Calendar cal) throws SQLException
+    public Time getTime(final int columnIndex, final Calendar cal) throws SQLException
     { try { return _res.getTime(columnIndex, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Time getTime(String columnName, Calendar cal) throws SQLException
+    public Time getTime(final String columnName, final Calendar cal) throws SQLException
     { try { return _res.getTime(columnName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException
+    public Timestamp getTimestamp(final int columnIndex, final Calendar cal) throws SQLException
     { try { return _res.getTimestamp(columnIndex, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException
+    public Timestamp getTimestamp(final String columnName, final Calendar cal) throws SQLException
     { try { return _res.getTimestamp(columnName, cal); } catch (final SQLException e) { handleException(e); return null; } }
 
 
     @Override
-    public java.net.URL getURL(int columnIndex) throws SQLException
+    public java.net.URL getURL(final int columnIndex) throws SQLException
     { try { return _res.getURL(columnIndex); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public java.net.URL getURL(String columnName) throws SQLException
+    public java.net.URL getURL(final String columnName) throws SQLException
     { try { return _res.getURL(columnName); } catch (final SQLException e) { handleException(e); return null; } }
 
     @Override
-    public void updateRef(int columnIndex, Ref x) throws SQLException
+    public void updateRef(final int columnIndex, final Ref x) throws SQLException
     { try { _res.updateRef(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateRef(String columnName, Ref x) throws SQLException
+    public void updateRef(final String columnName, final Ref x) throws SQLException
     { try { _res.updateRef(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBlob(int columnIndex, Blob x) throws SQLException
+    public void updateBlob(final int columnIndex, final Blob x) throws SQLException
     { try { _res.updateBlob(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateBlob(String columnName, Blob x) throws SQLException
+    public void updateBlob(final String columnName, final Blob x) throws SQLException
     { try { _res.updateBlob(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateClob(int columnIndex, Clob x) throws SQLException
+    public void updateClob(final int columnIndex, final Clob x) throws SQLException
     { try { _res.updateClob(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateClob(String columnName, Clob x) throws SQLException
+    public void updateClob(final String columnName, final Clob x) throws SQLException
     { try { _res.updateClob(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateArray(int columnIndex, Array x) throws SQLException
+    public void updateArray(final int columnIndex, final Array x) throws SQLException
     { try { _res.updateArray(columnIndex, x); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void updateArray(String columnName, Array x) throws SQLException
+    public void updateArray(final String columnName, final Array x) throws SQLException
     { try { _res.updateArray(columnName, x); } catch (final SQLException e) { handleException(e); } }
 
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return true;
         } else if (iface.isAssignableFrom(_res.getClass())) {
@@ -756,7 +756,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
         } else if (iface.isAssignableFrom(_res.getClass())) {
@@ -767,7 +767,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public RowId getRowId(int columnIndex) throws SQLException {
+    public RowId getRowId(final int columnIndex) throws SQLException {
         try {
             return _res.getRowId(columnIndex);
         }
@@ -778,7 +778,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public RowId getRowId(String columnLabel) throws SQLException {
+    public RowId getRowId(final String columnLabel) throws SQLException {
         try {
             return _res.getRowId(columnLabel);
         }
@@ -789,7 +789,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateRowId(int columnIndex, RowId value) throws SQLException {
+    public void updateRowId(final int columnIndex, final RowId value) throws SQLException {
         try {
             _res.updateRowId(columnIndex, value);
         }
@@ -799,7 +799,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateRowId(String columnLabel, RowId value) throws SQLException {
+    public void updateRowId(final String columnLabel, final RowId value) throws SQLException {
         try {
             _res.updateRowId(columnLabel, value);
         }
@@ -831,7 +831,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNString(int columnIndex, String value) throws SQLException {
+    public void updateNString(final int columnIndex, final String value) throws SQLException {
         try {
             _res.updateNString(columnIndex, value);
         }
@@ -841,7 +841,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNString(String columnLabel, String value) throws SQLException {
+    public void updateNString(final String columnLabel, final String value) throws SQLException {
         try {
             _res.updateNString(columnLabel, value);
         }
@@ -851,7 +851,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(int columnIndex, NClob value) throws SQLException {
+    public void updateNClob(final int columnIndex, final NClob value) throws SQLException {
         try {
             _res.updateNClob(columnIndex, value);
         }
@@ -861,7 +861,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(String columnLabel, NClob value) throws SQLException {
+    public void updateNClob(final String columnLabel, final NClob value) throws SQLException {
         try {
             _res.updateNClob(columnLabel, value);
         }
@@ -871,7 +871,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public NClob getNClob(int columnIndex) throws SQLException {
+    public NClob getNClob(final int columnIndex) throws SQLException {
         try {
             return _res.getNClob(columnIndex);
         }
@@ -882,7 +882,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public NClob getNClob(String columnLabel) throws SQLException {
+    public NClob getNClob(final String columnLabel) throws SQLException {
         try {
             return _res.getNClob(columnLabel);
         }
@@ -893,7 +893,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public SQLXML getSQLXML(int columnIndex) throws SQLException {
+    public SQLXML getSQLXML(final int columnIndex) throws SQLException {
         try {
             return _res.getSQLXML(columnIndex);
         }
@@ -904,7 +904,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public SQLXML getSQLXML(String columnLabel) throws SQLException {
+    public SQLXML getSQLXML(final String columnLabel) throws SQLException {
         try {
             return _res.getSQLXML(columnLabel);
         }
@@ -915,7 +915,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateSQLXML(int columnIndex, SQLXML value) throws SQLException {
+    public void updateSQLXML(final int columnIndex, final SQLXML value) throws SQLException {
         try {
             _res.updateSQLXML(columnIndex, value);
         }
@@ -925,7 +925,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateSQLXML(String columnLabel, SQLXML value) throws SQLException {
+    public void updateSQLXML(final String columnLabel, final SQLXML value) throws SQLException {
         try {
             _res.updateSQLXML(columnLabel, value);
         }
@@ -935,7 +935,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public String getNString(int columnIndex) throws SQLException {
+    public String getNString(final int columnIndex) throws SQLException {
         try {
             return _res.getNString(columnIndex);
         }
@@ -946,7 +946,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public String getNString(String columnLabel) throws SQLException {
+    public String getNString(final String columnLabel) throws SQLException {
         try {
             return _res.getNString(columnLabel);
         }
@@ -957,7 +957,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public Reader getNCharacterStream(int columnIndex) throws SQLException {
+    public Reader getNCharacterStream(final int columnIndex) throws SQLException {
         try {
             return _res.getNCharacterStream(columnIndex);
         }
@@ -968,7 +968,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public Reader getNCharacterStream(String columnLabel) throws SQLException {
+    public Reader getNCharacterStream(final String columnLabel) throws SQLException {
         try {
             return _res.getNCharacterStream(columnLabel);
         }
@@ -979,7 +979,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
+    public void updateNCharacterStream(final int columnIndex, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateNCharacterStream(columnIndex, reader, length);
         }
@@ -989,7 +989,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+    public void updateNCharacterStream(final String columnLabel, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateNCharacterStream(columnLabel, reader, length);
         }
@@ -999,7 +999,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
+    public void updateAsciiStream(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateAsciiStream(columnIndex, inputStream, length);
         }
@@ -1009,7 +1009,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream inputStream, long length) throws SQLException {
+    public void updateBinaryStream(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateBinaryStream(columnIndex, inputStream, length);
         }
@@ -1019,7 +1019,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader reader, long length) throws SQLException {
+    public void updateCharacterStream(final int columnIndex, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateCharacterStream(columnIndex, reader, length);
         }
@@ -1029,7 +1029,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateAsciiStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
+    public void updateAsciiStream(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateAsciiStream(columnLabel, inputStream, length);
         }
@@ -1039,7 +1039,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBinaryStream(String columnLabel, InputStream inputStream, long length) throws SQLException {
+    public void updateBinaryStream(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateBinaryStream(columnLabel, inputStream, length);
         }
@@ -1049,7 +1049,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
+    public void updateCharacterStream(final String columnLabel, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateCharacterStream(columnLabel, reader, length);
         }
@@ -1059,7 +1059,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
+    public void updateBlob(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateBlob(columnIndex, inputStream, length);
         }
@@ -1069,7 +1069,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
+    public void updateBlob(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         try {
             _res.updateBlob(columnLabel, inputStream, length);
         }
@@ -1079,7 +1079,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
+    public void updateClob(final int columnIndex, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateClob(columnIndex, reader, length);
         }
@@ -1089,7 +1089,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
+    public void updateClob(final String columnLabel, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateClob(columnLabel, reader, length);
         }
@@ -1099,7 +1099,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
+    public void updateNClob(final int columnIndex, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateNClob(columnIndex, reader, length);
         }
@@ -1109,7 +1109,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
+    public void updateNClob(final String columnLabel, final Reader reader, final long length) throws SQLException {
         try {
             _res.updateNClob(columnLabel, reader, length);
         }
@@ -1119,7 +1119,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNCharacterStream(int columnIndex, Reader reader) throws SQLException {
+    public void updateNCharacterStream(final int columnIndex, final Reader reader) throws SQLException {
         try {
             _res.updateNCharacterStream(columnIndex, reader);
         }
@@ -1129,7 +1129,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
+    public void updateNCharacterStream(final String columnLabel, final Reader reader) throws SQLException {
         try {
             _res.updateNCharacterStream(columnLabel, reader);
         }
@@ -1139,7 +1139,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream inputStream) throws SQLException {
+    public void updateAsciiStream(final int columnIndex, final InputStream inputStream) throws SQLException {
         try {
             _res.updateAsciiStream(columnIndex, inputStream);
         }
@@ -1149,7 +1149,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream inputStream) throws SQLException {
+    public void updateBinaryStream(final int columnIndex, final InputStream inputStream) throws SQLException {
         try {
             _res.updateBinaryStream(columnIndex, inputStream);
         }
@@ -1159,7 +1159,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader reader) throws SQLException {
+    public void updateCharacterStream(final int columnIndex, final Reader reader) throws SQLException {
         try {
             _res.updateCharacterStream(columnIndex, reader);
         }
@@ -1169,7 +1169,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateAsciiStream(String columnLabel, InputStream inputStream) throws SQLException {
+    public void updateAsciiStream(final String columnLabel, final InputStream inputStream) throws SQLException {
         try {
             _res.updateAsciiStream(columnLabel, inputStream);
         }
@@ -1179,7 +1179,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBinaryStream(String columnLabel, InputStream inputStream) throws SQLException {
+    public void updateBinaryStream(final String columnLabel, final InputStream inputStream) throws SQLException {
         try {
             _res.updateBinaryStream(columnLabel, inputStream);
         }
@@ -1189,7 +1189,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
+    public void updateCharacterStream(final String columnLabel, final Reader reader) throws SQLException {
         try {
             _res.updateCharacterStream(columnLabel, reader);
         }
@@ -1199,7 +1199,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
+    public void updateBlob(final int columnIndex, final InputStream inputStream) throws SQLException {
         try {
             _res.updateBlob(columnIndex, inputStream);
         }
@@ -1209,7 +1209,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
+    public void updateBlob(final String columnLabel, final InputStream inputStream) throws SQLException {
         try {
             _res.updateBlob(columnLabel, inputStream);
         }
@@ -1219,7 +1219,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateClob(int columnIndex, Reader reader) throws SQLException {
+    public void updateClob(final int columnIndex, final Reader reader) throws SQLException {
         try {
             _res.updateClob(columnIndex, reader);
         }
@@ -1229,7 +1229,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateClob(String columnLabel, Reader reader) throws SQLException {
+    public void updateClob(final String columnLabel, final Reader reader) throws SQLException {
         try {
             _res.updateClob(columnLabel, reader);
         }
@@ -1239,7 +1239,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(int columnIndex, Reader reader) throws SQLException {
+    public void updateNClob(final int columnIndex, final Reader reader) throws SQLException {
         try {
             _res.updateNClob(columnIndex, reader);
         }
@@ -1249,7 +1249,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public void updateNClob(String columnLabel, Reader reader) throws SQLException {
+    public void updateNClob(final String columnLabel, final Reader reader) throws SQLException {
         try {
             _res.updateNClob(columnLabel, reader);
         }
@@ -1259,7 +1259,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+    public <T> T getObject(final int columnIndex, final Class<T> type) throws SQLException {
         try {
             return _res.getObject(columnIndex, type);
         }
@@ -1270,7 +1270,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public <T> T getObject(String columnLabel, Class<T> type)
+    public <T> T getObject(final String columnLabel, final Class<T> type)
             throws SQLException {
         try {
             return _res.getObject(columnLabel, type);

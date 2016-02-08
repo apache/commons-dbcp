@@ -240,7 +240,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @exception Exception if an exception occurs creating the instance
      */
     @Override
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?,?> environment)
+    public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx, final Hashtable<?,?> environment)
         throws Exception {
 
         // We only know how to deal with <code>javax.naming.Reference</code>s
@@ -285,8 +285,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param warnings container for warning messages
      * @param infoMessages container for info messages
      */
-    private void validatePropertyNames(Reference ref, Name name, List<String> warnings,
-                                      List<String> infoMessages) {
+    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnings,
+                                      final List<String> infoMessages) {
         final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
         final String nameString = name != null ? "Name = " + name.toString() + " " : "";
         if (NUPROP_WARNTEXT!=null && !NUPROP_WARNTEXT.keySet().isEmpty()) {
@@ -335,7 +335,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param properties the datasource configuration properties
      * @throws Exception if an error occurs creating the data source
      */
-    public static BasicDataSource createDataSource(Properties properties) throws Exception {
+    public static BasicDataSource createDataSource(final Properties properties) throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
         String value = null;
 
@@ -606,7 +606,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @return Properties
      * @throws Exception
      */
-    private static Properties getProperties(String propText) throws Exception {
+    private static Properties getProperties(final String propText) throws Exception {
       final Properties p = new Properties();
       if (propText != null) {
         p.load(new ByteArrayInputStream(
@@ -621,7 +621,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param delimiter character used to separate values in the list
      * @return String Collection of values
      */
-    private static Collection<String> parseList(String value, char delimiter) {
+    private static Collection<String> parseList(final String value, final char delimiter) {
         final StringTokenizer tokenizer = new StringTokenizer(value, Character.toString(delimiter));
         final Collection<String> tokens = new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {

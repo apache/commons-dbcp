@@ -114,7 +114,7 @@ public class TestDriverManagerConnectionFactory {
         private final DataSource ds;
         private volatile boolean result = true;
 
-        private ConnectionThread(DataSource ds) {
+        private ConnectionThread(final DataSource ds) {
             this.ds = ds;
         }
 

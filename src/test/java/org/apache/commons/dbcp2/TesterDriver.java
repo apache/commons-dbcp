@@ -59,18 +59,18 @@ public class TesterDriver implements Driver {
     /** 
      * TesterDriver specific method to add users to the list of valid users 
      */
-    public static void addUser(String username, String password) {
+    public static void addUser(final String username, final String password) {
         synchronized (validUserPasswords) {
             validUserPasswords.put(username, password);
         }
     }
 
     @Override
-    public boolean acceptsURL(String url) throws SQLException {
+    public boolean acceptsURL(final String url) throws SQLException {
         return url != null && url.startsWith(CONNECT_STRING);
     }
 
-    private void assertValidUserPassword(String user, String password) 
+    private void assertValidUserPassword(final String user, final String password) 
         throws SQLException {
         if (user == null){
             throw new SQLException("username cannot be null.");            
@@ -88,7 +88,7 @@ public class TesterDriver implements Driver {
     }
 
     @Override
-    public Connection connect(String url, Properties info) throws SQLException {
+    public Connection connect(final String url, final Properties info) throws SQLException {
         //return (acceptsURL(url) ? new TesterConnection() : null);
         Connection conn = null;
         if (acceptsURL(url)) 
@@ -130,7 +130,7 @@ public class TesterDriver implements Driver {
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) {
+    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
         return new DriverPropertyInfo[0];
     }
 

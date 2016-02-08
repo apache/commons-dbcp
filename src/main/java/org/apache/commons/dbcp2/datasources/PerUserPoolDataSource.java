@@ -121,7 +121,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getBlockWhenExhausted()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public boolean getPerUserBlockWhenExhausted(String key) {
+    public boolean getPerUserBlockWhenExhausted(final String key) {
         Boolean value = null;
         if (perUserBlockWhenExhausted != null) {
             value = perUserBlockWhenExhausted.get(key);
@@ -137,8 +137,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getBlockWhenExhausted()} for the specified
      * user's pool.
      */
-    public void setPerUserBlockWhenExhausted(String username,
-            Boolean value) {
+    public void setPerUserBlockWhenExhausted(final String username,
+            final Boolean value) {
         assertInitializationAllowed();
         if (perUserBlockWhenExhausted == null) {
             perUserBlockWhenExhausted = new HashMap<>();
@@ -147,7 +147,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserBlockWhenExhausted(
-            Map<String,Boolean> userDefaultBlockWhenExhausted) {
+            final Map<String,Boolean> userDefaultBlockWhenExhausted) {
         assertInitializationAllowed();
         if (perUserBlockWhenExhausted == null) {
             perUserBlockWhenExhausted = new HashMap<>();
@@ -163,7 +163,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getEvictionPolicyClassName()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public String getPerUserEvictionPolicyClassName(String key) {
+    public String getPerUserEvictionPolicyClassName(final String key) {
         String value = null;
         if (perUserEvictionPolicyClassName != null) {
             value = perUserEvictionPolicyClassName.get(key);
@@ -179,8 +179,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified
      * user's pool.
      */
-    public void setPerUserEvictionPolicyClassName(String username,
-            String value) {
+    public void setPerUserEvictionPolicyClassName(final String username,
+            final String value) {
         assertInitializationAllowed();
         if (perUserEvictionPolicyClassName == null) {
             perUserEvictionPolicyClassName = new HashMap<>();
@@ -189,7 +189,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserEvictionPolicyClassName(
-            Map<String,String> userDefaultEvictionPolicyClassName) {
+            final Map<String,String> userDefaultEvictionPolicyClassName) {
         assertInitializationAllowed();
         if (perUserEvictionPolicyClassName == null) {
             perUserEvictionPolicyClassName = new HashMap<>();
@@ -205,7 +205,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * the specified user's pool or the default if no user specific value is
      * defined.
      */
-    public boolean getPerUserLifo(String key) {
+    public boolean getPerUserLifo(final String key) {
         Boolean value = null;
         if (perUserLifo != null) {
             value = perUserLifo.get(key);
@@ -221,7 +221,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getLifo()} for the specified
      * user's pool.
      */
-    public void setPerUserLifo(String username, Boolean value) {
+    public void setPerUserLifo(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserLifo == null) {
             perUserLifo = new HashMap<>();
@@ -229,7 +229,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserLifo.put(username, value);
     }
 
-    void setPerUserLifo(Map<String,Boolean> userDefaultLifo) {
+    void setPerUserLifo(final Map<String,Boolean> userDefaultLifo) {
         assertInitializationAllowed();
         if (perUserLifo == null) {
             perUserLifo = new HashMap<>();
@@ -245,7 +245,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxIdle()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public int getPerUserMaxIdle(String key) {
+    public int getPerUserMaxIdle(final String key) {
         Integer value = null;
         if (perUserMaxIdle != null) {
             value = perUserMaxIdle.get(key);
@@ -261,7 +261,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxIdle()} for the specified
      * user's pool.
      */
-    public void setPerUserMaxIdle(String username, Integer value) {
+    public void setPerUserMaxIdle(final String username, final Integer value) {
         assertInitializationAllowed();
         if (perUserMaxIdle == null) {
             perUserMaxIdle = new HashMap<>();
@@ -269,7 +269,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMaxIdle.put(username, value);
     }
 
-    void setPerUserMaxIdle(Map<String,Integer> userDefaultMaxIdle) {
+    void setPerUserMaxIdle(final Map<String,Integer> userDefaultMaxIdle) {
         assertInitializationAllowed();
         if (perUserMaxIdle == null) {
             perUserMaxIdle = new HashMap<>();
@@ -285,7 +285,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxTotal()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public int getPerUserMaxTotal(String key) {
+    public int getPerUserMaxTotal(final String key) {
         Integer value = null;
         if (perUserMaxTotal != null) {
             value = perUserMaxTotal.get(key);
@@ -301,7 +301,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxTotal()} for the specified
      * user's pool.
      */
-    public void setPerUserMaxTotal(String username, Integer value) {
+    public void setPerUserMaxTotal(final String username, final Integer value) {
         assertInitializationAllowed();
         if (perUserMaxTotal == null) {
             perUserMaxTotal = new HashMap<>();
@@ -309,7 +309,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMaxTotal.put(username, value);
     }
 
-    void setPerUserMaxTotal(Map<String,Integer> userDefaultMaxTotal) {
+    void setPerUserMaxTotal(final Map<String,Integer> userDefaultMaxTotal) {
         assertInitializationAllowed();
         if (perUserMaxTotal == null) {
             perUserMaxTotal = new HashMap<>();
@@ -325,7 +325,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxWaitMillis()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public long getPerUserMaxWaitMillis(String key) {
+    public long getPerUserMaxWaitMillis(final String key) {
         Long value = null;
         if (perUserMaxWaitMillis != null) {
             value = perUserMaxWaitMillis.get(key);
@@ -341,7 +341,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMaxWaitMillis()} for the specified
      * user's pool.
      */
-    public void setPerUserMaxWaitMillis(String username, Long value) {
+    public void setPerUserMaxWaitMillis(final String username, final Long value) {
         assertInitializationAllowed();
         if (perUserMaxWaitMillis == null) {
             perUserMaxWaitMillis = new HashMap<>();
@@ -350,7 +350,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserMaxWaitMillis(
-            Map<String,Long> userDefaultMaxWaitMillis) {
+            final Map<String,Long> userDefaultMaxWaitMillis) {
         assertInitializationAllowed();
         if (perUserMaxWaitMillis == null) {
             perUserMaxWaitMillis = new HashMap<>();
@@ -366,7 +366,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public long getPerUserMinEvictableIdleTimeMillis(String key) {
+    public long getPerUserMinEvictableIdleTimeMillis(final String key) {
         Long value = null;
         if (perUserMinEvictableIdleTimeMillis != null) {
             value = perUserMinEvictableIdleTimeMillis.get(key);
@@ -382,8 +382,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the
      * specified user's pool.
      */
-    public void setPerUserMinEvictableIdleTimeMillis(String username,
-            Long value) {
+    public void setPerUserMinEvictableIdleTimeMillis(final String username,
+            final Long value) {
         assertInitializationAllowed();
         if (perUserMinEvictableIdleTimeMillis == null) {
             perUserMinEvictableIdleTimeMillis = new HashMap<>();
@@ -392,7 +392,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserMinEvictableIdleTimeMillis(
-            Map<String,Long> userDefaultMinEvictableIdleTimeMillis) {
+            final Map<String,Long> userDefaultMinEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         if (perUserMinEvictableIdleTimeMillis == null) {
             perUserMinEvictableIdleTimeMillis = new HashMap<>();
@@ -409,7 +409,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMinIdle()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public int getPerUserMinIdle(String key) {
+    public int getPerUserMinIdle(final String key) {
         Integer value = null;
         if (perUserMinIdle != null) {
             value = perUserMinIdle.get(key);
@@ -425,7 +425,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getMinIdle()} for the specified
      * user's pool.
      */
-    public void setPerUserMinIdle(String username, Integer value) {
+    public void setPerUserMinIdle(final String username, final Integer value) {
         assertInitializationAllowed();
         if (perUserMinIdle == null) {
             perUserMinIdle = new HashMap<>();
@@ -433,7 +433,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMinIdle.put(username, value);
     }
 
-    void setPerUserMinIdle(Map<String,Integer> userDefaultMinIdle) {
+    void setPerUserMinIdle(final Map<String,Integer> userDefaultMinIdle) {
         assertInitializationAllowed();
         if (perUserMinIdle == null) {
             perUserMinIdle = new HashMap<>();
@@ -449,7 +449,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getNumTestsPerEvictionRun()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public int getPerUserNumTestsPerEvictionRun(String key) {
+    public int getPerUserNumTestsPerEvictionRun(final String key) {
         Integer value = null;
         if (perUserNumTestsPerEvictionRun != null) {
             value = perUserNumTestsPerEvictionRun.get(key);
@@ -465,8 +465,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getNumTestsPerEvictionRun()} for the specified
      * user's pool.
      */
-    public void setPerUserNumTestsPerEvictionRun(String username,
-            Integer value) {
+    public void setPerUserNumTestsPerEvictionRun(final String username,
+            final Integer value) {
         assertInitializationAllowed();
         if (perUserNumTestsPerEvictionRun == null) {
             perUserNumTestsPerEvictionRun = new HashMap<>();
@@ -475,7 +475,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserNumTestsPerEvictionRun(
-            Map<String,Integer> userDefaultNumTestsPerEvictionRun) {
+            final Map<String,Integer> userDefaultNumTestsPerEvictionRun) {
         assertInitializationAllowed();
         if (perUserNumTestsPerEvictionRun == null) {
             perUserNumTestsPerEvictionRun = new HashMap<>();
@@ -491,7 +491,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public long getPerUserSoftMinEvictableIdleTimeMillis(String key) {
+    public long getPerUserSoftMinEvictableIdleTimeMillis(final String key) {
         Long value = null;
         if (perUserSoftMinEvictableIdleTimeMillis != null) {
             value = perUserSoftMinEvictableIdleTimeMillis.get(key);
@@ -507,8 +507,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the
      * specified user's pool.
      */
-    public void setPerUserSoftMinEvictableIdleTimeMillis(String username,
-            Long value) {
+    public void setPerUserSoftMinEvictableIdleTimeMillis(final String username,
+            final Long value) {
         assertInitializationAllowed();
         if (perUserSoftMinEvictableIdleTimeMillis == null) {
             perUserSoftMinEvictableIdleTimeMillis = new HashMap<>();
@@ -517,7 +517,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserSoftMinEvictableIdleTimeMillis(
-            Map<String,Long> userDefaultSoftMinEvictableIdleTimeMillis) {
+            final Map<String,Long> userDefaultSoftMinEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         if (perUserSoftMinEvictableIdleTimeMillis == null) {
             perUserSoftMinEvictableIdleTimeMillis = new HashMap<>();
@@ -533,7 +533,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnCreate()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public boolean getPerUserTestOnCreate(String key) {
+    public boolean getPerUserTestOnCreate(final String key) {
         Boolean value = null;
         if (perUserTestOnCreate != null) {
             value = perUserTestOnCreate.get(key);
@@ -549,7 +549,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnCreate()} for the specified
      * user's pool.
      */
-    public void setPerUserTestOnCreate(String username, Boolean value) {
+    public void setPerUserTestOnCreate(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserTestOnCreate == null) {
             perUserTestOnCreate = new HashMap<>();
@@ -557,7 +557,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserTestOnCreate.put(username, value);
     }
 
-    void setPerUserTestOnCreate(Map<String,Boolean> userDefaultTestOnCreate) {
+    void setPerUserTestOnCreate(final Map<String,Boolean> userDefaultTestOnCreate) {
         assertInitializationAllowed();
         if (perUserTestOnCreate == null) {
             perUserTestOnCreate = new HashMap<>();
@@ -573,7 +573,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnBorrow()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public boolean getPerUserTestOnBorrow(String key) {
+    public boolean getPerUserTestOnBorrow(final String key) {
         Boolean value = null;
         if (perUserTestOnBorrow != null) {
             value = perUserTestOnBorrow.get(key);
@@ -589,7 +589,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnBorrow()} for the specified
      * user's pool.
      */
-    public void setPerUserTestOnBorrow(String username, Boolean value) {
+    public void setPerUserTestOnBorrow(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserTestOnBorrow == null) {
             perUserTestOnBorrow = new HashMap<>();
@@ -597,7 +597,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserTestOnBorrow.put(username, value);
     }
 
-    void setPerUserTestOnBorrow(Map<String,Boolean> userDefaultTestOnBorrow) {
+    void setPerUserTestOnBorrow(final Map<String,Boolean> userDefaultTestOnBorrow) {
         assertInitializationAllowed();
         if (perUserTestOnBorrow == null) {
             perUserTestOnBorrow = new HashMap<>();
@@ -613,7 +613,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnReturn()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public boolean getPerUserTestOnReturn(String key) {
+    public boolean getPerUserTestOnReturn(final String key) {
         Boolean value = null;
         if (perUserTestOnReturn != null) {
             value = perUserTestOnReturn.get(key);
@@ -629,7 +629,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestOnReturn()} for the specified
      * user's pool.
      */
-    public void setPerUserTestOnReturn(String username, Boolean value) {
+    public void setPerUserTestOnReturn(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserTestOnReturn == null) {
             perUserTestOnReturn = new HashMap<>();
@@ -638,7 +638,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserTestOnReturn(
-            Map<String,Boolean> userDefaultTestOnReturn) {
+            final Map<String,Boolean> userDefaultTestOnReturn) {
         assertInitializationAllowed();
         if (perUserTestOnReturn == null) {
             perUserTestOnReturn = new HashMap<>();
@@ -654,7 +654,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestWhileIdle()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public boolean getPerUserTestWhileIdle(String key) {
+    public boolean getPerUserTestWhileIdle(final String key) {
         Boolean value = null;
         if (perUserTestWhileIdle != null) {
             value = perUserTestWhileIdle.get(key);
@@ -670,7 +670,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTestWhileIdle()} for the specified
      * user's pool.
      */
-    public void setPerUserTestWhileIdle(String username, Boolean value) {
+    public void setPerUserTestWhileIdle(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserTestWhileIdle == null) {
             perUserTestWhileIdle = new HashMap<>();
@@ -679,7 +679,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserTestWhileIdle(
-            Map<String,Boolean> userDefaultTestWhileIdle) {
+            final Map<String,Boolean> userDefaultTestWhileIdle) {
         assertInitializationAllowed();
         if (perUserTestWhileIdle == null) {
             perUserTestWhileIdle = new HashMap<>();
@@ -695,7 +695,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis()} for the
      * specified user's pool or the default if no user specific value is defined.
      */
-    public long getPerUserTimeBetweenEvictionRunsMillis(String key) {
+    public long getPerUserTimeBetweenEvictionRunsMillis(final String key) {
         Long value = null;
         if (perUserTimeBetweenEvictionRunsMillis != null) {
             value = perUserTimeBetweenEvictionRunsMillis.get(key);
@@ -711,8 +711,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for the specified
      * user's pool.
      */
-    public void setPerUserTimeBetweenEvictionRunsMillis(String username,
-            Long value) {
+    public void setPerUserTimeBetweenEvictionRunsMillis(final String username,
+            final Long value) {
         assertInitializationAllowed();
         if (perUserTimeBetweenEvictionRunsMillis == null) {
             perUserTimeBetweenEvictionRunsMillis = new HashMap<>();
@@ -721,7 +721,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserTimeBetweenEvictionRunsMillis(
-            Map<String,Long> userDefaultTimeBetweenEvictionRunsMillis ) {
+            final Map<String,Long> userDefaultTimeBetweenEvictionRunsMillis ) {
         assertInitializationAllowed();
         if (perUserTimeBetweenEvictionRunsMillis == null) {
             perUserTimeBetweenEvictionRunsMillis = new HashMap<>();
@@ -737,7 +737,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Gets the user specific default value for
      * {@link Connection#setAutoCommit(boolean)} for the specified user's pool.
      */
-    public Boolean getPerUserDefaultAutoCommit(String key) {
+    public Boolean getPerUserDefaultAutoCommit(final String key) {
         Boolean value = null;
         if (perUserDefaultAutoCommit != null) {
             value = perUserDefaultAutoCommit.get(key);
@@ -749,7 +749,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Sets a user specific default value for
      * {@link Connection#setAutoCommit(boolean)} for the specified user's pool.
      */
-    public void setPerUserDefaultAutoCommit(String username, Boolean value) {
+    public void setPerUserDefaultAutoCommit(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserDefaultAutoCommit == null) {
             perUserDefaultAutoCommit = new HashMap<>();
@@ -757,7 +757,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserDefaultAutoCommit.put(username, value);
     }
 
-    void setPerUserDefaultAutoCommit(Map<String,Boolean> userDefaultAutoCommit) {
+    void setPerUserDefaultAutoCommit(final Map<String,Boolean> userDefaultAutoCommit) {
         assertInitializationAllowed();
         if (perUserDefaultAutoCommit == null) {
             perUserDefaultAutoCommit = new HashMap<>();
@@ -772,7 +772,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Gets the user specific default value for
      * {@link Connection#setReadOnly(boolean)} for the specified user's pool.
      */
-    public Boolean getPerUserDefaultReadOnly(String key) {
+    public Boolean getPerUserDefaultReadOnly(final String key) {
         Boolean value = null;
         if (perUserDefaultReadOnly != null) {
             value = perUserDefaultReadOnly.get(key);
@@ -784,7 +784,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Sets a user specific default value for
      * {@link Connection#setReadOnly(boolean)} for the specified user's pool.
      */
-    public void setPerUserDefaultReadOnly(String username, Boolean value) {
+    public void setPerUserDefaultReadOnly(final String username, final Boolean value) {
         assertInitializationAllowed();
         if (perUserDefaultReadOnly == null) {
             perUserDefaultReadOnly = new HashMap<>();
@@ -792,7 +792,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserDefaultReadOnly.put(username, value);
     }
 
-    void setPerUserDefaultReadOnly(Map<String,Boolean> userDefaultReadOnly) {
+    void setPerUserDefaultReadOnly(final Map<String,Boolean> userDefaultReadOnly) {
         assertInitializationAllowed();
         if (perUserDefaultReadOnly == null) {
             perUserDefaultReadOnly = new HashMap<>();
@@ -807,7 +807,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Gets the user specific default value for
      * {@link Connection#setTransactionIsolation(int)} for the specified user's pool.
      */
-    public Integer getPerUserDefaultTransactionIsolation(String key) {
+    public Integer getPerUserDefaultTransactionIsolation(final String key) {
         Integer value = null;
         if (perUserDefaultTransactionIsolation != null) {
             value = perUserDefaultTransactionIsolation.get(key);
@@ -819,8 +819,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Sets a user specific default value for
      * {@link Connection#setTransactionIsolation(int)} for the specified user's pool.
      */
-    public void setPerUserDefaultTransactionIsolation(String username,
-            Integer value) {
+    public void setPerUserDefaultTransactionIsolation(final String username,
+            final Integer value) {
         assertInitializationAllowed();
         if (perUserDefaultTransactionIsolation == null) {
             perUserDefaultTransactionIsolation = new HashMap<>();
@@ -829,7 +829,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     void setPerUserDefaultTransactionIsolation(
-            Map<String,Integer> userDefaultTransactionIsolation) {
+            final Map<String,Integer> userDefaultTransactionIsolation) {
         assertInitializationAllowed();
         if (perUserDefaultTransactionIsolation == null) {
             perUserDefaultTransactionIsolation = new HashMap<>();
@@ -853,7 +853,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Get the number of active connections in the pool for a given user.
      */
-    public int getNumActive(String username) {
+    public int getNumActive(final String username) {
         final ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumActive();
@@ -869,7 +869,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Get the number of idle connections in the pool for a given user.
      */
-    public int getNumIdle(String username) {
+    public int getNumIdle(final String username) {
         final ObjectPool<PooledConnectionAndInfo> pool =
             getPool(getPoolKey(username));
         return pool == null ? 0 : pool.getNumIdle();
@@ -881,7 +881,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     @Override
     protected PooledConnectionAndInfo
-        getPooledConnectionAndInfo(String username, String password)
+        getPooledConnectionAndInfo(final String username, final String password)
         throws SQLException {
 
         final PoolKey key = getPoolKey(username);
@@ -938,7 +938,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected void setupDefaults(Connection con, String username)
+    protected void setupDefaults(final Connection con, final String username)
         throws SQLException {
         Boolean defaultAutoCommit = isDefaultAutoCommit();
         if (username != null) {
@@ -980,7 +980,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected PooledConnectionManager getConnectionManager(UserPassKey upkey) {
+    protected PooledConnectionManager getConnectionManager(final UserPassKey upkey) {
         return managers.get(getPoolKey(upkey.getUsername()));
     }
 
@@ -1001,11 +1001,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @param username  User name
      * @return  The pool key
      */
-    private PoolKey getPoolKey(String username) {
+    private PoolKey getPoolKey(final String username) {
         return new PoolKey(getDataSourceName(), username);
     }
 
-    private synchronized void registerPool(String username, String password)
+    private synchronized void registerPool(final String username, final String password)
             throws NamingException, SQLException {
 
         final ConnectionPoolDataSource cpds = testCPDS(username, password);
@@ -1058,7 +1058,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @exception IOException if an error occurs
      * @exception ClassNotFoundException if an error occurs
      */
-    private void readObject(ObjectInputStream in)
+    private void readObject(final ObjectInputStream in)
         throws IOException, ClassNotFoundException {
         try
         {
@@ -1081,7 +1081,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return the GenericObjectPool pooling connections for the username and datasource
      * specified by the PoolKey
      */
-    private ObjectPool<PooledConnectionAndInfo> getPool(PoolKey key) {
+    private ObjectPool<PooledConnectionAndInfo> getPool(final PoolKey key) {
         final CPDSConnectionFactory mgr = (CPDSConnectionFactory) managers.get(key);
         return mgr == null ? null : mgr.getPool();
     }

@@ -27,14 +27,14 @@ public class TesterClassLoader extends ClassLoader {
     private final Set<String> loadedClasses = new HashSet<>();
 
     @Override
-    protected synchronized Class<?> loadClass(String name, boolean resolve)
+    protected synchronized Class<?> loadClass(final String name, final boolean resolve)
             throws ClassNotFoundException {
         final Class<?> clazz =  super.loadClass(name, resolve);
         loadedClasses.add(name);
         return clazz;
     }
 
-    public boolean didLoad(String className) {
+    public boolean didLoad(final String className) {
         return loadedClasses.contains(className);
     }
 }

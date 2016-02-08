@@ -122,7 +122,7 @@ public class TestManagedConnection {
     private class UncooperativeLocalXAConnectionFactory
         extends LocalXAConnectionFactory {
 
-        public UncooperativeLocalXAConnectionFactory(TransactionManager transactionManager, ConnectionFactory connectionFactory) {
+        public UncooperativeLocalXAConnectionFactory(final TransactionManager transactionManager, final ConnectionFactory connectionFactory) {
             super(transactionManager, connectionFactory);
 
             try {
@@ -139,7 +139,7 @@ public class TestManagedConnection {
     private class UncooperativeTransactionRegistry
         extends TransactionRegistry {
 
-        public UncooperativeTransactionRegistry(TransactionManager transactionManager) {
+        public UncooperativeTransactionRegistry(final TransactionManager transactionManager) {
             super(transactionManager);
         }
 
@@ -163,7 +163,7 @@ public class TestManagedConnection {
 
         private final Transaction wrappedTransaction;
 
-        public UncooperativeTransaction(Transaction transaction) {
+        public UncooperativeTransaction(final Transaction transaction) {
             this.wrappedTransaction = transaction;
         }
 
@@ -175,7 +175,7 @@ public class TestManagedConnection {
         }
 
         @Override
-        public boolean delistResource(XAResource arg0, int arg1)
+        public boolean delistResource(final XAResource arg0, final int arg1)
             throws IllegalStateException, SystemException {
             return wrappedTransaction.delistResource(arg0, arg1);
         }
@@ -187,7 +187,7 @@ public class TestManagedConnection {
         }
 
         @Override
-        public void registerSynchronization(Synchronization arg0)
+        public void registerSynchronization(final Synchronization arg0)
             throws IllegalStateException, RollbackException, SystemException {
             wrappedTransaction.registerSynchronization(arg0);
         }
@@ -205,7 +205,7 @@ public class TestManagedConnection {
         }
 
         @Override
-        public synchronized boolean enlistResource(XAResource xaRes) {
+        public synchronized boolean enlistResource(final XAResource xaRes) {
             return false;
         }
     }

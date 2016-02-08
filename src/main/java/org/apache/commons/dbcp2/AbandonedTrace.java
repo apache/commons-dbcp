@@ -55,7 +55,7 @@ public class AbandonedTrace implements TrackedUse {
      *
      * @param parent AbandonedTrace parent object
      */
-    public AbandonedTrace(AbandonedTrace parent) {
+    public AbandonedTrace(final AbandonedTrace parent) {
         init(parent);
     }
 
@@ -64,7 +64,7 @@ public class AbandonedTrace implements TrackedUse {
      *
      * @param parent AbandonedTrace parent object
      */
-    private void init(AbandonedTrace parent) {
+    private void init(final AbandonedTrace parent) {
         if (parent != null) {
             parent.addTrace(this);
         }
@@ -93,7 +93,7 @@ public class AbandonedTrace implements TrackedUse {
      *
      * @param time time in ms
      */
-    protected void setLastUsed(long time) {
+    protected void setLastUsed(final long time) {
         lastUsed = time;
     }
 
@@ -103,7 +103,7 @@ public class AbandonedTrace implements TrackedUse {
      *
      * @param trace AbandonedTrace object to add
      */
-    protected void addTrace(AbandonedTrace trace) {
+    protected void addTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
             this.traceList.add(new WeakReference<>(trace));
         }
@@ -151,7 +151,7 @@ public class AbandonedTrace implements TrackedUse {
      *
      * @param trace AbandonedTrace object to remove
      */
-    protected void removeTrace(AbandonedTrace trace) {
+    protected void removeTrace(final AbandonedTrace trace) {
         synchronized(this.traceList) {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {

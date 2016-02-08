@@ -87,7 +87,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      *
      * @param c the {@link Connection} to delegate all calls to.
      */
-    public DelegatingConnection(C c) {
+    public DelegatingConnection(final C c) {
         super();
         _conn = c;
     }
@@ -152,7 +152,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * @param c connection to compare innermost delegate with
      * @return true if innermost delegate equals <code>c</code>
      */
-    public boolean innermostDelegateEquals(Connection c) {
+    public boolean innermostDelegateEquals(final Connection c) {
         final Connection innerCon = getInnermostDelegateInternal();
         if (innerCon == null) {
             return c == null;
@@ -198,7 +198,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     /** Sets my delegate. */
-    public void setDelegate(C c) {
+    public void setDelegate(final C c) {
         _conn = c;
     }
 
@@ -223,7 +223,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         return _closed;
     }
 
-    protected void setClosedInternal(boolean closed) {
+    protected void setClosedInternal(final boolean closed) {
         this._closed = closed;
     }
 
@@ -243,11 +243,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         }
     }
 
-    protected void handleException(SQLException e) throws SQLException {
+    protected void handleException(final SQLException e) throws SQLException {
         throw e;
     }
 
-    private void initializeStatement(DelegatingStatement ds) throws SQLException {
+    private void initializeStatement(final DelegatingStatement ds) throws SQLException {
         if (defaultQueryTimeout != null &&
                 defaultQueryTimeout.intValue() != ds.getQueryTimeout()) {
             ds.setQueryTimeout(defaultQueryTimeout.intValue());
@@ -270,8 +270,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public Statement createStatement(int resultSetType,
-                                     int resultSetConcurrency) throws SQLException {
+    public Statement createStatement(final int resultSetType,
+                                     final int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
             final DelegatingStatement ds = new DelegatingStatement(
@@ -286,7 +286,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
@@ -301,9 +301,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql,
-                                              int resultSetType,
-                                              int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql,
+                                              final int resultSetType,
+                                              final int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
@@ -318,7 +318,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
+    public CallableStatement prepareCall(final String sql) throws SQLException {
         checkOpen();
         try {
             final DelegatingCallableStatement dcs =
@@ -333,9 +333,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public CallableStatement prepareCall(String sql,
-                                         int resultSetType,
-                                         int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(final String sql,
+                                         final int resultSetType,
+                                         final int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
             final DelegatingCallableStatement dcs = new DelegatingCallableStatement(
@@ -474,7 +474,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public String nativeSQL(String sql) throws SQLException {
+    public String nativeSQL(final String sql) throws SQLException {
         checkOpen();
         try {
             return _conn.nativeSQL(sql);
@@ -511,7 +511,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * created from this connection. <code>null</code> means that the driver
      * default will be used.
      */
-    public void setDefaultQueryTimeout(Integer defaultQueryTimeout) {
+    public void setDefaultQueryTimeout(final Integer defaultQueryTimeout) {
         this.defaultQueryTimeout = defaultQueryTimeout;
     }
 
@@ -521,7 +521,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      *
      * @param cacheState    The new value for the state caching flag
      */
-    public void setCacheState(boolean cacheState) {
+    public void setCacheState(final boolean cacheState) {
         this._cacheState = cacheState;
     }
 
@@ -538,7 +538,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
         checkOpen();
         try {
             _conn.setAutoCommit(autoCommit);
@@ -552,11 +552,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setCatalog(String catalog) throws SQLException
+    public void setCatalog(final String catalog) throws SQLException
     { checkOpen(); try { _conn.setCatalog(catalog); } catch (final SQLException e) { handleException(e); } }
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
         checkOpen();
         try {
             _conn.setReadOnly(readOnly);
@@ -571,7 +571,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void setTransactionIsolation(int level) throws SQLException {
+    public void setTransactionIsolation(final int level) throws SQLException {
         checkOpen();
         try {
             _conn.setTransactionIsolation(level);
@@ -582,7 +582,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
+    public void setTypeMap(final Map<String,Class<?>> map) throws SQLException {
         checkOpen();
         try {
             _conn.setTypeMap(map);
@@ -658,7 +658,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
+    public void setHoldability(final int holdability) throws SQLException {
         checkOpen();
         try {
             _conn.setHoldability(holdability);
@@ -681,7 +681,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public Savepoint setSavepoint(String name) throws SQLException {
+    public Savepoint setSavepoint(final String name) throws SQLException {
         checkOpen();
         try {
             return _conn.setSavepoint(name);
@@ -693,7 +693,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void rollback(Savepoint savepoint) throws SQLException {
+    public void rollback(final Savepoint savepoint) throws SQLException {
         checkOpen();
         try {
             _conn.rollback(savepoint);
@@ -704,7 +704,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public void releaseSavepoint(Savepoint savepoint)
+    public void releaseSavepoint(final Savepoint savepoint)
             throws SQLException {
         checkOpen();
         try {
@@ -716,9 +716,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public Statement createStatement(int resultSetType,
-                                     int resultSetConcurrency,
-                                     int resultSetHoldability) throws SQLException {
+    public Statement createStatement(final int resultSetType,
+                                     final int resultSetConcurrency,
+                                     final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             final DelegatingStatement ds = new DelegatingStatement(this,
@@ -734,9 +734,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType,
-                                              int resultSetConcurrency,
-                                              int resultSetHoldability) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
+                                              final int resultSetConcurrency,
+                                              final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
@@ -752,9 +752,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType,
-                                         int resultSetConcurrency,
-                                         int resultSetHoldability) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType,
+                                         final int resultSetConcurrency,
+                                         final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             final DelegatingCallableStatement dcs = new DelegatingCallableStatement(
@@ -770,7 +770,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
@@ -785,7 +785,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(
@@ -800,7 +800,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, String columnNames[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps =  new DelegatingPreparedStatement(
@@ -816,7 +816,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return true;
         } else if (iface.isAssignableFrom(_conn.getClass())) {
@@ -827,7 +827,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
         } else if (iface.isAssignableFrom(_conn.getClass())) {
@@ -838,7 +838,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+    public Array createArrayOf(final String typeName, final Object[] elements) throws SQLException {
         checkOpen();
         try {
             return _conn.createArrayOf(typeName, elements);
@@ -898,7 +898,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+    public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         checkOpen();
         try {
             return _conn.createStruct(typeName, attributes);
@@ -910,7 +910,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public boolean isValid(int timeout) throws SQLException {
+    public boolean isValid(final int timeout) throws SQLException {
         if (isClosed()) {
             return false;
         }
@@ -924,7 +924,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
         try {
             checkOpen();
             _conn.setClientInfo(name, value);
@@ -938,7 +938,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
         try {
             checkOpen();
             _conn.setClientInfo(properties);
@@ -964,7 +964,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public String getClientInfo(String name) throws SQLException {
+    public String getClientInfo(final String name) throws SQLException {
         checkOpen();
         try {
             return _conn.getClientInfo(name);
@@ -976,7 +976,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
+    public void setSchema(final String schema) throws SQLException {
         checkOpen();
         try {
             _conn.setSchema(schema);
@@ -999,7 +999,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void abort(Executor executor) throws SQLException {
+    public void abort(final Executor executor) throws SQLException {
         checkOpen();
         try {
             _conn.abort(executor);
@@ -1010,7 +1010,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds)
+    public void setNetworkTimeout(final Executor executor, final int milliseconds)
             throws SQLException {
         checkOpen();
         try {
