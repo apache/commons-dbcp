@@ -54,8 +54,8 @@ public class TesterConnection implements Connection {
     protected String username = null;
     protected Exception failure;
 
-    public TesterConnection(String username,
-            @SuppressWarnings("unused") String password) {
+    public TesterConnection(final String username,
+            @SuppressWarnings("unused") final String password) {
         this.username = username;
     }
 
@@ -63,7 +63,7 @@ public class TesterConnection implements Connection {
         return this.username;
     }
 
-    public void setWarnings(SQLWarning warning) {
+    public void setWarnings(final SQLWarning warning) {
         this.warnings = warning;
     }
 
@@ -94,7 +94,7 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         return new TesterStatement(this);
     }
@@ -148,13 +148,13 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public String nativeSQL(String sql) throws SQLException {
+    public String nativeSQL(final String sql) throws SQLException {
         checkOpen();
         return sql;
     }
 
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
+    public CallableStatement prepareCall(final String sql) throws SQLException {
         checkOpen();
         if ("warning".equals(sql)) {
             setWarnings(new SQLWarning("warning in prepareCall"));
@@ -163,13 +163,13 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         return new TesterCallableStatement(this);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkOpen();
         if("null".equals(sql)) {
             return null;
@@ -182,7 +182,7 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
     }
@@ -196,31 +196,31 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
         checkOpen();
         _autoCommit = autoCommit;
     }
 
     @Override
-    public void setCatalog(String catalog) throws SQLException {
+    public void setCatalog(final String catalog) throws SQLException {
         checkOpen();
         _catalog = catalog;
     }
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
         checkOpen();
         _readOnly = readOnly;
     }
 
     @Override
-    public void setTransactionIsolation(int level) throws SQLException {
+    public void setTransactionIsolation(final int level) throws SQLException {
         checkOpen();
         _transactionIsolation = level;
     }
 
     @Override
-    public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
+    public void setTypeMap(final Map<String,Class<?>> map) throws SQLException {
         checkOpen();
         _typeMap = map;
     }
@@ -242,7 +242,7 @@ public class TesterConnection implements Connection {
         }
     }
 
-    public void setFailure(Exception failure) {
+    public void setFailure(final Exception failure) {
         this.failure = failure;
     }
 
@@ -252,7 +252,7 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
+    public void setHoldability(final int holdability) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
@@ -262,75 +262,75 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public java.sql.Savepoint setSavepoint(String name) throws SQLException {
+    public java.sql.Savepoint setSavepoint(final String name) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public void rollback(java.sql.Savepoint savepoint) throws SQLException {
+    public void rollback(final java.sql.Savepoint savepoint) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public void releaseSavepoint(java.sql.Savepoint savepoint) throws SQLException {
+    public void releaseSavepoint(final java.sql.Savepoint savepoint) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public Statement createStatement(int resultSetType,
-                                     int resultSetConcurrency,
-                                     int resultSetHoldability)
+    public Statement createStatement(final int resultSetType,
+                                     final int resultSetConcurrency,
+                                     final int resultSetHoldability)
         throws SQLException {
         return createStatement();
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType,
-                                              int resultSetConcurrency,
-                                              int resultSetHoldability)
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
+                                              final int resultSetConcurrency,
+                                              final int resultSetHoldability)
         throws SQLException {
         return prepareStatement(sql);
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType,
-                                         int resultSetConcurrency,
-                                         int resultSetHoldability)
+    public CallableStatement prepareCall(final String sql, final int resultSetType,
+                                         final int resultSetConcurrency,
+                                         final int resultSetHoldability)
         throws SQLException {
         return prepareCall(sql);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
+    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys)
         throws SQLException {
         return prepareStatement(sql);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int columnIndexes[])
+    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
         throws SQLException {
         return prepareStatement(sql);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, String columnNames[])
+    public PreparedStatement prepareStatement(final String sql, final String columnNames[])
         throws SQLException {
         return prepareStatement(sql);
     }
 
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+    public Array createArrayOf(final String typeName, final Object[] elements) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
@@ -355,22 +355,22 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+    public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public boolean isValid(int timeout) throws SQLException {
+    public boolean isValid(final int timeout) throws SQLException {
         return _open;
     }
 
     @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
         throw new SQLClientInfoException();
     }
 
     @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
         throw new SQLClientInfoException();
     }
 
@@ -380,12 +380,12 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public String getClientInfo(String name) throws SQLException {
+    public String getClientInfo(final String name) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
+    public void setSchema(final String schema) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
@@ -395,12 +395,12 @@ public class TesterConnection implements Connection {
     }
 
     @Override
-    public void abort(Executor executor) throws SQLException {
+    public void abort(final Executor executor) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds)
+    public void setNetworkTimeout(final Executor executor, final int milliseconds)
             throws SQLException {
         throw new SQLException("Not implemented.");
     }

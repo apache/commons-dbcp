@@ -55,9 +55,9 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
      * @param pool the {@link KeyedObjectPool} from which this CallableStatement was obtained
      * @param conn the {@link DelegatingConnection} that created this CallableStatement
      */
-    public PoolableCallableStatement(CallableStatement stmt, PStmtKey key,
-            KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pool,
-            DelegatingConnection<Connection> conn) {
+    public PoolableCallableStatement(final CallableStatement stmt, final PStmtKey key,
+            final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pool,
+            final DelegatingConnection<Connection> conn) {
         super(conn, stmt);
         _pool = pool;
         _key = key;

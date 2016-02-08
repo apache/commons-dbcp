@@ -48,7 +48,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
      * <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @since 2.2
      */
-    public DriverManagerConnectionFactory(String connectUri) {
+    public DriverManagerConnectionFactory(final String connectUri) {
         _connectUri = connectUri;
         _props = new Properties();
     }
@@ -61,7 +61,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
      * connection arguments; normally at least a "user" and "password"
      * property should be included.
      */
-    public DriverManagerConnectionFactory(String connectUri, Properties props) {
+    public DriverManagerConnectionFactory(final String connectUri, final Properties props) {
         _connectUri = connectUri;
         _props = props;
     }
@@ -73,7 +73,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
      * @param uname the database user
      * @param passwd the user's password
      */
-    public DriverManagerConnectionFactory(String connectUri, String uname, String passwd) {
+    public DriverManagerConnectionFactory(final String connectUri, final String uname, final String passwd) {
         _connectUri = connectUri;
         _uname = uname;
         _passwd = passwd;

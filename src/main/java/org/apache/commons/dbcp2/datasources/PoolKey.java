@@ -29,13 +29,13 @@ class PoolKey implements Serializable {
     private final String datasourceName;
     private final String username;
 
-    PoolKey(String datasourceName, String username) {
+    PoolKey(final String datasourceName, final String username) {
         this.datasourceName = datasourceName;
         this.username = username;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof PoolKey) {
             final PoolKey pk = (PoolKey)obj;
             return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&

@@ -164,7 +164,7 @@ public class DriverAdapterCPDS
      * @param pass password to be used fur the connection
      */
     @Override
-    public PooledConnection getPooledConnection(String username, String pass)
+    public PooledConnection getPooledConnection(final String username, final String pass)
             throws SQLException {
         getConnectionCalled = true;
         PooledConnectionImpl pci = null;
@@ -274,8 +274,8 @@ public class DriverAdapterCPDS
      * implements ObjectFactory to create an instance of this class
      */
     @Override
-    public Object getObjectInstance(Object refObj, Name name,
-                                    Context context, Hashtable<?,?> env)
+    public Object getObjectInstance(final Object refObj, final Name name,
+                                    final Context context, final Hashtable<?,?> env)
             throws Exception {
         // The spec says to return null if we can't create an instance
         // of the reference
@@ -387,7 +387,7 @@ public class DriverAdapterCPDS
      * @param props Connection properties to use when creating new connections.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setConnectionProperties(Properties props) {
+    public void setConnectionProperties(final Properties props) {
         assertInitializationAllowed();
         connectionProperties = props;
         if (connectionProperties.containsKey("user")) {
@@ -417,7 +417,7 @@ public class DriverAdapterCPDS
      *
      * @param v  Value to assign to description.
      */
-    public void setDescription(String  v) {
+    public void setDescription(final String  v) {
         this.description = v;
     }
 
@@ -434,7 +434,7 @@ public class DriverAdapterCPDS
      * @param v  Value to assign to password.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setPassword(String v) {
+    public void setPassword(final String v) {
         assertInitializationAllowed();
         this.password = v;
         if (connectionProperties != null) {
@@ -455,7 +455,7 @@ public class DriverAdapterCPDS
      * @param v  Value to assign to url.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
     */
-    public void setUrl(String v) {
+    public void setUrl(final String v) {
         assertInitializationAllowed();
         this.url = v;
     }
@@ -473,7 +473,7 @@ public class DriverAdapterCPDS
      * @param v  Value to assign to user.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setUser(String v) {
+    public void setUser(final String v) {
         assertInitializationAllowed();
         this.user = v;
         if (connectionProperties != null) {
@@ -495,7 +495,7 @@ public class DriverAdapterCPDS
      * @param v  Value to assign to driver.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setDriver(String v) throws ClassNotFoundException {
+    public void setDriver(final String v) throws ClassNotFoundException {
         assertInitializationAllowed();
         this.driver = v;
         // make sure driver is registered
@@ -524,7 +524,7 @@ public class DriverAdapterCPDS
      * while attempting to connect to a database. NOT USED.
      */
     @Override
-    public void setLoginTimeout(int seconds) {
+    public void setLoginTimeout(final int seconds) {
         loginTimeout = seconds;
     }
 
@@ -532,7 +532,7 @@ public class DriverAdapterCPDS
      * Set the log writer for this data source. NOT USED.
      */
     @Override
-    public void setLogWriter(PrintWriter out) {
+    public void setLogWriter(final PrintWriter out) {
         logWriter = out;
     }
 
@@ -554,7 +554,7 @@ public class DriverAdapterCPDS
      * @param v  true to pool statements.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setPoolPreparedStatements(boolean v) {
+    public void setPoolPreparedStatements(final boolean v) {
         assertInitializationAllowed();
         this.poolPreparedStatements = v;
     }
@@ -575,7 +575,7 @@ public class DriverAdapterCPDS
      * @param maxIdle The maximum number of statements that can remain idle
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setMaxIdle(int maxIdle) {
+    public void setMaxIdle(final int maxIdle) {
         assertInitializationAllowed();
         this.maxIdle = maxIdle;
     }
@@ -602,7 +602,7 @@ public class DriverAdapterCPDS
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setTimeBetweenEvictionRunsMillis(
-            long timeBetweenEvictionRunsMillis) {
+            final long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
         _timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
@@ -631,7 +631,7 @@ public class DriverAdapterCPDS
      * @see #setTimeBetweenEvictionRunsMillis(long)
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
+    public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         assertInitializationAllowed();
         _numTestsPerEvictionRun = numTestsPerEvictionRun;
     }
@@ -659,7 +659,7 @@ public class DriverAdapterCPDS
      * @see #setTimeBetweenEvictionRunsMillis(long)
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
+    public void setMinEvictableIdleTimeMillis(final int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
@@ -680,7 +680,7 @@ public class DriverAdapterCPDS
      *
      * @param allow Access to the underlying connection is granted when true.
      */
-    public synchronized void setAccessToUnderlyingConnectionAllowed(boolean allow) {
+    public synchronized void setAccessToUnderlyingConnectionAllowed(final boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
     }
 
@@ -699,7 +699,7 @@ public class DriverAdapterCPDS
      * @param maxPreparedStatements the new maximum number of prepared
      * statements
      */
-    public void setMaxPreparedStatements(int maxPreparedStatements)
+    public void setMaxPreparedStatements(final int maxPreparedStatements)
     {
         _maxPreparedStatements = maxPreparedStatements;
     }

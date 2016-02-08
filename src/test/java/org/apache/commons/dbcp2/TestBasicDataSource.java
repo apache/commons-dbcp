@@ -805,13 +805,13 @@ class TesterConnRequestCountDriver extends TesterDriver {
     private static AtomicInteger connectionRequestCount = new AtomicInteger(0);
 
     @Override
-    public Connection connect(String url, Properties info) throws SQLException {
+    public Connection connect(final String url, final Properties info) throws SQLException {
         connectionRequestCount.incrementAndGet();
         return super.connect(url, info);
     }
 
     @Override
-    public boolean acceptsURL(String url) throws SQLException {
+    public boolean acceptsURL(final String url) throws SQLException {
         return CONNECT_STRING.startsWith(url);
     }
 
@@ -832,7 +832,7 @@ class TesterConnectionDelayDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnectionDelayDriver";
 
     @Override
-    public Connection connect(String url, Properties info) throws SQLException {
+    public Connection connect(final String url, final Properties info) throws SQLException {
         final String[] parsedUrl = url.split(":");
         final int delay = Integer.parseInt(parsedUrl[parsedUrl.length - 1]);
         try {
@@ -844,7 +844,7 @@ class TesterConnectionDelayDriver extends TesterDriver {
     }
 
     @Override
-    public boolean acceptsURL(String url) throws SQLException {
+    public boolean acceptsURL(final String url) throws SQLException {
         return url.startsWith(CONNECT_STRING);
     }
 

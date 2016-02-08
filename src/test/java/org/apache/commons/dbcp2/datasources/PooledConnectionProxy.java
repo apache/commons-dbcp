@@ -52,7 +52,7 @@ public class PooledConnectionProxy implements PooledConnection,
      */
     private boolean notifyOnClose = false;
     
-    public PooledConnectionProxy(PooledConnection pooledConnection) {
+    public PooledConnectionProxy(final PooledConnection pooledConnection) {
         this.delegate = pooledConnection;
         pooledConnection.addConnectionEventListener(this);
     }
@@ -77,13 +77,13 @@ public class PooledConnectionProxy implements PooledConnection,
      * Remove event listeners.
      */
     @Override
-    public void removeConnectionEventListener(ConnectionEventListener listener) {
+    public void removeConnectionEventListener(final ConnectionEventListener listener) {
         eventListeners.remove(listener);
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
     @Override
-    public void removeStatementEventListener(StatementEventListener listener) {
+    public void removeStatementEventListener(final StatementEventListener listener) {
         eventListeners.remove(listener);
     }
     /* JDBC_4_ANT_KEY_END */
@@ -92,7 +92,7 @@ public class PooledConnectionProxy implements PooledConnection,
         return notifyOnClose;
     }
 
-    public void setNotifyOnClose(boolean notifyOnClose) {
+    public void setNotifyOnClose(final boolean notifyOnClose) {
         this.notifyOnClose = notifyOnClose;
     }
     
@@ -111,7 +111,7 @@ public class PooledConnectionProxy implements PooledConnection,
      * Add event listeners.
      */
     @Override
-    public void addConnectionEventListener(ConnectionEventListener listener) {
+    public void addConnectionEventListener(final ConnectionEventListener listener) {
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
         }
@@ -119,7 +119,7 @@ public class PooledConnectionProxy implements PooledConnection,
 
     /* JDBC_4_ANT_KEY_BEGIN */
     @Override
-    public void addStatementEventListener(StatementEventListener listener) {
+    public void addStatementEventListener(final StatementEventListener listener) {
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
         }
@@ -130,7 +130,7 @@ public class PooledConnectionProxy implements PooledConnection,
      * Pass closed events on to listeners
      */
     @Override
-    public void connectionClosed(ConnectionEvent event) {
+    public void connectionClosed(final ConnectionEvent event) {
         notifyListeners();    
     }
 
@@ -138,7 +138,7 @@ public class PooledConnectionProxy implements PooledConnection,
      * Pass error events on to listeners
      */ 
     @Override
-    public void connectionErrorOccurred(ConnectionEvent event) {
+    public void connectionErrorOccurred(final ConnectionEvent event) {
         final Object[] listeners = eventListeners.toArray();
         for (final Object listener : listeners) {
             ((ConnectionEventListener) listener).connectionErrorOccurred(event);

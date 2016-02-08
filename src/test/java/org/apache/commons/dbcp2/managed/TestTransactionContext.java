@@ -57,7 +57,7 @@ public class TestTransactionContext {
             super(null, null);
         }
         @Override
-        public synchronized boolean enlistResource(XAResource xaRes) {
+        public synchronized boolean enlistResource(final XAResource xaRes) {
             return false;
         }
     }

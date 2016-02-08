@@ -51,7 +51,7 @@ public class TransactionRegistry {
      * Creates a TransactionRegistry for the specified transaction manager.
      * @param transactionManager the transaction manager used to enlist connections
      */
-    public TransactionRegistry(TransactionManager transactionManager) {
+    public TransactionRegistry(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
@@ -63,7 +63,7 @@ public class TransactionRegistry {
      * @param connection the JDBC connection
      * @param xaResource the XAResource which managed the connection within a transaction
      */
-    public synchronized void registerConnection(Connection connection, XAResource xaResource) {
+    public synchronized void registerConnection(final Connection connection, final XAResource xaResource) {
         if (connection == null) {
             throw new NullPointerException("connection is null");
         }
@@ -79,7 +79,7 @@ public class TransactionRegistry {
      * @return the XAResource registered for the connection; never null
      * @throws SQLException if the connection does not have a registered XAResource
      */
-    public synchronized XAResource getXAResource(Connection connection) throws SQLException {
+    public synchronized XAResource getXAResource(final Connection connection) throws SQLException {
         if (connection == null) {
             throw new NullPointerException("connection is null");
         }
@@ -130,13 +130,13 @@ public class TransactionRegistry {
      * Unregisters a destroyed connection from {@link TransactionRegistry}
      * @param connection
      */
-    public synchronized void unregisterConnection(Connection connection) {
+    public synchronized void unregisterConnection(final Connection connection) {
         final Connection key = getConnectionKey(connection);
         xaResources.remove(key);
     }
 
 
-    private Connection getConnectionKey(Connection connection) {
+    private Connection getConnectionKey(final Connection connection) {
         Connection result;
         if (connection instanceof DelegatingConnection) {
             result = ((DelegatingConnection<?>) connection).getInnermostDelegateInternal();

@@ -91,7 +91,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     /**
      * Get {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
-    public void setMaxTotal(int maxTotal) {
+    public void setMaxTotal(final int maxTotal) {
         assertInitializationAllowed();
         this.maxTotal = maxTotal;
     }
@@ -119,7 +119,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     @Override
     protected PooledConnectionAndInfo
-        getPooledConnectionAndInfo(String username, String password)
+        getPooledConnectionAndInfo(final String username, final String password)
         throws SQLException {
 
         synchronized(this) {
@@ -147,7 +147,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected PooledConnectionManager getConnectionManager(UserPassKey upkey)  {
+    protected PooledConnectionManager getConnectionManager(final UserPassKey upkey)  {
         return factory;
     }
 
@@ -162,7 +162,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         return ref;
     }
 
-    private void registerPool(String username, String password)
+    private void registerPool(final String username, final String password)
             throws NamingException, SQLException {
 
         final ConnectionPoolDataSource cpds = testCPDS(username, password);
@@ -201,7 +201,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected void setupDefaults(Connection con, String username) throws SQLException {
+    protected void setupDefaults(final Connection con, final String username) throws SQLException {
         final Boolean defaultAutoCommit = isDefaultAutoCommit();
         if (defaultAutoCommit != null &&
                 con.getAutoCommit() != defaultAutoCommit.booleanValue()) {
@@ -227,7 +227,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * @exception IOException if an error occurs
      * @exception ClassNotFoundException if an error occurs
      */
-    private void readObject(ObjectInputStream in)
+    private void readObject(final ObjectInputStream in)
         throws IOException, ClassNotFoundException {
         try
         {

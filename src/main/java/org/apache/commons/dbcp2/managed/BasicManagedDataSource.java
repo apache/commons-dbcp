@@ -82,7 +82,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      *
      * @param xaDataSourceInstance XADataSource instance
      */
-    public synchronized void setXaDataSourceInstance(XADataSource xaDataSourceInstance) {
+    public synchronized void setXaDataSourceInstance(final XADataSource xaDataSourceInstance) {
         this.xaDataSourceInstance = xaDataSourceInstance;
         xaDataSource = xaDataSourceInstance == null ? null : xaDataSourceInstance.getClass().getName();
     }
@@ -107,7 +107,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Sets the required transaction manager property.
      * @param transactionManager the transaction manager used to enlist connections
      */
-    public void setTransactionManager(TransactionManager transactionManager) {
+    public void setTransactionManager(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
@@ -123,7 +123,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * Sets the optional XADataSource class name.
      * @param xaDataSource the optional XADataSource class name
      */
-    public synchronized void setXADataSource(String xaDataSource) {
+    public synchronized void setXADataSource(final String xaDataSource) {
         this.xaDataSource = xaDataSource;
     }
 
@@ -181,7 +181,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      */
     @Override
     protected PoolableConnectionFactory createPoolableConnectionFactory(
-            ConnectionFactory driverConnectionFactory) throws SQLException {
+            final ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory = new PoolableManagedConnectionFactory(

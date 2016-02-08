@@ -418,7 +418,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     // complexity to reduce what would otherwise be lots of copy and paste
     private static abstract class PrepareStatementCallback {
         protected Connection conn;
-        void setConnection(Connection conn) {
+        void setConnection(final Connection conn) {
             this.conn = conn;
         }
         abstract PreparedStatement getPreparedStatement() throws SQLException;
@@ -459,7 +459,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             return conn.prepareStatement("select * from dual",0,0,0);
         }
     }
-    private void doTestPoolPreparedStatements(PrepareStatementCallback callBack)
+    private void doTestPoolPreparedStatements(final PrepareStatementCallback callBack)
     throws Exception {
         final DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
         DataSource myds = null;

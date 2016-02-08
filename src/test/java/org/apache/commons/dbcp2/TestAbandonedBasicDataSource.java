@@ -267,7 +267,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         Assert.assertEquals(0, conn.getTrace().size());
     }
 
-    private void createStatement(Connection conn) throws Exception{
+    private void createStatement(final Connection conn) throws Exception{
         final PreparedStatement ps = conn.prepareStatement("");
         Assert.assertNotNull(ps);
     }
@@ -276,7 +276,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     /**
      * Verifies that Statement executeXxx methods update lastUsed on the parent connection
      */
-    private void checkLastUsedStatement(Statement st, DelegatingConnection<?> conn) throws Exception {
+    private void checkLastUsedStatement(final Statement st, final DelegatingConnection<?> conn) throws Exception {
         st.execute("");
         assertAndReset(conn);
         st.execute("", new int[] {});
@@ -300,7 +300,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     /**
      * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
      */
-    private void checkLastUsedPreparedStatement(PreparedStatement ps, DelegatingConnection<?> conn) throws Exception {
+    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
         ps.execute();
         assertAndReset(conn);
         Assert.assertNotNull(ps.executeQuery());
@@ -312,7 +312,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     /**
      * Verifies that con.lastUsed has been updated and then resets it to 0
      */
-    private void assertAndReset(DelegatingConnection<?> con) {
+    private void assertAndReset(final DelegatingConnection<?> con) {
         assertTrue(con.getLastUsed() > 0);
         con.setLastUsed(0);
     }

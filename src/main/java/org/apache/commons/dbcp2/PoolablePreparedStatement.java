@@ -60,9 +60,9 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
      * @param pool the {@link KeyedObjectPool} from which I was obtained.
      * @param conn the {@link java.sql.Connection Connection} from which I was created
      */
-    public PoolablePreparedStatement(PreparedStatement stmt, K key,
-            KeyedObjectPool<K, PoolablePreparedStatement<K>> pool,
-            DelegatingConnection<?> conn) {
+    public PoolablePreparedStatement(final PreparedStatement stmt, final K key,
+            final KeyedObjectPool<K, PoolablePreparedStatement<K>> pool,
+            final DelegatingConnection<?> conn) {
         super(conn, stmt);
         _pool = pool;
         _key = key;

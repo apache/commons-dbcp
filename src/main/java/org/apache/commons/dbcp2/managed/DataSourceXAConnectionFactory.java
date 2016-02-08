@@ -48,7 +48,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      * @param transactionManager the transaction manager in which connections will be enlisted
      * @param xaDataSource the data source from which connections will be retrieved
      */
-    public DataSourceXAConnectionFactory(TransactionManager transactionManager, XADataSource xaDataSource) {
+    public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource) {
         this(transactionManager, xaDataSource, null, null);
     }
 
@@ -61,7 +61,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      * @param username the username used for authenticating new connections or null for unauthenticated
      * @param password the password used for authenticating new connections
      */
-    public DataSourceXAConnectionFactory(TransactionManager transactionManager, XADataSource xaDataSource, String username, String password) {
+    public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource, final String username, final String password) {
         if (transactionManager == null) {
             throw new NullPointerException("transactionManager is null");
         }
@@ -87,7 +87,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      * Sets the username used to authenticate new connections.
      * @param username the username used for authenticating the connection or null for unauthenticated
      */
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -95,7 +95,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      * Sets the password used to authenticate new connections.
      * @param password the password used for authenticating the connection or null for unauthenticated
      */
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -127,7 +127,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         xaConnection.addConnectionEventListener(new ConnectionEventListener() {
 
             @Override
-            public void connectionClosed(ConnectionEvent event) {
+            public void connectionClosed(final ConnectionEvent event) {
                 final PooledConnection pc = (PooledConnection) event.getSource();
                 pc.removeConnectionEventListener(this);
                 try {
@@ -139,7 +139,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
             }
 
             @Override
-            public void connectionErrorOccurred(ConnectionEvent event) {
+            public void connectionErrorOccurred(final ConnectionEvent event) {
                 connectionClosed(event);
             }
         });

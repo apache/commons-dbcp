@@ -145,7 +145,7 @@ public class TestBasicDataSourceFactory {
         return properties;
     }
 
-    private void checkDataSourceProperties(BasicDataSource ds) throws Exception {
+    private void checkDataSourceProperties(final BasicDataSource ds) throws Exception {
         assertEquals("org.apache.commons.dbcp2.TesterDriver", ds.getDriverClassName());
         assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
         assertEquals(10, ds.getMaxTotal());

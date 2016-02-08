@@ -45,7 +45,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     private static final Map<String, InstanceKeyDataSource> instanceMap =
             new ConcurrentHashMap<>();
 
-    static synchronized String registerNewInstance(InstanceKeyDataSource ds) {
+    static synchronized String registerNewInstance(final InstanceKeyDataSource ds) {
         int max = 0;
         final Iterator<String> i = instanceMap.keySet().iterator();
         while (i.hasNext()) {
@@ -65,7 +65,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         return instanceKey;
     }
 
-    static void removeInstance(String key) {
+    static void removeInstance(final String key) {
         if (key != null) {
             instanceMap.remove(key);
         }
@@ -90,8 +90,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      * or PerUserPoolDataSource
      */
     @Override
-    public Object getObjectInstance(Object refObj, Name name,
-                                    Context context, Hashtable<?,?> env)
+    public Object getObjectInstance(final Object refObj, final Name name,
+                                    final Context context, final Hashtable<?,?> env)
         throws IOException, ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
@@ -131,8 +131,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         return obj;
     }
 
-    private void setCommonProperties(Reference ref,
-                                     InstanceKeyDataSource ikds)
+    private void setCommonProperties(final Reference ref,
+                                     final InstanceKeyDataSource ikds)
         throws IOException, ClassNotFoundException {
 
         RefAddr ra = ref.get("dataSourceName");
@@ -311,7 +311,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     /**
      * used to set some properties saved within a Reference
      */
-    protected static final Object deserialize(byte[] data)
+    protected static final Object deserialize(final byte[] data)
         throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {

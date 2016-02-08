@@ -46,8 +46,8 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
      * @param transactionRegistry the transaction registry obtained from the
      * XAConnectionFactory used to create the connection pool object factory
      */
-    public ManagedDataSource(ObjectPool<C> pool,
-            TransactionRegistry transactionRegistry) {
+    public ManagedDataSource(final ObjectPool<C> pool,
+            final TransactionRegistry transactionRegistry) {
         super(pool);
         this.transactionRegistry = transactionRegistry;
     }
@@ -59,7 +59,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
      * @param transactionRegistry the transaction registry acquired from the XAConnectionFactory
      * used to create the pool
      */
-    public void setTransactionRegistry(TransactionRegistry transactionRegistry) {
+    public void setTransactionRegistry(final TransactionRegistry transactionRegistry) {
         if(this.transactionRegistry != null) {
             throw new IllegalStateException("TransactionRegistry already set");
         }

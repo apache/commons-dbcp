@@ -333,7 +333,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     // can't actually test close in a transaction
     @Override
-    protected void assertBackPointers(Connection conn, Statement statement) throws SQLException {
+    protected void assertBackPointers(final Connection conn, final Statement statement) throws SQLException {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));
 
