@@ -364,7 +364,7 @@ public class DriverAdapterCPDS
     // Properties
 
     /**
-     * Get the connection properties passed to the JDBC driver.
+     * Gets the connection properties passed to the JDBC driver.
      *
      * @return the JDBC connection properties used when creating connections.
      */
@@ -373,7 +373,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * <p>Set the connection properties passed to the JDBC driver.</p>
+     * <p>Sets the connection properties passed to the JDBC driver.</p>
      *
      * <p>If <code>props</code> contains "user" and/or "password"
      * properties, the corresponding instance properties are set. If these
@@ -399,7 +399,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the value of description.  This property is here for use by
+     * Gets the value of description.  This property is here for use by
      * the code which will deploy this datasource.  It is not used
      * internally.
      *
@@ -411,7 +411,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the value of description.  This property is here for use by
+     * Sets the value of description.  This property is here for use by
      * the code which will deploy this datasource.  It is not used
      * internally.
      *
@@ -422,7 +422,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the value of password for the default user.
+     * Gets the value of password for the default user.
      * @return value of password.
      */
     public String getPassword() {
@@ -430,7 +430,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the value of password for the default user.
+     * Sets the value of password for the default user.
      * @param v  Value to assign to password.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
@@ -443,7 +443,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the value of url used to locate the database for this datasource.
+     * Gets the value of url used to locate the database for this datasource.
      * @return value of url.
      */
     public String getUrl() {
@@ -451,7 +451,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the value of URL string used to locate the database for this datasource.
+     * Sets the value of URL string used to locate the database for this datasource.
      * @param v  Value to assign to url.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
     */
@@ -461,7 +461,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the value of default user (login or username).
+     * Gets the value of default user (login or username).
      * @return value of user.
      */
     public String getUser() {
@@ -469,7 +469,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the value of default user (login or username).
+     * Sets the value of default user (login or username).
      * @param v  Value to assign to user.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
@@ -482,7 +482,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the driver classname.
+     * Gets the driver classname.
      * @return value of driver.
      */
     public String getDriver() {
@@ -490,7 +490,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the driver classname.  Setting the driver classname cause the
+     * Sets the driver classname.  Setting the driver classname cause the
      * driver to be registered with the DriverManager.
      * @param v  Value to assign to driver.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
@@ -512,7 +512,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Get the log writer for this data source. NOT USED.
+     * Gets the log writer for this data source. NOT USED.
      */
     @Override
     public PrintWriter getLogWriter() {
@@ -529,7 +529,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the log writer for this data source. NOT USED.
+     * Sets the log writer for this data source. NOT USED.
      */
     @Override
     public void setLogWriter(final PrintWriter out) {
@@ -560,7 +560,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * The maximum number of statements that can remain idle in the
+     * Gets the maximum number of statements that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
      * @return the value of maxIdle
      */
@@ -569,7 +569,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * The maximum number of statements that can remain idle in the
+     * Gets the maximum number of statements that can remain idle in the
      * pool, without extra ones being released, or negative for no limit.
      *
      * @param maxIdle The maximum number of statements that can remain idle
@@ -581,7 +581,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Returns the number of milliseconds to sleep between runs of the
+     * Gets the number of milliseconds to sleep between runs of the
      * idle object evictor thread.
      * When non-positive, no idle object evictor thread will be
      * run.
@@ -608,7 +608,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Returns the number of statements to examine during each run of the
+     * Gets the number of statements to examine during each run of the
      * idle object evictor thread (if any).
      *
      * *see #setNumTestsPerEvictionRun
@@ -637,7 +637,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Returns the minimum amount of time a statement may sit idle in the pool
+     * Gets the minimum amount of time a statement may sit idle in the pool
      * before it is eligible for eviction by the idle object evictor
      * (if any).
      *
@@ -685,7 +685,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Returns the maximum number of prepared statements.
+     * Gets the maximum number of prepared statements.
      *
      * @return maxPrepartedStatements value
      */
