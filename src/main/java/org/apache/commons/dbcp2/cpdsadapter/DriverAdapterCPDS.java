@@ -451,7 +451,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Set the value of url used to locate the database for this datasource.
+     * Set the value of URL string used to locate the database for this datasource.
      * @param v  Value to assign to url.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
     */
