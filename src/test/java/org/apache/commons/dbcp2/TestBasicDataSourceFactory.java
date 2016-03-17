@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -158,8 +159,8 @@ public class TestBasicDataSourceFactory {
         assertEquals(Boolean.FALSE, ds.getDefaultReadOnly());
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, ds.getDefaultTransactionIsolation());
         assertEquals("test", ds.getDefaultCatalog());
-        assertEquals(true, ds.getTestOnBorrow());
-        assertEquals(false, ds.getTestOnReturn());
+        assertTrue(ds.getTestOnBorrow());
+        assertFalse(ds.getTestOnReturn());
         assertEquals("username", ds.getUsername());
         assertEquals("password", ds.getPassword());
         assertEquals("SELECT DUMMY FROM DUAL", ds.getValidationQuery());
@@ -171,17 +172,17 @@ public class TestBasicDataSourceFactory {
         assertEquals(2000, ds.getMinEvictableIdleTimeMillis());
         assertEquals(3000, ds.getSoftMinEvictableIdleTimeMillis());
         assertEquals(2, ds.getNumTestsPerEvictionRun());
-        assertEquals(true, ds.getTestWhileIdle());
-        assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
-        assertEquals(true, ds.getRemoveAbandonedOnBorrow());
-        assertEquals(true, ds.getRemoveAbandonedOnMaintenance());
+        assertTrue(ds.getTestWhileIdle());
+        assertTrue(ds.isAccessToUnderlyingConnectionAllowed());
+        assertTrue(ds.getRemoveAbandonedOnBorrow());
+        assertTrue(ds.getRemoveAbandonedOnMaintenance());
         assertEquals(3000, ds.getRemoveAbandonedTimeout());
-        assertEquals(true, ds.getLogAbandoned());
-        assertEquals(true, ds.getAbandonedUsageTracking());
-        assertEquals(true, ds.isPoolPreparedStatements());
+        assertTrue(ds.getLogAbandoned());
+        assertTrue(ds.getAbandonedUsageTracking());
+        assertTrue(ds.isPoolPreparedStatements());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
-        assertEquals(true, ds.getLifo());
-        assertEquals(true, ds.getFastFailValidation());
+        assertTrue(ds.getLifo());
+        assertTrue(ds.getFastFailValidation());
         assertTrue(ds.getDisconnectionSqlCodes().contains("XXX"));
         assertTrue(ds.getDisconnectionSqlCodes().contains("YYY"));
         assertEquals("org.apache.commons.dbcp2:name=test", ds.getJmxName());

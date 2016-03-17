@@ -224,7 +224,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testNoAccessToUnderlyingConnectionAllowed() throws Exception {
         // default: false
-        assertEquals(false, ds.isAccessToUnderlyingConnectionAllowed());
+        assertFalse(ds.isAccessToUnderlyingConnectionAllowed());
 
         final Connection conn = getConnection();
         Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
@@ -237,7 +237,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testAccessToUnderlyingConnectionAllowed() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        assertEquals(true, ds.isAccessToUnderlyingConnectionAllowed());
+        assertTrue(ds.isAccessToUnderlyingConnectionAllowed());
 
         final Connection conn = getConnection();
         Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
@@ -340,23 +340,23 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testSetValidationTestProperties() {
         // defaults
-        assertEquals(true, ds.getTestOnBorrow());
-        assertEquals(false, ds.getTestOnReturn());
-        assertEquals(false, ds.getTestWhileIdle());
+        assertTrue(ds.getTestOnBorrow());
+        assertFalse(ds.getTestOnReturn());
+        assertFalse(ds.getTestWhileIdle());
 
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setTestWhileIdle(true);
-        assertEquals(true, ds.getTestOnBorrow());
-        assertEquals(true, ds.getTestOnReturn());
-        assertEquals(true, ds.getTestWhileIdle());
+        assertTrue(ds.getTestOnBorrow());
+        assertTrue(ds.getTestOnReturn());
+        assertTrue(ds.getTestWhileIdle());
 
         ds.setTestOnBorrow(false);
         ds.setTestOnReturn(false);
         ds.setTestWhileIdle(false);
-        assertEquals(false, ds.getTestOnBorrow());
-        assertEquals(false, ds.getTestOnReturn());
-        assertEquals(false, ds.getTestWhileIdle());
+        assertFalse(ds.getTestOnBorrow());
+        assertFalse(ds.getTestOnReturn());
+        assertFalse(ds.getTestWhileIdle());
     }
 
     @Test
@@ -391,15 +391,15 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         final Connection conn = getConnection();
         assertNotNull(conn);
-        assertEquals(false, conn.getAutoCommit());
+        assertFalse(conn.getAutoCommit());
 
         final Connection dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
         assertNotNull(dconn);
-        assertEquals(false, dconn.getAutoCommit());
+        assertFalse(dconn.getAutoCommit());
 
         conn.close();
 
-        assertEquals(true, dconn.getAutoCommit());
+        assertTrue(dconn.getAutoCommit());
     }
 
     @Test
@@ -508,9 +508,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         final Connection conn = ds.getConnection();
         assertNotNull(conn);
 
-        assertEquals(false, ds.getConnectionPool().getTestOnBorrow());
-        assertEquals(false, ds.getConnectionPool().getTestWhileIdle());
-        assertEquals(true, ds.getConnectionPool().getTestOnReturn());
+        assertFalse(ds.getConnectionPool().getTestOnBorrow());
+        assertFalse(ds.getConnectionPool().getTestWhileIdle());
+        assertTrue(ds.getConnectionPool().getTestOnReturn());
     }
 
     /**
@@ -732,7 +732,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMaxTotal(8);
         ds.setLifo(true);
         ds.setMaxWaitMillis(-1);
-        
+
         // Threads just borrow and return - validation will trigger close check
         final TestThread testThread1 = new TestThread(1000,0);
         final Thread t1 = new Thread(testThread1);
@@ -740,22 +740,22 @@ public class TestBasicDataSource extends TestConnectionPool {
         final TestThread testThread2 = new TestThread(1000,0);
         final Thread t2 = new Thread(testThread1);
         t2.start();
-        
+
         // Grab and invalidate connections
         for (int i = 0; i < 1000; i++) {
             final Connection conn = ds.getConnection();
             ds.invalidateConnection(conn);
         }
-        
+
         // Make sure borrow threads complete successfully
         t1.join();
         t2.join();
         assertFalse(testThread1.failed());
         assertFalse(testThread2.failed());
-        
+
         ds.close();
     }
-    
+
     /**
      * Make sure setting jmxName to null suppresses JMX registration of connection and statement pools.
      * JIRA: DBCP-434
