@@ -77,9 +77,13 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" issue="DBCP-451">
         Add constructor DriverManagerConnectionFactory(String).
       </action>
-      <action dev="markt" type="fix" issue="DBCP-455" due-to="Kyohei Nakamura ">
+      <action dev="markt" type="fix" issue="DBCP-455" due-to="Kyohei Nakamura">
         Ensure that the cacheState setting is used when statement pooling is
         disabled.
+      </action>
+      <action dev="markt" type="fix" issue="DBCP-453" due-to="Philipp Marx">
+        Ensure that setSoftMinEvictableIdleTimeMillis is used when working with
+        BasicDataSource.
       </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=

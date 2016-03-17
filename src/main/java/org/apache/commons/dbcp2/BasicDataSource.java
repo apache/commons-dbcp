@@ -2050,7 +2050,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             }
 
             // Create the pooling data source to manage connections
-            DataSource newDataSource; 
+            DataSource newDataSource;
             success = false;
             try {
                 newDataSource = createDataSourceInstance();
@@ -2208,6 +2208,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setTestOnReturn(testOnReturn);
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
         gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        gop.setSoftMinEvictableIdleTimeMillis(softMinEvictableIdleTimeMillis);
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
         gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log, logExpiredConnections));

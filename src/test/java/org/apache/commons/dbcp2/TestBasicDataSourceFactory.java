@@ -32,6 +32,7 @@ import javax.management.MBeanServer;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.Test;
 
 /**
@@ -98,6 +99,7 @@ public class TestBasicDataSourceFactory {
             final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
             final BasicDataSource ds = (BasicDataSource) basicDataSourceFactory.getObjectInstance(ref, null, null, null);
             checkDataSourceProperties(ds);
+            checkConnectionPoolProperties(ds.getConnectionPool());
             final List<String> messages = StackMessageLog.getAll();
             assertEquals(0,messages.size());
         } finally {
@@ -190,5 +192,25 @@ public class TestBasicDataSourceFactory {
         // Unregister so subsequent calls to getTestProperties can re-register
         final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.unregisterMBean(ds.getRegisteredJmxName());
+    }
+
+    private void checkConnectionPoolProperties(final GenericObjectPool<PoolableConnection> cp) {
+        assertEquals(10, cp.getMaxTotal());
+        assertEquals(8, cp.getMaxIdle());
+        assertEquals(0, cp.getMinIdle());
+        assertEquals(500, cp.getMaxWaitMillis());
+        assertEquals(5, cp.getNumIdle());
+        assertTrue(cp.getTestOnBorrow());
+        assertFalse(cp.getTestOnReturn());
+        assertEquals(1000, cp.getTimeBetweenEvictionRunsMillis());
+        assertEquals(2000, cp.getMinEvictableIdleTimeMillis());
+        assertEquals(3000, cp.getSoftMinEvictableIdleTimeMillis());
+        assertEquals(2, cp.getNumTestsPerEvictionRun());
+        assertTrue(cp.getTestWhileIdle());
+        assertTrue(cp.getRemoveAbandonedOnBorrow());
+        assertTrue(cp.getRemoveAbandonedOnMaintenance());
+        assertEquals(3000, cp.getRemoveAbandonedTimeout());
+        assertTrue(cp.getLogAbandoned());
+        assertTrue(cp.getLifo());
     }
 }
