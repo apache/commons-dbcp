@@ -287,16 +287,16 @@ isValid() method.
    </td>
 </tr>
 <tr>
-   <td>softMiniEvictableIdleTimeMillis</td>
+   <td>softMinEvictableIdleTimeMillis</td>
    <td>-1</td>
    <td>
       The minimum amount of time a connection may sit idle in the pool before
       it is eligible for eviction by the idle connection evictor, with
       the extra condition that at least "minIdle" connections remain in the
-      pool. When miniEvictableIdleTimeMillis is set to a positive value,
-      miniEvictableIdleTimeMillis is examined first by the idle 
+      pool. When minEvictableIdleTimeMillis is set to a positive value,
+      minEvictableIdleTimeMillis is examined first by the idle 
       connection evictor - i.e. when idle connections are visited by the
-      evictor, idle time is first compared against miniEvictableIdleTimeMillis
+      evictor, idle time is first compared against minEvictableIdleTimeMillis
       (without considering the number of idle connections in the pool) and then
       against softMinEvictableIdleTimeMillis, including the minIdle constraint.
    </td>

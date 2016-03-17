@@ -895,8 +895,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * the extra condition that at least "minIdle" connections remain in the
      * pool.</p>
      *
-     * <p>When {@link #getMinEvictableIdleTimeMillis() miniEvictableIdleTimeMillis}
-     * is set to a positive value, miniEvictableIdleTimeMillis is examined
+     * <p>When {@link #getMinEvictableIdleTimeMillis() minEvictableIdleTimeMillis}
+     * is set to a positive value, minEvictableIdleTimeMillis is examined
      * first by the idle connection evictor - i.e. when idle connections are
      * visited by the evictor, idle time is first compared against
      * {@code minEvictableIdleTimeMillis} (without considering the number of idle

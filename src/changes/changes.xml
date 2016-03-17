@@ -85,6 +85,10 @@ The <action> type attribute can be add,update,fix,remove.
         Ensure that setSoftMinEvictableIdleTimeMillis is used when working with
         BasicDataSource.
       </action>
+      <action dev="markt" type="fix" issue="DBCP-456" due-to="Kyohei Nakamura">
+        Correct the name of the configuration attribute
+        softMinEvictableIdleTimeMillis.
+      </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">
