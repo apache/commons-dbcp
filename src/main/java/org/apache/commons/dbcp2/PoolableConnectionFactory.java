@@ -304,8 +304,9 @@ public class PoolableConnectionFactory
                     Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn,_pool, connJmxName,
+        final PoolableConnection pc = new PoolableConnection(conn, _pool, connJmxName,
                                       _disconnectionSqlCodes, _fastFailValidation);
+        pc.setCacheState(_cacheState);
 
         return new DefaultPooledObject<>(pc);
     }
@@ -444,11 +445,11 @@ public class PoolableConnectionFactory
     protected boolean getCacheState() {
         return _cacheState;
     }
-    
+
     protected ObjectName getDataSourceJmxName() {
         return dataSourceJmxName;
     }
-    
+
     protected AtomicLong getConnectionIndex() {
         return connectionIndex;
     }

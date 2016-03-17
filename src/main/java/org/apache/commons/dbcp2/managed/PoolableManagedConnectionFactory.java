@@ -92,7 +92,9 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             ((PoolingConnection)conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(getCacheState());
         }
-        return new DefaultPooledObject<PoolableConnection>(
-                new PoolableManagedConnection(transactionRegistry, conn, getPool()));
+        final PoolableManagedConnection pmc =
+                new PoolableManagedConnection(transactionRegistry, conn, getPool());
+        pmc.setCacheState(getCacheState());
+        return new DefaultPooledObject<PoolableConnection>(pmc);
     }
 }
