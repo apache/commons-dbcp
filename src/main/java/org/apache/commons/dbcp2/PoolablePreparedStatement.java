@@ -44,7 +44,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    private final KeyedObjectPool<K,PoolablePreparedStatement<K>> _pool;
+    private final KeyedObjectPool<K, PoolablePreparedStatement<K>> _pool;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
