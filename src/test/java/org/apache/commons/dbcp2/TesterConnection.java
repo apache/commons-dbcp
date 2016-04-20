@@ -236,9 +236,8 @@ public class TesterConnection implements Connection {
         if (failure != null) {
             if(failure instanceof SQLException) {
                 throw (SQLException)failure;
-            } else {
-                throw new SQLException("TesterConnection failure", failure);
             }
+            throw new SQLException("TesterConnection failure", failure);
         }
     }
 

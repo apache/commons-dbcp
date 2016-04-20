@@ -77,13 +77,10 @@ public class TesterResultSet implements ResultSet {
             _currentRow++;
             return _currentRow < _data.length;
         }
-        else {
-            if(--_rowsLeft > 0) {
-                return true;
-            } else {
-                return false;
-            }
+        if(--_rowsLeft > 0) {
+            return true;
         }
+        return false;
     }
 
     @Override

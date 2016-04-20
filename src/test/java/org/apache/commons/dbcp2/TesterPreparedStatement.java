@@ -85,9 +85,8 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
         if("null".equals(sql)) {
             return null;
-        } else {
-            return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);
         }
+        return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);
     }
 
     @Override

@@ -72,13 +72,12 @@ public class TesterStatement implements Statement {
             final String username = ((TesterConnection) _connection).getUsername();
             final Object[][] data = {{username}};
             return new TesterResultSet(this, data);
-        } else {
-            // Simulate timeout if queryTimout is set to less than 5 seconds
-            if (_queryTimeout > 0 && _queryTimeout < 5) {
-                throw new SQLException("query timeout");
-            }
-            return new TesterResultSet(this);
         }
+        // Simulate timeout if queryTimout is set to less than 5 seconds
+        if (_queryTimeout > 0 && _queryTimeout < 5) {
+            throw new SQLException("query timeout");
+        }
+        return new TesterResultSet(this);
     }
 
     @Override
