@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
         enables container-managed pools created from JNDI Resource
         definitions to enable JMX by supplying a valid root JMX name.  
       </action>
+      <action dev="ggregory" type="fix" issue="DBCP-446" due-to="Gary Gregory, feng yang, Euclides M, Phil Steitz">
+        NullPointerException thrown when calling ManagedConnection.isClosed().
+      </action>
       <action dev="psteitz" type="fix" issue="DBCP-444">
         InvalidateConnection can result in closed connection returned by getConnection.
       </action>

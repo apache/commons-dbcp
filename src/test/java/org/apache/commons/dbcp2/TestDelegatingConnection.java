@@ -139,4 +139,12 @@ public class TestDelegatingConnection {
         assertTrue(conn.isClosed());
     }
 
+    @Test
+    public void testIsClosedNullDelegate() throws Exception {
+        conn.checkOpen();
+        assertFalse(conn.isClosed());
+        conn.setDelegate(null);
+        assertTrue(conn.isClosed());
+    }
+
 }
