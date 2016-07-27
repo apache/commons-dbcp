@@ -15,10 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
@@ -27,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.2</version>
   <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -54,35 +51,35 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/tags/DBCP_2_2_RC1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/tags/DBCP_2_2_RC1</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/tags/DBCP_2_2_RC1</url>
   </scm>
 
   <developers>
     <developer>
       <name>Morgan Delagrange</name>
       <id>morgand</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>Geir Magnusson</name>
       <id>geirm</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>Craig McClanahan</name>
       <id>craigmcc</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>John McNally</name>
       <id>jmcnally</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>Martin Poeschl</name>
@@ -93,20 +90,20 @@
     <developer>
       <name>Rodney Waldhoff</name>
       <id>rwaldhoff</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>David Weinrich</name>
       <id>dweinr1</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>Dirk Verbeeck</name>
       <id>dirkv</id>
-      <email></email>
-      <organization></organization>
+      <email />
+      <organization />
     </developer>
     <developer>
       <name>Yoav Shapira</name>
@@ -115,10 +112,10 @@
       <organization>The Apache Software Foundation</organization>
     </developer>
     <developer>
-      <name>J&#x00f6;rg Schaible</name>
+      <name>Jörg Schaible</name>
       <id>joehni</id>
       <email>joerg.schaible@gmx.de</email>
-      <organization></organization>
+      <organization />
       <timezone>+1</timezone>
     </developer>
     <developer>
