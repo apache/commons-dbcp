@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.2</version>
+  <version>2.2-SNAPSHOT</version>
   <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
