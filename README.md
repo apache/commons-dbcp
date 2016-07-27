@@ -62,7 +62,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.1.1</version>
+  <version>2.2</version>
 </dependency>
 ```
 
