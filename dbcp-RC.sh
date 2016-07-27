@@ -28,7 +28,7 @@
 # $Revision$ $Date$
 # -----------------------------------------------------------------------------
 # Set script variables
-version=2.1.1
+version=2.2
 repo_path=~/.m2/repository/org/apache/commons/commons-dbcp2/${version}
 release_path=~/dbcp-rc  #checkout of https://dist.apache.org/repos/dist/dev/commons/dbcp
 #

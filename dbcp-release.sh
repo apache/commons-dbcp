@@ -31,8 +31,8 @@
 # $Revision$ $Date$
 # -----------------------------------------------------------------------------
 # Set script variables
-version=2.1.1      # version being released
-last_version=2.1   # previous version, will be replaced in README.html
+version=2.2        # version being released
+last_version=2.1.1 # previous version, will be replaced in README.html
 rc_path=~/dbcp-rc  # checkout of https://dist.apache.org/repos/dist/dev/commons/dbcp
 release_path=~/dbcp-release #https://dist.apache.org/repos/dist/release/commons/dbcp
 #
