@@ -1,28 +1,30 @@
               Apache Apache Commons DBCP
-                  Version 2.1.1
+                  Version 2.2
                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.2.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
-This is a patch release, including bug fixes only.
+This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
+New features:
+o DBCP-451:  Add constructor DriverManagerConnectionFactory(String).
 
 Fixed Bugs:
-o DBCP-441:  Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
-o DBCP-442:  SharedPoolDataSource getConnection fails when testOnBorrow is set with
-             a null validation query.
-o DBCP-438:  Nested connections in a transaction (local) throws null pointer. Thanks to Raihan Kibria.
-o DBCP-437:  BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
+o DBCP-446:  NullPointerException thrown when calling ManagedConnection.isClosed(). Thanks to Gary Gregory, feng yang, Euclides M, Phil Steitz.
+o DBCP-444:  InvalidateConnection can result in closed connection returned by getConnection.
+o DBCP-449:  Complete the fix for DBCP-418, enabling PoolableConnection class to load in environments
+             (such as GAE) where the JMX ManagementFactory is not available. Thanks to Grzegorz D..
+o DBCP-455:  Ensure that the cacheState setting is used when statement pooling is
+             disabled. Thanks to Kyohei Nakamura.
+o DBCP-453:  Ensure that setSoftMinEvictableIdleTimeMillis is used when working with
+             BasicDataSource. Thanks to Philipp Marx.
+o DBCP-456:  Correct the name of the configuration attribute
+             softMinEvictableIdleTimeMillis. Thanks to Kyohei Nakamura.
 
-Changes:
-o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
-             users to see more reports of abandoned connections (if removal and logging
-             are configured).  Prior to the fix for POOL-300, the PrintWriter used to log
-             abandoned connection stack traces was not being flushed on each log event.
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
