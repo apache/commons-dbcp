@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.3-SNAPSHOT</version>
   <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -218,7 +218,7 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <commons.componentid>dbcp2</commons.componentid>
-    <commons.release.version>2.1.1</commons.release.version>
+    <commons.release.version>2.2</commons.release.version>
     <commons.release.desc>for JDBC 4.1 (Java 7.0+)</commons.release.desc>
     <commons.release.2.version>1.4</commons.release.2.version>
     <commons.release.2.desc>for JDBC 4 (Java 6.0)</commons.release.2.desc>
