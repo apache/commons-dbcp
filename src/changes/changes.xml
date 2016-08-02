@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.2" date="TBD" description=
+    <release version="2.2" date="? Aug 2016" description=
 "This is a minor release, including bug fixes and enhancements.">
       <action dev="mattsicker" type="fix" issue="DBCP-454" due-to="Philipp Marx, Matt Sicker">
         OSGi declarations contain multiple import headers for javax.transaction.
