@@ -62,7 +62,10 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.2" date="TBD" description=
 "This is a minor release, including bug fixes and enhancements.">
-      <action dev="psteitz" tyoe="fix" issue="DBCP-452">
+      <action dev="mattsicker" type="fix" issue="DBCP-454" due-to="Philipp Marx, Matt Sicker">
+        OSGi declarations contain multiple import headers for javax.transaction.
+      </action>
+      <action dev="psteitz" type="fix" issue="DBCP-452">
         Add jmxName to properties set by BasicDataSourceFactory.  This
         enables container-managed pools created from JNDI Resource
         definitions to enable JMX by supplying a valid root JMX name.  

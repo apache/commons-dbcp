@@ -239,8 +239,8 @@
     <commons.checkstyle.version>2.11</commons.checkstyle.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.4.2</commons.pool.version>
-    <!-- See DBCP-445 -->
-    <commons.osgi.import>*,javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial</commons.osgi.import>
+    <!-- See DBCP-445 and DBCP-454 -->
+    <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
 
     <!-- Temporary fix to support Java 8 -->
     <commons.jacoco.version>0.7.4.201502262128</commons.jacoco.version>
