@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.2</version>
   <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -54,9 +54,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/tags/DBCP_2_2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/tags/DBCP_2_2</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/tags/DBCP_2_2</url>
   </scm>
 
   <developers>
