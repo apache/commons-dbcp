@@ -47,16 +47,16 @@
       <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-dbcp/</url>
     </site>
   </distributionManagement>
-  
+
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/DBCP</url>
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/dbcp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/dbcp/trunk</url>
+    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/commons-dbcp.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/commons-dbcp.git</developerConnection>
+    <url>https://git-wip-us.apache.org/repos/asf?p=commons-dbcp.git</url>
   </scm>
 
   <developers>
@@ -180,21 +180,21 @@
       <version>5.0.28</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>tomcat</groupId>
       <artifactId>naming-java</artifactId>
       <version>5.0.28</version>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- for testing of managed connections -->
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
       <artifactId>geronimo-transaction</artifactId>
-       <!-- 
+       <!--
        Cannot update this currently; anything later causes failures:
-       java.lang.NoClassDefFoundError: 
+       java.lang.NoClassDefFoundError:
        Could not initialize class org.apache.geronimo.transaction.manager.TransactionManagerImpl
         -->
        <version>1.2-beta</version>
@@ -244,7 +244,7 @@
 
     <!-- Temporary fix to support Java 8 -->
     <commons.jacoco.version>0.7.4.201502262128</commons.jacoco.version>
-  </properties> 
+  </properties>
 
   <build>
     <pluginManagement>
@@ -284,7 +284,7 @@
               <excludes>
                 <!-- Test support files -->
                 <exclude>**/Tester*.java</exclude>
-                <!-- Exclude nested classes which Surefire cannot handle --> 
+                <!-- Exclude nested classes which Surefire cannot handle -->
                 <exclude>**/Test*$*.java</exclude>
               </excludes>
           </configuration>
