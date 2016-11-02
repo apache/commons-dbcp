@@ -103,6 +103,12 @@ The <action> type attribute can be add,update,fix,remove.
         Expand the fail-fast for fatal connection errors feature to include
         managed connections.
       </action>
+      <action dev="markt" type="fix" issue="DBCP-463">
+        Correct a typo in the method name
+        PoolableConnectionFactory#setMaxOpenPreparedStatements. The old method
+        remains but is deprecated so not to break clients currently using the
+        incorrect name.
+      </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">

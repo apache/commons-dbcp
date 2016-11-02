@@ -2033,7 +2033,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                         driverConnectionFactory);
                 poolableConnectionFactory.setPoolStatements(
                         poolPreparedStatements);
-                poolableConnectionFactory.setMaxOpenPrepatedStatements(
+                poolableConnectionFactory.setMaxOpenPreparedStatements(
                         maxOpenPreparedStatements);
                 success = true;
             } catch (final SQLException se) {
@@ -2274,7 +2274,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setCacheState(cacheState);
             connectionFactory.setPoolStatements(poolPreparedStatements);
-            connectionFactory.setMaxOpenPrepatedStatements(maxOpenPreparedStatements);
+            connectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());

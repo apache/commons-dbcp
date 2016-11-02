@@ -62,7 +62,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
         final PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
         pcf.setPoolStatements(true);
-        pcf.setMaxOpenPrepatedStatements(10);
+        pcf.setMaxOpenPreparedStatements(10);
         pcf.setValidationQuery("SELECT COUNT(*) FROM DUAL");
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
