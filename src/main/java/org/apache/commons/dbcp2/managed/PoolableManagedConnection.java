@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.pool2.ObjectPool;
@@ -43,7 +44,25 @@ public class PoolableManagedConnection extends PoolableConnection {
      */
     public PoolableManagedConnection(final TransactionRegistry transactionRegistry,
             final Connection conn, final ObjectPool<PoolableConnection> pool) {
-        super(conn, pool, null);
+        this(transactionRegistry, conn, pool, null, false);
+    }
+
+
+    /**
+     * Create a PoolableManagedConnection.
+     *
+     * @param transactionRegistry transaction registry
+     * @param conn underlying connection
+     * @param pool connection pool
+     * @param disconnectSqlCodes SQL_STATE codes considered fatal disconnection errors
+     * @param fastFailValidation true means fatal disconnection errors cause subsequent
+     *        validations to fail immediately (no attempt to run query or isValid)
+     */
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry,
+            final Connection conn, final ObjectPool<PoolableConnection> pool,
+            final Collection<String> disconnectSqlCodes,
+            final boolean fastFailValidation) {
+        super(conn, pool, null, disconnectSqlCodes, fastFailValidation);
         this.transactionRegistry = transactionRegistry;
     }
 
