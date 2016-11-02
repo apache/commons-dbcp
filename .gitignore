@@ -9,3 +9,8 @@ release.properties
 
 
 site-content
+/.checkstyle
+/.classpath
+/.pmd
+/.project
+/.settings
