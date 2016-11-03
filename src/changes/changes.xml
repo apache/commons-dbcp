@@ -122,6 +122,11 @@ The <action> type attribute can be add,update,fix,remove.
          Make it simpler to extend BasicDataSource to allow sub-classes to
          provide custom GenericObjectPool implementations.
        </action>
+       <action dev="markt" type="fix" issue="DBCP-457">
+         When using a BasicDataSource, pass changes related to the handling of
+         abandoned connections to the underlying pool so that the pool
+         configuration may be updated dynamically. 
+       </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">

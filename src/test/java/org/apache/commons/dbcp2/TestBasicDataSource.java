@@ -35,6 +35,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -794,6 +795,26 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertTrue(pcf.isFastFailValidation());
         assertTrue(pcf.getDisconnectionSqlCodes().contains("XXX"));
         assertEquals(1, pcf.getDisconnectionSqlCodes().size());
+    }
+
+    /**
+     * JIRA: DBCP-457
+     * Verify that changes made to abandoned config are passed to the underlying
+     * pool.
+     */
+    @Test
+    public void testMutateAbandonedConfig() throws Exception {
+        final Properties properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
+        boolean original = ds.getConnectionPool().getLogAbandoned();
+        ds.setLogAbandoned(!original);
+        Assert.assertNotEquals(Boolean.valueOf(original),
+                Boolean.valueOf(ds.getConnectionPool().getLogAbandoned()));
     }
 }
 

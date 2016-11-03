@@ -1667,6 +1667,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
         abandonedConfig.setRemoveAbandonedOnMaintenance(
                 removeAbandonedOnMaintenance);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1699,6 +1703,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1744,6 +1752,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1772,6 +1784,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogAbandoned(logAbandoned);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1796,6 +1812,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogWriter(logWriter);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1829,6 +1849,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setUseUsageTracking(usageTracking);
+        GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     // --------------------------------------------------------- Public Methods
