@@ -109,10 +109,15 @@ The <action> type attribute can be add,update,fix,remove.
         remains but is deprecated so not to break clients currently using the
         incorrect name.
       </action>
-     <action dev="markt" type="add" issue="DBCP-462" due-to=" Keiichi Fujino">
-       Refactoring to prepare for a future patch to enable pooling of all
-       prepared and callable statements in PoolingConnection.
-     </action>
+       <action dev="markt" type="add" issue="DBCP-462" due-to=" Keiichi Fujino">
+         Refactoring to prepare for a future patch to enable pooling of all
+         prepared and callable statements in PoolingConnection.
+       </action>
+       <action dev="markt" type="fix" issue="DBCP-459">
+         Ensure that a thread's interrupt status is visible to the caller if the
+         thread is interrupted during a call to
+         PoolingDataSource.getConnection().
+       </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">
