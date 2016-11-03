@@ -2190,15 +2190,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         updateJmxName(config);
         config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
-        GenericObjectPool<PoolableConnection> gop;
-        if (abandonedConfig != null &&
-                (abandonedConfig.getRemoveAbandonedOnBorrow() ||
-                 abandonedConfig.getRemoveAbandonedOnMaintenance())) {
-            gop = new GenericObjectPool<>(factory, config, abandonedConfig);
-        }
-        else {
-            gop = new GenericObjectPool<>(factory, config);
-        }
+        GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
@@ -2215,6 +2207,29 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setEvictionPolicyClassName(evictionPolicyClassName);
         factory.setPool(gop);
         connectionPool = gop;
+    }
+
+    /**
+     * Creates an object pool used to provide pooling support for {@link Connection JDBC connections}.
+     *
+     * @param factory         the object factory
+     * @param poolConfig      the object pool configuration
+     * @param abandonedConfig the abandoned objects configuration
+     * @return a non-null instance
+     */
+    protected  GenericObjectPool<PoolableConnection> createObjectPool(
+            final PoolableConnectionFactory factory, final GenericObjectPoolConfig poolConfig,
+            final AbandonedConfig abandonedConfig) {
+        GenericObjectPool<PoolableConnection> gop;
+        if (abandonedConfig != null &&
+                (abandonedConfig.getRemoveAbandonedOnBorrow() ||
+                        abandonedConfig.getRemoveAbandonedOnMaintenance())) {
+            gop = new GenericObjectPool<>(factory, poolConfig, abandonedConfig);
+        }
+        else {
+            gop = new GenericObjectPool<>(factory, poolConfig);
+        }
+        return gop;
     }
 
     /**

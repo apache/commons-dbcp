@@ -118,6 +118,10 @@ The <action> type attribute can be add,update,fix,remove.
          thread is interrupted during a call to
          PoolingDataSource.getConnection().
        </action>
+       <action dev="markt" type="add" issue="DBCP-458" due-to="Adrian Tarau">
+         Make it simpler to extend BasicDataSource to allow sub-classes to
+         provide custom GenericObjectPool implementations.
+       </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=
 "This is a patch release, including bug fixes only.">
