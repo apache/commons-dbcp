@@ -288,7 +288,8 @@ public class TesterConnection implements Connection {
                                               final int resultSetConcurrency,
                                               final int resultSetHoldability)
         throws SQLException {
-        return prepareStatement(sql);
+        checkOpen();
+        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
@@ -296,7 +297,8 @@ public class TesterConnection implements Connection {
                                          final int resultSetConcurrency,
                                          final int resultSetHoldability)
         throws SQLException {
-        return prepareCall(sql);
+        checkOpen();
+        return new TesterCallableStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
@@ -309,13 +311,13 @@ public class TesterConnection implements Connection {
     @Override
     public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
         throws SQLException {
-        return prepareStatement(sql);
+        return new TesterPreparedStatement(this, sql, columnIndexes);
     }
 
     @Override
     public PreparedStatement prepareStatement(final String sql, final String columnNames[])
         throws SQLException {
-        return prepareStatement(sql);
+        return new TesterPreparedStatement(this, sql, columnNames);
     }
 
 

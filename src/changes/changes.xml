@@ -109,7 +109,7 @@ The <action> type attribute can be add,update,fix,remove.
         remains but is deprecated so not to break clients currently using the
         incorrect name.
       </action>
-       <action dev="markt" type="add" issue="DBCP-462" due-to=" Keiichi Fujino">
+       <action dev="markt" type="add" issue="DBCP-462" due-to="Keiichi Fujino">
          Refactoring to prepare for a future patch to enable pooling of all
          prepared and callable statements in PoolingConnection.
        </action>
@@ -126,6 +126,10 @@ The <action> type attribute can be add,update,fix,remove.
          When using a BasicDataSource, pass changes related to the handling of
          abandoned connections to the underlying pool so that the pool
          configuration may be updated dynamically. 
+       </action>
+       <action dev="markt" type="add" issue="DBCP-474" due-to="Keiichi Fujino">
+         Enable pooling of all prepared and callable statements
+         inPoolingConnection.
        </action>
     </release>
     <release version="2.1.1" date="6 Aug 2015" description=

@@ -201,26 +201,103 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         }
     }
 
+    /**
+     * Create or obtain a {@link PreparedStatement} from the pool.
+     * @param sql the sql string used to define the PreparedStatement
+     * @param resultSetType result set type
+     * @param resultSetConcurrency result set concurrency
+     * @param resultSetHoldability result set holdability
+     * @return a {@link PoolablePreparedStatement}
+     */
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
+            final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
+        if (null == _pstmtPool) {
+            throw new SQLException(
+                    "Statement pool is null - closed or invalid PoolingConnection.");
+        }
+        try {
+            return _pstmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        } catch(final NoSuchElementException e) {
+            throw new SQLException("MaxOpenPreparedStatements limit reached", e);
+        } catch(final RuntimeException e) {
+            throw e;
+        } catch(final Exception e) {
+            throw new SQLException("Borrow prepareStatement from pool failed", e);
+        }
+    }
 
-//    TODO: possible enhancement, cache these preparedStatements as well
+    /**
+     * Create or obtain a {@link PreparedStatement} from the pool.
+     * @param sql the sql string used to define the PreparedStatement
+     * @param columnIndexes column indexes
+     * @return a {@link PoolablePreparedStatement}
+     */
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
+            throws SQLException {
+        if (null == _pstmtPool) {
+            throw new SQLException(
+                    "Statement pool is null - closed or invalid PoolingConnection.");
+        }
+        try {
+            return _pstmtPool.borrowObject(createKey(sql, columnIndexes));
+        } catch(final NoSuchElementException e) {
+            throw new SQLException("MaxOpenPreparedStatements limit reached", e);
+        } catch(final RuntimeException e) {
+            throw e;
+        } catch(final Exception e) {
+            throw new SQLException("Borrow prepareStatement from pool failed", e);
+        }
+    }
 
-//    public PreparedStatement prepareStatement(String sql, int resultSetType,
-//                                              int resultSetConcurrency,
-//                                              int resultSetHoldability)
-//        throws SQLException {
-//        return super.prepareStatement(
-//            sql, resultSetType, resultSetConcurrency, resultSetHoldability);
-//    }
-//
-//    public PreparedStatement prepareStatement(String sql, int columnIndexes[])
-//        throws SQLException {
-//        return super.prepareStatement(sql, columnIndexes);
-//    }
-//
-//    public PreparedStatement prepareStatement(String sql, String columnNames[])
-//        throws SQLException {
-//        return super.prepareStatement(sql, columnNames);
-//    }
+    /**
+     * Create or obtain a {@link PreparedStatement} from the pool.
+     * @param sql the sql string used to define the PreparedStatement
+     * @param columnNames column names
+     * @return a {@link PoolablePreparedStatement}
+     */
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final String columnNames[])
+            throws SQLException {
+        if (null == _pstmtPool) {
+            throw new SQLException(
+                    "Statement pool is null - closed or invalid PoolingConnection.");
+        }
+        try {
+            return _pstmtPool.borrowObject(createKey(sql, columnNames));
+        } catch(final NoSuchElementException e) {
+            throw new SQLException("MaxOpenPreparedStatements limit reached", e);
+        } catch(final RuntimeException e) {
+            throw e;
+        } catch(final Exception e) {
+            throw new SQLException("Borrow prepareStatement from pool failed", e);
+        }
+    }
+
+    /**
+     * Create or obtain a {@link CallableStatement} from the pool.
+     * @param sql the sql string used to define the CallableStatement
+     * @param resultSetType result set type
+     * @param resultSetConcurrency result set concurrency
+     * @param resultSetHoldability result set holdability
+     * @return a {@link PoolableCallableStatement}
+     * @throws SQLException
+     */
+    @Override
+    public CallableStatement prepareCall(final String sql, final int resultSetType,
+            final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
+        try {
+            return (CallableStatement) _pstmtPool.borrowObject(createKey(sql, resultSetType,
+                            resultSetConcurrency, resultSetHoldability, StatementType.CALLABLE_STATEMENT));
+        } catch (final NoSuchElementException e) {
+            throw new SQLException("MaxOpenCallableStatements limit reached", e);
+        } catch (final RuntimeException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new SQLException("Borrow callableStatement from pool failed", e);
+        }
+    }
 
     protected PStmtKey createKey(final String sql, final int autoGeneratedKeys) {
         String catalog = null;
@@ -292,6 +369,73 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             // Ignored
         }
         return new PStmtKey(normalizeSQL(sql), catalog, stmtType, null);
+    }
+
+    /**
+     * Create a PStmtKey for the given arguments.
+     * @param sql the sql string used to define the statement
+     * @param resultSetType result set type
+     * @param resultSetConcurrency result set concurrency
+     * @param resultSetHoldability result set holdability
+     */
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (final SQLException e) {
+            // Ignored
+        }
+        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    /**
+     * Create a PStmtKey for the given arguments.
+     * @param sql the sql string used to define the statement
+     * @param resultSetType result set type
+     * @param resultSetConcurrency result set concurrency
+     * @param resultSetHoldability result set holdability
+     * @param stmtType statement type
+     */
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability, final StatementType stmtType) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (final SQLException e) {
+            // Ignored
+        }
+        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, resultSetHoldability,  stmtType);
+    }
+
+    /**
+     * Create a PStmtKey for the given arguments.
+     * @param sql the sql string used to define the statement
+     * @param columnIndexes column indexes
+     */
+    protected PStmtKey createKey(final String sql, final int columnIndexes[]) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (final SQLException e) {
+            // Ignored
+        }
+        return new PStmtKey(normalizeSQL(sql), catalog, columnIndexes);
+    }
+
+    /**
+     * Create a PStmtKey for the given arguments.
+     * @param sql the sql string used to define the statement
+     * @param columnNames column names
+     */
+    protected PStmtKey createKey(final String sql, final String columnNames[]) {
+        String catalog = null;
+        try {
+            catalog = getCatalog();
+        } catch (final SQLException e) {
+            // Ignored
+        }
+        return new PStmtKey(normalizeSQL(sql), catalog, columnNames);
     }
 
     /**

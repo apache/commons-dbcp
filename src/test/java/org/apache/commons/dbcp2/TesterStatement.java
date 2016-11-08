@@ -41,6 +41,14 @@ public class TesterStatement implements Statement {
         _resultSetConcurrency = resultSetConcurrency;
     }
 
+    public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) {
+        _connection = conn;
+        _resultSetType = resultSetType;
+        _resultSetConcurrency = resultSetConcurrency;
+        _resultSetHoldability = resultSetHoldability;
+    }
+
     protected Connection _connection = null;
     protected boolean _open = true;
     protected int _rowsUpdated = 1;
@@ -54,6 +62,7 @@ public class TesterStatement implements Statement {
     protected int _fetchSize = 1;
     protected int _resultSetConcurrency = 1;
     protected int _resultSetType = 1;
+    private int _resultSetHoldability = 1;
     protected ResultSet _resultSet = null;
 
     @Override
@@ -307,7 +316,7 @@ public class TesterStatement implements Statement {
     @Override
     public int getResultSetHoldability() throws SQLException {
         checkOpen();
-        throw new SQLException("Not implemented.");
+        return _resultSetHoldability;
     }
 
 

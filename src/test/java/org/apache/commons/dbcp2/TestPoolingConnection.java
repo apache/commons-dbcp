@@ -17,6 +17,7 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -83,6 +84,43 @@ public class TestPoolingConnection {
     }
 
     @Test
+    public void testPrepareStatementWithResultSetHoldability() throws Exception {
+        String sql = "select 'a' from dual";
+        int resultSetType = 0;
+        int resultSetConcurrency = 0;
+        int resultSetHoldability = 0;
+        DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
+        // assert
+        assertEquals(sql, testStatement.getSql());
+        assertEquals(resultSetType, testStatement.getResultSetType());
+        assertEquals(resultSetConcurrency, testStatement.getResultSetConcurrency());
+        assertEquals(resultSetHoldability, testStatement.getResultSetHoldability());
+    }
+
+    @Test
+    public void testPrepareStatementWithColumnIndexes() throws Exception {
+        String sql = "select 'a' from dual";
+        int[] columnIndexes = new int[]{1};
+        DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, columnIndexes);
+        TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
+        // assert
+        assertEquals(sql, testStatement.getSql());
+        assertArrayEquals(columnIndexes, testStatement.getColumnIndexes());
+    }
+
+    @Test
+    public void testPrepareStatementWithColumnNames() throws Exception {
+        String sql = "select 'a' from dual";
+        String columnNames[] = new String[]{"columnName1"};
+        DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, columnNames);
+        TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
+        // assert
+        assertEquals(sql, testStatement.getSql());
+        assertArrayEquals(columnNames, testStatement.getColumnNames());
+    }
+
+    @Test
     public void testPrepareCall() throws Exception {
         String sql = "select 'a' from dual";
         DelegatingCallableStatement statement = (DelegatingCallableStatement)con.prepareCall(sql);
@@ -102,5 +140,20 @@ public class TestPoolingConnection {
         assertEquals(sql, testStatement.getSql());
         assertEquals(resultSetType, testStatement.getResultSetType());
         assertEquals(resultSetConcurrency, testStatement.getResultSetConcurrency());
+    }
+
+    @Test
+    public void testPrepareCallWithResultSetHoldability() throws Exception {
+        String sql = "select 'a' from dual";
+        int resultSetType = 0;
+        int resultSetConcurrency = 0;
+        int resultSetHoldability = 0;
+        DelegatingCallableStatement statement = (DelegatingCallableStatement)con.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        TesterCallableStatement testStatement = (TesterCallableStatement) statement.getInnermostDelegate();
+        // assert
+        assertEquals(sql, testStatement.getSql());
+        assertEquals(resultSetType, testStatement.getResultSetType());
+        assertEquals(resultSetConcurrency, testStatement.getResultSetConcurrency());
+        assertEquals(resultSetHoldability, testStatement.getResultSetHoldability());
     }
 }

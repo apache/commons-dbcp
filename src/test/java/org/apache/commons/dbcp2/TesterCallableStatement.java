@@ -57,6 +57,11 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
         super(conn, sql, resultSetType, resultSetConcurrency);
     }
 
+    public TesterCallableStatement(final Connection conn, final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) {
+        super(conn, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
     @Override
     public void registerOutParameter(final int parameterIndex, final int sqlType) throws SQLException {
     }
