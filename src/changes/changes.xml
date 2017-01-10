@@ -703,7 +703,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="fix" issue="DBCP-237" due-to="Oliver Matz">
         Added exception handler to ensure that PooledConnections are not
         orphaned when an exception occurs in setUpDefaults or clearWarnings in 
-        IntanceKeyDataSource.getConnection.
+        InstanceKeyDataSource.getConnection.
       </action> 
       <action dev="psteitz" type="fix" issue="DBCP-252" due-to="FindBugs">
         Made getPool synchronized in PoolableConnectionFactory.
