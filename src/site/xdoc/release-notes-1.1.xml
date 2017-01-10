@@ -72,7 +72,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12869">12869</a></td><td>2002-11-01</td><td>Maj</td><td>FIXE</td><td>Abandoned Connections are never closed</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13077">13077</a></td><td>2002-11-07</td><td>Enh</td><td>FIXE</td><td>Jdbc2PoolDataSource issues</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13129">13129</a></td><td>2002-11-01</td><td>Nor</td><td>FIXE</td><td>CPDSConnectionFactory prints invalid error messages</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13155">13155</a></td><td>2002-10-30</td><td>Nor</td><td>DUPL</td><td>unexpected "exausted pool" error</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13155">13155</a></td><td>2002-10-30</td><td>Nor</td><td>DUPL</td><td>unexpected "exhausted pool" error</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13235">13235</a></td><td>2002-11-16</td><td>Blo</td><td>FIXE</td><td>referenced UserPassKey instances get erroneously returned to</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13930">13930</a></td><td>2003-03-06</td><td>Enh</td><td>FIXE</td><td>Adding connection parameters to BasicDataSourceFactory</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13988">13988</a></td><td>2003-03-17</td><td>Enh</td><td>DUPL</td><td>permission error makes connection loop</td></tr>
