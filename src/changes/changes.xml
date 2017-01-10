@@ -189,7 +189,7 @@ The <action> type attribute can be add,update,fix,remove.
         Made Datasources implement AutoCloseable.
       </action>
       <action issue="DBCP-427" dev="psteitz" type="add" due-to="Vladimir Konkov">
-        Added fastFailValidation property to PooloableConnection, configurable in
+        Added fastFailValidation property to PoolableConnection, configurable in
         BasicDataSource.  When set to true, connections that have previously thrown
         fatal disconnection errors will fail validation immediately (no driver calls).
       </action>
