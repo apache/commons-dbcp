@@ -621,7 +621,7 @@ The <action> type attribute can be add,update,fix,remove.
         Eliminated direct System.out calls in AbandonedTrace.
       </action>
       <action dev="niallp" type="fix" issue="DBCP-264">
-        Modified DelegatingStatment close to clear open batches.
+        Modified DelegatingStatement close to clear open batches.
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-255">
         Eliminated unused private "parent" field in AbandonedTrace.
