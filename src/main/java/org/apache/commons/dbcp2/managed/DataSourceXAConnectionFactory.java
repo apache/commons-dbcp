@@ -106,7 +106,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     @Override
     public Connection createConnection() throws SQLException {
-        // create a new XAConection
+        // create a new XAConnection
         XAConnection xaConnection;
         if (username == null) {
             xaConnection = xaDataSource.getXAConnection();
