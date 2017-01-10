@@ -39,7 +39,7 @@ There were some new features were added since the 1.1 release on 20 October 2003
 <br/>
 <li>Refactoring of the DelegatingStatement classes.</li>
 <br/>
-<li>Make some properties dynamic (changeble at runtime), this will be completed in next release.</li>
+<li>Make some properties dynamic (changeable at runtime), this will be completed in next release.</li>
 <br/>
 <li>Improvements to the prepared statement pooling.</li>
 <br/>
