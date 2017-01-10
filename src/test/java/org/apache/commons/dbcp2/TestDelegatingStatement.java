@@ -78,17 +78,17 @@ public class TestDelegatingStatement {
         final TesterConnection tstConn = new TesterConnection("test", "test");
         final TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
         final DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
-        final DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
+        final DelegatingStatement stmt = new DelegatingStatement(dconn, tstStmt);
 
         final Class<?> stmtProxyClass = Proxy.getProxyClass(
                 this.getClass().getClassLoader(),
                 Statement.class);
 
-        assertTrue(stamt.isWrapperFor(DelegatingStatement.class));
-        assertTrue(stamt.isWrapperFor(TesterStatement.class));
-        assertFalse(stamt.isWrapperFor(stmtProxyClass));
+        assertTrue(stmt.isWrapperFor(DelegatingStatement.class));
+        assertTrue(stmt.isWrapperFor(TesterStatement.class));
+        assertFalse(stmt.isWrapperFor(stmtProxyClass));
 
-        stamt.close();
+        stmt.close();
     }
 
     private static class TesterStatementNonWrapping extends TesterStatement {
