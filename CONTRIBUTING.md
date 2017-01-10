@@ -78,7 +78,7 @@ In this case, it is appropriate to start the first line of a commit with '(doc)'
 Submitting Changes
 ------------------
 
-+ Sign the [Contributor License Agreement][cla] if you haven't already.
++ Sign the [Contributor License Agreement][CLA] if you haven't already.
 + Push your changes to a topic branch in your fork of the repository.
 + Submit a pull request to the repository in the apache organization.
 + Update your JIRA ticket and include a link to the pull request in the ticket.
@@ -88,10 +88,10 @@ Additional Resources
 
 + [Contributing patches](https://commons.apache.org/patches.html)
 + [Apache Commons DBCP JIRA project page](https://issues.apache.org/jira/browse/DBCP)
-+ [Contributor License Agreement][cla]
++ [Contributor License Agreement][CLA]
 + [General GitHub documentation](https://help.github.com/)
 + [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 + #apachecommons IRC channel on freenode.org
 
-[cla]:https://www.apache.org/licenses/#clas
+[CLA]:https://www.apache.org/licenses/#clas
