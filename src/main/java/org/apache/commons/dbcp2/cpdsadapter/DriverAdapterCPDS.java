@@ -687,7 +687,7 @@ public class DriverAdapterCPDS
     /**
      * Gets the maximum number of prepared statements.
      *
-     * @return maxPrepartedStatements value
+     * @return maxPreparedStatements value
      */
     public int getMaxPreparedStatements()
     {
