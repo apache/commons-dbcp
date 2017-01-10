@@ -60,7 +60,7 @@ underlying connection is needed, you have to enable it: PoolingDriver.setAccessT
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25096">25096</a></td><td>2003-11-30</td><td>Enh</td><td>FIXE</td><td>PoolableConnectionFactory synchronized methods</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25001">25001</a></td><td>2003-11-30</td><td>Nor</td><td>FIXE</td><td>Oracle 9i and default isolation settings</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25762">25762</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>SharedPoolDataSource getConnection() throws ClassCastException</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25067">25067</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>Please give possibility to acecss ObjectPools from PoolingDriver</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25067">25067</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>Please give possibility to access ObjectPools from PoolingDriver</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25795">25795</a></td><td>2003-12-29</td><td>Nor</td><td>DUPL</td><td>NumberFormatException: For input string: "myDB"</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25794">25794</a></td><td>2003-12-29</td><td>Nor</td><td>FIXE</td><td>ClassNotFoundException: org.apache.xerces.parsers.SAXParser</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24966">24966</a></td><td>2004-01-06</td><td>Nor</td><td>FIXE</td><td>NullPointer with Oracle 9 driver</td></tr>
