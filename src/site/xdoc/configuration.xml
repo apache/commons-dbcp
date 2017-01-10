@@ -283,7 +283,7 @@ isValid() method.
    <td>1000 * 60 * 30</td>
    <td>
       The minimum amount of time an object may sit idle in the pool before it
-      is eligable for eviction by the idle object evictor (if any).
+      is eligible for eviction by the idle object evictor (if any).
    </td>
 </tr>
 <tr>
