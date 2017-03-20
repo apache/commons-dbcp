@@ -91,7 +91,7 @@ read the package overview of the
 package for an overview of how to use DBCP.</p>
 
 <p>There are 
-<a href="http://svn.apache.org/viewvc/commons/proper/dbcp2/trunk/doc/">several examples</a> 
+<a href="https://git-wip-us.apache.org/repos/asf?p=commons-dbcp.git;a=tree;f=doc;hb=refs/heads/master">several examples</a> 
 of using DBCP available.</p>
 
 </section>
