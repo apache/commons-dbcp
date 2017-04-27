@@ -133,12 +133,12 @@ public class AbandonedTrace implements TrackedUse {
         synchronized (this.traceList) {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
-                final WeakReference<AbandonedTrace> ref = iter.next();
-                if (ref.get() == null) {
+                final AbandonedTrace trace = iter.next().get();
+                if (trace == null) {
                     // Clean-up since we are here anyway
                     iter.remove();
                 } else {
-                    result.add(ref.get());
+                    result.add(trace);
                 }
             }
         }
@@ -154,11 +154,11 @@ public class AbandonedTrace implements TrackedUse {
         synchronized(this.traceList) {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
-                final WeakReference<AbandonedTrace> ref = iter.next();
-                if (trace.equals(ref.get())) {
+                final AbandonedTrace traceInList = iter.next().get();
+                if (trace.equals(traceInList)) {
                     iter.remove();
                     break;
-                } else if (ref.get() == null) {
+                } else if (traceInList == null) {
                     // Clean-up since we are here anyway
                     iter.remove();
                 }
