@@ -218,6 +218,7 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <commons.componentid>dbcp2</commons.componentid>
+    <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
     <commons.release.version>2.2</commons.release.version>
     <commons.release.desc>for JDBC 4.1 (Java 7.0+)</commons.release.desc>
     <commons.release.2.version>1.4</commons.release.2.version>
