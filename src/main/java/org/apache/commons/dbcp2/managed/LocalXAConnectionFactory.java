@@ -227,7 +227,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
             try {
                 // make sure the connection isn't already closed
                 if (connection.isClosed()) {
-                    throw new XAException("Conection is closed");
+                    throw new XAException("Connection is closed");
                 }
 
                 // A read only connection should not be committed

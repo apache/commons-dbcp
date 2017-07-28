@@ -159,7 +159,7 @@ public class PoolableConnectionFactory
     }
 
     @Deprecated // Due to typo in method name.
-    public void setMaxOpenPrepatedStatements(final int maxOpenPreparedStatements) {
+    public void setMaxOpenPreparedStatements(final int maxOpenPreparedStatements) {
         setMaxOpenPreparedStatements(maxOpenPreparedStatements);
     }
 

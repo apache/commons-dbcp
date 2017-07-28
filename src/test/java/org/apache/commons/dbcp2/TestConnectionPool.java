@@ -694,7 +694,7 @@ public abstract class TestConnectionPool {
         } catch (final SQLException e) {
             // getWarnings throws an exception if the statement is
             // closed, but could throw an exception for other reasons
-            // in this case it is good enought to assume the statement
+            // in this case it is good enough to assume the statement
             // is closed
             return true;
         }
@@ -707,7 +707,7 @@ public abstract class TestConnectionPool {
         } catch (final SQLException e) {
             // getWarnings throws an exception if the statement is
             // closed, but could throw an exception for other reasons
-            // in this case it is good enought to assume the result set
+            // in this case it is good enough to assume the result set
             // is closed
             return true;
         }

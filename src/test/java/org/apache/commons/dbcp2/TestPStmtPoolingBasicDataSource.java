@@ -200,7 +200,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testPStmtPoolingAccrossClose() throws Exception {
+    public void testPStmtPoolingAcrossClose() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);

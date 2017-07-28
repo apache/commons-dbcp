@@ -70,7 +70,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  *
  * <p>
  * The DriverAdapterCPDS also provides <code>PreparedStatement</code> pooling
- * which is not generally available in jbdc2
+ * which is not generally available in jdbc2
  * <code>ConnectionPoolDataSource</code> implementation, but is
  * addressed within the jdbc3 specification.  The <code>PreparedStatement</code>
  * pool in DriverAdapterCPDS has been in the dbcp package for some time, but
@@ -687,7 +687,7 @@ public class DriverAdapterCPDS
     /**
      * Gets the maximum number of prepared statements.
      *
-     * @return maxPrepartedStatements value
+     * @return maxPreparedStatements value
      */
     public int getMaxPreparedStatements()
     {
