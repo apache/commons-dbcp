@@ -134,7 +134,7 @@ testWhileIdle
       default will be used.</td>
 </tr>
 <tr>
-  <td>enableAutocommitOnReturn</td>
+  <td>enableAutoCommitOnReturn</td>
   <td>true</td>
   <td>If true, connections being returned to the pool will be checked and configured with
       <code>Connection.setAutoCommit(true)</code> if the auto commit setting is
