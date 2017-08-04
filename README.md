@@ -51,7 +51,7 @@ Apache Commons DBCP software implements Database Connection Pooling
 Documentation
 -------------
 
-More information can be found on the [homepage](https://commons.apache.org/proper/commons-dbcp2).
+More information can be found on the [homepage](https://commons.apache.org/proper/commons-dbcp).
 The [JavaDoc](https://commons.apache.org/proper/commons-dbcp2/javadocs/api-release) can be browsed.
 Questions related to the usage of Apache Commons DBCP should be posted to the [user mailing list][ml].
 
