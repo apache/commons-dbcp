@@ -1280,4 +1280,9 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[_res=" + _res + ", _stmt=" + _stmt + ", _conn=" + _conn + "]";
+    }
 }
