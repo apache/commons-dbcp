@@ -42,7 +42,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
  *
  * @author John D. McNally
- * @version $Id$
  * @since 2.0
  */
 class KeyedCPDSConnectionFactory

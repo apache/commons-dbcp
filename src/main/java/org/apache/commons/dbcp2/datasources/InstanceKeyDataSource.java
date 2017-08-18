@@ -81,7 +81,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * </p>
  *
  * @author John D. McNally
- * @version $Id$
  * @since 2.0
  */
 public abstract class InstanceKeyDataSource

@@ -32,7 +32,6 @@ import org.apache.commons.dbcp2.ConnectionFactory;
  *
  * @author Dain Sundstrom
  * @author Rodney Waldhoff
- * @version $Id$
  * @since 2.0
  */
 public interface XAConnectionFactory extends ConnectionFactory {

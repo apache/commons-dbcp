@@ -39,7 +39,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * PooledConnectionDataSource.
  *
  * @author John D. McNally
- * @version $Id$
  * @since 2.0
  */
 class PooledConnectionImpl

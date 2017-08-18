@@ -28,7 +28,6 @@ import java.sql.Statement;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TesterStatement implements Statement {
     public TesterStatement(final Connection conn) {

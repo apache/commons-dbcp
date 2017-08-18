@@ -51,7 +51,6 @@ import static org.junit.Assert.fail;
  * @author Sean C. Sullivan
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public abstract class TestConnectionPool {
 

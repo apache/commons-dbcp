@@ -41,7 +41,6 @@ import org.junit.Test;
  * TestSuite for BasicDataSource with prepared statement pooling enabled
  *
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestPStmtPooling {
 

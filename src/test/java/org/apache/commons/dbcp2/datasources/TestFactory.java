@@ -33,7 +33,6 @@ import org.junit.Test;
 
 /**
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestFactory {
 

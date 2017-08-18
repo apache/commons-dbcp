@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestDelegatingPreparedStatement {
 

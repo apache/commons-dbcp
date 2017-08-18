@@ -31,7 +31,6 @@ import org.apache.commons.logging.impl.SimpleLog;
  * A logger that pushes log messages onto a stack. The stack itself is static.
  * To get a log exclusive to a test case, use explicit lock / unlock and clear.
  *
- * @version $Id$
  */
 public class StackMessageLog extends SimpleLog {
 

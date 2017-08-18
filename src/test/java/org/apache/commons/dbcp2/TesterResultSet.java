@@ -41,7 +41,6 @@ import java.sql.SQLXML;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(final Statement stmt) {

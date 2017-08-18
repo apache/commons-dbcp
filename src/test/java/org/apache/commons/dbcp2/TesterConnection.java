@@ -40,7 +40,6 @@ import java.util.concurrent.Executor;
  *
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;

@@ -42,7 +42,6 @@ import javax.transaction.Transaction;
  * TestSuite for ManagedDataSource with an active transaction in progress.
  *
  * @author Dain Sundstrom
- * @version $Id$
  */
 public class TestManagedDataSourceInTx extends TestManagedDataSource {
 

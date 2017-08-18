@@ -29,7 +29,6 @@ import java.sql.SQLException;
  * create {@link DelegatingResultSet} objects and the remaining methods
  * simply call the corresponding method on the "delegate"
  * provided in the constructor.</p>
- * @version $Id$
  * @since 2.0
  */
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {

@@ -62,7 +62,6 @@ import java.util.concurrent.Executor;
  * @author Glenn L. Nielsen
  * @author James House
  * @author Dirk Verbeeck
- * @version $Id$
  * @since 2.0
  */
 public class DelegatingConnection<C extends Connection> extends AbandonedTrace

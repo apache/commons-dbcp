@@ -32,7 +32,6 @@ import org.junit.Test;
 
 /**
  * @author James Ring
- * @version $Id$
  */
 public class TestPoolableConnection {
 

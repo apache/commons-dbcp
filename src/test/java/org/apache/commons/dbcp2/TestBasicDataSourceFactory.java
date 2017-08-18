@@ -39,7 +39,6 @@ import org.junit.Test;
  * TestSuite for BasicDataSourceFactory
  *
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestBasicDataSourceFactory {
 

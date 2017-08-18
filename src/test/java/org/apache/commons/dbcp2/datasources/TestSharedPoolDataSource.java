@@ -41,7 +41,6 @@ import org.junit.Test;
 /**
  * @author John McNally
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
 

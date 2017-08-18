@@ -50,7 +50,6 @@ import java.sql.SQLException;
  *
  * @see BasicDataSource
  * @see ManagedConnection
- * @version $Id$
  * @since 2.0
  */
 public class BasicManagedDataSource extends BasicDataSource {

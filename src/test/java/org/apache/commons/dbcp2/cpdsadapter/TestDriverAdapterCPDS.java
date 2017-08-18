@@ -38,7 +38,6 @@ import org.junit.Test;
 /**
  * Tests for DriverAdapterCPDS
  *
- * @version $Id$
  */
 public class TestDriverAdapterCPDS {
 

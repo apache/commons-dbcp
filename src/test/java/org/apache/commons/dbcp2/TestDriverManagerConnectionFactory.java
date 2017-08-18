@@ -35,7 +35,6 @@ import org.junit.Test;
  * the initialisation of DriverManager.
  * Based on the test case for DBCP-212 written by Marcos Sanz
  *
- * @version $Id$
  */
 public class TestDriverManagerConnectionFactory {
 

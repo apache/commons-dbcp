@@ -42,7 +42,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
- * @version $Id$
  * @since 2.0
  */
 public class PoolingConnection extends DelegatingConnection<Connection>

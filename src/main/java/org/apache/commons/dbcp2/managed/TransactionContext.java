@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
  * to check the status of the transaction.
  *
  * @author Dain Sundstrom
- * @version $Id$
  * @since 2.0
  */
 public class TransactionContext {

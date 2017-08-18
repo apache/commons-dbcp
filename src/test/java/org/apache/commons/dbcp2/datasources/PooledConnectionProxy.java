@@ -33,7 +33,6 @@ import javax.sql.StatementEventListener;
  * PooledConnection and proxies events, allowing behavior to be
  * modified to simulate behavior of different implementations.
  * 
- * @version $Id$
  */
 public class PooledConnectionProxy implements PooledConnection,
     ConnectionEventListener {

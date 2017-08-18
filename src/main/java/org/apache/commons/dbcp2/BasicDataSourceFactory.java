@@ -56,7 +56,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  *
  * @author Craig R. McClanahan
  * @author Dirk Verbeeck
- * @version $Id$
  * @since 2.0
  */
 public class BasicDataSourceFactory implements ObjectFactory {

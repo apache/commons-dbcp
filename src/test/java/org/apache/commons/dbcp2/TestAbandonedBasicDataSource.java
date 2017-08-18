@@ -39,7 +39,6 @@ import org.junit.Test;
  * TestSuite for BasicDataSource with abandoned connection trace enabled
  *
  * @author Dirk Verbeeck
- * @version $Id$
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 

@@ -34,7 +34,6 @@ import org.junit.Test;
 /**
  * TestSuite for PoolingDataSource
  *
- * @version $Id$
  */
 public class TestPoolingDataSource extends TestConnectionPool {
 
