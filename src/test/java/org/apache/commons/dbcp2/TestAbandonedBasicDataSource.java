@@ -114,7 +114,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertNotNull(conn2);
         assertEquals(1, ds.getNumActive());
 
-        // set an IO failure causing the isClosed mathod to fail
+        // set an IO failure causing the isClosed method to fail
         final TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection<?>)conn1).getInnermostDelegate();
         tconn1.setFailure(new IOException("network error"));
         final TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection<?>)conn2).getInnermostDelegate();

@@ -52,7 +52,7 @@ public class TestJndi {
     protected Context context = null;
 
     /**
-     * Test BasicDatsource bind and lookup
+     * Test BasicDatasource bind and lookup
      * 
      * @throws Exception
      */

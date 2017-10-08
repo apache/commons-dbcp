@@ -192,7 +192,7 @@ The <action> type attribute can be add,update,fix,remove.
         Made Datasources implement AutoCloseable.
       </action>
       <action issue="DBCP-427" dev="psteitz" type="add" due-to="Vladimir Konkov">
-        Added fastFailValidation property to PooloableConnection, configurable in
+        Added fastFailValidation property to PoolableConnection, configurable in
         BasicDataSource.  When set to true, connections that have previously thrown
         fatal disconnection errors will fail validation immediately (no driver calls).
       </action>
@@ -624,7 +624,7 @@ The <action> type attribute can be add,update,fix,remove.
         Eliminated direct System.out calls in AbandonedTrace.
       </action>
       <action dev="niallp" type="fix" issue="DBCP-264">
-        Modified DelegatingStatment close to clear open batches.
+        Modified DelegatingStatement close to clear open batches.
       </action>
       <action dev="psteitz" type="fix" issue="DBCP-255">
         Eliminated unused private "parent" field in AbandonedTrace.
@@ -706,7 +706,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="psteitz" type="fix" issue="DBCP-237" due-to="Oliver Matz">
         Added exception handler to ensure that PooledConnections are not
         orphaned when an exception occurs in setUpDefaults or clearWarnings in 
-        IntanceKeyDataSource.getConnection.
+        InstanceKeyDataSource.getConnection.
       </action> 
       <action dev="psteitz" type="fix" issue="DBCP-252" due-to="FindBugs">
         Made getPool synchronized in PoolableConnectionFactory.

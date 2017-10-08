@@ -64,7 +64,7 @@
       <property name="test.runner" value="junit.textui.TestRunner" /> 
      
       <property name="javadoc.dir" value="${dist.dir}/docs/api"/>
-      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2015 Apache Software Foundation. Documenation generated ${TODAY}&lt;/small&gt;."/>
+      <property name="javadoc.bottom" value="&lt;small&gt;Copyright &amp;copy; 2001-2015 Apache Software Foundation. Documentation generated ${TODAY}&lt;/small&gt;."/>
       <property name="javadoc.overview" value="${basedir}/src/main/java/org/apache/commons/dbcp2/overview.html"/>
 
       <property name="javac.optimize" value="false"/>
