@@ -330,7 +330,9 @@ public class PStmtKey {
     }
 
     public Statement createStatement(final Connection connection) throws SQLException {
-        if (builder == null) throw new IllegalStateException("Prepared statement key is invalid.");
+        if (builder == null) {
+            throw new IllegalStateException("Prepared statement key is invalid.");
+        }
         return builder.createStatement(connection);
     }
 
