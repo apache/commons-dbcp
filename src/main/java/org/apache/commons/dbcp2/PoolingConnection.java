@@ -465,11 +465,10 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             @SuppressWarnings({"rawtypes", "unchecked"}) // Unable to find way to avoid this
             PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, _pstmtPool, this);
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
-        } else {
-            CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
-            PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, _pstmtPool, this);
-            return new DefaultPooledObject<DelegatingPreparedStatement>(pcs);
         }
+        CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
+        PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, _pstmtPool, this);
+        return new DefaultPooledObject<DelegatingPreparedStatement>(pcs);
     }
 
     /**
