@@ -38,7 +38,7 @@
         <item name="Class&#xA0;Diagrams" href="/guide/classdiagrams.html"/>
         <item name="Sequence&#xA0;Diagrams" href="/guide/sequencediagrams.html"/>
         </item>
-        <item name="Examples" href="http://svn.apache.org/viewvc/commons/proper/dbcp/trunk/doc/"/>
+        <item name="Examples" href="https://git-wip-us.apache.org/repos/asf?p=commons-dbcp.git;a=tree;f=doc;hb=HEAD"/>
         <item name="Downloads" href="/download_dbcp.cgi"/>
         <item name="Wiki" href="http://wiki.apache.org/commons/DBCP"/>
       </menu>

@@ -72,7 +72,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=12869">12869</a></td><td>2002-11-01</td><td>Maj</td><td>FIXE</td><td>Abandoned Connections are never closed</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13077">13077</a></td><td>2002-11-07</td><td>Enh</td><td>FIXE</td><td>Jdbc2PoolDataSource issues</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13129">13129</a></td><td>2002-11-01</td><td>Nor</td><td>FIXE</td><td>CPDSConnectionFactory prints invalid error messages</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13155">13155</a></td><td>2002-10-30</td><td>Nor</td><td>DUPL</td><td>unexpected "exausted pool" error</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13155">13155</a></td><td>2002-10-30</td><td>Nor</td><td>DUPL</td><td>unexpected "exhausted pool" error</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13235">13235</a></td><td>2002-11-16</td><td>Blo</td><td>FIXE</td><td>referenced UserPassKey instances get erroneously returned to</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13930">13930</a></td><td>2003-03-06</td><td>Enh</td><td>FIXE</td><td>Adding connection parameters to BasicDataSourceFactory</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=13988">13988</a></td><td>2003-03-17</td><td>Enh</td><td>DUPL</td><td>permission error makes connection loop</td></tr>
@@ -104,7 +104,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18982">18982</a></td><td>2003-04-13</td><td>Maj</td><td>INVA</td><td>Binary distribution missing package</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19374">19374</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Potential for DelegateStatement, DelegateResultSet to be lef</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19614">19614</a></td><td>2003-08-13</td><td>Maj</td><td>FIXE</td><td>Poor performance under load</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19615">19615</a></td><td>2003-05-02</td><td>Maj</td><td>INVA</td><td>Unecessary global synchronized in AbandonedObjectPool method</td></tr>
+<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19615">19615</a></td><td>2003-05-02</td><td>Maj</td><td>INVA</td><td>Unnecessary  global synchronized in AbandonedObjectPool method</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=19706">19706</a></td><td>2003-08-26</td><td>Enh</td><td>WONT</td><td>Add Initial Commons Logging to DBCP</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=20649">20649</a></td><td>2003-08-11</td><td>Cri</td><td>INVA</td><td>deadlock when acquiring connections from a pool</td></tr>
 <tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21132">21132</a></td><td>2003-08-11</td><td>Cri</td><td>DUPL</td><td>Broken pipe despite validation query set</td></tr>

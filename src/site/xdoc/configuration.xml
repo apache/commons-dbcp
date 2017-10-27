@@ -283,7 +283,7 @@ isValid() method.
    <td>1000 * 60 * 30</td>
    <td>
       The minimum amount of time an object may sit idle in the pool before it
-      is eligable for eviction by the idle object evictor (if any).
+      is eligible for eviction by the idle object evictor (if any).
    </td>
 </tr>
 <tr>
@@ -420,7 +420,7 @@ Be careful and only use when you need direct access to driver specific extension
       applications which fail to close connections.<br/>
       Setting removeAbandonedOnMaintenance to true removes abandoned connections on the
       maintenance cycle (when eviction ends). This property has no effect unless maintenance
-      is enabled by setting timeBetweenEvicionRunsMillis to a positive value. <br/>
+      is enabled by setting timeBetweenEvictionRunsMillis to a positive value. <br/>
       If removeAbandonedOnBorrow is true, abandoned connections are removed each time
       a connection is borrowed from the pool, with the additional requirements that
       <ul><li>getNumActive() &gt; getMaxTotal() - 3; and</li>
