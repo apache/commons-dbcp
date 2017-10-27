@@ -810,7 +810,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         properties.put("username", "foo");
         properties.put("password", "bar");
         final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
-        boolean original = ds.getConnectionPool().getLogAbandoned();
+        final boolean original = ds.getConnectionPool().getLogAbandoned();
         ds.setLogAbandoned(!original);
         Assert.assertNotEquals(Boolean.valueOf(original),
                 Boolean.valueOf(ds.getConnectionPool().getLogAbandoned()));

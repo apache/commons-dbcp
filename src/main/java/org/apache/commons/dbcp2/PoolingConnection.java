@@ -461,13 +461,14 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT ) {
-            PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
+            final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
             @SuppressWarnings({"rawtypes", "unchecked"}) // Unable to find way to avoid this
+            final
             PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, _pstmtPool, this);
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
         }
-        CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
-        PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, _pstmtPool, this);
+        final CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
+        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, _pstmtPool, this);
         return new DefaultPooledObject<DelegatingPreparedStatement>(pcs);
     }
 

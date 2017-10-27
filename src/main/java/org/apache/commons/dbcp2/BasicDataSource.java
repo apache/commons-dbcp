@@ -1667,7 +1667,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
         abandonedConfig.setRemoveAbandonedOnMaintenance(
                 removeAbandonedOnMaintenance);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -1703,7 +1703,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -1752,7 +1752,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -1784,7 +1784,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogAbandoned(logAbandoned);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -1812,7 +1812,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogWriter(logWriter);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -1849,7 +1849,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setUseUsageTracking(usageTracking);
-        GenericObjectPool<?> gop = this.connectionPool;
+        final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
         }
@@ -2214,7 +2214,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         updateJmxName(config);
         config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
-        GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
+        final GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
