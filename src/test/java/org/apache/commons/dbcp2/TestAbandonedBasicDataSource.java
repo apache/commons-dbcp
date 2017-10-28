@@ -96,7 +96,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         // Second close on conn1 is OK as of dbcp 1.3
         conn1.close();
         assertEquals(0, ds.getNumActive());
-        assertTrue(sw.toString().contains("testAbandonedClose"));
+        final String string = sw.toString();
+        assertTrue(string, string.contains("testAbandonedClose"));
     }
 
     @Test
@@ -129,7 +130,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
         try { conn1.close(); } catch (final SQLException ex) { }
         assertEquals(0, ds.getNumActive());
-        assertTrue(sw.toString().contains("testAbandonedCloseWithExceptions"));
+        final String string = sw.toString();
+        assertTrue(string, string.contains("testAbandonedCloseWithExceptions"));
     }
 
     /**
