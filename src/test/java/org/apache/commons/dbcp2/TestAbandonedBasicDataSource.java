@@ -116,9 +116,9 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertEquals(1, ds.getNumActive());
 
         // set an IO failure causing the isClosed method to fail
-        final TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection<?>)conn1).getInnermostDelegate();
+        final TesterConnection tconn1 = (TesterConnection) ((DelegatingConnection<?>) conn1).getInnermostDelegate();
         tconn1.setFailure(new IOException("network error"));
-        final TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection<?>)conn2).getInnermostDelegate();
+        final TesterConnection tconn2 = (TesterConnection) ((DelegatingConnection<?>) conn2).getInnermostDelegate();
         tconn2.setFailure(new IOException("network error"));
 
         try {
@@ -128,7 +128,10 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         }
         assertEquals(0, ds.getNumActive());
 
-        try { conn1.close(); } catch (final SQLException ex) { }
+        try {
+            conn1.close();
+        } catch (final SQLException ex) {
+        }
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
         assertTrue(string, string.contains("testAbandonedCloseWithExceptions"));
