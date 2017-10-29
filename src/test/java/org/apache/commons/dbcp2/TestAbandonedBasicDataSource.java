@@ -97,7 +97,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         conn1.close();
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
-        assertTrue(string, string.contains("testAbandonedClose"));
+        assertTrue(string, string.contains(TestAbandonedBasicDataSource.class.getName()));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         }
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
-        assertTrue(string, string.contains("testAbandonedCloseWithExceptions"));
+        assertTrue(string, string.contains(TestAbandonedBasicDataSource.class.getName()));
     }
 
     /**
