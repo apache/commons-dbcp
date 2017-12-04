@@ -40,7 +40,7 @@ public final class Utils {
 
     /** Any SQL_STATE starting with this value is considered a fatal disconnect */
     public static final String DISCONNECTION_SQL_CODE_PREFIX = "08";
-    
+
     /**
      * SQL codes of fatal connection errors.
      * <ul>

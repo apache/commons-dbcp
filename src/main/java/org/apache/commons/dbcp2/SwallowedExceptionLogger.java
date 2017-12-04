@@ -35,9 +35,9 @@ public class SwallowedExceptionLogger implements SwallowedExceptionListener{
      * @param log logger
      */
     public SwallowedExceptionLogger(final Log log) {
-        this(log, true);    
+        this(log, true);
     }
-    
+
     /**
      * Create a SwallowedExceptionLogger with the given logger and expired
      * connection logging property.
