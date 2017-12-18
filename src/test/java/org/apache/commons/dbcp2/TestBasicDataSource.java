@@ -824,6 +824,10 @@ class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
     private static AtomicInteger connectionRequestCount = new AtomicInteger(0);
 
+    public TesterConnRequestCountDriver() {
+        // DBCP expects an explicit no-arg constructor
+    }
+
     @Override
     public Connection connect(final String url, final Properties info) throws SQLException {
         connectionRequestCount.incrementAndGet();
@@ -850,6 +854,10 @@ class TesterConnRequestCountDriver extends TesterDriver {
  */
 class TesterConnectionDelayDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnectionDelayDriver";
+
+    public TesterConnectionDelayDriver() {
+        // DBCP expects an explicit no-arg constructor
+    }
 
     @Override
     public Connection connect(final String url, final Properties info) throws SQLException {
