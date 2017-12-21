@@ -43,15 +43,17 @@
 Apache Commons DBCP
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-dbcp.svg?branch=master)](https://travis-ci.org/apache/commons-dbcp)
+[![Build Status](https://travis-ci.org/apache/commons-dbcp2.svg?branch=master)](https://travis-ci.org/apache/commons-dbcp2)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp2/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-dbcp2)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Apache Commons DBCP software implements Database Connection Pooling
 
 Documentation
 -------------
 
-More information can be found on the [Apache Commons DBCP homepage](https://commons.apache.org/proper/commons-dbcp).
+More information can be found on the [Apache Commons DBCP homepage](https://commons.apache.org/proper/commons-dbcp2).
 The [JavaDoc](https://commons.apache.org/proper/commons-dbcp2/javadocs/api-release) can be browsed.
 Questions related to the usage of Apache Commons DBCP should be posted to the [user mailing list][ml].
 
@@ -65,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.1.1</version>
+  <version>2.2</version>
 </dependency>
 ```
 
