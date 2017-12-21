@@ -57,3 +57,37 @@ For complete information on Apache Commons DBCP, including instructions on how t
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
 http://commons.apache.org/dbcp/
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
+                  Version 2.1.1
+                 RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a patch release, including bug fixes only.
+
+Changes in this version include:
+
+
+Fixed Bugs:
+o DBCP-441:  Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
+o DBCP-442:  SharedPoolDataSource getConnection fails when testOnBorrow is set with
+             a null validation query.
+o DBCP-438:  Nested connections in a transaction (local) throws null pointer. Thanks to Raihan Kibria.
+o DBCP-437:  BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
+
+Changes:
+o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
+             users to see more reports of abandoned connections (if removal and logging
+             are configured).  Prior to the fix for POOL-300, the PrintWriter used to log
+             abandoned connection stack traces was not being flushed on each log event.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+http://commons.apache.org/dbcp/
