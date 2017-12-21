@@ -111,46 +111,46 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons DBCP 2.2 for JDBC 4.1 (Java 7.0+)">
+    <section name="Apache Commons DBCP 2.2.0 for JDBC 4.1 (Java 7)">
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.2-bin.tar.gz">commons-dbcp2-2.2-bin.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2-bin.tar.gz.md5">md5</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2-bin.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp2-2.2.0-bin.tar.gz">commons-dbcp2-2.2.0-bin.tar.gz</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2.0-bin.tar.gz.md5">md5</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2.0-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.2-bin.zip">commons-dbcp2-2.2-bin.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2-bin.zip.md5">md5</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2-bin.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp2-2.2.0-bin.zip">commons-dbcp2-2.2.0-bin.zip</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2.0-bin.zip.md5">md5</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp2-2.2.0-bin.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.2-src.tar.gz">commons-dbcp2-2.2-src.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2-src.tar.gz.md5">md5</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2-src.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp2-2.2.0-src.tar.gz">commons-dbcp2-2.2.0-src.tar.gz</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2.0-src.tar.gz.md5">md5</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2.0-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.2-src.zip">commons-dbcp2-2.2-src.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2-src.zip.md5">md5</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2-src.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp2-2.2.0-src.zip">commons-dbcp2-2.2.0-src.zip</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2.0-src.zip.md5">md5</a></td>
+              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp2-2.2.0-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
     </section>
-    <section name="Apache Commons DBCP 1.4 for JDBC 4 (Java 6.0)">
+    <section name="Apache Commons DBCP 1.4 for JDBC 4 (Java 6)">
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz">commons-dbcp-1.4-bin.tar.gz</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp-1.4-bin.tar.gz">commons-dbcp-1.4-bin.tar.gz</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip">commons-dbcp-1.4-bin.zip</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp-1.4-bin.zip">commons-dbcp-1.4-bin.zip</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip.asc">pgp</a></td>
           </tr>
@@ -159,12 +159,12 @@ limitations under the License.
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz">commons-dbcp-1.4-src.tar.gz</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp-1.4-src.tar.gz">commons-dbcp-1.4-src.tar.gz</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.4-src.zip">commons-dbcp-1.4-src.zip</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp-1.4-src.zip">commons-dbcp-1.4-src.zip</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.zip.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.zip.asc">pgp</a></td>
           </tr>
@@ -175,12 +175,12 @@ limitations under the License.
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz">commons-dbcp-1.3-bin.tar.gz</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp-1.3-bin.tar.gz">commons-dbcp-1.3-bin.tar.gz</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip">commons-dbcp-1.3-bin.zip</a></td>
+              <td><a href="[preferred]/commons/dbcp2/binaries/commons-dbcp-1.3-bin.zip">commons-dbcp-1.3-bin.zip</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip.asc">pgp</a></td>
           </tr>
@@ -189,12 +189,12 @@ limitations under the License.
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz">commons-dbcp-1.3-src.tar.gz</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp-1.3-src.tar.gz">commons-dbcp-1.3-src.tar.gz</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.3-src.zip">commons-dbcp-1.3-src.zip</a></td>
+              <td><a href="[preferred]/commons/dbcp2/source/commons-dbcp-1.3-src.zip">commons-dbcp-1.3-src.zip</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.zip.md5">md5</a></td>
               <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.zip.asc">pgp</a></td>
           </tr>
@@ -206,8 +206,8 @@ limitations under the License.
           Older releases can be obtained from the archives.
         </p>
         <ul>
-          <li class="download"><a href="[preferred]/commons/dbcp/">browse download area</a></li>
-          <li><a href="https://archive.apache.org/dist/commons/dbcp/">archives...</a></li>
+          <li class="download"><a href="[preferred]/commons/dbcp2/">browse download area</a></li>
+          <li><a href="https://archive.apache.org/dist/commons/dbcp2/">archives...</a></li>
         </ul>
     </section>
   </body>

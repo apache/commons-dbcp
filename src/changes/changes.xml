@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.2" date="2017-12-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.2.0" date="2017-12-DD" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="fix" issue="DBCP-481" due-to="Gary Gregory">
         Update Apache Commons Pool from 2.4.2 to 2.5.0.
       </action>
