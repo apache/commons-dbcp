@@ -127,6 +127,12 @@
       <email>markt@apache.org</email>
       <organization>The Apache Software Foundation</organization>
     </developer>
+    <developer>
+      <name>Gary Gregory</name>
+      <id>ggregory</id>
+      <email>ggregory@apache.org</email>
+      <organization>The Apache Software Foundation</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>
