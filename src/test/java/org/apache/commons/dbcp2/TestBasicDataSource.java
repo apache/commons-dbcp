@@ -34,6 +34,7 @@ import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -774,6 +775,20 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.getConnection();  // Trigger initialization
         // Nothing should be registered
         assertEquals(0, mbs.queryNames(commons, null).size());
+    }
+
+    /**
+     * JIRA: DBCP-482
+     * Verify warning not logged if JMX MBean unregistered before close() called.
+     */
+    @Test
+    public void testInstanceNotFoundExceptionLogSuppressed() throws Exception {
+        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ds.getConnection();
+        mbs.unregisterMBean(new ObjectName(ds.getJmxName()));
+        StackMessageLog.clear();
+        ds.close();
+        assertThat(StackMessageLog.popMessage(), CoreMatchers.not(CoreMatchers.containsString("InstanceNotFoundException")));
     }
 
     /**

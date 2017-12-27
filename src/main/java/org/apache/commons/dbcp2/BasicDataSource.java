@@ -37,14 +37,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.JMException;
-import javax.management.MBeanRegistration;
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -1939,6 +1932,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             try {
                 mbs.unregisterMBean(registeredJmxName);
+            } catch (final InstanceNotFoundException infe) {
+                // Suppress exception
             } catch (final JMException e) {
                 log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
             } finally {
