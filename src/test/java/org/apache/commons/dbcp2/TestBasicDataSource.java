@@ -784,11 +784,12 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testInstanceNotFoundExceptionLogSuppressed() throws Exception {
         final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        try (Connection c = ds.getConnection()) {
-            mbs.unregisterMBean(new ObjectName(ds.getJmxName()));
-            StackMessageLog.clear();
-        }
+        try (Connection c = ds.getConnection()) {}
+        mbs.unregisterMBean(new ObjectName(ds.getJmxName()));
+        StackMessageLog.clear();
+        ds.close();
         assertThat(StackMessageLog.popMessage(), CoreMatchers.not(CoreMatchers.containsString("InstanceNotFoundException")));
+        assertNull(ds.getRegisteredJmxName());
     }
 
     /**

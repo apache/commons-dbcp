@@ -38,7 +38,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
 import javax.management.JMException;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanRegistrationException;
@@ -1938,16 +1937,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void close() throws SQLException {
         if (registeredJmxName != null) {
             final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            try {
-                mbs.unregisterMBean(registeredJmxName);
-            } catch (final InstanceNotFoundException infe) {
-                // Suppress warning and exception. It is often the case that MBeans are
-                // de-registered before the close method is invoked.
-            } catch (final JMException e) {
-                log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
-            } finally {
-                registeredJmxName = null;
+            if (mbs.isRegistered(registeredJmxName)) {
+                try {
+                    mbs.unregisterMBean(registeredJmxName);
+                } catch (final JMException e) {
+                    log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
+                }
             }
+            registeredJmxName = null;
         }
         closed = true;
         final GenericObjectPool<?> oldpool = connectionPool;
