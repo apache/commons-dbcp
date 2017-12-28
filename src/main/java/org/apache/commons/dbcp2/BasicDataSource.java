@@ -1941,7 +1941,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             try {
                 mbs.unregisterMBean(registeredJmxName);
             } catch (final InstanceNotFoundException infe) {
-                // Suppress exception
+                // Suppress warning and exception. It is often the case that MBeans are
+                // de-registered before the close method is invoked.
             } catch (final JMException e) {
                 log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
             } finally {
