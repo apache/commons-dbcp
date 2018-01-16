@@ -1937,13 +1937,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void close() throws SQLException {
         if (registeredJmxName != null) {
             final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            try {
-                mbs.unregisterMBean(registeredJmxName);
-            } catch (final JMException e) {
-                log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
-            } finally {
-                registeredJmxName = null;
+            if (mbs.isRegistered(registeredJmxName)) {
+                try {
+                    mbs.unregisterMBean(registeredJmxName);
+                } catch (final JMException e) {
+                    log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
+                }
             }
+            registeredJmxName = null;
         }
         closed = true;
         final GenericObjectPool<?> oldpool = connectionPool;
