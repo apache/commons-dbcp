@@ -18,7 +18,6 @@ package org.apache.commons.dbcp2;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -37,12 +36,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistration;
-import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
 
