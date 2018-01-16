@@ -38,7 +38,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.management.InstanceAlreadyExistsException;
-import javax.management.JMException;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -1936,14 +1935,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public synchronized void close() throws SQLException {
         if (registeredJmxObjectName != null) {
-            final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            if (mbs.isRegistered(registeredJmxObjectName)) {
-                try {
-                    mbs.unregisterMBean(registeredJmxObjectName);
-                } catch (final JMException e) {
-                    log.warn("Failed to unregister the JMX name: " + registeredJmxObjectName, e);
-                }
-            }
+            registeredJmxObjectName.unregisterMBean();
             registeredJmxObjectName = null;
         }
         closed = true;
@@ -2304,7 +2296,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxObjectName);
+            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxObjectName.unwrap());
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -2357,7 +2349,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Actual name under which this component has been registered.
      */
-    private ObjectName registeredJmxObjectName = null;
+    private ObjectNameWrapper registeredJmxObjectName;
 
     private void jmxRegister() {
         // Return immediately if this DataSource has already been registered
@@ -2369,21 +2361,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (requestedName == null) {
             return;
         }
-        ObjectName oname;
         try {
-             oname = new ObjectName(requestedName);
-        } catch (final MalformedObjectNameException e) {
-            log.warn("The requested JMX name [" + requestedName +
-                    "] was not valid and will be ignored.");
-            return;
-        }
-
-        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        try {
-            mbs.registerMBean(this, oname);
-        } catch (InstanceAlreadyExistsException | MBeanRegistrationException
-                | NotCompliantMBeanException e) {
-            log.warn("Failed to complete JMX registration", e);
+            ObjectNameWrapper.wrap(requestedName).registerMBean();
+        } catch (MalformedObjectNameException e) {
+            log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
         }
     }
 
@@ -2392,16 +2373,15 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final String requestedName = getJmxName();
         if (requestedName != null) {
             try {
-                registeredJmxObjectName = new ObjectName(requestedName);
+                registeredJmxObjectName = ObjectNameWrapper.wrap(requestedName);
             } catch (final MalformedObjectNameException e) {
-                log.warn("The requested JMX name [" + requestedName +
-                        "] was not valid and will be ignored.");
+                log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
             }
         }
         if (registeredJmxObjectName == null) {
-            registeredJmxObjectName = objectName;
+            registeredJmxObjectName = ObjectNameWrapper.wrap(objectName);
         }
-        return registeredJmxObjectName;
+        return registeredJmxObjectName.unwrap();
     }
 
     @Override
@@ -2430,7 +2410,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     protected ObjectName getRegisteredJmxName() {
-        return registeredJmxObjectName;
+        return registeredJmxObjectName.unwrap();
     }
 
     /**
