@@ -1935,16 +1935,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public synchronized void close() throws SQLException {
-        if (registeredJmxName != null) {
+        if (registeredJmxObjectName != null) {
             final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            if (mbs.isRegistered(registeredJmxName)) {
+            if (mbs.isRegistered(registeredJmxObjectName)) {
                 try {
-                    mbs.unregisterMBean(registeredJmxName);
+                    mbs.unregisterMBean(registeredJmxObjectName);
                 } catch (final JMException e) {
-                    log.warn("Failed to unregister the JMX name: " + registeredJmxName, e);
+                    log.warn("Failed to unregister the JMX name: " + registeredJmxObjectName, e);
                 }
             }
-            registeredJmxName = null;
+            registeredJmxObjectName = null;
         }
         closed = true;
         final GenericObjectPool<?> oldpool = connectionPool;
@@ -2214,7 +2214,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         // Create an object pool to contain our active connections
         final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         updateJmxName(config);
-        config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
+        config.setJmxEnabled(registeredJmxObjectName != null);  // Disable JMX on the underlying pool if the DS is not registered.
         final GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
@@ -2304,7 +2304,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxName);
+            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxObjectName);
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -2357,11 +2357,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Actual name under which this component has been registered.
      */
-    private ObjectName registeredJmxName = null;
+    private ObjectName registeredJmxObjectName = null;
 
     private void jmxRegister() {
         // Return immediately if this DataSource has already been registered
-        if (registeredJmxName != null) {
+        if (registeredJmxObjectName != null) {
             return;
         }
         // Return immediately if no JMX name has been specified
@@ -2392,16 +2392,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final String requestedName = getJmxName();
         if (requestedName != null) {
             try {
-                registeredJmxName = new ObjectName(requestedName);
+                registeredJmxObjectName = new ObjectName(requestedName);
             } catch (final MalformedObjectNameException e) {
                 log.warn("The requested JMX name [" + requestedName +
                         "] was not valid and will be ignored.");
             }
         }
-        if (registeredJmxName == null) {
-            registeredJmxName = name;
+        if (registeredJmxObjectName == null) {
+            registeredJmxObjectName = name;
         }
-        return registeredJmxName;
+        return registeredJmxObjectName;
     }
 
     @Override
@@ -2420,17 +2420,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     private void updateJmxName(final GenericObjectPoolConfig config) {
-        if (registeredJmxName == null) {
+        if (registeredJmxObjectName == null) {
             return;
         }
-        final StringBuilder base = new StringBuilder(registeredJmxName.toString());
+        final StringBuilder base = new StringBuilder(registeredJmxObjectName.toString());
         base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
     }
 
     protected ObjectName getRegisteredJmxName() {
-        return registeredJmxName;
+        return registeredJmxObjectName;
     }
 
     /**

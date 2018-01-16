@@ -57,9 +57,9 @@ public class PoolableConnectionFactory
      * base {@link Connection}s
      */
     public PoolableConnectionFactory(final ConnectionFactory connFactory,
-            final ObjectName dataSourceJmxName) {
+            final ObjectName dataSourceJmxObjectName) {
         _connFactory = connFactory;
-        this.dataSourceJmxName = dataSourceJmxName;
+        this.dataSourceJmxName = dataSourceJmxObjectName;
     }
 
     /**
