@@ -58,7 +58,7 @@ public class PoolableConnection extends DelegatingConnection<Connection>
     /** The pool to which I should return. */
     private final ObjectPool<PoolableConnection> _pool;
 
-    private final ObjectName _jmxName;
+    private final ObjectName _jmxObjectName;
 
     // Use a prepared statement for validation, retaining the last used SQL to
     // check if the validation query has changed.
@@ -85,23 +85,23 @@ public class PoolableConnection extends DelegatingConnection<Connection>
      *
      * @param conn my underlying connection
      * @param pool the pool to which I should return when closed
-     * @param jmxName JMX name
+     * @param jmxObjectName JMX name
      * @param disconnectSqlCodes SQL_STATE codes considered fatal disconnection errors
      * @param fastFailValidation true means fatal disconnection errors cause subsequent
      *        validations to fail immediately (no attempt to run query or isValid)
      */
     public PoolableConnection(final Connection conn,
-            final ObjectPool<PoolableConnection> pool, final ObjectName jmxName, final Collection<String> disconnectSqlCodes,
+            final ObjectPool<PoolableConnection> pool, final ObjectName jmxObjectName, final Collection<String> disconnectSqlCodes,
             final boolean fastFailValidation) {
         super(conn);
         _pool = pool;
-        _jmxName = jmxName;
+        _jmxObjectName = jmxObjectName;
         _disconnectionSqlCodes = disconnectSqlCodes;
         _fastFailValidation = fastFailValidation;
 
-        if (jmxName != null) {
+        if (jmxObjectName != null) {
             try {
-                MBEAN_SERVER.registerMBean(this, jmxName);
+                MBEAN_SERVER.registerMBean(this, jmxObjectName);
             } catch (InstanceAlreadyExistsException |
                     MBeanRegistrationException | NotCompliantMBeanException e) {
                 // For now, simply skip registration
@@ -222,9 +222,9 @@ public class PoolableConnection extends DelegatingConnection<Connection>
      */
     @Override
     public void reallyClose() throws SQLException {
-        if (_jmxName != null) {
+        if (_jmxObjectName != null) {
             try {
-                MBEAN_SERVER.unregisterMBean(_jmxName);
+                MBEAN_SERVER.unregisterMBean(_jmxObjectName);
             } catch (MBeanRegistrationException | InstanceNotFoundException e) {
                 // Ignore
             }

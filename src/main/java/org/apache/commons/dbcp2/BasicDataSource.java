@@ -2388,7 +2388,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     @Override
-    public ObjectName preRegister(final MBeanServer server, final ObjectName name) {
+    public ObjectName preRegister(final MBeanServer server, final ObjectName objectName) {
         final String requestedName = getJmxName();
         if (requestedName != null) {
             try {
@@ -2399,7 +2399,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             }
         }
         if (registeredJmxObjectName == null) {
-            registeredJmxObjectName = name;
+            registeredJmxObjectName = objectName;
         }
         return registeredJmxObjectName;
     }
