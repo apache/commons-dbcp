@@ -47,6 +47,10 @@ class ObjectNameWrapper {
         }
     }
 
+    public static ObjectName unwrap(ObjectNameWrapper wrapper) {
+        return wrapper == null ? null : wrapper.unwrap();
+    }
+
     public static ObjectNameWrapper wrap(final ObjectName objectName) {
         return new ObjectNameWrapper(objectName);
     }
@@ -61,19 +65,19 @@ class ObjectNameWrapper {
         this.objectName = objectName;
     }
 
-    public void registerMBean() {
-        if (MBEAN_SERVER == null) {
+    public void registerMBean(Object object) {
+        if (MBEAN_SERVER == null || objectName == null) {
             return;
         }
         try {
-            MBEAN_SERVER.registerMBean(this, objectName);
+            MBEAN_SERVER.registerMBean(object, objectName);
         } catch (LinkageError | Exception e) {
             log.warn("Failed to complete JMX registration for " + objectName, e);
         }
     }
 
     public void unregisterMBean() {
-        if (MBEAN_SERVER == null) {
+        if (MBEAN_SERVER == null || objectName == null) {
             return;
         }
         if (MBEAN_SERVER.isRegistered(objectName)) {

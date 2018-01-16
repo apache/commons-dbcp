@@ -682,12 +682,12 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.clear();
             ds.setMaxConnLifetimeMillis(100);
             ds.setLogExpiredConnections(false);
-            final Connection conn = ds.getConnection();
-            assertEquals(1, ds.getNumActive());
-            Thread.sleep(500);
-            conn.close();
+            try (final Connection conn = ds.getConnection()) {
+                assertEquals(1, ds.getNumActive());
+                Thread.sleep(500);
+            }
             assertEquals(0, ds.getNumIdle());
-            assertTrue(StackMessageLog.isEmpty());
+            assertTrue(StackMessageLog.getAll().toString(), StackMessageLog.isEmpty());
         } finally {
             StackMessageLog.clear();
             StackMessageLog.unLock();
@@ -784,11 +784,17 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testInstanceNotFoundExceptionLogSuppressed() throws Exception {
         final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        try (Connection c = ds.getConnection()) {}
-        mbs.unregisterMBean(new ObjectName(ds.getJmxName()));
+        try (Connection c = ds.getConnection()) {
+            // nothing
+        }
+        final ObjectName objectName = new ObjectName(ds.getJmxName());
+        if (mbs.isRegistered(objectName)) {
+            mbs.unregisterMBean(objectName);
+        }
         StackMessageLog.clear();
         ds.close();
-        assertThat(StackMessageLog.popMessage(), CoreMatchers.not(CoreMatchers.containsString("InstanceNotFoundException")));
+        assertThat(StackMessageLog.popMessage(),
+                CoreMatchers.not(CoreMatchers.containsString("InstanceNotFoundException")));
         assertNull(ds.getRegisteredJmxName());
     }
 

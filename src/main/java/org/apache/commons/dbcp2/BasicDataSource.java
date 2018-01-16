@@ -2292,7 +2292,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final ConnectionFactory driverConnectionFactory) throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, registeredJmxObjectName.unwrap());
+            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, ObjectNameWrapper.unwrap(registeredJmxObjectName));
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -2358,7 +2358,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             return;
         }
         try {
-            ObjectNameWrapper.wrap(requestedName).registerMBean();
+            ObjectNameWrapper.wrap(requestedName).registerMBean(this);
         } catch (MalformedObjectNameException e) {
             log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
         }
@@ -2377,7 +2377,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (registeredJmxObjectName == null) {
             registeredJmxObjectName = ObjectNameWrapper.wrap(objectName);
         }
-        return registeredJmxObjectName.unwrap();
+        return ObjectNameWrapper.unwrap(registeredJmxObjectName);
     }
 
     @Override
@@ -2406,7 +2406,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     protected ObjectName getRegisteredJmxName() {
-        return registeredJmxObjectName.unwrap();
+        return ObjectNameWrapper.unwrap(registeredJmxObjectName);
     }
 
     /**
