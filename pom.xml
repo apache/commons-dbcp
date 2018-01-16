@@ -174,8 +174,8 @@
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-jta_1.1_spec</artifactId>
-       <version>1.1.1</version>
-       <optional>true</optional>
+      <version>1.1.1</version>
+      <optional>true</optional>
     </dependency>
 
     <!-- tomcat naming jars for jndi reference tests -->
@@ -197,23 +197,23 @@
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
       <artifactId>geronimo-transaction</artifactId>
-       <!--
-       Cannot update this currently; anything later causes failures:
-       java.lang.NoClassDefFoundError:
-       Could not initialize class org.apache.geronimo.transaction.manager.TransactionManagerImpl
-        -->
-       <version>1.2-beta</version>
-       <scope>test</scope>
-       <exclusions>
-         <exclusion>
-           <artifactId>junit</artifactId>
-           <groupId>junit</groupId>
-         </exclusion>
-         <exclusion>
-           <artifactId>commons-logging</artifactId>
-           <groupId>commons-logging</groupId>
-         </exclusion>
-       </exclusions>
+      <!--
+        Cannot update this currently; anything later causes failures:
+        java.lang.NoClassDefFoundError:
+        Could not initialize class org.apache.geronimo.transaction.manager.TransactionManagerImpl
+      -->
+      <version>1.2-beta</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
@@ -277,111 +277,111 @@
         </plugin>
       </plugins>
     </pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-            <systemPropertyVariables>
-                <!-- Ensure that logging messages can be inspected -->
-                <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
-            </systemPropertyVariables>
-            <reportFormat>plain</reportFormat>
-              <excludes>
-                <!-- Test support files -->
-                <exclude>**/Tester*.java</exclude>
-                <!-- Exclude nested classes which Surefire cannot handle -->
-                <exclude>**/Test*$*.java</exclude>
-              </excludes>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptors>
-              <descriptor>src/main/assembly/bin.xml</descriptor>
-              <descriptor>src/main/assembly/src-tar-gz.xml</descriptor>
-              <descriptor>src/main/assembly/src-zip.xml</descriptor>
-            </descriptors>
-            <tarLongFileMode>gnu</tarLongFileMode>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-scm-publish-plugin</artifactId>
-          <configuration>
-            <ignorePathsToDelete>
-              <ignorePathToDelete>api-*</ignorePathToDelete>
-            </ignorePathsToDelete>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${commons.javadoc.version}</version>
-          <configuration>
-            <links>
-              <link>http://docs.oracle.com/javase/7/docs/api</link>
-              <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
-              <link>http://docs.oracle.com/javaee/7/api/</link>
-            </links>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-    <reporting>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>findbugs-maven-plugin</artifactId>
-          <version>3.0.5</version>
-          <configuration>
-            <threshold>Normal</threshold>
-            <effort>Default</effort>
-            <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${commons.javadoc.version}</version>
-          <configuration>
-            <links>
-              <link>http://docs.oracle.com/javase/7/docs/api</link>
-              <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
-              <link>http://docs.oracle.com/javaee/7/api/</link>
-            </links>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-changes-plugin</artifactId>
-          <version>${commons.changes.version}</version>
-          <configuration>
-            <template>release-notes.vm</template>
-            <templateDirectory>src/changes</templateDirectory>
-            <!-- Limit this to released, supported versions else there are -->
-            <!-- to many issues in the report                              -->
-            <fixVersionIds>12313721,12326766,12328750</fixVersionIds>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${commons.checkstyle.version}</version>
-          <configuration>
-            <configLocation>${basedir}/checkstyle.xml</configLocation>
-            <enableRulesSummary>false</enableRulesSummary>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>clirr-maven-plugin</artifactId>
-          <version>${commons.clirr.version}</version>
-          <configuration>
-            <minSeverity>info</minSeverity>
-          </configuration>
-        </plugin>
-      </plugins>
-    </reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <!-- Ensure that logging messages can be inspected -->
+            <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
+          </systemPropertyVariables>
+          <reportFormat>plain</reportFormat>
+          <excludes>
+            <!-- Test support files -->
+            <exclude>**/Tester*.java</exclude>
+            <!-- Exclude nested classes which Surefire cannot handle -->
+            <exclude>**/Test*$*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/bin.xml</descriptor>
+            <descriptor>src/main/assembly/src-tar-gz.xml</descriptor>
+            <descriptor>src/main/assembly/src-zip.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <configuration>
+          <ignorePathsToDelete>
+            <ignorePathToDelete>api-*</ignorePathToDelete>
+          </ignorePathsToDelete>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${commons.javadoc.version}</version>
+        <configuration>
+          <links>
+            <link>http://docs.oracle.com/javase/7/docs/api</link>
+            <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
+            <link>http://docs.oracle.com/javaee/7/api/</link>
+          </links>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.5</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${commons.javadoc.version}</version>
+        <configuration>
+          <links>
+            <link>http://docs.oracle.com/javase/7/docs/api</link>
+            <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
+            <link>http://docs.oracle.com/javaee/7/api/</link>
+          </links>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>${commons.changes.version}</version>
+        <configuration>
+          <template>release-notes.vm</template>
+          <templateDirectory>src/changes</templateDirectory>
+          <!-- Limit this to released, supported versions else there are -->
+          <!-- to many issues in the report -->
+          <fixVersionIds>12313721,12326766,12328750</fixVersionIds>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${commons.checkstyle.version}</version>
+        <configuration>
+          <configLocation>${basedir}/checkstyle.xml</configLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <version>${commons.clirr.version}</version>
+        <configuration>
+          <minSeverity>info</minSeverity>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
