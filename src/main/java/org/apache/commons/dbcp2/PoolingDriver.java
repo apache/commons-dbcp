@@ -194,7 +194,7 @@ public class PoolingDriver implements Driver {
     }
 
     /** My URL prefix */
-    protected static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
+    public static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
     protected static final int URL_PREFIX_LEN = URL_PREFIX.length();
 
     // version numbers
