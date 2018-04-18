@@ -159,14 +159,16 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     @Override
     public void close() throws SQLException {
         if (!isClosedInternal()) {
-            try {
-                // Don't actually close the connection if in a transaction. The
-                // connection will be closed by the transactionComplete method.
-                if (transactionContext == null) {
-                    super.close();
+            synchronized (this) {
+                try {
+                    // Don't actually close the connection if in a transaction. The
+                    // connection will be closed by the transactionComplete method.
+                    if (transactionContext == null) {
+                        super.close();
+                    }
+                } finally {
+                    setClosedInternal(true);
                 }
-            } finally {
-                setClosedInternal(true);
             }
         }
     }
@@ -186,7 +188,9 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     protected void transactionComplete() {
-        transactionContext = null;
+        synchronized (this) {
+            transactionContext = null;
+        }
 
         // If we were using a shared connection, clear the reference now that
         // the transaction has completed
