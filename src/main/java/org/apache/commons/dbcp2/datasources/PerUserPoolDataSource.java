@@ -98,7 +98,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Close pool(s) being maintained by this datasource.
+     * Closes pool(s) being maintained by this datasource.
      */
     @Override
     public void close() {
@@ -843,14 +843,14 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     // Instrumentation Methods
 
     /**
-     * Get the number of active connections in the default pool.
+     * Gets the number of active connections in the default pool.
      */
     public int getNumActive() {
         return getNumActive(null);
     }
 
     /**
-     * Get the number of active connections in the pool for a given user.
+     * Gets the number of active connections in the pool for a given user.
      */
     public int getNumActive(final String username) {
         final ObjectPool<PooledConnectionAndInfo> pool =
@@ -859,14 +859,14 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Get the number of idle connections in the default pool.
+     * Gets the number of idle connections in the default pool.
      */
     public int getNumIdle() {
         return getNumIdle(null);
     }
 
     /**
-     * Get the number of idle connections in the pool for a given user.
+     * Gets the number of idle connections in the pool for a given user.
      */
     public int getNumIdle(final String username) {
         final ObjectPool<PooledConnectionAndInfo> pool =
@@ -995,7 +995,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Create a pool key from the provided parameters.
+     * Creates a pool key from the provided parameters.
      *
      * @param username  User name
      * @return  The pool key
