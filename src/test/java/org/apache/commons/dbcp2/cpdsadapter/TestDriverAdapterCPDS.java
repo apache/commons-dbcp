@@ -162,6 +162,22 @@ public class TestDriverAdapterCPDS {
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
     
+    @Test
+    public void testSetUserNull() throws Exception {
+        pcds.setUser("Alice");
+        assertEquals("Alice", pcds.getUser());
+        pcds.setUser(null);
+        assertEquals(null, pcds.getUser());
+    }
+    
+    @Test
+    public void testSetPasswordNull() throws Exception {
+        pcds.setPassword("Secret");
+        assertEquals("Secret", pcds.getPassword());
+        pcds.setPassword(null);
+        assertEquals(null, pcds.getPassword());
+    }
+    
     /**
      * JIRA: DBCP-442
      */
