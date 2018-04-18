@@ -611,10 +611,11 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the number of statements to examine during each run of the
-     * idle object evictor thread (if any).
+     * idle object evictor thread (if any.)
      *
      * *see #setNumTestsPerEvictionRun
      * *see #setTimeBetweenEvictionRunsMillis
+     * @return the number of statements to examine during each run of the idle object evictor thread (if any.)
      */
     public int getNumTestsPerEvictionRun() {
         return _numTestsPerEvictionRun;
@@ -645,6 +646,7 @@ public class DriverAdapterCPDS
      *
      * *see #setMinEvictableIdleTimeMillis
      * *see #setTimeBetweenEvictionRunsMillis
+     * @return the minimum amount of time a statement may sit idle in the pool. 
      */
     public int getMinEvictableIdleTimeMillis() {
         return _minEvictableIdleTimeMillis;
