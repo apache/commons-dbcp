@@ -98,7 +98,26 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Closes pool(s) being maintained by this datasource.
+     * Clears pool(s) maintained by this data source.
+     * 
+     * @see org.apache.commons.pool2.ObjectPool#clear()
+     * @since 2.3.0
+     */
+    public void clear() {
+        for (final PooledConnectionManager manager : managers.values()) {
+            try {
+              ((CPDSConnectionFactory) manager).getPool().clear();
+            } catch (final Exception closePoolException) {
+                    //ignore and try to close others.
+            }
+        }
+        InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
+    }
+
+    /**
+     * Closes pool(s) maintained by this data source.
+     * 
+     * @see org.apache.commons.pool2.ObjectPool#close()
      */
     @Override
     public void close() {
