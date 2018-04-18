@@ -495,6 +495,7 @@ public class DriverAdapterCPDS
      * driver to be registered with the DriverManager.
      * @param v  Value to assign to driver.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws ClassNotFoundException if the class cannot be located
      */
     public void setDriver(final String v) throws ClassNotFoundException {
         assertInitializationAllowed();
