@@ -177,8 +177,8 @@ public class DriverAdapterCPDS
         // exception upon first invocation.
         try {
             if (connectionProperties != null) {
-                update(connectionProperties, KEY_USER, username);
-                update(connectionProperties, KEY_PASSWORD, pass);
+                connectionProperties.put(KEY_USER, username);
+                connectionProperties.put(KEY_PASSWORD, pass);
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
                         getUrl(), connectionProperties));
             } else {
@@ -442,7 +442,13 @@ public class DriverAdapterCPDS
     public void setPassword(final String v) {
         assertInitializationAllowed();
         this.password = v;
-        update(connectionProperties, KEY_PASSWORD, v);
+        if (connectionProperties != null) {
+            if (v == null) {
+                connectionProperties.remove(KEY_PASSWORD);
+            } else {
+                connectionProperties.setProperty(KEY_PASSWORD, v);
+            }
+        }
     }
 
     /**
@@ -479,7 +485,13 @@ public class DriverAdapterCPDS
     public void setUser(final String v) {
         assertInitializationAllowed();
         this.user = v;
-        update(connectionProperties, KEY_USER, v);
+        if (connectionProperties != null) {
+            if (v == null) {
+                connectionProperties.remove(KEY_USER);
+            } else {
+                connectionProperties.setProperty(KEY_USER, v);
+            }
+        }
     }
 
     /**
@@ -703,15 +715,5 @@ public class DriverAdapterCPDS
     public void setMaxPreparedStatements(final int maxPreparedStatements)
     {
         _maxPreparedStatements = maxPreparedStatements;
-    }
-    
-    private void update(final Properties properties, final String key, final String value) {
-        if (properties != null) {
-            if (value == null) {
-                properties.remove(key);
-            } else {
-                properties.setProperty(key, value);
-            }
-        }        
     }
 }

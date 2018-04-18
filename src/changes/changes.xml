@@ -68,7 +68,7 @@ The <action> type attribute can be add,update,fix,remove.
         Make constant public: org.apache.commons.dbcp2.PoolingDriver.URL_PREFIX.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-486" due-to="Gary Gregory">
-        DriverAdapterCPDS.setUser(), setPassword(), and getPooledConnection() with null arguments throw NullPointerExceptions when connection properties are set.
+        DriverAdapterCPDS.setUser(null) and setPassword(null) throw NullPointerExceptions when connection properties are set.
       </action>
     </release>
     <release version="2.2.0" date="2017-12-DD" description="This is a minor release, including bug fixes and enhancements.">
