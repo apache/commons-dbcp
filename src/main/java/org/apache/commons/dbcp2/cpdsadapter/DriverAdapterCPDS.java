@@ -94,6 +94,12 @@ public class DriverAdapterCPDS
     implements ConnectionPoolDataSource, Referenceable, Serializable,
                ObjectFactory {
 
+    private static final String KEY_USER = "user";
+
+
+    private static final String KEY_PASSWORD = "password";
+
+
     private static final long serialVersionUID = -4820523787212147844L;
 
 
@@ -171,8 +177,8 @@ public class DriverAdapterCPDS
         // exception upon first invocation.
         try {
             if (connectionProperties != null) {
-                connectionProperties.put("user", username);
-                connectionProperties.put("password", pass);
+                connectionProperties.put(KEY_USER, username);
+                connectionProperties.put(KEY_PASSWORD, pass);
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
                         getUrl(), connectionProperties));
             } else {
@@ -245,8 +251,8 @@ public class DriverAdapterCPDS
         ref.add(new StringRefAddr("driver", getDriver()));
         ref.add(new StringRefAddr("loginTimeout",
                                   String.valueOf(getLoginTimeout())));
-        ref.add(new StringRefAddr("password", getPassword()));
-        ref.add(new StringRefAddr("user", getUser()));
+        ref.add(new StringRefAddr(KEY_PASSWORD, getPassword()));
+        ref.add(new StringRefAddr(KEY_USER, getUser()));
         ref.add(new StringRefAddr("url", getUrl()));
 
         ref.add(new StringRefAddr("poolPreparedStatements",
@@ -295,11 +301,11 @@ public class DriverAdapterCPDS
                 if (ra != null && ra.getContent() != null) {
                     setUrl(ra.getContent().toString());
                 }
-                ra = ref.get("user");
+                ra = ref.get(KEY_USER);
                 if (ra != null && ra.getContent() != null) {
                     setUser(ra.getContent().toString());
                 }
-                ra = ref.get("password");
+                ra = ref.get(KEY_PASSWORD);
                 if (ra != null && ra.getContent() != null) {
                     setPassword(ra.getContent().toString());
                 }
@@ -389,11 +395,11 @@ public class DriverAdapterCPDS
     public void setConnectionProperties(final Properties props) {
         assertInitializationAllowed();
         connectionProperties = props;
-        if (connectionProperties.containsKey("user")) {
-            setUser(connectionProperties.getProperty("user"));
+        if (connectionProperties.containsKey(KEY_USER)) {
+            setUser(connectionProperties.getProperty(KEY_USER));
         }
-        if (connectionProperties.containsKey("password")) {
-            setPassword(connectionProperties.getProperty("password"));
+        if (connectionProperties.containsKey(KEY_PASSWORD)) {
+            setPassword(connectionProperties.getProperty(KEY_PASSWORD));
         }
     }
 
@@ -437,7 +443,11 @@ public class DriverAdapterCPDS
         assertInitializationAllowed();
         this.password = v;
         if (connectionProperties != null) {
-            connectionProperties.setProperty("password", v);
+            if (v == null) {
+                connectionProperties.remove(KEY_PASSWORD);
+            } else {
+                connectionProperties.setProperty(KEY_PASSWORD, v);
+            }
         }
     }
 
@@ -476,7 +486,11 @@ public class DriverAdapterCPDS
         assertInitializationAllowed();
         this.user = v;
         if (connectionProperties != null) {
-            connectionProperties.setProperty("user", v);
+            if (v == null) {
+                connectionProperties.remove(KEY_USER);
+            } else {
+                connectionProperties.setProperty(KEY_USER, v);
+            }
         }
     }
 

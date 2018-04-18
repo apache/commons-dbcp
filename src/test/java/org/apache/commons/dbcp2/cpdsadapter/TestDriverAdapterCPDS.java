@@ -171,7 +171,25 @@ public class TestDriverAdapterCPDS {
     }
     
     @Test
+    public void testSetUserNullWithConnectionProperties() throws Exception {
+        pcds.setConnectionProperties(new Properties());
+        pcds.setUser("Alice");
+        assertEquals("Alice", pcds.getUser());
+        pcds.setUser(null);
+        assertEquals(null, pcds.getUser());
+    }
+    
+    @Test
     public void testSetPasswordNull() throws Exception {
+        pcds.setPassword("Secret");
+        assertEquals("Secret", pcds.getPassword());
+        pcds.setPassword(null);
+        assertEquals(null, pcds.getPassword());
+    }
+    
+    @Test
+    public void testSetPasswordNullWithConnectionProperties() throws Exception {
+        pcds.setConnectionProperties(new Properties());
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
         pcds.setPassword(null);
