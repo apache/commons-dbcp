@@ -202,6 +202,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
             connectionFactory.setFastFailValidation(getFastFailValidation());
             connectionFactory.setDisconnectionSqlCodes(getDisconnectionSqlCodes());
+            connectionFactory.setAlwaysCloseFatalConnection(isAlwaysCloseFatalConnection());
             validateConnectionFactory(connectionFactory);
         } catch (final RuntimeException e) {
             throw e;

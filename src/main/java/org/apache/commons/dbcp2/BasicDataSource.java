@@ -1464,6 +1464,28 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.fastFailValidation = fastFailValidation;
     }
 
+    private boolean alwaysCloseFatalConnection;
+
+    /**
+     * True means connections have fatal SQLException will close without validation
+     *
+     * @return true if connections created by this factory have a fatal SQLException,
+     * it will be closed regardless of the validation
+     * @see #setAlwaysCloseFatalConnection(boolean)
+     */
+    public boolean isAlwaysCloseFatalConnection() {
+        return alwaysCloseFatalConnection;
+    }
+
+    /**
+     * @param alwaysCloseFatalConnection true means connections created by this factory will
+     *                                   always close while Fatal SQLException happened
+     * @see #isAlwaysCloseFatalConnection()
+     */
+    public void setAlwaysCloseFatalConnection(boolean alwaysCloseFatalConnection) {
+        this.alwaysCloseFatalConnection = alwaysCloseFatalConnection;
+    }
+
     // ----------------------------------------------------- Instance Variables
 
     /**
@@ -2309,6 +2331,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
             connectionFactory.setFastFailValidation(fastFailValidation);
             connectionFactory.setDisconnectionSqlCodes(disconnectionSqlCodes);
+            connectionFactory.setAlwaysCloseFatalConnection(alwaysCloseFatalConnection);
             validateConnectionFactory(connectionFactory);
         } catch (final RuntimeException e) {
             throw e;
