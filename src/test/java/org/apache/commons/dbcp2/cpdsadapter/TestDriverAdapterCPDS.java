@@ -142,7 +142,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetProperties() throws Exception {
+    public void testSetConnectionProperties() throws Exception {
         // Set user property to bad value
         pcds.setUser("bad");
         // Supply correct value in connection properties
@@ -160,6 +160,11 @@ public class TestDriverAdapterCPDS {
         // Call will succeed and overwrite property
         pcds.getPooledConnection("foo", "bar").close();
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
+    }
+    
+    @Test
+    public void testSetConnectionPropertiesNull() throws Exception {
+        pcds.setConnectionProperties(null);
     }
     
     @Test

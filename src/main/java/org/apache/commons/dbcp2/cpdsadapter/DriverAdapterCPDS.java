@@ -395,11 +395,13 @@ public class DriverAdapterCPDS
     public void setConnectionProperties(final Properties props) {
         assertInitializationAllowed();
         connectionProperties = props;
-        if (connectionProperties.containsKey(KEY_USER)) {
-            setUser(connectionProperties.getProperty(KEY_USER));
-        }
-        if (connectionProperties.containsKey(KEY_PASSWORD)) {
-            setPassword(connectionProperties.getProperty(KEY_PASSWORD));
+        if (connectionProperties != null) {
+            if (connectionProperties.containsKey(KEY_USER)) {
+                setUser(connectionProperties.getProperty(KEY_USER));
+            }
+            if (connectionProperties.containsKey(KEY_PASSWORD)) {
+                setPassword(connectionProperties.getProperty(KEY_PASSWORD));
+            }
         }
     }
 
