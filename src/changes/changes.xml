@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.3.0" date="2018-MM-DD" description="This is a bug fix release.">
+    <release version="2.3.0" date="2018-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="fix" issue="DBCP-482" due-to="Dennis Lloyd, Gary Gregory">
         Avoid javax.management.InstanceNotFoundException on shutdown when a bean is not registered.
       </action>
