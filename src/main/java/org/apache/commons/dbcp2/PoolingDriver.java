@@ -81,7 +81,7 @@ public class PoolingDriver implements Driver {
             throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
         if (null == pool) {
-            throw new SQLException("Pool not registered.");
+            throw new SQLException("Pool not registered: " + name);
         }
         return pool;
     }
