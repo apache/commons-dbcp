@@ -50,7 +50,7 @@ public class PoolingDriver implements Driver {
     }
 
     /** The map of registered pools. */
-    protected static final HashMap<String,ObjectPool<? extends Connection>> pools =
+    protected static final HashMap<String, ObjectPool<? extends Connection>> pools =
             new HashMap<>();
 
     /** Controls access to the underlying connection */
@@ -88,7 +88,7 @@ public class PoolingDriver implements Driver {
 
     public synchronized void registerPool(final String name,
             final ObjectPool<? extends Connection> pool) {
-        pools.put(name,pool);
+        pools.put(name, pool);
     }
 
     public synchronized void closePool(final String name) throws SQLException {
