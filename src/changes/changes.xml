@@ -64,7 +64,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" issue="DBCP-482" due-to="Dennis Lloyd, Gary Gregory">
         Avoid javax.management.InstanceNotFoundException on shutdown when a bean is not registered.
       </action>
-      <action dev="ggregory" type="update" issue="DBCP-483">
+      <action dev="ggregory" type="update" issue="DBCP-483" due-to="Gary Gregory">
         Make constant public: org.apache.commons.dbcp2.PoolingDriver.URL_PREFIX.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-486" due-to="Gary Gregory">
