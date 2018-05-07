@@ -240,8 +240,6 @@
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
-    <!-- Version 1.0 requires Maven 3.0 or later -->
-    <commons.scm-publish.version>1.1</commons.scm-publish.version>
     <commons.checkstyle.version>2.11</commons.checkstyle.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.5.0</commons.pool.version>
