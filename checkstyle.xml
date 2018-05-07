@@ -167,10 +167,6 @@
         <module name="MagicNumber"/>
         -->
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows">
-            <property name="allowUnchecked" value="true"/>   
-            <property name="allowSubclasses" value="true"/> 
-        </module>
         <!--
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
