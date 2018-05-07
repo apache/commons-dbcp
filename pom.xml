@@ -35,7 +35,7 @@
 
   <!-- Maven 3.0 needed for scmpublish 1.0 -->
   <prerequisites>
-    <maven>3.0</maven>
+    <maven>3.0.5</maven>
   </prerequisites>
 
   <distributionManagement>
