@@ -248,6 +248,7 @@
     <commons.pool.version>2.5.0</commons.pool.version>
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
+    <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
   </properties>
 
   <build>
@@ -329,6 +330,40 @@
   </build>
   <reporting>
     <plugins>
+      <plugin>
+        <groupId>com.github.siom79.japicmp</groupId>
+        <artifactId>japicmp-maven-plugin</artifactId>
+        <version>${commons.japicmp.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+<!-- This is the only way I could find to skip generating this report -->
+<!-- Version 0.11.1 throws an exception because it cannot find a Geronimo class -->
+<!-- Version 0.12.0 throws an NullPointerException because it seems Maven did not inject the report Mojo with any values-->            
+<!--               <report>cmp-report</report> -->
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <parameter>
+            <onlyModified>true</onlyModified>
+            <breakBuildOnBinaryIncompatibleModifications>${commons.japicmp.breakBuildOnBinaryIncompatibleModifications}</breakBuildOnBinaryIncompatibleModifications>
+            <!-- skip japicmp on "mvn site" - use "mvn package site" to include report -->
+            <ignoreMissingNewVersion>true</ignoreMissingNewVersion>
+            <reportOnlyFilename>true</reportOnlyFilename>
+            <skipPomModules>true</skipPomModules>
+            <ignoreMissingClasses>${commons.japicmp.ignoreMissingClasses}</ignoreMissingClasses>
+            <oldVersionPattern>2.2.0</oldVersionPattern>
+          </parameter>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.geronimo.specs</groupId>
+              <artifactId>geronimo-jta_1.1_spec</artifactId>
+              <version>1.1.1</version>
+            </dependency>
+          </dependencies>
+        </configuration>
+      </plugin>    
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
