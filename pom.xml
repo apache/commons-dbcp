@@ -222,6 +222,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/dbcp/</commons.distSvnStagingUrl>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.componentid>dbcp2</commons.componentid>
     <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
     <commons.release.version>2.3.0</commons.release.version>
