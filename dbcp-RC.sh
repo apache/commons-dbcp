@@ -25,7 +25,6 @@
 #    svn pub/sub dev checkout.
 # 2) Nexus repo from previous RC has been dropped.
 #
-# $Revision$ $Date$
 # -----------------------------------------------------------------------------
 # Set script variables
 version=2.3.0
