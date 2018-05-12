@@ -1,5 +1,5 @@
               Apache Apache Commons DBCP
-                  Version 2.3.0-SNAPSHOT
+                  Version 2.3.0
                  RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.3.0-SNAPSHOT.
