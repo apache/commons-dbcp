@@ -691,7 +691,7 @@ The <action> type attribute can be add,update,fix,remove.
         Changed behavior to allow Connection, Statement, PreparedStatement,
         CallableStatement and ResultSet to be closed multiple times. The first
         time close is called the resource is closed and any subsequent calls
-        have no effect. This behavior is required as per the JavaDocs for these
+        have no effect. This behavior is required as per the Javadocs for these
         classes. Also added tests for closing all types multiple times and
         updated any tests that incorrectly assert that a resource can not be
         closed more then once.  Fixes DBCP-3, DBCP-5, DBCP-23 and DBCP-134.
