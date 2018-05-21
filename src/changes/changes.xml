@@ -64,6 +64,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" issue="DBCP-484" due-to="Emanuel Freitas">
         Connection leak during XATransaction in high load.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-492" due-to="Gary Gregory">
+        Drop Ant build.
+      </action>
     </release>
     <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="pschumacher" type="fix" issue="DBCP-476" due-to="Gary Evesson, Richard Cordova">
