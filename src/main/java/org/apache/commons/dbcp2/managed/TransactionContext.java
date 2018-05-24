@@ -40,6 +40,7 @@ public class TransactionContext {
     private final TransactionRegistry transactionRegistry;
     private final WeakReference<Transaction> transactionRef;
     private Connection sharedConnection;
+    private boolean isComplete;
 
     /**
      * Creates a TransactionContext for the specified Transaction and TransactionRegistry.  The
@@ -59,6 +60,7 @@ public class TransactionContext {
         }
         this.transactionRegistry = transactionRegistry;
         this.transactionRef = new WeakReference<>(transaction);
+        this.isComplete = false;
     }
 
     /**
@@ -93,6 +95,9 @@ public class TransactionContext {
             if ( !transaction.enlistResource(xaResource) ) {
                 throw new SQLException("Unable to enlist connection in transaction: enlistResource returns 'false'.");
             }
+        } catch (final IllegalStateException e) {
+            // This can happen if the transaction is already timed out
+            throw new SQLException("Unable to enlist connection in the transaction", e);
         } catch (final RollbackException e) {
             // transaction was rolled back... proceed as if there never was a transaction
         } catch (final SystemException e) {
@@ -152,5 +157,13 @@ public class TransactionContext {
             throw new SQLException("Unable to enlist connection because the transaction has been garbage collected");
         }
         return transaction;
+    }
+
+    public void complete() {
+        this.isComplete = true;
+    }
+
+    public boolean isComplete() {
+        return this.isComplete;
     }
 }

@@ -71,7 +71,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     private void updateTransactionStatus() throws SQLException {
         // if there is a is an active transaction context, assure the transaction context hasn't changed
-        if (transactionContext != null) {
+        if (transactionContext != null && !transactionContext.isComplete()) {
             if (transactionContext.isActive()) {
                 if (transactionContext != transactionRegistry.getActiveTransactionContext()) {
                     throw new SQLException("Connection can not be used while enlisted in another transaction");
@@ -172,7 +172,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                 // be modified by the transactionComplete method which could run
                 // in the different thread with the transaction calling back.
                 lock.lock();
-                if (transactionContext == null) {
+                if (transactionContext == null || transactionContext.isComplete()) {
                     super.close();
                 }
             } finally {
@@ -198,7 +198,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     protected void transactionComplete() {
         lock.lock();
-        transactionContext = null;
+        transactionContext.complete();
         lock.unlock();
 
         // If we were using a shared connection, clear the reference now that
