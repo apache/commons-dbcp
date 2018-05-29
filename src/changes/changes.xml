@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-492" due-to="Gary Gregory">
         Drop Ant build.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-491" due-to="Zheng Feng, Gary Gregory">
+        Ensure DBCP ConnectionListener can deal with transaction managers which invoke rollback in a separate thread.
+      </action>
     </release>
     <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="pschumacher" type="fix" issue="DBCP-476" due-to="Gary Evesson, Richard Cordova">

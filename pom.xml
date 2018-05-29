@@ -215,6 +215,42 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.197</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.narayana.jta</groupId>
+      <artifactId>narayana-jta</artifactId>
+      <version>5.8.2.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.transaction</groupId>
+      <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+      <version>1.0.0.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-transaction-spi</artifactId>
+      <version>7.6.0.Final</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging-spi</artifactId>
+        </exclusion>
+      </exclusions>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>3.1.4.GA</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -417,4 +453,34 @@
       </plugin>
     </plugins>
   </reporting>
+  <profiles>
+    <profile>
+      <id>jdk7</id>
+      <activation>
+        <jdk>(,1.7]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <!-- Ensure that logging messages can be inspected -->
+                <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
+              </systemPropertyVariables>
+              <reportFormat>plain</reportFormat>
+              <excludes>
+                <!-- Test support files -->
+                <exclude>**/Tester*.java</exclude>
+                <!-- Exclude nested classes which Surefire cannot handle -->
+                <exclude>**/Test*$*.java</exclude>
+                <exclude>**/*Narayana*.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
