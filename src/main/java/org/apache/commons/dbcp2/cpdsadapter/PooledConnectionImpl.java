@@ -247,6 +247,7 @@ class PooledConnectionImpl
         try {
             connection.close();
         } catch (final Exception ignored) {
+            // ignore
         }
 
         // make sure the last connection is marked as closed
