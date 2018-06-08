@@ -599,7 +599,7 @@ public class DriverAdapterCPDS
     /**
      * Sets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
-     * 
+     *
      * @param timeBetweenEvictionRunsMillis
      *            The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive,
      *            no idle object evictor thread will be run.
@@ -650,7 +650,7 @@ public class DriverAdapterCPDS
      *
      * *see #setMinEvictableIdleTimeMillis
      * *see #setTimeBetweenEvictionRunsMillis
-     * @return the minimum amount of time a statement may sit idle in the pool. 
+     * @return the minimum amount of time a statement may sit idle in the pool.
      */
     public int getMinEvictableIdleTimeMillis() {
         return _minEvictableIdleTimeMillis;
@@ -711,7 +711,7 @@ public class DriverAdapterCPDS
     {
         _maxPreparedStatements = maxPreparedStatements;
     }
-    
+
     private void update(final Properties properties, final String key, final String value) {
         if (properties != null) {
             if (value == null) {
@@ -719,6 +719,6 @@ public class DriverAdapterCPDS
             } else {
                 properties.setProperty(key, value);
             }
-        }        
+        }
     }
 }

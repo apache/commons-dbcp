@@ -737,7 +737,7 @@ public abstract class TestConnectionPool {
         final long maxWaitMillis) throws Exception {
         multipleThreads(holdTime, expectError, loopOnce, maxWaitMillis, 1, 2 * getMaxTotal(), 300);
     }
-    
+
     /**
      * Launches a group of {@code numThreads} threads, each of which will attempt to obtain a connection
      * from the pool, hold it for {@code holdTime} ms, and then return it to the pool.  If {@code loopOnce} is false,
@@ -865,7 +865,7 @@ public abstract class TestConnectionPool {
          * The number of milliseconds to hold onto a database connection
          */
         private final int connHoldTime;
-        
+
         private final int numStatements;
 
         private volatile boolean isRun;
@@ -875,7 +875,7 @@ public abstract class TestConnectionPool {
         private final Thread thread;
 
         private Throwable thrown;
-        
+
         private final Random random = new Random();
 
         // Debug for DBCP-318
@@ -895,7 +895,7 @@ public abstract class TestConnectionPool {
         public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException) {
             this(threadGroup, connHoldTime, isStopOnException, false, 1);
         }
-        
+
         public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException, final int numStatements) {
             this(threadGroup, connHoldTime, isStopOnException, false, numStatements);
         }

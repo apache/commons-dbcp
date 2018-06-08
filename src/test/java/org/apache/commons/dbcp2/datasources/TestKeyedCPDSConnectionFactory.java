@@ -150,7 +150,7 @@ public class TestKeyedCPDSConnectionFactory {
         factory.getPool().clear();
         assertEquals(0, pool.getNumIdle(key));
     }
-    
+
     /**
      * JIRA: DBCP-442
      */

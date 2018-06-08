@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ public class TestInstanceKeyDataSource {
 
     /**
      * Verify that exception on setupDefaults does not leak PooledConnection
-     * 
+     *
      * JIRA: DBCP-237
      */
     @Test
@@ -53,10 +53,10 @@ public class TestInstanceKeyDataSource {
         } catch (final SQLException ex) {
            //Expected
         }
-        assertEquals(numConnections,tds.getNumActive());  
+        assertEquals(numConnections,tds.getNumActive());
         tds.close();
     }
-    
+
     private static class ThrowOnSetupDefaultsDataSource
     extends SharedPoolDataSource {
         private static final long serialVersionUID = -448025812063133259L;

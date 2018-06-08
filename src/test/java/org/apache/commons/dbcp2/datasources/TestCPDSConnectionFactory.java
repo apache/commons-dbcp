@@ -142,7 +142,7 @@ public class TestCPDSConnectionFactory {
         factory.getPool().clear();
         assertEquals(0, pool.getNumIdle());
     }
-    
+
     /**
      * JIRA: DBCP-442
      */

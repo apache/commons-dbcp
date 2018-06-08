@@ -253,7 +253,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
      * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
      * </ol>
-     * 
+     *
      * @param sql
      *            validation query
      * @param timeout

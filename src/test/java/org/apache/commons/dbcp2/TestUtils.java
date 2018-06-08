@@ -25,6 +25,6 @@ public class TestUtils {
 
     @Test
     public void testClassLoads() {
-        Utils.closeQuietly((Connection) null); 
+        Utils.closeQuietly((Connection) null);
     }
 }

@@ -99,7 +99,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Clears pool(s) maintained by this data source.
-     * 
+     *
      * @see org.apache.commons.pool2.ObjectPool#clear()
      * @since 2.3.0
      */
@@ -116,7 +116,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Closes pool(s) maintained by this data source.
-     * 
+     *
      * @see org.apache.commons.pool2.ObjectPool#close()
      */
     @Override

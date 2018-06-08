@@ -161,12 +161,12 @@ public class TestDriverAdapterCPDS {
         pcds.getPooledConnection("foo", "bar").close();
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
-    
+
     @Test
     public void testSetConnectionPropertiesNull() throws Exception {
         pcds.setConnectionProperties(null);
     }
-    
+
     @Test
     public void testSetUserNull() throws Exception {
         pcds.setUser("Alice");
@@ -174,7 +174,7 @@ public class TestDriverAdapterCPDS {
         pcds.setUser(null);
         assertEquals(null, pcds.getUser());
     }
-    
+
     @Test
     public void testSetUserNullWithConnectionProperties() throws Exception {
         pcds.setConnectionProperties(new Properties());
@@ -183,7 +183,7 @@ public class TestDriverAdapterCPDS {
         pcds.setUser(null);
         assertEquals(null, pcds.getUser());
     }
-    
+
     @Test
     public void testSetPasswordNull() throws Exception {
         pcds.setPassword("Secret");
@@ -191,7 +191,7 @@ public class TestDriverAdapterCPDS {
         pcds.setPassword(null);
         assertEquals(null, pcds.getPassword());
     }
-    
+
     @Test
     public void testSetPasswordNullWithConnectionProperties() throws Exception {
         pcds.setConnectionProperties(new Properties());
@@ -200,7 +200,7 @@ public class TestDriverAdapterCPDS {
         pcds.setPassword(null);
         assertEquals(null, pcds.getPassword());
     }
-    
+
     /**
      * JIRA: DBCP-442
      */

@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Internal wrapper class that allows JMX to be a noop if absent or disabled.
- * 
+ *
  * @since 2.2.1
  */
 class ObjectNameWrapper {

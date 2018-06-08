@@ -40,16 +40,16 @@ public class TestDriverManagerConnectionFactory {
 
     private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
 
-    @BeforeClass 
+    @BeforeClass
     public static void beforeClass() {
         System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
     }
-    
+
     @AfterClass
     public static void afterClass() {
         System.clearProperty(KEY_JDBC_DRIVERS);
     }
-    
+
     @Test
     public void testDriverManagerInitWithEmptyProperties() throws Exception {
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
@@ -75,8 +75,8 @@ public class TestDriverManagerConnectionFactory {
         // The names "user" and "password" are specified in java.sql.DriverManager.getConnection(String, String, String)
         properties.put("user", "foo");
         properties.put("password", "bar");
-        final ConnectionFactory connectionFactory = withProperties ? 
-                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties) : 
+        final ConnectionFactory connectionFactory = withProperties ?
+                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties) :
                 new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "foo", "bar");
         final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, null);

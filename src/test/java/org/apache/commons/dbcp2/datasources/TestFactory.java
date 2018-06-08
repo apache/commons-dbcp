@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,13 +46,13 @@ public class TestFactory {
         refObj.add(new StringRefAddr("dataSourceName","java:comp/env/jdbc/bookstoreCPDS"));
         final Context context = new InitialContext();
         final Hashtable<?, ?> env = new Hashtable<>();
-        
+
         final ObjectFactory factory = new SharedPoolDataSourceFactory();
-        
+
         final Name name = new CompositeName("myDB");
         final Object obj = factory.getObjectInstance(refObj, name, context, env);
         assertNotNull(obj);
-        
+
         final Name name2 = new CompositeName("myDB2");
         final Object obj2 = factory.getObjectInstance(refObj, name2, context, env);
         assertNotNull(obj2);

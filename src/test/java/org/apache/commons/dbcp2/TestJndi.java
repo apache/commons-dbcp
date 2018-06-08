@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,59 +47,59 @@ public class TestJndi {
      */
     protected static final String JNDI_PATH = JNDI_SUBCONTEXT + "/"
             + "jndiTestDataSource";
-    
+
     /** jndi context to use in tests **/
     protected Context context = null;
 
     /**
      * Test BasicDatasource bind and lookup
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testBasicDataSourceBind() throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
-        checkBind(dataSource);      
+        checkBind(dataSource);
     }
-    
+
     /**
      * Test SharedPoolDataSource bind and lookup
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testSharedPoolDataSourceBind() throws Exception {
         final SharedPoolDataSource dataSource = new SharedPoolDataSource();
-        checkBind(dataSource);      
+        checkBind(dataSource);
     }
-    
+
     /**
      * Test PerUserPoolDataSource bind and lookup
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testPerUserPoolDataSourceBind() throws Exception {
         final PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
-        checkBind(dataSource);      
+        checkBind(dataSource);
     }
-    
+
     @Before
     public void setUp() throws Exception {
         context = getInitialContext();
-        context.createSubcontext(JNDI_SUBCONTEXT);  
+        context.createSubcontext(JNDI_SUBCONTEXT);
     }
-    
+
     @After
     public void tearDown() throws Exception {
         context.unbind(JNDI_PATH);
-        context.destroySubcontext(JNDI_SUBCONTEXT);    
+        context.destroySubcontext(JNDI_SUBCONTEXT);
     }
-    
+
     /**
-     * Binds a DataSource to the jndi and checks that we have successfully 
+     * Binds a DataSource to the jndi and checks that we have successfully
      * bound it by looking it up again.
-     * 
+     *
      * @throws Exception if the bind, lookup or connect fails
      */
     protected void checkBind(final DataSource dataSource) throws Exception {
@@ -109,7 +109,7 @@ public class TestJndi {
 
     /**
      * Binds a DataSource into jndi.
-     * 
+     *
      * @throws Exception if creation or binding fails.
      */
     protected void bindDataSource(final DataSource dataSource) throws Exception {
@@ -118,7 +118,7 @@ public class TestJndi {
 
     /**
      * Retrieves a DataSource from jndi.
-     * 
+     *
      * @throws Exception if the jndi lookup fails or no DataSource is bound.
      */
     protected DataSource retrieveDataSource() throws Exception {
@@ -133,9 +133,9 @@ public class TestJndi {
 
     /**
      * Retrieves (or creates if it does not exist) an InitialContext.
-     * 
+     *
      * @return the InitialContext.
-     * @throws NamingException if the InitialContext cannot be retrieved 
+     * @throws NamingException if the InitialContext cannot be retrieved
      *         or created.
      */
     protected InitialContext getInitialContext() throws NamingException {

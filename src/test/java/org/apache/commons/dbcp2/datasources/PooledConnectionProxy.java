@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,31 +32,31 @@ import javax.sql.StatementEventListener;
  * PooledConnection implementation that wraps a driver-supplied
  * PooledConnection and proxies events, allowing behavior to be
  * modified to simulate behavior of different implementations.
- * 
+ *
  */
 public class PooledConnectionProxy implements PooledConnection,
     ConnectionEventListener {
 
     protected PooledConnection delegate = null;
-    
+
     /**
      * ConnectionEventListeners
      */
     private final Vector<EventListener> eventListeners = new Vector<>();
-    
-    /** 
+
+    /**
      * True means we will (dubiously) notify listeners with a
      * ConnectionClosed event when this (i.e. the PooledConnection itself)
      * is closed
      */
     private boolean notifyOnClose = false;
-    
+
     public PooledConnectionProxy(final PooledConnection pooledConnection) {
         this.delegate = pooledConnection;
         pooledConnection.addConnectionEventListener(this);
     }
 
-    /** 
+    /**
      * If notifyOnClose is on, notify listeners
      */
     @Override
@@ -94,7 +94,7 @@ public class PooledConnectionProxy implements PooledConnection,
     public void setNotifyOnClose(final boolean notifyOnClose) {
         this.notifyOnClose = notifyOnClose;
     }
-    
+
     /**
      * sends a connectionClosed event to listeners.
      */
@@ -105,7 +105,7 @@ public class PooledConnectionProxy implements PooledConnection,
             ((ConnectionEventListener) listener).connectionClosed(event);
         }
     }
-    
+
     /**
      * Add event listeners.
      */
@@ -124,26 +124,26 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
     /* JDBC_4_ANT_KEY_END */
-    
+
     /**
      * Pass closed events on to listeners
      */
     @Override
     public void connectionClosed(final ConnectionEvent event) {
-        notifyListeners();    
+        notifyListeners();
     }
 
     /**
      * Pass error events on to listeners
-     */ 
+     */
     @Override
     public void connectionErrorOccurred(final ConnectionEvent event) {
         final Object[] listeners = eventListeners.toArray();
         for (final Object listener : listeners) {
             ((ConnectionEventListener) listener).connectionErrorOccurred(event);
-        } 
+        }
     }
-    
+
     /**
      * Generate a connection error event
      */
@@ -151,7 +151,7 @@ public class PooledConnectionProxy implements PooledConnection,
         final ConnectionEvent event = new ConnectionEvent(this);
         connectionErrorOccurred(event);
     }
-    
+
     /**
      * Expose listeners
      */
