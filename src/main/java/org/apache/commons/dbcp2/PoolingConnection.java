@@ -273,17 +273,17 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param key the key for the {@link PreparedStatement} to be created
      * @see #createKey(String, int, int, StatementType)
      */
+    @SuppressWarnings("resource")
     @Override
     public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key)
             throws Exception {
-        if(null == key) {
+        if (null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT ) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
             @SuppressWarnings({"rawtypes", "unchecked"}) // Unable to find way to avoid this
-            final
-            PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, _pstmtPool, this);
+            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, _pstmtPool, this);
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
