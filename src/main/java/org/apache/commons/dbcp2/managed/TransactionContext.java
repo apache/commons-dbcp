@@ -160,10 +160,16 @@ public class TransactionContext {
         return transaction;
     }
 
+    /**
+     * @since 2.4.0
+     */
     public void completeTransaction() {
         this.transactionComplete = true;
     }
 
+    /**
+     * @since 2.4.0
+     */
     public boolean isTransactionComplete() {
         return this.transactionComplete;
     }
