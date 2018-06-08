@@ -83,7 +83,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Close and free all {@link PreparedStatement}s or
+     * Closes and frees all {@link PreparedStatement}s or
      * {@link CallableStatement}s from the pool, and close the underlying
      * connection.
      */
@@ -111,7 +111,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      */
     protected PStmtKey createKey(final String sql) {
@@ -135,7 +135,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param columnIndexes column indexes
      */
@@ -150,7 +150,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -166,7 +166,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -184,7 +184,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -203,7 +203,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -220,7 +220,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the SQL string used to define the statement
      * @param stmtType statement type
      */
@@ -235,7 +235,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create a PStmtKey for the given arguments.
+     * Creates a PStmtKey for the given arguments.
      * @param sql the sql string used to define the statement
      * @param columnNames column names
      */
@@ -292,7 +292,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Normalize the given SQL statement, producing a
+     * Normalizes the given SQL statement, producing a
      * canonical form that is semantically equivalent to the original.
      */
     protected String normalizeSQL(final String sql) {
@@ -316,7 +316,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link CallableStatement} from the pool.
+     * Creates or obtains a {@link CallableStatement} from the pool.
      * @param sql the sql string used to define the CallableStatement
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
@@ -335,7 +335,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link CallableStatement} from the pool.
+     * Creates or obtains a {@link CallableStatement} from the pool.
      * @param sql the sql string used to define the CallableStatement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -357,7 +357,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link CallableStatement} from the pool.
+     * Creates or obtains a {@link CallableStatement} from the pool.
      * @param sql the sql string used to define the CallableStatement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -381,7 +381,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link PreparedStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      * @param sql the sql string used to define the PreparedStatement
      * @return a {@link PoolablePreparedStatement}
      */
@@ -423,7 +423,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link PreparedStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      * @param sql the sql string used to define the PreparedStatement
      * @param columnIndexes column indexes
      * @return a {@link PoolablePreparedStatement}
@@ -447,7 +447,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link PreparedStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      * @param sql the sql string used to define the PreparedStatement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -471,7 +471,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link PreparedStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      * @param sql the sql string used to define the PreparedStatement
      * @param resultSetType result set type
      * @param resultSetConcurrency result set concurrency
@@ -497,7 +497,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Create or obtain a {@link PreparedStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      * @param sql the sql string used to define the PreparedStatement
      * @param columnNames column names
      * @return a {@link PoolablePreparedStatement}
