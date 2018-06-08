@@ -118,6 +118,7 @@ public class TransactionContext {
             getTransaction().registerSynchronization(new Synchronization() {
                 @Override
                 public void beforeCompletion() {
+                    // empty
                 }
 
                 @Override
