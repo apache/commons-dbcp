@@ -397,8 +397,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
     // when setPoolPreparedStatements(true)
     @Test
-    public void testPoolPrepareStatement() throws Exception
-    {
+    public void testPoolPrepareStatement() throws Exception {
         pcds.setPoolPreparedStatements(true);
 
         final Connection conn = ds.getConnection();
