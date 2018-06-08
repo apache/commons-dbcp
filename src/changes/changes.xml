@@ -73,6 +73,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-494" due-to="Gary Gregory">
         org.apache.commons.dbcp2.PStmtKey should make copies of given arrays in constructors.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-495" due-to="Gary Gregory">
+        Remove duplicate code in org.apache.commons.dbcp2.cpdsadapter.PStmtKeyCPDS.
+      </action>
     </release>
     <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="pschumacher" type="fix" issue="DBCP-476" due-to="Gary Evesson, Richard Cordova">
