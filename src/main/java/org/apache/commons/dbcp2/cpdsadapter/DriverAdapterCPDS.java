@@ -597,13 +597,15 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the number of milliseconds to sleep between runs of the
-     * idle object evictor thread.
-     * When non-positive, no idle object evictor thread will be
-     * run.
+     * Sets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     * 
      * @param timeBetweenEvictionRunsMillis
+     *            The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive,
+     *            no idle object evictor thread will be run.
      * @see #getTimeBetweenEvictionRunsMillis()
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setTimeBetweenEvictionRunsMillis(
             final long timeBetweenEvictionRunsMillis) {
