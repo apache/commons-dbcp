@@ -422,42 +422,49 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
         abstract PreparedStatement getPreparedStatement() throws SQLException;
     }
+    
     private static class PscbString extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual");
         }
     }
+    
     private static class PscbStringIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0,0);
         }
     }
+    
     private static class PscbStringInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0);
         }
     }
+    
     private static class PscbStringIntArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", new int[0]);
         }
     }
+    
     private static class PscbStringStringArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",new String[0]);
         }
     }
+    
     private static class PscbStringIntIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual",0,0,0);
         }
     }
+    
     private void doTestPoolPreparedStatements(final PrepareStatementCallback callBack)
     throws Exception {
         final DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
