@@ -433,14 +433,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private static class PscbStringIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual",0,0);
+            return conn.prepareStatement("select * from dual", 0, 0);
         }
     }
     
     private static class PscbStringInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual",0);
+            return conn.prepareStatement("select * from dual", 0);
         }
     }
     
@@ -454,14 +454,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private static class PscbStringStringArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual",new String[0]);
+            return conn.prepareStatement("select * from dual", new String[0]);
         }
     }
     
     private static class PscbStringIntIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual",0,0,0);
+            return conn.prepareStatement("select * from dual", 0, 0, 0);
         }
     }
     
