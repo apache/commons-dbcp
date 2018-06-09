@@ -34,7 +34,7 @@ class PoolKey implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -44,7 +44,7 @@ class PoolKey implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        PoolKey other = (PoolKey) obj;
+        final PoolKey other = (PoolKey) obj;
         if (dataSourceName == null) {
             if (other.dataSourceName != null) {
                 return false;
