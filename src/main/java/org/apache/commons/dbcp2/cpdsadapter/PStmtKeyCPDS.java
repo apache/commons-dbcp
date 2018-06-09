@@ -23,6 +23,7 @@ import org.apache.commons.dbcp2.PStmtKey;
  * @since 2.0
  * @deprecated Use {@link PStmtKey}.
  */
+@Deprecated
 public class PStmtKeyCPDS extends PStmtKey {
     public PStmtKeyCPDS(final String sql) {
         super(sql);
