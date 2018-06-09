@@ -85,12 +85,12 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private Map<String, Boolean> perUserDefaultReadOnly;
 
     /**
-     * Map to keep track of Pools for a given user
+     * Map to keep track of Pools for a given user.
      */
     private transient Map<PoolKey, PooledConnectionManager> managers = new HashMap<>();
 
     /**
-     * Default no-arg constructor for Serialization
+     * Default no-arg constructor for Serialization.
      */
     public PerUserPoolDataSource() {
     }
@@ -104,9 +104,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void clear() {
         for (final PooledConnectionManager manager : managers.values()) {
             try {
-              ((CPDSConnectionFactory) manager).getPool().clear();
+                getCPDSConnectionFactoryPool(manager).clear();
             } catch (final Exception closePoolException) {
-                    //ignore and try to close others.
+                // ignore and try to close others.
             }
         }
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
@@ -121,7 +121,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void close() {
         for (final PooledConnectionManager manager : managers.values()) {
             try {
-                ((CPDSConnectionFactory) manager).getPool().close();
+                getCPDSConnectionFactoryPool(manager).close();
             } catch (final Exception closePoolException) {
                 // ignore and try to close others.
             }
@@ -139,6 +139,10 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return managers.get(getPoolKey(upkey.getUsername()));
     }
 
+    private ObjectPool<PooledConnectionAndInfo> getCPDSConnectionFactoryPool(PooledConnectionManager manager) {
+        return ((CPDSConnectionFactory) manager).getPool();
+    }
+
     /**
      * Gets the number of active connections in the default pool.
      * 
@@ -147,7 +151,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public int getNumActive() {
         return getNumActive(null);
     }
-
 
     /**
      * Gets the number of active connections in the pool for a given user.
@@ -170,6 +173,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return getNumIdle(null);
     }
 
+
     /**
      * Gets the number of idle connections in the pool for a given user.
      * 
@@ -181,7 +185,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         final ObjectPool<PooledConnectionAndInfo> pool = getPool(getPoolKey(userName));
         return pool == null ? 0 : pool.getNumIdle();
     }
-
 
     /**
      * Gets the user specific value for {@link GenericObjectPool#getBlockWhenExhausted()} for the specified user's pool
@@ -217,6 +220,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value;
     }
 
+
     /**
      * Gets the user specific default value for {@link Connection#setReadOnly(boolean)} for the specified user's pool.
      * 
@@ -231,7 +235,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value;
     }
-
 
     /**
      * Gets the user specific default value for {@link Connection#setTransactionIsolation(int)} for the specified user's
@@ -268,6 +271,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value;
     }
 
+
     /**
      * Gets the user specific value for {@link GenericObjectPool#getLifo()} for the specified user's pool or the default
      * if no user specific value is defined.
@@ -286,7 +290,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value.booleanValue();
     }
-
 
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMaxIdle()} for the specified user's pool or the
@@ -326,6 +329,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value.intValue();
     }
 
+
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMaxWaitMillis()} for the specified user's pool or
      * the default if no user specific value is defined.
@@ -344,7 +348,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value.longValue();
     }
-
 
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the specified
@@ -384,6 +387,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value.intValue();
     }
 
+
     /**
      * Gets the user specific value for {@link GenericObjectPool#getNumTestsPerEvictionRun()} for the specified user's
      * pool or the default if no user specific value is defined.
@@ -402,7 +406,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value.intValue();
     }
-
 
     /**
      * Gets the user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the specified
@@ -442,6 +445,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value.booleanValue();
     }
 
+
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestOnCreate()} for the specified user's pool or the
      * default if no user specific value is defined.
@@ -460,7 +464,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value.booleanValue();
     }
-
 
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestOnReturn()} for the specified user's pool or the
@@ -500,6 +503,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value.booleanValue();
     }
 
+
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis()} for the specified
      * user's pool or the default if no user specific value is defined.
@@ -518,7 +522,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         return value.longValue();
     }
-
 
     /**
      * Returns the object pool associated with the given PoolKey.
@@ -550,7 +553,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
                     throw new SQLException("RegisterPool failed", e);
                 }
             }
-            pool = ((CPDSConnectionFactory) manager).getPool();
+            pool = getCPDSConnectionFactoryPool(manager);
         }
 
         PooledConnectionAndInfo info = null;
