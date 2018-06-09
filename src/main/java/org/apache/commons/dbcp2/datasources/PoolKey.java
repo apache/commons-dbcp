@@ -25,11 +25,11 @@ import java.io.Serializable;
 class PoolKey implements Serializable {
     private static final long serialVersionUID = 2252771047542484533L;
 
-    private final String datasourceName;
+    private final String dataSourceName;
     private final String username;
 
-    PoolKey(final String datasourceName, final String username) {
-        this.datasourceName = datasourceName;
+    PoolKey(final String dataSourceName, final String username) {
+        this.dataSourceName = dataSourceName;
         this.username = username;
     }
 
@@ -37,7 +37,7 @@ class PoolKey implements Serializable {
     public boolean equals(final Object obj) {
         if (obj instanceof PoolKey) {
             final PoolKey pk = (PoolKey)obj;
-            return (null == datasourceName ? null == pk.datasourceName : datasourceName.equals(pk.datasourceName)) &&
+            return (null == dataSourceName ? null == pk.dataSourceName : dataSourceName.equals(pk.dataSourceName)) &&
                 (null == username ? null == pk.username : username.equals(pk.username));
         }
         return false;
@@ -46,8 +46,8 @@ class PoolKey implements Serializable {
     @Override
     public int hashCode() {
         int h = 0;
-        if (datasourceName != null) {
-            h += datasourceName.hashCode();
+        if (dataSourceName != null) {
+            h += dataSourceName.hashCode();
         }
         if (username != null) {
             h = 29 * h + username.hashCode();
@@ -59,7 +59,7 @@ class PoolKey implements Serializable {
     public String toString() {
         final StringBuffer sb = new StringBuffer(50);
         sb.append("PoolKey(");
-        sb.append(username).append(", ").append(datasourceName);
+        sb.append(username).append(", ").append(dataSourceName);
         sb.append(')');
         return sb.toString();
     }
