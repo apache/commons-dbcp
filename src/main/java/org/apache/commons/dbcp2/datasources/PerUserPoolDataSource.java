@@ -661,8 +661,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
     }
 
-    void setPerUserBlockWhenExhausted(
-            final Map<String,Boolean> userDefaultBlockWhenExhausted) {
+    void setPerUserBlockWhenExhausted(final Map<String, Boolean> userDefaultBlockWhenExhausted) {
         assertInitializationAllowed();
         if (perUserBlockWhenExhausted == null) {
             perUserBlockWhenExhausted = new HashMap<>();
@@ -671,7 +670,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
         perUserBlockWhenExhausted.putAll(userDefaultBlockWhenExhausted);
     }
-
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getBlockWhenExhausted()} for the specified user's pool.
