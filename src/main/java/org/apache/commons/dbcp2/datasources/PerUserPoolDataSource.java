@@ -121,9 +121,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void close() {
         for (final PooledConnectionManager manager : managers.values()) {
             try {
-              ((CPDSConnectionFactory) manager).getPool().close();
+                ((CPDSConnectionFactory) manager).getPool().close();
             } catch (final Exception closePoolException) {
-                    //ignore and try to close others.
+                // ignore and try to close others.
             }
         }
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
