@@ -105,7 +105,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                 }
                 else
                 {
-                    // tomcat jndi creates a Reference out of server.xml
+                    // Tomcat JNDI creates a Reference out of server.xml
                     // <ResourceParam> configuration and passes it to an
                     // instance of the factory given in server.xml.
                     String key = null;
