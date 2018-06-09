@@ -38,34 +38,42 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * actually close the statement, but rather returns it to the pool.
  * (See {@link PoolablePreparedStatement}, {@link PoolableCallableStatement}.)
  *
- *
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
  * @author Dirk Verbeeck
  * @since 2.0
  */
 public class PoolingConnection extends DelegatingConnection<Connection>
-        implements KeyedPooledObjectFactory<PStmtKey,DelegatingPreparedStatement> {
+        implements KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement> {
 
     /**
-     * The possible statement types.
-     * @since 2.0
+     * Statement types.
+     *
+     * @since 2.0 protected enum.
+     * @since 2.4.0  public enum.
      */
-    protected static enum StatementType {
+    public enum StatementType {
+
+        /**
+         * Callable statement.
+         */
         CALLABLE_STATEMENT,
+
+        /**
+         * Prepared statement.
+         */
         PREPARED_STATEMENT
     }
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    private KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> _pstmtPool = null;
-
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> _pstmtPool = null;
 
     /**
      * Constructor.
-     * @param c the underlying {@link Connection}.
+     * @param conn the underlying {@link Connection}.
      */
-    public PoolingConnection(final Connection c) {
-        super(c);
+    public PoolingConnection(final Connection conn) {
+        super(conn);
     }
 
 

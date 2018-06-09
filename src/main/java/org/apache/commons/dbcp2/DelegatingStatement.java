@@ -174,13 +174,23 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
-    protected void activate() throws SQLException {
+    /**
+     *
+     * @throws SQLException
+     * @since 2.4.0 made public, was protected in 2.3.0.
+     */
+    public void activate() throws SQLException {
         if(_stmt instanceof DelegatingStatement) {
             ((DelegatingStatement)_stmt).activate();
         }
     }
 
-    protected void passivate() throws SQLException {
+    /**
+     *
+     * @throws SQLException
+     * @since 2.4.0 made public, was protected in 2.3.0.
+     */
+    public void passivate() throws SQLException {
         if(_stmt instanceof DelegatingStatement) {
             ((DelegatingStatement)_stmt).passivate();
         }

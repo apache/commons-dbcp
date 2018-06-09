@@ -37,7 +37,8 @@ import javax.naming.spi.ObjectFactory;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.PoolablePreparedStatement;
+import org.apache.commons.dbcp2.DelegatingPreparedStatement;
+import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -186,9 +187,7 @@ public class DriverAdapterCPDS
                         getUrl(), username, pass));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        }
-        catch (final ClassCircularityError e)
-        {
+        } catch (final ClassCircularityError e) {
             if (connectionProperties != null) {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
                         getUrl(), connectionProperties));
@@ -198,7 +197,7 @@ public class DriverAdapterCPDS
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         }
-        KeyedObjectPool<PStmtKeyCPDS, PoolablePreparedStatement<PStmtKeyCPDS>> stmtPool = null;
+        KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = null;
         if (isPoolPreparedStatements()) {
             final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);

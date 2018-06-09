@@ -90,9 +90,11 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     /**
      * Activates after retrieval from the pool. Adds a trace for this CallableStatement to the Connection
      * that created it.
+     *
+     * @since 2.4.0 made public, was protected in 2.3.0.
      */
     @Override
-    protected void activate() throws SQLException {
+    public void activate() throws SQLException {
         setClosedInternal(false);
         if (getConnectionInternal() != null) {
             getConnectionInternal().addTrace(this);
@@ -103,9 +105,11 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     /**
      * Passivates to prepare for return to the pool.  Removes the trace associated with this CallableStatement
      * from the Connection that created it.  Also closes any associated ResultSets.
+     *
+     * @since 2.4.0 made public, was protected in 2.3.0.
      */
     @Override
-    protected void passivate() throws SQLException {
+    public void passivate() throws SQLException {
         setClosedInternal(true);
         if (getConnectionInternal() != null) {
             getConnectionInternal().removeTrace(this);

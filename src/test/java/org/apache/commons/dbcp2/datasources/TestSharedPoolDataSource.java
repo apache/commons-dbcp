@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -397,6 +398,22 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
     // when setPoolPreparedStatements(true)
     @Test
+    public void testPoolPrepareCall() throws Exception {
+        pcds.setPoolPreparedStatements(true);
+
+        final Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        final PreparedStatement stmt = conn.prepareCall("{call home()}");
+        assertNotNull(stmt);
+        final ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    @Test
     public void testPoolPrepareStatement() throws Exception {
         pcds.setPoolPreparedStatements(true);
 
@@ -412,6 +429,37 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
     }
 
+    // There are 3 different prepareCall statement methods so add a little
+    // complexity to reduce what would otherwise be lots of copy and paste
+    private static abstract class PrepareCallCallback {
+        protected Connection conn;
+        void setConnection(final Connection conn) {
+            this.conn = conn;
+        }
+        abstract CallableStatement getCallableStatement() throws SQLException;
+    }
+
+    private static class CscbString extends PrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}");
+        }
+    }
+
+    private static class CscbStringIntInt extends PrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}", 0, 0);
+        }
+    }
+
+    private static class CscbStringIntIntInt extends PrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}", 0, 0, 0);
+        }
+    }
+
     // There are 6 different prepareStatement statement methods so add a little
     // complexity to reduce what would otherwise be lots of copy and paste
     private static abstract class PrepareStatementCallback {
@@ -421,49 +469,127 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
         abstract PreparedStatement getPreparedStatement() throws SQLException;
     }
-    
+
     private static class PscbString extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual");
         }
     }
-    
+
     private static class PscbStringIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0, 0);
         }
     }
-    
+
     private static class PscbStringInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0);
         }
     }
-    
+
     private static class PscbStringIntArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", new int[0]);
         }
     }
-    
+
     private static class PscbStringStringArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", new String[0]);
         }
     }
-    
+
     private static class PscbStringIntIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0, 0, 0);
         }
     }
-    
+
+    private void doTestPoolCallableStatements(final PrepareCallCallback callBack)
+    throws Exception {
+        final DriverAdapterCPDS myPcds = new DriverAdapterCPDS();
+        DataSource myDs = null;
+        myPcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
+        myPcds.setUrl("jdbc:apache:commons:testdriver");
+        myPcds.setUser("foo");
+        myPcds.setPassword("bar");
+        myPcds.setPoolPreparedStatements(true);
+        myPcds.setMaxPreparedStatements(10);
+
+        final SharedPoolDataSource spDs = new SharedPoolDataSource();
+        spDs.setConnectionPoolDataSource(myPcds);
+        spDs.setMaxTotal(getMaxTotal());
+        spDs.setDefaultMaxWaitMillis((int) getMaxWaitMillis());
+        spDs.setDefaultTransactionIsolation(
+            Connection.TRANSACTION_READ_COMMITTED);
+
+        myDs = spDs;
+
+        Connection conn = ds.getConnection();
+        callBack.setConnection(conn);
+        CallableStatement stmt = null;
+        ResultSet rset = null;
+
+        assertNotNull(conn);
+
+        stmt = callBack.getCallableStatement();
+        assertNotNull(stmt);
+        final long l1HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = callBack.getCallableStatement();
+        assertNotNull(stmt);
+        final long l2HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        // statement pooling is not enabled, we should get different statements
+        assertTrue(l1HashCode != l2HashCode);
+        conn.close();
+        conn = null;
+
+        conn = myDs.getConnection();
+        callBack.setConnection(conn);
+
+        stmt = callBack.getCallableStatement();
+        assertNotNull(stmt);
+        final long l3HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = callBack.getCallableStatement();
+        assertNotNull(stmt);
+        final long l4HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        // prepared statement pooling is working
+        assertTrue(l3HashCode == l4HashCode);
+        conn.close();
+        conn = null;
+        spDs.close();
+    }
+
     private void doTestPoolPreparedStatements(final PrepareStatementCallback callBack)
     throws Exception {
         final DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
@@ -540,6 +666,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn.close();
         conn = null;
         tds.close();
+    }
+
+    @Test
+    public void testPoolPreparedCalls() throws Exception {
+        doTestPoolCallableStatements(new CscbString());
+        doTestPoolCallableStatements(new CscbStringIntInt());
+        doTestPoolCallableStatements(new CscbStringIntIntInt());
     }
 
     @Test
