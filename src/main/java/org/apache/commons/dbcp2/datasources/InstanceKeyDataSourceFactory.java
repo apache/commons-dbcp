@@ -74,15 +74,13 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      * Close all pools associated with this class.
      */
     public static void closeAll() throws Exception {
-        //Get iterator to loop over all instances of this datasource.
-        final Iterator<Entry<String,InstanceKeyDataSource>> instanceIterator =
-            instanceMap.entrySet().iterator();
+        // Get iterator to loop over all instances of this data source.
+        final Iterator<Entry<String, InstanceKeyDataSource>> instanceIterator = instanceMap.entrySet().iterator();
         while (instanceIterator.hasNext()) {
             instanceIterator.next().getValue().close();
         }
         instanceMap.clear();
     }
-
 
     /**
      * implements ObjectFactory to create an instance of SharedPoolDataSource
@@ -321,6 +319,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                 try {
                     in.close();
                 } catch (final IOException ex) {
+                    // ignore
                 }
             }
         }
