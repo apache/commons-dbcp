@@ -156,8 +156,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Attempt to establish a database connection using the default
-     * user and password.
+     * Attempts to establish a database connection using the default user and password.
      */
     @Override
     public PooledConnection getPooledConnection() throws SQLException {
@@ -166,8 +165,11 @@ public class DriverAdapterCPDS
 
     /**
      * Attempt to establish a database connection.
-     * @param username name to be used for the connection
-     * @param pass password to be used fur the connection
+     * 
+     * @param username
+     *            name to be used for the connection
+     * @param pass
+     *            password to be used fur the connection
      */
     @Override
     public PooledConnection getPooledConnection(final String username, final String pass)
@@ -355,8 +357,7 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Throws an IllegalStateException, if a PooledConnection has already
-     * been requested.
+     * Throws an IllegalStateException, if a PooledConnection has already been requested.
      */
     private void assertInitializationAllowed() throws IllegalStateException {
         if (getConnectionCalled) {
@@ -377,19 +378,23 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * <p>Sets the connection properties passed to the JDBC driver.</p>
+     * <p>
+     * Sets the connection properties passed to the JDBC driver.
+     * </p>
      *
-     * <p>If <code>props</code> contains "user" and/or "password"
-     * properties, the corresponding instance properties are set. If these
-     * properties are not present, they are filled in using
-     * {@link #getUser()}, {@link #getPassword()} when {@link #getPooledConnection()}
-     * is called, or using the actual parameters to the method call when
-     * {@link #getPooledConnection(String, String)} is called. Calls to
-     * {@link #setUser(String)} or {@link #setPassword(String)} overwrite the values
-     * of these properties if <code>connectionProperties</code> is not null.</p>
+     * <p>
+     * If <code>props</code> contains "user" and/or "password" properties, the corresponding instance properties are
+     * set. If these properties are not present, they are filled in using {@link #getUser()}, {@link #getPassword()}
+     * when {@link #getPooledConnection()} is called, or using the actual parameters to the method call when
+     * {@link #getPooledConnection(String, String)} is called. Calls to {@link #setUser(String)} or
+     * {@link #setPassword(String)} overwrite the values of these properties if <code>connectionProperties</code> is not
+     * null.
+     * </p>
      *
-     * @param props Connection properties to use when creating new connections.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @param props
+     *            Connection properties to use when creating new connections.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setConnectionProperties(final Properties props) {
         assertInitializationAllowed();
@@ -405,9 +410,8 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the value of description.  This property is here for use by
-     * the code which will deploy this datasource.  It is not used
-     * internally.
+     * Gets the value of description. This property is here for use by the code which will deploy this datasource. It is
+     * not used internally.
      *
      * @return value of description, may be null.
      * @see #setDescription(String)
@@ -417,11 +421,11 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the value of description.  This property is here for use by
-     * the code which will deploy this datasource.  It is not used
-     * internally.
+     * Sets the value of description. This property is here for use by the code which will deploy this datasource. It is
+     * not used internally.
      *
-     * @param v  Value to assign to description.
+     * @param v
+     *            Value to assign to description.
      */
     public void setDescription(final String  v) {
         this.description = v;
@@ -429,6 +433,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of password for the default user.
+     * 
      * @return value of password.
      */
     public String getPassword() {
@@ -437,8 +442,11 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of password for the default user.
-     * @param v  Value to assign to password.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * 
+     * @param v
+     *            Value to assign to password.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setPassword(final String v) {
         assertInitializationAllowed();
@@ -448,6 +456,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of url used to locate the database for this datasource.
+     * 
      * @return value of url.
      */
     public String getUrl() {
@@ -456,9 +465,12 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of URL string used to locate the database for this datasource.
-     * @param v  Value to assign to url.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
-    */
+     * 
+     * @param v
+     *            Value to assign to url.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
+     */
     public void setUrl(final String v) {
         assertInitializationAllowed();
         this.url = v;
@@ -466,6 +478,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of default user (login or username).
+     * 
      * @return value of user.
      */
     public String getUser() {
@@ -474,8 +487,11 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of default user (login or username).
-     * @param v  Value to assign to user.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * 
+     * @param v
+     *            Value to assign to user.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setUser(final String v) {
         assertInitializationAllowed();
@@ -484,7 +500,8 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the driver classname.
+     * Gets the driver class name.
+     * 
      * @return value of driver.
      */
     public String getDriver() {
@@ -492,11 +509,15 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the driver classname.  Setting the driver classname cause the
-     * driver to be registered with the DriverManager.
-     * @param v  Value to assign to driver.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
-     * @throws ClassNotFoundException if the class cannot be located
+     * Sets the driver class name. Setting the driver class name cause the driver to be registered with the
+     * DriverManager.
+     * 
+     * @param v
+     *            Value to assign to driver.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
+     * @throws ClassNotFoundException
+     *             if the class cannot be located
      */
     public void setDriver(final String v) throws ClassNotFoundException {
         assertInitializationAllowed();
@@ -506,8 +527,8 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the maximum time in seconds that this data source can wait
-     * while attempting to connect to a database. NOT USED.
+     * Gets the maximum time in seconds that this data source can wait while attempting to connect to a database. NOT
+     * USED.
      */
     @Override
     public int getLoginTimeout() {
@@ -523,8 +544,8 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the maximum time in seconds that this data source will wait
-     * while attempting to connect to a database. NOT USED.
+     * Sets the maximum time in seconds that this data source will wait while attempting to connect to a database. NOT
+     * USED.
      */
     @Override
     public void setLoginTimeout(final int seconds) {
@@ -546,6 +567,7 @@ public class DriverAdapterCPDS
 
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
+     * 
      * @return value of poolPreparedStatements.
      */
     public boolean isPoolPreparedStatements() {
@@ -554,8 +576,11 @@ public class DriverAdapterCPDS
 
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
-     * @param v  true to pool statements.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * 
+     * @param v
+     *            true to pool statements.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setPoolPreparedStatements(final boolean v) {
         assertInitializationAllowed();
@@ -563,8 +588,9 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the maximum number of statements that can remain idle in the
-     * pool, without extra ones being released, or negative for no limit.
+     * Gets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
+     * negative for no limit.
+     * 
      * @return the value of maxIdle
      */
     public int getMaxIdle() {
@@ -572,11 +598,13 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the maximum number of statements that can remain idle in the
-     * pool, without extra ones being released, or negative for no limit.
+     * Gets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
+     * negative for no limit.
      *
-     * @param maxIdle The maximum number of statements that can remain idle
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @param maxIdle
+     *            The maximum number of statements that can remain idle
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setMaxIdle(final int maxIdle) {
         assertInitializationAllowed();
@@ -584,10 +612,9 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the number of milliseconds to sleep between runs of the
-     * idle object evictor thread.
-     * When non-positive, no idle object evictor thread will be
-     * run.
+     * Gets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     * 
      * @return the value of the evictor thread timer
      * @see #setTimeBetweenEvictionRunsMillis(long)
      */
@@ -613,11 +640,10 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the number of statements to examine during each run of the
-     * idle object evictor thread (if any.)
+     * Gets the number of statements to examine during each run of the idle object evictor thread (if any.)
      *
-     * *see #setNumTestsPerEvictionRun
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setNumTestsPerEvictionRun
+     * @see #setTimeBetweenEvictionRunsMillis
      * @return the number of statements to examine during each run of the idle object evictor thread (if any.)
      */
     public int getNumTestsPerEvictionRun() {
@@ -625,17 +651,19 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the number of statements to examine during each run of the
-     * idle object evictor thread (if any).
+     * Sets the number of statements to examine during each run of the idle object evictor thread (if any).
      * <p>
-     * When a negative value is supplied, <tt>ceil({*link #numIdle})/abs({*link #getNumTestsPerEvictionRun})</tt>
-     * tests will be run.  I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the
-     * idle objects will be tested per run.
+     * When a negative value is supplied, <tt>ceil({*link #numIdle})/abs({*link #getNumTestsPerEvictionRun})</tt> tests
+     * will be run. I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the idle objects will be tested per
+     * run.
+     * </p>
      *
-     * @param numTestsPerEvictionRun number of statements to examine per run
+     * @param numTestsPerEvictionRun
+     *            number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
      * @see #setTimeBetweenEvictionRunsMillis(long)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         assertInitializationAllowed();
@@ -643,12 +671,11 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the minimum amount of time a statement may sit idle in the pool
-     * before it is eligible for eviction by the idle object evictor
-     * (if any).
+     * Gets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
+     * idle object evictor (if any).
      *
-     * *see #setMinEvictableIdleTimeMillis
-     * *see #setTimeBetweenEvictionRunsMillis
+     * @see #setMinEvictableIdleTimeMillis
+     * @see #setTimeBetweenEvictionRunsMillis
      * @return the minimum amount of time a statement may sit idle in the pool.
      */
     public int getMinEvictableIdleTimeMillis() {
@@ -656,15 +683,15 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the minimum amount of time a statement may sit idle in the pool
-     * before it is eligible for eviction by the idle object evictor
-     * (if any).
-     * When non-positive, no objects will be evicted from the pool
-     * due to idle time alone.
-     * @param minEvictableIdleTimeMillis minimum time to set (in ms)
+     * Sets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
+     * idle object evictor (if any). When non-positive, no objects will be evicted from the pool due to idle time alone.
+     * 
+     * @param minEvictableIdleTimeMillis
+     *            minimum time to set (in ms)
      * @see #getMinEvictableIdleTimeMillis()
      * @see #setTimeBetweenEvictionRunsMillis(long)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
      */
     public void setMinEvictableIdleTimeMillis(final int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
@@ -681,11 +708,11 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Sets the value of the accessToUnderlyingConnectionAllowed property.
-     * It controls if the PoolGuard allows access to the underlying connection.
-     * (Default: false)
+     * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to
+     * the underlying connection. (Default: false)
      *
-     * @param allow Access to the underlying connection is granted when true.
+     * @param allow
+     *            Access to the underlying connection is granted when true.
      */
     public synchronized void setAccessToUnderlyingConnectionAllowed(final boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
@@ -703,8 +730,9 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the maximum number of prepared statements.
-     * @param maxPreparedStatements the new maximum number of prepared
-     * statements
+     * 
+     * @param maxPreparedStatements
+     *            the new maximum number of prepared statements
      */
     public void setMaxPreparedStatements(final int maxPreparedStatements)
     {

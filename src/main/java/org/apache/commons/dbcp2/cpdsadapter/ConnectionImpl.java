@@ -27,17 +27,14 @@ import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 
 /**
- * This class is the <code>Connection</code> that will be returned
- * from <code>PooledConnectionImpl.getConnection()</code>.
- * Most methods are wrappers around the JDBC 1.x <code>Connection</code>.
- * A few exceptions include preparedStatement and close.
- * In accordance with the JDBC specification this Connection cannot
- * be used after closed() is called.  Any further usage will result in an
+ * This class is the <code>Connection</code> that will be returned from
+ * <code>PooledConnectionImpl.getConnection()</code>. Most methods are wrappers around the JDBC 1.x
+ * <code>Connection</code>. A few exceptions include preparedStatement and close. In accordance with the JDBC
+ * specification this Connection cannot be used after closed() is called. Any further usage will result in an
  * SQLException.
- *
- * ConnectionImpl extends DelegatingConnection to enable access to the
- * underlying connection.
- *
+ * <p>
+ * ConnectionImpl extends DelegatingConnection to enable access to the underlying connection.
+ * </p>
  * @author John D. McNally
  * @since 2.0
  */
@@ -65,13 +62,14 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * Marks the Connection as closed, and notifies the pool that the
-     * pooled connection is available.
-     * In accordance with the JDBC specification this Connection cannot
-     * be used after closed() is called.  Any further usage will result in an
-     * SQLException.
+     * Marks the Connection as closed, and notifies the pool that the pooled connection is available.
+     * <p>
+     * In accordance with the JDBC specification this Connection cannot be used after closed() is called. Any further
+     * usage will result in an SQLException.
+     * </p>
      *
-     * @throws SQLException The database connection couldn't be closed.
+     * @throws SQLException
+     *             The database connection couldn't be closed.
      */
     @Override
     public void close() throws SQLException {
@@ -177,14 +175,14 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * If pooling of <code>PreparedStatement</code>s is turned on in the
-     * {@link DriverAdapterCPDS}, a pooled object may be returned, otherwise
-     * delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
+     * If pooling of <code>PreparedStatement</code>s is turned on in the {@link DriverAdapterCPDS}, a pooled object may
+     * be returned, otherwise delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
      *
-     * @param sql SQL statement to be prepared
+     * @param sql
+     *            SQL statement to be prepared
      * @return the prepared statement
-     * @throws SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
+     * @throws SQLException
+     *             if this connection is closed or an error occurs in the wrapped connection.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
@@ -200,12 +198,11 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * If pooling of <code>PreparedStatement</code>s is turned on in the
-     * {@link DriverAdapterCPDS}, a pooled object may be returned, otherwise
-     * delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
+     * If pooling of <code>PreparedStatement</code>s is turned on in the {@link DriverAdapterCPDS}, a pooled object may
+     * be returned, otherwise delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
      *
-     * @throws SQLException if this connection is closed or an error occurs
-     * in the wrapped connection.
+     * @throws SQLException
+     *             if this connection is closed or an error occurs in the wrapped connection.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType,
@@ -288,6 +285,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
+     * 
      * @return true if access is allowed to the underlying connection
      * @see ConnectionImpl
      */
@@ -297,6 +295,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Get the delegated connection, if allowed.
+     * 
      * @return the internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */
@@ -310,6 +309,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Get the innermost connection, if allowed.
+     * 
      * @return the innermost internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */
