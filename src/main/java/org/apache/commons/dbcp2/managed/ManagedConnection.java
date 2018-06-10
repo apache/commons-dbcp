@@ -26,20 +26,21 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * ManagedConnection is responsible for managing a database connection in a transactional environment
- * (typically called "Container Managed").  A managed connection operates like any other connection
- * when no global transaction (a.k.a. XA transaction or JTA Transaction) is in progress.  When a
- * global transaction is active a single physical connection to the database is used by all
- * ManagedConnections accessed in the scope of the transaction.  Connection sharing means that all
- * data access during a transaction has a consistent view of the database.  When the global transaction
- * is committed or rolled back the enlisted connections are committed or rolled back.  Typically upon
- * transaction completion, a connection returns to the auto commit setting in effect before being
- * enlisted in the transaction, but some vendors do not properly implement this.
+ * ManagedConnection is responsible for managing a database connection in a transactional environment (typically called
+ * "Container Managed"). A managed connection operates like any other connection when no global transaction (a.k.a. XA
+ * transaction or JTA Transaction) is in progress. When a global transaction is active a single physical connection to
+ * the database is used by all ManagedConnections accessed in the scope of the transaction. Connection sharing means
+ * that all data access during a transaction has a consistent view of the database. When the global transaction is
+ * committed or rolled back the enlisted connections are committed or rolled back. Typically upon transaction
+ * completion, a connection returns to the auto commit setting in effect before being enlisted in the transaction, but
+ * some vendors do not properly implement this.
+ * <p>
+ * When enlisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods throw a
+ * SQLException. This is necessary to assure that the transaction completes as a single unit.
+ * </p>
  *
- * When enlisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods
- * throw a SQLException.  This is necessary to assure that the transaction completes as a single unit.
- *
- * @param <C> the Connection type
+ * @param <C>
+ *            the Connection type
  *
  * @author Dain Sundstrom
  * @since 2.0
