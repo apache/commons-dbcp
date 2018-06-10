@@ -71,14 +71,14 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
         Collections.<String, ClientInfoStatus>emptyMap();
 
     /** My delegate {@link Connection}. */
-    private volatile C _conn = null;
+    private volatile C _conn;
 
-    private volatile boolean _closed = false;
+    private volatile boolean _closed;
 
     private boolean _cacheState = true;
-    private Boolean _autoCommitCached = null;
-    private Boolean _readOnlyCached = null;
-    private Integer defaultQueryTimeout = null;
+    private Boolean _autoCommitCached;
+    private Boolean _readOnlyCached;
+    private Integer defaultQueryTimeoutSeconds;
 
     /**
      * Create a wrapper for the Connection which traces this
@@ -247,9 +247,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     }
 
     private void initializeStatement(final DelegatingStatement ds) throws SQLException {
-        if (defaultQueryTimeout != null &&
-                defaultQueryTimeout.intValue() != ds.getQueryTimeout()) {
-            ds.setQueryTimeout(defaultQueryTimeout.intValue());
+        if (defaultQueryTimeoutSeconds != null &&
+                defaultQueryTimeoutSeconds.intValue() != ds.getQueryTimeout()) {
+            ds.setQueryTimeout(defaultQueryTimeoutSeconds.intValue());
         }
     }
 
@@ -496,22 +496,25 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
 
     /**
-     * Obtain the default query timeout that will be used for {@link Statement}s
-     * created from this connection. <code>null</code> means that the driver
-     * default will be used.
+     * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     * 
+     * @return query timeout limit in seconds; zero means there is no limit
      */
     public Integer getDefaultQueryTimeout() {
-        return defaultQueryTimeout;
+        return defaultQueryTimeoutSeconds;
     }
 
 
     /**
-     * Set the default query timeout that will be used for {@link Statement}s
-     * created from this connection. <code>null</code> means that the driver
-     * default will be used.
+     * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     * 
+     * @param defaultQueryTimeoutSeconds
+     *            the new query timeout limit in seconds; zero means there is no limit
      */
-    public void setDefaultQueryTimeout(final Integer defaultQueryTimeout) {
-        this.defaultQueryTimeout = defaultQueryTimeout;
+    public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
+        this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
     }
 
 

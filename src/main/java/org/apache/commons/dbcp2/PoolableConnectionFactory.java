@@ -195,11 +195,11 @@ public class PoolableConnectionFactory
     }
 
     public Integer getDefaultQueryTimeout() {
-        return defaultQueryTimeout;
+        return defaultQueryTimeoutSeconds;
     }
 
-    public void setDefaultQueryTimeout(final Integer defaultQueryTimeout) {
-        this.defaultQueryTimeout = defaultQueryTimeout;
+    public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
+        this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
     }
 
     /**
@@ -418,7 +418,7 @@ public class PoolableConnectionFactory
                 !_defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(_defaultCatalog);
         }
-        conn.setDefaultQueryTimeout(defaultQueryTimeout);
+        conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }
 
     private void validateLifetime(final PooledObject<PoolableConnection> p)
@@ -478,7 +478,7 @@ public class PoolableConnectionFactory
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
     private final AtomicLong connectionIndex = new AtomicLong(0);
-    private Integer defaultQueryTimeout = null;
+    private Integer defaultQueryTimeoutSeconds;
 
     /**
      * Internal constant to indicate the level is not set.
