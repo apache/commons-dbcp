@@ -1011,7 +1011,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
     }
 
-    protected ConnectionPoolDataSource testCPDS(final String userName, final String password)
+    protected ConnectionPoolDataSource testCPDS(final String userName, final String userPassword)
             throws javax.naming.NamingException, SQLException {
         // The source of physical db connections
         ConnectionPoolDataSource cpds = this.dataSource;
@@ -1035,7 +1035,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         PooledConnection conn = null;
         try {
             if (userName != null) {
-                conn = cpds.getPooledConnection(userName, password);
+                conn = cpds.getPooledConnection(userName, userPassword);
             } else {
                 conn = cpds.getPooledConnection();
             }
