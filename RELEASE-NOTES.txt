@@ -1,8 +1,8 @@
               Apache Apache Commons DBCP
-                  Version 2.3.0
-                 RELEASE NOTES
+                  Version 2.4.0
+                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.3.0-SNAPSHOT.
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.4.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -10,6 +10,36 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
+Fixed Bugs:
+o DBCP-484:  Connection leak during XATransaction in high load. Thanks to Emanuel Freitas.
+o DBCP-496:  Add support for pooling CallableStatements to the org.apache.commons.dbcp2.cpdsadapter package. Thanks to Gary Gregory.
+
+Changes:
+o DBCP-492:  Drop Ant build. Thanks to Gary Gregory.
+o DBCP-491:  Ensure DBCP ConnectionListener can deal with transaction managers which invoke rollback in a separate thread. Thanks to Zheng Feng, Gary Gregory.
+o DBCP-494:  org.apache.commons.dbcp2.PStmtKey should make copies of given arrays in constructors. Thanks to Gary Gregory.
+o DBCP-495:  Remove duplicate code in org.apache.commons.dbcp2.cpdsadapter.PStmtKeyCPDS. Thanks to Gary Gregory.
+o DBCP-497:  Deprecate use of PStmtKeyCPDS in favor of PStmtKey. Thanks to Gary Gregory.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+http://commons.apache.org/dbcp/
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
+                  Version 2.3.0
+                  RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.3.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
 
 Fixed Bugs:
 o DBCP-476:  AbandonedTrace.getTrace() contains race condition Thanks to Gary Evesson, Richard Cordova.
@@ -32,7 +62,7 @@ http://commons.apache.org/dbcp/
 
               Apache Apache Commons DBCP
                   Version 2.2.0
-                 RELEASE NOTES
+                  RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.2.0.
 
@@ -94,7 +124,7 @@ http://commons.apache.org/dbcp/
 
               Apache Apache Commons DBCP
                   Version 2.1.1
-                 RELEASE NOTES
+                  RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
 
@@ -103,7 +133,6 @@ Apache Commons DBCP software implements Database Connection Pooling.
 This is a patch release, including bug fixes only.
 
 Changes in this version include:
-
 
 Fixed Bugs:
 o DBCP-441:  Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
