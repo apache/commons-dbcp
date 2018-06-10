@@ -125,13 +125,13 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     // Inherited abstract methods
 
     @Override
-    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password)
+    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String userPassword)
             throws SQLException {
 
         synchronized (this) {
             if (pool == null) {
                 try {
-                    registerPool(userName, password);
+                    registerPool(userName, userPassword);
                 } catch (final NamingException e) {
                     throw new SQLException("RegisterPool failed", e);
                 }
@@ -140,7 +140,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
         PooledConnectionAndInfo info = null;
 
-        final UserPassKey key = new UserPassKey(userName, password);
+        final UserPassKey key = new UserPassKey(userName, userPassword);
 
         try {
             info = pool.borrowObject(key);
