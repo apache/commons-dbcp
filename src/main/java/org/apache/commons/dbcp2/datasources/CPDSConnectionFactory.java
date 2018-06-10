@@ -51,13 +51,13 @@ class CPDSConnectionFactory
             = "close() was called on a Connection, but "
             + "I have no record of the underlying PooledConnection.";
 
-    private final ConnectionPoolDataSource _cpds;
-    private final String _validationQuery;
-    private final int _validationQueryTimeout;
-    private final boolean _rollbackAfterValidation;
-    private ObjectPool<PooledConnectionAndInfo> _pool;
-    private final String _userName;
-    private String _password = null;
+    private final ConnectionPoolDataSource cpds;
+    private final String validationQuery;
+    private final int validationQueryTimeout;
+    private final boolean rollbackAfterValidation;
+    private ObjectPool<PooledConnectionAndInfo> pool;
+    private final String userName;
+    private String password = null;
     private long maxConnLifetimeMillis = -1;
 
 
@@ -95,12 +95,12 @@ class CPDSConnectionFactory
                                  final boolean rollbackAfterValidation,
                                  final String userName,
                                  final String password) {
-        _cpds = cpds;
-        _validationQuery = validationQuery;
-        _validationQueryTimeout = validationQueryTimeout;
-        _userName = userName;
-        _password = password;
-        _rollbackAfterValidation = rollbackAfterValidation;
+        this.cpds = cpds;
+        this.validationQuery = validationQuery;
+        this.validationQueryTimeout = validationQueryTimeout;
+        this.userName = userName;
+        this.password = password;
+        this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
     /**
@@ -109,7 +109,7 @@ class CPDSConnectionFactory
      * @return ObjectPool managing pooled connections
      */
     public ObjectPool<PooledConnectionAndInfo> getPool() {
-        return _pool;
+        return pool;
     }
 
     /**
@@ -118,7 +118,7 @@ class CPDSConnectionFactory
      * Connection}s
      */
     public void setPool(final ObjectPool<PooledConnectionAndInfo> pool) {
-        this._pool = pool;
+        this.pool = pool;
     }
 
     @Override
@@ -126,10 +126,10 @@ class CPDSConnectionFactory
         PooledConnectionAndInfo pci;
         try {
             PooledConnection pc = null;
-            if (_userName == null) {
-                pc = _cpds.getPooledConnection();
+            if (userName == null) {
+                pc = cpds.getPooledConnection();
             } else {
-                pc = _cpds.getPooledConnection(_userName, _password);
+                pc = cpds.getPooledConnection(userName, password);
             }
 
             if (pc == null) {
@@ -139,7 +139,7 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, _userName, _password);
+            pci = new PooledConnectionAndInfo(pc, userName, password);
             pcMap.put(pc, pci);
         } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -173,8 +173,8 @@ class CPDSConnectionFactory
         final PooledConnection pconn = p.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pconn);
-        if (null == _validationQuery) {
-            int timeout = _validationQueryTimeout;
+        if (null == validationQuery) {
+            int timeout = validationQueryTimeout;
             if (timeout < 0) {
                 timeout = 0;
             }
@@ -198,13 +198,13 @@ class CPDSConnectionFactory
             try {
                 conn = pconn.getConnection();
                 stmt = conn.createStatement();
-                rset = stmt.executeQuery(_validationQuery);
+                rset = stmt.executeQuery(validationQuery);
                 if (rset.next()) {
                     valid = true;
                 } else {
                     valid = false;
                 }
-                if (_rollbackAfterValidation) {
+                if (rollbackAfterValidation) {
                     conn.rollback();
                 }
             } catch (final Exception e) {
@@ -253,7 +253,7 @@ class CPDSConnectionFactory
             }
 
             try {
-                _pool.returnObject(pci);
+                pool.returnObject(pci);
             } catch (final Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD "
                         + "NOT BE RETURNED TO THE POOL");
@@ -288,7 +288,7 @@ class CPDSConnectionFactory
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
-            _pool.invalidateObject(pci);
+            pool.invalidateObject(pci);
         } catch (final Exception e) {
             System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + pci);
             e.printStackTrace();
@@ -312,8 +312,8 @@ class CPDSConnectionFactory
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
-            _pool.invalidateObject(pci);  // Destroy instance and update pool counters
-            _pool.close();  // Clear any other instances in this pool and kill others as they come back
+            pool.invalidateObject(pci);  // Destroy instance and update pool counters
+            pool.close();  // Clear any other instances in this pool and kill others as they come back
         } catch (final Exception ex) {
             throw new SQLException("Error invalidating connection", ex);
         }
@@ -326,7 +326,7 @@ class CPDSConnectionFactory
      */
     @Override
     public synchronized void setPassword(final String password) {
-        _password = password;
+        this.password = password;
     }
 
     /**
@@ -347,12 +347,12 @@ class CPDSConnectionFactory
     @Override
     public void closePool(final String userName) throws SQLException {
         synchronized (this) {
-            if (userName == null || !userName.equals(_userName)) {
+            if (userName == null || !userName.equals(this.userName)) {
                 return;
             }
         }
         try {
-            _pool.close();
+            pool.close();
         } catch (final Exception ex) {
             throw new SQLException("Error closing connection pool", ex);
         }
