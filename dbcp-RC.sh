@@ -27,7 +27,7 @@
 #
 # -----------------------------------------------------------------------------
 # Set script variables
-version=2.3.0
+version=2.4.0
 repo_path=~/.m2/repository/org/apache/commons/commons-dbcp2/${version}
 release_path=~/dbcp-rc  #checkout of https://dist.apache.org/repos/dist/dev/commons/dbcp
 #
