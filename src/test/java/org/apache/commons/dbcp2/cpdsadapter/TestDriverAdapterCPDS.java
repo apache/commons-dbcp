@@ -188,7 +188,7 @@ public class TestDriverAdapterCPDS {
     public void testSetPasswordNull() throws Exception {
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
-        pcds.setPassword(null);
+        pcds.setPassword((char[]) null);
         assertEquals(null, pcds.getPassword());
     }
 
@@ -197,7 +197,7 @@ public class TestDriverAdapterCPDS {
         pcds.setConnectionProperties(new Properties());
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
-        pcds.setPassword(null);
+        pcds.setPassword((char[]) null);
         assertEquals(null, pcds.getPassword());
     }
 

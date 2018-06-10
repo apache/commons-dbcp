@@ -39,6 +39,7 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.commons.dbcp2.PStmtKey;
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -108,14 +109,14 @@ public class DriverAdapterCPDS
     /** Description */
     private String description;
     
-    /** Password */
-    private String password;
-    
     /** Url name */
     private String url;
     
     /** User name */
     private String userName;
+
+    /** User password */
+    private char[] userPassword;
     
     /** Driver class name */
     private String driver;
@@ -168,13 +169,13 @@ public class DriverAdapterCPDS
     /**
      * Attempt to establish a database connection.
      * 
-     * @param userName
+     * @param pooledUserName
      *            name to be used for the connection
-     * @param pass
+     * @param pooledUserPassword
      *            password to be used fur the connection
      */
     @Override
-    public PooledConnection getPooledConnection(final String userName, final String pass)
+    public PooledConnection getPooledConnection(final String pooledUserName, final String pooledUserPassword)
             throws SQLException {
         getConnectionCalled = true;
         PooledConnectionImpl pci = null;
@@ -182,13 +183,13 @@ public class DriverAdapterCPDS
         // exception upon first invocation.
         try {
             if (connectionProperties != null) {
-                update(connectionProperties, KEY_USER, userName);
-                update(connectionProperties, KEY_PASSWORD, pass);
+                update(connectionProperties, KEY_USER, pooledUserName);
+                update(connectionProperties, KEY_PASSWORD, pooledUserPassword);
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
                         getUrl(), connectionProperties));
             } else {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
-                        getUrl(), userName, pass));
+                        getUrl(), pooledUserName, pooledUserPassword));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         } catch (final ClassCircularityError e) {
@@ -197,7 +198,7 @@ public class DriverAdapterCPDS
                         getUrl(), connectionProperties));
             } else {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
-                        getUrl(), userName, pass));
+                        getUrl(), pooledUserName, pooledUserPassword));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         }
@@ -437,23 +438,47 @@ public class DriverAdapterCPDS
      * Gets the value of password for the default user.
      * 
      * @return value of password.
+     * @since 2.4.0
+     */
+    public char[] getPasswordCharArray() {
+        return userPassword;
+    }
+
+    /**
+     * Gets the value of password for the default user.
+     * 
+     * @return value of password.
      */
     public String getPassword() {
-        return password;
+        return Utils.toString(userPassword);
     }
 
     /**
      * Sets the value of password for the default user.
      * 
-     * @param v
+     * @param userPassword
      *            Value to assign to password.
      * @throws IllegalStateException
      *             if {@link #getPooledConnection()} has been called
      */
-    public void setPassword(final String v) {
+    public void setPassword(final char[] userPassword) {
         assertInitializationAllowed();
-        this.password = v;
-        update(connectionProperties, KEY_PASSWORD, v);
+        this.userPassword = userPassword;
+        update(connectionProperties, KEY_PASSWORD, Utils.toString(userPassword));
+    }
+
+    /**
+     * Sets the value of password for the default user.
+     * 
+     * @param userPassword
+     *            Value to assign to password.
+     * @throws IllegalStateException
+     *             if {@link #getPooledConnection()} has been called
+     */
+    public void setPassword(final String userPassword) {
+        assertInitializationAllowed();
+        this.userPassword = Utils.toCharArray(userPassword);
+        update(connectionProperties, KEY_PASSWORD, userPassword);
     }
 
     /**

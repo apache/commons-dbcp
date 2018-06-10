@@ -83,10 +83,13 @@ The <action> type attribute can be add,update,fix,remove.
         Deprecate use of PStmtKeyCPDS in favor of PStmtKey.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-498" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.DataSourceConnectionFactory should use a char[] instead of a String to save passwords.
+        org.apache.commons.dbcp2.DataSourceConnectionFactory should use a char[] instead of a String to store passwords.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-499" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory should use a char[] instead of a String to save passwords.
+        org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-500" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS should use a char[] instead of a String to store passwords.
       </action>
     </release>
     <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
