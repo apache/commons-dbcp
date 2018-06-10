@@ -258,12 +258,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/dbcp/</commons.distSvnStagingUrl>
-    <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.componentid>dbcp2</commons.componentid>
+    <commons.componentid>dbcp</commons.componentid>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
-    <commons.release.version>2.3.0</commons.release.version>
+    <commons.release.version>2.4.0</commons.release.version>
     <commons.release.desc>for JDBC 4.1 (Java 7.0+)</commons.release.desc>
     <commons.release.2.version>1.4</commons.release.2.version>
     <commons.release.2.desc>for JDBC 4 (Java 6.0)</commons.release.2.desc>
@@ -285,6 +283,12 @@
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.3.0</commons.bc.version>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
+    <commons.releaseManagerKey>2DB4F1EF0FA761ECC4EA935C86FDC7E2A11262CB</commons.releaseManagerKey>    
   </properties>
 
   <build>

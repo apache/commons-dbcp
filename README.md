@@ -43,23 +43,23 @@
 Apache Commons DBCP
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-dbcp2.svg)](https://travis-ci.org/apache/commons-dbcp2)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp2/badge.svg)](https://coveralls.io/r/apache/commons-dbcp2)
+[![Build Status](https://travis-ci.org/apache/commons-dbcp.svg)](https://travis-ci.org/apache/commons-dbcp)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp/badge.svg)](https://coveralls.io/r/apache/commons-dbcp)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.3.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.3.0)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.4.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.4.0)
 
-Apache Commons DBCP software implements Database Connection Pooling
+${project.description}
 
 Documentation
 -------------
 
-More information can be found on the [Apache Commons DBCP homepage](https://commons.apache.org/proper/commons-dbcp2).
-The [Javadoc](https://commons.apache.org/proper/commons-dbcp2/javadocs/api-release) can be browsed.
+More information can be found on the [Apache Commons DBCP homepage](https://commons.apache.org/proper/commons-dbcp).
+The [Javadoc](https://commons.apache.org/proper/commons-dbcp/javadocs/api-release) can be browsed.
 Questions related to the usage of Apache Commons DBCP should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
 -----------------------------------
-You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-dbcp2/download_dbcp2.cgi).
+You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi).
 
 Alternatively you can pull it from the central Maven repositories:
 
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.3.0</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
