@@ -925,9 +925,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             throw new SQLException("Cannot borrow connection from pool", e);
         }
 
-        if (!(null == password ? null == info.getPassword() : password.equals(info.getPassword()))) { // Password on
-                                                                                                      // PooledConnectionAndInfo
-                                                                                                      // does not match
+        // Password on PooledConnectionAndInfo does not match
+        if (!(null == password ? null == info.getPassword() : password.equals(info.getPassword()))) { 
             try { // See if password has changed by attempting connection
                 testCPDS(userName, password);
             } catch (final SQLException ex) {
@@ -944,9 +943,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
              */
             final UserPassKey upkey = info.getUserPassKey();
             final PooledConnectionManager manager = getConnectionManager(upkey);
-            manager.invalidate(info.getPooledConnection()); // Destroy and remove from pool
-            manager.setPassword(upkey.getPassword()); // Reset the password on the factory if using
-                                                      // CPDSConnectionFactory
+            // Destroy and remove from pool
+            manager.invalidate(info.getPooledConnection());
+            // Reset the password on the factory if using CPDSConnectionFactory
+            manager.setPassword(upkey.getPassword());
             info = null;
             for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return
                 try {
