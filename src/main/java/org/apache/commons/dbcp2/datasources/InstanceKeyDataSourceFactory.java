@@ -41,8 +41,7 @@ import javax.naming.spi.ObjectFactory;
  */
 abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
-    private static final Map<String, InstanceKeyDataSource> instanceMap =
-            new ConcurrentHashMap<>();
+    private static final Map<String, InstanceKeyDataSource> instanceMap = new ConcurrentHashMap<>();
 
     static synchronized String registerNewInstance(final InstanceKeyDataSource ds) {
         int max = 0;
@@ -58,8 +57,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             }
         }
         final String instanceKey = String.valueOf(max + 1);
-        // put a placeholder here for now, so other instances will not
-        // take our key.  we will replace with a pool when ready.
+        // Put a placeholder here for now, so other instances will not
+        // take our key. We will replace with a pool when ready.
         instanceMap.put(instanceKey, ds);
         return instanceKey;
     }
@@ -83,13 +82,11 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Implements ObjectFactory to create an instance of SharedPoolDataSource
-     * or PerUserPoolDataSource
+     * Implements ObjectFactory to create an instance of SharedPoolDataSource or PerUserPoolDataSource
      */
     @Override
-    public Object getObjectInstance(final Object refObj, final Name name,
-                                    final Context context, final Hashtable<?,?> env)
-        throws IOException, ClassNotFoundException {
+    public Object getObjectInstance(final Object refObj, final Name name, final Context context,
+            final Hashtable<?, ?> env) throws IOException, ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
         Object obj = null;
@@ -100,25 +97,20 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                 if (ra != null && ra.getContent() != null) {
                     // object was bound to jndi via Referenceable api.
                     obj = instanceMap.get(ra.getContent());
-                }
-                else
-                {
+                } else {
                     // Tomcat JNDI creates a Reference out of server.xml
                     // <ResourceParam> configuration and passes it to an
                     // instance of the factory given in server.xml.
                     String key = null;
-                    if (name != null)
-                    {
+                    if (name != null) {
                         key = name.toString();
                         obj = instanceMap.get(key);
                     }
-                    if (obj == null)
-                    {
+                    if (obj == null) {
                         final InstanceKeyDataSource ds = getNewInstance(ref);
                         setCommonProperties(ref, ds);
                         obj = ds;
-                        if (key != null)
-                        {
+                        if (key != null) {
                             instanceMap.put(key, ds);
                         }
                     }
@@ -128,9 +120,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         return obj;
     }
 
-    private void setCommonProperties(final Reference ref,
-                                     final InstanceKeyDataSource ikds)
-        throws IOException, ClassNotFoundException {
+    private void setCommonProperties(final Reference ref, final InstanceKeyDataSource ikds)
+            throws IOException, ClassNotFoundException {
 
         RefAddr ra = ref.get("dataSourceName");
         if (ra != null && ra.getContent() != null) {
@@ -143,22 +134,20 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
 
         ra = ref.get("jndiEnvironment");
-        if (ra != null  && ra.getContent() != null) {
+        if (ra != null && ra.getContent() != null) {
             final byte[] serialized = (byte[]) ra.getContent();
             ikds.setJndiEnvironment((Properties) deserialize(serialized));
         }
 
         ra = ref.get("loginTimeout");
         if (ra != null && ra.getContent() != null) {
-            ikds.setLoginTimeout(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setLoginTimeout(Integer.parseInt(ra.getContent().toString()));
         }
 
         // Pool properties
         ra = ref.get("blockWhenExhausted");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultBlockWhenExhausted(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultBlockWhenExhausted(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("evictionPolicyClassName");
@@ -169,82 +158,68 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         // Pool properties
         ra = ref.get("lifo");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultLifo(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultLifo(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("maxIdlePerKey");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultMaxIdle(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultMaxIdle(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("maxTotalPerKey");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultMaxTotal(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultMaxTotal(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("maxWaitMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultMaxWaitMillis(
-                Long.parseLong(ra.getContent().toString()));
+            ikds.setDefaultMaxWaitMillis(Long.parseLong(ra.getContent().toString()));
         }
 
         ra = ref.get("minEvictableIdleTimeMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultMinEvictableIdleTimeMillis(
-                Long.parseLong(ra.getContent().toString()));
+            ikds.setDefaultMinEvictableIdleTimeMillis(Long.parseLong(ra.getContent().toString()));
         }
 
         ra = ref.get("minIdlePerKey");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultMinIdle(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultMinIdle(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("numTestsPerEvictionRun");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultNumTestsPerEvictionRun(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultNumTestsPerEvictionRun(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("softMinEvictableIdleTimeMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultSoftMinEvictableIdleTimeMillis(
-                Long.parseLong(ra.getContent().toString()));
+            ikds.setDefaultSoftMinEvictableIdleTimeMillis(Long.parseLong(ra.getContent().toString()));
         }
 
         ra = ref.get("testOnCreate");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTestOnCreate(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultTestOnCreate(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("testOnBorrow");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTestOnBorrow(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultTestOnBorrow(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("testOnReturn");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTestOnReturn(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultTestOnReturn(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("testWhileIdle");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTestWhileIdle(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setDefaultTestWhileIdle(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("timeBetweenEvictionRunsMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTimeBetweenEvictionRunsMillis(
-                Long.parseLong(ra.getContent().toString()));
+            ikds.setDefaultTimeBetweenEvictionRunsMillis(Long.parseLong(ra.getContent().toString()));
         }
-
 
         // Connection factory properties
 
@@ -255,22 +230,18 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         ra = ref.get("validationQueryTimeout");
         if (ra != null && ra.getContent() != null) {
-            ikds.setValidationQueryTimeout(Integer.parseInt(
-                    ra.getContent().toString()));
+            ikds.setValidationQueryTimeout(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("rollbackAfterValidation");
         if (ra != null && ra.getContent() != null) {
-            ikds.setRollbackAfterValidation(Boolean.valueOf(
-                ra.getContent().toString()).booleanValue());
+            ikds.setRollbackAfterValidation(Boolean.valueOf(ra.getContent().toString()).booleanValue());
         }
 
         ra = ref.get("maxConnLifetimeMillis");
         if (ra != null && ra.getContent() != null) {
-            ikds.setMaxConnLifetimeMillis(
-                Long.parseLong(ra.getContent().toString()));
+            ikds.setMaxConnLifetimeMillis(Long.parseLong(ra.getContent().toString()));
         }
-
 
         // Connection properties
 
@@ -281,8 +252,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         ra = ref.get("defaultTransactionIsolation");
         if (ra != null && ra.getContent() != null) {
-            ikds.setDefaultTransactionIsolation(
-                Integer.parseInt(ra.getContent().toString()));
+            ikds.setDefaultTransactionIsolation(Integer.parseInt(ra.getContent().toString()));
         }
 
         ra = ref.get("defaultReadOnly");
@@ -291,25 +261,20 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
-
     /**
-     * @return true if and only if className is the value returned
-     * from getClass().getName().toString()
+     * @return true if and only if className is the value returned from getClass().getName().toString()
      */
     protected abstract boolean isCorrectClass(String className);
 
     /**
-     * Creates an instance of the subclass and sets any properties
-     * contained in the Reference.
+     * Creates an instance of the subclass and sets any properties contained in the Reference.
      */
-    protected abstract InstanceKeyDataSource getNewInstance(Reference ref)
-        throws IOException, ClassNotFoundException;
+    protected abstract InstanceKeyDataSource getNewInstance(Reference ref) throws IOException, ClassNotFoundException;
 
     /**
      * Sets some properties saved within a Reference
      */
-    protected static final Object deserialize(final byte[] data)
-        throws IOException, ClassNotFoundException {
+    protected static final Object deserialize(final byte[] data) throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {
             in = new ObjectInputStream(new ByteArrayInputStream(data));
