@@ -206,6 +206,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. <code>null</code> means that the driver default will be used.
+     * 
+     * @return The default query timeout
      */
     public Integer getDefaultQueryTimeout() {
         return defaultQueryTimeout;
@@ -215,6 +217,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. <code>null</code> means that the driver default will be used.
+     * 
+     * @param defaultQueryTimeout
+     *            The default query timeout.
      */
     public void setDefaultQueryTimeout(final Integer defaultQueryTimeout) {
         this.defaultQueryTimeout = defaultQueryTimeout;
