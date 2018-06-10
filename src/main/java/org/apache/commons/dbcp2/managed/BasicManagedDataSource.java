@@ -53,12 +53,16 @@ import java.sql.SQLException;
  * @since 2.0
  */
 public class BasicManagedDataSource extends BasicDataSource {
+    
     /** Transaction Registry */
     private TransactionRegistry transactionRegistry;
+    
     /** Transaction Manager */
     private transient TransactionManager transactionManager;
+    
     /** XA data source class name */
     private String xaDataSource;
+    
     /** XA data source instance */
     private XADataSource xaDataSourceInstance;
 
