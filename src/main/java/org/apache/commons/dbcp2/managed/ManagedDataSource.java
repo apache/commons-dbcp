@@ -22,6 +22,7 @@ import org.apache.commons.dbcp2.PoolingDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * The ManagedDataSource is a PoolingDataSource that creates ManagedConnections.
@@ -62,9 +63,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
         if(this.transactionRegistry != null) {
             throw new IllegalStateException("TransactionRegistry already set");
         }
-        if(transactionRegistry == null) {
-            throw new NullPointerException("TransactionRegistry is null");
-        }
+        Objects.requireNonNull(transactionRegistry, "transactionRegistry is null");
 
         this.transactionRegistry = transactionRegistry;
     }

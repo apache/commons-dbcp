@@ -25,6 +25,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * An implementation of XAConnectionFactory which manages non-XA connections in XA transactions.  A non-XA connection
@@ -46,13 +47,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      * @param connectionFactory  the connection factory from which connections will be retrieved
      */
     public LocalXAConnectionFactory(final TransactionManager transactionManager, final ConnectionFactory connectionFactory) {
-        if (transactionManager == null) {
-            throw new NullPointerException("transactionManager is null");
-        }
-        if (connectionFactory == null) {
-            throw new NullPointerException("connectionFactory is null");
-        }
-
+        Objects.requireNonNull(transactionManager, "transactionManager is null");
+        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
         this.transactionRegistry = new TransactionRegistry(transactionManager);
         this.connectionFactory = connectionFactory;
     }
@@ -161,9 +157,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void end(final Xid xid, final int flag) throws XAException {
-            if (xid == null) {
-                throw new NullPointerException("xid is null");
-            }
+            Objects.requireNonNull(xid, "xid is null");
             if (!this.currentXid.equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
@@ -212,9 +206,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void commit(final Xid xid, final boolean flag) throws XAException {
-            if (xid == null) {
-                throw new NullPointerException("xid is null");
-            }
+            Objects.requireNonNull(xid, "xid is null");
             if (this.currentXid == null) {
                 throw new XAException("There is no current transaction");
             }
@@ -239,6 +231,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
                 } catch (final SQLException e) {
+                    // ignore
                 }
                 this.currentXid = null;
             }
@@ -252,9 +245,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void rollback(final Xid xid) throws XAException {
-            if (xid == null) {
-                throw new NullPointerException("xid is null");
-            }
+            Objects.requireNonNull(xid, "xid is null");
             if (!this.currentXid.equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }

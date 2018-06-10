@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -50,16 +51,12 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     private boolean accessToUnderlyingConnectionAllowed;
 
     public PoolingDataSource(final ObjectPool<C> pool) {
-        if (null == pool) {
-            throw new NullPointerException("Pool must not be null.");
-        }
+        Objects.requireNonNull(pool, "Pool must not be null.");
         this.pool = pool;
         // Verify that _pool's factory refers back to it.  If not, log a warning and try to fix.
         if (this.pool instanceof GenericObjectPool<?>) {
             final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) this.pool).getFactory();
-            if (pcf == null) {
-                throw new NullPointerException("PoolableConnectionFactory must not be null.");
-            }
+            Objects.requireNonNull(pcf, "PoolableConnectionFactory must not be null.");
             if (pcf.getPool() != this.pool) {
                 log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
                 @SuppressWarnings("unchecked") // PCF must have a pool of PCs

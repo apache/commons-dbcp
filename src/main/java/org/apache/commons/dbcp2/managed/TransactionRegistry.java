@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2.managed;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 
 import javax.transaction.SystemException;
@@ -62,12 +63,8 @@ public class TransactionRegistry {
      * @param xaResource the XAResource which managed the connection within a transaction
      */
     public synchronized void registerConnection(final Connection connection, final XAResource xaResource) {
-        if (connection == null) {
-            throw new NullPointerException("connection is null");
-        }
-        if (xaResource == null) {
-            throw new NullPointerException("xaResource is null");
-        }
+        Objects.requireNonNull(connection, "connection is null");
+        Objects.requireNonNull(xaResource, "xaResource is null");
         xaResources.put(connection, xaResource);
     }
 
@@ -78,9 +75,7 @@ public class TransactionRegistry {
      * @throws SQLException if the connection does not have a registered XAResource
      */
     public synchronized XAResource getXAResource(final Connection connection) throws SQLException {
-        if (connection == null) {
-            throw new NullPointerException("connection is null");
-        }
+        Objects.requireNonNull(connection, "connection is null");
         final Connection key = getConnectionKey(connection);
         final XAResource xaResource = xaResources.get(key);
         if (xaResource == null) {

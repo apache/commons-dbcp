@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.management.ObjectName;
@@ -323,10 +324,7 @@ public class PoolableConnectionFactory
         if(null != sqls) {
             try (Statement stmt = conn.createStatement()) {
                 for (final String sql : sqls) {
-                    if (sql == null) {
-                        throw new NullPointerException(
-                                "null connectionInitSqls element");
-                    }
+                    Objects.requireNonNull(sql, "null connectionInitSqls element");
                     stmt.execute(sql);
                 }
             }

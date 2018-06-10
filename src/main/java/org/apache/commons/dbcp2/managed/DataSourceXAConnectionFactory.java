@@ -29,6 +29,7 @@ import org.apache.commons.dbcp2.Utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * An implementation of XAConnectionFactory which uses a real XADataSource to obtain connections and XAResources.
@@ -64,13 +65,8 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      */
     public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource,
             final String userName, final char[] userPassword) {
-        if (transactionManager == null) {
-            throw new NullPointerException("transactionManager is null");
-        }
-        if (xaDataSource == null) {
-            throw new NullPointerException("xaDataSource is null");
-        }
-
+        Objects.requireNonNull(transactionManager, "transactionManager is null");
+        Objects.requireNonNull(xaDataSource, "xaDataSource is null");
         this.transactionRegistry = new TransactionRegistry(transactionManager);
         this.xaDataSource = xaDataSource;
         this.userName = userName;

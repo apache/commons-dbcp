@@ -25,6 +25,7 @@ import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.lang.ref.WeakReference;
 
 /**
@@ -52,12 +53,8 @@ public class TransactionContext {
      * @param transaction the transaction
      */
     public TransactionContext(final TransactionRegistry transactionRegistry, final Transaction transaction) {
-        if (transactionRegistry == null) {
-            throw new NullPointerException("transactionRegistry is null");
-        }
-        if (transaction == null) {
-            throw new NullPointerException("transaction is null");
-        }
+        Objects.requireNonNull(transactionRegistry, "transactionRegistry is null");
+        Objects.requireNonNull(transaction, "transaction is null");
         this.transactionRegistry = transactionRegistry;
         this.transactionRef = new WeakReference<>(transaction);
         this.transactionComplete = false;

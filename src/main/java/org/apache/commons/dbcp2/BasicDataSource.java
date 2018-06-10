@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -1917,10 +1918,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            the connection properties used to create new connections
      */
     public void setConnectionProperties(final String connectionProperties) {
-        if (connectionProperties == null) {
-            throw new NullPointerException("connectionProperties is null");
-        }
-
+        Objects.requireNonNull(connectionProperties, "connectionProperties is null");
         final String[] entries = connectionProperties.split(";");
         final Properties properties = new Properties();
         for (final String entry : entries) {
