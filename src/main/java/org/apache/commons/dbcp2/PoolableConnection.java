@@ -53,9 +53,9 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /** The pool to which I should return. */
-    private final ObjectPool<PoolableConnection> _pool;
+    private final ObjectPool<PoolableConnection> pool;
 
-    private final ObjectNameWrapper _jmxObjectName;
+    private final ObjectNameWrapper jmxObjectName;
 
     // Use a prepared statement for validation, retaining the last used SQL to
     // check if the validation query has changed.
@@ -66,16 +66,16 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Indicate that unrecoverable SQLException was thrown when using this connection. Such a connection should be
      * considered broken and not pass validation in the future.
      */
-    private boolean _fatalSqlExceptionThrown = false;
+    private boolean fatalSqlExceptionThrown = false;
 
     /**
      * SQL_STATE codes considered to signal fatal conditions. Overrides the defaults in
      * {@link Utils#DISCONNECTION_SQL_CODES} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
      */
-    private final Collection<String> _disconnectionSqlCodes;
+    private final Collection<String> disconnectionSqlCodes;
 
     /** Whether or not to fast fail validation after fatal connection errors */
-    private final boolean _fastFailValidation;
+    private final boolean fastFailValidation;
 
     /**
      *
@@ -95,10 +95,10 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             final ObjectName jmxObjectName, final Collection<String> disconnectSqlCodes,
             final boolean fastFailValidation) {
         super(conn);
-        _pool = pool;
-        _jmxObjectName = ObjectNameWrapper.wrap(jmxObjectName);
-        _disconnectionSqlCodes = disconnectSqlCodes;
-        _fastFailValidation = fastFailValidation;
+        this.pool = pool;
+        this.jmxObjectName = ObjectNameWrapper.wrap(jmxObjectName);
+        this.disconnectionSqlCodes = disconnectSqlCodes;
+        this.fastFailValidation = fastFailValidation;
 
         if (jmxObjectName != null) {
             try {
@@ -168,7 +168,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             isUnderlyingConnectionClosed = getDelegateInternal().isClosed();
         } catch (final SQLException e) {
             try {
-                _pool.invalidateObject(this);
+                pool.invalidateObject(this);
             } catch (final IllegalStateException ise) {
                 // pool is closed, so close the connection
                 passivate();
@@ -188,7 +188,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             // Abnormal close: underlying connection closed unexpectedly, so we
             // must destroy this proxy
             try {
-                _pool.invalidateObject(this);
+                pool.invalidateObject(this);
             } catch (final IllegalStateException e) {
                 // pool is closed, so close the connection
                 passivate();
@@ -200,7 +200,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             // Normal close: underlying connection is still open, so we
             // simply need to return this proxy to the pool
             try {
-                _pool.returnObject(this);
+                pool.returnObject(this);
             } catch (final IllegalStateException e) {
                 // pool is closed, so close the connection
                 passivate();
@@ -220,8 +220,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      */
     @Override
     public void reallyClose() throws SQLException {
-        if (_jmxObjectName != null) {
-            _jmxObjectName.unregisterMBean();
+        if (jmxObjectName != null) {
+            jmxObjectName.unregisterMBean();
         }
 
         if (validationPreparedStatement != null) {
@@ -262,7 +262,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      *             if validation fails or an SQLException occurs during validation
      */
     public void validate(final String sql, int timeout) throws SQLException {
-        if (_fastFailValidation && _fatalSqlExceptionThrown) {
+        if (fastFailValidation && fatalSqlExceptionThrown) {
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
@@ -313,10 +313,10 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         boolean fatalException = false;
         final String sqlState = e.getSQLState();
         if (sqlState != null) {
-            fatalException = _disconnectionSqlCodes == null
+            fatalException = disconnectionSqlCodes == null
                     ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX)
                             || Utils.DISCONNECTION_SQL_CODES.contains(sqlState)
-                    : _disconnectionSqlCodes.contains(sqlState);
+                    : disconnectionSqlCodes.contains(sqlState);
             if (!fatalException) {
                 final SQLException nextException = e.getNextException();
                 if (nextException != null && nextException != e) {
@@ -329,7 +329,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     @Override
     protected void handleException(final SQLException e) throws SQLException {
-        _fatalSqlExceptionThrown |= isDisconnectionSqlException(e);
+        fatalSqlExceptionThrown |= isDisconnectionSqlException(e);
         super.handleException(e);
     }
 }

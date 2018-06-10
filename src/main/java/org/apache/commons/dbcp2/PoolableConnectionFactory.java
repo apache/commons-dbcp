@@ -58,7 +58,7 @@ public class PoolableConnectionFactory
      */
     public PoolableConnectionFactory(final ConnectionFactory connFactory,
             final ObjectName dataSourceJmxObjectName) {
-        _connFactory = connFactory;
+        this.connectionFactory = connFactory;
         this.dataSourceJmxName = dataSourceJmxObjectName;
     }
 
@@ -70,7 +70,7 @@ public class PoolableConnectionFactory
      * @param validationQuery a query to use to {@link #validateObject validate} {@link Connection}s.
      */
     public void setValidationQuery(final String validationQuery) {
-        _validationQuery = validationQuery;
+        this.validationQuery = validationQuery;
     }
 
     /**
@@ -79,10 +79,10 @@ public class PoolableConnectionFactory
      * executing a validation query.  Use a value less than or equal to 0 for
      * no timeout.
      *
-     * @param timeout new validation query timeout value in seconds
+     * @param timeoutSeconds new validation query timeout value in seconds
      */
-    public void setValidationQueryTimeout(final int timeout) {
-        _validationQueryTimeout = timeout;
+    public void setValidationQueryTimeout(final int timeoutSeconds) {
+        this.validationQueryTimeoutSeconds = timeoutSeconds;
     }
 
     /**
@@ -91,7 +91,7 @@ public class PoolableConnectionFactory
      * @param connectionInitSqls SQL statement to initialize {@link Connection}s.
      */
     public void setConnectionInitSql(final Collection<String> connectionInitSqls) {
-        _connectionInitSqls = connectionInitSqls;
+        this.connectionInitSqls = connectionInitSqls;
     }
 
     /**
@@ -99,14 +99,14 @@ public class PoolableConnectionFactory
      * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
     public synchronized void setPool(final ObjectPool<PoolableConnection> pool) {
-        if(null != _pool && pool != _pool) {
+        if(null != this.pool && pool != this.pool) {
             try {
-                _pool.close();
+                this.pool.close();
             } catch(final Exception e) {
                 // ignored !?!
             }
         }
-        _pool = pool;
+        this.pool = pool;
     }
 
     /**
@@ -114,7 +114,7 @@ public class PoolableConnectionFactory
      * @return the connection pool
      */
     public synchronized ObjectPool<PoolableConnection> getPool() {
-        return _pool;
+        return pool;
     }
 
     /**
@@ -122,7 +122,7 @@ public class PoolableConnectionFactory
      * @param defaultReadOnly the default "read only" setting for borrowed {@link Connection}s
      */
     public void setDefaultReadOnly(final Boolean defaultReadOnly) {
-        _defaultReadOnly = defaultReadOnly;
+        this.defaultReadOnly = defaultReadOnly;
     }
 
     /**
@@ -130,7 +130,7 @@ public class PoolableConnectionFactory
      * @param defaultAutoCommit the default "auto commit" setting for borrowed {@link Connection}s
      */
     public void setDefaultAutoCommit(final Boolean defaultAutoCommit) {
-        _defaultAutoCommit = defaultAutoCommit;
+        this.defaultAutoCommit = defaultAutoCommit;
     }
 
     /**
@@ -138,7 +138,7 @@ public class PoolableConnectionFactory
      * @param defaultTransactionIsolation the default "Transaction Isolation" setting for returned {@link Connection}s
      */
     public void setDefaultTransactionIsolation(final int defaultTransactionIsolation) {
-        _defaultTransactionIsolation = defaultTransactionIsolation;
+        this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
     /**
@@ -146,11 +146,11 @@ public class PoolableConnectionFactory
      * @param defaultCatalog the default "catalog" setting for borrowed {@link Connection}s
      */
     public void setDefaultCatalog(final String defaultCatalog) {
-        _defaultCatalog = defaultCatalog;
+        this.defaultCatalog = defaultCatalog;
     }
 
     public void setCacheState(final boolean cacheState) {
-        this._cacheState = cacheState;
+        this.cacheState = cacheState;
     }
 
     public void setPoolStatements(final boolean poolStatements) {
@@ -220,7 +220,7 @@ public class PoolableConnectionFactory
      * @since 2.1
      */
     public Collection<String> getDisconnectionSqlCodes() {
-        return _disconnectionSqlCodes;
+        return disconnectionSqlCodes;
     }
 
     /**
@@ -229,7 +229,7 @@ public class PoolableConnectionFactory
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-        _disconnectionSqlCodes = disconnectionSqlCodes;
+        this.disconnectionSqlCodes = disconnectionSqlCodes;
     }
 
     /**
@@ -242,7 +242,7 @@ public class PoolableConnectionFactory
      * @since 2.1
      */
     public boolean isFastFailValidation() {
-        return _fastFailValidation;
+        return fastFailValidation;
     }
 
     /**
@@ -252,12 +252,12 @@ public class PoolableConnectionFactory
      * @since 2.1
      */
     public void setFastFailValidation(final boolean fastFailValidation) {
-        _fastFailValidation = fastFailValidation;
+        this.fastFailValidation = fastFailValidation;
     }
 
     @Override
     public PooledObject<PoolableConnection> makeObject() throws Exception {
-        Connection conn = _connFactory.createConnection();
+        Connection conn = connectionFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
@@ -296,7 +296,7 @@ public class PoolableConnectionFactory
             final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
                     new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
             ((PoolingConnection)conn).setStatementPool(stmtPool);
-            ((PoolingConnection) conn).setCacheState(_cacheState);
+            ((PoolingConnection) conn).setCacheState(cacheState);
         }
 
         // Register this connection with JMX
@@ -308,15 +308,15 @@ public class PoolableConnectionFactory
                     Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn, _pool, connJmxName,
-                                      _disconnectionSqlCodes, _fastFailValidation);
-        pc.setCacheState(_cacheState);
+        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName,
+                                      disconnectionSqlCodes, fastFailValidation);
+        pc.setCacheState(cacheState);
 
         return new DefaultPooledObject<>(pc);
     }
 
     protected void initializeConnection(final Connection conn) throws SQLException {
-        final Collection<String> sqls = _connectionInitSqls;
+        final Collection<String> sqls = connectionInitSqls;
         if(conn.isClosed()) {
             throw new SQLException("initializeConnection: connection closed");
         }
@@ -359,7 +359,7 @@ public class PoolableConnectionFactory
         if(conn.isClosed()) {
             throw new SQLException("validateConnection: connection closed");
         }
-        conn.validate(_validationQuery, _validationQueryTimeout);
+        conn.validate(validationQuery, validationQueryTimeoutSeconds);
     }
 
     @Override
@@ -402,21 +402,21 @@ public class PoolableConnectionFactory
         final PoolableConnection conn = p.getObject();
         conn.activate();
 
-        if (_defaultAutoCommit != null &&
-                conn.getAutoCommit() != _defaultAutoCommit.booleanValue()) {
-            conn.setAutoCommit(_defaultAutoCommit.booleanValue());
+        if (defaultAutoCommit != null &&
+                conn.getAutoCommit() != defaultAutoCommit.booleanValue()) {
+            conn.setAutoCommit(defaultAutoCommit.booleanValue());
         }
-        if (_defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION &&
-                conn.getTransactionIsolation() != _defaultTransactionIsolation) {
-            conn.setTransactionIsolation(_defaultTransactionIsolation);
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION &&
+                conn.getTransactionIsolation() != defaultTransactionIsolation) {
+            conn.setTransactionIsolation(defaultTransactionIsolation);
         }
-        if (_defaultReadOnly != null &&
-                conn.isReadOnly() != _defaultReadOnly.booleanValue()) {
-            conn.setReadOnly(_defaultReadOnly.booleanValue());
+        if (defaultReadOnly != null &&
+                conn.isReadOnly() != defaultReadOnly.booleanValue()) {
+            conn.setReadOnly(defaultReadOnly.booleanValue());
         }
-        if (_defaultCatalog != null &&
-                !_defaultCatalog.equals(conn.getCatalog())) {
-            conn.setCatalog(_defaultCatalog);
+        if (defaultCatalog != null &&
+                !defaultCatalog.equals(conn.getCatalog())) {
+            conn.setCatalog(defaultCatalog);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }
@@ -435,7 +435,7 @@ public class PoolableConnectionFactory
     }
 
     protected ConnectionFactory getConnectionFactory() {
-        return _connFactory;
+        return connectionFactory;
     }
 
     protected boolean getPoolStatements() {
@@ -447,7 +447,7 @@ public class PoolableConnectionFactory
     }
 
     protected boolean getCacheState() {
-        return _cacheState;
+        return cacheState;
     }
 
     protected ObjectName getDataSourceJmxName() {
@@ -458,21 +458,21 @@ public class PoolableConnectionFactory
         return connectionIndex;
     }
 
-    private final ConnectionFactory _connFactory;
+    private final ConnectionFactory connectionFactory;
     private final ObjectName dataSourceJmxName;
-    private volatile String _validationQuery = null;
-    private volatile int _validationQueryTimeout = -1;
-    private Collection<String> _connectionInitSqls = null;
-    private Collection<String> _disconnectionSqlCodes = null;
-    private boolean _fastFailValidation = false;
-    private volatile ObjectPool<PoolableConnection> _pool = null;
-    private Boolean _defaultReadOnly = null;
-    private Boolean _defaultAutoCommit = null;
+    private volatile String validationQuery = null;
+    private volatile int validationQueryTimeoutSeconds = -1;
+    private Collection<String> connectionInitSqls = null;
+    private Collection<String> disconnectionSqlCodes = null;
+    private boolean fastFailValidation = false;
+    private volatile ObjectPool<PoolableConnection> pool = null;
+    private Boolean defaultReadOnly = null;
+    private Boolean defaultAutoCommit = null;
     private boolean enableAutoCommitOnReturn = true;
     private boolean rollbackOnReturn = true;
-    private int _defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    private String _defaultCatalog;
-    private boolean _cacheState;
+    private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
+    private String defaultCatalog;
+    private boolean cacheState;
     private boolean poolStatements = false;
     private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;

@@ -43,12 +43,12 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
-    private final KeyedObjectPool<K, PoolablePreparedStatement<K>> _pool;
+    private final KeyedObjectPool<K, PoolablePreparedStatement<K>> pool;
 
     /**
      * My "key" as used by {@link KeyedObjectPool}.
      */
-    private final K _key;
+    private final K key;
 
     private volatile boolean batchAdded = false;
 
@@ -63,8 +63,8 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
             final KeyedObjectPool<K, PoolablePreparedStatement<K>> pool,
             final DelegatingConnection<?> conn) {
         super(conn, stmt);
-        _pool = pool;
-        _key = key;
+        this.pool = pool;
+        this.key = key;
 
         // Remove from trace now because this statement will be
         // added by the activate method.
@@ -99,7 +99,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         // calling close twice should have no effect
         if (!isClosed()) {
             try {
-                _pool.returnObject(_key, this);
+                pool.returnObject(key, this);
             } catch(final SQLException e) {
                 throw e;
             } catch(final RuntimeException e) {

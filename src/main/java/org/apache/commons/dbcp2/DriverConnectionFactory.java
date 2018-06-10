@@ -27,24 +27,24 @@ import java.util.Properties;
  * @since 2.0
  */
 public class DriverConnectionFactory implements ConnectionFactory {
-    public DriverConnectionFactory(final Driver driver, final String connectUri, final Properties props) {
-        _driver = driver;
-        _connectUri = connectUri;
-        _props = props;
-    }
 
+    private final String connectionUri;
+    private final Driver driver;
+    private final Properties properties;
+
+    public DriverConnectionFactory(final Driver driver, final String connectUri, final Properties props) {
+        this.driver = driver;
+        this.connectionUri = connectUri;
+        this.properties = props;
+    }
     @Override
     public Connection createConnection() throws SQLException {
-        return _driver.connect(_connectUri,_props);
+        return driver.connect(connectionUri,properties);
     }
-
-    private final Driver _driver;
-    private final String _connectUri;
-    private final Properties _props;
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(_driver) + ";" +
-                String.valueOf(_connectUri) + ";"  + String.valueOf(_props) + "]";
+        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" +
+                String.valueOf(connectionUri) + ";"  + String.valueOf(properties) + "]";
     }
 }

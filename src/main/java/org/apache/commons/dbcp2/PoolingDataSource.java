@@ -53,18 +53,18 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         if (null == pool) {
             throw new NullPointerException("Pool must not be null.");
         }
-        _pool = pool;
+        this.pool = pool;
         // Verify that _pool's factory refers back to it.  If not, log a warning and try to fix.
-        if (_pool instanceof GenericObjectPool<?>) {
-            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) _pool).getFactory();
+        if (this.pool instanceof GenericObjectPool<?>) {
+            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) this.pool).getFactory();
             if (pcf == null) {
                 throw new NullPointerException("PoolableConnectionFactory must not be null.");
             }
-            if (pcf.getPool() != _pool) {
+            if (pcf.getPool() != this.pool) {
                 log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
                 @SuppressWarnings("unchecked") // PCF must have a pool of PCs
                 final
-                ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) _pool;
+                ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) this.pool;
                 pcf.setPool(p);
             }
         }
@@ -77,7 +77,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     @Override
     public void close() throws Exception {
         try {
-            _pool.close();
+            pool.close();
         } catch(final RuntimeException rte) {
             throw new RuntimeException(Utils.getMessage("pool.close.fail"), rte);
         } catch(final Exception e) {
@@ -131,7 +131,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     @Override
     public Connection getConnection() throws SQLException {
         try {
-            final C conn = _pool.borrowObject();
+            final C conn = pool.borrowObject();
             if (conn == null) {
                 return null;
             }
@@ -167,7 +167,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      */
     @Override
     public PrintWriter getLogWriter() {
-        return _logWriter;
+        return logWriter;
     }
 
     /**
@@ -196,16 +196,16 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      */
     @Override
     public void setLogWriter(final PrintWriter out) {
-        _logWriter = out;
+        logWriter = out;
     }
 
     /** My log writer. */
-    private PrintWriter _logWriter = null;
+    private PrintWriter logWriter = null;
 
-    private final ObjectPool<C> _pool;
+    private final ObjectPool<C> pool;
 
     protected ObjectPool<C> getPool() {
-        return _pool;
+        return pool;
     }
 
     /**

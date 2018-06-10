@@ -39,27 +39,27 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     /**
      * The {@link KeyedObjectPool} from which this CallableStatement was obtained.
      */
-    private final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> _pool;
+    private final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool;
 
     /**
      * Key for this statement in the containing {@link KeyedObjectPool}.
      */
-    private final PStmtKey _key;
+    private final PStmtKey key;
 
     /**
      * Constructor.
      *
-     * @param stmt the underlying {@link CallableStatement}
+     * @param callableStatement the underlying {@link CallableStatement}
      * @param key the key for this statement in the {@link KeyedObjectPool}
      * @param pool the {@link KeyedObjectPool} from which this CallableStatement was obtained
-     * @param conn the {@link DelegatingConnection} that created this CallableStatement
+     * @param connection the {@link DelegatingConnection} that created this CallableStatement
      */
-    public PoolableCallableStatement(final CallableStatement stmt, final PStmtKey key,
+    public PoolableCallableStatement(final CallableStatement callableStatement, final PStmtKey key,
             final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool,
-            final DelegatingConnection<Connection> conn) {
-        super(conn, stmt);
-        _pool = pool;
-        _key = key;
+            final DelegatingConnection<Connection> connection) {
+        super(connection, callableStatement);
+        this.pool = pool;
+        this.key = key;
 
         // Remove from trace now because this statement will be
         // added by the activate method.
@@ -76,7 +76,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
         // calling close twice should have no effect
         if (!isClosed()) {
             try {
-                _pool.returnObject(_key, this);
+                pool.returnObject(key, this);
             } catch (final SQLException e) {
                 throw e;
             } catch (final RuntimeException e) {

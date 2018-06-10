@@ -34,20 +34,19 @@ import java.sql.SQLException;
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
-    private final DatabaseMetaData _meta;
+    private final DatabaseMetaData databaseMetaData;
 
     /** The connection that created me. **/
-    private final DelegatingConnection<?> _conn;
+    private final DelegatingConnection<?> connection;
 
-    public DelegatingDatabaseMetaData(final DelegatingConnection<?> c,
-            final DatabaseMetaData m) {
+    public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection, final DatabaseMetaData databaseMetaData) {
         super();
-        _conn = c;
-        _meta = m;
+        this.connection = connection;
+        this.databaseMetaData = databaseMetaData;
     }
 
     public DatabaseMetaData getDelegate() {
-        return _meta;
+        return databaseMetaData;
     }
 
     /**
@@ -66,7 +65,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * sure to obtain a "genuine" {@link ResultSet}.
      */
     public DatabaseMetaData getInnermostDelegate() {
-        DatabaseMetaData m = _meta;
+        DatabaseMetaData m = databaseMetaData;
         while(m != null && m instanceof DelegatingDatabaseMetaData) {
             m = ((DelegatingDatabaseMetaData)m).getDelegate();
             if(this == m) {
@@ -77,8 +76,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     protected void handleException(final SQLException e) throws SQLException {
-        if (_conn != null) {
-            _conn.handleException(e);
+        if (connection != null) {
+            connection.handleException(e);
         }
         else {
             throw e;
@@ -87,37 +86,37 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-        try { return _meta.allProceduresAreCallable(); }
+        try { return databaseMetaData.allProceduresAreCallable(); }
           catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
-        try { return _meta.allTablesAreSelectable(); }
+        try { return databaseMetaData.allTablesAreSelectable(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-        try { return _meta.dataDefinitionCausesTransactionCommit(); }
+        try { return databaseMetaData.dataDefinitionCausesTransactionCommit(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-        try { return _meta.dataDefinitionIgnoredInTransactions(); }
+        try { return databaseMetaData.dataDefinitionIgnoredInTransactions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean deletesAreDetected(final int type) throws SQLException {
-        try { return _meta.deletesAreDetected(type); }
+        try { return databaseMetaData.deletesAreDetected(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
-        try { return _meta.doesMaxRowSizeIncludeBlobs(); }
+        try { return databaseMetaData.doesMaxRowSizeIncludeBlobs(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
@@ -125,9 +124,9 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getAttributes(final String catalog, final String schemaPattern,
             final String typeNamePattern, final String attributeNamePattern)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,_meta.getAttributes(
+            return DelegatingResultSet.wrapResultSet(connection,databaseMetaData.getAttributes(
                     catalog, schemaPattern, typeNamePattern,
                     attributeNamePattern));
         }
@@ -140,10 +139,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getBestRowIdentifier(final String catalog, final String schema,
             final String table, final int scope, final boolean nullable) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getBestRowIdentifier(catalog, schema, table, scope,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope,
                             nullable));
         }
         catch (final SQLException e) {
@@ -154,22 +153,22 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getCatalogSeparator() throws SQLException {
-        try { return _meta.getCatalogSeparator(); }
+        try { return databaseMetaData.getCatalogSeparator(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        try { return _meta.getCatalogTerm(); }
+        try { return databaseMetaData.getCatalogTerm(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getCatalogs());
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getCatalogs());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -180,10 +179,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getColumnPrivileges(final String catalog, final String schema,
             final String table, final String columnNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getColumnPrivileges(catalog, schema, table,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getColumnPrivileges(catalog, schema, table,
                             columnNamePattern));
         }
         catch (final SQLException e) {
@@ -196,10 +195,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getColumns(final String catalog, final String schemaPattern,
             final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getColumns(catalog, schemaPattern, tableNamePattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
                             columnNamePattern));
         }
         catch (final SQLException e) {
@@ -210,17 +209,17 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return _conn;
+        return connection;
     }
 
     @Override
     public ResultSet getCrossReference(final String parentCatalog,
             final String parentSchema, final String parentTable, final String foreignCatalog,
             final String foreignSchema, final String foreignTable) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getCrossReference(parentCatalog, parentSchema,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getCrossReference(parentCatalog, parentSchema,
                             parentTable, foreignCatalog, foreignSchema,
                             foreignTable));
         }
@@ -232,59 +231,59 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        try { return _meta.getDatabaseMajorVersion(); }
+        try { return databaseMetaData.getDatabaseMajorVersion(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        try { return _meta.getDatabaseMinorVersion(); }
+        try { return databaseMetaData.getDatabaseMinorVersion(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        try { return _meta.getDatabaseProductName(); }
+        try { return databaseMetaData.getDatabaseProductName(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        try { return _meta.getDatabaseProductVersion(); }
+        try { return databaseMetaData.getDatabaseProductVersion(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public int getDefaultTransactionIsolation() throws SQLException {
-        try { return _meta.getDefaultTransactionIsolation(); }
+        try { return databaseMetaData.getDefaultTransactionIsolation(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
-    public int getDriverMajorVersion() {return _meta.getDriverMajorVersion();}
+    public int getDriverMajorVersion() {return databaseMetaData.getDriverMajorVersion();}
 
     @Override
-    public int getDriverMinorVersion() {return _meta.getDriverMinorVersion();}
+    public int getDriverMinorVersion() {return databaseMetaData.getDriverMinorVersion();}
 
     @Override
     public String getDriverName() throws SQLException {
-        try { return _meta.getDriverName(); }
+        try { return databaseMetaData.getDriverName(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getDriverVersion() throws SQLException {
-        try { return _meta.getDriverVersion(); }
+        try { return databaseMetaData.getDriverVersion(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getExportedKeys(catalog, schema, table));
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getExportedKeys(catalog, schema, table));
         }
         catch (final SQLException e) {
             handleException(e);
@@ -294,23 +293,23 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-        try { return _meta.getExtraNameCharacters(); }
+        try { return databaseMetaData.getExtraNameCharacters(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
-        try { return _meta.getIdentifierQuoteString(); }
+        try { return databaseMetaData.getIdentifierQuoteString(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getImportedKeys(catalog, schema, table));
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getImportedKeys(catalog, schema, table));
         }
         catch (final SQLException e) {
             handleException(e);
@@ -321,10 +320,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getIndexInfo(final String catalog, final String schema, final String table,
             final boolean unique, final boolean approximate) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getIndexInfo(catalog, schema, table, unique,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getIndexInfo(catalog, schema, table, unique,
                             approximate));
         }
         catch (final SQLException e) {
@@ -335,149 +334,149 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        try { return _meta.getJDBCMajorVersion(); }
+        try { return databaseMetaData.getJDBCMajorVersion(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        try { return _meta.getJDBCMinorVersion(); }
+        try { return databaseMetaData.getJDBCMinorVersion(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxBinaryLiteralLength() throws SQLException {
-        try { return _meta.getMaxBinaryLiteralLength(); }
+        try { return databaseMetaData.getMaxBinaryLiteralLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
-        try { return _meta.getMaxCatalogNameLength(); }
+        try { return databaseMetaData.getMaxCatalogNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxCharLiteralLength() throws SQLException {
-        try { return _meta.getMaxCharLiteralLength(); }
+        try { return databaseMetaData.getMaxCharLiteralLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnNameLength() throws SQLException {
-        try { return _meta.getMaxColumnNameLength(); }
+        try { return databaseMetaData.getMaxColumnNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
-        try { return _meta.getMaxColumnsInGroupBy(); }
+        try { return databaseMetaData.getMaxColumnsInGroupBy(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
-        try { return _meta.getMaxColumnsInIndex(); }
+        try { return databaseMetaData.getMaxColumnsInIndex(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
-        try { return _meta.getMaxColumnsInOrderBy(); }
+        try { return databaseMetaData.getMaxColumnsInOrderBy(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
-        try { return _meta.getMaxColumnsInSelect(); }
+        try { return databaseMetaData.getMaxColumnsInSelect(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxColumnsInTable() throws SQLException {
-        try { return _meta.getMaxColumnsInTable(); }
+        try { return databaseMetaData.getMaxColumnsInTable(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxConnections() throws SQLException {
-        try { return _meta.getMaxConnections(); }
+        try { return databaseMetaData.getMaxConnections(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxCursorNameLength() throws SQLException {
-        try { return _meta.getMaxCursorNameLength(); }
+        try { return databaseMetaData.getMaxCursorNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxIndexLength() throws SQLException {
-        try { return _meta.getMaxIndexLength(); }
+        try { return databaseMetaData.getMaxIndexLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxProcedureNameLength() throws SQLException {
-        try { return _meta.getMaxProcedureNameLength(); }
+        try { return databaseMetaData.getMaxProcedureNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxRowSize() throws SQLException {
-        try { return _meta.getMaxRowSize(); }
+        try { return databaseMetaData.getMaxRowSize(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxSchemaNameLength() throws SQLException {
-        try { return _meta.getMaxSchemaNameLength(); }
+        try { return databaseMetaData.getMaxSchemaNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxStatementLength() throws SQLException {
-        try { return _meta.getMaxStatementLength(); }
+        try { return databaseMetaData.getMaxStatementLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxStatements() throws SQLException {
-        try { return _meta.getMaxStatements(); }
+        try { return databaseMetaData.getMaxStatements(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxTableNameLength() throws SQLException {
-        try { return _meta.getMaxTableNameLength(); }
+        try { return databaseMetaData.getMaxTableNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxTablesInSelect() throws SQLException {
-        try { return _meta.getMaxTablesInSelect(); }
+        try { return databaseMetaData.getMaxTablesInSelect(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public int getMaxUserNameLength() throws SQLException {
-        try { return _meta.getMaxUserNameLength(); }
+        try { return databaseMetaData.getMaxUserNameLength(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        try { return _meta.getNumericFunctions(); }
+        try { return databaseMetaData.getNumericFunctions(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getPrimaryKeys(final String catalog, final String schema, final String table)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getPrimaryKeys(catalog, schema, table));
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getPrimaryKeys(catalog, schema, table));
         }
         catch (final SQLException e) {
             handleException(e);
@@ -489,10 +488,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getProcedureColumns(final String catalog, final String schemaPattern,
             final String procedureNamePattern, final String columnNamePattern)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getProcedureColumns(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getProcedureColumns(catalog, schemaPattern,
                             procedureNamePattern, columnNamePattern));
         }
         catch (final SQLException e) {
@@ -503,17 +502,17 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getProcedureTerm() throws SQLException {
-        try { return _meta.getProcedureTerm(); }
+        try { return databaseMetaData.getProcedureTerm(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getProcedures(final String catalog, final String schemaPattern,
             final String procedureNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getProcedures(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getProcedures(catalog, schemaPattern,
                             procedureNamePattern));
         }
         catch (final SQLException e) {
@@ -524,34 +523,34 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getResultSetHoldability() throws SQLException {
-        try { return _meta.getResultSetHoldability(); }
+        try { return databaseMetaData.getResultSetHoldability(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        try { return _meta.getSQLKeywords(); }
+        try { return databaseMetaData.getSQLKeywords(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
-        try { return _meta.getSQLStateType(); }
+        try { return databaseMetaData.getSQLStateType(); }
         catch (final SQLException e) { handleException(e); return 0; }
     }
 
     @Override
     public String getSchemaTerm() throws SQLException {
-        try { return _meta.getSchemaTerm(); }
+        try { return databaseMetaData.getSchemaTerm(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getSchemas());
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getSchemas());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -561,23 +560,23 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSearchStringEscape() throws SQLException {
-        try { return _meta.getSearchStringEscape(); }
+        try { return databaseMetaData.getSearchStringEscape(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        try { return _meta.getStringFunctions(); }
+        try { return databaseMetaData.getStringFunctions(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getSuperTables(final String catalog, final String schemaPattern,
             final String tableNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getSuperTables(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getSuperTables(catalog, schemaPattern,
                             tableNamePattern));
         }
         catch (final SQLException e) {
@@ -589,10 +588,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSuperTypes(final String catalog, final String schemaPattern,
             final String typeNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getSuperTypes(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getSuperTypes(catalog, schemaPattern,
                             typeNamePattern));
         }
         catch (final SQLException e) {
@@ -603,17 +602,17 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        try { return _meta.getSystemFunctions(); }
+        try { return databaseMetaData.getSystemFunctions(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getTablePrivileges(final String catalog, final String schemaPattern,
             final String tableNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getTablePrivileges(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getTablePrivileges(catalog, schemaPattern,
                             tableNamePattern));
         }
         catch (final SQLException e) {
@@ -624,10 +623,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getTableTypes());
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getTableTypes());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -638,10 +637,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getTables(final String catalog, final String schemaPattern,
             final String tableNamePattern, final String[] types) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getTables(catalog, schemaPattern, tableNamePattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern,
                             types));
         }
         catch (final SQLException e) {
@@ -652,16 +651,16 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        try { return _meta.getTimeDateFunctions(); }
+        try { return databaseMetaData.getTimeDateFunctions(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getTypeInfo());
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getTypeInfo());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -672,10 +671,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getUDTs(final String catalog, final String schemaPattern,
             final String typeNamePattern, final int[] types) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getUDTs(catalog, schemaPattern, typeNamePattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern,
                             types));
         }
         catch (final SQLException e) {
@@ -686,23 +685,23 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getURL() throws SQLException {
-        try { return _meta.getURL(); }
+        try { return databaseMetaData.getURL(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public String getUserName() throws SQLException {
-        try { return _meta.getUserName(); }
+        try { return databaseMetaData.getUserName(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getVersionColumns(final String catalog, final String schema,
             final String table) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getVersionColumns(catalog, schema, table));
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getVersionColumns(catalog, schema, table));
         }
         catch (final SQLException e) {
             handleException(e);
@@ -712,547 +711,547 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean insertsAreDetected(final int type) throws SQLException {
-        try { return _meta.insertsAreDetected(type); }
+        try { return databaseMetaData.insertsAreDetected(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean isCatalogAtStart() throws SQLException {
-        try { return _meta.isCatalogAtStart(); }
+        try { return databaseMetaData.isCatalogAtStart(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        try { return _meta.isReadOnly(); }
+        try { return databaseMetaData.isReadOnly(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-        try { return _meta.locatorsUpdateCopy(); }
+        try { return databaseMetaData.locatorsUpdateCopy(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
-        try { return _meta.nullPlusNonNullIsNull(); }
+        try { return databaseMetaData.nullPlusNonNullIsNull(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
-        try { return _meta.nullsAreSortedAtEnd(); }
+        try { return databaseMetaData.nullsAreSortedAtEnd(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
-        try { return _meta.nullsAreSortedAtStart(); }
+        try { return databaseMetaData.nullsAreSortedAtStart(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean nullsAreSortedHigh() throws SQLException {
-        try { return _meta.nullsAreSortedHigh(); }
+        try { return databaseMetaData.nullsAreSortedHigh(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean nullsAreSortedLow() throws SQLException {
-        try { return _meta.nullsAreSortedLow(); }
+        try { return databaseMetaData.nullsAreSortedLow(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean othersDeletesAreVisible(final int type) throws SQLException {
-        try { return _meta.othersDeletesAreVisible(type); }
+        try { return databaseMetaData.othersDeletesAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean othersInsertsAreVisible(final int type) throws SQLException {
-        try { return _meta.othersInsertsAreVisible(type); }
+        try { return databaseMetaData.othersInsertsAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean othersUpdatesAreVisible(final int type) throws SQLException {
-        try { return _meta.othersUpdatesAreVisible(type); }
+        try { return databaseMetaData.othersUpdatesAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean ownDeletesAreVisible(final int type) throws SQLException {
-        try { return _meta.ownDeletesAreVisible(type); }
+        try { return databaseMetaData.ownDeletesAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean ownInsertsAreVisible(final int type) throws SQLException {
-        try { return _meta.ownInsertsAreVisible(type); }
+        try { return databaseMetaData.ownInsertsAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean ownUpdatesAreVisible(final int type) throws SQLException {
-        try { return _meta.ownUpdatesAreVisible(type); }
+        try { return databaseMetaData.ownUpdatesAreVisible(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
-        try { return _meta.storesLowerCaseIdentifiers(); }
+        try { return databaseMetaData.storesLowerCaseIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
-        try { return _meta.storesLowerCaseQuotedIdentifiers(); }
+        try { return databaseMetaData.storesLowerCaseQuotedIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
-        try { return _meta.storesMixedCaseIdentifiers(); }
+        try { return databaseMetaData.storesMixedCaseIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
-        try { return _meta.storesMixedCaseQuotedIdentifiers(); }
+        try { return databaseMetaData.storesMixedCaseQuotedIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
-        try { return _meta.storesUpperCaseIdentifiers(); }
+        try { return databaseMetaData.storesUpperCaseIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
-        try { return _meta.storesUpperCaseQuotedIdentifiers(); }
+        try { return databaseMetaData.storesUpperCaseQuotedIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        try { return _meta.supportsANSI92EntryLevelSQL(); }
+        try { return databaseMetaData.supportsANSI92EntryLevelSQL(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
-        try { return _meta.supportsANSI92FullSQL(); }
+        try { return databaseMetaData.supportsANSI92FullSQL(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        try { return _meta.supportsANSI92IntermediateSQL(); }
+        try { return databaseMetaData.supportsANSI92IntermediateSQL(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        try { return _meta.supportsAlterTableWithAddColumn(); }
+        try { return databaseMetaData.supportsAlterTableWithAddColumn(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        try { return _meta.supportsAlterTableWithDropColumn(); }
+        try { return databaseMetaData.supportsAlterTableWithDropColumn(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-        try { return _meta.supportsBatchUpdates(); }
+        try { return databaseMetaData.supportsBatchUpdates(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
-        try { return _meta.supportsCatalogsInDataManipulation(); }
+        try { return databaseMetaData.supportsCatalogsInDataManipulation(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        try { return _meta.supportsCatalogsInIndexDefinitions(); }
+        try { return databaseMetaData.supportsCatalogsInIndexDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        try { return _meta.supportsCatalogsInPrivilegeDefinitions(); }
+        try { return databaseMetaData.supportsCatalogsInPrivilegeDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        try { return _meta.supportsCatalogsInProcedureCalls(); }
+        try { return databaseMetaData.supportsCatalogsInProcedureCalls(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        try { return _meta.supportsCatalogsInTableDefinitions(); }
+        try { return databaseMetaData.supportsCatalogsInTableDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
-        try { return _meta.supportsColumnAliasing(); }
+        try { return databaseMetaData.supportsColumnAliasing(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
-        try { return _meta.supportsConvert(); }
+        try { return databaseMetaData.supportsConvert(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsConvert(final int fromType, final int toType)
             throws SQLException {
-        try { return _meta.supportsConvert(fromType, toType); }
+        try { return databaseMetaData.supportsConvert(fromType, toType); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
-        try { return _meta.supportsCoreSQLGrammar(); }
+        try { return databaseMetaData.supportsCoreSQLGrammar(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
-        try { return _meta.supportsCorrelatedSubqueries(); }
+        try { return databaseMetaData.supportsCorrelatedSubqueries(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions()
             throws SQLException {
-        try { return _meta.supportsDataDefinitionAndDataManipulationTransactions(); }
+        try { return databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly()
             throws SQLException {
-        try { return _meta.supportsDataManipulationTransactionsOnly(); }
+        try { return databaseMetaData.supportsDataManipulationTransactionsOnly(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        try { return _meta.supportsDifferentTableCorrelationNames(); }
+        try { return databaseMetaData.supportsDifferentTableCorrelationNames(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
-        try { return _meta.supportsExpressionsInOrderBy(); }
+        try { return databaseMetaData.supportsExpressionsInOrderBy(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
-        try { return _meta.supportsExtendedSQLGrammar(); }
+        try { return databaseMetaData.supportsExtendedSQLGrammar(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
-        try { return _meta.supportsFullOuterJoins(); }
+        try { return databaseMetaData.supportsFullOuterJoins(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-        try { return _meta.supportsGetGeneratedKeys(); }
+        try { return databaseMetaData.supportsGetGeneratedKeys(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
-        try { return _meta.supportsGroupBy(); }
+        try { return databaseMetaData.supportsGroupBy(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
-        try { return _meta.supportsGroupByBeyondSelect(); }
+        try { return databaseMetaData.supportsGroupByBeyondSelect(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
-        try { return _meta.supportsGroupByUnrelated(); }
+        try { return databaseMetaData.supportsGroupByUnrelated(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        try { return _meta.supportsIntegrityEnhancementFacility(); }
+        try { return databaseMetaData.supportsIntegrityEnhancementFacility(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
-        try { return _meta.supportsLikeEscapeClause(); }
+        try { return databaseMetaData.supportsLikeEscapeClause(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
-        try { return _meta.supportsLimitedOuterJoins(); }
+        try { return databaseMetaData.supportsLimitedOuterJoins(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
-        try { return _meta.supportsMinimumSQLGrammar(); }
+        try { return databaseMetaData.supportsMinimumSQLGrammar(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
-        try { return _meta.supportsMixedCaseIdentifiers(); }
+        try { return databaseMetaData.supportsMixedCaseIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
-        try { return _meta.supportsMixedCaseQuotedIdentifiers(); }
+        try { return databaseMetaData.supportsMixedCaseQuotedIdentifiers(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-        try { return _meta.supportsMultipleOpenResults(); }
+        try { return databaseMetaData.supportsMultipleOpenResults(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
-        try { return _meta.supportsMultipleResultSets(); }
+        try { return databaseMetaData.supportsMultipleResultSets(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
-        try { return _meta.supportsMultipleTransactions(); }
+        try { return databaseMetaData.supportsMultipleTransactions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        try { return _meta.supportsNamedParameters(); }
+        try { return databaseMetaData.supportsNamedParameters(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
-        try { return _meta.supportsNonNullableColumns(); }
+        try { return databaseMetaData.supportsNonNullableColumns(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-        try { return _meta.supportsOpenCursorsAcrossCommit(); }
+        try { return databaseMetaData.supportsOpenCursorsAcrossCommit(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-        try { return _meta.supportsOpenCursorsAcrossRollback(); }
+        try { return databaseMetaData.supportsOpenCursorsAcrossRollback(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-        try { return _meta.supportsOpenStatementsAcrossCommit(); }
+        try { return databaseMetaData.supportsOpenStatementsAcrossCommit(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-        try { return _meta.supportsOpenStatementsAcrossRollback(); }
+        try { return databaseMetaData.supportsOpenStatementsAcrossRollback(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
-        try { return _meta.supportsOrderByUnrelated(); }
+        try { return databaseMetaData.supportsOrderByUnrelated(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
-        try { return _meta.supportsOuterJoins(); }
+        try { return databaseMetaData.supportsOuterJoins(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsPositionedDelete() throws SQLException {
-        try { return _meta.supportsPositionedDelete(); }
+        try { return databaseMetaData.supportsPositionedDelete(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsPositionedUpdate() throws SQLException {
-        try { return _meta.supportsPositionedUpdate(); }
+        try { return databaseMetaData.supportsPositionedUpdate(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsResultSetConcurrency(final int type, final int concurrency)
             throws SQLException {
-        try { return _meta.supportsResultSetConcurrency(type, concurrency); }
+        try { return databaseMetaData.supportsResultSetConcurrency(type, concurrency); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsResultSetHoldability(final int holdability)
             throws SQLException {
-        try { return _meta.supportsResultSetHoldability(holdability); }
+        try { return databaseMetaData.supportsResultSetHoldability(holdability); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsResultSetType(final int type) throws SQLException {
-        try { return _meta.supportsResultSetType(type); }
+        try { return databaseMetaData.supportsResultSetType(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-        try { return _meta.supportsSavepoints(); }
+        try { return databaseMetaData.supportsSavepoints(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        try { return _meta.supportsSchemasInDataManipulation(); }
+        try { return databaseMetaData.supportsSchemasInDataManipulation(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        try { return _meta.supportsSchemasInIndexDefinitions(); }
+        try { return databaseMetaData.supportsSchemasInIndexDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        try { return _meta.supportsSchemasInPrivilegeDefinitions(); }
+        try { return databaseMetaData.supportsSchemasInPrivilegeDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        try { return _meta.supportsSchemasInProcedureCalls(); }
+        try { return databaseMetaData.supportsSchemasInProcedureCalls(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        try { return _meta.supportsSchemasInTableDefinitions(); }
+        try { return databaseMetaData.supportsSchemasInTableDefinitions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSelectForUpdate() throws SQLException {
-        try { return _meta.supportsSelectForUpdate(); }
+        try { return databaseMetaData.supportsSelectForUpdate(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-        try { return _meta.supportsStatementPooling(); }
+        try { return databaseMetaData.supportsStatementPooling(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsStoredProcedures() throws SQLException {
-        try { return _meta.supportsStoredProcedures(); }
+        try { return databaseMetaData.supportsStoredProcedures(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
-        try { return _meta.supportsSubqueriesInComparisons(); }
+        try { return databaseMetaData.supportsSubqueriesInComparisons(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
-        try { return _meta.supportsSubqueriesInExists(); }
+        try { return databaseMetaData.supportsSubqueriesInExists(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
-        try { return _meta.supportsSubqueriesInIns(); }
+        try { return databaseMetaData.supportsSubqueriesInIns(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
-        try { return _meta.supportsSubqueriesInQuantifieds(); }
+        try { return databaseMetaData.supportsSubqueriesInQuantifieds(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
-        try { return _meta.supportsTableCorrelationNames(); }
+        try { return databaseMetaData.supportsTableCorrelationNames(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsTransactionIsolationLevel(final int level)
             throws SQLException {
-        try { return _meta.supportsTransactionIsolationLevel(level); }
+        try { return databaseMetaData.supportsTransactionIsolationLevel(level); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsTransactions() throws SQLException {
-        try { return _meta.supportsTransactions(); }
+        try { return databaseMetaData.supportsTransactions(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsUnion() throws SQLException {
-        try { return _meta.supportsUnion(); }
+        try { return databaseMetaData.supportsUnion(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
-        try { return _meta.supportsUnionAll(); }
+        try { return databaseMetaData.supportsUnionAll(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean updatesAreDetected(final int type) throws SQLException {
-        try { return _meta.updatesAreDetected(type); }
+        try { return databaseMetaData.updatesAreDetected(type); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
-        try { return _meta.usesLocalFilePerTable(); }
+        try { return databaseMetaData.usesLocalFilePerTable(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
-        try { return _meta.usesLocalFiles(); }
+        try { return databaseMetaData.usesLocalFiles(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
@@ -1262,10 +1261,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return true;
-        } else if (iface.isAssignableFrom(_meta.getClass())) {
+        } else if (iface.isAssignableFrom(databaseMetaData.getClass())) {
             return true;
         } else {
-            return _meta.isWrapperFor(iface);
+            return databaseMetaData.isWrapperFor(iface);
         }
     }
 
@@ -1273,26 +1272,26 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
-        } else if (iface.isAssignableFrom(_meta.getClass())) {
-            return iface.cast(_meta);
+        } else if (iface.isAssignableFrom(databaseMetaData.getClass())) {
+            return iface.cast(databaseMetaData);
         } else {
-            return _meta.unwrap(iface);
+            return databaseMetaData.unwrap(iface);
         }
     }
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-        try { return _meta.getRowIdLifetime(); }
+        try { return databaseMetaData.getRowIdLifetime(); }
         catch (final SQLException e) { handleException(e); throw new AssertionError(); }
     }
 
     @Override
     public ResultSet getSchemas(final String catalog, final String schemaPattern)
     throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getSchemas(catalog, schemaPattern));
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getSchemas(catalog, schemaPattern));
         }
         catch (final SQLException e) {
             handleException(e);
@@ -1302,22 +1301,22 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        try { return _meta.autoCommitFailureClosesAllResultSets(); }
+        try { return databaseMetaData.autoCommitFailureClosesAllResultSets(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        try { return _meta.supportsStoredFunctionsUsingCallSyntax(); }
+        try { return databaseMetaData.supportsStoredFunctionsUsingCallSyntax(); }
         catch (final SQLException e) { handleException(e); return false; }
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getClientInfoProperties());
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getClientInfoProperties());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -1328,10 +1327,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getFunctions(final String catalog, final String schemaPattern,
             final String functionNamePattern) throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getFunctions(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getFunctions(catalog, schemaPattern,
                             functionNamePattern));
         }
         catch (final SQLException e) {
@@ -1344,10 +1343,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
             final String functionNamePattern, final String columnNamePattern)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getFunctionColumns(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getFunctionColumns(catalog, schemaPattern,
                             functionNamePattern, columnNamePattern));
         }
         catch (final SQLException e) {
@@ -1362,10 +1361,10 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getPseudoColumns(final String catalog, final String schemaPattern,
             final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(_conn,
-                    _meta.getPseudoColumns(catalog, schemaPattern,
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getPseudoColumns(catalog, schemaPattern,
                             tableNamePattern, columnNamePattern));
 }
         catch (final SQLException e) {
@@ -1376,9 +1375,9 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        _conn.checkOpen();
+        connection.checkOpen();
         try {
-            return _meta.generatedKeyAlwaysReturned();
+            return databaseMetaData.generatedKeyAlwaysReturned();
         }
         catch (final SQLException e) {
             handleException(e);
