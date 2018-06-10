@@ -134,4 +134,27 @@ public final class Utils {
         final MessageFormat mf = new MessageFormat(msg);
         return mf.format(args, new StringBuffer(), null).toString();
     }
+
+    /**
+     * Converts the given String to a char[].
+     * 
+     * @param value
+     *            may be null.
+     * @return a char[] or null.
+     */
+    public static char[] toCharArray(final String value) {
+        return value != null ? value.toCharArray() : null;
+    }
+
+    
+    /**
+     * Converts the given char[] to a String.
+     * 
+     * @param value
+     *            may be null.
+     * @return a String or null.
+     */
+    public static String toString(final char[] value) {
+        return value == null ? null : String.valueOf(value);
+    }
 }

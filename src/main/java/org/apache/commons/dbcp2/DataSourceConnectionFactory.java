@@ -75,7 +75,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(final DataSource dataSource, final String userName, final String password) {
         this.dataSource = dataSource;
         this.userName = userName;
-        this.userPassword = password != null ? password.toCharArray() : null;
+        this.userPassword = Utils.toCharArray(password);
     }
 
     @Override
@@ -83,6 +83,6 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
         if (null == userName && null == userPassword) {
             return dataSource.getConnection();
         }
-        return dataSource.getConnection(userName, userPassword == null ? null : String.valueOf(userPassword));
+        return dataSource.getConnection(userName, Utils.toString(userPassword));
     }
 }
