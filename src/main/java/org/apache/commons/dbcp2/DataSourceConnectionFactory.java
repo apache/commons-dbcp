@@ -27,25 +27,42 @@ import javax.sql.DataSource;
  * @since 2.0
  */
 public class DataSourceConnectionFactory implements ConnectionFactory {
-    public DataSourceConnectionFactory(final DataSource source) {
-        this(source,null,null);
-    }
 
-    public DataSourceConnectionFactory(final DataSource source, final String uname, final String passwd) {
-        _source = source;
-        _uname = uname;
-        _passwd = passwd;
-    }
+    private final DataSource dataSource;
 
+    private final String userName;
+
+    private final String userPassword;
+
+    /**
+     * Constructs an instance for the given DataSource.
+     * 
+     * @param dataSource
+     *            The DataSource for this factory.
+     */
+    public DataSourceConnectionFactory(final DataSource dataSource) {
+        this(dataSource, null, null);
+    }
+    /**
+     * Constructs an instance for the given DataSource.
+     * 
+     * @param dataSource
+     *            The DataSource for this factory.
+     * @param userName
+     *            The user name.
+     * @param password
+     *            The user password.
+     */
+    public DataSourceConnectionFactory(final DataSource dataSource, final String userName, final String password) {
+        this.dataSource = dataSource;
+        this.userName = userName;
+        this.userPassword = password;
+    }
     @Override
     public Connection createConnection() throws SQLException {
-        if(null == _uname && null == _passwd) {
-            return _source.getConnection();
+        if (null == userName && null == userPassword) {
+            return dataSource.getConnection();
         }
-        return _source.getConnection(_uname,_passwd);
+        return dataSource.getConnection(userName, userPassword);
     }
-
-    private final String _uname;
-    private final String _passwd;
-    private final DataSource _source;
 }
