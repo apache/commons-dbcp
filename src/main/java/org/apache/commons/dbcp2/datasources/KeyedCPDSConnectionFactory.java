@@ -50,11 +50,11 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but "
             + "I have no record of the underlying PooledConnection.";
 
-    private final ConnectionPoolDataSource _cpds;
-    private final String _validationQuery;
-    private final int _validationQueryTimeout;
-    private final boolean _rollbackAfterValidation;
-    private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> _pool;
+    private final ConnectionPoolDataSource cpds;
+    private final String validationQuery;
+    private final int validationQueryTimeout;
+    private final boolean rollbackAfterValidation;
+    private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool;
     private long maxConnLifetimeMillis = -1;
 
     /**
@@ -86,14 +86,14 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
                                       final String validationQuery,
                                       final int validationQueryTimeout,
                                       final boolean rollbackAfterValidation) {
-        _cpds = cpds;
-        _validationQuery = validationQuery;
-        _validationQueryTimeout = validationQueryTimeout;
-        _rollbackAfterValidation = rollbackAfterValidation;
+        this.cpds = cpds;
+        this.validationQuery = validationQuery;
+        this.validationQueryTimeout = validationQueryTimeout;
+        this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
     public void setPool(final KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool) {
-        this._pool = pool;
+        this.pool = pool;
     }
 
     /**
@@ -102,7 +102,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * @return KeyedObjectPool managing pooled connections
      */
     public KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> getPool() {
-        return _pool;
+        return pool;
     }
 
     /**
@@ -122,9 +122,9 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         final String userName = upkey.getUsername();
         final String password = upkey.getPassword();
         if (userName == null) {
-            pc = _cpds.getPooledConnection();
+            pc = cpds.getPooledConnection();
         } else {
-            pc = _cpds.getPooledConnection(userName, password);
+            pc = cpds.getPooledConnection(userName, password);
         }
 
         if (pc == null) {
@@ -171,8 +171,8 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         final PooledConnection pconn = p.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pconn);
-        if (null == _validationQuery) {
-            int timeout = _validationQueryTimeout;
+        if (null == validationQuery) {
+            int timeout = validationQueryTimeout;
             if (timeout < 0) {
                 timeout = 0;
             }
@@ -196,13 +196,13 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
             try {
                 conn = pconn.getConnection();
                 stmt = conn.createStatement();
-                rset = stmt.executeQuery(_validationQuery);
+                rset = stmt.executeQuery(validationQuery);
                 if (rset.next()) {
                     valid = true;
                 } else {
                     valid = false;
                 }
-                if (_rollbackAfterValidation) {
+                if (rollbackAfterValidation) {
                     conn.rollback();
                 }
             } catch (final Exception e) {
@@ -248,12 +248,12 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
                 throw new IllegalStateException(NO_KEY_MESSAGE);
             }
             try {
-                _pool.returnObject(pci.getUserPassKey(), pci);
+                pool.returnObject(pci.getUserPassKey(), pci);
             } catch (final Exception e) {
                 System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + "NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
-                    _pool.invalidateObject(pci.getUserPassKey(), pci);
+                    pool.invalidateObject(pci.getUserPassKey(), pci);
                 } catch (final Exception e3) {
                     System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + pci);
                     e3.printStackTrace();
@@ -278,7 +278,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
-            _pool.invalidateObject(info.getUserPassKey(), info);
+            pool.invalidateObject(info.getUserPassKey(), info);
         } catch (final Exception e) {
             System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + info);
             e.printStackTrace();
@@ -303,8 +303,8 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         }
         final UserPassKey key = info.getUserPassKey();
         try {
-            _pool.invalidateObject(key, info); // Destroy and update pool counters
-            _pool.clear(key); // Remove any idle instances with this key
+            pool.invalidateObject(key, info); // Destroy and update pool counters
+            pool.clear(key); // Remove any idle instances with this key
         } catch (final Exception ex) {
             throw new SQLException("Error invalidating connection", ex);
         }
@@ -336,7 +336,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     @Override
     public void closePool(final String userName) throws SQLException {
         try {
-            _pool.clear(new UserPassKey(userName, null));
+            pool.clear(new UserPassKey(userName, null));
         } catch (final Exception ex) {
             throw new SQLException("Error closing connection pool", ex);
         }
