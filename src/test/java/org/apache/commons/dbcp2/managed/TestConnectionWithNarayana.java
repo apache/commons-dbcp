@@ -178,12 +178,15 @@ public class TestConnectionWithNarayana {
                         ps2 = c.prepareStatement(SELECT_STMT);
                         rs = ps2.executeQuery();
                     } finally {
-                        if (rs != null)
+                        if (rs != null) {
                             rs.close();
-                        if (ps2 != null)
+                        }
+                        if (ps2 != null) {
                             ps2.close();
-                        if (c != null)
+                        }
+                        if (c != null) {
                             c.close();
+                        }
                     }
                 } while (n < 2);
 
@@ -208,10 +211,12 @@ public class TestConnectionWithNarayana {
                     mds.getTransactionManager().rollback();
                 }
             } finally {
-                if (ps != null)
+                if (ps != null) {
                     ps.close();
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
+                }
             }
             Assert.assertEquals(0, mds.getNumActive());
         }
