@@ -44,8 +44,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @since 2.0
  */
 class CPDSConnectionFactory
-        implements PooledObjectFactory<PooledConnectionAndInfo>,
-        ConnectionEventListener, PooledConnectionManager {
+        implements PooledObjectFactory<PooledConnectionAndInfo>, ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE
             = "close() was called on a Connection, but "
@@ -57,9 +56,8 @@ class CPDSConnectionFactory
     private final boolean rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> pool;
     private final String userName;
-    private String password = null;
+    private char[] userPassword;
     private long maxConnLifetimeMillis = -1;
-
 
     /**
      * Map of PooledConnections for which close events are ignored.
@@ -75,32 +73,64 @@ class CPDSConnectionFactory
         new ConcurrentHashMap<>();
 
     /**
-     * Create a new {@code PoolableConnectionFactory}.
+     * Creates a new {@code PoolableConnectionFactory}.
      *
-     * @param cpds the ConnectionPoolDataSource from which to obtain
-     * PooledConnection's
-     * @param validationQuery a query to use to {@link #validateObject
-     * validate} {@link Connection}s. Should return at least one row.
-     * May be {@code null} in which case {@link Connection#isValid(int)} will
-     * be used to validate connections.
-     * @param validationQueryTimeout Timeout in seconds before validation fails
-     * @param rollbackAfterValidation whether a rollback should be issued
-     * after {@link #validateObject validating} {@link Connection}s.
-     * @param userName The user name to use to create connections
-     * @param password The password to use to create connections
+     * @param cpds
+     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
+     * @param validationQuery
+     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
+     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
+     *            connections.
+     * @param validationQueryTimeout
+     *            Timeout in seconds before validation fails
+     * @param rollbackAfterValidation
+     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param userName
+     *            The user name to use to create connections
+     * @param userPassword
+     *            The password to use to create connections
+     * @since 2.4.0
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
                                  final String validationQuery,
                                  final int validationQueryTimeout,
                                  final boolean rollbackAfterValidation,
                                  final String userName,
-                                 final String password) {
+                                 final char[] userPassword) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeout = validationQueryTimeout;
         this.userName = userName;
-        this.password = password;
+        this.userPassword = userPassword;
         this.rollbackAfterValidation = rollbackAfterValidation;
+    }
+
+    /**
+     * Creates a new {@code PoolableConnectionFactory}.
+     *
+     * @param cpds
+     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
+     * @param validationQuery
+     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
+     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
+     *            connections.
+     * @param validationQueryTimeout
+     *            Timeout in seconds before validation fails
+     * @param rollbackAfterValidation
+     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param userName
+     *            The user name to use to create connections
+     * @param userPassword
+     *            The password to use to create connections
+     */
+    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
+                                 final String validationQuery,
+                                 final int validationQueryTimeout,
+                                 final boolean rollbackAfterValidation,
+                                 final String userName,
+                                 final String userPassword) {
+        this(cpds, validationQuery, validationQueryTimeout, rollbackAfterValidation, userName,
+                Utils.toCharArray(userPassword));
     }
 
     /**
@@ -129,7 +159,7 @@ class CPDSConnectionFactory
             if (userName == null) {
                 pc = cpds.getPooledConnection();
             } else {
-                pc = cpds.getPooledConnection(userName, password);
+                pc = cpds.getPooledConnection(userName, Utils.toString(userPassword));
             }
 
             if (pc == null) {
@@ -139,7 +169,7 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, userName, password);
+            pci = new PooledConnectionAndInfo(pc, userName, Utils.toString(userPassword));
             pcMap.put(pc, pci);
         } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -322,11 +352,20 @@ class CPDSConnectionFactory
     /**
      * Sets the database password used when creating new connections.
      *
-     * @param password new password
+     * @param userPassword new password
+     */
+    public synchronized void setPassword(final char[] userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    /**
+     * Sets the database password used when creating new connections.
+     *
+     * @param userPassword new password
      */
     @Override
-    public synchronized void setPassword(final String password) {
-        this.password = password;
+    public synchronized void setPassword(final String userPassword) {
+        this.userPassword = Utils.toCharArray(userPassword);
     }
 
     /**
