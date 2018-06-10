@@ -71,7 +71,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Close all pools associated with this class.
+     * Closes all pools associated with this class.
      */
     public static void closeAll() throws Exception {
         // Get iterator to loop over all instances of this data source.
@@ -83,7 +83,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * implements ObjectFactory to create an instance of SharedPoolDataSource
+     * Implements ObjectFactory to create an instance of SharedPoolDataSource
      * or PerUserPoolDataSource
      */
     @Override
@@ -306,7 +306,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         throws IOException, ClassNotFoundException;
 
     /**
-     * used to set some properties saved within a Reference
+     * Sets some properties saved within a Reference
      */
     protected static final Object deserialize(final byte[] data)
         throws IOException, ClassNotFoundException {
