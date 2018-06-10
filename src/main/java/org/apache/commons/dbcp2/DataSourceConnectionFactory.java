@@ -18,6 +18,7 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 /**
@@ -32,20 +33,38 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
 
     private final String userName;
 
-    private final String userPassword;
+    private final char[] userPassword;
 
     /**
      * Constructs an instance for the given DataSource.
-     * 
+     *
      * @param dataSource
      *            The DataSource for this factory.
      */
     public DataSourceConnectionFactory(final DataSource dataSource) {
-        this(dataSource, null, null);
+        this(dataSource, null, (char[]) null);
     }
+
     /**
      * Constructs an instance for the given DataSource.
-     * 
+     *
+     * @param dataSource
+     *            The DataSource for this factory.
+     * @param userName
+     *            The user name.
+     * @param userPassword
+     *            The user password.
+     * @since 2.4.0
+     */
+    public DataSourceConnectionFactory(final DataSource dataSource, final String userName, final char[] userPassword) {
+        this.dataSource = dataSource;
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
+
+    /**
+     * Constructs an instance for the given DataSource.
+     *
      * @param dataSource
      *            The DataSource for this factory.
      * @param userName
@@ -56,13 +75,14 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(final DataSource dataSource, final String userName, final String password) {
         this.dataSource = dataSource;
         this.userName = userName;
-        this.userPassword = password;
+        this.userPassword = password != null ? password.toCharArray() : null;
     }
+
     @Override
     public Connection createConnection() throws SQLException {
         if (null == userName && null == userPassword) {
             return dataSource.getConnection();
         }
-        return dataSource.getConnection(userName, userPassword);
+        return dataSource.getConnection(userName, userPassword == null ? null : String.valueOf(userPassword));
     }
 }
