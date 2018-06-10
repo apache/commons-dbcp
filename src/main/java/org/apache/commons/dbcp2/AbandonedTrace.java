@@ -25,11 +25,10 @@ import java.util.List;
 import org.apache.commons.pool2.TrackedUse;
 
 /**
- * Tracks db connection usage for recovering and reporting
- * abandoned db connections.
- *
- * The JDBC Connection, Statement, and ResultSet classes
- * extend this class.
+ * Tracks db connection usage for recovering and reporting abandoned db connections.
+ * <p>
+ * The JDBC Connection, Statement, and ResultSet classes extend this class.
+ * </p>
  *
  * @author Glenn L. Nielsen
  * @since 2.0
@@ -38,19 +37,19 @@ public class AbandonedTrace implements TrackedUse {
 
     /** A list of objects created by children of this object */
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
+    
     /** Last time this connection was used */
     private volatile long lastUsed = 0;
 
     /**
-     * Create a new AbandonedTrace without config and
-     * without doing abandoned tracing.
+     * Create a new AbandonedTrace without config and without doing abandoned tracing.
      */
     public AbandonedTrace() {
         init(null);
     }
 
     /**
-     * Construct a new AbandonedTrace with a parent object.
+     * Constructs a new AbandonedTrace with a parent object.
      *
      * @param parent AbandonedTrace parent object
      */
@@ -59,7 +58,7 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Initialize abandoned tracing for this object.
+     * Initializes abandoned tracing for this object.
      *
      * @param parent AbandonedTrace parent object
      */
@@ -70,7 +69,7 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Get the last time this object was used in ms.
+     * Gets the last time this object was used in ms.
      *
      * @return long time in ms
      */
@@ -80,27 +79,27 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Set the time this object was last used to the
-     * current time in ms.
+     * Sets the time this object was last used to the current time in ms.
      */
     protected void setLastUsed() {
         lastUsed = System.currentTimeMillis();
     }
 
     /**
-     * Set the time in ms this object was last used.
+     * Sets the time in ms this object was last used.
      *
-     * @param time time in ms
+     * @param time
+     *            time in ms
      */
     protected void setLastUsed(final long time) {
         lastUsed = time;
     }
 
     /**
-     * Add an object to the list of objects being
-     * traced.
+     * Adds an object to the list of objects being traced.
      *
-     * @param trace AbandonedTrace object to add
+     * @param trace
+     *            AbandonedTrace object to add
      */
     protected void addTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
@@ -110,8 +109,7 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Clear the list of objects being traced by this
-     * object.
+     * Clears the list of objects being traced by this object.
      */
     protected void clearTrace() {
         synchronized(this.traceList) {
@@ -120,7 +118,7 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Get a list of objects being traced by this object.
+     * Gets a list of objects being traced by this object.
      *
      * @return List of objects
      */
@@ -146,9 +144,10 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Remove a child object this object is tracing.
+     * Removes a child object this object is tracing.
      *
-     * @param trace AbandonedTrace object to remove
+     * @param trace
+     *            AbandonedTrace object to remove
      */
     protected void removeTrace(final AbandonedTrace trace) {
         synchronized(this.traceList) {
