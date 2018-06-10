@@ -324,10 +324,11 @@ class KeyedCPDSConnectionFactory
     }
 
     /**
-     * Does nothing.  This factory does not cache user credentials.
+     * Does nothing. This factory does not cache user credentials.
      */
     @Override
     public void setPassword(final String password) {
+        // Does nothing. This factory does not cache user credentials.
     }
 
     /**
