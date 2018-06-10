@@ -65,7 +65,7 @@ public class TestInstanceKeyDataSource {
             super();
         }
         @Override
-        protected void setupDefaults(final Connection con, final String username)
+        protected void setupDefaults(final Connection connection, final String userName)
         throws  SQLException {
             throw new SQLException("bang!");
         }

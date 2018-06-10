@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 /**
  * Mock object implementing the <code>java.sql.Driver</code> interface.
  * Returns <code>TestConnection</code>'s from getConnection methods.
- * Valid username, password combinations are:
+ * Valid user name, password combinations are:
  *
  * <table summary="valid credentials">
  * <tr><th>user</th><th>password</th></tr>
@@ -59,9 +59,9 @@ public class TesterDriver implements Driver {
     /**
      * TesterDriver specific method to add users to the list of valid users
      */
-    public static void addUser(final String username, final String password) {
+    public static void addUser(final String userName, final String password) {
         synchronized (validUserPasswords) {
-            validUserPasswords.put(username, password);
+            validUserPasswords.put(userName, password);
         }
     }
 
@@ -70,18 +70,18 @@ public class TesterDriver implements Driver {
         return url != null && url.startsWith(CONNECT_STRING);
     }
 
-    private void assertValidUserPassword(final String user, final String password)
+    private void assertValidUserPassword(final String userName, final String password)
         throws SQLException {
-        if (user == null){
-            throw new SQLException("username cannot be null.");
+        if (userName == null){
+            throw new SQLException("user name cannot be null.");
         }
         synchronized (validUserPasswords) {
-            final String realPassword = validUserPasswords.getProperty(user);
+            final String realPassword = validUserPasswords.getProperty(userName);
             if (realPassword == null) {
-                throw new SQLException(user + " is not a valid username.");
+                throw new SQLException(userName + " is not a valid user name.");
             }
             if (!realPassword.equals(password)) {
-                throw new SQLException(password + " is not the correct password for " + user
+                throw new SQLException(password + " is not the correct password for " + userName
                         + ".  The correct password is " + realPassword);
             }
         }
@@ -93,22 +93,22 @@ public class TesterDriver implements Driver {
         Connection conn = null;
         if (acceptsURL(url))
         {
-            String username = "test";
+            String userName = "test";
             String password = "test";
             if (info != null)
             {
-                username = info.getProperty("user");
+                userName = info.getProperty("user");
                 password = info.getProperty("password");
-                if (username == null) {
+                if (userName == null) {
                     final String[] parts = url.split(";");
-                    username = parts[1];
-                    username = username.split("=")[1];
+                    userName = parts[1];
+                    userName = userName.split("=")[1];
                     password = parts[2];
                     password = password.split("=")[1];
                 }
-                assertValidUserPassword(username, password);
+                assertValidUserPassword(userName, password);
             }
-            conn = new TesterConnection(username, password);
+            conn = new TesterConnection(userName, password);
         }
 
         return conn;

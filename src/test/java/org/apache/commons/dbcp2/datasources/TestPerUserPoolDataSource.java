@@ -427,7 +427,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
-    // unregistered user is in the same pool as without username
+    // unregistered user is in the same pool as without user name
     @Test
     public void testUnregisteredUser() throws Exception {
         final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;

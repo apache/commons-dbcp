@@ -46,9 +46,9 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * set for users with read-only connections.</p>
  *
  * <p>User passwords can be changed without re-initializing the datasource.
- * When a <code>getConnection(username, password)</code> request is processed
+ * When a <code>getConnection(userName, password)</code> request is processed
  * with a password that is different from those used to create connections in
- * the pool associated with <code>username</code>, an attempt is made to create
+ * the pool associated with <code>userName</code>, an attempt is made to create
  * a new connection using the supplied password and if this succeeds, the
  * existing pool is cleared and a new pool is created for connections using the
  * new password.</p>

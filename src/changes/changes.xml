@@ -785,7 +785,7 @@ The <action> type attribute can be add,update,fix,remove.
         Add a &lt;i&gt;JNDI How To&lt;/i&gt; to the User Guide.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-108" due-to="Maxwell Grender-Jones">
-        DriverManagerConnectionFactory: blank username/password handling.
+        DriverManagerConnectionFactory: blank user name and password handling.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-113" due-to="Rohan Lenard">
         Broken behaviour for BasicDataSource.setMaxActive(0).

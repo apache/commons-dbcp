@@ -1063,7 +1063,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * The connection username to be passed to our JDBC driver to establish a connection.
+     * The connection user name to be passed to our JDBC driver to establish a connection.
      */
     private String userName;
 
@@ -1087,11 +1087,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
      * </p>
      *
-     * @param username
-     *            the new value for the JDBC connection username
+     * @param userName
+     *            the new value for the JDBC connection user name
      */
-    public void setUsername(final String username) {
-        this.userName = username;
+    public void setUsername(final String userName) {
+        this.userName = userName;
     }
 
     /**

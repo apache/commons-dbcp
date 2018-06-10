@@ -20,10 +20,10 @@ package org.apache.commons.dbcp2.datasources;
 import java.io.Serializable;
 
 /**
- * <p>Holds a username, password pair.  Serves as a poolable object key for the KeyedObjectPool
- * backing a SharedPoolDataSource.  Two instances with the same username are considered equal.
+ * <p>Holds a user name, password pair.  Serves as a poolable object key for the KeyedObjectPool
+ * backing a SharedPoolDataSource.  Two instances with the same user name are considered equal.
  * This ensures that there will be only one keyed pool for each user in the pool.  The password
- * is used (along with the username) by the KeyedCPDSConnectionFactory when creating new connections.</p>
+ * is used (along with the user name) by the KeyedCPDSConnectionFactory when creating new connections.</p>
  *
  * <p>{@link InstanceKeyDataSource#getConnection(String, String)} validates that the password used to create
  * a connection matches the password provided by the client.</p>
@@ -33,15 +33,16 @@ import java.io.Serializable;
 class UserPassKey implements Serializable {
     private static final long serialVersionUID = 5142970911626584817L;
     private final String password;
-    private final String username;
+    private final String userName;
 
-    UserPassKey(final String username, final String password) {
-        this.username = username;
+    UserPassKey(final String userName, final String password) {
+        this.userName = userName;
         this.password = password;
     }
 
     /**
-     * Get the value of password.
+     * Gets the value of password.
+     * 
      * @return value of password.
      */
     public String getPassword() {
@@ -49,16 +50,17 @@ class UserPassKey implements Serializable {
     }
 
     /**
-     * Get the value of username.
-     * @return value of username.
+     * Gets the value of user name.
+     * 
+     * @return value of user name.
      */
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     /**
-     * @return <code>true</code> if the username fields for both
-     * objects are equal.  Two instances with the same username
+     * @return <code>true</code> if the user name fields for both
+     * objects are equal.  Two instances with the same user name
      * but different passwords are considered equal.
      *
      * @see java.lang.Object#equals(java.lang.Object)
@@ -79,25 +81,25 @@ class UserPassKey implements Serializable {
 
         final UserPassKey key = (UserPassKey) obj;
 
-        return this.username == null ?
-                key.username == null :
-                this.username.equals(key.username);
+        return this.userName == null ?
+                key.userName == null :
+                this.userName.equals(key.userName);
     }
 
     /**
-     * Returns the hash of the username.
+     * Returns the hash of the user name.
      */
     @Override
     public int hashCode() {
-        return this.username != null ?
-                this.username.hashCode() : 0;
+        return this.userName != null ?
+                this.userName.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer(50);
         sb.append("UserPassKey(");
-        sb.append(username).append(", ").append(password).append(')');
+        sb.append(userName).append(", ").append(password).append(')');
         return sb.toString();
     }
 }

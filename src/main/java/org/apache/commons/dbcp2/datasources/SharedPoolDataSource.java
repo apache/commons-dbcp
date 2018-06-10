@@ -34,13 +34,13 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 /**
  * <p>A pooling <code>DataSource</code> appropriate for deployment within
  * J2EE environment.  There are many configuration options, most of which are
- * defined in the parent class. All users (based on username) share a single
- * maximum number of Connections in this datasource.</p>
+ * defined in the parent class. All users (based on user name) share a single
+ * maximum number of Connections in this data source.</p>
  *
- * <p>User passwords can be changed without re-initializing the datasource.
- * When a <code>getConnection(username, password)</code> request is processed
+ * <p>User passwords can be changed without re-initializing the data source.
+ * When a <code>getConnection(user name, password)</code> request is processed
  * with a password that is different from those used to create connections in the
- * pool associated with <code>username</code>, an attempt is made to create a
+ * pool associated with <code>user name</code>, an attempt is made to create a
  * new connection using the supplied password and if this succeeds, idle connections
  * created using the old password are destroyed and new connections are created
  * using the new password.</p>
@@ -59,14 +59,14 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     private transient KeyedCPDSConnectionFactory factory = null;
 
     /**
-     * Default no-arg constructor for Serialization
+     * Default no-argument constructor for Serialization
      */
     public SharedPoolDataSource() {
         // empty.
     }
 
     /**
-     * Closes pool being maintained by this datasource.
+     * Closes pool being maintained by this data source.
      */
     @Override
     public void close() throws Exception {
@@ -125,13 +125,13 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     // Inherited abstract methods
 
     @Override
-    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String username, final String password)
+    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password)
             throws SQLException {
 
         synchronized (this) {
             if (pool == null) {
                 try {
-                    registerPool(username, password);
+                    registerPool(userName, password);
                 } catch (final NamingException e) {
                     throw new SQLException("RegisterPool failed", e);
                 }
@@ -140,7 +140,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
         PooledConnectionAndInfo info = null;
 
-        final UserPassKey key = new UserPassKey(username, password);
+        final UserPassKey key = new UserPassKey(userName, password);
 
         try {
             info = pool.borrowObject(key);
@@ -165,9 +165,9 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         return ref;
     }
 
-    private void registerPool(final String username, final String password) throws NamingException, SQLException {
+    private void registerPool(final String userName, final String password) throws NamingException, SQLException {
 
-        final ConnectionPoolDataSource cpds = testCPDS(username, password);
+        final ConnectionPoolDataSource cpds = testCPDS(userName, password);
 
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeout(),
@@ -199,20 +199,20 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected void setupDefaults(final Connection con, final String username) throws SQLException {
+    protected void setupDefaults(final Connection connection, final String userName) throws SQLException {
         final Boolean defaultAutoCommit = isDefaultAutoCommit();
-        if (defaultAutoCommit != null && con.getAutoCommit() != defaultAutoCommit.booleanValue()) {
-            con.setAutoCommit(defaultAutoCommit.booleanValue());
+        if (defaultAutoCommit != null && connection.getAutoCommit() != defaultAutoCommit.booleanValue()) {
+            connection.setAutoCommit(defaultAutoCommit.booleanValue());
         }
 
         final int defaultTransactionIsolation = getDefaultTransactionIsolation();
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION) {
-            con.setTransactionIsolation(defaultTransactionIsolation);
+            connection.setTransactionIsolation(defaultTransactionIsolation);
         }
 
         final Boolean defaultReadOnly = isDefaultReadOnly();
-        if (defaultReadOnly != null && con.isReadOnly() != defaultReadOnly.booleanValue()) {
-            con.setReadOnly(defaultReadOnly.booleanValue());
+        if (defaultReadOnly != null && connection.isReadOnly() != defaultReadOnly.booleanValue()) {
+            connection.setReadOnly(defaultReadOnly.booleanValue());
         }
     }
 

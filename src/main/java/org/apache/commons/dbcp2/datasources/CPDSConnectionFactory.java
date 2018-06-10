@@ -56,7 +56,7 @@ class CPDSConnectionFactory
     private final int _validationQueryTimeout;
     private final boolean _rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> _pool;
-    private final String _username;
+    private final String _userName;
     private String _password = null;
     private long maxConnLifetimeMillis = -1;
 
@@ -86,19 +86,19 @@ class CPDSConnectionFactory
      * @param validationQueryTimeout Timeout in seconds before validation fails
      * @param rollbackAfterValidation whether a rollback should be issued
      * after {@link #validateObject validating} {@link Connection}s.
-     * @param username The user name to use to create connections
+     * @param userName The user name to use to create connections
      * @param password The password to use to create connections
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
                                  final String validationQuery,
                                  final int validationQueryTimeout,
                                  final boolean rollbackAfterValidation,
-                                 final String username,
+                                 final String userName,
                                  final String password) {
         _cpds = cpds;
         _validationQuery = validationQuery;
         _validationQueryTimeout = validationQueryTimeout;
-        _username = username;
+        _userName = userName;
         _password = password;
         _rollbackAfterValidation = rollbackAfterValidation;
     }
@@ -126,10 +126,10 @@ class CPDSConnectionFactory
         PooledConnectionAndInfo pci;
         try {
             PooledConnection pc = null;
-            if (_username == null) {
+            if (_userName == null) {
                 pc = _cpds.getPooledConnection();
             } else {
-                pc = _cpds.getPooledConnection(_username, _password);
+                pc = _cpds.getPooledConnection(_userName, _password);
             }
 
             if (pc == null) {
@@ -139,7 +139,7 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, _username, _password);
+            pci = new PooledConnectionAndInfo(pc, _userName, _password);
             pcMap.put(pc, pci);
         } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -341,13 +341,13 @@ class CPDSConnectionFactory
     }
 
     /**
-     * Verifies that the username matches the user whose connections are being managed by this
+     * Verifies that the user name matches the user whose connections are being managed by this
      * factory and closes the pool if this is the case; otherwise does nothing.
      */
     @Override
-    public void closePool(final String username) throws SQLException {
+    public void closePool(final String userName) throws SQLException {
         synchronized (this) {
-            if (username == null || !username.equals(_username)) {
+            if (userName == null || !userName.equals(_userName)) {
                 return;
             }
         }

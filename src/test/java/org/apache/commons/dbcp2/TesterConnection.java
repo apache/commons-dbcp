@@ -50,16 +50,16 @@ public class TesterConnection implements Connection {
     protected Map<String,Class<?>> _typeMap = null;
     protected boolean _readOnly = false;
     protected SQLWarning warnings = null;
-    protected String username = null;
+    protected String userName = null;
     protected Exception failure;
 
-    public TesterConnection(final String username,
+    public TesterConnection(final String userName,
             @SuppressWarnings("unused") final String password) {
-        this.username = username;
+        this.userName = userName;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getUserName() {
+        return this.userName;
     }
 
     public void setWarnings(final SQLWarning warning) {

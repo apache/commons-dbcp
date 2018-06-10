@@ -115,7 +115,7 @@ public class DriverAdapterCPDS
     /** Url name */
     private String url;
     /** User name */
-    private String user;
+    private String userName;
     /** Driver class name */
     private String driver;
 
@@ -166,13 +166,13 @@ public class DriverAdapterCPDS
     /**
      * Attempt to establish a database connection.
      * 
-     * @param username
+     * @param userName
      *            name to be used for the connection
      * @param pass
      *            password to be used fur the connection
      */
     @Override
-    public PooledConnection getPooledConnection(final String username, final String pass)
+    public PooledConnection getPooledConnection(final String userName, final String pass)
             throws SQLException {
         getConnectionCalled = true;
         PooledConnectionImpl pci = null;
@@ -180,13 +180,13 @@ public class DriverAdapterCPDS
         // exception upon first invocation.
         try {
             if (connectionProperties != null) {
-                update(connectionProperties, KEY_USER, username);
+                update(connectionProperties, KEY_USER, userName);
                 update(connectionProperties, KEY_PASSWORD, pass);
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
                         getUrl(), connectionProperties));
             } else {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
-                        getUrl(), username, pass));
+                        getUrl(), userName, pass));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         } catch (final ClassCircularityError e) {
@@ -195,7 +195,7 @@ public class DriverAdapterCPDS
                         getUrl(), connectionProperties));
             } else {
                 pci = new PooledConnectionImpl(DriverManager.getConnection(
-                        getUrl(), username, pass));
+                        getUrl(), userName, pass));
             }
             pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         }
@@ -477,16 +477,16 @@ public class DriverAdapterCPDS
     }
 
     /**
-     * Gets the value of default user (login or username).
+     * Gets the value of default user (login or user name).
      * 
      * @return value of user.
      */
     public String getUser() {
-        return user;
+        return userName;
     }
 
     /**
-     * Sets the value of default user (login or username).
+     * Sets the value of default user (login or user name).
      * 
      * @param v
      *            Value to assign to user.
@@ -495,7 +495,7 @@ public class DriverAdapterCPDS
      */
     public void setUser(final String v) {
         assertInitializationAllowed();
-        this.user = v;
+        this.userName = v;
         update(connectionProperties, KEY_USER, v);
     }
 

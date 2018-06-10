@@ -108,7 +108,7 @@
  *    In code, that might look like this:
  * </p>
  * <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
- * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
+ * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
  * PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
  * PoolingDataSource dataSource = new PoolingDataSource(connectionPool);</pre>
  * <p>
@@ -117,7 +117,7 @@
  *    we create a {@link org.apache.commons.dbcp2.PoolingDriver}, and register the
  *    {@code connectionPool} with it.  E.g.,:</p>
  * <pre>GenericObjectPool connectionPool = new GenericObjectPool(null);
- * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "username", "password");
+ * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
  * PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
  * PoolingDriver driver = new PoolingDriver();
  * driver.registerPool("example",connectionPool);</pre>

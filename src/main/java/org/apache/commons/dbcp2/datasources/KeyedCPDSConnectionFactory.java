@@ -119,12 +119,12 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         PooledConnectionAndInfo pci = null;
 
         PooledConnection pc = null;
-        final String username = upkey.getUsername();
+        final String userName = upkey.getUsername();
         final String password = upkey.getPassword();
-        if (username == null) {
+        if (userName == null) {
             pc = _cpds.getPooledConnection();
         } else {
-            pc = _cpds.getPooledConnection(username, password);
+            pc = _cpds.getPooledConnection(userName, password);
         }
 
         if (pc == null) {
@@ -134,7 +134,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
-        pci = new PooledConnectionAndInfo(pc, username, password);
+        pci = new PooledConnectionAndInfo(pc, userName, password);
         pcMap.put(pc, pci);
 
         return new DefaultPooledObject<>(pci);
@@ -291,7 +291,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
 
     /**
      * Invalidates the PooledConnection in the pool. The KeyedCPDSConnectionFactory closes the connection and pool
-     * counters are updated appropriately. Also clears any idle instances associated with the username that was used to
+     * counters are updated appropriately. Also clears any idle instances associated with the user name that was used to
      * create the PooledConnection. Connections associated with this user are not affected and they will not be
      * automatically closed on return to the pool.
      */
@@ -334,9 +334,9 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * the pool associated with the given user. This method is not currently used.
      */
     @Override
-    public void closePool(final String username) throws SQLException {
+    public void closePool(final String userName) throws SQLException {
         try {
-            _pool.clear(new UserPassKey(username, null));
+            _pool.clear(new UserPassKey(userName, null));
         } catch (final Exception ex) {
             throw new SQLException("Error closing connection pool", ex);
         }

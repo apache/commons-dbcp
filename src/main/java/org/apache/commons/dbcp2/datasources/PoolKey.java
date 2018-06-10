@@ -28,9 +28,9 @@ class PoolKey implements Serializable {
     private final String dataSourceName;
     private final String userName;
 
-    PoolKey(final String dataSourceName, final String username) {
+    PoolKey(final String dataSourceName, final String userName) {
         this.dataSourceName = dataSourceName;
-        this.userName = username;
+        this.userName = userName;
     }
 
     @Override

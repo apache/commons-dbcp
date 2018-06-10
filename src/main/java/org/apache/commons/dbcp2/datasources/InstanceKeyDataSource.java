@@ -930,9 +930,9 @@ public abstract class InstanceKeyDataSource
 
     /**
      * Attempt to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)}
-     * with the provided username and password.  The password on the {@link PooledConnectionAndInfo}
+     * with the provided user name and password.  The password on the {@link PooledConnectionAndInfo}
      * instance returned by <code>getPooledConnectionAndInfo</code> is compared to the <code>password</code>
-     * parameter.  If the comparison fails, a database connection using the supplied username and password
+     * parameter.  If the comparison fails, a database connection using the supplied user name and password
      * is attempted.  If the connection attempt fails, an SQLException is thrown, indicating that the given password
      * did not match the password used to create the pooled connection.  If the connection attempt succeeds, this
      * means that the database password has been changed.  In this case, the <code>PooledConnectionAndInfo</code>
@@ -940,7 +940,7 @@ public abstract class InstanceKeyDataSource
      * repeatedly invoked until a <code>PooledConnectionAndInfo</code> instance with the new password is returned.
      */
     @Override
-    public Connection getConnection(final String username, final String password)
+    public Connection getConnection(final String userName, final String password)
             throws SQLException {
         if (instanceKey == null) {
             throw new SQLException("Must set the ConnectionPoolDataSource "
@@ -950,7 +950,7 @@ public abstract class InstanceKeyDataSource
         getConnectionCalled = true;
         PooledConnectionAndInfo info = null;
         try {
-            info = getPooledConnectionAndInfo(username, password);
+            info = getPooledConnectionAndInfo(userName, password);
         } catch (final NoSuchElementException e) {
             closeDueToException(info);
             throw new SQLException("Cannot borrow connection from pool", e);
@@ -968,7 +968,7 @@ public abstract class InstanceKeyDataSource
         if (!(null == password ? null == info.getPassword()
                 : password.equals(info.getPassword()))) {  // Password on PooledConnectionAndInfo does not match
             try { // See if password has changed by attempting connection
-                testCPDS(username, password);
+                testCPDS(userName, password);
             } catch (final SQLException ex) {
                 // Password has not changed, so refuse client, but return connection to the pool
                 closeDueToException(info);
@@ -989,7 +989,7 @@ public abstract class InstanceKeyDataSource
             info = null;
             for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return
                 try {
-                    info = getPooledConnectionAndInfo(username, password);
+                    info = getPooledConnectionAndInfo(userName, password);
                 } catch (final NoSuchElementException e) {
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
@@ -1018,7 +1018,7 @@ public abstract class InstanceKeyDataSource
 
         final Connection con = info.getPooledConnection().getConnection();
         try {
-            setupDefaults(con, username);
+            setupDefaults(con, userName);
             con.clearWarnings();
             return con;
         } catch (final SQLException ex) {
@@ -1032,13 +1032,10 @@ public abstract class InstanceKeyDataSource
         }
     }
 
-    protected abstract PooledConnectionAndInfo
-        getPooledConnectionAndInfo(String username, String password)
-        throws SQLException;
+    protected abstract PooledConnectionAndInfo getPooledConnectionAndInfo(String userName, String password)
+            throws SQLException;
 
-    protected abstract void setupDefaults(Connection con, String username)
-        throws SQLException;
-
+    protected abstract void setupDefaults(Connection connection, String userName) throws SQLException;
 
     private void closeDueToException(final PooledConnectionAndInfo info) {
         if (info != null) {
@@ -1055,7 +1052,7 @@ public abstract class InstanceKeyDataSource
     }
 
     protected ConnectionPoolDataSource
-        testCPDS(final String username, final String password)
+        testCPDS(final String userName, final String password)
         throws javax.naming.NamingException, SQLException {
         // The source of physical db connections
         ConnectionPoolDataSource cpds = this.dataSource;
@@ -1077,18 +1074,18 @@ public abstract class InstanceKeyDataSource
             }
         }
 
-        // try to get a connection with the supplied username/password
+        // try to get a connection with the supplied userName/password
         PooledConnection conn = null;
         try {
-            if (username != null) {
-                conn = cpds.getPooledConnection(username, password);
+            if (userName != null) {
+                conn = cpds.getPooledConnection(userName, password);
             }
             else {
                 conn = cpds.getPooledConnection();
             }
             if (conn == null) {
                 throw new SQLException(
-                    "Cannot connect using the supplied username/password");
+                    "Cannot connect using the supplied userName/password");
             }
         }
         finally {
