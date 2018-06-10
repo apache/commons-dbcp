@@ -127,11 +127,11 @@ public class DriverAdapterCPDS
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
     private int maxIdle = 10;
-    private long _timeBetweenEvictionRunsMillis =
+    private long timeBetweenEvictionRunsMillis =
             BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
-    private int _numTestsPerEvictionRun = -1;
-    private int _minEvictableIdleTimeMillis = -1;
-    private int _maxPreparedStatements = -1;
+    private int numTestsPerEvictionRun = -1;
+    private int minEvictableIdleTimeMillis = -1;
+    private int maxPreparedStatements = -1;
 
     /** Whether or not getConnection has been called */
     private volatile boolean getConnectionCalled = false;
@@ -619,7 +619,7 @@ public class DriverAdapterCPDS
      * @see #setTimeBetweenEvictionRunsMillis(long)
      */
     public long getTimeBetweenEvictionRunsMillis() {
-        return _timeBetweenEvictionRunsMillis;
+        return timeBetweenEvictionRunsMillis;
     }
 
     /**
@@ -636,7 +636,7 @@ public class DriverAdapterCPDS
     public void setTimeBetweenEvictionRunsMillis(
             final long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
-        _timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+        this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
 
     /**
@@ -647,7 +647,7 @@ public class DriverAdapterCPDS
      * @return the number of statements to examine during each run of the idle object evictor thread (if any.)
      */
     public int getNumTestsPerEvictionRun() {
-        return _numTestsPerEvictionRun;
+        return numTestsPerEvictionRun;
     }
 
     /**
@@ -667,7 +667,7 @@ public class DriverAdapterCPDS
      */
     public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         assertInitializationAllowed();
-        _numTestsPerEvictionRun = numTestsPerEvictionRun;
+        this.numTestsPerEvictionRun = numTestsPerEvictionRun;
     }
 
     /**
@@ -679,7 +679,7 @@ public class DriverAdapterCPDS
      * @return the minimum amount of time a statement may sit idle in the pool.
      */
     public int getMinEvictableIdleTimeMillis() {
-        return _minEvictableIdleTimeMillis;
+        return minEvictableIdleTimeMillis;
     }
 
     /**
@@ -695,7 +695,7 @@ public class DriverAdapterCPDS
      */
     public void setMinEvictableIdleTimeMillis(final int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
-        _minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+       this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
 
     /**
@@ -725,7 +725,7 @@ public class DriverAdapterCPDS
      */
     public int getMaxPreparedStatements()
     {
-        return _maxPreparedStatements;
+        return maxPreparedStatements;
     }
 
     /**
@@ -736,7 +736,7 @@ public class DriverAdapterCPDS
      */
     public void setMaxPreparedStatements(final int maxPreparedStatements)
     {
-        _maxPreparedStatements = maxPreparedStatements;
+        this.maxPreparedStatements = maxPreparedStatements;
     }
 
     private void update(final Properties properties, final String key, final String value) {
