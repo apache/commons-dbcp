@@ -19,25 +19,70 @@ package org.apache.commons.dbcp2.datasources;
 
 import java.io.Serializable;
 
+import org.apache.commons.dbcp2.Utils;
+
 /**
- * <p>Holds a user name, password pair.  Serves as a poolable object key for the KeyedObjectPool
- * backing a SharedPoolDataSource.  Two instances with the same user name are considered equal.
- * This ensures that there will be only one keyed pool for each user in the pool.  The password
- * is used (along with the user name) by the KeyedCPDSConnectionFactory when creating new connections.</p>
+ * <p>
+ * Holds a user name and password pair. Serves as a poolable object key for the KeyedObjectPool backing a
+ * SharedPoolDataSource. Two instances with the same user name are considered equal. This ensures that there will be
+ * only one keyed pool for each user in the pool. The password is used (along with the user name) by the
+ * KeyedCPDSConnectionFactory when creating new connections.
+ * </p>
  *
- * <p>{@link InstanceKeyDataSource#getConnection(String, String)} validates that the password used to create
- * a connection matches the password provided by the client.</p>
+ * <p>
+ * {@link InstanceKeyDataSource#getConnection(String, String)} validates that the password used to create a connection
+ * matches the password provided by the client.
+ * </p>
  *
  * @since 2.0
  */
 class UserPassKey implements Serializable {
     private static final long serialVersionUID = 5142970911626584817L;
-    private final String password;
     private final String userName;
+    private final char[] userPassword;
 
-    UserPassKey(final String userName, final String password) {
+    /**
+     * @since 2.4.0
+     */
+    UserPassKey(final String userName) {
+        this(userName, (char[]) null);
+    }
+
+    /**
+     * @since 2.4.0
+     */
+    UserPassKey(final String userName, final char[] password) {
         this.userName = userName;
-        this.password = password;
+        this.userPassword = password;
+    }
+
+    UserPassKey(final String userName, final String userPassword) {
+        this(userName, Utils.toCharArray(userPassword));
+    }
+
+    /**
+     * Only takes the user name into account.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        UserPassKey other = (UserPassKey) obj;
+        if (userName == null) {
+            if (other.userName != null) {
+                return false;
+            }
+        } else if (!userName.equals(other.userName)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -46,7 +91,16 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     public String getPassword() {
-        return password;
+        return Utils.toString(userPassword);
+    }
+
+    /**
+     * Gets the value of password.
+     * 
+     * @return value of password.
+     */
+    public char[] getPasswordCharArray() {
+        return userPassword;
     }
 
     /**
@@ -59,47 +113,21 @@ class UserPassKey implements Serializable {
     }
 
     /**
-     * @return <code>true</code> if the user name fields for both
-     * objects are equal.  Two instances with the same user name
-     * but different passwords are considered equal.
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof UserPassKey)) {
-            return false;
-        }
-
-        final UserPassKey key = (UserPassKey) obj;
-
-        return this.userName == null ?
-                key.userName == null :
-                this.userName.equals(key.userName);
-    }
-
-    /**
-     * Returns the hash of the user name.
+     * Only takes the user name into account.
      */
     @Override
     public int hashCode() {
-        return this.userName != null ?
-                this.userName.hashCode() : 0;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        return result;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer(50);
         sb.append("UserPassKey(");
-        sb.append(userName).append(", ").append(password).append(')');
+        sb.append(userName).append(", ").append(userPassword).append(')');
         return sb.toString();
     }
 }

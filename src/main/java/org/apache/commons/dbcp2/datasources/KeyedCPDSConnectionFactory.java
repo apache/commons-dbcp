@@ -336,7 +336,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     @Override
     public void closePool(final String userName) throws SQLException {
         try {
-            pool.clear(new UserPassKey(userName, null));
+            pool.clear(new UserPassKey(userName));
         } catch (final Exception ex) {
             throw new SQLException("Error closing connection pool", ex);
         }

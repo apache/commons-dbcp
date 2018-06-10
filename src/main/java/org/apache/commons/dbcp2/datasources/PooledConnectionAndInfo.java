@@ -19,6 +19,8 @@ package org.apache.commons.dbcp2.datasources;
 
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.Utils;
+
 /**
  * Immutable poolable object holding a PooledConnection along with the user name and password used to create the
  * connection.
@@ -27,15 +29,26 @@ import javax.sql.PooledConnection;
  */
 final class PooledConnectionAndInfo {
     private final PooledConnection pooledConnection;
-    private final String password;
+    private final char[] userPassword;
     private final String userName;
-    private final UserPassKey upkey;
+    private final UserPassKey upKey;
 
-    PooledConnectionAndInfo(final PooledConnection pc, final String userName, final String password) {
+    /**
+     * @since 2.4.0
+     */
+    PooledConnectionAndInfo(final PooledConnection pc, final String userName, final char[] userPassword) {
         this.pooledConnection = pc;
         this.userName = userName;
-        this.password = password;
-        upkey = new UserPassKey(userName, password);
+        this.userPassword = userPassword;
+        this.upKey = new UserPassKey(userName, userPassword);
+    }
+
+    /**
+     * @deprecated Since 2.4.0
+     */
+    @Deprecated
+    PooledConnectionAndInfo(final PooledConnection pc, final String userName, final String userPassword) {
+        this(pc,  userName, Utils.toCharArray(userPassword));
     }
 
     PooledConnection getPooledConnection() {
@@ -43,7 +56,7 @@ final class PooledConnectionAndInfo {
     }
 
     UserPassKey getUserPassKey() {
-        return upkey;
+        return upKey;
     }
 
     /**
@@ -52,7 +65,17 @@ final class PooledConnectionAndInfo {
      * @return value of password.
      */
     String getPassword() {
-        return password;
+        return Utils.toString(userPassword);
+    }
+
+    /**
+     * Gets the value of password.
+     * 
+     * @return value of password.
+     * @since 2.4.0
+     */
+    char[] getPasswordCharArray() {
+        return userPassword;
     }
 
     /**
