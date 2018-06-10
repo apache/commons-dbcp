@@ -250,14 +250,12 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p)
-            throws Exception {
+    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
         validateLifetime(p);
     }
 
     @Override
-    public void activateObject(final PooledObject<PooledConnectionAndInfo> p)
-            throws Exception {
+    public void activateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
         validateLifetime(p);
     }
 
