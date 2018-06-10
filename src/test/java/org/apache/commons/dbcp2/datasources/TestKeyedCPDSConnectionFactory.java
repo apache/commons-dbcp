@@ -44,7 +44,7 @@ public class TestKeyedCPDSConnectionFactory {
         final DriverAdapterCPDS delegate = (DriverAdapterCPDS) cpds.getDelegate();
         delegate.setDriver("org.apache.commons.dbcp2.TesterDriver");
         delegate.setUrl("jdbc:apache:commons:testdriver");
-        delegate.setUser("username");
+        delegate.setUser("userName");
         delegate.setPassword("password");
     }
 
@@ -62,9 +62,9 @@ public class TestKeyedCPDSConnectionFactory {
        ds.setMaxTotal(10);
        ds.setDefaultMaxWaitMillis(50);
        ds.setDefaultMaxIdle(2);
-       final Connection conn1 = ds.getConnection("username", "password");
-       final Connection conn2 = ds.getConnection("username", "password");
-       final Connection conn3 = ds.getConnection("username", "password");
+       final Connection conn1 = ds.getConnection("userName", "password");
+       final Connection conn2 = ds.getConnection("userName", "password");
+       final Connection conn3 = ds.getConnection("userName", "password");
        assertEquals(3, ds.getNumActive());
        conn1.close();
        assertEquals(1, ds.getNumIdle());
@@ -84,7 +84,7 @@ public class TestKeyedCPDSConnectionFactory {
     @Test
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        final UserPassKey key = new UserPassKey("username", "password");
+        final UserPassKey key = new UserPassKey("userName", "password");
         final KeyedCPDSConnectionFactory factory =
             new KeyedCPDSConnectionFactory(cpds, null, -1, false);
         final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);
@@ -156,7 +156,7 @@ public class TestKeyedCPDSConnectionFactory {
      */
     @Test
     public void testNullValidationQuery() throws Exception {
-        final UserPassKey key = new UserPassKey("username", "password");
+        final UserPassKey key = new UserPassKey("userName", "password");
         final KeyedCPDSConnectionFactory factory =
                 new KeyedCPDSConnectionFactory(cpds, null, -1, false);
         final GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory);

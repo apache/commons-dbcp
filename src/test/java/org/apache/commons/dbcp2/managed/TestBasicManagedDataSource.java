@@ -50,7 +50,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
         basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-        basicManagedDataSource.setUsername("username");
+        basicManagedDataSource.setUsername("userName");
         basicManagedDataSource.setPassword("password");
         basicManagedDataSource.setMaxIdle(1);
         // Create two connections

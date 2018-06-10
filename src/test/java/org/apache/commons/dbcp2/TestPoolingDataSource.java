@@ -48,7 +48,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     @Before
     public void setUp() throws Exception {
         final Properties props = new Properties();
-        props.setProperty("user", "username");
+        props.setProperty("user", "userName");
         props.setProperty("password", "password");
         final PoolableConnectionFactory factory =
             new PoolableConnectionFactory(
@@ -154,7 +154,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     @Test
     public void testFixFactoryConfig() throws Exception {
         final Properties props = new Properties();
-        props.setProperty("user", "username");
+        props.setProperty("user", "userName");
         props.setProperty("password", "password");
         final PoolableConnectionFactory f =
             new PoolableConnectionFactory(
@@ -176,7 +176,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     public void testClose() throws Exception {
 
         final Properties props = new Properties();
-        props.setProperty("user", "username");
+        props.setProperty("user", "userName");
         props.setProperty("password", "password");
         final PoolableConnectionFactory f =
             new PoolableConnectionFactory(

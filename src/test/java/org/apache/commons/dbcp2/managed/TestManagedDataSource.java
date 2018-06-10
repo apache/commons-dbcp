@@ -66,7 +66,7 @@ public class TestManagedDataSource extends TestConnectionPool {
 
         // create a driver connection factory
         final Properties properties = new Properties();
-        properties.setProperty("user", "username");
+        properties.setProperty("user", "userName");
         properties.setProperty("password", "password");
         final ConnectionFactory connectionFactory = new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties);
 

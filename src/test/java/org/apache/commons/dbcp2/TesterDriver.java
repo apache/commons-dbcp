@@ -53,7 +53,7 @@ public class TesterDriver implements Driver {
         validUserPasswords.put("foo", "bar");
         validUserPasswords.put("u1", "p1");
         validUserPasswords.put("u2", "p2");
-        validUserPasswords.put("username", "password");
+        validUserPasswords.put("userName", "password");
     }
 
     /**
