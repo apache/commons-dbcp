@@ -139,7 +139,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return managers.get(getPoolKey(upkey.getUsername()));
     }
 
-    private ObjectPool<PooledConnectionAndInfo> getCPDSConnectionFactoryPool(PooledConnectionManager manager) {
+    private ObjectPool<PooledConnectionAndInfo> getCPDSConnectionFactoryPool(final PooledConnectionManager manager) {
         return ((CPDSConnectionFactory) manager).getPool();
     }
 

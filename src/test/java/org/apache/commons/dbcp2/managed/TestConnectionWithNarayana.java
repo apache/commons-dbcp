@@ -47,7 +47,7 @@ public class TestConnectionWithNarayana {
     private static final String DROP_STMT = "DROP TABLE TEST_DATA";
 
     static {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("Start");
         sb.append("payload");
         for (int i = 0; i < 10000; i++) {
@@ -85,8 +85,8 @@ public class TestConnectionWithNarayana {
         mds.setLogExpiredConnections(true);
         mds.setLifo(false);
 
-        Connection conn = mds.getConnection();
-        PreparedStatement ps = conn.prepareStatement(CREATE_STMT);
+        final Connection conn = mds.getConnection();
+        final PreparedStatement ps = conn.prepareStatement(CREATE_STMT);
         ps.execute();
         ps.close();
         conn.close();
@@ -105,13 +105,13 @@ public class TestConnectionWithNarayana {
             Thread.sleep(1000);
             try (Connection conn = mds.getConnection()) {
                 fail("Should not get the connection 1");
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 if (!e.getCause().getClass().equals(IllegalStateException.class)) {
                     throw e;
                 }
                 try (Connection conn = mds.getConnection()) {
                     fail("Should not get connection 2");
-                } catch (SQLException e2) {
+                } catch (final SQLException e2) {
                     if (!e2.getCause().getClass().equals(IllegalStateException.class)) {
                         throw e2;
                     }
@@ -136,7 +136,7 @@ public class TestConnectionWithNarayana {
             try {
                 conn.commit();
                 fail("Should not work after timeout");
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 // Expected
                 Assert.assertEquals("Commit can not be set while enrolled in a transaction", e.getMessage());
             }
@@ -198,14 +198,14 @@ public class TestConnectionWithNarayana {
                 try {
                     mds.getTransactionManager().commit();
                     fail("Should not have been able to commit");
-                } catch (RollbackException e) {
+                } catch (final RollbackException e) {
                     // this is expected
                     if (mds.getTransactionManager().getTransaction() != null) {
                         // Need to pop it off the thread if a background thread rolled the transaction back
                         mds.getTransactionManager().rollback();
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 if (mds.getTransactionManager().getTransaction() != null) {
                     // Need to pop it off the thread if a background thread rolled the transaction back
                     mds.getTransactionManager().rollback();
@@ -224,8 +224,8 @@ public class TestConnectionWithNarayana {
 
     @After
     public void tearDown() throws Exception {
-        Connection conn = mds.getConnection();
-        PreparedStatement ps = conn.prepareStatement(DROP_STMT);
+        final Connection conn = mds.getConnection();
+        final PreparedStatement ps = conn.prepareStatement(DROP_STMT);
         ps.execute();
         ps.close();
         conn.close();

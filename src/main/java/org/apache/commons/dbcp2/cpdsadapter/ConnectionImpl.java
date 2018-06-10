@@ -96,7 +96,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
      * @since 2.4.0
      */
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
+    public CallableStatement prepareCall(final String sql) throws SQLException {
         checkOpen();
         try {
             return new DelegatingCallableStatement(this, pooledConnection.prepareCall(sql));
@@ -127,7 +127,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
      * @since 2.4.0
      */
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
             return new DelegatingCallableStatement(this,
@@ -162,8 +162,8 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
      * @since 2.4.0
      */
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
-            int resultSetHoldability) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             return new DelegatingCallableStatement(this,

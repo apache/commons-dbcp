@@ -2386,7 +2386,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
         try {
             ObjectNameWrapper.wrap(requestedName).registerMBean(this);
-        } catch (MalformedObjectNameException e) {
+        } catch (final MalformedObjectNameException e) {
             log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
         }
     }

@@ -47,7 +47,7 @@ class ObjectNameWrapper {
         }
     }
 
-    public static ObjectName unwrap(ObjectNameWrapper wrapper) {
+    public static ObjectName unwrap(final ObjectNameWrapper wrapper) {
         return wrapper == null ? null : wrapper.unwrap();
     }
 
@@ -65,7 +65,7 @@ class ObjectNameWrapper {
         this.objectName = objectName;
     }
 
-    public void registerMBean(Object object) {
+    public void registerMBean(final Object object) {
         if (MBEAN_SERVER == null || objectName == null) {
             return;
         }

@@ -225,8 +225,8 @@ class PooledConnectionImpl
      *
      * @since 2.4.0
      */
-    protected PStmtKey createKey(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability,
-            StatementType statementType) {
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability,
+            final StatementType statementType) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), resultSetType, resultSetConcurrency, resultSetHoldability,
                 statementType);
     }
@@ -235,8 +235,8 @@ class PooledConnectionImpl
      *
      * @since 2.4.0
      */
-    protected PStmtKey createKey(String sql, int resultSetType, int resultSetConcurrency,
-            StatementType statementType) {
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final StatementType statementType) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), resultSetType, resultSetConcurrency, statementType);
     }
 
@@ -292,7 +292,7 @@ class PooledConnectionImpl
     private String getCatalogOrNull() {
         try {
             return connection == null ? null : connection.getCatalog();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             return null;
         }
     }
@@ -401,7 +401,7 @@ class PooledConnectionImpl
      *                Thrown if a database access error occurs or this method is called on a closed connection.
      * @since 2.4.0
      */
-    CallableStatement prepareCall(String sql) throws SQLException {
+    CallableStatement prepareCall(final String sql) throws SQLException {
         if (pstmtPool == null) {
             return connection.prepareCall(sql);
         }
@@ -433,7 +433,7 @@ class PooledConnectionImpl
      *             parameters are not <code>ResultSet</code> constants indicating type and concurrency.
      * @since 2.4.0
      */
-    CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         if (pstmtPool == null) {
             return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
         }
@@ -468,8 +468,8 @@ class PooledConnectionImpl
      *             parameters are not <code>ResultSet</code> constants indicating type, concurrency, and holdability.
      * @since 2.4.0
      */
-    CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
-            int resultSetHoldability) throws SQLException {
+    CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) throws SQLException {
         if (pstmtPool == null) {
             return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }

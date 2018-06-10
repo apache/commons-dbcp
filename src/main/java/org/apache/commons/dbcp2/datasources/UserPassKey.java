@@ -64,7 +64,7 @@ class UserPassKey implements Serializable {
      * Only takes the user name into account.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -74,7 +74,7 @@ class UserPassKey implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        UserPassKey other = (UserPassKey) obj;
+        final UserPassKey other = (UserPassKey) obj;
         if (userName == null) {
             if (other.userName != null) {
                 return false;

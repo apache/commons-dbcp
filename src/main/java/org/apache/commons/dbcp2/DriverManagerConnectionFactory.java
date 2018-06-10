@@ -89,7 +89,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         return DriverManager.getConnection(connectionUri, propeties);
     }
 
-    private String connectionUri;
+    private final String connectionUri;
     private String userName;
     private String userPassword;
     private Properties propeties;
