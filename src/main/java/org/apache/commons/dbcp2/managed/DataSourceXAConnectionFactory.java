@@ -37,7 +37,7 @@ import java.sql.SQLException;
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     private final TransactionRegistry transactionRegistry;
     private final XADataSource xaDataSource;
-    private String username;
+    private String userName;
     private String password;
 
     /**
@@ -57,10 +57,10 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      *
      * @param transactionManager the transaction manager in which connections will be enlisted
      * @param xaDataSource the data source from which connections will be retrieved
-     * @param username the username used for authenticating new connections or null for unauthenticated
+     * @param userName the user name used for authenticating new connections or null for unauthenticated
      * @param password the password used for authenticating new connections
      */
-    public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource, final String username, final String password) {
+    public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource, final String userName, final String password) {
         if (transactionManager == null) {
             throw new NullPointerException("transactionManager is null");
         }
@@ -70,24 +70,24 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
         this.transactionRegistry = new TransactionRegistry(transactionManager);
         this.xaDataSource = xaDataSource;
-        this.username = username;
+        this.userName = userName;
         this.password = password;
     }
 
     /**
-     * Gets the username used to authenticate new connections.
+     * Gets the user name used to authenticate new connections.
      * @return the user name or null if unauthenticated connections are used
      */
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     /**
-     * Sets the username used to authenticate new connections.
-     * @param username the username used for authenticating the connection or null for unauthenticated
+     * Sets the user name used to authenticate new connections.
+     * @param userName the user name used for authenticating the connection or null for unauthenticated
      */
-    public void setUsername(final String username) {
-        this.username = username;
+    public void setUsername(final String userName) {
+        this.userName = userName;
     }
 
     /**
@@ -107,10 +107,10 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     public Connection createConnection() throws SQLException {
         // create a new XAConnection
         XAConnection xaConnection;
-        if (username == null) {
+        if (userName == null) {
             xaConnection = xaDataSource.getXAConnection();
         } else {
-            xaConnection = xaDataSource.getXAConnection(username, password);
+            xaConnection = xaDataSource.getXAConnection(userName, password);
         }
 
         // get the real connection and XAResource from the connection
