@@ -57,9 +57,9 @@ public class BasicManagedDataSource extends BasicDataSource {
     private TransactionRegistry transactionRegistry;
     /** Transaction Manager */
     private transient TransactionManager transactionManager;
-    /** XA datasource class name */
+    /** XA data source class name */
     private String xaDataSource;
-    /** XA datasource instance */
+    /** XA data source instance */
     private XADataSource xaDataSourceInstance;
 
     /**
