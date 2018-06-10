@@ -66,7 +66,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool = null;
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool;
 
     /**
      * Constructor.

@@ -89,8 +89,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         return DriverManager.getConnection(connectionUri, propeties);
     }
 
-    private String connectionUri = null;
-    private String userName = null;
-    private String userPassword = null;
-    private Properties propeties = null;
+    private String connectionUri;
+    private String userName;
+    private String userPassword;
+    private Properties propeties;
 }

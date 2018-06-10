@@ -54,7 +54,7 @@ class PooledConnectionImpl
     /**
      * The JDBC database connection that represents the physical db connection.
      */
-    private Connection connection = null;
+    private Connection connection;
 
     /**
      * A DelegatingConnection used to create a PoolablePreparedStatementStub
@@ -64,7 +64,7 @@ class PooledConnectionImpl
     /**
      * The JDBC database logical connection.
      */
-    private Connection logicalConnection = null;
+    private Connection logicalConnection;
 
     /**
      * ConnectionEventListeners
@@ -88,7 +88,7 @@ class PooledConnectionImpl
     /**
      * Controls access to the underlying connection
      */
-    private boolean accessToUnderlyingConnectionAllowed = false;
+    private boolean accessToUnderlyingConnectionAllowed;
 
     /**
      * Wraps the real connection.

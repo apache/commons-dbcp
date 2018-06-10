@@ -100,28 +100,28 @@ public abstract class InstanceKeyDataSource
     protected static final int UNKNOWN_TRANSACTIONISOLATION = -1;
 
     /** Guards property setters - once true, setters throw IllegalStateException */
-    private volatile boolean getConnectionCalled = false;
+    private volatile boolean getConnectionCalled;
 
     /** Underlying source of PooledConnections */
-    private ConnectionPoolDataSource dataSource = null;
+    private ConnectionPoolDataSource dataSource;
 
     /** DataSource Name used to find the ConnectionPoolDataSource */
-    private String dataSourceName = null;
+    private String dataSourceName;
 
     /** Description */
-    private String description = null;
+    private String description;
 
     /** Environment that may be used to set up a jndi initial context. */
-    private Properties jndiEnvironment = null;
+    private Properties jndiEnvironment;
 
     /** Login TimeOut in seconds */
-    private int loginTimeout = 0;
+    private int loginTimeout;
 
     /** Log stream */
-    private PrintWriter logWriter = null;
+    private PrintWriter logWriter;
 
     /** Instance key */
-    private String instanceKey = null;
+    private String instanceKey;
 
     // Pool properties
     private boolean defaultBlockWhenExhausted =
@@ -155,15 +155,15 @@ public abstract class InstanceKeyDataSource
             BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
 
     // Connection factory properties
-    private String validationQuery = null;
+    private String validationQuery;
     private int validationQueryTimeout = -1;
-    private boolean rollbackAfterValidation = false;
+    private boolean rollbackAfterValidation;
     private long maxConnLifetimeMillis = -1;
 
     // Connection properties
-    private Boolean defaultAutoCommit = null;
+    private Boolean defaultAutoCommit;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    private Boolean defaultReadOnly = null;
+    private Boolean defaultReadOnly;
 
 
     /**

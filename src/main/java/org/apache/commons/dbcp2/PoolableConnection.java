@@ -42,7 +42,7 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolableConnection extends DelegatingConnection<Connection> implements PoolableConnectionMXBean {
 
-    private static MBeanServer MBEAN_SERVER = null;
+    private static MBeanServer MBEAN_SERVER;
 
     static {
         try {
@@ -59,8 +59,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     // Use a prepared statement for validation, retaining the last used SQL to
     // check if the validation query has changed.
-    private PreparedStatement validationPreparedStatement = null;
-    private String lastValidationSql = null;
+    private PreparedStatement validationPreparedStatement;
+    private String lastValidationSql;
 
     /**
      * Indicate that unrecoverable SQLException was thrown when using this connection. Such a connection should be

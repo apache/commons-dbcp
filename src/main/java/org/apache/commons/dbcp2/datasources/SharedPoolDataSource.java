@@ -55,8 +55,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     // Pool properties
     private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
-    private transient KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool = null;
-    private transient KeyedCPDSConnectionFactory factory = null;
+    private transient KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool;
+    private transient KeyedCPDSConnectionFactory factory;
 
     /**
      * Default no-argument constructor for Serialization

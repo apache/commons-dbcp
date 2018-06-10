@@ -47,7 +47,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     private static final Log log = LogFactory.getLog(PoolingDataSource.class);
 
     /** Controls access to the underlying connection */
-    private boolean accessToUnderlyingConnectionAllowed = false;
+    private boolean accessToUnderlyingConnectionAllowed;
 
     public PoolingDataSource(final ObjectPool<C> pool) {
         if (null == pool) {

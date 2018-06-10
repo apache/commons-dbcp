@@ -125,7 +125,7 @@ public class DriverAdapterCPDS
     private int loginTimeout;
     
     /** Log stream. NOT USED */
-    private transient PrintWriter logWriter = null;
+    private transient PrintWriter logWriter;
 
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
@@ -137,10 +137,10 @@ public class DriverAdapterCPDS
     private int maxPreparedStatements = -1;
 
     /** Whether or not getConnection has been called */
-    private volatile boolean getConnectionCalled = false;
+    private volatile boolean getConnectionCalled;
 
     /** Connection properties passed to JDBC Driver */
-    private Properties connectionProperties = null;
+    private Properties connectionProperties;
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
@@ -150,7 +150,7 @@ public class DriverAdapterCPDS
     /**
      * Controls access to the underlying connection
      */
-    private boolean accessToUnderlyingConnectionAllowed = false;
+    private boolean accessToUnderlyingConnectionAllowed;
 
     /**
      * Default no-arg constructor for Serialization

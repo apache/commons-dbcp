@@ -460,20 +460,20 @@ public class PoolableConnectionFactory
 
     private final ConnectionFactory connectionFactory;
     private final ObjectName dataSourceJmxName;
-    private volatile String validationQuery = null;
+    private volatile String validationQuery;
     private volatile int validationQueryTimeoutSeconds = -1;
-    private Collection<String> connectionInitSqls = null;
-    private Collection<String> disconnectionSqlCodes = null;
-    private boolean fastFailValidation = false;
-    private volatile ObjectPool<PoolableConnection> pool = null;
-    private Boolean defaultReadOnly = null;
-    private Boolean defaultAutoCommit = null;
+    private Collection<String> connectionInitSqls;
+    private Collection<String> disconnectionSqlCodes;
+    private boolean fastFailValidation;
+    private volatile ObjectPool<PoolableConnection> pool;
+    private Boolean defaultReadOnly;
+    private Boolean defaultAutoCommit;
     private boolean enableAutoCommitOnReturn = true;
     private boolean rollbackOnReturn = true;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     private String defaultCatalog;
     private boolean cacheState;
-    private boolean poolStatements = false;
+    private boolean poolStatements;
     private int maxOpenPreparedStatements =
         GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
