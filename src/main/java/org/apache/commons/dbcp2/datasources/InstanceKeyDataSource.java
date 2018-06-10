@@ -902,7 +902,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * <code>PooledConnectionAndInfo</code> instance with the new password is returned.
      */
     @Override
-    public Connection getConnection(final String userName, final String password) throws SQLException {
+    public Connection getConnection(final String userName, final String userPassword) throws SQLException {
         if (instanceKey == null) {
             throw new SQLException("Must set the ConnectionPoolDataSource "
                     + "through setDataSourceName or setConnectionPoolDataSource" + " before calling getConnection.");
@@ -910,7 +910,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         getConnectionCalled = true;
         PooledConnectionAndInfo info = null;
         try {
-            info = getPooledConnectionAndInfo(userName, password);
+            info = getPooledConnectionAndInfo(userName, userPassword);
         } catch (final NoSuchElementException e) {
             closeDueToException(info);
             throw new SQLException("Cannot borrow connection from pool", e);
@@ -926,9 +926,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
 
         // Password on PooledConnectionAndInfo does not match
-        if (!(null == password ? null == info.getPassword() : password.equals(info.getPassword()))) { 
+        if (!(null == userPassword ? null == info.getPassword() : userPassword.equals(info.getPassword()))) { 
             try { // See if password has changed by attempting connection
-                testCPDS(userName, password);
+                testCPDS(userName, userPassword);
             } catch (final SQLException ex) {
                 // Password has not changed, so refuse client, but return connection to the pool
                 closeDueToException(info);
@@ -950,7 +950,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             info = null;
             for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return
                 try {
-                    info = getPooledConnectionAndInfo(userName, password);
+                    info = getPooledConnectionAndInfo(userName, userPassword);
                 } catch (final NoSuchElementException e) {
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
@@ -964,7 +964,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
                 }
-                if (info != null && password != null && password.equals(info.getPassword())) {
+                if (info != null && userPassword != null && userPassword.equals(info.getPassword())) {
                     break;
                 }
                 if (info != null) {
@@ -992,7 +992,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
     }
 
-    protected abstract PooledConnectionAndInfo getPooledConnectionAndInfo(String userName, String password)
+    protected abstract PooledConnectionAndInfo getPooledConnectionAndInfo(String userName, String userPassword)
             throws SQLException;
 
     protected abstract void setupDefaults(Connection connection, String userName) throws SQLException;
