@@ -184,7 +184,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getBlockWhenExhausted()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getBlockWhenExhausted()} for each per user
      *         pool.
      */
@@ -194,7 +194,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getBlockWhenExhausted()} for each per user pool.
-     * 
+     *
      * @param blockWhenExhausted
      *            The default value for {@link GenericKeyedObjectPoolConfig#getBlockWhenExhausted()} for each per user
      *            pool.
@@ -207,7 +207,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per user
      * pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per user
      *         pool.
      */
@@ -218,7 +218,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per user
      * pool.
-     * 
+     *
      * @param evictionPolicyClassName
      *            The default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per
      *            user pool.
@@ -230,7 +230,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getLifo()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getLifo()} for each per user pool.
      */
     public boolean getDefaultLifo() {
@@ -239,7 +239,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getLifo()} for each per user pool.
-     * 
+     *
      * @param lifo
      *            The default value for {@link GenericKeyedObjectPoolConfig#getLifo()} for each per user pool.
      */
@@ -250,7 +250,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxIdlePerKey()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxIdlePerKey()} for each per user pool.
      */
     public int getDefaultMaxIdle() {
@@ -259,7 +259,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxIdlePerKey()} for each per user pool.
-     * 
+     *
      * @param maxIdle
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxIdlePerKey()} for each per user pool.
      */
@@ -270,7 +270,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxTotalPerKey()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxTotalPerKey()} for each per user pool.
      */
     public int getDefaultMaxTotal() {
@@ -279,7 +279,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxTotalPerKey()} for each per user pool.
-     * 
+     *
      * @param maxTotal
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxTotalPerKey()} for each per user pool.
      */
@@ -290,7 +290,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
      */
     public long getDefaultMaxWaitMillis() {
@@ -299,7 +299,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
-     * 
+     *
      * @param maxWaitMillis
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
      */
@@ -311,7 +311,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per user
      * pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per
      *         user pool.
      */
@@ -322,7 +322,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per user
      * pool.
-     * 
+     *
      * @param minEvictableIdleTimeMillis
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each
      *            per user pool.
@@ -334,7 +334,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinIdlePerKey()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinIdlePerKey()} for each per user pool.
      */
     public int getDefaultMinIdle() {
@@ -343,7 +343,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinIdlePerKey()} for each per user pool.
-     * 
+     *
      * @param minIdle
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMinIdlePerKey()} for each per user pool.
      */
@@ -355,7 +355,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()} for each per user
      * pool.
-     * 
+     *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()} for each per user
      *         pool.
      */
@@ -366,7 +366,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()} for each per user
      * pool.
-     * 
+     *
      * @param numTestsPerEvictionRun
      *            The default value for {@link GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()} for each per
      *            user pool.
@@ -379,7 +379,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      */
@@ -390,7 +390,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
-     * 
+     *
      * @param softMinEvictableIdleTimeMillis
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
@@ -403,7 +403,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnCreate()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTestOnCreate()} for each per user pool.
      */
@@ -414,7 +414,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnCreate()} for each per user pool.
-     * 
+     *
      * @param testOnCreate
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTestOnCreate()} for each per user pool.
@@ -427,7 +427,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnBorrow()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTestOnBorrow()} for each per user pool.
      */
@@ -438,7 +438,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnBorrow()} for each per user pool.
-     * 
+     *
      * @param testOnBorrow
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTestOnBorrow()} for each per user pool.
@@ -451,7 +451,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnReturn()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTestOnReturn()} for each per user pool.
      */
@@ -462,7 +462,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestOnReturn()} for each per user pool.
-     * 
+     *
      * @param testOnReturn
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTestOnReturn()} for each per user pool.
@@ -475,7 +475,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestWhileIdle()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTestWhileIdle()} for each per user pool.
      */
@@ -486,7 +486,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTestWhileIdle()} for each per user pool.
-     * 
+     *
      * @param testWhileIdle
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTestWhileIdle()} for each per user pool.
@@ -499,7 +499,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
-     * 
+     *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
      */
@@ -510,7 +510,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
-     * 
+     *
      * @param timeBetweenEvictionRunsMillis
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
@@ -688,7 +688,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the value of jndiEnvironment which is used when instantiating a JNDI InitialContext. This InitialContext is
      * used to locate the backend ConnectionPoolDataSource.
-     * 
+     *
      * @param key
      *            JNDI environment key.
      * @return value of jndiEnvironment.
@@ -735,7 +735,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Get the value of loginTimeout.
-     * 
+     *
      * @return value of loginTimeout.
      */
     @Override
@@ -745,7 +745,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Set the value of loginTimeout.
-     * 
+     *
      * @param v
      *            Value to assign to loginTimeout.
      */
@@ -756,7 +756,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Get the value of logWriter.
-     * 
+     *
      * @return value of logWriter.
      */
     @Override
@@ -769,7 +769,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Set the value of logWriter.
-     * 
+     *
      * @param v
      *            Value to assign to logWriter.
      */
@@ -782,7 +782,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Gets the SQL query that will be used to validate connections from this pool before returning them to the caller.
      * If specified, this query <strong>MUST</strong> be an SQL SELECT statement that returns at least one row. If not
      * specified, {@link Connection#isValid(int)} will be used to validate connections.
-     * 
+     *
      * @return The SQL query that will be used to validate connections from this pool before returning them to the
      *         caller.
      */
@@ -794,7 +794,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Sets the SQL query that will be used to validate connections from this pool before returning them to the caller.
      * If specified, this query <strong>MUST</strong> be an SQL SELECT statement that returns at least one row. If not
      * specified, connections will be validated using {@link Connection#isValid(int)}.
-     * 
+     *
      * @param validationQuery
      *            The SQL query that will be used to validate connections from this pool before returning them to the
      *            caller.
@@ -806,7 +806,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Returns the timeout in seconds before the validation query fails.
-     * 
+     *
      * @return The timeout in seconds before the validation query fails.
      */
     public int getValidationQueryTimeout() {
@@ -849,7 +849,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Returns the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      * infinite lifetime.
-     * 
+     *
      * @return The maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      *         infinite lifetime.
      */
@@ -867,7 +867,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
      * </p>
-     * 
+     *
      * @param maxConnLifetimeMillis
      *            The maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      *            infinite lifetime.
@@ -926,7 +926,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
 
         // Password on PooledConnectionAndInfo does not match
-        if (!(null == userPassword ? null == info.getPassword() : userPassword.equals(info.getPassword()))) { 
+        if (!(null == userPassword ? null == info.getPassword() : userPassword.equals(info.getPassword()))) {
             try { // See if password has changed by attempting connection
                 testCPDS(userName, userPassword);
             } catch (final SQLException ex) {

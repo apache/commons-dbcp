@@ -137,7 +137,7 @@ public final class Utils {
 
     /**
      * Converts the given String to a char[].
-     * 
+     *
      * @param value
      *            may be null.
      * @return a char[] or null.
@@ -146,10 +146,10 @@ public final class Utils {
         return value != null ? value.toCharArray() : null;
     }
 
-    
+
     /**
      * Converts the given char[] to a String.
-     * 
+     *
      * @param value
      *            may be null.
      * @return a String or null.

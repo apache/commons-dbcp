@@ -105,7 +105,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Sets the password used to authenticate new connections.
-     * 
+     *
      * @param userPassword
      *            the password used for authenticating the connection or null for unauthenticated.
      * @since 2.4.0
@@ -116,7 +116,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Sets the password used to authenticate new connections.
-     * 
+     *
      * @param userPassword
      *            the password used for authenticating the connection or null for unauthenticated
      */

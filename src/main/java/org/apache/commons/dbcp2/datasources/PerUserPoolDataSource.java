@@ -145,7 +145,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of active connections in the default pool.
-     * 
+     *
      * @return The number of active connections in the default pool.
      */
     public int getNumActive() {
@@ -154,7 +154,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of active connections in the pool for a given user.
-     * 
+     *
      * @param userName The user name key.
      * @return The user specific value.
      */
@@ -166,7 +166,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of idle connections in the default pool.
-     * 
+     *
      * @return The number of idle connections in the default pool.
      */
     public int getNumIdle() {
@@ -176,7 +176,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of idle connections in the pool for a given user.
-     * 
+     *
      * @param userName The user name key.
      * @return The user specific value.
      */
@@ -189,7 +189,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getBlockWhenExhausted()} for the specified user's pool
      * or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -207,7 +207,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the user specific default value for {@link Connection#setAutoCommit(boolean)} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -223,7 +223,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the user specific default value for {@link Connection#setReadOnly(boolean)} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -239,7 +239,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific default value for {@link Connection#setTransactionIsolation(int)} for the specified user's
      * pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -255,7 +255,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -275,7 +275,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getLifo()} for the specified user's pool or the default
      * if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -294,7 +294,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMaxIdle()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -313,7 +313,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMaxTotal()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -333,7 +333,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMaxWaitMillis()} for the specified user's pool or
      * the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -352,7 +352,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the specified
      * user's pool or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -371,7 +371,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getMinIdle()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -391,7 +391,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getNumTestsPerEvictionRun()} for the specified user's
      * pool or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -410,7 +410,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the specified
      * user's pool or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -429,7 +429,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestOnBorrow()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -449,7 +449,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestOnCreate()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -468,7 +468,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestOnReturn()} for the specified user's pool or the
      * default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -487,7 +487,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTestWhileIdle()} for the specified user's pool or
      * the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -507,7 +507,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis()} for the specified
      * user's pool or the default if no user specific value is defined.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @return The user specific value.
@@ -678,9 +678,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getBlockWhenExhausted()} for the specified user's pool.
-     * 
+     *
      * @param userName The user name key.
-     * @param value The user specific value. 
+     * @param value The user specific value.
      */
     public void setPerUserBlockWhenExhausted(final String userName, final Boolean value) {
         assertInitializationAllowed();
@@ -702,7 +702,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific default value for {@link Connection#setAutoCommit(boolean)} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -729,7 +729,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific default value for {@link Connection#setReadOnly(boolean)} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -758,7 +758,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific default value for {@link Connection#setTransactionIsolation(int)} for the specified user's
      * pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -786,7 +786,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -812,7 +812,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getLifo()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -839,7 +839,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMaxIdle()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -865,7 +865,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMaxTotal()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -893,7 +893,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMaxWaitMillis()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -923,7 +923,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the specified user's
      * pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -949,7 +949,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMinIdle()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -978,7 +978,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getNumTestsPerEvictionRun()} for the specified user's
      * pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -1006,7 +1006,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the specified
      * user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -1032,7 +1032,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getTestOnBorrow()} for the specified user's pool.
-     * 
+     *
      * @param userName
      *            The user name key.
      * @param value
@@ -1059,9 +1059,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getTestOnCreate()} for the specified user's pool.
-     * 
+     *
      * @param userName The user name key.
-     * @param value The user specific value. 
+     * @param value The user specific value.
      */
     public void setPerUserTestOnCreate(final String userName, final Boolean value) {
         assertInitializationAllowed();
@@ -1084,9 +1084,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getTestOnReturn()} for the specified user's pool.
-     * 
+     *
      * @param userName The user name key.
-     * @param value The user specific value. 
+     * @param value The user specific value.
      */
     public void setPerUserTestOnReturn(final String userName, final Boolean value) {
         assertInitializationAllowed();
@@ -1109,9 +1109,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets a user specific value for {@link GenericObjectPool#getTestWhileIdle()} for the specified user's pool.
-     * 
+     *
      * @param userName The user name key.
-     * @param value The user specific value. 
+     * @param value The user specific value.
      */
     public void setPerUserTestWhileIdle(final String userName, final Boolean value) {
         assertInitializationAllowed();
@@ -1134,9 +1134,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for the specified
      * user's pool.
-     * 
+     *
      * @param userName The user name key.
-     * @param value The user specific value. 
+     * @param value The user specific value.
      */
     public void setPerUserTimeBetweenEvictionRunsMillis(final String userName, final Long value) {
         assertInitializationAllowed();

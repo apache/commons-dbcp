@@ -108,22 +108,22 @@ public class DriverAdapterCPDS
 
     /** Description */
     private String description;
-    
+
     /** Url name */
     private String url;
-    
+
     /** User name */
     private String userName;
 
     /** User password */
     private char[] userPassword;
-    
+
     /** Driver class name */
     private String driver;
 
     /** Login TimeOut in seconds */
     private int loginTimeout;
-    
+
     /** Log stream. NOT USED */
     private transient PrintWriter logWriter;
 
@@ -168,7 +168,7 @@ public class DriverAdapterCPDS
 
     /**
      * Attempt to establish a database connection.
-     * 
+     *
      * @param pooledUserName
      *            name to be used for the connection
      * @param pooledUserPassword
@@ -436,7 +436,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of password for the default user.
-     * 
+     *
      * @return value of password.
      * @since 2.4.0
      */
@@ -446,7 +446,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of password for the default user.
-     * 
+     *
      * @return value of password.
      */
     public String getPassword() {
@@ -455,7 +455,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of password for the default user.
-     * 
+     *
      * @param userPassword
      *            Value to assign to password.
      * @throws IllegalStateException
@@ -469,7 +469,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of password for the default user.
-     * 
+     *
      * @param userPassword
      *            Value to assign to password.
      * @throws IllegalStateException
@@ -483,7 +483,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of url used to locate the database for this datasource.
-     * 
+     *
      * @return value of url.
      */
     public String getUrl() {
@@ -492,7 +492,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of URL string used to locate the database for this datasource.
-     * 
+     *
      * @param v
      *            Value to assign to url.
      * @throws IllegalStateException
@@ -505,7 +505,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the value of default user (login or user name).
-     * 
+     *
      * @return value of user.
      */
     public String getUser() {
@@ -514,7 +514,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the value of default user (login or user name).
-     * 
+     *
      * @param v
      *            Value to assign to user.
      * @throws IllegalStateException
@@ -528,7 +528,7 @@ public class DriverAdapterCPDS
 
     /**
      * Gets the driver class name.
-     * 
+     *
      * @return value of driver.
      */
     public String getDriver() {
@@ -538,7 +538,7 @@ public class DriverAdapterCPDS
     /**
      * Sets the driver class name. Setting the driver class name cause the driver to be registered with the
      * DriverManager.
-     * 
+     *
      * @param v
      *            Value to assign to driver.
      * @throws IllegalStateException
@@ -594,7 +594,7 @@ public class DriverAdapterCPDS
 
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
-     * 
+     *
      * @return value of poolPreparedStatements.
      */
     public boolean isPoolPreparedStatements() {
@@ -603,7 +603,7 @@ public class DriverAdapterCPDS
 
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
-     * 
+     *
      * @param v
      *            true to pool statements.
      * @throws IllegalStateException
@@ -617,7 +617,7 @@ public class DriverAdapterCPDS
     /**
      * Gets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
      * negative for no limit.
-     * 
+     *
      * @return the value of maxIdle
      */
     public int getMaxIdle() {
@@ -641,7 +641,7 @@ public class DriverAdapterCPDS
     /**
      * Gets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
-     * 
+     *
      * @return the value of the evictor thread timer
      * @see #setTimeBetweenEvictionRunsMillis(long)
      */
@@ -712,7 +712,7 @@ public class DriverAdapterCPDS
     /**
      * Sets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
      * idle object evictor (if any). When non-positive, no objects will be evicted from the pool due to idle time alone.
-     * 
+     *
      * @param minEvictableIdleTimeMillis
      *            minimum time to set (in ms)
      * @see #getMinEvictableIdleTimeMillis()
@@ -757,7 +757,7 @@ public class DriverAdapterCPDS
 
     /**
      * Sets the maximum number of prepared statements.
-     * 
+     *
      * @param maxPreparedStatements
      *            the new maximum number of prepared statements
      */

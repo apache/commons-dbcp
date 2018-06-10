@@ -285,7 +285,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
-     * 
+     *
      * @return true if access is allowed to the underlying connection
      * @see ConnectionImpl
      */
@@ -295,7 +295,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Get the delegated connection, if allowed.
-     * 
+     *
      * @return the internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */
@@ -309,7 +309,7 @@ class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Get the innermost connection, if allowed.
-     * 
+     *
      * @return the innermost internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */

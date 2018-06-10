@@ -498,7 +498,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     /**
      * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
      * <code>null</code> means that the driver default will be used.
-     * 
+     *
      * @return query timeout limit in seconds; zero means there is no limit.
      */
     public Integer getDefaultQueryTimeout() {
@@ -509,7 +509,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     /**
      * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
      * <code>null</code> means that the driver default will be used.
-     * 
+     *
      * @param defaultQueryTimeoutSeconds
      *            the new query timeout limit in seconds; zero means there is no limit
      */

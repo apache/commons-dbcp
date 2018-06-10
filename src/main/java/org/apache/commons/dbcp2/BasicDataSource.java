@@ -207,7 +207,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. <code>null</code> means that the driver default will be used.
-     * 
+     *
      * @return The default query timeout in seconds.
      */
     public Integer getDefaultQueryTimeout() {
@@ -218,7 +218,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. <code>null</code> means that the driver default will be used.
-     * 
+     *
      * @param defaultQueryTimeoutSeconds
      *            The default query timeout in seconds.
      */
@@ -377,7 +377,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Note: This getter only returns the last value set by a call to {@link #setDriverClassLoader(ClassLoader)}. It
      * does not return the class loader of any driver that may have been set via {@link #setDriver(Driver)}.
      * </p>
-     * 
+     *
      * @return The class loader specified for loading the JDBC driver.
      */
     public synchronized ClassLoader getDriverClassLoader() {
@@ -918,8 +918,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Gets the EvictionPolicy implementation in use with this connection pool.
-     * 
-     * @return The EvictionPolicy implementation in use with this connection pool. 
+     *
+     * @return The EvictionPolicy implementation in use with this connection pool.
      */
     public synchronized String getEvictionPolicyClassName() {
         return evictionPolicyClassName;
@@ -1292,7 +1292,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
      * </p>
-     * 
+     *
      * @param maxConnLifetimeMillis
      *            The maximum permitted lifetime of a connection in milliseconds.
      */
@@ -1304,7 +1304,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * When {@link #getMaxConnLifetimeMillis()} is set to limit connection lifetime, this property determines whether or
      * not log messages are generated when the pool closes connections due to maximum lifetime exceeded. Set this
      * property to false to suppress log messages when connections expire.
-     * 
+     *
      * @param logExpiredConnections
      *            Whether or not log messages are generated when the pool closes connections due to maximum lifetime
      *            exceeded.
@@ -1318,7 +1318,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Returns the JMX name that has been requested for this DataSource. If the requested name is not valid, an
      * alternative may be chosen.
-     * 
+     *
      * @return The JMX name that has been requested for this DataSource.
      */
     public String getJmxName() {
@@ -1330,7 +1330,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * may be chosen. This DataSource will attempt to register itself using this name. If another component registers
      * this DataSource with JMX and this name is valid this name will be used in preference to any specified by the
      * other component.
-     * 
+     *
      * @param jmxName
      *            The JMX name that has been requested for this DataSource
      */
@@ -1344,7 +1344,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Returns the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
-     * 
+     *
      * @return Whether or not connections being returned to the pool will be checked and configured with auto-commit.
      */
     public boolean getEnableAutoCommitOnReturn() {
@@ -1355,7 +1355,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
-     * 
+     *
      * @param enableAutoCommitOnReturn
      *            Whether or not connections being returned to the pool will be checked and configured with auto-commit.
      */
@@ -1368,7 +1368,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the current value of the flag that controls whether a connection will be rolled back when it is returned to
      * the pool if auto commit is not enabled and the connection is not read only.
-     * 
+     *
      * @return whether a connection will be rolled back when it is returned to the pool.
      */
     public boolean getRollbackOnReturn() {
@@ -1378,7 +1378,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the flag that controls if a connection will be rolled back when it is returned to the pool if auto commit is
      * not enabled and the connection is not read only.
-     * 
+     *
      * @param rollbackOnReturn
      *            whether a connection will be rolled back when it is returned to the pool.
      */
@@ -1390,7 +1390,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Returns the set of SQL_STATE codes considered to signal fatal conditions.
-     * 
+     *
      * @return fatal disconnection state codes
      * @see #setDisconnectionSqlCodes(Collection)
      * @since 2.1
@@ -1405,7 +1405,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
-     * 
+     *
      * @since 2.1
      */
     @Override
@@ -1818,7 +1818,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Gets the print writer used by this configuration to log information on abandoned objects.
-     * 
+     *
      * @return The print writer used by this configuration to log information on abandoned objects.
      */
     public PrintWriter getAbandonedLogWriter() {
@@ -1984,7 +1984,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * If true, this data source is closed and no more connections can be retrieved from this datasource.
-     * 
+     *
      * @return true, if the data source is closed; false otherwise
      */
     @Override
@@ -2010,7 +2010,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Manually invalidates a connection, effectively requesting the pool to try to close it, remove it from the pool
      * and reclaim pool capacity.
-     * 
+     *
      * @param connection
      *            The Connection to invalidate.
      *

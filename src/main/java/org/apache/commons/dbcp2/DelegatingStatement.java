@@ -43,10 +43,10 @@ import java.util.List;
  * @since 2.0
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
-    
+
     /** My delegate. */
     private Statement statement;
-    
+
     /** The connection that created me. **/
     private DelegatingConnection<?> connection;
 

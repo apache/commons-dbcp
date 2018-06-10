@@ -41,7 +41,7 @@ import org.apache.commons.pool2.ObjectPool;
  * @since 2.0
  */
 public class PoolingDriver implements Driver {
-    
+
     /** Register myself with the {@link DriverManager}. */
     static {
         try {

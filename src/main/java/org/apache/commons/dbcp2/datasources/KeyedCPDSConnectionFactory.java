@@ -70,7 +70,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
 
     /**
      * Create a new {@code KeyedPoolableConnectionFactory}.
-     * 
+     *
      * @param cpds
      *            the ConnectionPoolDataSource from which to obtain PooledConnections
      * @param validationQuery

@@ -82,7 +82,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
-     * 
+     *
      * @return {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
     public int getMaxTotal() {
@@ -91,8 +91,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Sets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
-     * 
-     * @param maxTotal {@link GenericKeyedObjectPool#getMaxTotal()} for this pool. 
+     *
+     * @param maxTotal {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
     public void setMaxTotal(final int maxTotal) {
         assertInitializationAllowed();
@@ -105,7 +105,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of active connections in the pool.
-     * 
+     *
      * @return The number of active connections in the pool.
      */
     public int getNumActive() {
@@ -114,8 +114,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     /**
      * Gets the number of idle connections in the pool.
-     * 
-     * @return The number of idle connections in the pool. 
+     *
+     * @return The number of idle connections in the pool.
      */
     public int getNumIdle() {
         return pool == null ? 0 : pool.getNumIdle();
