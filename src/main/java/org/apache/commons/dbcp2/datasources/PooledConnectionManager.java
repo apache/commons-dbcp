@@ -44,7 +44,6 @@ interface PooledConnectionManager {
      */
     void setPassword(String password);
 
-
     /**
      * Closes the connection pool associated with the given user.
      *
