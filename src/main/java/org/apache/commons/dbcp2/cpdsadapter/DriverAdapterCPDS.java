@@ -97,12 +97,9 @@ public class DriverAdapterCPDS
 
     private static final String KEY_USER = "user";
 
-
     private static final String KEY_PASSWORD = "password";
 
-
     private static final long serialVersionUID = -4820523787212147844L;
-
 
     private static final String GET_CONNECTION_CALLED
             = "A PooledConnection was already requested from this source, "
@@ -110,17 +107,22 @@ public class DriverAdapterCPDS
 
     /** Description */
     private String description;
+    
     /** Password */
     private String password;
+    
     /** Url name */
     private String url;
+    
     /** User name */
     private String userName;
+    
     /** Driver class name */
     private String driver;
 
     /** Login TimeOut in seconds */
     private int loginTimeout;
+    
     /** Log stream. NOT USED */
     private transient PrintWriter logWriter = null;
 
