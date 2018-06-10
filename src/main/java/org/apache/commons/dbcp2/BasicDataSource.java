@@ -1065,21 +1065,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The connection username to be passed to our JDBC driver to establish a connection.
      */
-    private String username;
+    private String userName;
 
     /**
-     * Returns the JDBC connection {@link #username} property.
+     * Returns the JDBC connection {@link #userName} property.
      *
-     * @return the {@link #username} passed to the JDBC driver to establish connections
+     * @return the {@link #userName} passed to the JDBC driver to establish connections
      */
     @Override
     public String getUsername() {
-        return this.username;
+        return this.userName;
     }
 
     /**
      * <p>
-     * Sets the {@link #username}.
+     * Sets the {@link #userName}.
      * </p>
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
@@ -1091,7 +1091,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            the new value for the JDBC connection username
      */
     public void setUsername(final String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     /**
@@ -2195,7 +2195,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
 
         // Set up the driver connection factory we will use
-        final String user = username;
+        final String user = userName;
         if (user != null) {
             connectionProperties.put("user", user);
         } else {
