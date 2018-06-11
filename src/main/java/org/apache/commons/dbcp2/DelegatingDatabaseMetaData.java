@@ -39,12 +39,25 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     /** The connection that created me. **/
     private final DelegatingConnection<?> connection;
 
+    /**
+     * Constructs a new instance for the given delegating connection and database meta data.
+     * 
+     * @param connection
+     *            the delegating connection
+     * @param databaseMetaData
+     *            the database meta data
+     */
     public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection, final DatabaseMetaData databaseMetaData) {
         super();
         this.connection = connection;
         this.databaseMetaData = databaseMetaData;
     }
 
+    /**
+     * Gets the underlying database meta data.
+     * 
+     * @return The underlying database meta data.
+     */
     public DatabaseMetaData getDelegate() {
         return databaseMetaData;
     }
@@ -63,6 +76,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * This method is useful when you may have nested
      * {@code DelegatingResultSet}s, and you want to make
      * sure to obtain a "genuine" {@link ResultSet}.
+     * 
+     * @return the innermost database meta data.
      */
     public DatabaseMetaData getInnermostDelegate() {
         DatabaseMetaData m = databaseMetaData;
