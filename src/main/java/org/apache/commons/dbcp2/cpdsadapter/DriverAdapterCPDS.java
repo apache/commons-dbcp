@@ -187,13 +187,13 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
             config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(getMaxIdle());
             if (getMaxPreparedStatements() <= 0) {
-                // since there is no limit, create a prepared statement pool with an eviction thread
+                // since there is no limit, create a prepared statement pool with an eviction thread;
                 // evictor settings are the same as the connection pool settings.
                 config.setTimeBetweenEvictionRunsMillis(getTimeBetweenEvictionRunsMillis());
                 config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
                 config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
             } else {
-                // since there is limit, create a prepared statement pool without an eviction thread
+                // since there is a limit, create a prepared statement pool without an eviction thread;
                 // pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
                 // see org.apache.commons.pool2.impl.GenericKeyedObjectPool.clearOldest method
                 config.setMaxTotal(getMaxPreparedStatements());
