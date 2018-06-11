@@ -50,15 +50,17 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private static final Log log = LogFactory.getLog(PoolableConnectionFactory.class);
 
     /**
-     * Create a new {@code PoolableConnectionFactory}.
+     * Creates a new {@code PoolableConnectionFactory}.
      * 
      * @param connFactory
      *            the {@link ConnectionFactory} from which to obtain base {@link Connection}s
+     * @param dataSourceJmxObjectName
+     *            The JMX object name
      */
     public PoolableConnectionFactory(final ConnectionFactory connFactory,
             final ObjectName dataSourceJmxObjectName) {
         this.connectionFactory = connFactory;
-        this.dataSourceJmxName = dataSourceJmxObjectName;
+        this.dataSourceJmxObjectName = dataSourceJmxObjectName;
     }
 
     /**
@@ -291,8 +293,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             config.setMaxWaitMillis(0);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
-            if (dataSourceJmxName != null) {
-                final StringBuilder base = new StringBuilder(dataSourceJmxName.toString());
+            if (dataSourceJmxObjectName != null) {
+                final StringBuilder base = new StringBuilder(dataSourceJmxObjectName.toString());
                 base.append(Constants.JMX_CONNECTION_BASE_EXT);
                 base.append(Long.toString(connIndex));
                 config.setJmxNameBase(base.toString());
@@ -308,10 +310,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         // Register this connection with JMX
         ObjectName connJmxName;
-        if (dataSourceJmxName == null) {
+        if (dataSourceJmxObjectName == null) {
             connJmxName = null;
         } else {
-            connJmxName = new ObjectName(dataSourceJmxName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
+            connJmxName = new ObjectName(dataSourceJmxObjectName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
 
         final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes,
@@ -448,7 +450,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     protected ObjectName getDataSourceJmxName() {
-        return dataSourceJmxName;
+        return dataSourceJmxObjectName;
     }
 
     protected AtomicLong getConnectionIndex() {
@@ -456,7 +458,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     private final ConnectionFactory connectionFactory;
-    private final ObjectName dataSourceJmxName;
+    private final ObjectName dataSourceJmxObjectName;
     private volatile String validationQuery;
     private volatile int validationQueryTimeoutSeconds = -1;
     private Collection<String> connectionInitSqls;
