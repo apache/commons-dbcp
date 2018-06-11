@@ -47,7 +47,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * Statement types.
      *
      * @since 2.0 protected enum.
-     * @since 2.4.0  public enum.
+     * @since 2.4.0 public enum.
      */
     public enum StatementType {
 
@@ -75,7 +75,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         super(connection);
     }
 
-
     /**
      * {@link KeyedPooledObjectFactory} method for activating pooled statements.
      *
@@ -85,8 +84,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            wrapped pooled statement to be activated
      */
     @Override
-    public void activateObject(final PStmtKey key,
-            final PooledObject<DelegatingPreparedStatement> p) throws Exception {
+    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) throws Exception {
         p.getObject().activate();
     }
 
@@ -98,13 +96,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     public synchronized void close() throws SQLException {
         try {
             if (null != pstmtPool) {
-                final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> oldpool = pstmtPool;
+                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldpool = pstmtPool;
                 pstmtPool = null;
                 try {
                     oldpool.close();
-                } catch(final RuntimeException e) {
+                } catch (final RuntimeException e) {
                     throw e;
-                } catch(final Exception e) {
+                } catch (final Exception e) {
                     throw new SQLException("Cannot close connection", e);
                 }
             }
@@ -226,7 +224,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         } catch (final SQLException e) {
             // Ignored
         }
-        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, resultSetHoldability,  stmtType);
+        return new PStmtKey(normalizeSQL(sql), catalog, resultSetType, resultSetConcurrency, resultSetHoldability,
+                stmtType);
     }
 
     /**
@@ -241,7 +240,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param stmtType
      *            statement type
      */
-    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency, final StatementType stmtType) {
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final StatementType stmtType) {
         String catalog = null;
         try {
             catalog = getCatalog();
@@ -297,9 +297,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            the wrapped pooled statement to be destroyed.
      */
     @Override
-    public void destroyObject(final PStmtKey key,
-            final PooledObject<DelegatingPreparedStatement> p)
-            throws Exception {
+    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) throws Exception {
         p.getObject().getInnermostDelegate().close();
     }
 
@@ -314,14 +312,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      */
     @SuppressWarnings("resource")
     @Override
-    public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key)
-            throws Exception {
+    public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws Exception {
         if (null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
-        if (key.getStmtType() == StatementType.PREPARED_STATEMENT ) {
+        if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
-            @SuppressWarnings({"rawtypes", "unchecked"}) // Unable to find way to avoid this
+            @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
             final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pstmtPool, this);
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
         }
@@ -331,8 +328,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Normalizes the given SQL statement, producing a
-     * canonical form that is semantically equivalent to the original.
+     * Normalizes the given SQL statement, producing a canonical form that is semantically equivalent to the original.
      */
     protected String normalizeSQL(final String sql) {
         return sql.trim();
@@ -392,10 +388,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
+            throws SQLException {
         try {
-            return (CallableStatement) pstmtPool.borrowObject(createKey(sql, resultSetType,
-                            resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) pstmtPool.borrowObject(
+                    createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
         } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (final RuntimeException e) {
@@ -421,11 +418,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType,
-            final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) throws SQLException {
         try {
-            return (CallableStatement) pstmtPool.borrowObject(createKey(sql, resultSetType,
-                            resultSetConcurrency, resultSetHoldability, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) pstmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
+                    resultSetHoldability, StatementType.CALLABLE_STATEMENT));
         } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (final RuntimeException e) {
@@ -445,16 +442,15 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
             return pstmtPool.borrowObject(createKey(sql));
-        } catch(final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
@@ -462,145 +458,150 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
             return pstmtPool.borrowObject(createKey(sql, autoGeneratedKeys));
-        }
-        catch (final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        }
-        catch (final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * @param sql the SQL string used to define the PreparedStatement
-     * @param columnIndexes column indexes
+     * 
+     * @param sql
+     *            the SQL string used to define the PreparedStatement
+     * @param columnIndexes
+     *            column indexes
      * @return a {@link PoolablePreparedStatement}
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
-            throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
             return pstmtPool.borrowObject(createKey(sql, columnIndexes));
-        } catch(final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * @param sql the SQL string used to define the PreparedStatement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
+     * 
+     * @param sql
+     *            the SQL string used to define the PreparedStatement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
      * @return a {@link PoolablePreparedStatement}
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
+            throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
-            return pstmtPool.borrowObject(createKey(sql,resultSetType,resultSetConcurrency));
-        } catch(final NoSuchElementException e) {
+            return pstmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency));
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * @param sql the SQL string used to define the PreparedStatement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
-     * @param resultSetHoldability result set holdability
+     * 
+     * @param sql
+     *            the SQL string used to define the PreparedStatement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
+     * @param resultSetHoldability
+     *            result set holdability
      * @return a {@link PoolablePreparedStatement}
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
-            final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability) throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
             return pstmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-        } catch(final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * @param sql the SQL string used to define the PreparedStatement
-     * @param columnNames column names
+     * 
+     * @param sql
+     *            the SQL string used to define the PreparedStatement
+     * @param columnNames
+     *            column names
      * @return a {@link PoolablePreparedStatement}
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final String columnNames[])
-            throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
         if (null == pstmtPool) {
-            throw new SQLException(
-                    "Statement pool is null - closed or invalid PoolingConnection.");
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
             return pstmtPool.borrowObject(createKey(sql, columnNames));
-        } catch(final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
-    public void setStatementPool(
-            final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> pool) {
+    public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
         pstmtPool = pool;
     }
 
     @Override
     public String toString() {
-        if (pstmtPool != null ) {
+        if (pstmtPool != null) {
             return "PoolingConnection: " + pstmtPool.toString();
         }
         return "PoolingConnection: null";
     }
 
     /**
-     * {@link KeyedPooledObjectFactory} method for validating
-     * pooled statements. Currently always returns true.
+     * {@link KeyedPooledObjectFactory} method for validating pooled statements. Currently always returns true.
      *
-     * @param key ignored
-     * @param p ignored
+     * @param key
+     *            ignored
+     * @param p
+     *            ignored
      * @return {@code true}
      */
     @Override
-    public boolean validateObject(final PStmtKey key,
-            final PooledObject<DelegatingPreparedStatement> p) {
+    public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) {
         return true;
     }
 }
