@@ -48,7 +48,7 @@ public class TransactionRegistry {
      * Creates a TransactionRegistry for the specified transaction manager.
      * 
      * @param transactionManager
-     *            the transaction manager used to enlist connections
+     *            the transaction manager used to enlist connections.
      */
     public TransactionRegistry(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
@@ -59,9 +59,9 @@ public class TransactionRegistry {
      * it is actually the XAResource that is given to the transaction manager.
      *
      * @param connection
-     *            the JDBC connection
+     *            The JDBC connection.
      * @param xaResource
-     *            the XAResource which managed the connection within a transaction
+     *            The XAResource which managed the connection within a transaction.
      */
     public synchronized void registerConnection(final Connection connection, final XAResource xaResource) {
         Objects.requireNonNull(connection, "connection is null");
@@ -74,9 +74,9 @@ public class TransactionRegistry {
      * 
      * @param connection
      *            the connection
-     * @return the XAResource registered for the connection; never null
+     * @return The XAResource registered for the connection; never null.
      * @throws SQLException
-     *             if the connection does not have a registered XAResource
+     *             Thrown when the connection does not have a registered XAResource.
      */
     public synchronized XAResource getXAResource(final Connection connection) throws SQLException {
         Objects.requireNonNull(connection, "connection is null");
@@ -91,9 +91,9 @@ public class TransactionRegistry {
     /**
      * Gets the active TransactionContext or null if not Transaction is active.
      * 
-     * @return the active TransactionContext or null if no Transaction is active
+     * @return The active TransactionContext or null if no Transaction is active.
      * @throws SQLException
-     *             if an error occurs while fetching the transaction
+     *             Thrown when an error occurs while fetching the transaction.
      */
     public TransactionContext getActiveTransactionContext() throws SQLException {
         Transaction transaction = null;
@@ -123,9 +123,10 @@ public class TransactionRegistry {
     }
 
     /**
-     * Unregisters a destroyed connection from {@link TransactionRegistry}
+     * Unregisters a destroyed connection from {@link TransactionRegistry}.
      * 
      * @param connection
+     *            A destroyed connection from {@link TransactionRegistry}.
      */
     public synchronized void unregisterConnection(final Connection connection) {
         final Connection key = getConnectionKey(connection);
