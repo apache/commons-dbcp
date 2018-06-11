@@ -69,7 +69,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Constructor.
-     * 
+     *
      * @param connection
      *            the underlying {@link Connection}.
      */
@@ -121,7 +121,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      */
@@ -147,7 +147,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param columnIndexes
@@ -165,7 +165,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param resultSetType
@@ -185,7 +185,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param resultSetType
@@ -208,7 +208,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param resultSetType
@@ -233,7 +233,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param resultSetType
@@ -255,7 +255,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param stmtType
@@ -273,7 +273,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the statement
      * @param columnNames
@@ -360,7 +360,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the CallableStatement
      * @return a {@link PoolableCallableStatement}
@@ -382,7 +382,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the CallableStatement
      * @param resultSetType
@@ -409,7 +409,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the CallableStatement
      * @param resultSetType
@@ -439,7 +439,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @return a {@link PoolablePreparedStatement}

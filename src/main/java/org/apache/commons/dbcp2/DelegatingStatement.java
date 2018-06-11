@@ -67,7 +67,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Returns my underlying {@link Statement}.
-     * 
+     *
      * @return my underlying {@link Statement}.
      * @see #getInnermostDelegate
      */
@@ -88,7 +88,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * a "genuine" {@link Statement}.
      * </p>
      * @return The innermost delegate.
-     * 
+     *
      * @see #getDelegate
      */
     public Statement getInnermostDelegate() {
@@ -104,7 +104,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Sets my delegate.
-     * 
+     *
      * @param statement my delegate.
      */
     public void setDelegate(final Statement statement) {

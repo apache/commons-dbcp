@@ -68,7 +68,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Close and free all {@link Connection}s from the pool.
-     * 
+     *
      * @since 2.1
      */
     @Override
@@ -150,7 +150,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}
-     * 
+     *
      * @throws UnsupportedOperationException always thrown
      */
     @Override
@@ -160,7 +160,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Returns my log writer.
-     * 
+     *
      * @return my log writer
      * @see DataSource#getLogWriter
      */
@@ -171,7 +171,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             As this implementation does not support this feature.
      */
@@ -182,7 +182,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             As this implementation does not support this feature.
      */
@@ -193,7 +193,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Sets my log writer.
-     * 
+     *
      * @see DataSource#setLogWriter
      */
     @Override
@@ -212,7 +212,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a closed connection cannot be used anymore.
-     * 
+     *
      * @since 2.0
      */
     private class PoolGuardConnectionWrapper<D extends Connection>

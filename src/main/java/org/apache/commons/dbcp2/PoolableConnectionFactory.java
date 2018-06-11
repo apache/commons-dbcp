@@ -51,7 +51,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Creates a new {@code PoolableConnectionFactory}.
-     * 
+     *
      * @param connFactory
      *            the {@link ConnectionFactory} from which to obtain base {@link Connection}s
      * @param dataSourceJmxObjectName
@@ -88,7 +88,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Sets the SQL statements I use to initialize newly created {@link Connection}s. Using {@code null} turns off
      * connection initialization.
-     * 
+     *
      * @param connectionInitSqls
      *            SQL statement to initialize {@link Connection}s.
      */
@@ -98,7 +98,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the {@link ObjectPool} in which to pool {@link Connection}s.
-     * 
+     *
      * @param pool
      *            the {@link ObjectPool} in which to pool those {@link Connection}s
      */
@@ -115,7 +115,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
-     * 
+     *
      * @return the connection pool
      */
     public synchronized ObjectPool<PoolableConnection> getPool() {
@@ -124,7 +124,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the default "read only" setting for borrowed {@link Connection}s
-     * 
+     *
      * @param defaultReadOnly
      *            the default "read only" setting for borrowed {@link Connection}s
      */
@@ -134,7 +134,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
-     * 
+     *
      * @param defaultAutoCommit
      *            the default "auto commit" setting for borrowed {@link Connection}s
      */
@@ -144,7 +144,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the default "Transaction Isolation" setting for borrowed {@link Connection}s
-     * 
+     *
      * @param defaultTransactionIsolation
      *            the default "Transaction Isolation" setting for returned {@link Connection}s
      */
@@ -154,7 +154,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the default "catalog" setting for borrowed {@link Connection}s
-     * 
+     *
      * @param defaultCatalog
      *            the default "catalog" setting for borrowed {@link Connection}s
      */

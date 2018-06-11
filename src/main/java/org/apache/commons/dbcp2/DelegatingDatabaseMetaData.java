@@ -30,7 +30,7 @@ import java.sql.SQLException;
  * Methods that create {@link ResultSet} objects are wrapped to create {@link DelegatingResultSet} objects and the
  * remaining methods simply call the corresponding method on the "delegate" provided in the constructor.
  * </p>
- * 
+ *
  * @since 2.0
  */
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {
@@ -43,7 +43,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /**
      * Constructs a new instance for the given delegating connection and database meta data.
-     * 
+     *
      * @param connection
      *            the delegating connection
      * @param databaseMetaData
@@ -57,7 +57,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /**
      * Gets the underlying database meta data.
-     * 
+     *
      * @return The underlying database meta data.
      */
     public DatabaseMetaData getDelegate() {
@@ -75,7 +75,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * This method is useful when you may have nested {@code DelegatingResultSet}s, and you want to make sure to obtain
      * a "genuine" {@link ResultSet}.
      * </p>
-     * 
+     *
      * @return the innermost database meta data.
      */
     public DatabaseMetaData getInnermostDelegate() {
