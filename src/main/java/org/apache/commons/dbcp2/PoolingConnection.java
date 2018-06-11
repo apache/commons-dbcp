@@ -325,9 +325,12 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * @param sql the sql string used to define the CallableStatement
+     * 
+     * @param sql
+     *            the SQL string used to define the CallableStatement
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
+     *             Wraps an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql) throws SQLException {
@@ -344,11 +347,16 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * @param sql the sql string used to define the CallableStatement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
+     * 
+     * @param sql
+     *            the SQL string used to define the CallableStatement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
+     *             Wraps an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
@@ -366,12 +374,18 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
-     * @param sql the sql string used to define the CallableStatement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
-     * @param resultSetHoldability result set holdability
+     * 
+     * @param sql
+     *            the SQL string used to define the CallableStatement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
+     * @param resultSetHoldability
+     *            result set holdability
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
+     *             Wraps an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType,
@@ -390,7 +404,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * @param sql the sql string used to define the PreparedStatement
+     * 
+     * @param sql
+     *            the SQL string used to define the PreparedStatement
      * @return a {@link PoolablePreparedStatement}
      */
     @Override
