@@ -502,7 +502,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return value.booleanValue();
     }
 
-
     /**
      * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis()} for the specified
      * user's pool or the default if no user specific value is defined.
