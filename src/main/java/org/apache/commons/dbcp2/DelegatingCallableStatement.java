@@ -41,16 +41,18 @@ import java.util.Map;
  * <p>
  * All of the methods from the {@link CallableStatement} interface simply call the corresponding method on the
  * "delegate" provided in my constructor.
+ * </p>
  * <p>
  * Extends AbandonedTrace to implement Statement tracking and logging of code which created the Statement. Tracking the
  * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
+ * </p>
  *
  * @since 2.0
  */
 public class DelegatingCallableStatement extends DelegatingPreparedStatement implements CallableStatement {
 
     /**
-     * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
+     * Creates a wrapper for the Statement which traces this Statement to the Connection which created it and the code
      * which created it.
      *
      * @param c
