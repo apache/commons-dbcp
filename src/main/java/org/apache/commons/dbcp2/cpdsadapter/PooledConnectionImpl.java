@@ -78,7 +78,7 @@ class PooledConnectionImpl
     /**
      * Flag set to true, once close() is called.
      */
-    private boolean isClosed;
+    private boolean closed;
 
     /** My pool of {@link PreparedStatement}s. */
     private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pStmtPool;
@@ -102,7 +102,7 @@ class PooledConnectionImpl
             this.delegatingConnection = new DelegatingConnection<>(connection);
         }
         eventListeners = new Vector<>();
-        isClosed = false;
+        closed = false;
     }
 
     /**
@@ -141,7 +141,7 @@ class PooledConnectionImpl
      * Throws an SQLException, if isClosed is true
      */
     private void assertOpen() throws SQLException {
-        if (isClosed) {
+        if (closed) {
             throw new SQLException(CLOSED);
         }
     }
@@ -156,7 +156,7 @@ class PooledConnectionImpl
     @Override
     public void close() throws SQLException {
         assertOpen();
-        isClosed = true;
+        closed = true;
         try {
             if (pStmtPool != null) {
                 try {
