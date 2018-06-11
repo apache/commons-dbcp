@@ -59,7 +59,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * shopping" solution for basic requirements.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable {
