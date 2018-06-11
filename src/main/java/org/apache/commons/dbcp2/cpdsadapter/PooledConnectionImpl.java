@@ -73,8 +73,7 @@ class PooledConnectionImpl
     /**
      * StatementEventListeners.
      */
-    private final Vector<StatementEventListener> statementEventListeners =
-            new Vector<>();
+    private final Vector<StatementEventListener> statementEventListeners = new Vector<>();
 
     /**
      * Flag set to true, once close() is called.
