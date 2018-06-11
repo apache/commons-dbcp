@@ -76,7 +76,7 @@ class PooledConnectionImpl
     private final Vector<StatementEventListener> statementEventListeners = new Vector<>();
 
     /**
-     * Flag set to true, once close() is called.
+     * Flag set to true, once {@link #close()} is called.
      */
     private boolean closed;
 
