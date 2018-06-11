@@ -158,8 +158,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
             throws SQLException {
         getConnectionCalled = true;
         PooledConnectionImpl pooledConnection = null;
-        // Workaround for buggy WebLogic 5.1 classloader - ignore the
-        // exception upon first invocation.
+        // Workaround for buggy WebLogic 5.1 classloader - ignore the exception upon first invocation.
         try {
             if (connectionProperties != null) {
                 update(connectionProperties, KEY_USER, pooledUserName);
