@@ -53,7 +53,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     public PoolingDataSource(final ObjectPool<C> pool) {
         Objects.requireNonNull(pool, "Pool must not be null.");
         this.pool = pool;
-        // Verify that _pool's factory refers back to it.  If not, log a warning and try to fix.
+        // Verify that pool's factory refers back to it.  If not, log a warning and try to fix.
         if (this.pool instanceof GenericObjectPool<?>) {
             final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) this.pool).getFactory();
             Objects.requireNonNull(pcf, "PoolableConnectionFactory must not be null.");
