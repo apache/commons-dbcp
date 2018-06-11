@@ -52,7 +52,7 @@ class CPDSConnectionFactory
 
     private final ConnectionPoolDataSource cpds;
     private final String validationQuery;
-    private final int validationQueryTimeout;
+    private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> pool;
     private final String userName;
@@ -81,7 +81,7 @@ class CPDSConnectionFactory
      *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
      *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
      *            connections.
-     * @param validationQueryTimeout
+     * @param validationQueryTimeoutSeconds
      *            Timeout in seconds before validation fails
      * @param rollbackAfterValidation
      *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
@@ -93,13 +93,13 @@ class CPDSConnectionFactory
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
                                  final String validationQuery,
-                                 final int validationQueryTimeout,
+                                 final int validationQueryTimeoutSeconds,
                                  final boolean rollbackAfterValidation,
                                  final String userName,
                                  final char[] userPassword) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
-        this.validationQueryTimeout = validationQueryTimeout;
+        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
         this.userName = userName;
         this.userPassword = userPassword;
         this.rollbackAfterValidation = rollbackAfterValidation;
@@ -114,7 +114,7 @@ class CPDSConnectionFactory
      *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
      *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
      *            connections.
-     * @param validationQueryTimeout
+     * @param validationQueryTimeoutSeconds
      *            Timeout in seconds before validation fails
      * @param rollbackAfterValidation
      *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
@@ -125,11 +125,11 @@ class CPDSConnectionFactory
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
                                  final String validationQuery,
-                                 final int validationQueryTimeout,
+                                 final int validationQueryTimeoutSeconds,
                                  final boolean rollbackAfterValidation,
                                  final String userName,
                                  final String userPassword) {
-        this(cpds, validationQuery, validationQueryTimeout, rollbackAfterValidation, userName,
+        this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName,
                 Utils.toCharArray(userPassword));
     }
 
@@ -204,7 +204,7 @@ class CPDSConnectionFactory
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == validationQuery) {
-            int timeout = validationQueryTimeout;
+            int timeout = validationQueryTimeoutSeconds;
             if (timeout < 0) {
                 timeout = 0;
             }

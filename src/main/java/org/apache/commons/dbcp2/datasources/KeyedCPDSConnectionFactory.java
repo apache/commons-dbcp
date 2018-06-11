@@ -52,7 +52,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
 
     private final ConnectionPoolDataSource cpds;
     private final String validationQuery;
-    private final int validationQueryTimeout;
+    private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool;
     private long maxConnLifetimeMillis = -1;
@@ -77,18 +77,18 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
      *            row. May be {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate
      *            connections.
-     * @param validationQueryTimeout
+     * @param validationQueryTimeoutSeconds
      *            The time, in seconds, to allow for the validation query to complete
      * @param rollbackAfterValidation
      *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
      */
     public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds,
                                       final String validationQuery,
-                                      final int validationQueryTimeout,
+                                      final int validationQueryTimeoutSeconds,
                                       final boolean rollbackAfterValidation) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
-        this.validationQueryTimeout = validationQueryTimeout;
+        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
@@ -172,7 +172,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == validationQuery) {
-            int timeout = validationQueryTimeout;
+            int timeout = validationQueryTimeoutSeconds;
             if (timeout < 0) {
                 timeout = 0;
             }

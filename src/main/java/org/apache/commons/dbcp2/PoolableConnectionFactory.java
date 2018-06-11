@@ -80,10 +80,10 @@ public class PoolableConnectionFactory
      * executing a validation query.  Use a value less than or equal to 0 for
      * no timeout.
      *
-     * @param timeoutSeconds new validation query timeout value in seconds
+     * @param validationQueryTimeoutSeconds new validation query timeout value in seconds
      */
-    public void setValidationQueryTimeout(final int timeoutSeconds) {
-        this.validationQueryTimeoutSeconds = timeoutSeconds;
+    public void setValidationQueryTimeout(final int validationQueryTimeoutSeconds) {
+        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
     }
 
     /**

@@ -1137,7 +1137,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Timeout in seconds before connection validation queries fail.
      */
-    private volatile int validationQueryTimeout = -1;
+    private volatile int validationQueryTimeoutSeconds = -1;
 
     /**
      * Returns the validation query timeout.
@@ -1146,7 +1146,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public int getValidationQueryTimeout() {
-        return validationQueryTimeout;
+        return validationQueryTimeoutSeconds;
     }
 
     /**
@@ -1158,11 +1158,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
      * </p>
      *
-     * @param timeout
+     * @param validationQueryTimeoutSeconds
      *            new validation query timeout value in seconds
      */
-    public void setValidationQueryTimeout(final int timeout) {
-        this.validationQueryTimeout = timeout;
+    public void setValidationQueryTimeout(final int validationQueryTimeoutSeconds) {
+        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
     }
 
     /**
@@ -2322,7 +2322,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory = new PoolableConnectionFactory(driverConnectionFactory,
                     ObjectNameWrapper.unwrap(registeredJmxObjectName));
             connectionFactory.setValidationQuery(validationQuery);
-            connectionFactory.setValidationQueryTimeout(validationQueryTimeout);
+            connectionFactory.setValidationQueryTimeout(validationQueryTimeoutSeconds);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
             connectionFactory.setDefaultReadOnly(defaultReadOnly);
             connectionFactory.setDefaultAutoCommit(defaultAutoCommit);

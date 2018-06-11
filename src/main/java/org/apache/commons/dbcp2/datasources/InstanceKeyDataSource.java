@@ -130,7 +130,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     // Connection factory properties
     private String validationQuery;
-    private int validationQueryTimeout = -1;
+    private int validationQueryTimeoutSeconds = -1;
     private boolean rollbackAfterValidation;
     private long maxConnLifetimeMillis = -1;
 
@@ -810,17 +810,17 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @return The timeout in seconds before the validation query fails.
      */
     public int getValidationQueryTimeout() {
-        return validationQueryTimeout;
+        return validationQueryTimeoutSeconds;
     }
 
     /**
      * Sets the timeout in seconds before the validation query fails.
      *
-     * @param validationQueryTimeout
+     * @param validationQueryTimeoutSeconds
      *            The new timeout in seconds
      */
-    public void setValidationQueryTimeout(final int validationQueryTimeout) {
-        this.validationQueryTimeout = validationQueryTimeout;
+    public void setValidationQueryTimeout(final int validationQueryTimeoutSeconds) {
+        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
     }
 
     /**
