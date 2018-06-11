@@ -74,7 +74,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             getConnectionInternal().setLastUsed();
         }
         try {
-            return DelegatingResultSet.wrapResultSet(this,((PreparedStatement)getDelegate()).executeQuery());
+            return DelegatingResultSet.wrapResultSet(this,getDelegatePreparedStatement().executeQuery());
         }
         catch (final SQLException e) {
             handleException(e);
@@ -89,18 +89,22 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             getConnectionInternal().setLastUsed();
         }
         try {
-            return ((PreparedStatement) getDelegate()).executeUpdate();
+            return getDelegatePreparedStatement().executeUpdate();
         } catch (final SQLException e) {
             handleException(e);
             return 0;
         }
     }
 
+    private PreparedStatement getDelegatePreparedStatement() {
+        return (PreparedStatement) getDelegate();
+    }
+
     @Override
     public void setNull(final int parameterIndex, final int sqlType) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setNull(parameterIndex, sqlType);
+            getDelegatePreparedStatement().setNull(parameterIndex, sqlType);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -110,7 +114,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBoolean(final int parameterIndex, final boolean x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setBoolean(parameterIndex, x);
+            getDelegatePreparedStatement().setBoolean(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -120,7 +124,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setByte(final int parameterIndex, final byte x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setByte(parameterIndex, x);
+            getDelegatePreparedStatement().setByte(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -130,7 +134,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setShort(final int parameterIndex, final short x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setShort(parameterIndex, x);
+            getDelegatePreparedStatement().setShort(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -140,7 +144,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setInt(final int parameterIndex, final int x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setInt(parameterIndex, x);
+            getDelegatePreparedStatement().setInt(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -150,7 +154,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setLong(final int parameterIndex, final long x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setLong(parameterIndex, x);
+            getDelegatePreparedStatement().setLong(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -160,7 +164,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setFloat(final int parameterIndex, final float x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setFloat(parameterIndex, x);
+            getDelegatePreparedStatement().setFloat(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -170,7 +174,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setDouble(final int parameterIndex, final double x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setDouble(parameterIndex, x);
+            getDelegatePreparedStatement().setDouble(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -180,7 +184,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBigDecimal(final int parameterIndex, final BigDecimal x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setBigDecimal(parameterIndex, x);
+            getDelegatePreparedStatement().setBigDecimal(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -190,7 +194,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setString(final int parameterIndex, final String x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setString(parameterIndex, x);
+            getDelegatePreparedStatement().setString(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -200,7 +204,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBytes(final int parameterIndex, final byte[] x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setBytes(parameterIndex, x);
+            getDelegatePreparedStatement().setBytes(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -210,7 +214,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setDate(final int parameterIndex, final Date x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setDate(parameterIndex, x);
+            getDelegatePreparedStatement().setDate(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -220,7 +224,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setTime(final int parameterIndex, final Time x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setTime(parameterIndex, x);
+            getDelegatePreparedStatement().setTime(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -230,7 +234,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setTimestamp(final int parameterIndex, final Timestamp x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setTimestamp(parameterIndex, x);
+            getDelegatePreparedStatement().setTimestamp(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -240,7 +244,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setAsciiStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setAsciiStream(parameterIndex, x, length);
+            getDelegatePreparedStatement().setAsciiStream(parameterIndex, x, length);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -252,7 +256,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setUnicodeStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setUnicodeStream(parameterIndex, x, length);
+            getDelegatePreparedStatement().setUnicodeStream(parameterIndex, x, length);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -262,7 +266,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBinaryStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setBinaryStream(parameterIndex, x, length);
+            getDelegatePreparedStatement().setBinaryStream(parameterIndex, x, length);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -272,7 +276,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void clearParameters() throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).clearParameters();
+            getDelegatePreparedStatement().clearParameters();
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -283,7 +287,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setObject(parameterIndex, x, targetSqlType, scale);
+            getDelegatePreparedStatement().setObject(parameterIndex, x, targetSqlType, scale);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -293,7 +297,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setObject(final int parameterIndex, final Object x, final int targetSqlType) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setObject(parameterIndex, x, targetSqlType);
+            getDelegatePreparedStatement().setObject(parameterIndex, x, targetSqlType);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -303,7 +307,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setObject(final int parameterIndex, final Object x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setObject(parameterIndex, x);
+            getDelegatePreparedStatement().setObject(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -316,7 +320,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             getConnectionInternal().setLastUsed();
         }
         try {
-            return ((PreparedStatement) getDelegate()).execute();
+            return getDelegatePreparedStatement().execute();
         } catch (final SQLException e) {
             handleException(e);
             return false;
@@ -327,7 +331,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void addBatch() throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).addBatch();
+            getDelegatePreparedStatement().addBatch();
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -338,7 +342,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setCharacterStream(parameterIndex, reader, length);
+            getDelegatePreparedStatement().setCharacterStream(parameterIndex, reader, length);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -348,7 +352,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setRef(final int i, final Ref x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setRef(i, x);
+            getDelegatePreparedStatement().setRef(i, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -358,7 +362,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBlob(final int i, final Blob x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setBlob(i, x);
+            getDelegatePreparedStatement().setBlob(i, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -368,7 +372,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setClob(final int i, final Clob x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setClob(i, x);
+            getDelegatePreparedStatement().setClob(i, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -378,7 +382,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setArray(final int i, final Array x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setArray(i, x);
+            getDelegatePreparedStatement().setArray(i, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -388,7 +392,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public ResultSetMetaData getMetaData() throws SQLException {
         checkOpen();
         try {
-            return ((PreparedStatement) getDelegate()).getMetaData();
+            return getDelegatePreparedStatement().getMetaData();
         } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
@@ -399,7 +403,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setDate(final int parameterIndex, final Date x, final Calendar cal) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setDate(parameterIndex, x, cal);
+            getDelegatePreparedStatement().setDate(parameterIndex, x, cal);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -409,7 +413,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setTime(final int parameterIndex, final Time x, final Calendar cal) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setTime(parameterIndex, x, cal);
+            getDelegatePreparedStatement().setTime(parameterIndex, x, cal);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -419,7 +423,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setTimestamp(final int parameterIndex, final Timestamp x, final Calendar cal) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setTimestamp(parameterIndex, x, cal);
+            getDelegatePreparedStatement().setTimestamp(parameterIndex, x, cal);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -429,7 +433,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNull(final int paramIndex, final int sqlType, final String typeName) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setNull(paramIndex, sqlType, typeName);
+            getDelegatePreparedStatement().setNull(paramIndex, sqlType, typeName);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -450,7 +454,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setURL(final int parameterIndex, final java.net.URL x) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement) getDelegate()).setURL(parameterIndex, x);
+            getDelegatePreparedStatement().setURL(parameterIndex, x);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -460,7 +464,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
         checkOpen();
         try {
-            return ((PreparedStatement) getDelegate()).getParameterMetaData();
+            return getDelegatePreparedStatement().getParameterMetaData();
         } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
@@ -471,7 +475,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setRowId(final int parameterIndex, final RowId value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setRowId(parameterIndex, value);
+            getDelegatePreparedStatement().setRowId(parameterIndex, value);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -482,7 +486,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNString(final int parameterIndex, final String value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNString(parameterIndex, value);
+            getDelegatePreparedStatement().setNString(parameterIndex, value);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -493,7 +497,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNCharacterStream(final int parameterIndex, final Reader value, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNCharacterStream(parameterIndex, value, length);
+            getDelegatePreparedStatement().setNCharacterStream(parameterIndex, value, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -504,7 +508,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNClob(final int parameterIndex, final NClob value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, value);
+            getDelegatePreparedStatement().setNClob(parameterIndex, value);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -515,7 +519,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setClob(parameterIndex, reader, length);
+            getDelegatePreparedStatement().setClob(parameterIndex, reader, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -526,7 +530,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBlob(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setBlob(parameterIndex, inputStream, length);
+            getDelegatePreparedStatement().setBlob(parameterIndex, inputStream, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -537,7 +541,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, reader, length);
+            getDelegatePreparedStatement().setNClob(parameterIndex, reader, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -548,7 +552,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setSQLXML(final int parameterIndex, final SQLXML value) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setSQLXML(parameterIndex, value);
+            getDelegatePreparedStatement().setSQLXML(parameterIndex, value);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -559,7 +563,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setAsciiStream(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setAsciiStream(parameterIndex, inputStream, length);
+            getDelegatePreparedStatement().setAsciiStream(parameterIndex, inputStream, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -570,7 +574,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBinaryStream(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setBinaryStream(parameterIndex, inputStream, length);
+            getDelegatePreparedStatement().setBinaryStream(parameterIndex, inputStream, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -581,7 +585,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setCharacterStream(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setCharacterStream(parameterIndex, reader, length);
+            getDelegatePreparedStatement().setCharacterStream(parameterIndex, reader, length);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -592,7 +596,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setAsciiStream(final int parameterIndex, final InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setAsciiStream(parameterIndex, inputStream);
+            getDelegatePreparedStatement().setAsciiStream(parameterIndex, inputStream);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -603,7 +607,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBinaryStream(final int parameterIndex, final InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setBinaryStream(parameterIndex, inputStream);
+            getDelegatePreparedStatement().setBinaryStream(parameterIndex, inputStream);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -614,7 +618,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setCharacterStream(final int parameterIndex, final Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setCharacterStream(parameterIndex, reader);
+            getDelegatePreparedStatement().setCharacterStream(parameterIndex, reader);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -625,7 +629,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNCharacterStream(final int parameterIndex, final Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNCharacterStream(parameterIndex, reader);
+            getDelegatePreparedStatement().setNCharacterStream(parameterIndex, reader);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -636,7 +640,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setClob(final int parameterIndex, final Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setClob(parameterIndex, reader);
+            getDelegatePreparedStatement().setClob(parameterIndex, reader);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -647,7 +651,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setBlob(final int parameterIndex, final InputStream inputStream) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setBlob(parameterIndex, inputStream);
+            getDelegatePreparedStatement().setBlob(parameterIndex, inputStream);
         }
         catch (final SQLException e) {
             handleException(e);
@@ -658,7 +662,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public void setNClob(final int parameterIndex, final Reader reader) throws SQLException {
         checkOpen();
         try {
-            ((PreparedStatement)getDelegate()).setNClob(parameterIndex, reader);
+            getDelegatePreparedStatement().setNClob(parameterIndex, reader);
         }
         catch (final SQLException e) {
             handleException(e);
