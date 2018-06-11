@@ -56,20 +56,19 @@ import java.util.Calendar;
  * @author Dirk Verbeeck
  * @since 2.0
  */
-public class DelegatingPreparedStatement extends DelegatingStatement
-        implements PreparedStatement {
+public class DelegatingPreparedStatement extends DelegatingStatement implements PreparedStatement {
 
     /**
-     * Create a wrapper for the Statement which traces this
-     * Statement to the Connection which created it and the
-     * code which created it.
+     * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
+     * which created it.
      *
-     * @param s the {@link PreparedStatement} to delegate all calls to.
-     * @param c the {@link DelegatingConnection} that created this statement.
+     * @param statement
+     *            the {@link PreparedStatement} to delegate all calls to.
+     * @param connection
+     *            the {@link DelegatingConnection} that created this statement.
      */
-    public DelegatingPreparedStatement(final DelegatingConnection<?> c,
-                                       final PreparedStatement s) {
-        super(c, s);
+    public DelegatingPreparedStatement(final DelegatingConnection<?> connection, final PreparedStatement statement) {
+        super(connection, statement);
     }
 
     @Override
