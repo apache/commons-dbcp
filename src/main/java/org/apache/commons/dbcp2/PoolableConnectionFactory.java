@@ -101,10 +101,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      *            the {@link ObjectPool} in which to pool those {@link Connection}s
      */
     public synchronized void setPool(final ObjectPool<PoolableConnection> pool) {
-        if(null != this.pool && pool != this.pool) {
+        if (null != this.pool && pool != this.pool) {
             try {
                 this.pool.close();
-            } catch(final Exception e) {
+            } catch (final Exception e) {
                 // ignored !?!
             }
         }
@@ -283,7 +283,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         final long connIndex = connectionIndex.getAndIncrement();
 
-        if(poolStatements) {
+        if (poolStatements) {
             conn = new PoolingConnection(conn);
             final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
             config.setMaxTotalPerKey(-1);
@@ -300,9 +300,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             } else {
                 config.setJmxEnabled(false);
             }
-            final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
-                    new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
-            ((PoolingConnection)conn).setStatementPool(stmtPool);
+            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(
+                    (PoolingConnection) conn, config);
+            ((PoolingConnection) conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(cacheState);
         }
 
@@ -311,12 +311,11 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (dataSourceJmxName == null) {
             connJmxName = null;
         } else {
-            connJmxName = new ObjectName(dataSourceJmxName.toString() +
-                    Constants.JMX_CONNECTION_BASE_EXT + connIndex);
+            connJmxName = new ObjectName(dataSourceJmxName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName,
-                                      disconnectionSqlCodes, fastFailValidation);
+        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes,
+                fastFailValidation);
         pc.setCacheState(cacheState);
 
         return new DefaultPooledObject<>(pc);
@@ -324,10 +323,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     protected void initializeConnection(final Connection conn) throws SQLException {
         final Collection<String> sqls = connectionInitSqls;
-        if(conn.isClosed()) {
+        if (conn.isClosed()) {
             throw new SQLException("initializeConnection: connection closed");
         }
-        if(null != sqls) {
+        if (null != sqls) {
             try (Statement stmt = conn.createStatement()) {
                 for (final String sql : sqls) {
                     Objects.requireNonNull(sql, "null connectionInitSqls element");
@@ -360,15 +359,14 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     public void validateConnection(final PoolableConnection conn) throws SQLException {
-        if(conn.isClosed()) {
+        if (conn.isClosed()) {
             throw new SQLException("validateConnection: connection closed");
         }
         conn.validate(validationQuery, validationQueryTimeoutSeconds);
     }
 
     @Override
-    public void passivateObject(final PooledObject<PoolableConnection> p)
-            throws Exception {
+    public void passivateObject(final PooledObject<PoolableConnection> p) throws Exception {
 
         validateLifetime(p);
 
@@ -376,7 +374,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         Boolean connAutoCommit = null;
         if (rollbackOnReturn) {
             connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
-            if(!connAutoCommit.booleanValue() && !conn.isReadOnly()) {
+            if (!connAutoCommit.booleanValue() && !conn.isReadOnly()) {
                 conn.rollback();
             }
         }
@@ -389,7 +387,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             if (connAutoCommit == null) {
                 connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
             }
-            if(!connAutoCommit.booleanValue()) {
+            if (!connAutoCommit.booleanValue()) {
                 conn.setAutoCommit(true);
             }
         }
@@ -398,35 +396,30 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public void activateObject(final PooledObject<PoolableConnection> p)
-            throws Exception {
+    public void activateObject(final PooledObject<PoolableConnection> p) throws Exception {
 
         validateLifetime(p);
 
         final PoolableConnection conn = p.getObject();
         conn.activate();
 
-        if (defaultAutoCommit != null &&
-                conn.getAutoCommit() != defaultAutoCommit.booleanValue()) {
+        if (defaultAutoCommit != null && conn.getAutoCommit() != defaultAutoCommit.booleanValue()) {
             conn.setAutoCommit(defaultAutoCommit.booleanValue());
         }
-        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION &&
-                conn.getTransactionIsolation() != defaultTransactionIsolation) {
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION
+                && conn.getTransactionIsolation() != defaultTransactionIsolation) {
             conn.setTransactionIsolation(defaultTransactionIsolation);
         }
-        if (defaultReadOnly != null &&
-                conn.isReadOnly() != defaultReadOnly.booleanValue()) {
+        if (defaultReadOnly != null && conn.isReadOnly() != defaultReadOnly.booleanValue()) {
             conn.setReadOnly(defaultReadOnly.booleanValue());
         }
-        if (defaultCatalog != null &&
-                !defaultCatalog.equals(conn.getCatalog())) {
+        if (defaultCatalog != null && !defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(defaultCatalog);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }
 
-    private void validateLifetime(final PooledObject<PoolableConnection> p)
-            throws Exception {
+    private void validateLifetime(final PooledObject<PoolableConnection> p) throws Exception {
         if (maxConnLifetimeMillis > 0) {
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
@@ -478,8 +471,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private String defaultCatalog;
     private boolean cacheState;
     private boolean poolStatements;
-    private int maxOpenPreparedStatements =
-        GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
+    private int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
     private long maxConnLifetimeMillis = -1;
     private final AtomicLong connectionIndex = new AtomicLong(0);
     private Integer defaultQueryTimeoutSeconds;
