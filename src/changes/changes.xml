@@ -97,6 +97,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-502" due-to="Gary Gregory">
         org.apache.commons.dbcp2.datasources internals should use a char[] instead of a String to store passwords.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-503" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.datasources.InstanceKeyDataSourceFactory.closeAll() does not close all.
+      </action>
     </release>
     <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="pschumacher" type="fix" issue="DBCP-476" due-to="Gary Evesson, Richard Cordova">

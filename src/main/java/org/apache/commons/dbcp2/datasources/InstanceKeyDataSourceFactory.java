@@ -19,9 +19,10 @@ package org.apache.commons.dbcp2.datasources;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -33,9 +34,10 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
+import org.apache.commons.dbcp2.ListException;
+
 /**
- * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s
- * or <code>PerUserPoolDataSource</code>s
+ * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s or <code>PerUserPoolDataSource</code>s
  *
  * @since 2.0
  */
@@ -71,14 +73,37 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
     /**
      * Closes all pools associated with this class.
+     *
+     * @throws Exception
+     *             a {@link ListException} containing all exceptions thrown by {@link InstanceKeyDataSource#close()}
+     * @see InstanceKeyDataSource#close()
+     * @see ListException
+     * @since 2.4.0 throws a {@link ListException} instead of, in 2.3.0 and before, the first exception thrown by
+     *        {@link InstanceKeyDataSource#close()}.
      */
     public static void closeAll() throws Exception {
         // Get iterator to loop over all instances of this data source.
+        final List<Throwable> exceptionList = new ArrayList<>(instanceMap.size());
         final Iterator<Entry<String, InstanceKeyDataSource>> instanceIterator = instanceMap.entrySet().iterator();
         while (instanceIterator.hasNext()) {
-            instanceIterator.next().getValue().close();
+            // Bullet-proof to avoid anything else but problems from InstanceKeyDataSource#close().
+            final Entry<String, InstanceKeyDataSource> next = instanceIterator.next();
+            if (next != null) {
+                @SuppressWarnings("resource")
+                final InstanceKeyDataSource value = next.getValue();
+                if (value != null) {
+                    try {
+                        value.close();
+                    } catch (final Exception e) {
+                        exceptionList.add(e);
+                    }
+                }
+            }
         }
         instanceMap.clear();
+        if (!exceptionList.isEmpty()) {
+            throw new ListException("Could not close all InstanceKeyDataSource instances.", exceptionList);
+        }
     }
 
     /**
@@ -290,4 +315,3 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 }
-
