@@ -521,7 +521,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of connectionPoolDataSource. This method will return null, if the backing datasource is being
+     * Gets the value of connectionPoolDataSource. This method will return null, if the backing datasource is being
      * accessed via jndi.
      *
      * @return value of connectionPoolDataSource.
@@ -531,7 +531,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the backend ConnectionPoolDataSource. This property should not be set if using jndi to access the datasource.
+     * Sets the backend ConnectionPoolDataSource. This property should not be set if using jndi to access the datasource.
      *
      * @param v
      *            Value to assign to connectionPoolDataSource.
@@ -549,7 +549,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
+     * Gets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
      * from a jndi service provider.
      *
      * @return value of dataSourceName.
@@ -559,7 +559,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
+     * Sets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
      * from a jndi service provider.
      *
      * @param v
@@ -579,7 +579,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
+     * Gets the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setAutoCommit(boolean). The default is <code>null</code> which
      * will use the default value for the drive.
      *
@@ -590,7 +590,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
+     * Sets the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setAutoCommit(boolean). The default is <code>null</code> which
      * will use the default value for the drive.
      *
@@ -603,7 +603,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
+     * Gets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
      * be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which will
      * use the default value for the drive.
      *
@@ -614,7 +614,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
+     * Sets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
      * be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which will
      * use the default value for the drive.
      *
@@ -627,7 +627,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of defaultTransactionIsolation, which defines the state of connections handed out from this pool.
+     * Gets the value of defaultTransactionIsolation, which defines the state of connections handed out from this pool.
      * The value can be changed on the Connection using Connection.setTransactionIsolation(int). If this method returns
      * -1, the default is JDBC driver dependent.
      *
@@ -638,7 +638,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the value of defaultTransactionIsolation, which defines the state of connections handed out from this pool.
+     * Sets the value of defaultTransactionIsolation, which defines the state of connections handed out from this pool.
      * The value can be changed on the Connection using Connection.setTransactionIsolation(int). The default is JDBC
      * driver dependent.
      *
@@ -661,7 +661,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the description. This property is defined by JDBC as for use with GUI (or other) tools that might deploy the
+     * Gets the description. This property is defined by JDBC as for use with GUI (or other) tools that might deploy the
      * datasource. It serves no internal purpose.
      *
      * @return value of description.
@@ -671,7 +671,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the description. This property is defined by JDBC as for use with GUI (or other) tools that might deploy the
+     * Sets the description. This property is defined by JDBC as for use with GUI (or other) tools that might deploy the
      * datasource. It serves no internal purpose.
      *
      * @param v
@@ -734,7 +734,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of loginTimeout.
+     * Gets the value of loginTimeout.
      *
      * @return value of loginTimeout.
      */
@@ -744,7 +744,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the value of loginTimeout.
+     * Sets the value of loginTimeout.
      *
      * @param v
      *            Value to assign to loginTimeout.
@@ -755,7 +755,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Get the value of logWriter.
+     * Gets the value of logWriter.
      *
      * @return value of logWriter.
      */
@@ -768,7 +768,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Set the value of logWriter.
+     * Sets the value of logWriter.
      *
      * @param v
      *            Value to assign to logWriter.
@@ -883,7 +883,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     // DataSource implementation
 
     /**
-     * Attempt to establish a database connection.
+     * Attempts to establish a database connection.
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -891,7 +891,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Attempt to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the
+     * Attempts to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the
      * provided user name and password. The password on the {@link PooledConnectionAndInfo} instance returned by
      * <code>getPooledConnectionAndInfo</code> is compared to the <code>password</code> parameter. If the comparison
      * fails, a database connection using the supplied user name and password is attempted. If the connection attempt
