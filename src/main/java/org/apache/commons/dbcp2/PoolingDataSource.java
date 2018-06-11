@@ -32,10 +32,10 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
- * A simple {@link DataSource} implementation that obtains
- * {@link Connection}s from the specified {@link ObjectPool}.
+ * A simple {@link DataSource} implementation that obtains {@link Connection}s from the specified {@link ObjectPool}.
  *
- * @param <C> The connection type
+ * @param <C>
+ *            The connection type
  *
  * @author Rodney Waldhoff
  * @author Glenn L. Nielsen
@@ -68,6 +68,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Close and free all {@link Connection}s from the pool.
+     * 
      * @since 2.1
      */
     @Override
@@ -91,11 +92,11 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Sets the value of the accessToUnderlyingConnectionAllowed property.
-     * It controls if the PoolGuard allows access to the underlying connection.
-     * (Default: false)
+     * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to
+     * the underlying connection. (Default: false)
      *
-     * @param allow Access to the underlying connection is granted when true.
+     * @param allow
+     *            Access to the underlying connection is granted when true.
      */
     public void setAccessToUnderlyingConnectionAllowed(final boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
@@ -121,8 +122,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     //--- DataSource methods -----------------------------------------
 
     /**
-     * Return a {@link java.sql.Connection} from my pool,
-     * according to the contract specified by {@link ObjectPool#borrowObject}.
+     * Return a {@link java.sql.Connection} from my pool, according to the contract specified by
+     * {@link ObjectPool#borrowObject}.
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -149,7 +150,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}
-     * @throws UnsupportedOperationException
+     * 
+     * @throws UnsupportedOperationException always thrown
      */
     @Override
     public Connection getConnection(final String uname, final String passwd) throws SQLException {
@@ -158,6 +160,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Returns my log writer.
+     * 
      * @return my log writer
      * @see DataSource#getLogWriter
      */
@@ -168,8 +171,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * @throws UnsupportedOperationException As this
-     *   implementation does not support this feature.
+     * 
+     * @throws UnsupportedOperationException
+     *             As this implementation does not support this feature.
      */
     @Override
     public int getLoginTimeout() {
@@ -178,8 +182,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     * @throws UnsupportedOperationException As this
-     *   implementation does not support this feature.
+     * 
+     * @throws UnsupportedOperationException
+     *             As this implementation does not support this feature.
      */
     @Override
     public void setLoginTimeout(final int seconds) {
@@ -188,6 +193,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Sets my log writer.
+     * 
      * @see DataSource#setLogWriter
      */
     @Override
@@ -205,8 +211,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a
-     * closed connection cannot be used anymore.
+     * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a closed connection cannot be used anymore.
+     * 
      * @since 2.0
      */
     private class PoolGuardConnectionWrapper<D extends Connection>
