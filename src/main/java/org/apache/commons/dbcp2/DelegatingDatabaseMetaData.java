@@ -134,31 +134,26 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getAttributes(final String catalog, final String schemaPattern,
-            final String typeNamePattern, final String attributeNamePattern)
-            throws SQLException {
+    public ResultSet getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
+            final String attributeNamePattern) throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,databaseMetaData.getAttributes(
-                    catalog, schemaPattern, typeNamePattern,
-                    attributeNamePattern));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection,
+                    databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getBestRowIdentifier(final String catalog, final String schema,
-            final String table, final int scope, final boolean nullable) throws SQLException {
+    public ResultSet getBestRowIdentifier(final String catalog, final String schema, final String table,
+            final int scope, final boolean nullable) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope,
-                            nullable));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -180,41 +175,34 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getCatalogs() throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getCatalogs());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getCatalogs());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getColumnPrivileges(final String catalog, final String schema,
-            final String table, final String columnNamePattern) throws SQLException {
+    public ResultSet getColumnPrivileges(final String catalog, final String schema, final String table,
+            final String columnNamePattern) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getColumnPrivileges(catalog, schema, table,
-                            columnNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getColumns(final String catalog, final String schemaPattern,
-            final String tableNamePattern, final String columnNamePattern)
-            throws SQLException {
+    public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+            final String columnNamePattern) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
-                            columnNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -226,17 +214,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getCrossReference(final String parentCatalog,
-            final String parentSchema, final String parentTable, final String foreignCatalog,
-            final String foreignSchema, final String foreignTable) throws SQLException {
+    public ResultSet getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
+            final String foreignCatalog, final String foreignSchema, final String foreignTable) throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getCrossReference(parentCatalog, parentSchema,
-                            parentTable, foreignCatalog, foreignSchema,
-                            foreignTable));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getCrossReference(parentCatalog,
+                    parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -297,8 +281,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         try {
             return DelegatingResultSet.wrapResultSet(connection,
                     databaseMetaData.getExportedKeys(catalog, schema, table));
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -323,23 +306,20 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         try {
             return DelegatingResultSet.wrapResultSet(connection,
                     databaseMetaData.getImportedKeys(catalog, schema, table));
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getIndexInfo(final String catalog, final String schema, final String table,
-            final boolean unique, final boolean approximate) throws SQLException {
+    public ResultSet getIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
+            final boolean approximate) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getIndexInfo(catalog, schema, table, unique,
-                            approximate));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -484,14 +464,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getPrimaryKeys(final String catalog, final String schema, final String table)
-            throws SQLException {
+    public ResultSet getPrimaryKeys(final String catalog, final String schema, final String table) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
                     databaseMetaData.getPrimaryKeys(catalog, schema, table));
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -499,15 +477,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getProcedureColumns(final String catalog, final String schemaPattern,
-            final String procedureNamePattern, final String columnNamePattern)
-            throws SQLException {
+            final String procedureNamePattern, final String columnNamePattern) throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getProcedureColumns(catalog, schemaPattern,
-                            procedureNamePattern, columnNamePattern));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getProcedureColumns(catalog,
+                    schemaPattern, procedureNamePattern, columnNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -520,15 +495,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getProcedures(final String catalog, final String schemaPattern,
-            final String procedureNamePattern) throws SQLException {
+    public ResultSet getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getProcedures(catalog, schemaPattern,
-                            procedureNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -562,10 +535,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getSchemas() throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSchemas());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getSchemas());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -584,30 +555,26 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getSuperTables(final String catalog, final String schemaPattern,
-            final String tableNamePattern) throws SQLException {
+    public ResultSet getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSuperTables(catalog, schemaPattern,
-                            tableNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getSuperTypes(final String catalog, final String schemaPattern,
-            final String typeNamePattern) throws SQLException {
+    public ResultSet getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSuperTypes(catalog, schemaPattern,
-                            typeNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -620,15 +587,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getTablePrivileges(final String catalog, final String schemaPattern,
-            final String tableNamePattern) throws SQLException {
+    public ResultSet getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTablePrivileges(catalog, schemaPattern,
-                            tableNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -638,25 +603,21 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTableTypes() throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTableTypes());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getTableTypes());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getTables(final String catalog, final String schemaPattern,
-            final String tableNamePattern, final String[] types) throws SQLException {
+    public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
+            final String[] types) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern,
-                            types));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -672,10 +633,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTypeInfo() throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTypeInfo());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getTypeInfo());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -709,14 +668,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getVersionColumns(final String catalog, final String schema,
-            final String table) throws SQLException {
+    public ResultSet getVersionColumns(final String catalog, final String schema, final String table)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
                     databaseMetaData.getVersionColumns(catalog, schema, table));
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -1299,14 +1257,11 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getSchemas(final String catalog, final String schemaPattern)
-    throws SQLException {
+    public ResultSet getSchemas(final String catalog, final String schemaPattern) throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSchemas(catalog, schemaPattern));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getSchemas(catalog, schemaPattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -1328,25 +1283,21 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getClientInfoProperties() throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getClientInfoProperties());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getClientInfoProperties());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
     }
 
     @Override
-    public ResultSet getFunctions(final String catalog, final String schemaPattern,
-            final String functionNamePattern) throws SQLException {
+    public ResultSet getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern)
+            throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getFunctions(catalog, schemaPattern,
-                            functionNamePattern));
-        }
-        catch (final SQLException e) {
+                    databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -1354,15 +1305,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
-            final String functionNamePattern, final String columnNamePattern)
-            throws SQLException {
+            final String functionNamePattern, final String columnNamePattern) throws SQLException {
         connection.checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getFunctionColumns(catalog, schemaPattern,
-                            functionNamePattern, columnNamePattern));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getFunctionColumns(catalog,
+                    schemaPattern, functionNamePattern, columnNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -1371,16 +1319,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     /* JDBC_4_ANT_KEY_END */
 
     @Override
-    public ResultSet getPseudoColumns(final String catalog, final String schemaPattern,
-            final String tableNamePattern, final String columnNamePattern)
-            throws SQLException {
+    public ResultSet getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+            final String columnNamePattern) throws SQLException {
         connection.checkOpen();
         try {
             return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getPseudoColumns(catalog, schemaPattern,
-                            tableNamePattern, columnNamePattern));
-}
-        catch (final SQLException e) {
+                    databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
