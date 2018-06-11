@@ -157,27 +157,29 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     public PooledConnection getPooledConnection(final String pooledUserName, final String pooledUserPassword)
             throws SQLException {
         getConnectionCalled = true;
-        PooledConnectionImpl pci = null;
+        PooledConnectionImpl pooledConnection = null;
         // Workaround for buggy WebLogic 5.1 classloader - ignore the
         // exception upon first invocation.
         try {
             if (connectionProperties != null) {
                 update(connectionProperties, KEY_USER, pooledUserName);
                 update(connectionProperties, KEY_PASSWORD, pooledUserPassword);
-                pci = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), connectionProperties));
+                pooledConnection = new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), connectionProperties));
             } else {
-                pci = new PooledConnectionImpl(
+                pooledConnection = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
             }
-            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+            pooledConnection.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         } catch (final ClassCircularityError e) {
             if (connectionProperties != null) {
-                pci = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), connectionProperties));
+                pooledConnection = new PooledConnectionImpl(
+                        DriverManager.getConnection(getUrl(), connectionProperties));
             } else {
-                pci = new PooledConnectionImpl(
+                pooledConnection = new PooledConnectionImpl(
                         DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
             }
-            pci.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+            pooledConnection.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         }
         KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = null;
         if (isPoolPreparedStatements()) {
@@ -201,10 +203,10 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleTimeMillis(0);
             }
-            stmtPool = new GenericKeyedObjectPool<>(pci, config);
-            pci.setStatementPool(stmtPool);
+            stmtPool = new GenericKeyedObjectPool<>(pooledConnection, config);
+            pooledConnection.setStatementPool(stmtPool);
         }
-        return pci;
+        return pooledConnection;
     }
 
     @Override
