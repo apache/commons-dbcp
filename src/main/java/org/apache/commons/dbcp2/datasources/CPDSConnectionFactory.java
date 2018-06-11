@@ -157,7 +157,7 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, userName, Utils.toString(userPassword));
+            pci = new PooledConnectionAndInfo(pc, userName, userPassword);
             pcMap.put(pc, pci);
         } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
