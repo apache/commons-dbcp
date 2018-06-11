@@ -45,6 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 2.0
  */
 public class ManagedConnection<C extends Connection> extends DelegatingConnection<C> {
+    
     private final ObjectPool<C> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
@@ -52,6 +53,18 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     private boolean isSharedConnection;
     private final Lock lock;
 
+    /**
+     * Constructs a new instance responsible for managing a database connection in a transactional environment.
+     * 
+     * @param pool
+     *            The connection pool.
+     * @param transactionRegistry
+     *            The transaction registry.
+     * @param accessToUnderlyingConnectionAllowed
+     *            Whether or not to allow access to the underlying Connection.
+     * @throws SQLException
+     *             Thrown when there is problem managing transactions.
+     */
     public ManagedConnection(final ObjectPool<C> pool, final TransactionRegistry transactionRegistry,
             final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
