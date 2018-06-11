@@ -29,10 +29,9 @@ import java.util.Objects;
 import java.lang.ref.WeakReference;
 
 /**
- * TransactionContext represents the association between a single XAConnectionFactory and a Transaction.
- * This context contains a single shared connection which should be used by all ManagedConnections for
- * the XAConnectionFactory, the ability to listen for the transaction completion event, and a method
- * to check the status of the transaction.
+ * TransactionContext represents the association between a single XAConnectionFactory and a Transaction. This context
+ * contains a single shared connection which should be used by all ManagedConnections for the XAConnectionFactory, the
+ * ability to listen for the transaction completion event, and a method to check the status of the transaction.
  *
  * @since 2.0
  */
@@ -43,13 +42,13 @@ public class TransactionContext {
     private boolean transactionComplete;
 
     /**
-     * Creates a TransactionContext for the specified Transaction and TransactionRegistry.  The
-     * TransactionRegistry is used to obtain the XAResource for the shared connection when it is
-     * enlisted in the transaction.
+     * Creates a TransactionContext for the specified Transaction and TransactionRegistry. The TransactionRegistry is
+     * used to obtain the XAResource for the shared connection when it is enlisted in the transaction.
      *
-     * @param transactionRegistry the TransactionRegistry used to obtain the XAResource for the
-     * shared connection
-     * @param transaction the transaction
+     * @param transactionRegistry
+     *            the TransactionRegistry used to obtain the XAResource for the shared connection
+     * @param transaction
+     *            the transaction
      */
     public TransactionContext(final TransactionRegistry transactionRegistry, final Transaction transaction) {
         Objects.requireNonNull(transactionRegistry, "transactionRegistry is null");
@@ -60,9 +59,9 @@ public class TransactionContext {
     }
 
     /**
-     * Gets the connection shared by all ManagedConnections in the transaction.  Specifically,
-     * connection using the same XAConnectionFactory from which the TransactionRegistry was
-     * obtained.
+     * Gets the connection shared by all ManagedConnections in the transaction. Specifically, connection using the same
+     * XAConnectionFactory from which the TransactionRegistry was obtained.
+     * 
      * @return the shared connection for this transaction
      */
     public Connection getSharedConnection() {
@@ -70,13 +69,13 @@ public class TransactionContext {
     }
 
     /**
-     * Sets the shared connection for this transaction.  The shared connection is enlisted
-     * in the transaction.
+     * Sets the shared connection for this transaction. The shared connection is enlisted in the transaction.
      *
-     * @param sharedConnection the shared connection
-     * @throws SQLException if a shared connection is already set, if XAResource for the connection
-     * could not be found in the transaction registry, or if there was a problem enlisting the
-     * connection in the transaction
+     * @param sharedConnection
+     *            the shared connection
+     * @throws SQLException
+     *             if a shared connection is already set, if XAResource for the connection could not be found in the
+     *             transaction registry, or if there was a problem enlisting the connection in the transaction
      */
     public void setSharedConnection(final Connection sharedConnection) throws SQLException {
         if (this.sharedConnection != null) {
@@ -88,7 +87,7 @@ public class TransactionContext {
         final Transaction transaction = getTransaction();
         try {
             final XAResource xaResource = transactionRegistry.getXAResource(sharedConnection);
-            if ( !transaction.enlistResource(xaResource) ) {
+            if (!transaction.enlistResource(xaResource)) {
                 throw new SQLException("Unable to enlist connection in transaction: enlistResource returns 'false'.");
             }
         } catch (final IllegalStateException e) {
@@ -106,8 +105,10 @@ public class TransactionContext {
     /**
      * Adds a listener for transaction completion events.
      *
-     * @param listener the listener to add
-     * @throws SQLException if a problem occurs adding the listener to the transaction
+     * @param listener
+     *            the listener to add
+     * @throws SQLException
+     *             if a problem occurs adding the listener to the transaction
      */
     public void addTransactionContextListener(final TransactionContextListener listener) throws SQLException {
         try {
@@ -132,8 +133,10 @@ public class TransactionContext {
 
     /**
      * True if the transaction is active or marked for rollback only.
+     * 
      * @return true if the transaction is active or marked for rollback only; false otherwise
-     * @throws SQLException if a problem occurs obtaining the transaction status
+     * @throws SQLException
+     *             if a problem occurs obtaining the transaction status
      */
     public boolean isActive() throws SQLException {
         try {
@@ -166,7 +169,7 @@ public class TransactionContext {
     }
 
     /**
-     * Gets the transaction  complete flag to true.
+     * Gets the transaction complete flag to true.
      *
      * @return The transaction complete flag.
      *

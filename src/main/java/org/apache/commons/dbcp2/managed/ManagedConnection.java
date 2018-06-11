@@ -52,8 +52,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     private boolean isSharedConnection;
     private final Lock lock;
 
-    public ManagedConnection(final ObjectPool<C> pool,
-            final TransactionRegistry transactionRegistry,
+    public ManagedConnection(final ObjectPool<C> pool, final TransactionRegistry transactionRegistry,
             final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
         this.pool = pool;
@@ -80,7 +79,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             }
             // transaction should have been cleared up by TransactionContextListener, but in
             // rare cases another lister could have registered which uses the connection before
-            // our listener is called.  In that rare case, trigger the transaction complete call now
+            // our listener is called. In that rare case, trigger the transaction complete call now
             transactionComplete();
         }
 
@@ -115,8 +114,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // always be of type C since it has been shared by another
             // connection from the same pool.
             @SuppressWarnings("unchecked")
-            final
-            C shared = (C) transactionContext.getSharedConnection();
+            final C shared = (C) transactionContext.getSharedConnection();
             setDelegate(shared);
 
             // remember that we are using a shared connection so it can be cleared after the
@@ -183,8 +181,8 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     /**
-     * Delegates to {@link ManagedConnection#transactionComplete()}
-     * for transaction completion events.
+     * Delegates to {@link ManagedConnection#transactionComplete()} for transaction completion events.
+     * 
      * @since 2.0
      */
     protected class CompletionListener implements TransactionContextListener {
@@ -238,7 +236,6 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         super.setAutoCommit(autoCommit);
     }
 
-
     @Override
     public void commit() throws SQLException {
         if (transactionContext != null) {
@@ -255,7 +252,6 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         super.rollback();
     }
 
-
     @Override
     public void setReadOnly(final boolean readOnly) throws SQLException {
         if (transactionContext != null) {
@@ -270,6 +266,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
+     * 
      * @return if false, getDelegate() and getInnermostDelegate() will return null
      */
     public boolean isAccessToUnderlyingConnectionAllowed() {

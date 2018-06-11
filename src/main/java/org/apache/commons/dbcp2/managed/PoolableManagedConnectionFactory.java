@@ -16,6 +16,7 @@
  */
 
 package org.apache.commons.dbcp2.managed;
+
 import java.sql.Connection;
 
 import javax.management.ObjectName;

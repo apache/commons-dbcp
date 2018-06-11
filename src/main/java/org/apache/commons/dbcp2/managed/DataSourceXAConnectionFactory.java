@@ -43,24 +43,30 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     private char[] userPassword;
 
     /**
-     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database
-     * connections.  The connections are enlisted into transactions using the specified transaction manager.
+     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database connections.
+     * The connections are enlisted into transactions using the specified transaction manager.
      *
-     * @param transactionManager the transaction manager in which connections will be enlisted
-     * @param xaDataSource the data source from which connections will be retrieved
+     * @param transactionManager
+     *            the transaction manager in which connections will be enlisted
+     * @param xaDataSource
+     *            the data source from which connections will be retrieved
      */
     public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource) {
         this(transactionManager, xaDataSource, null, (char[]) null);
     }
 
     /**
-     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database
-     * connections.  The connections are enlisted into transactions using the specified transaction manager.
+     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database connections.
+     * The connections are enlisted into transactions using the specified transaction manager.
      *
-     * @param transactionManager the transaction manager in which connections will be enlisted
-     * @param xaDataSource the data source from which connections will be retrieved
-     * @param userName the user name used for authenticating new connections or null for unauthenticated
-     * @param userPassword the password used for authenticating new connections
+     * @param transactionManager
+     *            the transaction manager in which connections will be enlisted
+     * @param xaDataSource
+     *            the data source from which connections will be retrieved
+     * @param userName
+     *            the user name used for authenticating new connections or null for unauthenticated
+     * @param userPassword
+     *            the password used for authenticating new connections
      */
     public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource,
             final String userName, final char[] userPassword) {
@@ -73,13 +79,17 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     }
 
     /**
-     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database
-     * connections.  The connections are enlisted into transactions using the specified transaction manager.
+     * Creates an DataSourceXAConnectionFactory which uses the specified XADataSource to create database connections.
+     * The connections are enlisted into transactions using the specified transaction manager.
      *
-     * @param transactionManager the transaction manager in which connections will be enlisted
-     * @param xaDataSource the data source from which connections will be retrieved
-     * @param userName the user name used for authenticating new connections or null for unauthenticated
-     * @param userPassword the password used for authenticating new connections
+     * @param transactionManager
+     *            the transaction manager in which connections will be enlisted
+     * @param xaDataSource
+     *            the data source from which connections will be retrieved
+     * @param userName
+     *            the user name used for authenticating new connections or null for unauthenticated
+     * @param userPassword
+     *            the password used for authenticating new connections
      */
     public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource,
             final String userName, final String userPassword) {
@@ -88,6 +98,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Gets the user name used to authenticate new connections.
+     * 
      * @return the user name or null if unauthenticated connections are used
      */
     public String getUsername() {
@@ -96,7 +107,9 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Sets the user name used to authenticate new connections.
-     * @param userName the user name used for authenticating the connection or null for unauthenticated
+     * 
+     * @param userName
+     *            the user name used for authenticating the connection or null for unauthenticated
      */
     public void setUsername(final String userName) {
         this.userName = userName;
