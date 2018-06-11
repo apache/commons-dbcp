@@ -48,7 +48,7 @@ final class PooledConnectionAndInfo {
      */
     @Deprecated
     PooledConnectionAndInfo(final PooledConnection pc, final String userName, final String userPassword) {
-        this(pc,  userName, Utils.toCharArray(userPassword));
+        this(pc, userName, Utils.toCharArray(userPassword));
     }
 
     PooledConnection getPooledConnection() {

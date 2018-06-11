@@ -530,7 +530,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the backend ConnectionPoolDataSource. This property should not be set if using jndi to access the datasource.
+     * Sets the backend ConnectionPoolDataSource. This property should not be set if using jndi to access the
+     * datasource.
      *
      * @param v
      *            Value to assign to connectionPoolDataSource.
@@ -602,9 +603,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
-     * be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which will
-     * use the default value for the drive.
+     * Gets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value
+     * can be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which
+     * will use the default value for the drive.
      *
      * @return value of defaultReadOnly.
      */
@@ -613,9 +614,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value can
-     * be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which will
-     * use the default value for the drive.
+     * Sets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value
+     * can be changed on the Connection using Connection.setReadOnly(boolean). The default is <code>null</code> which
+     * will use the default value for the drive.
      *
      * @param v
      *            Value to assign to defaultReadOnly.

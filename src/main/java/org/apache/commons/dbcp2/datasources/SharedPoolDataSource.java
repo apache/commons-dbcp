@@ -32,18 +32,19 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
- * <p>A pooling <code>DataSource</code> appropriate for deployment within
- * J2EE environment.  There are many configuration options, most of which are
- * defined in the parent class. All users (based on user name) share a single
- * maximum number of Connections in this data source.</p>
+ * <p>
+ * A pooling <code>DataSource</code> appropriate for deployment within J2EE environment. There are many configuration
+ * options, most of which are defined in the parent class. All users (based on user name) share a single maximum number
+ * of Connections in this data source.
+ * </p>
  *
- * <p>User passwords can be changed without re-initializing the data source.
- * When a <code>getConnection(user name, password)</code> request is processed
- * with a password that is different from those used to create connections in the
- * pool associated with <code>user name</code>, an attempt is made to create a
- * new connection using the supplied password and if this succeeds, idle connections
- * created using the old password are destroyed and new connections are created
- * using the new password.</p>
+ * <p>
+ * User passwords can be changed without re-initializing the data source. When a
+ * <code>getConnection(user name, password)</code> request is processed with a password that is different from those
+ * used to create connections in the pool associated with <code>user name</code>, an attempt is made to create a new
+ * connection using the supplied password and if this succeeds, idle connections created using the old password are
+ * destroyed and new connections are created using the new password.
+ * </p>
  *
  * @since 2.0
  */
@@ -54,7 +55,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     // Pool properties
     private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
-    private transient KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool;
+    private transient KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
     private transient KeyedCPDSConnectionFactory factory;
 
     /**
@@ -75,7 +76,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
-
     // -------------------------------------------------------------------
     // Properties
 
@@ -91,13 +91,13 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      *
-     * @param maxTotal {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
+     * @param maxTotal
+     *            {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      */
     public void setMaxTotal(final int maxTotal) {
         assertInitializationAllowed();
         this.maxTotal = maxTotal;
     }
-
 
     // ----------------------------------------------------------------------
     // Instrumentation Methods
@@ -150,7 +150,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected PooledConnectionManager getConnectionManager(final UserPassKey upkey)  {
+    protected PooledConnectionManager getConnectionManager(final UserPassKey upkey) {
         return factory;
     }
 
@@ -218,9 +218,12 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     /**
      * Supports Serialization interface.
      *
-     * @param in a <code>java.io.ObjectInputStream</code> value
-     * @throws IOException if an error occurs
-     * @throws ClassNotFoundException if an error occurs
+     * @param in
+     *            a <code>java.io.ObjectInputStream</code> value
+     * @throws IOException
+     *             if an error occurs
+     * @throws ClassNotFoundException
+     *             if an error occurs
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         try {
@@ -233,4 +236,3 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         }
     }
 }
-

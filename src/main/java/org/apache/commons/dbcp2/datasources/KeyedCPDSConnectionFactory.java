@@ -53,7 +53,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     private final String validationQuery;
     private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
-    private KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool;
+    private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
     private long maxConnLifetimeMillis = -1;
 
     /**
@@ -81,17 +81,15 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * @param rollbackAfterValidation
      *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
      */
-    public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds,
-                                      final String validationQuery,
-                                      final int validationQueryTimeoutSeconds,
-                                      final boolean rollbackAfterValidation) {
+    public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
+            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
-    public void setPool(final KeyedObjectPool<UserPassKey,PooledConnectionAndInfo> pool) {
+    public void setPool(final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool) {
         this.pool = pool;
     }
 
@@ -341,14 +339,11 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         }
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p)
-            throws Exception {
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
         if (maxConnLifetimeMillis > 0) {
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
-                throw new Exception(Utils.getMessage(
-                        "connectionFactory.lifetimeExceeded",
-                        Long.valueOf(lifetime),
+                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", Long.valueOf(lifetime),
                         Long.valueOf(maxConnLifetimeMillis)));
             }
         }

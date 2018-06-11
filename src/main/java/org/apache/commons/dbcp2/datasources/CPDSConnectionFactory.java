@@ -37,17 +37,14 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {@link PooledObjectFactory} that creates
- * {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
+ * A {@link PooledObjectFactory} that creates {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
  *
  * @since 2.0
  */
 class CPDSConnectionFactory
         implements PooledObjectFactory<PooledConnectionAndInfo>, ConnectionEventListener, PooledConnectionManager {
 
-    private static final String NO_KEY_MESSAGE
-            = "close() was called on a Connection, but "
-            + "I have no record of the underlying PooledConnection.";
+    private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but I have no record of the underlying PooledConnection.";
 
     private final ConnectionPoolDataSource cpds;
     private final String validationQuery;
@@ -59,17 +56,15 @@ class CPDSConnectionFactory
     private long maxConnLifetimeMillis = -1;
 
     /**
-     * Map of PooledConnections for which close events are ignored.
-     * Connections are muted when they are being validated.
+     * Map of PooledConnections for which close events are ignored. Connections are muted when they are being validated.
      */
-    private final Set<PooledConnection> validatingSet =
-            Collections.newSetFromMap(new ConcurrentHashMap<PooledConnection,Boolean>());
+    private final Set<PooledConnection> validatingSet = Collections
+            .newSetFromMap(new ConcurrentHashMap<PooledConnection, Boolean>());
 
     /**
      * Map of PooledConnectionAndInfo instances
      */
-    private final Map<PooledConnection, PooledConnectionAndInfo> pcMap =
-        new ConcurrentHashMap<>();
+    private final Map<PooledConnection, PooledConnectionAndInfo> pcMap = new ConcurrentHashMap<>();
 
     /**
      * Creates a new {@code PoolableConnectionFactory}.
@@ -90,12 +85,9 @@ class CPDSConnectionFactory
      *            The password to use to create connections
      * @since 2.4.0
      */
-    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
-                                 final String validationQuery,
-                                 final int validationQueryTimeoutSeconds,
-                                 final boolean rollbackAfterValidation,
-                                 final String userName,
-                                 final char[] userPassword) {
+    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
+            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
+            final char[] userPassword) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
@@ -122,12 +114,9 @@ class CPDSConnectionFactory
      * @param userPassword
      *            The password to use to create connections
      */
-    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds,
-                                 final String validationQuery,
-                                 final int validationQueryTimeoutSeconds,
-                                 final boolean rollbackAfterValidation,
-                                 final String userName,
-                                 final String userPassword) {
+    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
+            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
+            final String userPassword) {
         this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName,
                 Utils.toCharArray(userPassword));
     }
@@ -143,8 +132,8 @@ class CPDSConnectionFactory
 
     /**
      *
-     * @param pool the {@link ObjectPool} in which to pool those {@link
-     * Connection}s
+     * @param pool
+     *            the {@link ObjectPool} in which to pool those {@link Connection}s
      */
     public void setPool(final ObjectPool<PooledConnectionAndInfo> pool) {
         this.pool = pool;
@@ -184,7 +173,7 @@ class CPDSConnectionFactory
         doDestroyObject(p.getObject());
     }
 
-    private void doDestroyObject(final PooledConnectionAndInfo pci) throws Exception{
+    private void doDestroyObject(final PooledConnectionAndInfo pci) throws Exception {
         final PooledConnection pc = pci.getPooledConnection();
         pc.removeConnectionEventListener(this);
         pcMap.remove(pc);
@@ -263,10 +252,9 @@ class CPDSConnectionFactory
     // ***********************************************************************
 
     /**
-     * This will be called if the Connection returned by the getConnection
-     * method came from a PooledConnection, and the user calls the close()
-     * method of this connection object. What we need to do here is to
-     * release this PooledConnection from our pool...
+     * This will be called if the Connection returned by the getConnection method came from a PooledConnection, and the
+     * user calls the close() method of this connection object. What we need to do here is to release this
+     * PooledConnection from our pool...
      */
     @Override
     public void connectionClosed(final ConnectionEvent event) {
@@ -282,14 +270,12 @@ class CPDSConnectionFactory
             try {
                 pool.returnObject(pci);
             } catch (final Exception e) {
-                System.err.println("CLOSING DOWN CONNECTION AS IT COULD "
-                        + "NOT BE RETURNED TO THE POOL");
+                System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + "NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
                     doDestroyObject(pci);
                 } catch (final Exception e2) {
-                    System.err.println("EXCEPTION WHILE DESTROYING OBJECT "
-                            + pci);
+                    System.err.println("EXCEPTION WHILE DESTROYING OBJECT " + pci);
                     e2.printStackTrace();
                 }
             }
@@ -297,16 +283,13 @@ class CPDSConnectionFactory
     }
 
     /**
-     * If a fatal error occurs, close the underlying physical connection so as
-     * not to be returned in the future
+     * If a fatal error occurs, close the underlying physical connection so as not to be returned in the future
      */
     @Override
     public void connectionErrorOccurred(final ConnectionEvent event) {
-        final PooledConnection pc = (PooledConnection)event.getSource();
+        final PooledConnection pc = (PooledConnection) event.getSource();
         if (null != event.getSQLException()) {
-            System.err.println(
-                    "CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR ("
-                    + event.getSQLException() + ")");
+            System.err.println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" + event.getSQLException() + ")");
         }
         pc.removeConnectionEventListener(this);
 
@@ -327,10 +310,9 @@ class CPDSConnectionFactory
     // ***********************************************************************
 
     /**
-     * Invalidates the PooledConnection in the pool.  The CPDSConnectionFactory
-     * closes the connection and pool counters are updated appropriately.
-     * Also closes the pool.  This ensures that all idle connections are closed
-     * and connections that are checked out are closed on return.
+     * Invalidates the PooledConnection in the pool. The CPDSConnectionFactory closes the connection and pool counters
+     * are updated appropriately. Also closes the pool. This ensures that all idle connections are closed and
+     * connections that are checked out are closed on return.
      */
     @Override
     public void invalidate(final PooledConnection pc) throws SQLException {
@@ -339,8 +321,8 @@ class CPDSConnectionFactory
             throw new IllegalStateException(NO_KEY_MESSAGE);
         }
         try {
-            pool.invalidateObject(pci);  // Destroy instance and update pool counters
-            pool.close();  // Clear any other instances in this pool and kill others as they come back
+            pool.invalidateObject(pci); // Destroy instance and update pool counters
+            pool.close(); // Clear any other instances in this pool and kill others as they come back
         } catch (final Exception ex) {
             throw new SQLException("Error invalidating connection", ex);
         }
@@ -349,7 +331,8 @@ class CPDSConnectionFactory
     /**
      * Sets the database password used when creating new connections.
      *
-     * @param userPassword new password
+     * @param userPassword
+     *            new password
      */
     public synchronized void setPassword(final char[] userPassword) {
         this.userPassword = userPassword;
@@ -358,7 +341,8 @@ class CPDSConnectionFactory
     /**
      * Sets the database password used when creating new connections.
      *
-     * @param userPassword new password
+     * @param userPassword
+     *            new password
      */
     @Override
     public synchronized void setPassword(final String userPassword) {
@@ -366,19 +350,19 @@ class CPDSConnectionFactory
     }
 
     /**
-     * Sets the maximum lifetime in milliseconds of a connection after which the
-     * connection will always fail activation, passivation and validation.
+     * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
+     * passivation and validation.
      *
-     * @param maxConnLifetimeMillis A value of zero or less indicates an
-     *        infinite lifetime. The default value is -1.
+     * @param maxConnLifetimeMillis
+     *            A value of zero or less indicates an infinite lifetime. The default value is -1.
      */
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
     /**
-     * Verifies that the user name matches the user whose connections are being managed by this
-     * factory and closes the pool if this is the case; otherwise does nothing.
+     * Verifies that the user name matches the user whose connections are being managed by this factory and closes the
+     * pool if this is the case; otherwise does nothing.
      */
     @Override
     public void closePool(final String userName) throws SQLException {
@@ -394,14 +378,11 @@ class CPDSConnectionFactory
         }
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p)
-            throws Exception {
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
         if (maxConnLifetimeMillis > 0) {
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
-                throw new Exception(Utils.getMessage(
-                        "connectionFactory.lifetimeExceeded",
-                        Long.valueOf(lifetime),
+                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", Long.valueOf(lifetime),
                         Long.valueOf(maxConnLifetimeMillis)));
             }
         }
