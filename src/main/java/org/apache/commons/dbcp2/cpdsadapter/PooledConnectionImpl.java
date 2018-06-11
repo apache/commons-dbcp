@@ -342,6 +342,7 @@ class PooledConnectionImpl
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(connection);
+        @SuppressWarnings("unchecked")
         final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, pStmtPool,
                 (DelegatingConnection<Connection>) delegatingConnection);
         return new DefaultPooledObject<DelegatingPreparedStatement>(pcs);
