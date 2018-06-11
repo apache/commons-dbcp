@@ -326,11 +326,13 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Creates and configures a {@link BasicDataSource} instance based on the
-     * given properties.
+     * Creates and configures a {@link BasicDataSource} instance based on the given properties.
      *
-     * @param properties the datasource configuration properties
-     * @throws Exception if an error occurs creating the data source
+     * @param properties
+     *            The data source configuration properties.
+     * @return A new a {@link BasicDataSource} instance based on the given properties.
+     * @throws Exception
+     *             Thrown when an error occurs creating the data source.
      */
     public static BasicDataSource createDataSource(final Properties properties) throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
