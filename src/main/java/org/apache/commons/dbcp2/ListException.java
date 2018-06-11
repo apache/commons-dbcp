@@ -40,7 +40,7 @@ public class ListException extends Exception {
      * @param exceptionList
      *            a list of exceptions.
      */
-    public ListException(String message, List<Throwable> exceptionList) {
+    public ListException(final String message, final List<Throwable> exceptionList) {
         super(message);
         this.exceptionList = exceptionList;
     }
