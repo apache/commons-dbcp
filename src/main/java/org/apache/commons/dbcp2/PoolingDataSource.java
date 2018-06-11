@@ -227,10 +227,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
          */
         @Override
         public D getDelegate() {
-            if (isAccessToUnderlyingConnectionAllowed()) {
-                return super.getDelegate();
-            }
-            return null;
+            return isAccessToUnderlyingConnectionAllowed() ? super.getDelegate() : null;
         }
 
         /**
@@ -238,10 +235,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
          */
         @Override
         public Connection getInnermostDelegate() {
-            if (isAccessToUnderlyingConnectionAllowed()) {
-                return super.getInnermostDelegate();
-            }
-            return null;
+            return isAccessToUnderlyingConnectionAllowed() ? super.getInnermostDelegate() : null;
         }
 
         @Override
@@ -254,10 +248,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
         @Override
         public boolean isClosed() throws SQLException {
-            if (getDelegateInternal() == null) {
-                return true;
-            }
-            return super.isClosed();
+            return getDelegateInternal() == null ? true : super.isClosed();
         }
     }
 }
