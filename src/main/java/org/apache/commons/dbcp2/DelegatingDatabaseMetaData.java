@@ -72,10 +72,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * delegate that is not a {@code DelegatingResultSet},
      * or {@code null} when no non-{@code DelegatingResultSet}
      * delegate can be found by traversing this chain.
+     * </p>
      * <p>
      * This method is useful when you may have nested
      * {@code DelegatingResultSet}s, and you want to make
      * sure to obtain a "genuine" {@link ResultSet}.
+     * </p>
      * 
      * @return the innermost database meta data.
      */
