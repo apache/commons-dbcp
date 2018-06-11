@@ -168,10 +168,12 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * delegate that is not a {@code DelegatingConnection},
      * or {@code null} when no non-{@code DelegatingConnection}
      * delegate can be found by traversing this chain.
+     * </p>
      * <p>
      * This method is useful when you may have nested
      * {@code DelegatingConnection}s, and you want to make
      * sure to obtain a "genuine" {@link Connection}.
+     * </p>
      * 
      * @return innermost delegate. 
      */
