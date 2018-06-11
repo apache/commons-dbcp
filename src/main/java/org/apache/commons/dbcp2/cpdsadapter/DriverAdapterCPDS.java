@@ -89,7 +89,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * <code>Jdbc2PoolDataSource</code> without the use of JNDI.
  * </p>
  *
- * @author John D. McNally
  * @since 2.0
  */
 public class DriverAdapterCPDS

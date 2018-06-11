@@ -24,9 +24,6 @@ import java.util.Properties;
 /**
  * A {@link DriverManager}-based implementation of {@link ConnectionFactory}.
  *
- * @author Rodney Waldhoff
- * @author Ignacio J. Ortega
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class DriverManagerConnectionFactory implements ConnectionFactory {

@@ -35,9 +35,6 @@ import org.apache.commons.pool2.ObjectPool;
  * A delegating connection that, rather than closing the underlying connection, returns itself to an {@link ObjectPool}
  * when closed.
  *
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
  * @since 2.0
  */
 public class PoolableConnection extends DelegatingConnection<Connection> implements PoolableConnectionMXBean {

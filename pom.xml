@@ -132,6 +132,14 @@
       <email>ggregory@apache.org</email>
       <organization>The Apache Software Foundation</organization>
     </developer>
+    <developer>
+      <name>Ignacio J. Ortega</name>
+      <id>nacho</id>
+    </developer>
+    <developer>
+      <name>Sean C. Sullivan</name>
+      <id>sullis</id>
+    </developer>
   </developers>
   <contributors>
     <contributor>
@@ -147,6 +155,15 @@
     </contributor>
     <contributor>
       <name>Philippe Mouawad</name>
+    </contributor>
+    <contributor>
+      <name>Glenn L. Nielsen</name>
+    </contributor>
+    <contributor>
+      <name>James House</name>
+    </contributor>
+    <contributor>
+      <name>James Ring</name>
     </contributor>
   </contributors>
 

@@ -35,7 +35,6 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
  * <p>
  * ConnectionImpl extends DelegatingConnection to enable access to the underlying connection.
  * </p>
- * @author John D. McNally
  * @since 2.0
  */
 class ConnectionImpl extends DelegatingConnection<Connection> {

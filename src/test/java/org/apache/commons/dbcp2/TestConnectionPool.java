@@ -47,10 +47,6 @@ import static org.junit.Assert.fail;
 /**
  * Base test suite for DBCP pools.
  *
- * @author Rodney Waldhoff
- * @author Sean C. Sullivan
- * @author John McNally
- * @author Dirk Verbeeck
  */
 public abstract class TestConnectionPool {
 

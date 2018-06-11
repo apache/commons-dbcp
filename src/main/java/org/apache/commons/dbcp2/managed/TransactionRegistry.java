@@ -37,7 +37,6 @@ import org.apache.commons.dbcp2.DelegatingConnection;
  * The TransactionRegistry hides the details of transaction processing from the existing DBCP pooling code, and gives
  * the ManagedConnection a way to enlist connections in a transaction, allowing for the maximal rescue of DBCP.
  * </p>
- * @author Dain Sundstrom
  * @since 2.0
  */
 public class TransactionRegistry {

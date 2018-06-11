@@ -45,7 +45,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * created using the old password are destroyed and new connections are created
  * using the new password.</p>
  *
- * @author John D. McNally
  * @since 2.0
  */
 public class SharedPoolDataSource extends InstanceKeyDataSource {

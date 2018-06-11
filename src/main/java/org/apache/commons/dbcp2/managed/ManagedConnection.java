@@ -42,7 +42,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @param <C>
  *            the Connection type
  *
- * @author Dain Sundstrom
  * @since 2.0
  */
 public class ManagedConnection<C extends Connection> extends DelegatingConnection<C> {

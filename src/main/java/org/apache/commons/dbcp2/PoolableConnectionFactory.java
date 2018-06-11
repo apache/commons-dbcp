@@ -39,10 +39,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * A {@link PooledObjectFactory} that creates {@link PoolableConnection}s.
  *
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class PoolableConnectionFactory implements PooledObjectFactory<PoolableConnection> {

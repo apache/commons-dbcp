@@ -42,7 +42,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * Implementation of PooledConnection that is returned by PooledConnectionDataSource.
  *
- * @author John D. McNally
  * @since 2.0
  */
 class PooledConnectionImpl

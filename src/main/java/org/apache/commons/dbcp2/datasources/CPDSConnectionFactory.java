@@ -40,7 +40,6 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * A {@link PooledObjectFactory} that creates
  * {@link org.apache.commons.dbcp2.PoolableConnection PoolableConnection}s.
  *
- * @author John D. McNally
  * @since 2.0
  */
 class CPDSConnectionFactory

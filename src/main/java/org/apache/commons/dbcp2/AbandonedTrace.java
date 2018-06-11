@@ -30,7 +30,6 @@ import org.apache.commons.pool2.TrackedUse;
  * The JDBC Connection, Statement, and ResultSet classes extend this class.
  * </p>
  *
- * @author Glenn L. Nielsen
  * @since 2.0
  */
 public class AbandonedTrace implements TrackedUse {

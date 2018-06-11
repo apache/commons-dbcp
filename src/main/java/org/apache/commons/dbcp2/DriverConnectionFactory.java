@@ -23,7 +23,6 @@ import java.util.Properties;
 /**
  * A {@link Driver}-based implementation of {@link ConnectionFactory}.
  *
- * @author Rodney Waldhoff
  * @since 2.0
  */
 public class DriverConnectionFactory implements ConnectionFactory {

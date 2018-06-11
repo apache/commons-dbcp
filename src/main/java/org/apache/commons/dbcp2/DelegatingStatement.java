@@ -36,10 +36,6 @@ import java.util.List;
  * Statement ensures that the Connection which created it can
  * close any open Statement's on Connection close.
  *
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {

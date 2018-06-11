@@ -32,7 +32,6 @@ import java.util.Objects;
  * commits and rolls back as part of the XA transaction, but is not recoverable since the connection does not implement
  * the 2-phase protocol.
  *
- * @author Dain Sundstrom
  * @since 2.0
  */
 public class LocalXAConnectionFactory implements XAConnectionFactory {

@@ -30,8 +30,6 @@ import org.apache.commons.dbcp2.ConnectionFactory;
  * XAConnections and gives a the ManagedConnection a way to enlist a connection in the
  * the transaction.
  *
- * @author Dain Sundstrom
- * @author Rodney Waldhoff
  * @since 2.0
  */
 public interface XAConnectionFactory extends ConnectionFactory {

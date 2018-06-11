@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author James Ring
  */
 public class TestPoolableConnection {
 

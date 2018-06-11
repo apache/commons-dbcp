@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
  * the XAConnectionFactory, the ability to listen for the transaction completion event, and a method
  * to check the status of the transaction.
  *
- * @author Dain Sundstrom
  * @since 2.0
  */
 public class TransactionContext {

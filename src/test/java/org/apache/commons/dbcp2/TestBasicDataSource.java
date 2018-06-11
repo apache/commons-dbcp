@@ -44,7 +44,6 @@ import org.junit.Test;
 /**
  * TestSuite for BasicDataSource
  *
- * @author Dirk Verbeeck
  */
 public class TestBasicDataSource extends TestConnectionPool {
 

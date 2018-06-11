@@ -51,9 +51,6 @@ import java.util.Map;
  * ResultSet ensures that the Statement which created it can
  * close any open ResultSet's on Statement close.
  *
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public final class DelegatingResultSet extends AbandonedTrace implements ResultSet {

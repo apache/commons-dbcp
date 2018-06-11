@@ -58,10 +58,6 @@ import java.util.concurrent.Executor;
  *
  * @param <C> the Connection type
  *
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class DelegatingConnection<C extends Connection> extends AbandonedTrace

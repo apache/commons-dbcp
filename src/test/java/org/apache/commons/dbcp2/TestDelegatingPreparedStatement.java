@@ -28,8 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  */
 public class TestDelegatingPreparedStatement {
 

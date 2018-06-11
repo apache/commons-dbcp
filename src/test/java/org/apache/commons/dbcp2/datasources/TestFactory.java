@@ -32,7 +32,6 @@ import javax.naming.spi.ObjectFactory;
 import org.junit.Test;
 
 /**
- * @author Dirk Verbeeck
  */
 public class TestFactory {
 

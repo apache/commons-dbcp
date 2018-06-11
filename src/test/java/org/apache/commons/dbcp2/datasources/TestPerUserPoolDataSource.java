@@ -41,8 +41,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author John McNally
- * @author Dirk Verbeeck
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
 

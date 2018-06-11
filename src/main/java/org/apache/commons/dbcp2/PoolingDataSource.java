@@ -37,10 +37,6 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * @param <C>
  *            The connection type
  *
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class PoolingDataSource<C extends Connection> implements DataSource, AutoCloseable {

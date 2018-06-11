@@ -53,7 +53,6 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * existing pool is cleared and a new pool is created for connections using the
  * new password.</p>
  *
- * @author John D. McNally
  * @since 2.0
  */
 public class PerUserPoolDataSource extends InstanceKeyDataSource {

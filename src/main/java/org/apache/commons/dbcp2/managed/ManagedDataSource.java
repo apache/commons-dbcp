@@ -27,7 +27,6 @@ import java.util.Objects;
 /**
  * The ManagedDataSource is a PoolingDataSource that creates ManagedConnections.
  *
- * @author Dain Sundstrom
  * @param <C> The kind of {@link Connection} to manage.
  * @since 2.0
  */

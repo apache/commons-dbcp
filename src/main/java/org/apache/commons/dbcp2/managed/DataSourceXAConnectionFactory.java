@@ -34,7 +34,6 @@ import java.util.Objects;
 /**
  * An implementation of XAConnectionFactory which uses a real XADataSource to obtain connections and XAResources.
  *
- * @author Dain Sundstrom
  * @since 2.0
  */
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {

@@ -38,8 +38,6 @@ import java.util.concurrent.Executor;
 /**
  * A dummy {@link Connection}, for testing purposes.
  *
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;

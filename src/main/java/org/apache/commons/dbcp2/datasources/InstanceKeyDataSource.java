@@ -71,7 +71,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * also contains a non-JNDI example.
  * </p>
  *
- * @author John D. McNally
  * @since 2.0
  */
 public abstract class InstanceKeyDataSource implements DataSource, Referenceable, Serializable, AutoCloseable {

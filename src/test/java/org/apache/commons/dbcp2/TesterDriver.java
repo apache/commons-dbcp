@@ -39,8 +39,6 @@ import java.util.logging.Logger;
  * <tr><td>username</td><td>password</td></tr>
  * </table>
  *
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  * @version $Revision$ $Date: 2014-02-05 18:13:01 +0100 (Wed, 05 Feb 2014) $
  */
 public class TesterDriver implements Driver {

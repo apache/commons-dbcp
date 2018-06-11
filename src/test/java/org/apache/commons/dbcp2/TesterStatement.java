@@ -26,8 +26,6 @@ import java.sql.Statement;
 /**
  * A dummy {@link Statement}, for testing purposes.
  *
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  */
 public class TesterStatement implements Statement {
     public TesterStatement(final Connection conn) {

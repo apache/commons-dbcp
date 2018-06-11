@@ -36,8 +36,6 @@ import org.apache.commons.pool2.ObjectPool;
  * {@link Connection}s from a registered
  * {@link ObjectPool}.
  *
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class PoolingDriver implements Driver {

@@ -39,8 +39,6 @@ import java.sql.SQLXML;
 /**
  * A dummy {@link ResultSet}, for testing purposes.
  *
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
  */
 public class TesterResultSet implements ResultSet {
     public TesterResultSet(final Statement stmt) {

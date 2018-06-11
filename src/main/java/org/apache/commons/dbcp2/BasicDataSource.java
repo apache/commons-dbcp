@@ -59,9 +59,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * shopping" solution for basic requirements.
  * </p>
  *
- * @author Glenn L. Nielsen
- * @author Craig R. McClanahan
- * @author Dirk Verbeeck
  * @version $Id$
  * @since 2.0
  */

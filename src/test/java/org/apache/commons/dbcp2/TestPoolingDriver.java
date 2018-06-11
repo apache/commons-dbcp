@@ -43,8 +43,6 @@ import org.junit.Test;
 
 /**
  * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
- * @author Rodney Waldhoff
- * @author Sean C. Sullivan
  */
 public class TestPoolingDriver extends TestConnectionPool {
 

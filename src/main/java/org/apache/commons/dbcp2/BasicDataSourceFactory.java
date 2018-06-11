@@ -54,8 +54,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  *     <code>BasicDataSource</code> requires a collection of Strings.</li>
  * </ul>
  *
- * @author Craig R. McClanahan
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class BasicDataSourceFactory implements ObjectFactory {

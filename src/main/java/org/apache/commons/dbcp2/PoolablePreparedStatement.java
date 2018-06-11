@@ -33,10 +33,6 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @param <K> the key type
  *
  * @see PoolingConnection
- * @author Rodney Waldhoff
- * @author Glenn L. Nielsen
- * @author James House
- * @author Dirk Verbeeck
  * @since 2.0
  */
 public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
