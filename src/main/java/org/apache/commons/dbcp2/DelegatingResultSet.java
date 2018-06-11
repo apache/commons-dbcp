@@ -45,11 +45,13 @@ import java.util.Map;
  * All of the methods from the {@link ResultSet} interface
  * simply call the corresponding method on the "delegate"
  * provided in my constructor.
+ * </p>
  * <p>
  * Extends AbandonedTrace to implement result set tracking and
  * logging of code which created the ResultSet. Tracking the
  * ResultSet ensures that the Statement which created it can
  * close any open ResultSet's on Statement close.
+ * </p>
  *
  * @since 2.0
  */
@@ -65,12 +67,13 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     private Connection connection;
 
     /**
-     * Create a wrapper for the ResultSet which traces this
+     * Creates a wrapper for the ResultSet which traces this
      * ResultSet to the Statement which created it and the
      * code which created it.
      * <p>
      * Private to ensure all construction is
      * {@link #wrapResultSet(Statement, ResultSet)}
+     * </p>
      *
      * @param stmt Statement which created this ResultSet
      * @param res ResultSet to wrap
@@ -82,12 +85,13 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     /**
-     * Create a wrapper for the ResultSet which traces this
+     * Creates a wrapper for the ResultSet which traces this
      * ResultSet to the Connection which created it (via, for
      * example DatabaseMetadata, and the code which created it.
      * <p>
      * Private to ensure all construction is
      * {@link #wrapResultSet(Connection, ResultSet)}
+     * </p>
      *
      * @param conn Connection which created this ResultSet
      * @param res ResultSet to wrap
@@ -126,10 +130,12 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * delegate that is not a {@code DelegatingResultSet},
      * or {@code null} when no non-{@code DelegatingResultSet}
      * delegate can be found by traversing this chain.
+     * </p>
      * <p>
      * This method is useful when you may have nested
      * {@code DelegatingResultSet}s, and you want to make
      * sure to obtain a "genuine" {@link ResultSet}.
+     * </p>
      */
     public ResultSet getInnermostDelegate() {
         ResultSet r = resultSet;
