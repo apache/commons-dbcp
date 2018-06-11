@@ -47,8 +47,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 class PooledConnectionImpl
         implements PooledConnection, KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement> {
 
-    private static final String CLOSED
-            = "Attempted to use PooledConnection after closed() was called.";
+    private static final String CLOSED = "Attempted to use PooledConnection after closed() was called.";
 
     /**
      * The JDBC database connection that represents the physical db connection.
@@ -304,13 +303,11 @@ class PooledConnectionImpl
         if (logicalConnection != null && !logicalConnection.isClosed()) {
             // should notify pool of error so the pooled connection can
             // be removed !FIXME!
-            throw new SQLException("PooledConnection was reused, without "
-                    + "its previous Connection being closed.");
+            throw new SQLException("PooledConnection was reused, without its previous Connection being closed.");
         }
 
         // the spec requires that this return a new Connection instance.
-        logicalConnection = new ConnectionImpl(
-                this, connection, isAccessToUnderlyingConnectionAllowed());
+        logicalConnection = new ConnectionImpl(this, connection, isAccessToUnderlyingConnectionAllowed());
         return logicalConnection;
     }
 
