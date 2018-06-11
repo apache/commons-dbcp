@@ -55,7 +55,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @param connFactory
      *            the {@link ConnectionFactory} from which to obtain base {@link Connection}s
      * @param dataSourceJmxObjectName
-     *            The JMX object name
+     *            The JMX object name, may be null.
      */
     public PoolableConnectionFactory(final ConnectionFactory connFactory,
             final ObjectName dataSourceJmxObjectName) {
