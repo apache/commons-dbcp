@@ -113,7 +113,8 @@ class PooledConnectionImpl
      *            Ignored.
      */
     @Override
-    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) throws Exception {
+    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
+            throws Exception {
         pooledObject.getObject().activate();
     }
 
@@ -219,11 +220,12 @@ class PooledConnectionImpl
      *
      * @since 2.4.0
      */
-    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability,
-            final StatementType statementType) {
-        return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), resultSetType, resultSetConcurrency, resultSetHoldability,
-                statementType);
+    protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
+            final int resultSetHoldability, final StatementType statementType) {
+        return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), resultSetType, resultSetConcurrency,
+                resultSetHoldability, statementType);
     }
+
     /**
      * Creates a {@link PooledConnectionImpl.PStmtKey} for the given arguments.
      *
@@ -277,8 +279,7 @@ class PooledConnectionImpl
 
         // make sure the last connection is marked as closed
         if (logicalConnection != null && !logicalConnection.isClosed()) {
-            throw new SQLException("PooledConnection was gc'ed, without"
-                    + "its last Connection being closed.");
+            throw new SQLException("PooledConnection was gc'ed, without its last Connection being closed.");
         }
     }
 
@@ -294,7 +295,8 @@ class PooledConnectionImpl
      * Returns a JDBC connection.
      *
      * @return The database connection.
-     * @throws SQLException if the connection is not open or the previous logical connection is still open
+     * @throws SQLException
+     *             if the connection is not open or the previous logical connection is still open
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -332,10 +334,11 @@ class PooledConnectionImpl
         if (null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
-        if (key.getStmtType() == StatementType.PREPARED_STATEMENT ) {
+        if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(connection);
-            @SuppressWarnings({"rawtypes", "unchecked"}) // Unable to find way to avoid this
-            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pStmtPool, delegatingConnection);
+            @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
+            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pStmtPool,
+                    delegatingConnection);
             return new DefaultPooledObject<DelegatingPreparedStatement>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(connection);
@@ -423,12 +426,14 @@ class PooledConnectionImpl
      *             parameters are not <code>ResultSet</code> constants indicating type and concurrency.
      * @since 2.4.0
      */
-    CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
+    CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
+            throws SQLException {
         if (pStmtPool == null) {
             return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
         }
         try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) pStmtPool.borrowObject(
+                    createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -464,7 +469,8 @@ class PooledConnectionImpl
             return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
+                    resultSetHoldability, StatementType.CALLABLE_STATEMENT));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -503,13 +509,12 @@ class PooledConnectionImpl
      * @return a {@link PoolablePreparedStatement}
      * @see Connection#prepareStatement(String, int)
      */
-    PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys)
-            throws SQLException {
+    PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
         if (pStmtPool == null) {
             return connection.prepareStatement(sql, autoGeneratedKeys);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql,autoGeneratedKeys));
+            return pStmtPool.borrowObject(createKey(sql, autoGeneratedKeys));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -517,8 +522,7 @@ class PooledConnectionImpl
         }
     }
 
-    PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
-    throws SQLException {
+    PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
         if (pStmtPool == null) {
             return connection.prepareStatement(sql, columnIndexes);
         }
