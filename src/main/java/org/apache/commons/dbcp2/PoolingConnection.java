@@ -308,17 +308,19 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * {@link KeyedPooledObjectFactory} method for passivating
-     * {@link PreparedStatement}s or {@link CallableStatement}s.
+     * {@link KeyedPooledObjectFactory} method for passivating {@link PreparedStatement}s or {@link CallableStatement}s.
      * Invokes {@link PreparedStatement#clearParameters}.
      *
-     * @param key ignored
-     * @param p a wrapped {@link PreparedStatement}
+     * @param key
+     *            ignored
+     * @param pooledObject
+     *            a wrapped {@link PreparedStatement}
      */
     @Override
-    public void passivateObject(final PStmtKey key,
-            final PooledObject<DelegatingPreparedStatement> p) throws Exception {
-        final DelegatingPreparedStatement dps = p.getObject();
+    public void passivateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
+            throws Exception {
+        @SuppressWarnings("resource")
+        final DelegatingPreparedStatement dps = pooledObject.getObject();
         dps.clearParameters();
         dps.passivate();
     }
