@@ -48,6 +48,7 @@ import java.util.concurrent.Executor;
  * simply check to see that the {@link Connection} is active,
  * and call the corresponding method on the "delegate"
  * provided in my constructor.
+ * </p>
  * <p>
  * Extends AbandonedTrace to implement Connection tracking and
  * logging of code which created the Connection. Tracking the
@@ -55,6 +56,7 @@ import java.util.concurrent.Executor;
  * this connection and recycle it if its pool of connections
  * is nearing exhaustion and this connection's last usage is
  * older than the removeAbandonedTimeout.
+ * </p>
  *
  * @param <C> the Connection type
  *
@@ -77,7 +79,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
     private Integer defaultQueryTimeoutSeconds;
 
     /**
-     * Create a wrapper for the Connection which traces this
+     * Creates a wrapper for the Connection which traces this
      * Connection in the AbandonedObjectPool.
      *
      * @param c the {@link Connection} to delegate all calls to.
