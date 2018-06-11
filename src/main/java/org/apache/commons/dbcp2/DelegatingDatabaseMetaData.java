@@ -80,9 +80,9 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      */
     public DatabaseMetaData getInnermostDelegate() {
         DatabaseMetaData m = databaseMetaData;
-        while(m != null && m instanceof DelegatingDatabaseMetaData) {
-            m = ((DelegatingDatabaseMetaData)m).getDelegate();
-            if(this == m) {
+        while (m != null && m instanceof DelegatingDatabaseMetaData) {
+            m = ((DelegatingDatabaseMetaData) m).getDelegate();
+            if (this == m) {
                 return null;
             }
         }
@@ -92,8 +92,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     protected void handleException(final SQLException e) throws SQLException {
         if (connection != null) {
             connection.handleException(e);
-        }
-        else {
+        } else {
             throw e;
         }
     }
@@ -1392,8 +1391,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         connection.checkOpen();
         try {
             return databaseMetaData.generatedKeyAlwaysReturned();
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             return false;
         }
