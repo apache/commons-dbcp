@@ -23,12 +23,14 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 /**
- * <p>A base delegating implementation of {@link DatabaseMetaData}.</p>
- *
- * <p>Methods that create {@link ResultSet} objects are wrapped to
- * create {@link DelegatingResultSet} objects and the remaining methods
- * simply call the corresponding method on the "delegate"
- * provided in the constructor.</p>
+ * <p>
+ * A base delegating implementation of {@link DatabaseMetaData}.
+ * </p>
+ * <p>
+ * Methods that create {@link ResultSet} objects are wrapped to create {@link DelegatingResultSet} objects and the
+ * remaining methods simply call the corresponding method on the "delegate" provided in the constructor.
+ * </p>
+ * 
  * @since 2.0
  */
 public class DelegatingDatabaseMetaData implements DatabaseMetaData {
@@ -63,20 +65,15 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
-     * If my underlying {@link ResultSet} is not a
-     * {@code DelegatingResultSet}, returns it,
-     * otherwise recursively invokes this method on
-     * my delegate.
+     * If my underlying {@link ResultSet} is not a {@code DelegatingResultSet}, returns it, otherwise recursively
+     * invokes this method on my delegate.
      * <p>
-     * Hence this method will return the first
-     * delegate that is not a {@code DelegatingResultSet},
-     * or {@code null} when no non-{@code DelegatingResultSet}
-     * delegate can be found by traversing this chain.
+     * Hence this method will return the first delegate that is not a {@code DelegatingResultSet}, or {@code null} when
+     * no non-{@code DelegatingResultSet} delegate can be found by traversing this chain.
      * </p>
      * <p>
-     * This method is useful when you may have nested
-     * {@code DelegatingResultSet}s, and you want to make
-     * sure to obtain a "genuine" {@link ResultSet}.
+     * This method is useful when you may have nested {@code DelegatingResultSet}s, and you want to make sure to obtain
+     * a "genuine" {@link ResultSet}.
      * </p>
      * 
      * @return the innermost database meta data.
