@@ -31,12 +31,11 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
  * <p>
- * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than
- * creating a new PreparedStatement each time, may actually pull the statement
- * from a pool of unused statements.
- * The {@link PreparedStatement#close} method of the returned statement doesn't
- * actually close the statement, but rather returns it to the pool.
- * (See {@link PoolablePreparedStatement}, {@link PoolableCallableStatement}.)
+ * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than creating a new PreparedStatement each
+ * time, may actually pull the statement from a pool of unused statements. The {@link PreparedStatement#close} method of
+ * the returned statement doesn't actually close the statement, but rather returns it to the pool. (See
+ * {@link PoolablePreparedStatement}, {@link PoolableCallableStatement}.)
+ * </p>
  *
  * @see PoolablePreparedStatement
  * @author Rodney Waldhoff
@@ -70,19 +69,22 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Constructor.
-     * @param conn the underlying {@link Connection}.
+     * 
+     * @param connection
+     *            the underlying {@link Connection}.
      */
-    public PoolingConnection(final Connection conn) {
-        super(conn);
+    public PoolingConnection(final Connection connection) {
+        super(connection);
     }
 
 
     /**
-     * {@link KeyedPooledObjectFactory} method for activating
-     * pooled statements.
+     * {@link KeyedPooledObjectFactory} method for activating pooled statements.
      *
-     * @param key ignored
-     * @param p wrapped pooled statement to be activated
+     * @param key
+     *            ignored
+     * @param p
+     *            wrapped pooled statement to be activated
      */
     @Override
     public void activateObject(final PStmtKey key,
@@ -91,9 +93,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Closes and frees all {@link PreparedStatement}s or
-     * {@link CallableStatement}s from the pool, and close the underlying
-     * connection.
+     * Closes and frees all {@link PreparedStatement}s or {@link CallableStatement}s from the pool, and close the
+     * underlying connection.
      */
     @Override
     public synchronized void close() throws SQLException {
@@ -120,7 +121,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
      */
     protected PStmtKey createKey(final String sql) {
         String catalog = null;
@@ -144,8 +147,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param columnIndexes column indexes
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param columnIndexes
+     *            column indexes
      */
     protected PStmtKey createKey(final String sql, final int columnIndexes[]) {
         String catalog = null;
@@ -159,9 +165,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
      */
     protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency) {
         String catalog = null;
@@ -175,10 +185,15 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
-     * @param resultSetHoldability result set holdability
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
+     * @param resultSetHoldability
+     *            result set holdability
      */
     protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) {
@@ -193,11 +208,17 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
-     * @param resultSetHoldability result set holdability
-     * @param stmtType statement type
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
+     * @param resultSetHoldability
+     *            result set holdability
+     * @param stmtType
+     *            statement type
      */
     protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability, final StatementType stmtType) {
@@ -212,10 +233,15 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param resultSetType result set type
-     * @param resultSetConcurrency result set concurrency
-     * @param stmtType statement type
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param resultSetType
+     *            result set type
+     * @param resultSetConcurrency
+     *            result set concurrency
+     * @param stmtType
+     *            statement type
      */
     protected PStmtKey createKey(final String sql, final int resultSetType, final int resultSetConcurrency, final StatementType stmtType) {
         String catalog = null;
@@ -229,8 +255,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the SQL string used to define the statement
-     * @param stmtType statement type
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param stmtType
+     *            statement type
      */
     protected PStmtKey createKey(final String sql, final StatementType stmtType) {
         String catalog = null;
@@ -244,8 +273,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates a PStmtKey for the given arguments.
-     * @param sql the sql string used to define the statement
-     * @param columnNames column names
+     * 
+     * @param sql
+     *            the SQL string used to define the statement
+     * @param columnNames
+     *            column names
      */
     protected PStmtKey createKey(final String sql, final String columnNames[]) {
         String catalog = null;
@@ -258,12 +290,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * {@link KeyedPooledObjectFactory} method for destroying
-     * PoolablePreparedStatements and PoolableCallableStatements.
+     * {@link KeyedPooledObjectFactory} method for destroying PoolablePreparedStatements and PoolableCallableStatements.
      * Closes the underlying statement.
      *
-     * @param key ignored
-     * @param p the wrapped pooled statement to be destroyed.
+     * @param key
+     *            ignored
+     * @param p
+     *            the wrapped pooled statement to be destroyed.
      */
     @Override
     public void destroyObject(final PStmtKey key,
@@ -273,12 +306,12 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * {@link KeyedPooledObjectFactory} method for creating
-     * {@link PoolablePreparedStatement}s or {@link PoolableCallableStatement}s.
-     * The <code>stmtType</code> field in the key determines whether
-     * a PoolablePreparedStatement or PoolableCallableStatement is created.
+     * {@link KeyedPooledObjectFactory} method for creating {@link PoolablePreparedStatement}s or
+     * {@link PoolableCallableStatement}s. The <code>stmtType</code> field in the key determines whether a
+     * PoolablePreparedStatement or PoolableCallableStatement is created.
      *
-     * @param key the key for the {@link PreparedStatement} to be created
+     * @param key
+     *            the key for the {@link PreparedStatement} to be created
      * @see #createKey(String, int, int, StatementType)
      */
     @SuppressWarnings("resource")
