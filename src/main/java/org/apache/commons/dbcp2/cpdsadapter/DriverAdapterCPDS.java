@@ -561,14 +561,14 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Flag to toggle the pooling of <code>PreparedStatement</code>s
      *
-     * @param v
+     * @param poolPreparedStatements
      *            true to pool statements.
      * @throws IllegalStateException
      *             if {@link #getPooledConnection()} has been called
      */
-    public void setPoolPreparedStatements(final boolean v) {
+    public void setPoolPreparedStatements(final boolean poolPreparedStatements) {
         assertInitializationAllowed();
-        this.poolPreparedStatements = v;
+        this.poolPreparedStatements = poolPreparedStatements;
     }
 
     /**
