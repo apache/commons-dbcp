@@ -32,7 +32,6 @@ import javax.sql.StatementEventListener;
  * PooledConnection implementation that wraps a driver-supplied
  * PooledConnection and proxies events, allowing behavior to be
  * modified to simulate behavior of different implementations.
- *
  */
 public class PooledConnectionProxy implements PooledConnection,
     ConnectionEventListener {

@@ -28,7 +28,6 @@ import javax.sql.PooledConnection;
 /**
  * ConnectionPoolDataSource implementation that proxies another
  * ConnectionPoolDataSource.
- *
  */
 public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 

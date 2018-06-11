@@ -38,7 +38,6 @@ import java.util.logging.Logger;
  * <tr><td>u2</td><td>p2</td></tr>
  * <tr><td>username</td><td>password</td></tr>
  * </table>
- *
  */
 public class TesterDriver implements Driver {
     private static final Properties validUserPasswords = new Properties();

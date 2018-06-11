@@ -45,7 +45,6 @@ import java.util.Properties;
 
 /**
  * TestSuite for ManagedDataSource without a transaction in progress.
- *
  */
 public class TestManagedDataSource extends TestConnectionPool {
 

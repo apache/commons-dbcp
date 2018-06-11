@@ -33,7 +33,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for PoolingDataSource
- *
  */
 public class TestPoolingDataSource extends TestConnectionPool {
 

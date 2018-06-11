@@ -46,7 +46,6 @@ import static org.junit.Assert.fail;
 
 /**
  * Base test suite for DBCP pools.
- *
  */
 public abstract class TestConnectionPool {
 

@@ -37,7 +37,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSourceFactory
- *
  */
 public class TestBasicDataSourceFactory {
 

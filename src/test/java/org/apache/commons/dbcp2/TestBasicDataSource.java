@@ -43,7 +43,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSource
- *
  */
 public class TestBasicDataSource extends TestConnectionPool {
 

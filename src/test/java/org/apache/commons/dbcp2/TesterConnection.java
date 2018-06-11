@@ -37,7 +37,6 @@ import java.util.concurrent.Executor;
 
 /**
  * A dummy {@link Connection}, for testing purposes.
- *
  */
 public class TesterConnection implements Connection {
     protected boolean _open = true;
