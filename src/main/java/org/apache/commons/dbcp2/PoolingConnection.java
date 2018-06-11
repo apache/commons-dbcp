@@ -80,12 +80,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      * @param key
      *            ignored
-     * @param p
+     * @param pooledObject
      *            wrapped pooled statement to be activated
      */
     @Override
-    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) throws Exception {
-        p.getObject().activate();
+    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
+            throws Exception {
+        pooledObject.getObject().activate();
     }
 
     /**
@@ -293,12 +294,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      * @param key
      *            ignored
-     * @param p
+     * @param pooledObject
      *            the wrapped pooled statement to be destroyed.
      */
     @Override
-    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) throws Exception {
-        p.getObject().getInnermostDelegate().close();
+    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
+            throws Exception {
+        pooledObject.getObject().getInnermostDelegate().close();
     }
 
     /**
@@ -579,6 +581,12 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         }
     }
 
+    /**
+     * Sets the prepared statement pool.
+     * 
+     * @param pool
+     *            the prepared statement pool.
+     */
     public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
         pstmtPool = pool;
     }
@@ -596,12 +604,12 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      * @param key
      *            ignored
-     * @param p
+     * @param pooledObject
      *            ignored
      * @return {@code true}
      */
     @Override
-    public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> p) {
+    public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
     }
 }
