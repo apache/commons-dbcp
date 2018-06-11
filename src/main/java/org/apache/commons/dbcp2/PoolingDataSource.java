@@ -60,8 +60,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
             if (pcf.getPool() != this.pool) {
                 log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
                 @SuppressWarnings("unchecked") // PCF must have a pool of PCs
-                final
-                ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) this.pool;
+                final ObjectPool<PoolableConnection> p = (ObjectPool<PoolableConnection>) this.pool;
                 pcf.setPool(p);
             }
         }
