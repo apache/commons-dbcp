@@ -77,8 +77,6 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
             throw new IllegalStateException("TransactionRegistry has not been set");
         }
 
-        final Connection connection = new ManagedConnection<>(getPool(), transactionRegistry,
-                isAccessToUnderlyingConnectionAllowed());
-        return connection;
+        return new ManagedConnection<>(getPool(), transactionRegistry, isAccessToUnderlyingConnectionAllowed());
     }
 }
