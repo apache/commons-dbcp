@@ -102,9 +102,13 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return s;
     }
 
-    /** Sets my delegate. */
-    public void setDelegate(final Statement s) {
-        statement = s;
+    /**
+     * Sets my delegate.
+     * 
+     * @param statement my delegate.
+     */
+    public void setDelegate(final Statement statement) {
+        this.statement = statement;
     }
 
     private boolean closed = false;
