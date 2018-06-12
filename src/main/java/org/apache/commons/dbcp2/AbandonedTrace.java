@@ -68,9 +68,9 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Gets the last time this object was used in ms.
+     * Gets the last time this object was used in milliseconds.
      *
-     * @return long time in ms
+     * @return long time in milliseconds
      */
     @Override
     public long getLastUsed() {
@@ -78,20 +78,20 @@ public class AbandonedTrace implements TrackedUse {
     }
 
     /**
-     * Sets the time this object was last used to the current time in ms.
+     * Sets the time this object was last used to the current time in milliseconds.
      */
     protected void setLastUsed() {
         lastUsed = System.currentTimeMillis();
     }
 
     /**
-     * Sets the time in ms this object was last used.
+     * Sets the time in milliseconds this object was last used.
      *
-     * @param time
-     *            time in ms
+     * @param lastUsedMillis
+     *            time in milliseconds
      */
-    protected void setLastUsed(final long time) {
-        lastUsed = time;
+    protected void setLastUsed(final long lastUsedMillis) {
+        lastUsed = lastUsedMillis;
     }
 
     /**
