@@ -46,6 +46,12 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /** Controls access to the underlying connection */
     private boolean accessToUnderlyingConnectionAllowed;
 
+    /**
+     * Constructs a new instance backed by the given connection pool.
+     * 
+     * @param pool
+     *            the given connection pool.
+     */
     public PoolingDataSource(final ObjectPool<C> pool) {
         Objects.requireNonNull(pool, "Pool must not be null.");
         this.pool = pool;
@@ -63,7 +69,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Close and free all {@link Connection}s from the pool.
+     * Closes and free all {@link Connection}s from the pool.
      *
      * @since 2.1
      */
@@ -118,7 +124,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     //--- DataSource methods -----------------------------------------
 
     /**
-     * Return a {@link java.sql.Connection} from my pool, according to the contract specified by
+     * Returns a {@link java.sql.Connection} from my pool, according to the contract specified by
      * {@link ObjectPool#borrowObject}.
      */
     @Override
