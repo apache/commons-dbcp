@@ -26,8 +26,8 @@ import java.util.List;
 import org.apache.commons.pool2.KeyedObjectPool;
 
 /**
- * A {@link DelegatingCallableStatement} that cooperates with
- * {@link PoolingConnection} to implement a pool of {@link CallableStatement}s.
+ * A {@link DelegatingCallableStatement} that cooperates with {@link PoolingConnection} to implement a pool of
+ * {@link CallableStatement}s.
  * <p>
  * The {@link #close} method returns this statement to its containing pool. (See {@link PoolingConnection}.)
  *
@@ -49,10 +49,14 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     /**
      * Constructor.
      *
-     * @param callableStatement the underlying {@link CallableStatement}
-     * @param key the key for this statement in the {@link KeyedObjectPool}
-     * @param pool the {@link KeyedObjectPool} from which this CallableStatement was obtained
-     * @param connection the {@link DelegatingConnection} that created this CallableStatement
+     * @param callableStatement
+     *            the underlying {@link CallableStatement}
+     * @param key
+     *            the key for this statement in the {@link KeyedObjectPool}
+     * @param pool
+     *            the {@link KeyedObjectPool} from which this CallableStatement was obtained
+     * @param connection
+     *            the {@link DelegatingConnection} that created this CallableStatement
      */
     public PoolableCallableStatement(final CallableStatement callableStatement, final PStmtKey key,
             final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool,
@@ -69,7 +73,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     }
 
     /**
-     * Returns the CallableStatement to the pool.  If {{@link #isClosed()}, this is a No-op.
+     * Returns the CallableStatement to the pool. If {{@link #isClosed()}, this is a No-op.
      */
     @Override
     public void close() throws SQLException {
@@ -88,8 +92,8 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     }
 
     /**
-     * Activates after retrieval from the pool. Adds a trace for this CallableStatement to the Connection
-     * that created it.
+     * Activates after retrieval from the pool. Adds a trace for this CallableStatement to the Connection that created
+     * it.
      *
      * @since 2.4.0 made public, was protected in 2.3.0.
      */
@@ -103,8 +107,8 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     }
 
     /**
-     * Passivates to prepare for return to the pool.  Removes the trace associated with this CallableStatement
-     * from the Connection that created it.  Also closes any associated ResultSets.
+     * Passivates to prepare for return to the pool. Removes the trace associated with this CallableStatement from the
+     * Connection that created it. Also closes any associated ResultSets.
      *
      * @since 2.4.0 made public, was protected in 2.3.0.
      */

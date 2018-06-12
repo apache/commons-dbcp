@@ -55,9 +55,10 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     public PoolingDataSource(final ObjectPool<C> pool) {
         Objects.requireNonNull(pool, "Pool must not be null.");
         this.pool = pool;
-        // Verify that pool's factory refers back to it.  If not, log a warning and try to fix.
+        // Verify that pool's factory refers back to it. If not, log a warning and try to fix.
         if (this.pool instanceof GenericObjectPool<?>) {
-            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) this.pool).getFactory();
+            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ((GenericObjectPool<?>) this.pool)
+                    .getFactory();
             Objects.requireNonNull(pcf, "PoolableConnectionFactory must not be null.");
             if (pcf.getPool() != this.pool) {
                 log.warn(Utils.getMessage("poolingDataSource.factoryConfig"));
@@ -77,9 +78,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     public void close() throws Exception {
         try {
             pool.close();
-        } catch(final RuntimeException rte) {
+        } catch (final RuntimeException rte) {
             throw new RuntimeException(Utils.getMessage("pool.close.fail"), rte);
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException(Utils.getMessage("pool.close.fail"), e);
         }
     }
@@ -121,7 +122,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         throw new SQLFeatureNotSupportedException();
     }
 
-    //--- DataSource methods -----------------------------------------
+    // --- DataSource methods -----------------------------------------
 
     /**
      * Returns a {@link java.sql.Connection} from my pool, according to the contract specified by
@@ -135,17 +136,17 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
                 return null;
             }
             return new PoolGuardConnectionWrapper<>(conn);
-        } catch(final SQLException e) {
+        } catch (final SQLException e) {
             throw e;
-        } catch(final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new SQLException("Cannot get a connection, pool error " + e.getMessage(), e);
-        } catch(final RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch(final InterruptedException e) {
+        } catch (final InterruptedException e) {
             // Reset the interrupt status so it is visible to callers
             Thread.currentThread().interrupt();
             throw new SQLException("Cannot get a connection, general error", e);
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             throw new SQLException("Cannot get a connection, general error", e);
         }
     }
@@ -153,7 +154,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /**
      * Throws {@link UnsupportedOperationException}
      *
-     * @throws UnsupportedOperationException always thrown
+     * @throws UnsupportedOperationException
+     *             always thrown
      */
     @Override
     public Connection getConnection(final String uname, final String passwd) throws SQLException {
@@ -217,8 +219,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      *
      * @since 2.0
      */
-    private class PoolGuardConnectionWrapper<D extends Connection>
-            extends DelegatingConnection<D> {
+    private class PoolGuardConnectionWrapper<D extends Connection> extends DelegatingConnection<D> {
 
         PoolGuardConnectionWrapper(final D delegate) {
             super(delegate);

@@ -50,7 +50,8 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Constructs a new AbandonedTrace with a parent object.
      *
-     * @param parent AbandonedTrace parent object.
+     * @param parent
+     *            AbandonedTrace parent object.
      */
     public AbandonedTrace(final AbandonedTrace parent) {
         init(parent);
@@ -59,7 +60,8 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Initializes abandoned tracing for this object.
      *
-     * @param parent AbandonedTrace parent object.
+     * @param parent
+     *            AbandonedTrace parent object.
      */
     private void init(final AbandonedTrace parent) {
         if (parent != null) {
@@ -111,7 +113,7 @@ public class AbandonedTrace implements TrackedUse {
      * Clears the list of objects being traced by this object.
      */
     protected void clearTrace() {
-        synchronized(this.traceList) {
+        synchronized (this.traceList) {
             this.traceList.clear();
         }
     }
@@ -149,7 +151,7 @@ public class AbandonedTrace implements TrackedUse {
      *            AbandonedTrace object to remove.
      */
     protected void removeTrace(final AbandonedTrace trace) {
-        synchronized(this.traceList) {
+        synchronized (this.traceList) {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
                 final AbandonedTrace traceInList = iter.next().get();

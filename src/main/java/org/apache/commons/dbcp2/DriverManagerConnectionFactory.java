@@ -16,6 +16,7 @@
  */
 
 package org.apache.commons.dbcp2;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,11 +38,11 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         DriverManager.getDrivers();
     }
 
-
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param connectionUri a database url of the form
-     * <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
+     * 
+     * @param connectionUri
+     *            a database url of the form <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @since 2.2
      */
     public DriverManagerConnectionFactory(final String connectionUri) {
@@ -51,11 +52,12 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param connectionUri a database url of the form
-     * <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
-     * @param properties a list of arbitrary string tag/value pairs as
-     * connection arguments; normally at least a "user" and "password"
-     * property should be included.
+     * 
+     * @param connectionUri
+     *            a database url of the form <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
+     * @param properties
+     *            a list of arbitrary string tag/value pairs as connection arguments; normally at least a "user" and
+     *            "password" property should be included.
      */
     public DriverManagerConnectionFactory(final String connectionUri, final Properties properties) {
         this.connectionUri = connectionUri;
@@ -64,12 +66,16 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * @param connectionUri a database url of the form
-     * <code>jdbc:<em>subprotocol</em>:<em>subname</em></code>
-     * @param userName the database user
-     * @param userPassword the user's password
+     * 
+     * @param connectionUri
+     *            a database url of the form <code>jdbc:<em>subprotocol</em>:<em>subname</em></code>
+     * @param userName
+     *            the database user
+     * @param userPassword
+     *            the user's password
      */
-    public DriverManagerConnectionFactory(final String connectionUri, final String userName, final String userPassword) {
+    public DriverManagerConnectionFactory(final String connectionUri, final String userName,
+            final String userPassword) {
         this.connectionUri = connectionUri;
         this.userName = userName;
         this.userPassword = userPassword;

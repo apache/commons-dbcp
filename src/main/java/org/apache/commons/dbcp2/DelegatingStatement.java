@@ -26,15 +26,11 @@ import java.util.List;
 /**
  * A base delegating implementation of {@link Statement}.
  * <p>
- * All of the methods from the {@link Statement} interface
- * simply check to see that the {@link Statement} is active,
- * and call the corresponding method on the "delegate"
- * provided in my constructor.
+ * All of the methods from the {@link Statement} interface simply check to see that the {@link Statement} is active, and
+ * call the corresponding method on the "delegate" provided in my constructor.
  * <p>
- * Extends AbandonedTrace to implement Statement tracking and
- * logging of code which created the Statement. Tracking the
- * Statement ensures that the Connection which created it can
- * close any open Statement's on Connection close.
+ * Extends AbandonedTrace to implement Statement tracking and logging of code which created the Statement. Tracking the
+ * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
  *
  * @since 2.0
  */
@@ -71,7 +67,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return statement;
     }
 
-
     /**
      * If my underlying {@link Statement} is not a {@code DelegatingStatement}, returns it, otherwise recursively
      * invokes this method on my delegate.
@@ -83,6 +78,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * This method is useful when you may have nested {@code DelegatingStatement}s, and you want to make sure to obtain
      * a "genuine" {@link Statement}.
      * </p>
+     * 
      * @return The innermost delegate.
      *
      * @see #getDelegate
@@ -101,7 +97,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Sets my delegate.
      *
-     * @param statement my delegate.
+     * @param statement
+     *            my delegate.
      */
     public void setDelegate(final Statement statement) {
         this.statement = statement;
@@ -118,10 +115,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     protected void checkOpen() throws SQLException {
-        if(isClosed()) {
-            throw new SQLException
-                (this.getClass().getName() + " with address: \"" +
-                this.toString() + "\" is closed.");
+        if (isClosed()) {
+            throw new SQLException(this.getClass().getName() + " with address: \"" + this.toString() + "\" is closed.");
         }
     }
 
@@ -168,8 +163,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     protected void handleException(final SQLException e) throws SQLException {
         if (connection != null) {
             connection.handleException(e);
-        }
-        else {
+        } else {
             throw e;
         }
     }
@@ -215,9 +209,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             connection.setLastUsed();
         }
         try {
-            return DelegatingResultSet.wrapResultSet(this,statement.executeQuery(sql));
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(this, statement.executeQuery(sql));
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -227,9 +220,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(this,statement.getResultSet());
-        }
-        catch (final SQLException e) {
+            return DelegatingResultSet.wrapResultSet(this, statement.getResultSet());
+        } catch (final SQLException e) {
             handleException(e);
             throw new AssertionError();
         }
@@ -244,7 +236,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         try {
             return statement.executeUpdate(sql);
         } catch (final SQLException e) {
-            handleException(e); return 0;
+            handleException(e);
+            return 0;
         }
     }
 
@@ -631,7 +624,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return closed;
     }
 
-
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
@@ -659,8 +651,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         checkOpen();
         try {
             statement.setPoolable(poolable);
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
         }
     }
@@ -670,8 +661,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         checkOpen();
         try {
             return statement.isPoolable();
-        }
-        catch (final SQLException e) {
+        } catch (final SQLException e) {
             handleException(e);
             return false;
         }

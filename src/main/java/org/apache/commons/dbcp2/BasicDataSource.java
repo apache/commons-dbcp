@@ -129,7 +129,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.defaultAutoCommit = defaultAutoCommit;
     }
 
-
     /**
      * The default read-only state of connections created by this pool.
      */
@@ -165,8 +164,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The default TransactionIsolation state of connections created by this pool.
      */
-    private volatile int defaultTransactionIsolation =
-        PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+    private volatile int defaultTransactionIsolation = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
 
     /**
      * Returns the default transaction isolation state of returned connections.
@@ -197,7 +195,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
-
     private Integer defaultQueryTimeoutSeconds;
 
     /**
@@ -210,7 +207,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return defaultQueryTimeoutSeconds;
     }
 
-
     /**
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. <code>null</code> means that the driver default will be used.
@@ -221,7 +217,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
         this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
     }
-
 
     /**
      * The default "catalog" of connections created by this pool.
@@ -254,8 +249,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setDefaultCatalog(final String defaultCatalog) {
         if (defaultCatalog != null && defaultCatalog.trim().length() > 0) {
             this.defaultCatalog = defaultCatalog;
-        }
-        else {
+        } else {
             this.defaultCatalog = null;
         }
     }
@@ -354,8 +348,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setDriverClassName(final String driverClassName) {
         if (driverClassName != null && driverClassName.trim().length() > 0) {
             this.driverClassName = driverClassName;
-        }
-        else {
+        } else {
             this.driverClassName = null;
         }
     }
@@ -535,10 +528,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see GenericObjectPool#setMinIdle(int)
      */
     public synchronized void setMinIdle(final int minIdle) {
-       this.minIdle = minIdle;
-       if (connectionPool != null) {
-           connectionPool.setMinIdle(minIdle);
-       }
+        this.minIdle = minIdle;
+        if (connectionPool != null) {
+            connectionPool.setMinIdle(minIdle);
+        }
     }
 
     /**
@@ -577,8 +570,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The maximum number of milliseconds that the pool will wait (when there are no available connections) for a
      * connection to be returned before throwing an exception, or <= 0 to wait indefinitely.
      */
-    private long maxWaitMillis =
-            BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
+    private long maxWaitMillis = BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
 
     /**
      * Returns the maximum number of milliseconds that the pool will wait for a connection to be returned before
@@ -1541,7 +1533,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param pass
      *            The database user's password
      *
-     * @throws UnsupportedOperationException always thrown.
+     * @throws UnsupportedOperationException
+     *             always thrown.
      * @throws SQLException
      *             if a database access error occurs
      * @return nothing - always throws UnsupportedOperationException
@@ -1651,9 +1644,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * following conditions hold:
      * </p>
      * <ul>
-     *   <li>{@link #getRemoveAbandonedOnBorrow()}</li>
-     *   <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3</li>
-     *   <li>{@link #getNumIdle()} &lt; 2</li>
+     * <li>{@link #getRemoveAbandonedOnBorrow()}</li>
+     * <li>{@link #getNumActive()} &gt; {@link #getMaxTotal()} - 3</li>
+     * <li>{@link #getNumIdle()} &lt; 2</li>
      * </ul>
      *
      * @see #getRemoveAbandonedTimeout()
@@ -1734,9 +1727,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Abandoned connection cleanup happens when:
      * </p>
      * <ul>
-     *   <li>{@link #getRemoveAbandonedOnBorrow()} or {@link #getRemoveAbandonedOnMaintenance()} = true</li>
-     *   <li>{@link #getNumIdle() numIdle} &lt; 2</li>
-     *   <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
+     * <li>{@link #getRemoveAbandonedOnBorrow()} or {@link #getRemoveAbandonedOnMaintenance()} = true</li>
+     * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
+     * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
      * </ul>
      * <p>
      * The default value is 300 seconds.
@@ -2132,13 +2125,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Creates a JDBC connection factory for this datasource. The JDBC driver is loaded using the following algorithm:
      * <ol>
-     *   <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
-     *   <li>If no Driver instance was specified and {@link #driverClassName} is specified that class is loaded using the
-     *   {@link ClassLoader} of this class or, if {@link #driverClassLoader} is set, {@link #driverClassName} is loaded
-     *   with the specified {@link ClassLoader}.</li>
-     *   <li>If {@link #driverClassName} is specified and the previous attempt fails, the class is loaded using the
-     *   context class loader of the current thread.</li>
-     *   <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
+     * <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
+     * <li>If no Driver instance was specified and {@link #driverClassName} is specified that class is loaded using the
+     * {@link ClassLoader} of this class or, if {@link #driverClassLoader} is set, {@link #driverClassName} is loaded
+     * with the specified {@link ClassLoader}.</li>
+     * <li>If {@link #driverClassName} is specified and the previous attempt fails, the class is loaded using the
+     * context class loader of the current thread.</li>
+     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
      * </ol>
      * This method exists so subclasses can replace the implementation class.
      */

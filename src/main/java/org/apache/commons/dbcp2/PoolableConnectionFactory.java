@@ -53,8 +53,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @param dataSourceJmxObjectName
      *            The JMX object name, may be null.
      */
-    public PoolableConnectionFactory(final ConnectionFactory connFactory,
-            final ObjectName dataSourceJmxObjectName) {
+    public PoolableConnectionFactory(final ConnectionFactory connFactory, final ObjectName dataSourceJmxObjectName) {
         this.connectionFactory = connFactory;
         this.dataSourceJmxObjectName = dataSourceJmxObjectName;
     }
@@ -199,7 +198,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
-
     public boolean isEnableAutoCommitOnReturn() {
         return enableAutoCommitOnReturn;
     }
@@ -207,7 +205,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setEnableAutoCommitOnReturn(final boolean enableAutoCommitOnReturn) {
         this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
     }
-
 
     public boolean isRollbackOnReturn() {
         return rollbackOnReturn;
@@ -326,7 +323,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (dataSourceJmxObjectName == null) {
             connJmxName = null;
         } else {
-            connJmxName = new ObjectName(dataSourceJmxObjectName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
+            connJmxName = new ObjectName(
+                    dataSourceJmxObjectName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
         }
 
         final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes,
@@ -352,8 +350,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public void destroyObject(final PooledObject<PoolableConnection> p)
-            throws Exception {
+    public void destroyObject(final PooledObject<PoolableConnection> p) throws Exception {
         p.getObject().reallyClose();
     }
 
@@ -366,8 +363,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             return true;
         } catch (final Exception e) {
             if (log.isDebugEnabled()) {
-                log.debug(Utils.getMessage(
-                        "poolableConnectionFactory.validateObject.fail"), e);
+                log.debug(Utils.getMessage("poolableConnectionFactory.validateObject.fail"), e);
             }
             return false;
         }
@@ -438,10 +434,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (maxConnLifetimeMillis > 0) {
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
-                throw new LifetimeExceededException(Utils.getMessage(
-                        "connectionFactory.lifetimeExceeded",
-                        Long.valueOf(lifetime),
-                        Long.valueOf(maxConnLifetimeMillis)));
+                throw new LifetimeExceededException(Utils.getMessage("connectionFactory.lifetimeExceeded",
+                        Long.valueOf(lifetime), Long.valueOf(maxConnLifetimeMillis)));
             }
         }
     }
