@@ -145,11 +145,7 @@ public class PoolingDriver implements Driver {
 
     @Override
     public boolean acceptsURL(final String url) throws SQLException {
-        try {
-            return url.startsWith(URL_PREFIX);
-        } catch(final NullPointerException e) {
-            return false;
-        }
+        return url == null ? false : url.startsWith(URL_PREFIX);
     }
 
     @Override
