@@ -34,14 +34,14 @@ import org.apache.commons.pool2.TrackedUse;
  */
 public class AbandonedTrace implements TrackedUse {
 
-    /** A list of objects created by children of this object */
+    /** A list of objects created by children of this object. */
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
 
-    /** Last time this connection was used */
+    /** Last time this connection was used. */
     private volatile long lastUsedMillis = 0;
 
     /**
-     * Create a new AbandonedTrace without config and without doing abandoned tracing.
+     * Creates a new AbandonedTrace without config and without doing abandoned tracing.
      */
     public AbandonedTrace() {
         init(null);
@@ -50,7 +50,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Constructs a new AbandonedTrace with a parent object.
      *
-     * @param parent AbandonedTrace parent object
+     * @param parent AbandonedTrace parent object.
      */
     public AbandonedTrace(final AbandonedTrace parent) {
         init(parent);
@@ -59,7 +59,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Initializes abandoned tracing for this object.
      *
-     * @param parent AbandonedTrace parent object
+     * @param parent AbandonedTrace parent object.
      */
     private void init(final AbandonedTrace parent) {
         if (parent != null) {
@@ -70,7 +70,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Gets the last time this object was used in milliseconds.
      *
-     * @return long time in milliseconds
+     * @return long time in milliseconds.
      */
     @Override
     public long getLastUsed() {
@@ -88,7 +88,7 @@ public class AbandonedTrace implements TrackedUse {
      * Sets the time in milliseconds this object was last used.
      *
      * @param lastUsedMillis
-     *            time in milliseconds
+     *            time in milliseconds.
      */
     protected void setLastUsed(final long lastUsedMillis) {
         this.lastUsedMillis = lastUsedMillis;
@@ -98,7 +98,7 @@ public class AbandonedTrace implements TrackedUse {
      * Adds an object to the list of objects being traced.
      *
      * @param trace
-     *            AbandonedTrace object to add
+     *            AbandonedTrace object to add.
      */
     protected void addTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
@@ -119,7 +119,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Gets a list of objects being traced by this object.
      *
-     * @return List of objects
+     * @return List of objects.
      */
     protected List<AbandonedTrace> getTrace() {
         final int size = traceList.size();
@@ -146,7 +146,7 @@ public class AbandonedTrace implements TrackedUse {
      * Removes a child object this object is tracing.
      *
      * @param trace
-     *            AbandonedTrace object to remove
+     *            AbandonedTrace object to remove.
      */
     protected void removeTrace(final AbandonedTrace trace) {
         synchronized(this.traceList) {
