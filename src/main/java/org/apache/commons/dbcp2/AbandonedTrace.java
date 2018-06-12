@@ -38,7 +38,7 @@ public class AbandonedTrace implements TrackedUse {
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
 
     /** Last time this connection was used */
-    private volatile long lastUsed = 0;
+    private volatile long lastUsedMillis = 0;
 
     /**
      * Create a new AbandonedTrace without config and without doing abandoned tracing.
@@ -74,14 +74,14 @@ public class AbandonedTrace implements TrackedUse {
      */
     @Override
     public long getLastUsed() {
-        return lastUsed;
+        return lastUsedMillis;
     }
 
     /**
      * Sets the time this object was last used to the current time in milliseconds.
      */
     protected void setLastUsed() {
-        lastUsed = System.currentTimeMillis();
+        lastUsedMillis = System.currentTimeMillis();
     }
 
     /**
@@ -91,7 +91,7 @@ public class AbandonedTrace implements TrackedUse {
      *            time in milliseconds
      */
     protected void setLastUsed(final long lastUsedMillis) {
-        lastUsed = lastUsedMillis;
+        this.lastUsedMillis = lastUsedMillis;
     }
 
     /**
