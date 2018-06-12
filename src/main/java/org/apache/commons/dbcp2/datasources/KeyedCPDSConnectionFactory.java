@@ -131,7 +131,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
-        pci = new PooledConnectionAndInfo(pc, userName, password);
+        pci = new PooledConnectionAndInfo(pc, userName, upkey.getPasswordCharArray());
         pcMap.put(pc, pci);
 
         return new DefaultPooledObject<>(pci);
@@ -153,29 +153,29 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      *
      * @param key
      *            ignored
-     * @param p
+     * @param pooledObject
      *            wrapped {@link PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation succeeds
      */
     @Override
-    public boolean validateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) {
+    public boolean validateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) {
         try {
-            validateLifetime(p);
+            validateLifetime(pooledObject);
         } catch (final Exception e) {
             return false;
         }
         boolean valid = false;
-        final PooledConnection pconn = p.getObject().getPooledConnection();
+        final PooledConnection pconn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == validationQuery) {
-            int timeout = validationQueryTimeoutSeconds;
-            if (timeout < 0) {
-                timeout = 0;
+            int timeoutSeconds = validationQueryTimeoutSeconds;
+            if (timeoutSeconds < 0) {
+                timeoutSeconds = 0;
             }
             try {
                 conn = pconn.getConnection();
-                valid = conn.isValid(timeout);
+                valid = conn.isValid(timeoutSeconds);
             } catch (final SQLException e) {
                 valid = false;
             } finally {
