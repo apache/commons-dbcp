@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.apache.commons.dbcp2;
+
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -31,19 +32,30 @@ public class DriverConnectionFactory implements ConnectionFactory {
     private final Driver driver;
     private final Properties properties;
 
-    public DriverConnectionFactory(final Driver driver, final String connectUri, final Properties props) {
+    /**
+     * Constructs a connection factory for a given Driver.
+     * 
+     * @param driver
+     *            The Driver.
+     * @param connectString
+     *            The connection string.
+     * @param properties
+     *            The connection properties.
+     */
+    public DriverConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
         this.driver = driver;
-        this.connectionUri = connectUri;
-        this.properties = props;
+        this.connectionUri = connectString;
+        this.properties = properties;
     }
+
     @Override
     public Connection createConnection() throws SQLException {
-        return driver.connect(connectionUri,properties);
+        return driver.connect(connectionUri, properties);
     }
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" +
-                String.valueOf(connectionUri) + ";"  + String.valueOf(properties) + "]";
+        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" + String.valueOf(connectionUri) + ";"
+                + String.valueOf(properties) + "]";
     }
 }
