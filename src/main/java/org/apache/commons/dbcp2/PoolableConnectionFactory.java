@@ -166,11 +166,24 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.poolStatements = poolStatements;
     }
 
+    /**
+     * Deprecated due to typo in method name.
+     * 
+     * @param maxOpenPreparedStatements
+     *            The maximum number of open prepared statements.
+     * @deprecated Use {@link #setMaxOpenPreparedStatements(int)}.
+     */
     @Deprecated // Due to typo in method name.
     public void setMaxOpenPrepatedStatements(final int maxOpenPreparedStatements) {
         setMaxOpenPreparedStatements(maxOpenPreparedStatements);
     }
 
+    /**
+     * Sets the maximum number of open prepared statements.
+     * 
+     * @param maxOpenPreparedStatements
+     *            The maximum number of open prepared statements.
+     */
     public void setMaxOpenPreparedStatements(final int maxOpenPreparedStatements) {
         this.maxOpenPreparedStatements = maxOpenPreparedStatements;
     }
