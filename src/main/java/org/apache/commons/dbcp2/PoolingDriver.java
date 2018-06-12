@@ -166,6 +166,7 @@ public class PoolingDriver implements Driver {
                 pool.invalidateObject(pgconn.getDelegateInternal());
             }
             catch (final Exception e) {
+                // Ignore.
             }
         }
         else {
