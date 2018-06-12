@@ -17,7 +17,7 @@
 package org.apache.commons.dbcp2;
 
 /**
- * Constants for use with JMX
+ * Constants for use with JMX.
  * 
  * @since 2.0
  */
