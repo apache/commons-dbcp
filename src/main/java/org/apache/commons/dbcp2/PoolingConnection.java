@@ -475,7 +475,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @param columnIndexes
@@ -500,7 +500,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @param resultSetType
@@ -528,7 +528,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @param resultSetType
@@ -558,7 +558,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
-     * 
+     *
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @param columnNames
@@ -583,7 +583,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Sets the prepared statement pool.
-     * 
+     *
      * @param pool
      *            the prepared statement pool.
      */

@@ -82,7 +82,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Gets the connection pool for the given name.
-     * 
+     *
      * @param name
      *            The pool name
      * @return The pool
@@ -100,7 +100,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Registers a named pool.
-     * 
+     *
      * @param name
      *            The pool name.
      * @param pool
@@ -113,7 +113,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Closes a named pool.
-     * 
+     *
      * @param name
      *            The pool name.
      * @throws SQLException
@@ -135,7 +135,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Gets the pool names.
-     * 
+     *
      * @return the pool names.
      */
     public synchronized String[] getPoolNames(){

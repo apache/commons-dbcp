@@ -98,7 +98,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Gets the user name used to authenticate new connections.
-     * 
+     *
      * @return the user name or null if unauthenticated connections are used
      */
     public String getUsername() {
@@ -107,7 +107,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
 
     /**
      * Sets the user name used to authenticate new connections.
-     * 
+     *
      * @param userName
      *            the user name used for authenticating the connection or null for unauthenticated
      */

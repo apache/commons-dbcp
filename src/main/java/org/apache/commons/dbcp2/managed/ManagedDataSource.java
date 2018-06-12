@@ -55,7 +55,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
     /**
      * Sets the transaction registry from the XAConnectionFactory used to create the pool. The transaction registry can
      * only be set once using either a connector or this setter method.
-     * 
+     *
      * @param transactionRegistry
      *            the transaction registry acquired from the XAConnectionFactory used to create the pool
      */

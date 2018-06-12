@@ -91,7 +91,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Gets the required transaction manager property.
-     * 
+     *
      * @return the transaction manager used to enlist connections
      */
     public TransactionManager getTransactionManager() {
@@ -100,7 +100,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Gets the transaction registry.
-     * 
+     *
      * @return the transaction registry associating XAResources with managed connections
      */
     protected synchronized TransactionRegistry getTransactionRegistry() {
@@ -109,7 +109,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Sets the required transaction manager property.
-     * 
+     *
      * @param transactionManager
      *            the transaction manager used to enlist connections
      */
@@ -119,7 +119,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Gets the optional XADataSource class name.
-     * 
+     *
      * @return the optional XADataSource class name
      */
     public synchronized String getXADataSource() {
@@ -128,7 +128,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Sets the optional XADataSource class name.
-     * 
+     *
      * @param xaDataSource
      *            the optional XADataSource class name
      */

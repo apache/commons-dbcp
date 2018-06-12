@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * Utility methods.
- * 
+ *
  * @since 2.0
  */
 public final class Utils {
@@ -121,7 +121,7 @@ public final class Utils {
 
     /**
      * Gets the correct i18n message for the given key.
-     * 
+     *
      * @param key
      *            The key to look up an i18n message.
      * @return The i18n message.
@@ -132,7 +132,7 @@ public final class Utils {
 
     /**
      * Gets the correct i18n message for the given key with placeholders replaced by the supplied arguments.
-     * 
+     *
      * @param key
      *            A message key.
      * @param args

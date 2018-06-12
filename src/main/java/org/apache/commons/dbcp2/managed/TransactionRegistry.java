@@ -36,7 +36,7 @@ import org.apache.commons.dbcp2.DelegatingConnection;
  * The TransactionRegistry hides the details of transaction processing from the existing DBCP pooling code, and gives
  * the ManagedConnection a way to enlist connections in a transaction, allowing for the maximal rescue of DBCP.
  * </p>
- * 
+ *
  * @since 2.0
  */
 public class TransactionRegistry {
@@ -46,7 +46,7 @@ public class TransactionRegistry {
 
     /**
      * Creates a TransactionRegistry for the specified transaction manager.
-     * 
+     *
      * @param transactionManager
      *            the transaction manager used to enlist connections.
      */
@@ -71,7 +71,7 @@ public class TransactionRegistry {
 
     /**
      * Gets the XAResource registered for the connection.
-     * 
+     *
      * @param connection
      *            the connection
      * @return The XAResource registered for the connection; never null.
@@ -90,7 +90,7 @@ public class TransactionRegistry {
 
     /**
      * Gets the active TransactionContext or null if not Transaction is active.
-     * 
+     *
      * @return The active TransactionContext or null if no Transaction is active.
      * @throws SQLException
      *             Thrown when an error occurs while fetching the transaction.
@@ -124,7 +124,7 @@ public class TransactionRegistry {
 
     /**
      * Unregisters a destroyed connection from {@link TransactionRegistry}.
-     * 
+     *
      * @param connection
      *            A destroyed connection from {@link TransactionRegistry}.
      */

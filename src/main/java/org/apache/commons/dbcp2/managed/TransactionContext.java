@@ -61,7 +61,7 @@ public class TransactionContext {
     /**
      * Gets the connection shared by all ManagedConnections in the transaction. Specifically, connection using the same
      * XAConnectionFactory from which the TransactionRegistry was obtained.
-     * 
+     *
      * @return the shared connection for this transaction
      */
     public Connection getSharedConnection() {
@@ -133,7 +133,7 @@ public class TransactionContext {
 
     /**
      * True if the transaction is active or marked for rollback only.
-     * 
+     *
      * @return true if the transaction is active or marked for rollback only; false otherwise
      * @throws SQLException
      *             if a problem occurs obtaining the transaction status

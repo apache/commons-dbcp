@@ -106,7 +106,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     /**
      * Wraps the given result set in a delegate.
-     * 
+     *
      * @param statement
      *            The Statement which created the ResultSet.
      * @param resultSet
@@ -122,7 +122,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     /**
      * Wraps the given result set in a delegate.
-     * 
+     *
      * @param connection
      *            The Connection which created the ResultSet.
      * @param resultSet
@@ -138,7 +138,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     /**
      * Gets my delegate.
-     * 
+     *
      * @return my delegate.
      */
     public ResultSet getDelegate() {
@@ -161,7 +161,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * {@code DelegatingResultSet}s, and you want to make
      * sure to obtain a "genuine" {@link ResultSet}.
      * </p>
-     * 
+     *
      * @return the innermost delegate.
      */
     public ResultSet getInnermostDelegate() {

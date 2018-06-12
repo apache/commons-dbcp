@@ -174,8 +174,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * {@code DelegatingConnection}s, and you want to make
      * sure to obtain a "genuine" {@link Connection}.
      * </p>
-     * 
-     * @return innermost delegate. 
+     *
+     * @return innermost delegate.
      */
     public Connection getInnermostDelegate() {
         return getInnermostDelegateInternal();
@@ -186,8 +186,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
      * Although this method is public, it is part of the internal API and should
      * not be used by clients. The signature of this method may change at any
      * time including in ways that break backwards compatibility.
-     * 
-     * @return innermost delegate. 
+     *
+     * @return innermost delegate.
      */
     public final Connection getInnermostDelegateInternal() {
         Connection c = connection;
@@ -202,7 +202,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace
 
     /**
      * Sets my delegate.
-     * 
+     *
      * @param connection
      *            my delegate.
      */

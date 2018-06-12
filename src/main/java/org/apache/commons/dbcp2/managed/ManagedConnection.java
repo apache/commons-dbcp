@@ -45,7 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 2.0
  */
 public class ManagedConnection<C extends Connection> extends DelegatingConnection<C> {
-    
+
     private final ObjectPool<C> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
@@ -55,7 +55,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     /**
      * Constructs a new instance responsible for managing a database connection in a transactional environment.
-     * 
+     *
      * @param pool
      *            The connection pool.
      * @param transactionRegistry
@@ -195,7 +195,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     /**
      * Delegates to {@link ManagedConnection#transactionComplete()} for transaction completion events.
-     * 
+     *
      * @since 2.0
      */
     protected class CompletionListener implements TransactionContextListener {
@@ -279,7 +279,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
-     * 
+     *
      * @return if false, getDelegate() and getInnermostDelegate() will return null
      */
     public boolean isAccessToUnderlyingConnectionAllowed() {

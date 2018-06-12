@@ -34,7 +34,7 @@ public class DriverConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructs a connection factory for a given Driver.
-     * 
+     *
      * @param driver
      *            The Driver.
      * @param connectString

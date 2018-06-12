@@ -178,7 +178,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
      * passivation and validation. A value of zero or less indicates an infinite lifetime. The default value is -1.
-     * 
+     *
      * @param maxConnLifetimeMillis
      *            The maximum lifetime in milliseconds.
      */
