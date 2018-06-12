@@ -75,13 +75,15 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * {@link #wrapResultSet(Statement, ResultSet)}
      * </p>
      *
-     * @param stmt Statement which created this ResultSet
-     * @param res ResultSet to wrap
+     * @param statement
+     *            The Statement which created the ResultSet.
+     * @param resultSet
+     *            The ResultSet to wrap.
      */
-    private DelegatingResultSet(final Statement stmt, final ResultSet res) {
-        super((AbandonedTrace)stmt);
-        this.statement = stmt;
-        this.resultSet = res;
+    private DelegatingResultSet(final Statement statement, final ResultSet resultSet) {
+        super((AbandonedTrace)statement);
+        this.statement = statement;
+        this.resultSet = resultSet;
     }
 
     /**
@@ -102,20 +104,43 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         this.resultSet = res;
     }
 
-    public static ResultSet wrapResultSet(final Statement stmt, final ResultSet rset) {
-        if(null == rset) {
+    /**
+     * Wraps the given result set in a delegate.
+     * 
+     * @param statement
+     *            The Statement which created the ResultSet.
+     * @param resultSet
+     *            The ResultSet to wrap.
+     * @return a new delegate.
+     */
+    public static ResultSet wrapResultSet(final Statement statement, final ResultSet resultSet) {
+        if (null == resultSet) {
             return null;
         }
-        return new DelegatingResultSet(stmt,rset);
+        return new DelegatingResultSet(statement, resultSet);
     }
 
-    public static ResultSet wrapResultSet(final Connection conn, final ResultSet rset) {
-        if(null == rset) {
+    /**
+     * Wraps the given result set in a delegate.
+     * 
+     * @param connection
+     *            The Connection which created the ResultSet.
+     * @param resultSet
+     *            The ResultSet to wrap.
+     * @return a new delegate.
+     */
+    public static ResultSet wrapResultSet(final Connection connection, final ResultSet resultSet) {
+        if (null == resultSet) {
             return null;
         }
-        return new DelegatingResultSet(conn,rset);
+        return new DelegatingResultSet(connection, resultSet);
     }
 
+    /**
+     * Gets my delegate.
+     * 
+     * @return my delegate.
+     */
     public ResultSet getDelegate() {
         return resultSet;
     }
@@ -136,6 +161,8 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * {@code DelegatingResultSet}s, and you want to make
      * sure to obtain a "genuine" {@link ResultSet}.
      * </p>
+     * 
+     * @return the innermost delegate.
      */
     public ResultSet getInnermostDelegate() {
         ResultSet r = resultSet;
