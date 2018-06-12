@@ -854,12 +854,12 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public boolean isValid(final int timeout) throws SQLException {
+    public boolean isValid(final int timeoutSeconds) throws SQLException {
         if (isClosed()) {
             return false;
         }
         try {
-            return connection.isValid(timeout);
+            return connection.isValid(timeoutSeconds);
         } catch (final SQLException e) {
             handleException(e);
             return false;

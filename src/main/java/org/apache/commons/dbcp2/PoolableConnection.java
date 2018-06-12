@@ -252,22 +252,22 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * </ol>
      *
      * @param sql
-     *            validation query
-     * @param timeout
-     *            validation timeout
+     *            The validation SQL query.
+     * @param timeoutSeconds
+     *            The validation timeout in seconds.
      * @throws SQLException
-     *             if validation fails or an SQLException occurs during validation
+     *             Thrown when validation fails or an SQLException occurs during validation
      */
-    public void validate(final String sql, int timeout) throws SQLException {
+    public void validate(final String sql, int timeoutSeconds) throws SQLException {
         if (fastFailValidation && fatalSqlExceptionThrown) {
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
         if (sql == null || sql.length() == 0) {
-            if (timeout < 0) {
-                timeout = 0;
+            if (timeoutSeconds < 0) {
+                timeoutSeconds = 0;
             }
-            if (!isValid(timeout)) {
+            if (!isValid(timeoutSeconds)) {
                 throw new SQLException("isValid() returned false");
             }
             return;
@@ -280,8 +280,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             validationPreparedStatement = getInnermostDelegateInternal().prepareStatement(sql);
         }
 
-        if (timeout > 0) {
-            validationPreparedStatement.setQueryTimeout(timeout);
+        if (timeoutSeconds > 0) {
+            validationPreparedStatement.setQueryTimeout(timeoutSeconds);
         }
 
         try (ResultSet rs = validationPreparedStatement.executeQuery()) {

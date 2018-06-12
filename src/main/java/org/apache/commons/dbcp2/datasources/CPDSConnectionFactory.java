@@ -192,13 +192,13 @@ class CPDSConnectionFactory
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == validationQuery) {
-            int timeout = validationQueryTimeoutSeconds;
-            if (timeout < 0) {
-                timeout = 0;
+            int timeoutSeconds = validationQueryTimeoutSeconds;
+            if (timeoutSeconds < 0) {
+                timeoutSeconds = 0;
             }
             try {
                 conn = pconn.getConnection();
-                valid = conn.isValid(timeout);
+                valid = conn.isValid(timeoutSeconds);
             } catch (final SQLException e) {
                 valid = false;
             } finally {
