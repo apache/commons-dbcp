@@ -28,7 +28,7 @@ import java.util.Properties;
  */
 public class DriverConnectionFactory implements ConnectionFactory {
 
-    private final String connectionUri;
+    private final String connectionString;
     private final Driver driver;
     private final Properties properties;
 
@@ -44,18 +44,18 @@ public class DriverConnectionFactory implements ConnectionFactory {
      */
     public DriverConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
         this.driver = driver;
-        this.connectionUri = connectString;
+        this.connectionString = connectString;
         this.properties = properties;
     }
 
     @Override
     public Connection createConnection() throws SQLException {
-        return driver.connect(connectionUri, properties);
+        return driver.connect(connectionString, properties);
     }
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" + String.valueOf(connectionUri) + ";"
+        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" + String.valueOf(connectionString) + ";"
                 + String.valueOf(properties) + "]";
     }
 }
