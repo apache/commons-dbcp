@@ -56,6 +56,9 @@ public class PoolingDriver implements Driver {
     /** Controls access to the underlying connection */
     private final boolean accessToUnderlyingConnectionAllowed;
 
+    /**
+     * Constructs a new driver with <code>accessToUnderlyingConnectionAllowed</code> enabled.
+     */
     public PoolingDriver() {
         this(true);
     }
@@ -77,6 +80,15 @@ public class PoolingDriver implements Driver {
         return accessToUnderlyingConnectionAllowed;
     }
 
+    /**
+     * Gets the connection pool for the given name.
+     * 
+     * @param name
+     *            The pool name
+     * @return The pool
+     * @throws SQLException
+     *             Thrown when the named pool is not registered.
+     */
     public synchronized ObjectPool<? extends Connection> getConnectionPool(final String name)
             throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
@@ -86,12 +98,29 @@ public class PoolingDriver implements Driver {
         return pool;
     }
 
+    /**
+     * Registers a named pool.
+     * 
+     * @param name
+     *            The pool name.
+     * @param pool
+     *            The pool.
+     */
     public synchronized void registerPool(final String name,
             final ObjectPool<? extends Connection> pool) {
         pools.put(name, pool);
     }
 
+    /**
+     * Closes a named pool.
+     * 
+     * @param name
+     *            The pool name.
+     * @throws SQLException
+     *             Thrown when a problem is caught closing the pool.
+     */
     public synchronized void closePool(final String name) throws SQLException {
+        @SuppressWarnings("resource")
         final ObjectPool<? extends Connection> pool = pools.get(name);
         if (pool != null) {
             pools.remove(name);
@@ -104,6 +133,11 @@ public class PoolingDriver implements Driver {
         }
     }
 
+    /**
+     * Gets the pool names.
+     * 
+     * @return the pool names.
+     */
     public synchronized String[] getPoolNames(){
         final Set<String> names = pools.keySet();
         return names.toArray(new String[names.size()]);
