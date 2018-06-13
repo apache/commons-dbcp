@@ -78,7 +78,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * This method is useful when you may have nested {@code DelegatingStatement}s, and you want to make sure to obtain
      * a "genuine" {@link Statement}.
      * </p>
-     * 
+     *
      * @return The innermost delegate.
      *
      * @see #getDelegate

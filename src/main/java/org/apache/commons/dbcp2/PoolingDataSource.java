@@ -48,7 +48,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
     /**
      * Constructs a new instance backed by the given connection pool.
-     * 
+     *
      * @param pool
      *            the given connection pool.
      */

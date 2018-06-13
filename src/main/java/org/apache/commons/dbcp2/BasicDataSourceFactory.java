@@ -556,7 +556,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * <p>
      * Parse properties from the string. Format of the string must be [propertyName=property;]*
      * <p>
-     * 
+     *
      * @param propText
      * @return Properties
      * @throws Exception
@@ -571,7 +571,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
     /**
      * Parse list of property values from a delimited string
-     * 
+     *
      * @param value
      *            delimited list of values
      * @param delimiter

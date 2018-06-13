@@ -167,7 +167,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Deprecated due to typo in method name.
-     * 
+     *
      * @param maxOpenPreparedStatements
      *            The maximum number of open prepared statements.
      * @deprecated Use {@link #setMaxOpenPreparedStatements(int)}.
@@ -179,7 +179,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Sets the maximum number of open prepared statements.
-     * 
+     *
      * @param maxOpenPreparedStatements
      *            The maximum number of open prepared statements.
      */

@@ -223,7 +223,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a closed connection cannot be used anymore.
-     * 
+     *
      * @since 2.0
      */
     private class PoolGuardConnectionWrapper extends DelegatingConnection<Connection> {

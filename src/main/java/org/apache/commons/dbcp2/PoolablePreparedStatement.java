@@ -51,7 +51,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
 
     /**
      * Constructor
-     * 
+     *
      * @param stmt
      *            my underlying {@link PreparedStatement}
      * @param key

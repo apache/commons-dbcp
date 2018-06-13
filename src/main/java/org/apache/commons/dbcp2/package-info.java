@@ -95,7 +95,7 @@
  * <p>
  * In code, that might look like this:
  * </p>
- * 
+ *
  * <pre>
  * GenericObjectPool connectionPool = new GenericObjectPool(null);
  * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName",
@@ -109,7 +109,7 @@
  * {@link javax.sql.DataSource} on the last line, we create a {@link org.apache.commons.dbcp2.PoolingDriver}, and
  * register the {@code connectionPool} with it. E.g.,:
  * </p>
- * 
+ *
  * <pre>
  * GenericObjectPool connectionPool = new GenericObjectPool(null);
  * ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName",
@@ -124,7 +124,7 @@
  * when it is created, now you can just go to the {@link java.sql.DriverManager} to create your
  * {@link java.sql.Connection}s, like you normally would:
  * </p>
- * 
+ *
  * <pre>
  * Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:example");
  * </pre>

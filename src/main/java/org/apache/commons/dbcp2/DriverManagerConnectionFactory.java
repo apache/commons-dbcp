@@ -40,7 +40,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * 
+     *
      * @param connectionUri
      *            a database url of the form <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @since 2.2
@@ -52,7 +52,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * 
+     *
      * @param connectionUri
      *            a database url of the form <code> jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @param properties
@@ -66,7 +66,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     /**
      * Constructor for DriverManagerConnectionFactory.
-     * 
+     *
      * @param connectionUri
      *            a database url of the form <code>jdbc:<em>subprotocol</em>:<em>subname</em></code>
      * @param userName
