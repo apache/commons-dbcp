@@ -43,8 +43,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSource
- *
- * @author Dirk Verbeeck
  */
 public class TestBasicDataSource extends TestConnectionPool {
 
@@ -73,7 +71,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setDefaultCatalog(CATALOG);
-        ds.setUsername("username");
+        ds.setUsername("userName");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
         ds.setConnectionInitSqls(Arrays.asList(new String[] { "SELECT 1", "SELECT 2"}));
@@ -579,7 +577,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setDefaultCatalog(CATALOG);
-        ds.setUsername("username");
+        ds.setUsername("userName");
         // Set timeBetweenEvictionRuns > 0, so evictor is created
         ds.setTimeBetweenEvictionRunsMillis(100);
         // Make password incorrect, so createDataSource will throw
@@ -622,7 +620,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnRequestCountDriver");
         ds.setUrl("jdbc:apache:commons:testerConnRequestCountDriver");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
-        ds.setUsername("username");
+        ds.setUsername("userName");
 
         // Make password incorrect, so createDataSource will throw
         ds.setPassword("wrong");

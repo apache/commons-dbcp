@@ -56,7 +56,7 @@
   BasicDataSource bds = new BasicDataSource();
   bds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
   bds.setUrl("jdbc:apache:commons:testdriver");
-  bds.setUsername("username");
+  bds.setUsername("userName");
   bds.setPassword("password");
 
   ic.rebind("jdbc/basic", bds);

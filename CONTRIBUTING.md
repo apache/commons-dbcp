@@ -107,7 +107,7 @@ Additional Resources
 + [Apache Commons DBCP JIRA project page][jira]
 + [Contributor License Agreement][cla]
 + [General GitHub documentation](https://help.github.com/)
-+ [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
++ [GitHub pull request documentation](https://help.github.com/articles/creating-a-pull-request/)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 + `#apache-commons` IRC channel on `irc.freenode.net`
 

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 
 /**
  * Mock object implementing the <code>java.sql.Driver</code> interface.
- * Returns <code>TestConnection</code>'s from getConnection methods.  
- * Valid username, password combinations are:
+ * Returns <code>TestConnection</code>'s from getConnection methods.
+ * Valid user name, password combinations are:
  *
  * <table summary="valid credentials">
  * <tr><th>user</th><th>password</th></tr>
@@ -38,10 +38,6 @@ import java.util.logging.Logger;
  * <tr><td>u2</td><td>p2</td></tr>
  * <tr><td>username</td><td>password</td></tr>
  * </table>
- * 
- * @author Rodney Waldhoff
- * @author Dirk Verbeeck
- * @version $Revision$ $Date: 2014-02-05 18:13:01 +0100 (Wed, 05 Feb 2014) $
  */
 public class TesterDriver implements Driver {
     private static final Properties validUserPasswords = new Properties();
@@ -53,15 +49,15 @@ public class TesterDriver implements Driver {
         validUserPasswords.put("foo", "bar");
         validUserPasswords.put("u1", "p1");
         validUserPasswords.put("u2", "p2");
-        validUserPasswords.put("username", "password");
+        validUserPasswords.put("userName", "password");
     }
 
-    /** 
-     * TesterDriver specific method to add users to the list of valid users 
+    /**
+     * TesterDriver specific method to add users to the list of valid users
      */
-    public static void addUser(final String username, final String password) {
+    public static void addUser(final String userName, final String password) {
         synchronized (validUserPasswords) {
-            validUserPasswords.put(username, password);
+            validUserPasswords.put(userName, password);
         }
     }
 
@@ -70,18 +66,18 @@ public class TesterDriver implements Driver {
         return url != null && url.startsWith(CONNECT_STRING);
     }
 
-    private void assertValidUserPassword(final String user, final String password) 
+    private void assertValidUserPassword(final String userName, final String password)
         throws SQLException {
-        if (user == null){
-            throw new SQLException("username cannot be null.");            
+        if (userName == null){
+            throw new SQLException("user name cannot be null.");
         }
         synchronized (validUserPasswords) {
-            final String realPassword = validUserPasswords.getProperty(user);
+            final String realPassword = validUserPasswords.getProperty(userName);
             if (realPassword == null) {
-                throw new SQLException(user + " is not a valid username.");
+                throw new SQLException(userName + " is not a valid user name.");
             }
             if (!realPassword.equals(password)) {
-                throw new SQLException(password + " is not the correct password for " + user
+                throw new SQLException(password + " is not the correct password for " + userName
                         + ".  The correct password is " + realPassword);
             }
         }
@@ -91,26 +87,26 @@ public class TesterDriver implements Driver {
     public Connection connect(final String url, final Properties info) throws SQLException {
         //return (acceptsURL(url) ? new TesterConnection() : null);
         Connection conn = null;
-        if (acceptsURL(url)) 
+        if (acceptsURL(url))
         {
-            String username = "test";
+            String userName = "test";
             String password = "test";
-            if (info != null) 
+            if (info != null)
             {
-                username = info.getProperty("user");
+                userName = info.getProperty("user");
                 password = info.getProperty("password");
-                if (username == null) {
+                if (userName == null) {
                     final String[] parts = url.split(";");
-                    username = parts[1];
-                    username = username.split("=")[1];
+                    userName = parts[1];
+                    userName = userName.split("=")[1];
                     password = parts[2];
                     password = password.split("=")[1];
                 }
-                assertValidUserPassword(username, password);
+                assertValidUserPassword(userName, password);
             }
-            conn = new TesterConnection(username, password);
+            conn = new TesterConnection(userName, password);
         }
-        
+
         return conn;
     }
 

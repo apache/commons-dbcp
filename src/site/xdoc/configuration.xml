@@ -52,7 +52,7 @@ testWhileIdle
 <hr><th>Parameter</th><th>Description</th></hr>
 <tr>
    <td>username</td>
-   <td>The connection username to be passed to our JDBC driver to establish a connection.</td>
+   <td>The connection user name to be passed to our JDBC driver to establish a connection.</td>
 </tr>
 <tr>
    <td>password</td>

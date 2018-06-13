@@ -37,8 +37,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSourceFactory
- *
- * @author Dirk Verbeeck
  */
 public class TestBasicDataSourceFactory {
 
@@ -122,7 +120,7 @@ public class TestBasicDataSourceFactory {
         properties.setProperty("defaultCatalog", "test");
         properties.setProperty("testOnBorrow", "true");
         properties.setProperty("testOnReturn", "false");
-        properties.setProperty("username", "username");
+        properties.setProperty("username", "userName");
         properties.setProperty("password", "password");
         properties.setProperty("validationQuery", "SELECT DUMMY FROM DUAL");
         properties.setProperty("validationQueryTimeout", "100");
@@ -162,7 +160,7 @@ public class TestBasicDataSourceFactory {
         assertEquals("test", ds.getDefaultCatalog());
         assertTrue(ds.getTestOnBorrow());
         assertFalse(ds.getTestOnReturn());
-        assertEquals("username", ds.getUsername());
+        assertEquals("userName", ds.getUsername());
         assertEquals("password", ds.getPassword());
         assertEquals("SELECT DUMMY FROM DUAL", ds.getValidationQuery());
         assertEquals(100, ds.getValidationQueryTimeout());

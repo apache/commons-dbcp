@@ -16,6 +16,7 @@
  */
 
 package org.apache.commons.dbcp2.managed;
+
 import java.sql.Connection;
 
 import javax.management.ObjectName;
@@ -43,22 +44,23 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
     private final TransactionRegistry transactionRegistry;
 
     /**
-     * Create a PoolableManagedConnectionFactory and attach it to a connection pool.
+     * Creates a PoolableManagedConnectionFactory and attach it to a connection pool.
      *
-     * @param connFactory XAConnectionFactory
+     * @param connFactory
+     *            XAConnectionFactory
+     * @param dataSourceJmxName
+     *            The data source name.
      */
-    public PoolableManagedConnectionFactory(final XAConnectionFactory connFactory,
-            final ObjectName dataSourceJmxName) {
+    public PoolableManagedConnectionFactory(final XAConnectionFactory connFactory, final ObjectName dataSourceJmxName) {
         super(connFactory, dataSourceJmxName);
         this.transactionRegistry = connFactory.getTransactionRegistry();
     }
 
     /**
-     * Uses the configured XAConnectionFactory to create a {@link PoolableManagedConnection}.
-     * Throws <code>IllegalStateException</code> if the connection factory returns null.
-     * Also initializes the connection using configured initialization sql (if provided)
-     * and sets up a prepared statement pool associated with the PoolableManagedConnection
-     * if statement pooling is enabled.
+     * Uses the configured XAConnectionFactory to create a {@link PoolableManagedConnection}. Throws
+     * <code>IllegalStateException</code> if the connection factory returns null. Also initializes the connection using
+     * configured initialization SQL (if provided) and sets up a prepared statement pool associated with the
+     * PoolableManagedConnection if statement pooling is enabled.
      */
     @Override
     synchronized public PooledObject<PoolableConnection> makeObject() throws Exception {
@@ -86,14 +88,13 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
             } else {
                 config.setJmxEnabled(false);
             }
-            final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
-                new GenericKeyedObjectPool<>((PoolingConnection)conn, config);
-            ((PoolingConnection)conn).setStatementPool(stmtPool);
+            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(
+                    (PoolingConnection) conn, config);
+            ((PoolingConnection) conn).setStatementPool(stmtPool);
             ((PoolingConnection) conn).setCacheState(getCacheState());
         }
-        final PoolableManagedConnection pmc =
-                new PoolableManagedConnection(transactionRegistry, conn, getPool(),
-                        getDisconnectionSqlCodes(), isFastFailValidation());
+        final PoolableManagedConnection pmc = new PoolableManagedConnection(transactionRegistry, conn, getPool(),
+                getDisconnectionSqlCodes(), isFastFailValidation());
         pmc.setCacheState(getCacheState());
         return new DefaultPooledObject<PoolableConnection>(pmc);
     }

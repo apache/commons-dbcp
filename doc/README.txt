@@ -34,7 +34,7 @@ PoolingDataSource.java
  Look at the comments with that file for instructions on how to
  build and run it.
 
-See also the JavaDoc documentation (use "ant doc" to generate it),
+See also the Javadoc documentation (use "ant doc" to generate it),
 especially the package documentation for org.apache.commons.dbcp
 for an overview of how it all works.
 

@@ -84,7 +84,7 @@ filtered out of the DBCP 1.3 sources.</p>
 <section name="Documentation">
 
 <p>The 
-<a href="apidocs/index.html">JavaDoc API documents</a> 
+<a href="apidocs/index.html">Javadoc API documents</a> 
 are available online.  In particular, you should
 read the package overview of the 
 <code><a href="apidocs/org/apache/commons/dbcp2/package-summary.html#package_description">org.apache.commons.dbcp2</a></code>

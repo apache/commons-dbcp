@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Internal wrapper class that allows JMX to be a noop if absent or disabled.
- * 
+ *
  * @since 2.2.1
  */
 class ObjectNameWrapper {
@@ -47,7 +47,7 @@ class ObjectNameWrapper {
         }
     }
 
-    public static ObjectName unwrap(ObjectNameWrapper wrapper) {
+    public static ObjectName unwrap(final ObjectNameWrapper wrapper) {
         return wrapper == null ? null : wrapper.unwrap();
     }
 
@@ -65,7 +65,7 @@ class ObjectNameWrapper {
         this.objectName = objectName;
     }
 
-    public void registerMBean(Object object) {
+    public void registerMBean(final Object object) {
         if (MBEAN_SERVER == null || objectName == null) {
             return;
         }

@@ -60,7 +60,48 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.3.0" date="2018-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.4.0" date="2018-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <action dev="ggregory" type="fix" issue="DBCP-484" due-to="Emanuel Freitas">
+        Connection leak during XATransaction in high load.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-492" due-to="Gary Gregory">
+        Drop Ant build.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-491" due-to="Zheng Feng, Gary Gregory">
+        Ensure DBCP ConnectionListener can deal with transaction managers which invoke rollback in a separate thread.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-494" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.PStmtKey should make copies of given arrays in constructors.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-495" due-to="Gary Gregory">
+        Remove duplicate code in org.apache.commons.dbcp2.cpdsadapter.PStmtKeyCPDS.
+      </action>
+      <action dev="ggregory" type="fix" issue="DBCP-496" due-to="Gary Gregory">
+        Add support for pooling CallableStatements to the org.apache.commons.dbcp2.cpdsadapter package.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-497" due-to="Gary Gregory">
+        Deprecate use of PStmtKeyCPDS in favor of PStmtKey.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-498" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.DataSourceConnectionFactory should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-499" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-500" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-501" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.datasources.CPDSConnectionFactory should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-502" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.datasources internals should use a char[] instead of a String to store passwords.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-503" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.datasources.InstanceKeyDataSourceFactory.closeAll() does not close all.
+      </action>
+    </release>
+    <release version="2.3.0" date="2018-05-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="pschumacher" type="fix" issue="DBCP-476" due-to="Gary Evesson, Richard Cordova">
         AbandonedTrace.getTrace() contains race condition.
       </action>
@@ -689,7 +730,7 @@ The <action> type attribute can be add,update,fix,remove.
         Changed behavior to allow Connection, Statement, PreparedStatement,
         CallableStatement and ResultSet to be closed multiple times. The first
         time close is called the resource is closed and any subsequent calls
-        have no effect. This behavior is required as per the JavaDocs for these
+        have no effect. This behavior is required as per the Javadocs for these
         classes. Also added tests for closing all types multiple times and
         updated any tests that incorrectly assert that a resource can not be
         closed more then once.  Fixes DBCP-3, DBCP-5, DBCP-23 and DBCP-134.
@@ -759,7 +800,7 @@ The <action> type attribute can be add,update,fix,remove.
         Add a &lt;i&gt;JNDI How To&lt;/i&gt; to the User Guide.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-108" due-to="Maxwell Grender-Jones">
-        DriverManagerConnectionFactory: blank username/password handling.
+        DriverManagerConnectionFactory: blank user name and password handling.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-113" due-to="Rohan Lenard">
         Broken behaviour for BasicDataSource.setMaxActive(0).

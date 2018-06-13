@@ -14,3 +14,5 @@ site-content
 /.pmd
 /.project
 /.settings
+/ObjectStore/
+/bin/

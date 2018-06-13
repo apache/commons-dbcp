@@ -24,6 +24,6 @@
 # page need to be checked in after review.
 #
 # ----------------------------------------------------------------------------
-version=2.3.0
+version=2.4.0
 mvn changes:announcement-generate -Prelease-notes -Dchanges.version=${version}
 mvn commons:download-page -Dcommons.componentid=dbcp -Dcommons.release.version=${version}

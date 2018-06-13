@@ -43,8 +43,6 @@ import org.junit.Test;
 
 /**
  * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
- * @author Rodney Waldhoff
- * @author Sean C. Sullivan
  */
 public class TestPoolingDriver extends TestConnectionPool {
 
@@ -94,7 +92,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void test1() {
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","userName","password");
         final PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
@@ -108,7 +106,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void test2() {
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","username","password");
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","userName","password");
         final PoolableConnectionFactory pcf =
             new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
@@ -148,7 +146,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         config.setMaxIdle(10);
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver",
-            "username",
+            "userName",
             "password");
         final PoolableConnectionFactory poolableConnectionFactory =
             new PoolableConnectionFactory(connectionFactory, null);

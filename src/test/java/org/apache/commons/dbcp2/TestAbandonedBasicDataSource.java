@@ -37,8 +37,6 @@ import org.junit.Test;
 
 /**
  * TestSuite for BasicDataSource with abandoned connection trace enabled
- *
- * @author Dirk Verbeeck
  */
 public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
@@ -252,8 +250,8 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
         @SuppressWarnings("unchecked")
         final
-        GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>  gkop =
-                (GenericKeyedObjectPool<PStmtKey,DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "_pstmtPool");
+        GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
+                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pstmtPool");
         Assert.assertEquals(0, conn.getTrace().size());
         Assert.assertEquals(0, gkop.getNumActive());
         createStatement(conn);

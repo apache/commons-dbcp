@@ -25,10 +25,10 @@ import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.apache.geronimo.transaction.manager.TransactionImpl;
 
 /**
- * TestSuite for TransactionContext  
+ * TestSuite for TransactionContext
  */
 public class TestTransactionContext {
-    
+
     /**
      * JIRA: DBCP-428
      */
@@ -38,17 +38,17 @@ public class TestTransactionContext {
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
         basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-        basicManagedDataSource.setUsername("username");
+        basicManagedDataSource.setUsername("userName");
         basicManagedDataSource.setPassword("password");
         basicManagedDataSource.setMaxIdle(1);
         final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        final UncooperativeTransaction transaction = new UncooperativeTransaction(); 
+        final UncooperativeTransaction transaction = new UncooperativeTransaction();
         final TransactionContext transactionContext =
                 new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
         transactionContext.setSharedConnection(conn);
         basicManagedDataSource.close();
     }
-    
+
     /**
      * Transaction that always fails enlistResource.
      */
