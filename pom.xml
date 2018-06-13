@@ -132,6 +132,14 @@
       <email>ggregory@apache.org</email>
       <organization>The Apache Software Foundation</organization>
     </developer>
+    <developer>
+      <name>Ignacio J. Ortega</name>
+      <id>nacho</id>
+    </developer>
+    <developer>
+      <name>Sean C. Sullivan</name>
+      <id>sullis</id>
+    </developer>
   </developers>
   <contributors>
     <contributor>
@@ -147,6 +155,15 @@
     </contributor>
     <contributor>
       <name>Philippe Mouawad</name>
+    </contributor>
+    <contributor>
+      <name>Glenn L. Nielsen</name>
+    </contributor>
+    <contributor>
+      <name>James House</name>
+    </contributor>
+    <contributor>
+      <name>James Ring</name>
     </contributor>
   </contributors>
 
@@ -215,6 +232,42 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.197</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.narayana.jta</groupId>
+      <artifactId>narayana-jta</artifactId>
+      <version>5.8.2.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.transaction</groupId>
+      <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+      <version>1.0.0.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-transaction-spi</artifactId>
+      <version>7.6.0.Final</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging-spi</artifactId>
+        </exclusion>
+      </exclusions>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>3.1.4.GA</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -222,12 +275,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/dbcp/</commons.distSvnStagingUrl>
-    <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.componentid>dbcp2</commons.componentid>
+    <commons.componentid>dbcp</commons.componentid>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
-    <commons.release.version>2.3.0</commons.release.version>
+    <commons.release.version>2.4.0</commons.release.version>
     <commons.release.desc>for JDBC 4.1 (Java 7.0+)</commons.release.desc>
     <commons.release.2.version>1.4</commons.release.2.version>
     <commons.release.2.desc>for JDBC 4 (Java 6.0)</commons.release.2.desc>
@@ -249,6 +300,12 @@
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.3.0</commons.bc.version>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
+    <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   </properties>
 
   <build>
@@ -417,4 +474,34 @@
       </plugin>
     </plugins>
   </reporting>
+  <profiles>
+    <profile>
+      <id>jdk7</id>
+      <activation>
+        <jdk>(,1.7]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <!-- Ensure that logging messages can be inspected -->
+                <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
+              </systemPropertyVariables>
+              <reportFormat>plain</reportFormat>
+              <excludes>
+                <!-- Test support files -->
+                <exclude>**/Tester*.java</exclude>
+                <!-- Exclude nested classes which Surefire cannot handle -->
+                <exclude>**/Test*$*.java</exclude>
+                <exclude>**/*Narayana*.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
