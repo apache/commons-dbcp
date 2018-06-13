@@ -48,7 +48,7 @@ Apache Commons DBCP
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.4.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.4.0)
 
-${project.description}
+Apache Commons DBCP software implements Database Connection Pooling
 
 Documentation
 -------------
