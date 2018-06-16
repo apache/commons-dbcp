@@ -111,7 +111,7 @@ public class TransactionRegistry {
             throw new SQLException("Unable to determine current transaction ", e);
         }
 
-        // register the the context (or create a new one)
+        // register the context (or create a new one)
         synchronized (this) {
             TransactionContext cache = caches.get(transaction);
             if (cache == null) {
