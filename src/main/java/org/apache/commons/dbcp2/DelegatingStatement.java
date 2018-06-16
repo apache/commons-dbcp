@@ -42,6 +42,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** The connection that created me. **/
     private DelegatingConnection<?> connection;
 
+    private boolean closed = false;
+
     /**
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
      * which created it.
@@ -58,66 +60,60 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * Returns my underlying {@link Statement}.
      *
-     * @return my underlying {@link Statement}.
-     * @see #getInnermostDelegate
+     * @throws SQLException
+     *             thrown by the delegating statement.
+     * @since 2.4.0 made public, was protected in 2.3.0.
      */
-    public Statement getDelegate() {
-        return statement;
-    }
-
-    /**
-     * If my underlying {@link Statement} is not a {@code DelegatingStatement}, returns it, otherwise recursively
-     * invokes this method on my delegate.
-     * <p>
-     * Hence this method will return the first delegate that is not a {@code DelegatingStatement} or {@code null} when
-     * no non-{@code DelegatingStatement} delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@code DelegatingStatement}s, and you want to make sure to obtain
-     * a "genuine" {@link Statement}.
-     * </p>
-     *
-     * @return The innermost delegate.
-     *
-     * @see #getDelegate
-     */
-    @SuppressWarnings("resource")
-    public Statement getInnermostDelegate() {
-        Statement s = statement;
-        while (s != null && s instanceof DelegatingStatement) {
-            s = ((DelegatingStatement) s).getDelegate();
-            if (this == s) {
-                return null;
-            }
+    public void activate() throws SQLException {
+        if (statement instanceof DelegatingStatement) {
+            ((DelegatingStatement) statement).activate();
         }
-        return s;
     }
 
-    /**
-     * Sets my delegate.
-     *
-     * @param statement
-     *            my delegate.
-     */
-    public void setDelegate(final Statement statement) {
-        this.statement = statement;
+    @Override
+    public void addBatch(final String sql) throws SQLException {
+        checkOpen();
+        try {
+            statement.addBatch(sql);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
     }
 
-    private boolean closed = false;
-
-    protected boolean isClosedInternal() {
-        return closed;
-    }
-
-    protected void setClosedInternal(final boolean closed) {
-        this.closed = closed;
+    @Override
+    public void cancel() throws SQLException {
+        checkOpen();
+        try {
+            statement.cancel();
+        } catch (final SQLException e) {
+            handleException(e);
+        }
     }
 
     protected void checkOpen() throws SQLException {
         if (isClosed()) {
             throw new SQLException(this.getClass().getName() + " with address: \"" + this.toString() + "\" is closed.");
+        }
+    }
+
+    @Override
+    public void clearBatch() throws SQLException {
+        checkOpen();
+        try {
+            statement.clearBatch();
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        checkOpen();
+        try {
+            statement.clearWarnings();
+        } catch (final SQLException e) {
+            handleException(e);
         }
     }
 
@@ -161,196 +157,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
-    protected void handleException(final SQLException e) throws SQLException {
-        if (connection != null) {
-            connection.handleException(e);
-        } else {
-            throw e;
-        }
-    }
-
-    /**
-     *
-     * @throws SQLException
-     *             thrown by the delegating statement.
-     * @since 2.4.0 made public, was protected in 2.3.0.
-     */
-    public void activate() throws SQLException {
-        if (statement instanceof DelegatingStatement) {
-            ((DelegatingStatement) statement).activate();
-        }
-    }
-
-    /**
-     *
-     * @throws SQLException
-     *             thrown by the delegating statement.
-     * @since 2.4.0 made public, was protected in 2.3.0.
-     */
-    public void passivate() throws SQLException {
-        if (statement instanceof DelegatingStatement) {
-            ((DelegatingStatement) statement).passivate();
-        }
-    }
-
     @Override
-    public Connection getConnection() throws SQLException {
-        checkOpen();
-        return getConnectionInternal(); // return the delegating connection that created this
-    }
-
-    protected DelegatingConnection<?> getConnectionInternal() {
-        return connection;
-    }
-
-    @Override
-    public ResultSet executeQuery(final String sql) throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return DelegatingResultSet.wrapResultSet(this, statement.executeQuery(sql));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
-    }
-
-    @Override
-    public ResultSet getResultSet() throws SQLException {
+    public void closeOnCompletion() throws SQLException {
         checkOpen();
         try {
-            return DelegatingResultSet.wrapResultSet(this, statement.getResultSet());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
-    }
-
-    @Override
-    public int executeUpdate(final String sql) throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return statement.executeUpdate(sql);
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int getMaxFieldSize() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getMaxFieldSize();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void setMaxFieldSize(final int max) throws SQLException {
-        checkOpen();
-        try {
-            statement.setMaxFieldSize(max);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public int getMaxRows() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getMaxRows();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void setMaxRows(final int max) throws SQLException {
-        checkOpen();
-        try {
-            statement.setMaxRows(max);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setEscapeProcessing(final boolean enable) throws SQLException {
-        checkOpen();
-        try {
-            statement.setEscapeProcessing(enable);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public int getQueryTimeout() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getQueryTimeout();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void setQueryTimeout(final int seconds) throws SQLException {
-        checkOpen();
-        try {
-            statement.setQueryTimeout(seconds);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void cancel() throws SQLException {
-        checkOpen();
-        try {
-            statement.cancel();
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getWarnings();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        checkOpen();
-        try {
-            statement.clearWarnings();
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setCursorName(final String name) throws SQLException {
-        checkOpen();
-        try {
-            statement.setCursorName(name);
+            statement.closeOnCompletion();
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -367,200 +178,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         } catch (final SQLException e) {
             handleException(e);
             return false;
-        }
-    }
-
-    @Override
-    public int getUpdateCount() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getUpdateCount();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public boolean getMoreResults() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getMoreResults();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public void setFetchDirection(final int direction) throws SQLException {
-        checkOpen();
-        try {
-            statement.setFetchDirection(direction);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public int getFetchDirection() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getFetchDirection();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void setFetchSize(final int rows) throws SQLException {
-        checkOpen();
-        try {
-            statement.setFetchSize(rows);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public int getFetchSize() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getFetchSize();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int getResultSetConcurrency() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getResultSetConcurrency();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int getResultSetType() throws SQLException {
-        checkOpen();
-        try {
-            return statement.getResultSetType();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void addBatch(final String sql) throws SQLException {
-        checkOpen();
-        try {
-            statement.addBatch(sql);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void clearBatch() throws SQLException {
-        checkOpen();
-        try {
-            statement.clearBatch();
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public int[] executeBatch() throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return statement.executeBatch();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
-    }
-
-    /**
-     * Returns a String representation of this object.
-     *
-     * @return String
-     */
-    @Override
-    public String toString() {
-        return statement == null ? "NULL" : statement.toString();
-    }
-
-    @Override
-    public boolean getMoreResults(final int current) throws SQLException {
-        checkOpen();
-        try {
-            return statement.getMoreResults(current);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public ResultSet getGeneratedKeys() throws SQLException {
-        checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(this, statement.getGeneratedKeys());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
-    }
-
-    @Override
-    public int executeUpdate(final String sql, final int autoGeneratedKeys) throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return statement.executeUpdate(sql, autoGeneratedKeys);
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int executeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return statement.executeUpdate(sql, columnIndexes);
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int executeUpdate(final String sql, final String columnNames[]) throws SQLException {
-        checkOpen();
-        if (connection != null) {
-            connection.setLastUsed();
-        }
-        try {
-            return statement.executeUpdate(sql, columnNames);
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
         }
     }
 
@@ -607,85 +224,86 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public int getResultSetHoldability() throws SQLException {
+    public int[] executeBatch() throws SQLException {
         checkOpen();
+        if (connection != null) {
+            connection.setLastUsed();
+        }
         try {
-            return statement.getResultSetHoldability();
+            return statement.executeBatch();
+        } catch (final SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public ResultSet executeQuery(final String sql) throws SQLException {
+        checkOpen();
+        if (connection != null) {
+            connection.setLastUsed();
+        }
+        try {
+            return DelegatingResultSet.wrapResultSet(this, statement.executeQuery(sql));
+        } catch (final SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public int executeUpdate(final String sql) throws SQLException {
+        checkOpen();
+        if (connection != null) {
+            connection.setLastUsed();
+        }
+        try {
+            return statement.executeUpdate(sql);
         } catch (final SQLException e) {
             handleException(e);
             return 0;
         }
     }
 
-    /*
-     * Note was protected prior to JDBC 4
-     */
     @Override
-    public boolean isClosed() throws SQLException {
-        return closed;
-    }
-
-    @Override
-    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return true;
-        } else if (iface.isAssignableFrom(statement.getClass())) {
-            return true;
-        } else {
-            return statement.isWrapperFor(iface);
-        }
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return iface.cast(this);
-        } else if (iface.isAssignableFrom(statement.getClass())) {
-            return iface.cast(statement);
-        } else {
-            return statement.unwrap(iface);
-        }
-    }
-
-    @Override
-    public void setPoolable(final boolean poolable) throws SQLException {
+    public int executeUpdate(final String sql, final int autoGeneratedKeys) throws SQLException {
         checkOpen();
+        if (connection != null) {
+            connection.setLastUsed();
+        }
         try {
-            statement.setPoolable(poolable);
+            return statement.executeUpdate(sql, autoGeneratedKeys);
         } catch (final SQLException e) {
             handleException(e);
+            return 0;
         }
     }
 
     @Override
-    public boolean isPoolable() throws SQLException {
+    public int executeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
         checkOpen();
+        if (connection != null) {
+            connection.setLastUsed();
+        }
         try {
-            return statement.isPoolable();
+            return statement.executeUpdate(sql, columnIndexes);
         } catch (final SQLException e) {
             handleException(e);
-            return false;
+            return 0;
         }
     }
 
     @Override
-    public void closeOnCompletion() throws SQLException {
+    public int executeUpdate(final String sql, final String columnNames[]) throws SQLException {
         checkOpen();
-        try {
-            statement.closeOnCompletion();
-        } catch (final SQLException e) {
-            handleException(e);
+        if (connection != null) {
+            connection.setLastUsed();
         }
-    }
-
-    @Override
-    public boolean isCloseOnCompletion() throws SQLException {
-        checkOpen();
         try {
-            return statement.isCloseOnCompletion();
+            return statement.executeUpdate(sql, columnNames);
         } catch (final SQLException e) {
             handleException(e);
-            return false;
+            return 0;
         }
     }
 
@@ -701,5 +319,387 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         // to the pool.
         close();
         super.finalize();
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        checkOpen();
+        return getConnectionInternal(); // return the delegating connection that created this
+    }
+
+    protected DelegatingConnection<?> getConnectionInternal() {
+        return connection;
+    }
+
+    /**
+     * Returns my underlying {@link Statement}.
+     *
+     * @return my underlying {@link Statement}.
+     * @see #getInnermostDelegate
+     */
+    public Statement getDelegate() {
+        return statement;
+    }
+
+    @Override
+    public int getFetchDirection() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getFetchDirection();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getFetchSize() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getFetchSize();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public ResultSet getGeneratedKeys() throws SQLException {
+        checkOpen();
+        try {
+            return DelegatingResultSet.wrapResultSet(this, statement.getGeneratedKeys());
+        } catch (final SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    /**
+     * If my underlying {@link Statement} is not a {@code DelegatingStatement}, returns it, otherwise recursively
+     * invokes this method on my delegate.
+     * <p>
+     * Hence this method will return the first delegate that is not a {@code DelegatingStatement} or {@code null} when
+     * no non-{@code DelegatingStatement} delegate can be found by traversing this chain.
+     * </p>
+     * <p>
+     * This method is useful when you may have nested {@code DelegatingStatement}s, and you want to make sure to obtain
+     * a "genuine" {@link Statement}.
+     * </p>
+     *
+     * @return The innermost delegate.
+     *
+     * @see #getDelegate
+     */
+    @SuppressWarnings("resource")
+    public Statement getInnermostDelegate() {
+        Statement s = statement;
+        while (s != null && s instanceof DelegatingStatement) {
+            s = ((DelegatingStatement) s).getDelegate();
+            if (this == s) {
+                return null;
+            }
+        }
+        return s;
+    }
+
+    @Override
+    public int getMaxFieldSize() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getMaxFieldSize();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getMaxRows() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getMaxRows();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean getMoreResults() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getMoreResults();
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean getMoreResults(final int current) throws SQLException {
+        checkOpen();
+        try {
+            return statement.getMoreResults(current);
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public int getQueryTimeout() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getQueryTimeout();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public ResultSet getResultSet() throws SQLException {
+        checkOpen();
+        try {
+            return DelegatingResultSet.wrapResultSet(this, statement.getResultSet());
+        } catch (final SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public int getResultSetConcurrency() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getResultSetConcurrency();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getResultSetHoldability() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getResultSetHoldability();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getResultSetType() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getResultSetType();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getUpdateCount() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getUpdateCount();
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
+        }
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        checkOpen();
+        try {
+            return statement.getWarnings();
+        } catch (final SQLException e) {
+            handleException(e);
+            throw new AssertionError();
+        }
+    }
+
+    protected void handleException(final SQLException e) throws SQLException {
+        if (connection != null) {
+            connection.handleException(e);
+        } else {
+            throw e;
+        }
+    }
+
+    /*
+     * Note was protected prior to JDBC 4
+     */
+    @Override
+    public boolean isClosed() throws SQLException {
+        return closed;
+    }
+
+    protected boolean isClosedInternal() {
+        return closed;
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        checkOpen();
+        try {
+            return statement.isCloseOnCompletion();
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPoolable() throws SQLException {
+        checkOpen();
+        try {
+            return statement.isPoolable();
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        } else if (iface.isAssignableFrom(statement.getClass())) {
+            return true;
+        } else {
+            return statement.isWrapperFor(iface);
+        }
+    }
+
+    /**
+     *
+     * @throws SQLException
+     *             thrown by the delegating statement.
+     * @since 2.4.0 made public, was protected in 2.3.0.
+     */
+    public void passivate() throws SQLException {
+        if (statement instanceof DelegatingStatement) {
+            ((DelegatingStatement) statement).passivate();
+        }
+    }
+
+    protected void setClosedInternal(final boolean closed) {
+        this.closed = closed;
+    }
+
+    @Override
+    public void setCursorName(final String name) throws SQLException {
+        checkOpen();
+        try {
+            statement.setCursorName(name);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * Sets my delegate.
+     *
+     * @param statement
+     *            my delegate.
+     */
+    public void setDelegate(final Statement statement) {
+        this.statement = statement;
+    }
+
+    @Override
+    public void setEscapeProcessing(final boolean enable) throws SQLException {
+        checkOpen();
+        try {
+            statement.setEscapeProcessing(enable);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setFetchDirection(final int direction) throws SQLException {
+        checkOpen();
+        try {
+            statement.setFetchDirection(direction);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setFetchSize(final int rows) throws SQLException {
+        checkOpen();
+        try {
+            statement.setFetchSize(rows);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setMaxFieldSize(final int max) throws SQLException {
+        checkOpen();
+        try {
+            statement.setMaxFieldSize(max);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setMaxRows(final int max) throws SQLException {
+        checkOpen();
+        try {
+            statement.setMaxRows(max);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setPoolable(final boolean poolable) throws SQLException {
+        checkOpen();
+        try {
+            statement.setPoolable(poolable);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setQueryTimeout(final int seconds) throws SQLException {
+        checkOpen();
+        try {
+            statement.setQueryTimeout(seconds);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * Returns a String representation of this object.
+     *
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return statement == null ? "NULL" : statement.toString();
+    }
+
+    @Override
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        } else if (iface.isAssignableFrom(statement.getClass())) {
+            return iface.cast(statement);
+        } else {
+            return statement.unwrap(iface);
+        }
     }
 }
