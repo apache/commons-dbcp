@@ -83,6 +83,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      *
      * @see #getDelegate
      */
+    @SuppressWarnings("resource")
     public Statement getInnermostDelegate() {
         Statement s = statement;
         while (s != null && s instanceof DelegatingStatement) {
