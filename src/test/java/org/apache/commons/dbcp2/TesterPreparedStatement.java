@@ -27,6 +27,7 @@ import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.util.Calendar;
 import java.io.InputStream;
 import java.io.Reader;
@@ -459,6 +460,16 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
 
     @Override
     public void setObject(final int parameterIndex, final Object x, final int targetSqlType, final int scale) throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         checkOpen();
     }
 
