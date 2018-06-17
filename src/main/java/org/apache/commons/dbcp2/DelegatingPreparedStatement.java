@@ -98,6 +98,9 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
+    /**
+     * @since 2.5.0
+     */
     @Override
     public long executeLargeUpdate() throws SQLException {
         checkOpen();
@@ -540,6 +543,9 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
+    /**
+     * @since 2.5.0
+     */
     @Override
     public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
         checkOpen();
@@ -550,6 +556,9 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
+    /**
+     * @since 2.5.0
+     */
     @Override
     public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         checkOpen();
