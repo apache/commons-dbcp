@@ -25,6 +25,7 @@ import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.Calendar;
@@ -1070,8 +1071,17 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     }
 
     @Override
-    public void updateObject(final int columnIndex, final Object x, final int scale)
-      throws SQLException {
+    public void updateObject(final int columnIndex, final Object x, final int scale) throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         checkOpen();
     }
 
@@ -1081,20 +1091,28 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     }
 
     @Override
-    public void updateObject(final String columnName, final Object x, final int scale)
-      throws SQLException {
+    public void updateObject(final String columnName, final Object x, final int scale) throws SQLException {
         checkOpen();
     }
 
     @Override
-    public void updateRef(final int columnIndex, final java.sql.Ref x)
-        throws SQLException {
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+            throws SQLException {
+        checkOpen();
+    }
+
+    @Override
+    public void updateRef(final int columnIndex, final java.sql.Ref x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public void updateRef(final String columnName, final java.sql.Ref x)
-        throws SQLException {
+    public void updateRef(final String columnName, final java.sql.Ref x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
