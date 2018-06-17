@@ -30,6 +30,7 @@ import java.sql.NClob;
 import java.sql.Ref;
 import java.sql.RowId;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -772,6 +773,47 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
         }
     }
 
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType) throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterIndex, sqlType);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType, final int scale)
+            throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterIndex, sqlType, scale);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType, final String typeName)
+            throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterIndex, sqlType, typeName);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
     @Override
     public void registerOutParameter(final String parameterName, final int sqlType) throws SQLException {
         checkOpen();
@@ -795,6 +837,47 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
 
     @Override
     public void registerOutParameter(final String parameterName, final int sqlType, final String typeName)
+            throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterName, sqlType, typeName);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final String parameterName, final SQLType sqlType) throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterName, sqlType);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final String parameterName, final SQLType sqlType, final int scale)
+            throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().registerOutParameter(parameterName, sqlType, scale);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void registerOutParameter(final String parameterName, final SQLType sqlType, final String typeName)
             throws SQLException {
         checkOpen();
         try {
@@ -1162,6 +1245,33 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
         checkOpen();
         try {
             getDelegateCallableStatement().setObject(parameterName, x, targetSqlType, scale);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType) throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().setObject(parameterName, x, targetSqlType);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * @since 2.5.0
+     */
+    @Override
+    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType,
+            final int scaleOrLength) throws SQLException {
+        checkOpen();
+        try {
+            getDelegateCallableStatement().setObject(parameterName, x, targetSqlType, scaleOrLength);
         } catch (final SQLException e) {
             handleException(e);
         }

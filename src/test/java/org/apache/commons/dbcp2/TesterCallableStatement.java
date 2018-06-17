@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Ref;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -381,6 +382,21 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
+    public void registerOutParameter(int parameterIndex, SQLType sqlType) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
+    public void registerOutParameter(int parameterIndex, SQLType sqlType, int scale) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
+    public void registerOutParameter(int parameterIndex, SQLType sqlType, String typeName) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
     public void registerOutParameter(final String parameterName, final int sqlType) throws SQLException {
     }
 
@@ -390,6 +406,21 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
 
     @Override
     public void registerOutParameter(final String parameterName, final int sqlType, final String typeName) throws SQLException {
+    }
+
+    @Override
+    public void registerOutParameter(String parameterName, SQLType sqlType) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
+    public void registerOutParameter(String parameterName, SQLType sqlType, int scale) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
+    public void registerOutParameter(String parameterName, SQLType sqlType, String typeName) throws SQLException {
+        // Do nothing
     }
 
     @Override
@@ -534,6 +565,17 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
 
     @Override
     public void setObject(final String parameterName, final Object x, final int targetSqlType, final int scale) throws SQLException {
+    }
+
+    @Override
+    public void setObject(String parameterName, Object x, SQLType targetSqlType) throws SQLException {
+        // Do nothing
+    }
+
+    @Override
+    public void setObject(String parameterName, Object x, SQLType targetSqlType, int scaleOrLength)
+            throws SQLException {
+        // Do nothing
     }
 
     @Override
