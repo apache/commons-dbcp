@@ -207,6 +207,31 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
+     * DBCP-343 - verify that using a DelegatingStatement updates
+     * the lastUsed on the parent connection
+     */
+    @Test
+    public void testLastUsedLargePreparedStatementUse() throws Exception {
+        ds.setRemoveAbandonedTimeout(1);
+        ds.setMaxTotal(2);
+        try (Connection conn1 = ds.getConnection();
+                Statement st = conn1.createStatement()) {
+            final String querySQL = "SELECT 1 FROM DUAL";
+            Thread.sleep(500);
+            Assert.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
+            Thread.sleep(800);
+            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+            Assert.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
+            conn2.close();
+            Thread.sleep(500);
+            st.executeLargeUpdate(""); // Should also reset
+            Thread.sleep(800);
+            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
+            try (Statement s = conn1.createStatement()) {}  // Connection should still be good
+        }
+    }
+
+    /**
      * DBCP-343 - verify additional operations reset lastUsed on
      * the parent connection
      */
@@ -287,15 +312,23 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertAndReset(conn);
         st.executeBatch();
         assertAndReset(conn);
+        st.executeLargeBatch();
+        assertAndReset(conn);
         Assert.assertNotNull(st.executeQuery(""));
         assertAndReset(conn);
         st.executeUpdate("");
         assertAndReset(conn);
         st.executeUpdate("", new int[] {});
         assertAndReset(conn);
+        st.executeLargeUpdate("", new int[] {});
+        assertAndReset(conn);
         st.executeUpdate("", 0);
         assertAndReset(conn);
+        st.executeLargeUpdate("", 0);
+        assertAndReset(conn);
         st.executeUpdate("", new String[] {});
+        assertAndReset(conn);
+        st.executeLargeUpdate("", new String[] {});
         assertAndReset(conn);
     }
 
