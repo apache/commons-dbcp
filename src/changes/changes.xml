@@ -64,6 +64,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-505" due-to="Gary Gregory">
         Update Java requirement from version 7 to 8.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-506" due-to="Gary Gregory">
+        Support JDBC 4.2.
+      </action>
     </release>
     <release version="2.4.0" date="2018-06-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="fix" issue="DBCP-484" due-to="Emanuel Freitas">
