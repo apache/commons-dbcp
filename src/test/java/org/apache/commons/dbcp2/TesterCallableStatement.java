@@ -60,56 +60,18 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void registerOutParameter(final int parameterIndex, final int sqlType) throws SQLException {
-    }
-
-    @Override
-    public void registerOutParameter(final int parameterIndex, final int sqlType, final int scale) throws SQLException {
-    }
-
-    @Override
-    public boolean wasNull() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public String getString(final int parameterIndex) throws SQLException {
+    public Array getArray(final int i) throws SQLException {
         return null;
     }
 
     @Override
-    public boolean getBoolean(final int parameterIndex) throws SQLException {
-        return false;
+    public Array getArray(final String parameterName) throws SQLException {
+        return null;
     }
 
     @Override
-    public byte getByte(final int parameterIndex) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public short getShort(final int parameterIndex) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public int getInt(final int parameterIndex) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public long getLong(final int parameterIndex) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public float getFloat(final int parameterIndex) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public double getDouble(final int parameterIndex) throws SQLException {
-        return 0;
+    public BigDecimal getBigDecimal(final int parameterIndex) throws SQLException {
+        return null;
     }
 
     /**
@@ -122,42 +84,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public byte[] getBytes(final int parameterIndex) throws SQLException {
-        return new byte[0];
-    }
-
-    @Override
-    public Date getDate(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Time getTime(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Timestamp getTimestamp(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Object getObject(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Object getObject(final int i, final Map<String, Class<?>> map) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Ref getRef(final int i) throws SQLException {
+    public BigDecimal getBigDecimal(final String parameterName) throws SQLException {
         return null;
     }
 
@@ -167,12 +94,62 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
+    public Blob getBlob(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public boolean getBoolean(final int parameterIndex) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean getBoolean(final String parameterName) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public byte getByte(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public byte getByte(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public byte[] getBytes(final int parameterIndex) throws SQLException {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] getBytes(final String parameterName) throws SQLException {
+        return new byte[0];
+    }
+
+    @Override
+    public Reader getCharacterStream(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Reader getCharacterStream(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
     public Clob getClob(final int i) throws SQLException {
         return null;
     }
 
     @Override
-    public Array getArray(final int i) throws SQLException {
+    public Clob getClob(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Date getDate(final int parameterIndex) throws SQLException {
         return null;
     }
 
@@ -182,13 +159,221 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
+    public Date getDate(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Date getDate(final String parameterName, final Calendar cal) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public double getDouble(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public double getDouble(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public float getFloat(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public float getFloat(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public int getInt(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public int getInt(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public long getLong(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public long getLong(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public Reader getNCharacterStream(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Reader getNCharacterStream(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public NClob getNClob(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public NClob getNClob(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getNString(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getNString(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Object getObject(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public <T> T getObject(final int parameterIndex, final Class<T> type) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Object getObject(final int i, final Map<String, Class<?>> map) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Object getObject(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public <T> T getObject(final String parameterName, final Class<T> type) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Object getObject(final String parameterName, final Map<String,Class<?>> map) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Ref getRef(final int i) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Ref getRef(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public RowId getRowId(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public RowId getRowId(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public short getShort(final int parameterIndex) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public short getShort(final String parameterName) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public SQLXML getSQLXML(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public SQLXML getSQLXML(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getString(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getString(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Time getTime(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
     public Time getTime(final int parameterIndex, final Calendar cal) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Time getTime(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Time getTime(final String parameterName, final Calendar cal) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Timestamp getTimestamp(final int parameterIndex) throws SQLException {
         return null;
     }
 
     @Override
     public Timestamp getTimestamp(final int parameterIndex, final Calendar cal) throws SQLException {
         return null;
+    }
+
+    @Override
+    public Timestamp getTimestamp(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Timestamp getTimestamp(final String parameterName, final Calendar cal) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public URL getURL(final int parameterIndex) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public URL getURL(final String parameterName) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void registerOutParameter(final int parameterIndex, final int sqlType) throws SQLException {
+    }
+
+    @Override
+    public void registerOutParameter(final int parameterIndex, final int sqlType, final int scale) throws SQLException {
     }
 
     @Override
@@ -208,16 +393,43 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public URL getURL(final int parameterIndex) throws SQLException {
-        return null;
+    public void setAsciiStream(final String parameterName, final InputStream inputStream) throws SQLException {
     }
 
     @Override
-    public void setURL(final String parameterName, final URL val) throws SQLException {
+    public void setAsciiStream(final String parameterName, final InputStream x, final int length) throws SQLException {
     }
 
     @Override
-    public void setNull(final String parameterName, final int sqlType) throws SQLException {
+    public void setAsciiStream(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
+    }
+
+    @Override
+    public void setBigDecimal(final String parameterName, final BigDecimal x) throws SQLException {
+    }
+
+    @Override
+    public void setBinaryStream(final String parameterName, final InputStream inputStream) throws SQLException {
+    }
+
+    @Override
+    public void setBinaryStream(final String parameterName, final InputStream x, final int length) throws SQLException {
+    }
+
+    @Override
+    public void setBinaryStream(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
+    }
+
+    @Override
+    public void setBlob(final String parameterName, final Blob blob) throws SQLException {
+    }
+
+    @Override
+    public void setBlob(final String parameterName, final InputStream inputStream) throws SQLException {
+    }
+
+    @Override
+    public void setBlob(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
     }
 
     @Override
@@ -229,7 +441,47 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setShort(final String parameterName, final short x) throws SQLException {
+    public void setBytes(final String parameterName, final byte x[]) throws SQLException {
+    }
+
+    @Override
+    public void setCharacterStream(final String parameterName, final Reader reader) throws SQLException {
+    }
+
+    @Override
+    public void setCharacterStream(final String parameterName, final Reader reader, final int length) throws SQLException {
+    }
+
+    @Override
+    public void setCharacterStream(final String parameterName, final Reader reader, final long length) throws SQLException {
+    }
+
+    @Override
+    public void setClob(final String parameterName, final Clob clob) throws SQLException {
+    }
+
+    @Override
+    public void setClob(final String parameterName, final Reader reader) throws SQLException {
+    }
+
+    @Override
+    public void setClob(final String parameterName, final Reader reader, final long length) throws SQLException {
+    }
+
+    @Override
+    public void setDate(final String parameterName, final Date x) throws SQLException {
+    }
+
+    @Override
+    public void setDate(final String parameterName, final Date x, final Calendar cal) throws SQLException {
+    }
+
+    @Override
+    public void setDouble(final String parameterName, final double x) throws SQLException {
+    }
+
+    @Override
+    public void setFloat(final String parameterName, final float x) throws SQLException {
     }
 
     @Override
@@ -241,208 +493,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setFloat(final String parameterName, final float x) throws SQLException {
-    }
-
-    @Override
-    public void setDouble(final String parameterName, final double x) throws SQLException {
-    }
-
-    @Override
-    public void setBigDecimal(final String parameterName, final BigDecimal x) throws SQLException {
-    }
-
-    @Override
-    public void setString(final String parameterName, final String x) throws SQLException {
-    }
-
-    @Override
-    public void setBytes(final String parameterName, final byte x[]) throws SQLException {
-    }
-
-    @Override
-    public void setDate(final String parameterName, final Date x) throws SQLException {
-    }
-
-    @Override
-    public void setTime(final String parameterName, final Time x) throws SQLException {
-    }
-
-    @Override
-    public void setTimestamp(final String parameterName, final Timestamp x) throws SQLException {
-    }
-
-    @Override
-    public void setAsciiStream(final String parameterName, final InputStream x, final int length) throws SQLException {
-    }
-
-    @Override
-    public void setBinaryStream(final String parameterName, final InputStream x, final int length) throws SQLException {
-    }
-
-    @Override
-    public void setObject(final String parameterName, final Object x, final int targetSqlType, final int scale) throws SQLException {
-    }
-
-    @Override
-    public void setObject(final String parameterName, final Object x, final int targetSqlType) throws SQLException {
-    }
-
-    @Override
-    public void setObject(final String parameterName, final Object x) throws SQLException {
-    }
-
-    @Override
-    public void setCharacterStream(final String parameterName, final Reader reader, final int length) throws SQLException {
-    }
-
-    @Override
-    public void setDate(final String parameterName, final Date x, final Calendar cal) throws SQLException {
-    }
-
-    @Override
-    public void setTime(final String parameterName, final Time x, final Calendar cal) throws SQLException {
-    }
-
-    @Override
-    public void setTimestamp(final String parameterName, final Timestamp x, final Calendar cal) throws SQLException {
-    }
-
-    @Override
-    public void setNull(final String parameterName, final int sqlType, final String typeName) throws SQLException {
-    }
-
-    @Override
-    public String getString(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public boolean getBoolean(final String parameterName) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public byte getByte(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public short getShort(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public int getInt(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public long getLong(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public float getFloat(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public double getDouble(final String parameterName) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public byte[] getBytes(final String parameterName) throws SQLException {
-        return new byte[0];
-    }
-
-    @Override
-    public Date getDate(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Time getTime(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Timestamp getTimestamp(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Object getObject(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Object getObject(final String parameterName, final Map<String,Class<?>> map) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Ref getRef(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Blob getBlob(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Clob getClob(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Array getArray(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Date getDate(final String parameterName, final Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Time getTime(final String parameterName, final Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Timestamp getTimestamp(final String parameterName, final Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public URL getURL(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public RowId getRowId(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public RowId getRowId(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void setRowId(final String parameterName, final RowId value) throws SQLException {
-    }
-
-    @Override
-    public void setNString(final String parameterName, final String value) throws SQLException {
+    public void setNCharacterStream(final String parameterName, final Reader reader) throws SQLException {
     }
 
     @Override
@@ -454,11 +505,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setClob(final String parameterName, final Reader reader, final long length) throws SQLException {
-    }
-
-    @Override
-    public void setBlob(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
+    public void setNClob(final String parameterName, final Reader reader) throws SQLException {
     }
 
     @Override
@@ -466,13 +513,35 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public NClob getNClob(final int parameterIndex) throws SQLException {
-        return null;
+    public void setNString(final String parameterName, final String value) throws SQLException {
     }
 
     @Override
-    public NClob getNClob(final String parameterName) throws SQLException {
-        return null;
+    public void setNull(final String parameterName, final int sqlType) throws SQLException {
+    }
+
+    @Override
+    public void setNull(final String parameterName, final int sqlType, final String typeName) throws SQLException {
+    }
+
+    @Override
+    public void setObject(final String parameterName, final Object x) throws SQLException {
+    }
+
+    @Override
+    public void setObject(final String parameterName, final Object x, final int targetSqlType) throws SQLException {
+    }
+
+    @Override
+    public void setObject(final String parameterName, final Object x, final int targetSqlType, final int scale) throws SQLException {
+    }
+
+    @Override
+    public void setRowId(final String parameterName, final RowId value) throws SQLException {
+    }
+
+    @Override
+    public void setShort(final String parameterName, final short x) throws SQLException {
     }
 
     @Override
@@ -480,100 +549,31 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public SQLXML getSQLXML(final int parameterIndex) throws SQLException {
-        return null;
+    public void setString(final String parameterName, final String x) throws SQLException {
     }
 
     @Override
-    public SQLXML getSQLXML(final String parameterName) throws SQLException {
-        return null;
+    public void setTime(final String parameterName, final Time x) throws SQLException {
     }
 
     @Override
-    public String getNString(final int parameterIndex) throws SQLException {
-        return null;
+    public void setTime(final String parameterName, final Time x, final Calendar cal) throws SQLException {
     }
 
     @Override
-    public String getNString(final String parameterName) throws SQLException {
-        return null;
+    public void setTimestamp(final String parameterName, final Timestamp x) throws SQLException {
     }
 
     @Override
-    public Reader getNCharacterStream(final int parameterIndex) throws SQLException {
-        return null;
+    public void setTimestamp(final String parameterName, final Timestamp x, final Calendar cal) throws SQLException {
     }
 
     @Override
-    public Reader getNCharacterStream(final String parameterName) throws SQLException {
-        return null;
+    public void setURL(final String parameterName, final URL val) throws SQLException {
     }
 
     @Override
-    public Reader getCharacterStream(final int parameterIndex) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Reader getCharacterStream(final String parameterName) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void setBlob(final String parameterName, final Blob blob) throws SQLException {
-    }
-
-    @Override
-    public void setClob(final String parameterName, final Clob clob) throws SQLException {
-    }
-
-    @Override
-    public void setAsciiStream(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
-    }
-
-    @Override
-    public void setBinaryStream(final String parameterName, final InputStream inputStream, final long length) throws SQLException {
-    }
-
-    @Override
-    public void setCharacterStream(final String parameterName, final Reader reader, final long length) throws SQLException {
-    }
-
-    @Override
-    public void setAsciiStream(final String parameterName, final InputStream inputStream) throws SQLException {
-    }
-
-    @Override
-    public void setBinaryStream(final String parameterName, final InputStream inputStream) throws SQLException {
-    }
-
-    @Override
-    public void setCharacterStream(final String parameterName, final Reader reader) throws SQLException {
-    }
-
-    @Override
-    public void setNCharacterStream(final String parameterName, final Reader reader) throws SQLException {
-    }
-
-    @Override
-    public void setClob(final String parameterName, final Reader reader) throws SQLException {
-    }
-
-    @Override
-    public void setBlob(final String parameterName, final InputStream inputStream) throws SQLException {
-    }
-
-    @Override
-    public void setNClob(final String parameterName, final Reader reader) throws SQLException {
-    }
-
-    @Override
-    public <T> T getObject(final int parameterIndex, final Class<T> type) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public <T> T getObject(final String parameterName, final Class<T> type) throws SQLException {
-        return null;
+    public boolean wasNull() throws SQLException {
+        return false;
     }
 }
