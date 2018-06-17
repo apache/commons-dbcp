@@ -55,20 +55,20 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
      * Creates a wrapper for the Statement which traces this Statement to the Connection which created it and the code
      * which created it.
      *
-     * @param c
+     * @param connection
      *            the {@link DelegatingConnection} that created this statement
-     * @param s
+     * @param statement
      *            the {@link CallableStatement} to delegate all calls to
      */
-    public DelegatingCallableStatement(final DelegatingConnection<?> c, final CallableStatement s) {
-        super(c, s);
+    public DelegatingCallableStatement(final DelegatingConnection<?> connection, final CallableStatement statement) {
+        super(connection, statement);
     }
 
     @Override
-    public Array getArray(final int i) throws SQLException {
+    public Array getArray(final int parameterIndex) throws SQLException {
         checkOpen();
         try {
-            return getDelegateCallableStatement().getArray(i);
+            return getDelegateCallableStatement().getArray(parameterIndex);
         } catch (final SQLException e) {
             handleException(e);
             return null;
@@ -122,10 +122,10 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     @Override
-    public Blob getBlob(final int i) throws SQLException {
+    public Blob getBlob(final int parameterIndex) throws SQLException {
         checkOpen();
         try {
-            return getDelegateCallableStatement().getBlob(i);
+            return getDelegateCallableStatement().getBlob(parameterIndex);
         } catch (final SQLException e) {
             handleException(e);
             return null;
@@ -232,10 +232,10 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     @Override
-    public Clob getClob(final int i) throws SQLException {
+    public Clob getClob(final int parameterIndex) throws SQLException {
         checkOpen();
         try {
-            return getDelegateCallableStatement().getClob(i);
+            return getDelegateCallableStatement().getClob(parameterIndex);
         } catch (final SQLException e) {
             handleException(e);
             return null;
@@ -522,10 +522,10 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     @Override
-    public Ref getRef(final int i) throws SQLException {
+    public Ref getRef(final int parameterIndex) throws SQLException {
         checkOpen();
         try {
-            return getDelegateCallableStatement().getRef(i);
+            return getDelegateCallableStatement().getRef(parameterIndex);
         } catch (final SQLException e) {
             handleException(e);
             return null;
