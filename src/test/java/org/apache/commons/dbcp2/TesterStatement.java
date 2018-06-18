@@ -347,7 +347,7 @@ public class TesterStatement implements Statement {
         checkOpen();
         _escapeProcessing = enable;
     }
-    
+
     @Override
     public void setFetchDirection(final int direction) throws SQLException {
         checkOpen();
