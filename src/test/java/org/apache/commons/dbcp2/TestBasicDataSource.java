@@ -463,7 +463,9 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.clear();
             ds.close();
             // Exception must have been swallowed by the pool - verify it is logged
-            assertTrue(StackMessageLog.popMessage().indexOf("bang") > 0);
+            final String message = StackMessageLog.popMessage();
+            Assert.assertNotNull(message);
+            assertTrue(message.indexOf("bang") > 0);
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().indexOf("Cannot close") > 0);
             assertTrue(ex.getCause().getMessage().indexOf("bang") > 0);
@@ -484,7 +486,9 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.lock();
             StackMessageLog.clear();
             ds.close();
-            assertTrue(StackMessageLog.popMessage().indexOf("boom") > 0);
+            final String message = StackMessageLog.popMessage();
+            Assert.assertNotNull(message);
+            assertTrue(message.indexOf("boom") > 0);
         } catch (final IllegalStateException ex) {
             assertTrue(ex.getMessage().indexOf("boom") > 0); // RTE is not wrapped by BDS#close
         } finally {
@@ -666,6 +670,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             conn.close();
             assertEquals(0, ds.getNumIdle());
             final String message = StackMessageLog.popMessage();
+            Assert.assertNotNull(message);
             assertTrue(message.indexOf("exceeds the maximum permitted value") > 0);
         } finally {
             StackMessageLog.clear();

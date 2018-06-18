@@ -207,6 +207,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultAutoCommit(getDefaultAutoCommit());
             connectionFactory.setDefaultTransactionIsolation(getDefaultTransactionIsolation());
             connectionFactory.setDefaultCatalog(getDefaultCatalog());
+            connectionFactory.setDefaultSchema(getDefaultSchema());
             connectionFactory.setCacheState(getCacheState());
             connectionFactory.setPoolStatements(isPoolPreparedStatements());
             connectionFactory.setMaxOpenPreparedStatements(getMaxOpenPreparedStatements());

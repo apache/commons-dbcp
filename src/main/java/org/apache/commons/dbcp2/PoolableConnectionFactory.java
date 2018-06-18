@@ -157,6 +157,17 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.defaultCatalog = defaultCatalog;
     }
 
+    /**
+     * Sets the default "schema" setting for borrowed {@link Connection}s
+     *
+     * @param defaultSchema
+     *            the default "schema" setting for borrowed {@link Connection}s
+     * @since 2.5.0
+     */
+    public void setDefaultSchema(final String defaultSchema) {
+        this.defaultSchema = defaultSchema;
+    }
+
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
     }
@@ -427,6 +438,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (defaultCatalog != null && !defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(defaultCatalog);
         }
+        if (defaultSchema != null && !defaultSchema.equals(conn.getSchema())) {
+            conn.setSchema(defaultSchema);
+        }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }
 
@@ -478,6 +492,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private boolean rollbackOnReturn = true;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
     private String defaultCatalog;
+    private String defaultSchema;
     private boolean cacheState;
     private boolean poolStatements;
     private int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;

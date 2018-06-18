@@ -44,6 +44,7 @@ public class TesterConnection implements Connection {
     protected int _transactionIsolation = 1;
     protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
     protected String _catalog = null;
+    protected String schema;
     protected Map<String,Class<?>> _typeMap = null;
     protected boolean _readOnly = false;
     protected SQLWarning warnings = null;
@@ -384,12 +385,14 @@ public class TesterConnection implements Connection {
 
     @Override
     public void setSchema(final String schema) throws SQLException {
-        throw new SQLException("Not implemented.");
+        checkOpen();
+        this.schema= schema;
     }
 
     @Override
     public String getSchema() throws SQLException {
-        throw new SQLException("Not implemented.");
+        checkOpen();
+        return schema;
     }
 
     @Override

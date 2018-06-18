@@ -59,15 +59,14 @@ public class TestBasicDataSourceFactory {
         try {
             StackMessageLog.lock();
             StackMessageLog.clear();
-            final Reference ref = new Reference("javax.sql.DataSource",
-                                          BasicDataSourceFactory.class.getName(), null);
-            ref.add(new StringRefAddr("foo", "bar"));     // Unknown
+            final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+            ref.add(new StringRefAddr("foo", "bar")); // Unknown
             ref.add(new StringRefAddr("maxWait", "100")); // Changed
-            ref.add(new StringRefAddr("driverClassName", "org.apache.commons.dbcp2.TesterDriver")); //OK
+            ref.add(new StringRefAddr("driverClassName", "org.apache.commons.dbcp2.TesterDriver")); // OK
             final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
             basicDataSourceFactory.getObjectInstance(ref, null, null, null);
             final List<String> messages = StackMessageLog.getAll();
-            assertEquals(2,messages.size());
+            assertEquals(messages.toString(), 2, messages.size());
             for (final String message : messages) {
                 if (message.contains("maxWait")) {
                     assertTrue(message.contains("use maxWaitMillis"));
@@ -118,6 +117,7 @@ public class TestBasicDataSourceFactory {
         properties.setProperty("defaultReadOnly", "false");
         properties.setProperty("defaultTransactionIsolation", "READ_COMMITTED");
         properties.setProperty("defaultCatalog", "test");
+        properties.setProperty("defaultSchema", "testSchema");
         properties.setProperty("testOnBorrow", "true");
         properties.setProperty("testOnReturn", "false");
         properties.setProperty("username", "userName");
@@ -158,6 +158,7 @@ public class TestBasicDataSourceFactory {
         assertEquals(Boolean.FALSE, ds.getDefaultReadOnly());
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, ds.getDefaultTransactionIsolation());
         assertEquals("test", ds.getDefaultCatalog());
+        assertEquals("testSchema", ds.getDefaultSchema());
         assertTrue(ds.getTestOnBorrow());
         assertFalse(ds.getTestOnReturn());
         assertEquals("userName", ds.getUsername());
