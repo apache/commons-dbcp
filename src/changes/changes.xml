@@ -64,11 +64,17 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-505" due-to="Gary Gregory">
         Update Java requirement from version 7 to 8.
       </action>
-      <action dev="ggregory" type="update" issue="DBCP-506" due-to="Gary Gregory">
+      <action dev="ggregory" type="add" issue="DBCP-506" due-to="Gary Gregory">
         Support JDBC 4.2.
       </action>
-      <action dev="ggregory" type="update" issue="DBCP-479" due-to="Guillaume Husta, Gary Gregory">
+      <action dev="ggregory" type="add" issue="DBCP-479" due-to="Guillaume Husta, Gary Gregory">
         Support default schema in configuration.
+      </action>
+       <action dev="ggregory" type="update" issue="DBCP-427" due-to="Vladimir Konkov, Phil Steitz, Gary Gregory">
+        Examines 'SQLException's thrown by underlying connections or statements for fatal (disconnection) errors.
+      </action>
+       <action dev="ggregory" type="update" issue="DBCP-507" due-to="Vladimir Konkov, Phil Steitz, Gary Gregory">
+        Change default for fail-fast connections from false to true.
       </action>
     </release>
     <release version="2.4.0" date="2018-06-12" description="This is a minor release, including bug fixes and enhancements.">

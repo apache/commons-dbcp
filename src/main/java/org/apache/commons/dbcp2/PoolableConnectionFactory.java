@@ -270,6 +270,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @return true if connections created by this factory will fast fail validation.
      * @see #setDisconnectionSqlCodes(Collection)
      * @since 2.1
+     * @since 2.5.0 Defaults to true, previous versions defaulted to false.
      */
     public boolean isFastFailValidation() {
         return fastFailValidation;
@@ -484,7 +485,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private volatile int validationQueryTimeoutSeconds = -1;
     private Collection<String> connectionInitSqls;
     private Collection<String> disconnectionSqlCodes;
-    private boolean fastFailValidation;
+    private boolean fastFailValidation = true;
     private volatile ObjectPool<PoolableConnection> pool;
     private Boolean defaultReadOnly;
     private Boolean defaultAutoCommit;
