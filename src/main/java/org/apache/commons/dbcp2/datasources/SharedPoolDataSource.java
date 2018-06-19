@@ -173,7 +173,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
                 isRollbackAfterValidation());
         factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
 
-        final GenericKeyedObjectPoolConfig<PooledConnectionAndInfo> config = new GenericKeyedObjectPoolConfig<>();
+        final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
         config.setBlockWhenExhausted(getDefaultBlockWhenExhausted());
         config.setEvictionPolicyClassName(getDefaultEvictionPolicyClassName());
         config.setLifo(getDefaultLifo());
