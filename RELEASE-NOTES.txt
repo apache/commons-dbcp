@@ -2,11 +2,11 @@
                  Version 2.4.0
                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.4.0-SNAPSHOT.
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.4.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
-This is a minor release, including bug fixes and enhancements.
+This is a minor release, including bug fixes and enhancements, which you can download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 Changes in this version include:
 
