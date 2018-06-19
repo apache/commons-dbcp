@@ -2078,6 +2078,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Creates (if necessary) and return the internal data source we are using to manage our connections.
      * </p>
      *
+     * @return The current internal DataSource or a newly created instance if it has not yet been created.
      * @throws SQLException
      *             if the object pool cannot be created.
      */
@@ -2172,6 +2173,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
      * </ol>
      * This method exists so subclasses can replace the implementation class.
+     *
+     * @return A new connection factory.
+     *
+     * @throws SQLException
+     *            If the connection factort cannot be created
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
@@ -2247,6 +2253,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * property is deferred to {@link #startPoolMaintenance()}, since setting timeBetweenEvictionRunsMillis to a
      * positive value causes {@link GenericObjectPool}'s eviction timer to be started.
      * </p>
+     *
+     * @param factory
+     *            The factory to use to create new connections for this pool.
      */
     protected void createConnectionPool(final PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
@@ -2326,6 +2335,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @throws SQLException
      *             if unable to create a datasource instance
+     *
+     * @return A new DataSource instance
      */
     protected DataSource createDataSourceInstance() throws SQLException {
         final PoolingDataSource<PoolableConnection> pds = new PoolingDataSource<>(connectionPool);
@@ -2341,6 +2352,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            JDBC connection factory
      * @throws SQLException
      *             if an error occurs creating the PoolableConnectionFactory
+     *
+     * @return A new PoolableConnectionFactory configured with the current configuration of this BasicDataSource
      */
     protected PoolableConnectionFactory createPoolableConnectionFactory(final ConnectionFactory driverConnectionFactory)
             throws SQLException {
