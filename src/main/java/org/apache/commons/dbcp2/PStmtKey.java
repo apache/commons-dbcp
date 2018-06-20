@@ -126,7 +126,7 @@ public class PStmtKey {
      * Interface for Prepared or Callable Statement.
      */
     private interface StatementBuilder {
-        public Statement createStatement(Connection connection) throws SQLException;
+        Statement createStatement(Connection connection) throws SQLException;
     }
 
     /**
