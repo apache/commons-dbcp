@@ -18,6 +18,7 @@ package org.apache.commons.dbcp2;
 
 import java.util.Arrays;
 
+import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,14 +30,128 @@ import org.junit.Test;
 public class TestPStmtKey {
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, int[])}.
+     * Tests constructors with different schemas.
+     */
+    @Test
+    public void testCtorDifferentSchema() {
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog1", "schema2"));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
+                new PStmtKey("sql", "catalog1", "schema2", 0));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0, null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", (int[]) null),
+                new PStmtKey("sql", "catalog1", "schema2", (int[]) null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", new int[1]),
+                new PStmtKey("sql", "catalog1", "schema2", new int[1]));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", (String[]) null),
+                new PStmtKey("sql", "catalog1", "schema2", (String[]) null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", new String[] {"A" }),
+                new PStmtKey("sql", "catalog1", "schema2", new String[] {"A" }));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema2", StatementType.PREPARED_STATEMENT));
+        Assert.assertNotEquals(
+                new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE),
+                new PStmtKey("sql", "catalog1", "schema2", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Tests constructors with different catalog.
+     */
+    @Test
+    public void testCtorDifferentCatalog() {
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog2", "schema1"));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
+                new PStmtKey("sql", "catalog2", "schema1", 0));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0, null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", (int[]) null),
+                new PStmtKey("sql", "catalog2", "schema1", (int[]) null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", new int[1]),
+                new PStmtKey("sql", "catalog2", "schema1", new int[1]));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", (String[]) null),
+                new PStmtKey("sql", "catalog2", "schema1", (String[]) null));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", new String[] {"A" }),
+                new PStmtKey("sql", "catalog2", "schema1", new String[] {"A" }));
+        Assert.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog2", "schema1", StatementType.PREPARED_STATEMENT));
+        Assert.assertNotEquals(
+                new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE),
+                new PStmtKey("sql", "catalog2", "schema1", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Tests constructors with different catalog.
+     */
+    @Test
+    public void testCtorEquals() {
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog1", "schema1"));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
+                new PStmtKey("sql", "catalog1", "schema1", 0));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0));
+        //
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, null));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT));
+        //
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", (int[]) null),
+                new PStmtKey("sql", "catalog1", "schema1", (int[]) null));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", new int[1]),
+                new PStmtKey("sql", "catalog1", "schema1", new int[1]));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", (String[]) null),
+                new PStmtKey("sql", "catalog1", "schema1", (String[]) null));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", new String[] {"A" }),
+                new PStmtKey("sql", "catalog1", "schema1", new String[] {"A" }));
+        Assert.assertEquals(new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT));
+        Assert.assertEquals(
+                new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE),
+                new PStmtKey("sql", "catalog1", "schema1", StatementType.PREPARED_STATEMENT, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, int[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
     public void testCtorStringStringArrayOfInts() {
         final int[] input = {0, 0 };
-        final PStmtKey pStmtKey = new PStmtKey("", "", input);
+        final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assert.assertArrayEquals(input, pStmtKey.getColumnIndexes());
         input[0] = 1;
         input[1] = 1;
@@ -44,38 +159,38 @@ public class TestPStmtKey {
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, int[])}.
+     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, int[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
     public void testCtorStringStringArrayOfNullInts() {
         final int[] input = null;
-        final PStmtKey pStmtKey = new PStmtKey("", "", input);
+        final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assert.assertArrayEquals(input, pStmtKey.getColumnIndexes());
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String[])}.
+     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, String[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
     public void testCtorStringStringArrayOfNullStrings() {
         final String[] input = null;
-        final PStmtKey pStmtKey = new PStmtKey("", "", input);
+        final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assert.assertArrayEquals(input, pStmtKey.getColumnNames());
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String[])}.
+     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, String[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
     public void testCtorStringStringArrayOfStrings() {
         final String[] input = {"A", "B" };
-        final PStmtKey pStmtKey = new PStmtKey("", "", input);
+        final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assert.assertArrayEquals(input, pStmtKey.getColumnNames());
         input[0] = "C";
         input[1] = "D";

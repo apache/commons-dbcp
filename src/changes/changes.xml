@@ -76,6 +76,9 @@ The <action> type attribute can be add,update,fix,remove.
        <action dev="ggregory" type="update" issue="DBCP-507" due-to="Vladimir Konkov, Phil Steitz, Gary Gregory">
         Change default for fail-fast connections from false to true.
       </action>
+      <action dev="ggregory" type="fix" issue="DBCP-508" due-to="Gary Gregory">
+        Prepared statement keys should take a Connection's schema into account.
+      </action>
     </release>
     <release version="2.4.0" date="2018-06-12" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="fix" issue="DBCP-484" due-to="Emanuel Freitas">
