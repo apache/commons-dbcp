@@ -324,10 +324,11 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             } else {
                 config.setJmxEnabled(false);
             }
+            final PoolingConnection poolingConn = (PoolingConnection) conn;
             final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(
-                    (PoolingConnection) conn, config);
-            ((PoolingConnection) conn).setStatementPool(stmtPool);
-            ((PoolingConnection) conn).setCacheState(cacheState);
+                    poolingConn, config);
+            poolingConn.setStatementPool(stmtPool);
+            poolingConn.setCacheState(cacheState);
         }
 
         // Register this connection with JMX
