@@ -129,4 +129,46 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             assertNotNull(basicManagedDataSource.createConnectionFactory());
         }
     }
+
+    @Test(expected=NullPointerException.class)
+    public void testRuntimeExceptionsAreRethrown() throws SQLException, XAException {
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            // results in a NPE
+            basicManagedDataSource.createPoolableConnectionFactory(null);
+        }
+    }
+
+    @Test
+    public void testSetXaDataSourceInstance() throws SQLException, XAException {
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            basicManagedDataSource.setXaDataSourceInstance(new JdbcDataSource());
+            assertNotNull(basicManagedDataSource.createConnectionFactory());
+        }
+    }
+
+    @Test
+    public void testSetNullXaDataSourceInstance() throws SQLException, XAException {
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            basicManagedDataSource.setXaDataSourceInstance(null);
+            assertNull(basicManagedDataSource.getXaDataSourceInstance());
+        }
+    }
 }
