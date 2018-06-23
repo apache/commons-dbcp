@@ -256,4 +256,31 @@ public class TestManagedDataSource extends TestConnectionPool {
         c1.close();
         c2.close();
     }
+
+    @Test(expected=IllegalStateException.class)
+    public void testTransactionRegistryNotInitialized() throws Exception {
+        try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
+            ds.getConnection();
+        }
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void testSetTransactionRegistryAlreadySet() {
+        ManagedDataSource<?> managed = (ManagedDataSource<?>) ds;
+        managed.setTransactionRegistry(null);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testSetNullTransactionRegistry() throws Exception {
+        try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
+            ds.setTransactionRegistry(null);
+        }
+    }
+
+    @Test()
+    public void testSetTransactionRegistry() throws Exception {
+        try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
+            ds.setTransactionRegistry(new TransactionRegistry(transactionManager));
+        }
+    }
 }
