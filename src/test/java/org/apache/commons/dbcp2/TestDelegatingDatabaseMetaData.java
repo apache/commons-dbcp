@@ -18,11 +18,16 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,28 +37,29 @@ import org.junit.Test;
  */
 public class TestDelegatingDatabaseMetaData {
 
-    private DelegatingConnection<Connection> conn = null;
-    private Connection delegateConn = null;
-    private DelegatingDatabaseMetaData meta = null;
-    private DatabaseMetaData delegateMeta = null;
+    private TesterConnection testConn;
+    private DelegatingConnection<?> conn = null;
+    private DelegatingDatabaseMetaData delegate = null;
+    private DatabaseMetaData obj = null;
 
     @Before
     public void setUp() throws Exception {
-        delegateConn = new TesterConnection("test", "test");
-        delegateMeta = delegateConn.getMetaData();
-        conn = new DelegatingConnection<>(delegateConn);
-        meta = new DelegatingDatabaseMetaData(conn,delegateMeta);
+        obj = mock(DatabaseMetaData.class);
+        testConn = new TesterConnection("test", "test");
+        conn = new DelegatingConnection<>(testConn);
+        delegate = new DelegatingDatabaseMetaData(conn, obj);
     }
 
     @Test
     public void testGetDelegate() throws Exception {
-        assertEquals(delegateMeta,meta.getDelegate());
+        assertEquals(obj ,delegate.getDelegate());
     }
 
     @Test
     /* JDBC_4_ANT_KEY_BEGIN */
     public void testCheckOpen() throws Exception {
-        final ResultSet rst = meta.getSchemas();
+        delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
+        final ResultSet rst = delegate.getSchemas();
         assertTrue(!rst.isClosed());
         conn.close();
         assertTrue(rst.isClosed());
@@ -62,888 +68,1422 @@ public class TestDelegatingDatabaseMetaData {
 
     @Test
     public void testAllProceduresAreCallable() throws Exception {
-        assertEquals(delegateMeta.allProceduresAreCallable(), meta.allProceduresAreCallable());
+        try {
+            delegate.allProceduresAreCallable();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).allProceduresAreCallable();
     }
 
     @Test
     public void testAllTablesAreSelectable() throws Exception {
-        assertEquals(delegateMeta.allTablesAreSelectable(), meta.allTablesAreSelectable());
+        try {
+            delegate.allTablesAreSelectable();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).allTablesAreSelectable();
     }
 
     @Test
     public void testAutoCommitFailureClosesAllResultSets() throws Exception {
-        assertEquals(delegateMeta.autoCommitFailureClosesAllResultSets(), meta.autoCommitFailureClosesAllResultSets());
+        try {
+            delegate.autoCommitFailureClosesAllResultSets();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).autoCommitFailureClosesAllResultSets();
     }
 
     @Test
     public void testDataDefinitionCausesTransactionCommit() throws Exception {
-        assertEquals(delegateMeta.dataDefinitionCausesTransactionCommit(),
-                meta.dataDefinitionCausesTransactionCommit());
+        try {
+            delegate.dataDefinitionCausesTransactionCommit();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).dataDefinitionCausesTransactionCommit();
     }
 
     @Test
     public void testDataDefinitionIgnoredInTransactions() throws Exception {
-        assertEquals(delegateMeta.dataDefinitionIgnoredInTransactions(), meta.dataDefinitionIgnoredInTransactions());
+        try {
+            delegate.dataDefinitionIgnoredInTransactions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).dataDefinitionIgnoredInTransactions();
     }
 
     @Test
-    public void testDeletesAreDetected() throws Exception {
-        assertEquals(delegateMeta.deletesAreDetected(1), meta.deletesAreDetected(1));
+    public void testDeletesAreDetectedInteger() throws Exception {
+        try {
+            delegate.deletesAreDetected(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).deletesAreDetected(1);
     }
 
     @Test
     public void testDoesMaxRowSizeIncludeBlobs() throws Exception {
-        assertEquals(delegateMeta.doesMaxRowSizeIncludeBlobs(), meta.doesMaxRowSizeIncludeBlobs());
+        try {
+            delegate.doesMaxRowSizeIncludeBlobs();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).doesMaxRowSizeIncludeBlobs();
     }
 
     @Test
     public void testGeneratedKeyAlwaysReturned() throws Exception {
-        assertEquals(delegateMeta.generatedKeyAlwaysReturned(), meta.generatedKeyAlwaysReturned());
+        try {
+            delegate.generatedKeyAlwaysReturned();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).generatedKeyAlwaysReturned();
     }
 
     @Test
-    public void testGetAttributes() throws Exception {
-        assertEquals(delegateMeta.getAttributes("catalog", "schema", "type", "attribute"),
-                meta.getAttributes("catalog", "schema", "type", "attribute"));
+    public void testGetAttributesStringStringStringString() throws Exception {
+        try {
+            delegate.getAttributes("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getAttributes("foo","foo","foo","foo");
     }
 
     @Test
-    public void testGetBestRowIdentifier() throws Exception {
-        assertEquals(delegateMeta.getBestRowIdentifier("catalog", "schema", "table", 1, false),
-                meta.getBestRowIdentifier("catalog", "schema", "table", 1, false));
+    public void testGetBestRowIdentifierStringStringStringIntegerBoolean() throws Exception {
+        try {
+            delegate.getBestRowIdentifier("foo","foo","foo",1,Boolean.TRUE);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getBestRowIdentifier("foo","foo","foo",1,Boolean.TRUE);
     }
 
     @Test
     public void testGetCatalogSeparator() throws Exception {
-        assertEquals(delegateMeta.getCatalogSeparator(), meta.getCatalogSeparator());
+        try {
+            delegate.getCatalogSeparator();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getCatalogSeparator();
     }
 
     @Test
     public void testGetCatalogTerm() throws Exception {
-        assertEquals(delegateMeta.getCatalogTerm(), meta.getCatalogTerm());
+        try {
+            delegate.getCatalogTerm();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getCatalogTerm();
     }
 
     @Test
     public void testGetCatalogs() throws Exception {
-        assertEquals(delegateMeta.getCatalogs(), meta.getCatalogs());
+        try {
+            delegate.getCatalogs();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getCatalogs();
     }
 
     @Test
     public void testGetClientInfoProperties() throws Exception {
-        assertEquals(delegateMeta.getClientInfoProperties(), meta.getClientInfoProperties());
+        try {
+            delegate.getClientInfoProperties();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getClientInfoProperties();
     }
 
     @Test
-    public void testGetColumnPrivileges() throws Exception {
-        assertEquals(delegateMeta.getColumnPrivileges("catalog", "schema", "table", "column"),
-                meta.getColumnPrivileges("catalog", "schema", "table", "column"));
+    public void testGetColumnPrivilegesStringStringStringString() throws Exception {
+        try {
+            delegate.getColumnPrivileges("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getColumnPrivileges("foo","foo","foo","foo");
     }
 
     @Test
-    public void testGetColumns() throws Exception {
-        assertEquals(delegateMeta.getColumns("catalog", "schema", "table", "column"),
-                meta.getColumns("catalog", "schema", "table", "column"));
+    public void testGetColumnsStringStringStringString() throws Exception {
+        try {
+            delegate.getColumns("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getColumns("foo","foo","foo","foo");
+    }
+
+    /**
+     * This method is a bit special, and doesn't call the method on the wrapped object,
+     * instead returning the connection from the delegate object itself.
+     * @throws Exception
+     */
+    @Test
+    public void testGetConnection() throws Exception {
+        try {
+            delegate.getConnection();
+        } catch (SQLException e) {}
+        verify(obj, times(0)).getConnection();
     }
 
     @Test
-    public void testGetCrossReference() throws Exception {
-        assertEquals(delegateMeta.getCrossReference("catalog", "schema", "table", "catalog", "schema", "table"),
-                meta.getCrossReference("catalog", "schema", "table", "catalog", "schema", "table"));
+    public void testGetCrossReferenceStringStringStringStringStringString() throws Exception {
+        try {
+            delegate.getCrossReference("foo","foo","foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getCrossReference("foo","foo","foo","foo","foo","foo");
     }
 
     @Test
     public void testGetDatabaseMajorVersion() throws Exception {
-        assertEquals(delegateMeta.getDatabaseMajorVersion(), meta.getDatabaseMajorVersion());
+        try {
+            delegate.getDatabaseMajorVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDatabaseMajorVersion();
     }
 
     @Test
     public void testGetDatabaseMinorVersion() throws Exception {
-        assertEquals(delegateMeta.getDatabaseMinorVersion(), meta.getDatabaseMinorVersion());
+        try {
+            delegate.getDatabaseMinorVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDatabaseMinorVersion();
     }
 
     @Test
     public void testGetDatabaseProductName() throws Exception {
-        assertEquals(delegateMeta.getDatabaseProductName(), meta.getDatabaseProductName());
+        try {
+            delegate.getDatabaseProductName();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDatabaseProductName();
     }
 
     @Test
     public void testGetDatabaseProductVersion() throws Exception {
-        assertEquals(delegateMeta.getDatabaseProductVersion(), meta.getDatabaseProductVersion());
+        try {
+            delegate.getDatabaseProductVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDatabaseProductVersion();
     }
 
     @Test
     public void testGetDefaultTransactionIsolation() throws Exception {
-        assertEquals(delegateMeta.getDefaultTransactionIsolation(), meta.getDefaultTransactionIsolation());
+        try {
+            delegate.getDefaultTransactionIsolation();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDefaultTransactionIsolation();
     }
 
     @Test
     public void testGetDriverMajorVersion() throws Exception {
-        assertEquals(delegateMeta.getDriverMajorVersion(), meta.getDriverMajorVersion());
+        delegate.getDriverMajorVersion();
+        verify(obj, times(1)).getDriverMajorVersion();
     }
 
     @Test
     public void testGetDriverMinorVersion() throws Exception {
-        assertEquals(delegateMeta.getDriverMinorVersion(), meta.getDriverMinorVersion());
+        delegate.getDriverMinorVersion();
+        verify(obj, times(1)).getDriverMinorVersion();
     }
 
     @Test
     public void testGetDriverName() throws Exception {
-        assertEquals(delegateMeta.getDriverName(), meta.getDriverName());
+        try {
+            delegate.getDriverName();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDriverName();
     }
 
     @Test
     public void testGetDriverVersion() throws Exception {
-        assertEquals(delegateMeta.getDriverVersion(), meta.getDriverVersion());
+        try {
+            delegate.getDriverVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getDriverVersion();
     }
 
     @Test
-    public void testGetExportedKeys() throws Exception {
-        assertEquals(delegateMeta.getExportedKeys("catalog", "schema", "table"),
-                meta.getExportedKeys("catalog", "schema", "table"));
+    public void testGetExportedKeysStringStringString() throws Exception {
+        try {
+            delegate.getExportedKeys("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getExportedKeys("foo","foo","foo");
     }
 
     @Test
     public void testGetExtraNameCharacters() throws Exception {
-        assertEquals(delegateMeta.getExtraNameCharacters(), meta.getExtraNameCharacters());
+        try {
+            delegate.getExtraNameCharacters();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getExtraNameCharacters();
     }
 
     @Test
-    public void testGetFunctionColumns() throws Exception {
-        assertEquals(delegateMeta.getFunctionColumns("catalog", "schema", "function", "column"),
-                meta.getFunctionColumns("catalog", "schema", "function", "column"));
+    public void testGetFunctionColumnsStringStringStringString() throws Exception {
+        try {
+            delegate.getFunctionColumns("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getFunctionColumns("foo","foo","foo","foo");
     }
 
     @Test
-    public void testGetFunctions() throws Exception {
-        assertEquals(delegateMeta.getFunctions("catalog", "schema", "function"),
-                meta.getFunctions("catalog", "schema", "function"));
+    public void testGetFunctionsStringStringString() throws Exception {
+        try {
+            delegate.getFunctions("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getFunctions("foo","foo","foo");
     }
 
     @Test
     public void testGetIdentifierQuoteString() throws Exception {
-        assertEquals(delegateMeta.getIdentifierQuoteString(), meta.getIdentifierQuoteString());
+        try {
+            delegate.getIdentifierQuoteString();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getIdentifierQuoteString();
     }
 
     @Test
-    public void testGetImportedKeys() throws Exception {
-        assertEquals(delegateMeta.getImportedKeys("catalog", "schema", "table"),
-                meta.getImportedKeys("catalog", "schema", "table"));
+    public void testGetImportedKeysStringStringString() throws Exception {
+        try {
+            delegate.getImportedKeys("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getImportedKeys("foo","foo","foo");
     }
 
     @Test
-    public void testGetIndexInfo() throws Exception {
-        assertEquals(delegateMeta.getIndexInfo("catalog", "schema", "table", false, false),
-                meta.getIndexInfo("catalog", "schema", "table", false, false));
+    public void testGetIndexInfoStringStringStringBooleanBoolean() throws Exception {
+        try {
+            delegate.getIndexInfo("foo","foo","foo",Boolean.TRUE,Boolean.TRUE);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getIndexInfo("foo","foo","foo",Boolean.TRUE,Boolean.TRUE);
     }
 
     @Test
     public void testGetJDBCMajorVersion() throws Exception {
-        assertEquals(delegateMeta.getJDBCMajorVersion(), meta.getJDBCMajorVersion());
+        try {
+            delegate.getJDBCMajorVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getJDBCMajorVersion();
     }
 
     @Test
     public void testGetJDBCMinorVersion() throws Exception {
-        assertEquals(delegateMeta.getJDBCMinorVersion(), meta.getJDBCMinorVersion());
+        try {
+            delegate.getJDBCMinorVersion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getJDBCMinorVersion();
     }
 
     @Test
     public void testGetMaxBinaryLiteralLength() throws Exception {
-        assertEquals(delegateMeta.getMaxBinaryLiteralLength(), meta.getMaxBinaryLiteralLength());
+        try {
+            delegate.getMaxBinaryLiteralLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxBinaryLiteralLength();
     }
 
     @Test
     public void testGetMaxCatalogNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxCatalogNameLength(), meta.getMaxCatalogNameLength());
+        try {
+            delegate.getMaxCatalogNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxCatalogNameLength();
     }
 
     @Test
     public void testGetMaxCharLiteralLength() throws Exception {
-        assertEquals(delegateMeta.getMaxCharLiteralLength(), meta.getMaxCharLiteralLength());
+        try {
+            delegate.getMaxCharLiteralLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxCharLiteralLength();
     }
 
     @Test
     public void testGetMaxColumnNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnNameLength(), meta.getMaxColumnNameLength());
+        try {
+            delegate.getMaxColumnNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnNameLength();
     }
 
     @Test
     public void testGetMaxColumnsInGroupBy() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnsInGroupBy(), meta.getMaxColumnsInGroupBy());
+        try {
+            delegate.getMaxColumnsInGroupBy();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnsInGroupBy();
     }
 
     @Test
     public void testGetMaxColumnsInIndex() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnsInIndex(), meta.getMaxColumnsInIndex());
+        try {
+            delegate.getMaxColumnsInIndex();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnsInIndex();
     }
 
     @Test
     public void testGetMaxColumnsInOrderBy() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnsInOrderBy(), meta.getMaxColumnsInOrderBy());
+        try {
+            delegate.getMaxColumnsInOrderBy();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnsInOrderBy();
     }
 
     @Test
     public void testGetMaxColumnsInSelect() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnsInSelect(), meta.getMaxColumnsInSelect());
+        try {
+            delegate.getMaxColumnsInSelect();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnsInSelect();
     }
 
     @Test
     public void testGetMaxColumnsInTable() throws Exception {
-        assertEquals(delegateMeta.getMaxColumnsInTable(), meta.getMaxColumnsInTable());
+        try {
+            delegate.getMaxColumnsInTable();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxColumnsInTable();
     }
 
     @Test
     public void testGetMaxConnections() throws Exception {
-        assertEquals(delegateMeta.getMaxConnections(), meta.getMaxConnections());
+        try {
+            delegate.getMaxConnections();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxConnections();
     }
 
     @Test
     public void testGetMaxCursorNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxCursorNameLength(), meta.getMaxCursorNameLength());
+        try {
+            delegate.getMaxCursorNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxCursorNameLength();
     }
 
     @Test
     public void testGetMaxIndexLength() throws Exception {
-        assertEquals(delegateMeta.getMaxIndexLength(), meta.getMaxIndexLength());
+        try {
+            delegate.getMaxIndexLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxIndexLength();
     }
 
     @Test
     public void testGetMaxLogicalLobSize() throws Exception {
-        assertEquals(delegateMeta.getMaxLogicalLobSize(), meta.getMaxLogicalLobSize());
+        try {
+            delegate.getMaxLogicalLobSize();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxLogicalLobSize();
     }
 
     @Test
     public void testGetMaxProcedureNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxProcedureNameLength(), meta.getMaxProcedureNameLength());
+        try {
+            delegate.getMaxProcedureNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxProcedureNameLength();
     }
 
     @Test
     public void testGetMaxRowSize() throws Exception {
-        assertEquals(delegateMeta.getMaxRowSize(), meta.getMaxRowSize());
+        try {
+            delegate.getMaxRowSize();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxRowSize();
     }
 
     @Test
     public void testGetMaxSchemaNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxSchemaNameLength(), meta.getMaxSchemaNameLength());
+        try {
+            delegate.getMaxSchemaNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxSchemaNameLength();
     }
 
     @Test
     public void testGetMaxStatementLength() throws Exception {
-        assertEquals(delegateMeta.getMaxStatementLength(), meta.getMaxStatementLength());
+        try {
+            delegate.getMaxStatementLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxStatementLength();
     }
 
     @Test
     public void testGetMaxStatements() throws Exception {
-        assertEquals(delegateMeta.getMaxStatements(), meta.getMaxStatements());
+        try {
+            delegate.getMaxStatements();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxStatements();
     }
 
     @Test
     public void testGetMaxTableNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxTableNameLength(), meta.getMaxTableNameLength());
+        try {
+            delegate.getMaxTableNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxTableNameLength();
     }
 
     @Test
     public void testGetMaxTablesInSelect() throws Exception {
-        assertEquals(delegateMeta.getMaxTablesInSelect(), meta.getMaxTablesInSelect());
+        try {
+            delegate.getMaxTablesInSelect();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxTablesInSelect();
     }
 
     @Test
     public void testGetMaxUserNameLength() throws Exception {
-        assertEquals(delegateMeta.getMaxUserNameLength(), meta.getMaxUserNameLength());
+        try {
+            delegate.getMaxUserNameLength();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getMaxUserNameLength();
     }
 
     @Test
     public void testGetNumericFunctions() throws Exception {
-        assertEquals(delegateMeta.getNumericFunctions(), meta.getNumericFunctions());
+        try {
+            delegate.getNumericFunctions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getNumericFunctions();
     }
 
     @Test
-    public void testGetPrimaryKeys() throws Exception {
-        assertEquals(delegateMeta.getPrimaryKeys("catalog", "schema", "table"),
-                meta.getPrimaryKeys("catalog", "schema", "table"));
+    public void testGetPrimaryKeysStringStringString() throws Exception {
+        try {
+            delegate.getPrimaryKeys("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getPrimaryKeys("foo","foo","foo");
     }
 
     @Test
-    public void testGetProcedureColumns() throws Exception {
-        assertEquals(delegateMeta.getProcedureColumns("catalog", "schema", "table", "column"),
-                meta.getProcedureColumns("catalog", "schema", "table", "column"));
+    public void testGetProcedureColumnsStringStringStringString() throws Exception {
+        try {
+            delegate.getProcedureColumns("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getProcedureColumns("foo","foo","foo","foo");
     }
 
     @Test
     public void testGetProcedureTerm() throws Exception {
-        assertEquals(delegateMeta.getProcedureTerm(), meta.getProcedureTerm());
+        try {
+            delegate.getProcedureTerm();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getProcedureTerm();
     }
 
     @Test
-    public void testGetProcedures() throws Exception {
-        assertEquals(delegateMeta.getProcedures("catalog", "schema", "procedure"),
-                meta.getProcedures("catalog", "schema", "procedure"));
+    public void testGetProceduresStringStringString() throws Exception {
+        try {
+            delegate.getProcedures("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getProcedures("foo","foo","foo");
     }
 
     @Test
-    public void testGetPseudoColumns() throws Exception {
-        assertEquals(delegateMeta.getPseudoColumns("catalog", "schema", "table", "column"),
-                meta.getPseudoColumns("catalog", "schema", "table", "column"));
+    public void testGetPseudoColumnsStringStringStringString() throws Exception {
+        try {
+            delegate.getPseudoColumns("foo","foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getPseudoColumns("foo","foo","foo","foo");
     }
 
     @Test
     public void testGetResultSetHoldability() throws Exception {
-        assertEquals(delegateMeta.getResultSetHoldability(), meta.getResultSetHoldability());
+        try {
+            delegate.getResultSetHoldability();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getResultSetHoldability();
     }
 
     @Test
     public void testGetRowIdLifetime() throws Exception {
-        assertEquals(delegateMeta.getRowIdLifetime(), meta.getRowIdLifetime());
+        try {
+            delegate.getRowIdLifetime();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getRowIdLifetime();
     }
 
     @Test
     public void testGetSQLKeywords() throws Exception {
-        assertEquals(delegateMeta.getSQLKeywords(), meta.getSQLKeywords());
+        try {
+            delegate.getSQLKeywords();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSQLKeywords();
     }
 
     @Test
     public void testGetSQLStateType() throws Exception {
-        assertEquals(delegateMeta.getSQLStateType(), meta.getSQLStateType());
+        try {
+            delegate.getSQLStateType();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSQLStateType();
     }
 
     @Test
     public void testGetSchemaTerm() throws Exception {
-        assertEquals(delegateMeta.getSchemaTerm(), meta.getSchemaTerm());
+        try {
+            delegate.getSchemaTerm();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSchemaTerm();
+    }
+
+    @Test
+    public void testGetSchemasStringString() throws Exception {
+        try {
+            delegate.getSchemas("foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSchemas("foo","foo");
+    }
+
+    @Test
+    public void testGetSchemas() throws Exception {
+        try {
+            delegate.getSchemas();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSchemas();
     }
 
     @Test
     public void testGetSearchStringEscape() throws Exception {
-        assertEquals(delegateMeta.getSearchStringEscape(), meta.getSearchStringEscape());
+        try {
+            delegate.getSearchStringEscape();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSearchStringEscape();
     }
 
     @Test
     public void testGetStringFunctions() throws Exception {
-        assertEquals(delegateMeta.getStringFunctions(), meta.getStringFunctions());
+        try {
+            delegate.getStringFunctions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getStringFunctions();
     }
 
     @Test
-    public void testGetSuperTables() throws Exception {
-        assertEquals(delegateMeta.getSuperTables("catalog", "schema", "table"),
-                meta.getSuperTables("catalog", "schema", "table"));
+    public void testGetSuperTablesStringStringString() throws Exception {
+        try {
+            delegate.getSuperTables("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSuperTables("foo","foo","foo");
     }
 
     @Test
-    public void testGetSuperTypes() throws Exception {
-        assertEquals(delegateMeta.getSuperTypes("catalog", "schema", "type"),
-                meta.getSuperTypes("catalog", "schema", "type"));
+    public void testGetSuperTypesStringStringString() throws Exception {
+        try {
+            delegate.getSuperTypes("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSuperTypes("foo","foo","foo");
     }
 
     @Test
     public void testGetSystemFunctions() throws Exception {
-        assertEquals(delegateMeta.getSystemFunctions(), meta.getSystemFunctions());
+        try {
+            delegate.getSystemFunctions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getSystemFunctions();
     }
 
     @Test
-    public void testGetTablePrivileges() throws Exception {
-        assertEquals(delegateMeta.getTablePrivileges("catalog", "schema", "table"),
-                meta.getTablePrivileges("catalog", "schema", "table"));
+    public void testGetTablePrivilegesStringStringString() throws Exception {
+        try {
+            delegate.getTablePrivileges("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getTablePrivileges("foo","foo","foo");
     }
 
     @Test
     public void testGetTableTypes() throws Exception {
-        assertEquals(delegateMeta.getTableTypes(), meta.getTableTypes());
+        try {
+            delegate.getTableTypes();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getTableTypes();
     }
 
     @Test
-    public void testGetTables() throws Exception {
-        assertEquals(delegateMeta.getTables("catalog", "schema", "table", null),
-                meta.getTables("catalog", "schema", "table", null));
+    public void testGetTablesStringStringStringStringArray() throws Exception {
+        try {
+            delegate.getTables("foo","foo","foo",(String[]) null);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getTables("foo","foo","foo",(String[]) null);
     }
 
     @Test
     public void testGetTimeDateFunctions() throws Exception {
-        assertEquals(delegateMeta.getTimeDateFunctions(), meta.getTimeDateFunctions());
+        try {
+            delegate.getTimeDateFunctions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getTimeDateFunctions();
     }
 
     @Test
     public void testGetTypeInfo() throws Exception {
-        assertEquals(delegateMeta.getTypeInfo(), meta.getTypeInfo());
+        try {
+            delegate.getTypeInfo();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getTypeInfo();
     }
 
     @Test
-    public void testGetUDTs() throws Exception {
-        assertEquals(delegateMeta.getUDTs("catalog", "schema", "type", null),
-                meta.getUDTs("catalog", "schema", "type", null));
+    public void testGetUDTsStringStringStringIntegerArray() throws Exception {
+        try {
+            delegate.getUDTs("foo","foo","foo",(int[]) null);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getUDTs("foo","foo","foo",(int[]) null);
     }
 
     @Test
     public void testGetURL() throws Exception {
-        assertEquals(delegateMeta.getURL(), meta.getURL());
+        try {
+            delegate.getURL();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getURL();
     }
 
     @Test
     public void testGetUserName() throws Exception {
-        assertEquals(delegateMeta.getUserName(), meta.getUserName());
+        try {
+            delegate.getUserName();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getUserName();
     }
 
     @Test
-    public void testGetVersionColumns() throws Exception {
-        assertEquals(delegateMeta.getVersionColumns("catalog", "schema", "table"),
-                meta.getVersionColumns("catalog", "schema", "table"));
+    public void testGetVersionColumnsStringStringString() throws Exception {
+        try {
+            delegate.getVersionColumns("foo","foo","foo");
+        } catch (SQLException e) {}
+        verify(obj, times(1)).getVersionColumns("foo","foo","foo");
     }
 
     @Test
-    public void testInsertsAreDetected() throws Exception {
-        assertEquals(delegateMeta.insertsAreDetected(2), meta.insertsAreDetected(2));
+    public void testInsertsAreDetectedInteger() throws Exception {
+        try {
+            delegate.insertsAreDetected(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).insertsAreDetected(1);
     }
 
     @Test
     public void testIsCatalogAtStart() throws Exception {
-        assertEquals(delegateMeta.isCatalogAtStart(), meta.isCatalogAtStart());
+        try {
+            delegate.isCatalogAtStart();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).isCatalogAtStart();
     }
 
     @Test
     public void testIsReadOnly() throws Exception {
-        assertEquals(delegateMeta.isReadOnly(), meta.isReadOnly());
+        try {
+            delegate.isReadOnly();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).isReadOnly();
     }
 
     @Test
     public void testLocatorsUpdateCopy() throws Exception {
-        assertEquals(delegateMeta.locatorsUpdateCopy(), meta.locatorsUpdateCopy());
+        try {
+            delegate.locatorsUpdateCopy();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).locatorsUpdateCopy();
     }
 
     @Test
     public void testNullPlusNonNullIsNull() throws Exception {
-        assertEquals(delegateMeta.nullPlusNonNullIsNull(), meta.nullPlusNonNullIsNull());
+        try {
+            delegate.nullPlusNonNullIsNull();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).nullPlusNonNullIsNull();
     }
 
     @Test
     public void testNullsAreSortedAtEnd() throws Exception {
-        assertEquals(delegateMeta.nullsAreSortedAtEnd(), meta.nullsAreSortedAtEnd());
+        try {
+            delegate.nullsAreSortedAtEnd();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).nullsAreSortedAtEnd();
     }
 
     @Test
     public void testNullsAreSortedAtStart() throws Exception {
-        assertEquals(delegateMeta.nullsAreSortedAtStart(), meta.nullsAreSortedAtStart());
+        try {
+            delegate.nullsAreSortedAtStart();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).nullsAreSortedAtStart();
     }
 
     @Test
     public void testNullsAreSortedHigh() throws Exception {
-        assertEquals(delegateMeta.nullsAreSortedHigh(), meta.nullsAreSortedHigh());
+        try {
+            delegate.nullsAreSortedHigh();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).nullsAreSortedHigh();
     }
 
     @Test
     public void testNullsAreSortedLow() throws Exception {
-        assertEquals(delegateMeta.nullsAreSortedLow(), meta.nullsAreSortedLow());
+        try {
+            delegate.nullsAreSortedLow();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).nullsAreSortedLow();
     }
 
     @Test
-    public void testOthersDeletesAreVisible() throws Exception {
-        assertEquals(delegateMeta.othersDeletesAreVisible(0), meta.othersDeletesAreVisible(0));
+    public void testOthersDeletesAreVisibleInteger() throws Exception {
+        try {
+            delegate.othersDeletesAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).othersDeletesAreVisible(1);
     }
 
     @Test
-    public void testOthersInsertsAreVisible() throws Exception {
-        assertEquals(delegateMeta.othersInsertsAreVisible(0), meta.othersInsertsAreVisible(0));
+    public void testOthersInsertsAreVisibleInteger() throws Exception {
+        try {
+            delegate.othersInsertsAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).othersInsertsAreVisible(1);
     }
 
     @Test
-    public void testOthersUpdatesAreVisible() throws Exception {
-        assertEquals(delegateMeta.othersUpdatesAreVisible(1), meta.othersUpdatesAreVisible(1));
+    public void testOthersUpdatesAreVisibleInteger() throws Exception {
+        try {
+            delegate.othersUpdatesAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).othersUpdatesAreVisible(1);
     }
 
     @Test
-    public void testOwnDeletesAreVisible() throws Exception {
-        assertEquals(delegateMeta.ownDeletesAreVisible(1), meta.ownDeletesAreVisible(1));
+    public void testOwnDeletesAreVisibleInteger() throws Exception {
+        try {
+            delegate.ownDeletesAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).ownDeletesAreVisible(1);
     }
 
     @Test
-    public void testOwnInsertsAreVisible() throws Exception {
-        assertEquals(delegateMeta.ownInsertsAreVisible(2), meta.ownInsertsAreVisible(2));
+    public void testOwnInsertsAreVisibleInteger() throws Exception {
+        try {
+            delegate.ownInsertsAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).ownInsertsAreVisible(1);
     }
 
     @Test
-    public void testOwnUpdatesAreVisible() throws Exception {
-        assertEquals(delegateMeta.ownUpdatesAreVisible(1), meta.ownUpdatesAreVisible(1));
+    public void testOwnUpdatesAreVisibleInteger() throws Exception {
+        try {
+            delegate.ownUpdatesAreVisible(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).ownUpdatesAreVisible(1);
     }
 
     @Test
     public void testStoresLowerCaseIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesLowerCaseIdentifiers(), meta.storesLowerCaseIdentifiers());
+        try {
+            delegate.storesLowerCaseIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesLowerCaseIdentifiers();
     }
 
     @Test
     public void testStoresLowerCaseQuotedIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesLowerCaseQuotedIdentifiers(), meta.storesLowerCaseQuotedIdentifiers());
+        try {
+            delegate.storesLowerCaseQuotedIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesLowerCaseQuotedIdentifiers();
     }
 
     @Test
     public void testStoresMixedCaseIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesMixedCaseIdentifiers(), meta.storesMixedCaseIdentifiers());
+        try {
+            delegate.storesMixedCaseIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesMixedCaseIdentifiers();
     }
 
     @Test
     public void testStoresMixedCaseQuotedIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesMixedCaseQuotedIdentifiers(), meta.storesMixedCaseQuotedIdentifiers());
+        try {
+            delegate.storesMixedCaseQuotedIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesMixedCaseQuotedIdentifiers();
     }
 
     @Test
     public void testStoresUpperCaseIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesUpperCaseIdentifiers(), meta.storesUpperCaseIdentifiers());
+        try {
+            delegate.storesUpperCaseIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesUpperCaseIdentifiers();
     }
 
     @Test
     public void testStoresUpperCaseQuotedIdentifiers() throws Exception {
-        assertEquals(delegateMeta.storesUpperCaseQuotedIdentifiers(), meta.storesUpperCaseQuotedIdentifiers());
+        try {
+            delegate.storesUpperCaseQuotedIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).storesUpperCaseQuotedIdentifiers();
     }
 
     @Test
     public void testSupportsANSI92EntryLevelSQL() throws Exception {
-        assertEquals(delegateMeta.supportsANSI92EntryLevelSQL(), meta.supportsANSI92EntryLevelSQL());
+        try {
+            delegate.supportsANSI92EntryLevelSQL();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsANSI92EntryLevelSQL();
     }
 
     @Test
     public void testSupportsANSI92FullSQL() throws Exception {
-        assertEquals(delegateMeta.supportsANSI92FullSQL(), meta.supportsANSI92FullSQL());
+        try {
+            delegate.supportsANSI92FullSQL();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsANSI92FullSQL();
     }
 
     @Test
     public void testSupportsANSI92IntermediateSQL() throws Exception {
-        assertEquals(delegateMeta.supportsANSI92IntermediateSQL(), meta.supportsANSI92IntermediateSQL());
+        try {
+            delegate.supportsANSI92IntermediateSQL();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsANSI92IntermediateSQL();
     }
 
     @Test
     public void testSupportsAlterTableWithAddColumn() throws Exception {
-        assertEquals(delegateMeta.supportsAlterTableWithAddColumn(), meta.supportsAlterTableWithAddColumn());
+        try {
+            delegate.supportsAlterTableWithAddColumn();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsAlterTableWithAddColumn();
     }
 
     @Test
     public void testSupportsAlterTableWithDropColumn() throws Exception {
-        assertEquals(delegateMeta.supportsAlterTableWithDropColumn(), meta.supportsAlterTableWithDropColumn());
+        try {
+            delegate.supportsAlterTableWithDropColumn();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsAlterTableWithDropColumn();
     }
 
     @Test
     public void testSupportsBatchUpdates() throws Exception {
-        assertEquals(delegateMeta.supportsBatchUpdates(), meta.supportsBatchUpdates());
+        try {
+            delegate.supportsBatchUpdates();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsBatchUpdates();
     }
 
     @Test
     public void testSupportsCatalogsInDataManipulation() throws Exception {
-        assertEquals(delegateMeta.supportsCatalogsInDataManipulation(), meta.supportsCatalogsInDataManipulation());
+        try {
+            delegate.supportsCatalogsInDataManipulation();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCatalogsInDataManipulation();
     }
 
     @Test
     public void testSupportsCatalogsInIndexDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsCatalogsInIndexDefinitions(), meta.supportsCatalogsInIndexDefinitions());
+        try {
+            delegate.supportsCatalogsInIndexDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCatalogsInIndexDefinitions();
     }
 
     @Test
     public void testSupportsCatalogsInPrivilegeDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsCatalogsInPrivilegeDefinitions(),
-                meta.supportsCatalogsInPrivilegeDefinitions());
+        try {
+            delegate.supportsCatalogsInPrivilegeDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCatalogsInPrivilegeDefinitions();
     }
 
     @Test
     public void testSupportsCatalogsInProcedureCalls() throws Exception {
-        assertEquals(delegateMeta.supportsCatalogsInProcedureCalls(), meta.supportsCatalogsInProcedureCalls());
+        try {
+            delegate.supportsCatalogsInProcedureCalls();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCatalogsInProcedureCalls();
     }
 
     @Test
     public void testSupportsCatalogsInTableDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsCatalogsInTableDefinitions(), meta.supportsCatalogsInTableDefinitions());
+        try {
+            delegate.supportsCatalogsInTableDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCatalogsInTableDefinitions();
     }
 
     @Test
     public void testSupportsColumnAliasing() throws Exception {
-        assertEquals(delegateMeta.supportsColumnAliasing(), meta.supportsColumnAliasing());
+        try {
+            delegate.supportsColumnAliasing();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsColumnAliasing();
+    }
+
+    @Test
+    public void testSupportsConvertIntegerInteger() throws Exception {
+        try {
+            delegate.supportsConvert(1,1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsConvert(1,1);
     }
 
     @Test
     public void testSupportsConvert() throws Exception {
-        assertEquals(delegateMeta.supportsConvert(), meta.supportsConvert());
+        try {
+            delegate.supportsConvert();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsConvert();
     }
 
     @Test
     public void testSupportsCoreSQLGrammar() throws Exception {
-        assertEquals(delegateMeta.supportsCoreSQLGrammar(), meta.supportsCoreSQLGrammar());
+        try {
+            delegate.supportsCoreSQLGrammar();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCoreSQLGrammar();
     }
 
     @Test
     public void testSupportsCorrelatedSubqueries() throws Exception {
-        assertEquals(delegateMeta.supportsCorrelatedSubqueries(), meta.supportsCorrelatedSubqueries());
+        try {
+            delegate.supportsCorrelatedSubqueries();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsCorrelatedSubqueries();
     }
 
     @Test
     public void testSupportsDataDefinitionAndDataManipulationTransactions() throws Exception {
-        assertEquals(delegateMeta.supportsDataDefinitionAndDataManipulationTransactions(),
-                meta.supportsDataDefinitionAndDataManipulationTransactions());
+        try {
+            delegate.supportsDataDefinitionAndDataManipulationTransactions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsDataDefinitionAndDataManipulationTransactions();
     }
 
     @Test
     public void testSupportsDataManipulationTransactionsOnly() throws Exception {
-        assertEquals(delegateMeta.supportsDataManipulationTransactionsOnly(),
-                meta.supportsDataManipulationTransactionsOnly());
+        try {
+            delegate.supportsDataManipulationTransactionsOnly();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsDataManipulationTransactionsOnly();
     }
 
     @Test
     public void testSupportsDifferentTableCorrelationNames() throws Exception {
-        assertEquals(delegateMeta.supportsDifferentTableCorrelationNames(),
-                meta.supportsDifferentTableCorrelationNames());
+        try {
+            delegate.supportsDifferentTableCorrelationNames();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsDifferentTableCorrelationNames();
     }
 
     @Test
     public void testSupportsExpressionsInOrderBy() throws Exception {
-        assertEquals(delegateMeta.supportsExpressionsInOrderBy(), meta.supportsExpressionsInOrderBy());
+        try {
+            delegate.supportsExpressionsInOrderBy();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsExpressionsInOrderBy();
     }
 
     @Test
     public void testSupportsExtendedSQLGrammar() throws Exception {
-        assertEquals(delegateMeta.supportsExtendedSQLGrammar(), meta.supportsExtendedSQLGrammar());
+        try {
+            delegate.supportsExtendedSQLGrammar();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsExtendedSQLGrammar();
     }
 
     @Test
     public void testSupportsFullOuterJoins() throws Exception {
-        assertEquals(delegateMeta.supportsFullOuterJoins(), meta.supportsFullOuterJoins());
+        try {
+            delegate.supportsFullOuterJoins();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsFullOuterJoins();
     }
 
     @Test
     public void testSupportsGetGeneratedKeys() throws Exception {
-        assertEquals(delegateMeta.supportsGetGeneratedKeys(), meta.supportsGetGeneratedKeys());
+        try {
+            delegate.supportsGetGeneratedKeys();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsGetGeneratedKeys();
     }
 
     @Test
     public void testSupportsGroupBy() throws Exception {
-        assertEquals(delegateMeta.supportsGroupBy(), meta.supportsGroupBy());
+        try {
+            delegate.supportsGroupBy();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsGroupBy();
     }
 
     @Test
     public void testSupportsGroupByBeyondSelect() throws Exception {
-        assertEquals(delegateMeta.supportsGroupByBeyondSelect(), meta.supportsGroupByBeyondSelect());
+        try {
+            delegate.supportsGroupByBeyondSelect();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsGroupByBeyondSelect();
     }
 
     @Test
     public void testSupportsGroupByUnrelated() throws Exception {
-        assertEquals(delegateMeta.supportsGroupByUnrelated(), meta.supportsGroupByUnrelated());
+        try {
+            delegate.supportsGroupByUnrelated();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsGroupByUnrelated();
     }
 
     @Test
     public void testSupportsIntegrityEnhancementFacility() throws Exception {
-        assertEquals(delegateMeta.supportsIntegrityEnhancementFacility(), meta.supportsIntegrityEnhancementFacility());
+        try {
+            delegate.supportsIntegrityEnhancementFacility();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsIntegrityEnhancementFacility();
     }
 
     @Test
     public void testSupportsLikeEscapeClause() throws Exception {
-        assertEquals(delegateMeta.supportsLikeEscapeClause(), meta.supportsLikeEscapeClause());
+        try {
+            delegate.supportsLikeEscapeClause();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsLikeEscapeClause();
     }
 
     @Test
     public void testSupportsLimitedOuterJoins() throws Exception {
-        assertEquals(delegateMeta.supportsLimitedOuterJoins(), meta.supportsLimitedOuterJoins());
+        try {
+            delegate.supportsLimitedOuterJoins();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsLimitedOuterJoins();
     }
 
     @Test
     public void testSupportsMinimumSQLGrammar() throws Exception {
-        assertEquals(delegateMeta.supportsMinimumSQLGrammar(), meta.supportsMinimumSQLGrammar());
+        try {
+            delegate.supportsMinimumSQLGrammar();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMinimumSQLGrammar();
     }
 
     @Test
     public void testSupportsMixedCaseIdentifiers() throws Exception {
-        assertEquals(delegateMeta.supportsMixedCaseIdentifiers(), meta.supportsMixedCaseIdentifiers());
+        try {
+            delegate.supportsMixedCaseIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMixedCaseIdentifiers();
     }
 
     @Test
     public void testSupportsMixedCaseQuotedIdentifiers() throws Exception {
-        assertEquals(delegateMeta.supportsMixedCaseQuotedIdentifiers(), meta.supportsMixedCaseQuotedIdentifiers());
+        try {
+            delegate.supportsMixedCaseQuotedIdentifiers();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMixedCaseQuotedIdentifiers();
     }
 
     @Test
     public void testSupportsMultipleOpenResults() throws Exception {
-        assertEquals(delegateMeta.supportsMultipleOpenResults(), meta.supportsMultipleOpenResults());
+        try {
+            delegate.supportsMultipleOpenResults();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMultipleOpenResults();
     }
 
     @Test
     public void testSupportsMultipleResultSets() throws Exception {
-        assertEquals(delegateMeta.supportsMultipleResultSets(), meta.supportsMultipleResultSets());
+        try {
+            delegate.supportsMultipleResultSets();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMultipleResultSets();
     }
 
     @Test
     public void testSupportsMultipleTransactions() throws Exception {
-        assertEquals(delegateMeta.supportsMultipleTransactions(), meta.supportsMultipleTransactions());
+        try {
+            delegate.supportsMultipleTransactions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsMultipleTransactions();
     }
 
     @Test
     public void testSupportsNamedParameters() throws Exception {
-        assertEquals(delegateMeta.supportsNamedParameters(), meta.supportsNamedParameters());
+        try {
+            delegate.supportsNamedParameters();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsNamedParameters();
     }
 
     @Test
     public void testSupportsNonNullableColumns() throws Exception {
-        assertEquals(delegateMeta.supportsNonNullableColumns(), meta.supportsNonNullableColumns());
+        try {
+            delegate.supportsNonNullableColumns();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsNonNullableColumns();
     }
 
     @Test
     public void testSupportsOpenCursorsAcrossCommit() throws Exception {
-        assertEquals(delegateMeta.supportsOpenCursorsAcrossCommit(), meta.supportsOpenCursorsAcrossCommit());
+        try {
+            delegate.supportsOpenCursorsAcrossCommit();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOpenCursorsAcrossCommit();
     }
 
     @Test
     public void testSupportsOpenCursorsAcrossRollback() throws Exception {
-        assertEquals(delegateMeta.supportsOpenCursorsAcrossRollback(), meta.supportsOpenCursorsAcrossRollback());
+        try {
+            delegate.supportsOpenCursorsAcrossRollback();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOpenCursorsAcrossRollback();
     }
 
     @Test
     public void testSupportsOpenStatementsAcrossCommit() throws Exception {
-        assertEquals(delegateMeta.supportsOpenStatementsAcrossCommit(), meta.supportsOpenStatementsAcrossCommit());
+        try {
+            delegate.supportsOpenStatementsAcrossCommit();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOpenStatementsAcrossCommit();
     }
 
     @Test
     public void testSupportsOpenStatementsAcrossRollback() throws Exception {
-        assertEquals(delegateMeta.supportsOpenStatementsAcrossRollback(), meta.supportsOpenStatementsAcrossRollback());
+        try {
+            delegate.supportsOpenStatementsAcrossRollback();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOpenStatementsAcrossRollback();
     }
 
     @Test
     public void testSupportsOrderByUnrelated() throws Exception {
-        assertEquals(delegateMeta.supportsOrderByUnrelated(), meta.supportsOrderByUnrelated());
+        try {
+            delegate.supportsOrderByUnrelated();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOrderByUnrelated();
     }
 
     @Test
     public void testSupportsOuterJoins() throws Exception {
-        assertEquals(delegateMeta.supportsOuterJoins(), meta.supportsOuterJoins());
+        try {
+            delegate.supportsOuterJoins();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsOuterJoins();
     }
 
     @Test
     public void testSupportsPositionedDelete() throws Exception {
-        assertEquals(delegateMeta.supportsPositionedDelete(), meta.supportsPositionedDelete());
+        try {
+            delegate.supportsPositionedDelete();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsPositionedDelete();
     }
 
     @Test
     public void testSupportsPositionedUpdate() throws Exception {
-        assertEquals(delegateMeta.supportsPositionedUpdate(), meta.supportsPositionedUpdate());
+        try {
+            delegate.supportsPositionedUpdate();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsPositionedUpdate();
     }
 
     @Test
     public void testSupportsRefCursors() throws Exception {
-        assertEquals(delegateMeta.supportsRefCursors(), meta.supportsRefCursors());
+        try {
+            delegate.supportsRefCursors();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsRefCursors();
     }
 
     @Test
-    public void testSupportsResultSetConcurrency() throws Exception {
-        assertEquals(delegateMeta.supportsResultSetConcurrency(1, 2), meta.supportsResultSetConcurrency(1, 2));
+    public void testSupportsResultSetConcurrencyIntegerInteger() throws Exception {
+        try {
+            delegate.supportsResultSetConcurrency(1,1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsResultSetConcurrency(1,1);
     }
 
     @Test
-    public void testSupportsResultSetHoldability() throws Exception {
-        assertEquals(delegateMeta.supportsResultSetHoldability(1), meta.supportsResultSetHoldability(1));
+    public void testSupportsResultSetHoldabilityInteger() throws Exception {
+        try {
+            delegate.supportsResultSetHoldability(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsResultSetHoldability(1);
     }
 
     @Test
-    public void testSupportsResultSetType() throws Exception {
-        assertEquals(delegateMeta.supportsResultSetType(3), meta.supportsResultSetType(3));
+    public void testSupportsResultSetTypeInteger() throws Exception {
+        try {
+            delegate.supportsResultSetType(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsResultSetType(1);
     }
 
     @Test
     public void testSupportsSavepoints() throws Exception {
-        assertEquals(delegateMeta.supportsSavepoints(), meta.supportsSavepoints());
+        try {
+            delegate.supportsSavepoints();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSavepoints();
     }
 
     @Test
     public void testSupportsSchemasInDataManipulation() throws Exception {
-        assertEquals(delegateMeta.supportsSchemasInDataManipulation(), meta.supportsSchemasInDataManipulation());
+        try {
+            delegate.supportsSchemasInDataManipulation();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSchemasInDataManipulation();
     }
 
     @Test
     public void testSupportsSchemasInIndexDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsSchemasInIndexDefinitions(), meta.supportsSchemasInIndexDefinitions());
+        try {
+            delegate.supportsSchemasInIndexDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSchemasInIndexDefinitions();
     }
 
     @Test
     public void testSupportsSchemasInPrivilegeDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsSchemasInPrivilegeDefinitions(),
-                meta.supportsSchemasInPrivilegeDefinitions());
+        try {
+            delegate.supportsSchemasInPrivilegeDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSchemasInPrivilegeDefinitions();
     }
 
     @Test
     public void testSupportsSchemasInProcedureCalls() throws Exception {
-        assertEquals(delegateMeta.supportsSchemasInProcedureCalls(), meta.supportsSchemasInProcedureCalls());
+        try {
+            delegate.supportsSchemasInProcedureCalls();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSchemasInProcedureCalls();
     }
 
     @Test
     public void testSupportsSchemasInTableDefinitions() throws Exception {
-        assertEquals(delegateMeta.supportsSchemasInTableDefinitions(), meta.supportsSchemasInTableDefinitions());
+        try {
+            delegate.supportsSchemasInTableDefinitions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSchemasInTableDefinitions();
     }
 
     @Test
     public void testSupportsSelectForUpdate() throws Exception {
-        assertEquals(delegateMeta.supportsSelectForUpdate(), meta.supportsSelectForUpdate());
+        try {
+            delegate.supportsSelectForUpdate();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSelectForUpdate();
     }
 
     @Test
     public void testSupportsStatementPooling() throws Exception {
-        assertEquals(delegateMeta.supportsStatementPooling(), meta.supportsStatementPooling());
+        try {
+            delegate.supportsStatementPooling();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsStatementPooling();
     }
 
     @Test
     public void testSupportsStoredFunctionsUsingCallSyntax() throws Exception {
-        assertEquals(delegateMeta.supportsStoredFunctionsUsingCallSyntax(),
-                meta.supportsStoredFunctionsUsingCallSyntax());
+        try {
+            delegate.supportsStoredFunctionsUsingCallSyntax();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsStoredFunctionsUsingCallSyntax();
     }
 
     @Test
     public void testSupportsStoredProcedures() throws Exception {
-        assertEquals(delegateMeta.supportsStoredProcedures(), meta.supportsStoredProcedures());
+        try {
+            delegate.supportsStoredProcedures();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsStoredProcedures();
     }
 
     @Test
     public void testSupportsSubqueriesInComparisons() throws Exception {
-        assertEquals(delegateMeta.supportsSubqueriesInComparisons(), meta.supportsSubqueriesInComparisons());
+        try {
+            delegate.supportsSubqueriesInComparisons();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSubqueriesInComparisons();
     }
 
     @Test
     public void testSupportsSubqueriesInExists() throws Exception {
-        assertEquals(delegateMeta.supportsSubqueriesInExists(), meta.supportsSubqueriesInExists());
+        try {
+            delegate.supportsSubqueriesInExists();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSubqueriesInExists();
     }
 
     @Test
     public void testSupportsSubqueriesInIns() throws Exception {
-        assertEquals(delegateMeta.supportsSubqueriesInIns(), meta.supportsSubqueriesInIns());
+        try {
+            delegate.supportsSubqueriesInIns();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSubqueriesInIns();
     }
 
     @Test
     public void testSupportsSubqueriesInQuantifieds() throws Exception {
-        assertEquals(delegateMeta.supportsSubqueriesInQuantifieds(), meta.supportsSubqueriesInQuantifieds());
+        try {
+            delegate.supportsSubqueriesInQuantifieds();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsSubqueriesInQuantifieds();
     }
 
     @Test
     public void testSupportsTableCorrelationNames() throws Exception {
-        assertEquals(delegateMeta.supportsTableCorrelationNames(), meta.supportsTableCorrelationNames());
+        try {
+            delegate.supportsTableCorrelationNames();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsTableCorrelationNames();
     }
 
     @Test
-    public void testSupportsTransactionIsolationLevel() throws Exception {
-        assertEquals(delegateMeta.supportsTransactionIsolationLevel(1), meta.supportsTransactionIsolationLevel(1));
+    public void testSupportsTransactionIsolationLevelInteger() throws Exception {
+        try {
+            delegate.supportsTransactionIsolationLevel(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsTransactionIsolationLevel(1);
     }
 
     @Test
     public void testSupportsTransactions() throws Exception {
-        assertEquals(delegateMeta.supportsTransactions(), meta.supportsTransactions());
+        try {
+            delegate.supportsTransactions();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsTransactions();
     }
 
     @Test
     public void testSupportsUnion() throws Exception {
-        assertEquals(delegateMeta.supportsUnion(), meta.supportsUnion());
+        try {
+            delegate.supportsUnion();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsUnion();
     }
 
     @Test
     public void testSupportsUnionAll() throws Exception {
-        assertEquals(delegateMeta.supportsUnionAll(), meta.supportsUnionAll());
+        try {
+            delegate.supportsUnionAll();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).supportsUnionAll();
     }
 
     @Test
-    public void testUpdatesAreDetected() throws Exception {
-        assertEquals(delegateMeta.updatesAreDetected(2), meta.updatesAreDetected(2));
+    public void testUpdatesAreDetectedInteger() throws Exception {
+        try {
+            delegate.updatesAreDetected(1);
+        } catch (SQLException e) {}
+        verify(obj, times(1)).updatesAreDetected(1);
     }
 
     @Test
     public void testUsesLocalFilePerTable() throws Exception {
-        assertEquals(delegateMeta.usesLocalFilePerTable(), meta.usesLocalFilePerTable());
+        try {
+            delegate.usesLocalFilePerTable();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).usesLocalFilePerTable();
     }
 
     @Test
     public void testUsesLocalFiles() throws Exception {
-        assertEquals(delegateMeta.usesLocalFiles(), meta.usesLocalFiles());
+        try {
+            delegate.usesLocalFiles();
+        } catch (SQLException e) {}
+        verify(obj, times(1)).usesLocalFiles();
+    }
+
+    @Test
+    public void testWrap() throws SQLException {
+        assertEquals(delegate, delegate.unwrap(DatabaseMetaData.class));
+        assertEquals(delegate, delegate.unwrap(DelegatingDatabaseMetaData.class));
+        assertEquals(obj, delegate.unwrap(obj.getClass()));
+        assertNull(delegate.unwrap(String.class));
+        assertTrue(delegate.isWrapperFor(DatabaseMetaData.class));
+        assertTrue(delegate.isWrapperFor(DelegatingDatabaseMetaData.class));
+        assertTrue(delegate.isWrapperFor(obj.getClass()));
+        assertFalse(delegate.isWrapperFor(String.class));
     }
 }
