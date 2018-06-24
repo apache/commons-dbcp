@@ -17,6 +17,9 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +44,27 @@ public class TestDelegatingPreparedStatement {
         connection = new DelegatingConnection<>(testerConn);
         obj =  mock(PreparedStatement.class);
         delegate = new DelegatingPreparedStatement(connection, obj);
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNull() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"null");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertNull(delegate.executeQuery());
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNotNull() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"select * from foo");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertTrue(null != delegate.executeQuery());
+    }
+
+    @Test
+    public void testGetDelegate() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"select * from foo");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertEquals(obj,delegate.getDelegate());
     }
 
     @Test
