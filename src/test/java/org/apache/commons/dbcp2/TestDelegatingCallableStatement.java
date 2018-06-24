@@ -17,6 +17,9 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +44,27 @@ public class TestDelegatingCallableStatement {
         obj = mock(CallableStatement.class);
         DelegatingConnection<Connection> delegatingConnection = new DelegatingConnection<Connection>(conn);
         delegate = new DelegatingCallableStatement(delegatingConnection, obj);
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNull() throws Exception {
+        TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"null");
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        assertNull(obj.executeQuery());
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNotNull() throws Exception {
+        TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        assertTrue(null != obj.executeQuery());
+    }
+
+    @Test
+    public void testGetDelegate() throws Exception {
+        TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        assertEquals(delegateStmt,((DelegatingCallableStatement)obj).getDelegate());
     }
 
     @Test
