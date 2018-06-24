@@ -21,10 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,6 +47,58 @@ public class TestDelegatingStatement {
         conn = new DelegatingConnection<>(delegateConn);
         obj = mock(Statement.class);
         delegate = new DelegatingStatement(conn, obj);
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNull() throws Exception {
+        assertNull(delegate.executeQuery("null"));
+    }
+
+    @Test
+    public void testGetDelegate() throws Exception {
+        assertEquals(obj,delegate.getDelegate());
+    }
+
+    @Test
+    public void testCheckOpen() throws Exception {
+        delegate.checkOpen();
+        delegate.close();
+        try {
+            delegate.checkOpen();
+            fail("Expecting SQLException");
+        } catch (final SQLException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testIsWrapperFor() throws Exception {
+        final TesterConnection tstConn = new TesterConnection("test", "test");
+        final TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
+        final DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
+        final DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
+
+        final Class<?> stmtProxyClass = Proxy.getProxyClass(
+                this.getClass().getClassLoader(),
+                Statement.class);
+
+        assertTrue(stamt.isWrapperFor(DelegatingStatement.class));
+        assertTrue(stamt.isWrapperFor(TesterStatement.class));
+        assertFalse(stamt.isWrapperFor(stmtProxyClass));
+
+        stamt.close();
+    }
+
+    private static class TesterStatementNonWrapping extends TesterStatement {
+
+        public TesterStatementNonWrapping(final Connection conn) {
+            super(conn);
+        }
+
+        @Override
+        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
+            return false;
+        }
     }
 
     @Test
