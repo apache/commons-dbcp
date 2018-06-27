@@ -211,12 +211,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *            The user name key.
      * @return The user specific value.
      */
-    public Boolean getPerUserDefaultAutoCommit(final String userName) {
+    public boolean getPerUserDefaultAutoCommit(final String userName) {
         Boolean value = null;
         if (perUserDefaultAutoCommit != null) {
             value = perUserDefaultAutoCommit.get(userName);
         }
-        return value;
+        if (value == null) {
+            return isDefaultAutoCommit();
+        }
+        return value.booleanValue();
     }
 
     /**
@@ -226,12 +229,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *            The user name key.
      * @return The user specific value.
      */
-    public Boolean getPerUserDefaultReadOnly(final String userName) {
+    public boolean getPerUserDefaultReadOnly(final String userName) {
         Boolean value = null;
         if (perUserDefaultReadOnly != null) {
             value = perUserDefaultReadOnly.get(userName);
         }
-        return value;
+        if (value == null) {
+            return isDefaultReadOnly();
+        }
+        return value.booleanValue();
     }
 
     /**
@@ -242,12 +248,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *            The user name key.
      * @return The user specific value.
      */
-    public Integer getPerUserDefaultTransactionIsolation(final String userName) {
+    public int getPerUserDefaultTransactionIsolation(final String userName) {
         Integer value = null;
         if (perUserDefaultTransactionIsolation != null) {
             value = perUserDefaultTransactionIsolation.get(userName);
         }
-        return value;
+        if (value == null) {
+            return getDefaultTransactionIsolation();
+        }
+        return value.intValue();
     }
 
     /**

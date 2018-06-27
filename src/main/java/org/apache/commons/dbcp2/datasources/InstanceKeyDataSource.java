@@ -134,9 +134,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private long maxConnLifetimeMillis = -1;
 
     // Connection properties
-    private Boolean defaultAutoCommit;
+    private boolean defaultAutoCommit;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
-    private Boolean defaultReadOnly;
+    private boolean defaultReadOnly;
 
     /**
      * Default no-arg constructor for Serialization
@@ -585,7 +585,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return value of defaultAutoCommit.
      */
-    public Boolean isDefaultAutoCommit() {
+    public boolean isDefaultAutoCommit() {
         return defaultAutoCommit;
     }
 
@@ -597,7 +597,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @param v
      *            Value to assign to defaultAutoCommit.
      */
-    public void setDefaultAutoCommit(final Boolean v) {
+    public void setDefaultAutoCommit(final boolean v) {
         assertInitializationAllowed();
         this.defaultAutoCommit = v;
     }
@@ -609,7 +609,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return value of defaultReadOnly.
      */
-    public Boolean isDefaultReadOnly() {
+    public boolean isDefaultReadOnly() {
         return defaultReadOnly;
     }
 
@@ -621,7 +621,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @param v
      *            Value to assign to defaultReadOnly.
      */
-    public void setDefaultReadOnly(final Boolean v) {
+    public void setDefaultReadOnly(final boolean v) {
         assertInitializationAllowed();
         this.defaultReadOnly = v;
     }
