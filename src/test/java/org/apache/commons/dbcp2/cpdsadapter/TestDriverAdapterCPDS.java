@@ -17,17 +17,24 @@
 
 package org.apache.commons.dbcp2.cpdsadapter;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Properties;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
@@ -148,6 +155,7 @@ public class TestDriverAdapterCPDS {
         // This will overwrite field value
         final Properties properties = new Properties();
         properties.put("user", "foo");
+        properties.put("password", pcds.getPassword());
         pcds.setConnectionProperties(properties);
         pcds.getPooledConnection().close();
         assertEquals("foo", pcds.getUser());
@@ -159,6 +167,14 @@ public class TestDriverAdapterCPDS {
         // Call will succeed and overwrite property
         pcds.getPooledConnection("foo", "bar").close();
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void testSetConnectionPropertiesConnectionCalled() throws Exception {
+        final Properties properties = new Properties();
+        // call to the connection
+        pcds.getPooledConnection().close();
+        pcds.setConnectionProperties(properties);
     }
 
     @Test
@@ -274,5 +290,69 @@ public class TestDriverAdapterCPDS {
         public boolean isFailed() {
             return failed;
         }
+    }
+
+    @Test(expected=SQLFeatureNotSupportedException.class)
+    public void testGetParentLogger() throws SQLFeatureNotSupportedException {
+        pcds.getParentLogger();
+    }
+
+    @Test
+    public void testGetReference() throws NamingException {
+        Reference ref = pcds.getReference();
+        assertEquals(pcds.getDriver(), ref.get("driver").getContent());
+        assertEquals(pcds.getDescription(), ref.get("description").getContent());
+    }
+
+    @Test
+    public void testGettersAndSetters() {
+        pcds.setUser("foo");
+        assertEquals("foo", pcds.getUser());
+        pcds.setPassword("bar");
+        assertEquals("bar", pcds.getPassword());
+        pcds.setPassword(new char[] {'a', 'b'});
+        assertArrayEquals(new char[] {'a', 'b'}, pcds.getPasswordCharArray());
+        PrintWriter pw = new PrintWriter(System.err);
+        pcds.setLogWriter(pw);
+        assertEquals(pw, pcds.getLogWriter());
+        pcds.setLoginTimeout(10);
+        assertEquals(10, pcds.getLoginTimeout());
+        pcds.setMaxIdle(100);
+        assertEquals(100, pcds.getMaxIdle());
+        pcds.setTimeBetweenEvictionRunsMillis(100);
+        assertEquals(100, pcds.getTimeBetweenEvictionRunsMillis());
+        pcds.setNumTestsPerEvictionRun(1);
+        assertEquals(1, pcds.getNumTestsPerEvictionRun());
+        pcds.setMinEvictableIdleTimeMillis(11);
+        assertEquals(11, pcds.getMinEvictableIdleTimeMillis());
+        pcds.setDescription("jo");
+        assertEquals("jo", pcds.getDescription());
+    }
+
+    @Test
+    public void testGetObjectInstanceNull() throws Exception {
+        Object o = pcds.getObjectInstance(null, null, null, null);
+        assertNull(o);
+    }
+
+    @Test
+    public void testGetObjectInstance() throws Exception {
+        Reference ref = pcds.getReference();
+        Object o = pcds.getObjectInstance(ref, null, null, null);
+        assertEquals(pcds.getDriver(), ((DriverAdapterCPDS) o).getDriver());
+    }
+
+    @Test
+    public void testGetObjectInstanceChangeDescription() throws Exception {
+        Reference ref = pcds.getReference();
+        for (int i = 0; i < ref.size(); i++) {
+            if (ref.get(i).getType().equals("description")) {
+                ref.remove(i);
+                break;
+            }
+        }
+        ref.add(new StringRefAddr("description", "anything"));
+        Object o = pcds.getObjectInstance(ref, null, null, null);
+        assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
     }
 }
