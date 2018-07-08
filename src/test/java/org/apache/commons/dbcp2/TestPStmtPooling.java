@@ -131,11 +131,10 @@ public class TestPStmtPooling {
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
 
-        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setJmxNameBase("UnitTests:DataSource=test,connectionpool=connections");
         config.setJmxNamePrefix("");
-        final ObjectPool<PoolableConnection> connPool =
-                new GenericObjectPool<>(pcf, config);
+        final ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf, config);
         pcf.setPool(connPool);
 
         final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);

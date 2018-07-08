@@ -33,13 +33,13 @@ public class TestPoolingConnection {
     @Before
     public void setUp() throws Exception {
         con = new PoolingConnection(new TesterConnection("test", "test"));
-        final GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+        final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
         config.setMaxTotalPerKey(-1);
         config.setBlockWhenExhausted(false);
         config.setMaxWaitMillis(0);
         config.setMaxIdlePerKey(1);
         config.setMaxTotal(1);
-        final KeyedObjectPool<PStmtKey,DelegatingPreparedStatement> stmtPool =
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool =
                 new GenericKeyedObjectPool<>(con, config);
         con.setStatementPool(stmtPool);
     }

@@ -64,7 +64,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
 
-        final GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig<PoolableConnection> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxTotal(getMaxTotal());
         poolConfig.setMaxWaitMillis(getMaxWaitMillis());
         poolConfig.setMinIdle(10);
@@ -140,7 +140,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testReportedBug12400() throws Exception {
-        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(70);
         config.setMaxWaitMillis(60000);
         config.setMaxIdle(10);
@@ -152,8 +152,8 @@ public class TestPoolingDriver extends TestConnectionPool {
             new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
         poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
-        final ObjectPool<PoolableConnection> connectionPool =
-                new GenericObjectPool<>(poolableConnectionFactory,config);
+        final ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory,
+                config);
         poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
         final PoolingDriver driver2 = new PoolingDriver();

@@ -92,7 +92,7 @@ public class TestDriverManagerConnectionFactory {
     }
 
     public void testDriverManagerInit(final boolean withProperties) throws Exception {
-        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
         final Properties properties = new Properties();
