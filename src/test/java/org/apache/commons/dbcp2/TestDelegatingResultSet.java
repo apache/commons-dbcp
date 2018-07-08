@@ -699,7 +699,7 @@ public class TestDelegatingResultSet {
      * This method is a bit special. It actually calls statement in the
      * {@link DelegatingResultSet} object itself, instead of calling in the
      * underlying {@link ResultSet}.
-     * 
+     *
      * @throws Exception
      */
     @Test
