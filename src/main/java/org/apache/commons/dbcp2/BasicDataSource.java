@@ -2309,11 +2309,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Closes the connection pool, silently swallowing any exception that occurs.
      */
     private void closeConnectionPool() {
-        final GenericObjectPool<?> oldpool = connectionPool;
+        final GenericObjectPool<?> oldPool = connectionPool;
         connectionPool = null;
         try {
-            if (oldpool != null) {
-                oldpool.close();
+            if (oldPool != null) {
+                oldPool.close();
             }
         } catch (final Exception e) {
             /* Ignore */
