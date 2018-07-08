@@ -305,7 +305,7 @@ public class PStmtKey {
      *            or <code>ResultSet.CLOSE_CURSORS_AT_COMMIT</code>.
      * @param statementType
      *            The SQL statement type, prepared or callable.
-     * @deprecated Use {#link {@link #PStmtKey(String, String, String, int, int, int, StatementType)}
+     * @deprecated Use {@link #PStmtKey(String, String, String, int, int, int, StatementType)}
      */
     @Deprecated
     public PStmtKey(final String sql, final String catalog, final int resultSetType, final int resultSetConcurrency,
