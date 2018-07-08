@@ -355,7 +355,6 @@
             <!-- Ensure that logging messages can be inspected -->
             <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
           </systemPropertyVariables>
-          <reportFormat>plain</reportFormat>
           <excludes>
             <!-- Test support files -->
             <exclude>**/Tester*.java</exclude>
@@ -423,7 +422,7 @@
             <reportOnlyFilename>true</reportOnlyFilename>
             <skipPomModules>true</skipPomModules>
             <ignoreMissingClasses>${commons.japicmp.ignoreMissingClasses}</ignoreMissingClasses>
-            <oldVersionPattern>2.2.0</oldVersionPattern>
+            <oldVersionPattern>${commons.bc.version}</oldVersionPattern>
           </parameter>
           <dependencies>
             <dependency>
@@ -503,33 +502,5 @@
     </plugins>
   </reporting>
   <profiles>
-    <profile>
-      <id>jdk7</id>
-      <activation>
-        <jdk>(,1.7]</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <!-- Ensure that logging messages can be inspected -->
-                <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
-              </systemPropertyVariables>
-              <reportFormat>plain</reportFormat>
-              <excludes>
-                <!-- Test support files -->
-                <exclude>**/Tester*.java</exclude>
-                <!-- Exclude nested classes which Surefire cannot handle -->
-                <exclude>**/Test*$*.java</exclude>
-                <exclude>**/*Narayana*.java</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
 </project>
