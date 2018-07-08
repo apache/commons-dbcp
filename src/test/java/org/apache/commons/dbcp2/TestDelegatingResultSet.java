@@ -49,7 +49,7 @@ public class TestDelegatingResultSet {
         testConn = new TesterConnection("foo", "bar");
         conn = new DelegatingConnection<>(testConn);
         rs = mock(ResultSet.class);
-        delegate = (DelegatingResultSet) DelegatingResultSet.wrapResultSet((Connection) conn, rs);
+        delegate = (DelegatingResultSet) DelegatingResultSet.wrapResultSet(conn, rs);
     }
 
     @Test

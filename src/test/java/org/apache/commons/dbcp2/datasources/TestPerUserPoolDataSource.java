@@ -772,7 +772,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final Map<String, Integer> values = new HashMap<>();
         values.put("key", 1);
         ds.setPerUserDefaultTransactionIsolation(values);
-        assertEquals((Integer) 1, (Integer) ds.getPerUserDefaultTransactionIsolation("key"));
+        assertEquals((Integer) 1, ds.getPerUserDefaultTransactionIsolation("key"));
     }
 
     @Test
@@ -781,13 +781,13 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         Map<String, Integer> values = new HashMap<>();
         values.put("key", 0);
         ds.setPerUserDefaultTransactionIsolation(values);
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation("key"));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation("key"));
         values = new HashMap<>();
         values.put("anonymous", 0);
         ds.setPerUserDefaultTransactionIsolation(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, (Integer) ds.getPerUserDefaultTransactionIsolation("key"));
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation("anonymous"));
+        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("key"));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation("anonymous"));
     }
 
     @Test
@@ -797,24 +797,24 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values.put("key", 0);
         ds.setPerUserDefaultTransactionIsolation(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, (Integer) ds.getPerUserDefaultTransactionIsolation("missingkey"));
+        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("missingkey"));
     }
 
     @Test
     public void testPerUserDefaultTransactionIsolationWithUserMapNotInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultTransactionIsolation(user, 0);
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation(user));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation(user));
     }
 
     @Test
     public void testPerUserDefaultTransactionIsolationWithUserMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultTransactionIsolation(user, 0);
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation(user));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation(user));
         ds.setPerUserDefaultTransactionIsolation("anotheruser", 0);
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation(user));
-        assertEquals((Integer) 0, (Integer) ds.getPerUserDefaultTransactionIsolation("anotheruser"));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation(user));
+        assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation("anotheruser"));
     }
 
     @Test
@@ -822,7 +822,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultTransactionIsolation("whatismyuseragain?", 0);
         // TODO this is not consistent with the other methods
-        assertEquals(null, (Integer) ds.getPerUserDefaultTransactionIsolation("missingkey"));
+        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("missingkey"));
     }
 
     // -- per user eviction policy class name
