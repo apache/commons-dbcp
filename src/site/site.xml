@@ -35,6 +35,7 @@
         <item name="Javadoc&#xA0;2.2.0"     href="/api-2.2.0/index.html"/>
         <item name="Javadoc&#xA0;2.3.0"     href="/api-2.3.0/index.html"/>
         <item name="Javadoc&#xA0;2.4.0"     href="/api-2.4.0/index.html"/>
+        <item name="Javadoc&#xA0;2.5.0"     href="/api-2.5.0/index.html"/>
         <item name="Developers&#xA0;Guide"  href="/guide/index.html" collapse="true">
         <item name="JNDI&#xA0;Howto"        href="/guide/jndi-howto.html"/>
         <item name="Class&#xA0;Diagrams"    href="/guide/classdiagrams.html"/>
