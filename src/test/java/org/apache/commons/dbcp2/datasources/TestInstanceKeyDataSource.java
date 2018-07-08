@@ -136,14 +136,14 @@ public class TestInstanceKeyDataSource {
 
     @Test
     public void testDefaultTransactionIsolation() {
-        assertEquals(SharedPoolDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
+        assertEquals(InstanceKeyDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
         spds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, spds.getDefaultTransactionIsolation());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testDefaultTransactionIsolationInvalid() {
-        assertEquals(SharedPoolDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
+        assertEquals(InstanceKeyDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
         spds.setDefaultTransactionIsolation(Integer.MAX_VALUE);
     }
 
