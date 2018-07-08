@@ -266,7 +266,7 @@ public class TestManagedDataSource extends TestConnectionPool {
 
     @Test(expected=IllegalStateException.class)
     public void testSetTransactionRegistryAlreadySet() {
-        ManagedDataSource<?> managed = (ManagedDataSource<?>) ds;
+        final ManagedDataSource<?> managed = (ManagedDataSource<?>) ds;
         managed.setTransactionRegistry(null);
     }
 

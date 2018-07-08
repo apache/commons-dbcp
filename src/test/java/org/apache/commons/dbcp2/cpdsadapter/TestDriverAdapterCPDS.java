@@ -299,7 +299,7 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testGetReference() throws NamingException {
-        Reference ref = pcds.getReference();
+        final Reference ref = pcds.getReference();
         assertEquals(pcds.getDriver(), ref.get("driver").getContent());
         assertEquals(pcds.getDescription(), ref.get("description").getContent());
     }
@@ -312,7 +312,7 @@ public class TestDriverAdapterCPDS {
         assertEquals("bar", pcds.getPassword());
         pcds.setPassword(new char[] {'a', 'b'});
         assertArrayEquals(new char[] {'a', 'b'}, pcds.getPasswordCharArray());
-        PrintWriter pw = new PrintWriter(System.err);
+        final PrintWriter pw = new PrintWriter(System.err);
         pcds.setLogWriter(pw);
         assertEquals(pw, pcds.getLogWriter());
         pcds.setLoginTimeout(10);
@@ -331,20 +331,20 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testGetObjectInstanceNull() throws Exception {
-        Object o = pcds.getObjectInstance(null, null, null, null);
+        final Object o = pcds.getObjectInstance(null, null, null, null);
         assertNull(o);
     }
 
     @Test
     public void testGetObjectInstance() throws Exception {
-        Reference ref = pcds.getReference();
-        Object o = pcds.getObjectInstance(ref, null, null, null);
+        final Reference ref = pcds.getReference();
+        final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDriver(), ((DriverAdapterCPDS) o).getDriver());
     }
 
     @Test
     public void testGetObjectInstanceChangeDescription() throws Exception {
-        Reference ref = pcds.getReference();
+        final Reference ref = pcds.getReference();
         for (int i = 0; i < ref.size(); i++) {
             if (ref.get(i).getType().equals("description")) {
                 ref.remove(i);
@@ -352,7 +352,7 @@ public class TestDriverAdapterCPDS {
             }
         }
         ref.add(new StringRefAddr("description", "anything"));
-        Object o = pcds.getObjectInstance(ref, null, null, null);
+        final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
     }
 }

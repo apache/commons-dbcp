@@ -1076,12 +1076,12 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     }
 
     @Override
-    public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+    public void updateObject(final int columnIndex, final Object x, final SQLType targetSqlType) throws SQLException {
         checkOpen();
     }
 
     @Override
-    public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
+    public void updateObject(final int columnIndex, final Object x, final SQLType targetSqlType, final int scaleOrLength) throws SQLException {
         checkOpen();
     }
 
@@ -1096,12 +1096,12 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     }
 
     @Override
-    public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
+    public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType) throws SQLException {
         checkOpen();
     }
 
     @Override
-    public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+    public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType, final int scaleOrLength)
             throws SQLException {
         checkOpen();
     }

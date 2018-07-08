@@ -34,7 +34,7 @@ public class TestBasicDataSourceMXBean {
         assertNull(bean.getDefaultSchema());
     }
 
-    private BasicDataSourceMXBean bean = new BasicDataSourceMXBean() {
+    private final BasicDataSourceMXBean bean = new BasicDataSourceMXBean() {
         
         @Override
         public boolean isPoolPreparedStatements() {

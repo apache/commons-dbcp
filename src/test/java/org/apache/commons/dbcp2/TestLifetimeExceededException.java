@@ -29,13 +29,13 @@ public class TestLifetimeExceededException {
 
     @Test
     public void testLifetimeExceededExceptionNoMessage() {
-        LifetimeExceededException exception = new LifetimeExceededException();
+        final LifetimeExceededException exception = new LifetimeExceededException();
         assertNull(exception.getMessage());
     }
 
     @Test
     public void testLifetimeExceededException() {
-        LifetimeExceededException exception = new LifetimeExceededException("car");
+        final LifetimeExceededException exception = new LifetimeExceededException("car");
         assertEquals("car", exception.getMessage());
     }
 }

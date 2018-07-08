@@ -547,7 +547,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      * @since 2.5.0
      */
     @Override
-    public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
+    public void setObject(final int parameterIndex, final Object x, final SQLType targetSqlType) throws SQLException {
         checkOpen();
         try {
             getDelegatePreparedStatement().setObject(parameterIndex, x, targetSqlType);
@@ -560,7 +560,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      * @since 2.5.0
      */
     @Override
-    public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
+    public void setObject(final int parameterIndex, final Object x, final SQLType targetSqlType, final int scaleOrLength) throws SQLException {
         checkOpen();
         try {
             getDelegatePreparedStatement().setObject(parameterIndex, x, targetSqlType, scaleOrLength);

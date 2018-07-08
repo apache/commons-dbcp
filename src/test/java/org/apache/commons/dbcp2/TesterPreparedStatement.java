@@ -464,12 +464,12 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     }
 
     @Override
-    public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
+    public void setObject(final int parameterIndex, final Object x, final SQLType targetSqlType) throws SQLException {
         checkOpen();
     }
 
     @Override
-    public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
+    public void setObject(final int parameterIndex, final Object x, final SQLType targetSqlType, final int scaleOrLength) throws SQLException {
         checkOpen();
     }
 

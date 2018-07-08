@@ -33,7 +33,7 @@ public class TestListException {
 
     @Test
     public void testNulls() {
-        ListException list = new ListException(null, null);
+        final ListException list = new ListException(null, null);
         assertNull(list.getMessage());
         assertNull(list.getExceptionList());
     }
@@ -41,8 +41,9 @@ public class TestListException {
     @Test
     public void testExceptionList() {
         @SuppressWarnings("unchecked")
+        final
         List<Throwable> exceptions = Arrays.asList(new Throwable[] {new NullPointerException(), new RuntimeException()});
-        ListException list = new ListException("Internal Error", exceptions);
+        final ListException list = new ListException("Internal Error", exceptions);
         assertEquals("Internal Error", list.getMessage());
         assertArrayEquals(exceptions.toArray(), list.getExceptionList().toArray());
     }

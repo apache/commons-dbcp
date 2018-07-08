@@ -47,28 +47,28 @@ public class TestDataSourceConnectionFactory {
 
     @Test
     public void testDefaultValues() throws SQLException {
-        Connection conn = factory.createConnection();
+        final Connection conn = factory.createConnection();
         assertNull(((TesterConnection) conn).getUserName());
     }
 
     @Test
     public void testCredentials() throws SQLException {
-        DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", "bar");
-        Connection conn = factory.createConnection();
+        final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", "bar");
+        final Connection conn = factory.createConnection();
         assertEquals("foo", ((TesterConnection) conn).getUserName());
     }
 
     @Test
     public void testEmptyPassword() throws SQLException {
-        DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", (char[]) null);
-        Connection conn = factory.createConnection();
+        final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", (char[]) null);
+        final Connection conn = factory.createConnection();
         assertEquals("foo", ((TesterConnection) conn).getUserName());
     }
 
     @Test
     public void testEmptyUser() throws SQLException {
-        DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] {'a'});
-        Connection conn = factory.createConnection();
+        final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] {'a'});
+        final Connection conn = factory.createConnection();
         assertNull(((TesterConnection) conn).getUserName());
     }
 
@@ -80,11 +80,11 @@ public class TestDataSourceConnectionFactory {
         }
 
         @Override
-        public void setLogWriter(PrintWriter out) throws SQLException {
+        public void setLogWriter(final PrintWriter out) throws SQLException {
         }
 
         @Override
-        public void setLoginTimeout(int seconds) throws SQLException {
+        public void setLoginTimeout(final int seconds) throws SQLException {
         }
 
         @Override
@@ -98,12 +98,12 @@ public class TestDataSourceConnectionFactory {
         }
 
         @Override
-        public <T> T unwrap(Class<T> iface) throws SQLException {
+        public <T> T unwrap(final Class<T> iface) throws SQLException {
             return null;
         }
 
         @Override
-        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
             return false;
         }
 
@@ -113,7 +113,7 @@ public class TestDataSourceConnectionFactory {
         }
 
         @Override
-        public Connection getConnection(String username, String password) throws SQLException {
+        public Connection getConnection(final String username, final String password) throws SQLException {
             return new TesterConnection(username, password);
         }
     }

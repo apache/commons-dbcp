@@ -71,7 +71,7 @@ public class TestInstanceKeyDataSource {
      */
     @Test
     public void testExceptionOnSetupDefaults() throws Exception {
-        ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource();
+        final ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource();
         final int numConnections = tds.getNumActive();
         try {
             tds.getConnection(USER, PASS);
@@ -169,7 +169,7 @@ public class TestInstanceKeyDataSource {
     public void testJndiPropertiesCleared() {
         spds.setJndiEnvironment("name", "king");
         assertEquals("king", spds.getJndiEnvironment("name"));
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty("fish", "kohi");
         spds.setJndiEnvironment(properties);
         assertNull(spds.getJndiEnvironment("name"));
@@ -178,7 +178,7 @@ public class TestInstanceKeyDataSource {
     @Test
     public void testJndiEnvironment() {
         assertNull(spds.getJndiEnvironment("name"));
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty("name", "clarke");
         spds.setJndiEnvironment(properties);
         assertEquals("clarke", spds.getJndiEnvironment("name"));
@@ -302,10 +302,10 @@ public class TestInstanceKeyDataSource {
         pcds.setDriver(DRIVER);
         pcds.setUrl(URL);
         spds.setConnectionPoolDataSource(pcds);
-        PooledConnectionAndInfo info = spds.getPooledConnectionAndInfo(null, null);
+        final PooledConnectionAndInfo info = spds.getPooledConnectionAndInfo(null, null);
         assertNull(info.getUsername());
         assertNull(info.getPassword());
-        Connection conn = spds.getConnection();
+        final Connection conn = spds.getConnection();
         assertNotNull(conn);
     }
 }

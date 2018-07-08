@@ -105,7 +105,7 @@ public class TestDelegatingStatement {
     public void testAddBatchString() throws Exception {
         try {
             delegate.addBatch("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).addBatch("foo");
     }
@@ -114,7 +114,7 @@ public class TestDelegatingStatement {
     public void testCancel() throws Exception {
         try {
             delegate.cancel();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).cancel();
     }
@@ -123,7 +123,7 @@ public class TestDelegatingStatement {
     public void testClearBatch() throws Exception {
         try {
             delegate.clearBatch();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).clearBatch();
     }
@@ -132,7 +132,7 @@ public class TestDelegatingStatement {
     public void testClearWarnings() throws Exception {
         try {
             delegate.clearWarnings();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).clearWarnings();
     }
@@ -141,7 +141,7 @@ public class TestDelegatingStatement {
     public void testClose() throws Exception {
         try {
             delegate.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).close();
     }
@@ -150,7 +150,7 @@ public class TestDelegatingStatement {
     public void testCloseOnCompletion() throws Exception {
         try {
             delegate.closeOnCompletion();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).closeOnCompletion();
     }
@@ -159,7 +159,7 @@ public class TestDelegatingStatement {
     public void testExecuteStringIntegerArray() throws Exception {
         try {
             delegate.execute("foo", (int[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).execute("foo", (int[]) null);
     }
@@ -168,7 +168,7 @@ public class TestDelegatingStatement {
     public void testExecuteString() throws Exception {
         try {
             delegate.execute("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).execute("foo");
     }
@@ -177,7 +177,7 @@ public class TestDelegatingStatement {
     public void testExecuteStringStringArray() throws Exception {
         try {
             delegate.execute("foo", (String[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).execute("foo", (String[]) null);
     }
@@ -186,7 +186,7 @@ public class TestDelegatingStatement {
     public void testExecuteStringInteger() throws Exception {
         try {
             delegate.execute("foo", 1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).execute("foo", 1);
     }
@@ -195,7 +195,7 @@ public class TestDelegatingStatement {
     public void testExecuteBatch() throws Exception {
         try {
             delegate.executeBatch();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeBatch();
     }
@@ -204,7 +204,7 @@ public class TestDelegatingStatement {
     public void testExecuteLargeBatch() throws Exception {
         try {
             delegate.executeLargeBatch();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeLargeBatch();
     }
@@ -213,7 +213,7 @@ public class TestDelegatingStatement {
     public void testExecuteLargeUpdateStringInteger() throws Exception {
         try {
             delegate.executeLargeUpdate("foo", 1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeLargeUpdate("foo", 1);
     }
@@ -222,7 +222,7 @@ public class TestDelegatingStatement {
     public void testExecuteLargeUpdateStringIntegerArray() throws Exception {
         try {
             delegate.executeLargeUpdate("foo", (int[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeLargeUpdate("foo", (int[]) null);
     }
@@ -231,7 +231,7 @@ public class TestDelegatingStatement {
     public void testExecuteLargeUpdateString() throws Exception {
         try {
             delegate.executeLargeUpdate("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeLargeUpdate("foo");
     }
@@ -240,7 +240,7 @@ public class TestDelegatingStatement {
     public void testExecuteLargeUpdateStringStringArray() throws Exception {
         try {
             delegate.executeLargeUpdate("foo", (String[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeLargeUpdate("foo", (String[]) null);
     }
@@ -249,7 +249,7 @@ public class TestDelegatingStatement {
     public void testExecuteQueryString() throws Exception {
         try {
             delegate.executeQuery("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeQuery("foo");
     }
@@ -258,7 +258,7 @@ public class TestDelegatingStatement {
     public void testExecuteUpdateStringIntegerArray() throws Exception {
         try {
             delegate.executeUpdate("foo", (int[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeUpdate("foo", (int[]) null);
     }
@@ -267,7 +267,7 @@ public class TestDelegatingStatement {
     public void testExecuteUpdateStringStringArray() throws Exception {
         try {
             delegate.executeUpdate("foo", (String[]) null);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeUpdate("foo", (String[]) null);
     }
@@ -276,7 +276,7 @@ public class TestDelegatingStatement {
     public void testExecuteUpdateString() throws Exception {
         try {
             delegate.executeUpdate("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeUpdate("foo");
     }
@@ -285,7 +285,7 @@ public class TestDelegatingStatement {
     public void testExecuteUpdateStringInteger() throws Exception {
         try {
             delegate.executeUpdate("foo", 1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).executeUpdate("foo", 1);
     }
@@ -300,7 +300,7 @@ public class TestDelegatingStatement {
     public void testGetConnection() throws Exception {
         try {
             delegate.getConnection();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(0)).getConnection();
     }
@@ -309,7 +309,7 @@ public class TestDelegatingStatement {
     public void testGetFetchDirection() throws Exception {
         try {
             delegate.getFetchDirection();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getFetchDirection();
     }
@@ -318,7 +318,7 @@ public class TestDelegatingStatement {
     public void testGetFetchSize() throws Exception {
         try {
             delegate.getFetchSize();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getFetchSize();
     }
@@ -327,7 +327,7 @@ public class TestDelegatingStatement {
     public void testGetGeneratedKeys() throws Exception {
         try {
             delegate.getGeneratedKeys();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getGeneratedKeys();
     }
@@ -336,7 +336,7 @@ public class TestDelegatingStatement {
     public void testGetLargeMaxRows() throws Exception {
         try {
             delegate.getLargeMaxRows();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getLargeMaxRows();
     }
@@ -345,7 +345,7 @@ public class TestDelegatingStatement {
     public void testGetLargeUpdateCount() throws Exception {
         try {
             delegate.getLargeUpdateCount();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getLargeUpdateCount();
     }
@@ -354,7 +354,7 @@ public class TestDelegatingStatement {
     public void testGetMaxFieldSize() throws Exception {
         try {
             delegate.getMaxFieldSize();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getMaxFieldSize();
     }
@@ -363,7 +363,7 @@ public class TestDelegatingStatement {
     public void testGetMaxRows() throws Exception {
         try {
             delegate.getMaxRows();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getMaxRows();
     }
@@ -372,7 +372,7 @@ public class TestDelegatingStatement {
     public void testGetMoreResultsInteger() throws Exception {
         try {
             delegate.getMoreResults(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getMoreResults(1);
     }
@@ -381,7 +381,7 @@ public class TestDelegatingStatement {
     public void testGetMoreResults() throws Exception {
         try {
             delegate.getMoreResults();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getMoreResults();
     }
@@ -390,7 +390,7 @@ public class TestDelegatingStatement {
     public void testGetQueryTimeout() throws Exception {
         try {
             delegate.getQueryTimeout();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getQueryTimeout();
     }
@@ -399,7 +399,7 @@ public class TestDelegatingStatement {
     public void testGetResultSet() throws Exception {
         try {
             delegate.getResultSet();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getResultSet();
     }
@@ -408,7 +408,7 @@ public class TestDelegatingStatement {
     public void testGetResultSetConcurrency() throws Exception {
         try {
             delegate.getResultSetConcurrency();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getResultSetConcurrency();
     }
@@ -417,7 +417,7 @@ public class TestDelegatingStatement {
     public void testGetResultSetHoldability() throws Exception {
         try {
             delegate.getResultSetHoldability();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getResultSetHoldability();
     }
@@ -426,7 +426,7 @@ public class TestDelegatingStatement {
     public void testGetResultSetType() throws Exception {
         try {
             delegate.getResultSetType();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getResultSetType();
     }
@@ -435,7 +435,7 @@ public class TestDelegatingStatement {
     public void testGetUpdateCount() throws Exception {
         try {
             delegate.getUpdateCount();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getUpdateCount();
     }
@@ -444,7 +444,7 @@ public class TestDelegatingStatement {
     public void testGetWarnings() throws Exception {
         try {
             delegate.getWarnings();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).getWarnings();
     }
@@ -453,7 +453,7 @@ public class TestDelegatingStatement {
     public void testIsCloseOnCompletion() throws Exception {
         try {
             delegate.isCloseOnCompletion();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).isCloseOnCompletion();
     }
@@ -468,7 +468,7 @@ public class TestDelegatingStatement {
     public void testIsClosed() throws Exception {
         try {
             delegate.isClosed();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(0)).isClosed();
     }
@@ -477,7 +477,7 @@ public class TestDelegatingStatement {
     public void testIsPoolable() throws Exception {
         try {
             delegate.isPoolable();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).isPoolable();
     }
@@ -486,7 +486,7 @@ public class TestDelegatingStatement {
     public void testSetCursorNameString() throws Exception {
         try {
             delegate.setCursorName("foo");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setCursorName("foo");
     }
@@ -495,7 +495,7 @@ public class TestDelegatingStatement {
     public void testSetEscapeProcessingBoolean() throws Exception {
         try {
             delegate.setEscapeProcessing(Boolean.TRUE);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setEscapeProcessing(Boolean.TRUE);
     }
@@ -504,7 +504,7 @@ public class TestDelegatingStatement {
     public void testSetFetchDirectionInteger() throws Exception {
         try {
             delegate.setFetchDirection(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setFetchDirection(1);
     }
@@ -513,7 +513,7 @@ public class TestDelegatingStatement {
     public void testSetFetchSizeInteger() throws Exception {
         try {
             delegate.setFetchSize(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setFetchSize(1);
     }
@@ -522,7 +522,7 @@ public class TestDelegatingStatement {
     public void testSetLargeMaxRowsLong() throws Exception {
         try {
             delegate.setLargeMaxRows(1l);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setLargeMaxRows(1l);
     }
@@ -531,7 +531,7 @@ public class TestDelegatingStatement {
     public void testSetMaxFieldSizeInteger() throws Exception {
         try {
             delegate.setMaxFieldSize(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setMaxFieldSize(1);
     }
@@ -540,7 +540,7 @@ public class TestDelegatingStatement {
     public void testSetMaxRowsInteger() throws Exception {
         try {
             delegate.setMaxRows(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setMaxRows(1);
     }
@@ -549,7 +549,7 @@ public class TestDelegatingStatement {
     public void testSetPoolableBoolean() throws Exception {
         try {
             delegate.setPoolable(Boolean.TRUE);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setPoolable(Boolean.TRUE);
     }
@@ -558,7 +558,7 @@ public class TestDelegatingStatement {
     public void testSetQueryTimeoutInteger() throws Exception {
         try {
             delegate.setQueryTimeout(1);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
         }
         verify(obj, times(1)).setQueryTimeout(1);
     }

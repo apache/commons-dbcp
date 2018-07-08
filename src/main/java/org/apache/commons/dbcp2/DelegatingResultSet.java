@@ -1866,7 +1866,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @since 2.5.0
      */
     @Override
-    public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+    public void updateObject(final int columnIndex, final Object x, final SQLType targetSqlType) throws SQLException {
         try {
             resultSet.updateObject(columnIndex, x, targetSqlType);
         } catch (final SQLException e) {
@@ -1878,7 +1878,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @since 2.5.0
      */
     @Override
-    public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
+    public void updateObject(final int columnIndex, final Object x, final SQLType targetSqlType, final int scaleOrLength) throws SQLException {
         try {
             resultSet.updateObject(columnIndex, x, targetSqlType, scaleOrLength);
         } catch (final SQLException e) {
@@ -1908,7 +1908,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @since 2.5.0
      */
     @Override
-    public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
+    public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType) throws SQLException {
         try {
             resultSet.updateObject(columnLabel, x, targetSqlType);
         } catch (final SQLException e) {
@@ -1920,7 +1920,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * @since 2.5.0
      */
     @Override
-    public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+    public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType, final int scaleOrLength)
             throws SQLException {
         try {
             resultSet.updateObject(columnLabel, x, targetSqlType, scaleOrLength);

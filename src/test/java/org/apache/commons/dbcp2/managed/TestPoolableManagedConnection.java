@@ -135,7 +135,7 @@ public class TestPoolableManagedConnection {
         try {
             assertNull(transactionRegistry.getXAResource(conn));
             fail("Transaction registry was supposed to be empty now");
-        } catch (SQLException e) {}
+        } catch (final SQLException e) {}
         assertEquals(0, pool.getNumActive());
     }
 }

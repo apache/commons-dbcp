@@ -87,7 +87,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     @Test
     public void testXaDataSourceInstance() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            XADataSource ds = new JdbcDataSource();
+            final XADataSource ds = new JdbcDataSource();
             basicManagedDataSource.setXaDataSourceInstance(ds);
             assertEquals(ds, basicManagedDataSource.getXaDataSourceInstance());
         }

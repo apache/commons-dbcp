@@ -227,7 +227,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                 boolean connectionIsClosed;
                 try {
                     connectionIsClosed = connection.isClosed();
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     // not sure what the state is, so assume the connection is open.
                     connectionIsClosed = false;
                 }

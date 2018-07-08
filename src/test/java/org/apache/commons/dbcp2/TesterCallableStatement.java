@@ -382,17 +382,17 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void registerOutParameter(int parameterIndex, SQLType sqlType) throws SQLException {
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType) throws SQLException {
         // Do nothing
     }
 
     @Override
-    public void registerOutParameter(int parameterIndex, SQLType sqlType, int scale) throws SQLException {
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType, final int scale) throws SQLException {
         // Do nothing
     }
 
     @Override
-    public void registerOutParameter(int parameterIndex, SQLType sqlType, String typeName) throws SQLException {
+    public void registerOutParameter(final int parameterIndex, final SQLType sqlType, final String typeName) throws SQLException {
         // Do nothing
     }
 
@@ -409,17 +409,17 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void registerOutParameter(String parameterName, SQLType sqlType) throws SQLException {
+    public void registerOutParameter(final String parameterName, final SQLType sqlType) throws SQLException {
         // Do nothing
     }
 
     @Override
-    public void registerOutParameter(String parameterName, SQLType sqlType, int scale) throws SQLException {
+    public void registerOutParameter(final String parameterName, final SQLType sqlType, final int scale) throws SQLException {
         // Do nothing
     }
 
     @Override
-    public void registerOutParameter(String parameterName, SQLType sqlType, String typeName) throws SQLException {
+    public void registerOutParameter(final String parameterName, final SQLType sqlType, final String typeName) throws SQLException {
         // Do nothing
     }
 
@@ -568,12 +568,12 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setObject(String parameterName, Object x, SQLType targetSqlType) throws SQLException {
+    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType) throws SQLException {
         // Do nothing
     }
 
     @Override
-    public void setObject(String parameterName, Object x, SQLType targetSqlType, int scaleOrLength)
+    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType, final int scaleOrLength)
             throws SQLException {
         // Do nothing
     }

@@ -32,17 +32,17 @@ public class TestDriverConnectionFactory {
 
     @Test
     public void testDriverConnectionFactoryToString() {
-        DriverConnectionFactory cf = new DriverConnectionFactory(
+        final DriverConnectionFactory cf = new DriverConnectionFactory(
                 new TesterDriver(), "jdbc:apache:commons:testdriver", null);
-        String toString = cf.toString();
+        final String toString = cf.toString();
         assertTrue(toString.contains("jdbc:apache:commons:testdriver"));
     }
 
     @Test
     public void testCreateConnection() throws SQLException {
-        DriverConnectionFactory cf = new DriverConnectionFactory(
+        final DriverConnectionFactory cf = new DriverConnectionFactory(
                 new TesterDriver(), "jdbc:apache:commons:testdriver", null);
-        Connection conn = cf.createConnection();
+        final Connection conn = cf.createConnection();
         assertEquals(0, conn.getMetaData().getDriverMajorVersion());
     }
 }

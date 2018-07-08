@@ -98,7 +98,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testStartNoFlagResume() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         assertEquals(xid, resource.getXid());
@@ -106,7 +106,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testStartNoFlagResumeEnd() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         // flag is never used in the end
@@ -116,7 +116,7 @@ public class TestLocalXaResource {
 
     @Test(expected=NullPointerException.class)
     public void testStartNoFlagResumeEndMissingXid() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         // flag is never used in the end
@@ -125,7 +125,7 @@ public class TestLocalXaResource {
 
     @Test(expected=XAException.class)
     public void testStartNoFlagResumeEndDifferentXid() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         // flag is never used in the end
@@ -134,7 +134,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testForgetDifferentXid() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(new TestXid());
         assertEquals(xid, resource.getXid());
@@ -142,7 +142,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testForgetMissingXid() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(null);
         assertEquals(xid, resource.getXid());
@@ -150,7 +150,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testForget() throws XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(xid);
         assertNull(resource.getXid());
@@ -158,7 +158,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testStartReadOnlyConnectionPrepare() throws XAException, SQLException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         conn.setAutoCommit(false);
         conn.setReadOnly(true);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -174,7 +174,7 @@ public class TestLocalXaResource {
      */
     @Test
     public void testStartExceptionOnGetAutoCommit() throws XAException, SQLException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenGetAutoCommit = true;
         conn.setAutoCommit(false);
         conn.setReadOnly(true);
@@ -196,7 +196,7 @@ public class TestLocalXaResource {
      */
     @Test
     public void testStartReadOnlyConnectionExceptionOnGetAutoCommit() throws XAException, SQLException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenGetAutoCommit = true;
         conn.setAutoCommit(false);
         conn.setReadOnly(false);
@@ -211,7 +211,7 @@ public class TestLocalXaResource {
 
     @Test(expected=XAException.class)
     public void testStartFailsWhenCannotSetAutoCommit() throws XAException, SQLException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenSetAutoCommit = true;
         resource.start(xid, XAResource.TMNOFLAGS);
     }
@@ -230,7 +230,7 @@ public class TestLocalXaResource {
 
     @Test(expected=XAException.class)
     public void testCommitInvalidXid() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -239,7 +239,7 @@ public class TestLocalXaResource {
 
     @Test(expected=XAException.class)
     public void testCommitConnectionClosed() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = true;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -248,7 +248,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testCommitConnectionNotReadOnly() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(true);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -258,7 +258,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testCommit() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -273,7 +273,7 @@ public class TestLocalXaResource {
 
     @Test(expected=XAException.class)
     public void testRollbackInvalidXid() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -282,7 +282,7 @@ public class TestLocalXaResource {
 
     @Test
     public void testRollback() throws SQLException, XAException {
-        Xid xid = new TestXid();
+        final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
@@ -301,12 +301,12 @@ public class TestLocalXaResource {
         public boolean closed = false;
 
         @Override
-        public <T> T unwrap(Class<T> iface) throws SQLException {
+        public <T> T unwrap(final Class<T> iface) throws SQLException {
             return null;
         }
 
         @Override
-        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
             return false;
         }
 
@@ -316,22 +316,22 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql) throws SQLException {
+        public PreparedStatement prepareStatement(final String sql) throws SQLException {
             return null;
         }
 
         @Override
-        public CallableStatement prepareCall(String sql) throws SQLException {
+        public CallableStatement prepareCall(final String sql) throws SQLException {
             return null;
         }
 
         @Override
-        public String nativeSQL(String sql) throws SQLException {
+        public String nativeSQL(final String sql) throws SQLException {
             return null;
         }
 
         @Override
-        public void setAutoCommit(boolean autoCommit) throws SQLException {
+        public void setAutoCommit(final boolean autoCommit) throws SQLException {
             if (throwWhenSetAutoCommit) {
                 throw new SQLException();
             }
@@ -372,7 +372,7 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public void setReadOnly(boolean readOnly) throws SQLException {
+        public void setReadOnly(final boolean readOnly) throws SQLException {
             this.readOnly = readOnly;
         }
 
@@ -382,7 +382,7 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public void setCatalog(String catalog) throws SQLException {
+        public void setCatalog(final String catalog) throws SQLException {
         }
 
         @Override
@@ -391,7 +391,7 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public void setTransactionIsolation(int level) throws SQLException {
+        public void setTransactionIsolation(final int level) throws SQLException {
         }
 
         @Override
@@ -409,18 +409,18 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+        public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
             return null;
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
+        public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
                 throws SQLException {
             return null;
         }
 
         @Override
-        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency)
+        public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
                 throws SQLException {
             return null;
         }
@@ -431,11 +431,11 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
+        public void setTypeMap(final Map<String, Class<?>> map) throws SQLException {
         }
 
         @Override
-        public void setHoldability(int holdability) throws SQLException {
+        public void setHoldability(final int holdability) throws SQLException {
         }
 
         @Override
@@ -449,48 +449,48 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public Savepoint setSavepoint(String name) throws SQLException {
+        public Savepoint setSavepoint(final String name) throws SQLException {
             return null;
         }
 
         @Override
-        public void rollback(Savepoint savepoint) throws SQLException {
+        public void rollback(final Savepoint savepoint) throws SQLException {
         }
 
         @Override
-        public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+        public void releaseSavepoint(final Savepoint savepoint) throws SQLException {
         }
 
         @Override
-        public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
+        public Statement createStatement(final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability)
                 throws SQLException {
             return null;
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
-                int resultSetHoldability) throws SQLException {
+        public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
+                final int resultSetHoldability) throws SQLException {
             return null;
         }
 
         @Override
-        public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
-                int resultSetHoldability) throws SQLException {
+        public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
+                final int resultSetHoldability) throws SQLException {
             return null;
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+        public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
             return null;
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+        public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
             return null;
         }
 
         @Override
-        public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+        public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
             return null;
         }
 
@@ -515,20 +515,20 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public boolean isValid(int timeout) throws SQLException {
+        public boolean isValid(final int timeout) throws SQLException {
             return false;
         }
 
         @Override
-        public void setClientInfo(String name, String value) throws SQLClientInfoException {
+        public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
         }
 
         @Override
-        public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        public void setClientInfo(final Properties properties) throws SQLClientInfoException {
         }
 
         @Override
-        public String getClientInfo(String name) throws SQLException {
+        public String getClientInfo(final String name) throws SQLException {
             return null;
         }
 
@@ -538,17 +538,17 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        public Array createArrayOf(final String typeName, final Object[] elements) throws SQLException {
             return null;
         }
 
         @Override
-        public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+        public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
             return null;
         }
 
         @Override
-        public void setSchema(String schema) throws SQLException {
+        public void setSchema(final String schema) throws SQLException {
         }
 
         @Override
@@ -557,11 +557,11 @@ public class TestLocalXaResource {
         }
 
         @Override
-        public void abort(Executor executor) throws SQLException {
+        public void abort(final Executor executor) throws SQLException {
         }
 
         @Override
-        public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+        public void setNetworkTimeout(final Executor executor, final int milliseconds) throws SQLException {
         }
 
         @Override
