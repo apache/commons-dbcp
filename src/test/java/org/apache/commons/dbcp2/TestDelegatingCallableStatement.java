@@ -42,7 +42,7 @@ public class TestDelegatingCallableStatement {
     public void setUp() throws Exception {
         conn = new TesterConnection("test", "test");
         obj = mock(CallableStatement.class);
-        final DelegatingConnection<Connection> delegatingConnection = new DelegatingConnection<Connection>(conn);
+        final DelegatingConnection<Connection> delegatingConnection = new DelegatingConnection<>(conn);
         delegate = new DelegatingCallableStatement(delegatingConnection, obj);
     }
 
