@@ -1,4 +1,41 @@
               Apache Apache Commons DBCP
+                 Version 2.5.0
+                 RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.5.0-SNAPSHOT.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o DBCP-506:  Support JDBC 4.2. Thanks to Gary Gregory.
+o DBCP-479:  Support default schema in configuration. Thanks to Guillaume Husta, Gary Gregory.
+
+Fixed Bugs:
+o DBCP-508:  Prepared statement keys should take a Connection's schema into account. Thanks to Gary Gregory.
+o DBCP-512:  Avoid exceptions when closing a connection in mutli-threaded use case. Thanks to Gary Gregory.
+
+Changes:
+o DBCP-505:  Update Java requirement from version 7 to 8. Thanks to Gary Gregory.
+o DBCP-427:  Examines 'SQLException's thrown by underlying connections or statements for fatal (disconnection) errors. Thanks to Vladimir Konkov, Phil Steitz, Gary Gregory.
+o DBCP-507:  Change default for fail-fast connections from false to true. Thanks to Vladimir Konkov, Phil Steitz, Gary Gregory.
+o DBCP-504:  Increase test coverage. Thanks to Bruno P. Kinoshita.
+o DBCP-510:  Update Apache Commons Pool from 2.5.0 to 2.6.0. Thanks to Gary Gregory.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+http://commons.apache.org/dbcp/
+
+-----------------------------------------------------------------------------
+
+Download page: http://commons.apache.org/dbcp/download_dbcp.cgi
+
+              Apache Apache Commons DBCP
                  Version 2.4.0
                  RELEASE NOTES
 
@@ -33,7 +70,6 @@ For complete information on Apache Commons DBCP, including instructions on how t
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
 http://commons.apache.org/dbcp/
-
 
 -----------------------------------------------------------------------------
 
