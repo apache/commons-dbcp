@@ -25,6 +25,8 @@ o DBCP-507:  Change default for fail-fast connections from false to true. Thanks
 o DBCP-504:  Increase test coverage. Thanks to Bruno P. Kinoshita.
 o DBCP-510:  Update Apache Commons Pool from 2.5.0 to 2.6.0. Thanks to Gary Gregory.
 
+Note that Clirr incorrectly reports one binary incompatible change because it is not aware of Java 8 and default methods:
+[ERROR] 7012: org.apache.commons.dbcp2.BasicDataSourceMXBean: Method 'public java.lang.String getDefaultSchema()' has been added to an interface
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
