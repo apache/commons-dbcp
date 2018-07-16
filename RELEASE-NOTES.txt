@@ -33,6 +33,8 @@ patches, or suggestions for improvement, see the Apache Apache Commons DBCP webs
 
 http://commons.apache.org/dbcp/
 
+Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+
 -----------------------------------------------------------------------------
 
 Download page: http://commons.apache.org/dbcp/download_dbcp.cgi
@@ -73,6 +75,8 @@ patches, or suggestions for improvement, see the Apache Apache Commons DBCP webs
 
 http://commons.apache.org/dbcp/
 
+Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
@@ -103,6 +107,8 @@ For complete information on Apache Commons DBCP, including instructions on how t
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
 http://commons.apache.org/dbcp/
+
+Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
@@ -166,6 +172,8 @@ patches, or suggestions for improvement, see the Apache Apache Commons DBCP webs
 
 http://commons.apache.org/dbcp/
 
+Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
@@ -198,3 +206,5 @@ For complete information on Apache Commons DBCP, including instructions on how t
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
 http://commons.apache.org/dbcp/
+
+Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
