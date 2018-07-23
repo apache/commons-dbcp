@@ -26,6 +26,7 @@ import org.apache.commons.dbcp2.PoolingDataSource;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import java.sql.SQLException;
 
@@ -61,6 +62,8 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /** XA data source instance */
     private XADataSource xaDataSourceInstance;
+    /** Transaction Manager */
+    private transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     /**
      * Gets the XADataSource instance used by the XAConnectionFactory.
@@ -99,6 +102,14 @@ public class BasicManagedDataSource extends BasicDataSource {
     }
 
     /**
+     * Gets the optional TSR.
+     * @return the TSR that can be used to register synchronizations
+     */
+    public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
+                return transactionSynchronizationRegistry;
+    }
+
+    /**
      * Gets the transaction registry.
      *
      * @return the transaction registry associating XAResources with managed connections
@@ -115,6 +126,14 @@ public class BasicManagedDataSource extends BasicDataSource {
      */
     public void setTransactionManager(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
+    }
+
+    /**
+     * Sets the optional TSR property.
+     * @param transactionSynchronizationRegistry the TSR used to register synchronizations
+     */
+    public void setTransactionSynchronizationRegistry(final TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
+        this.transactionSynchronizationRegistry = transactionSynchronizationRegistry;
     }
 
     /**
