@@ -208,6 +208,15 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
+    public void testSetPasswordThenModCharArray() {
+        char[] pwd = {'a' };
+        pcds.setPassword(pwd);
+        assertEquals("a", pcds.getPassword());
+        pwd[0] = 'b';
+        assertEquals("a", pcds.getPassword());
+    }
+
+    @Test
     public void testSetPasswordNullWithConnectionProperties() throws Exception {
         pcds.setConnectionProperties(new Properties());
         pcds.setPassword("Secret");
