@@ -45,6 +45,7 @@ public class TesterDriver implements Driver {
         try {
             DriverManager.registerDriver(new TesterDriver());
         } catch(final Exception e) {
+            // ignore
         }
         validUserPasswords.put("foo", "bar");
         validUserPasswords.put("u1", "p1");
