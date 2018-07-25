@@ -36,6 +36,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
+import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 
 /**
@@ -57,6 +58,36 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             transactionManager.commit();
         }
         super.tearDown();
+    }
+
+    @Test
+    public void testGetConnectionInAfterCompletion() throws Exception {
+
+        final DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection();
+        // Don't close so we can check it for warnings in afterCompletion
+        transactionManager.getTransaction().registerSynchronization(new Synchronization() {
+            @Override
+            public void beforeCompletion() {
+
+            }
+
+            @Override
+            public void afterCompletion(int i) {
+                try {
+                    Connection connection1 = ds.getConnection();
+                    try {
+                        connection1.getWarnings();
+                        fail("Could operate on closed connection");
+                    } catch (SQLException e) {
+                        // This is expected
+                    }
+                } catch (SQLException e) {
+                    fail("Should have been able to get connection");
+                }
+            }
+        });
+        connection.close();
+        transactionManager.commit();
     }
 
     /**
