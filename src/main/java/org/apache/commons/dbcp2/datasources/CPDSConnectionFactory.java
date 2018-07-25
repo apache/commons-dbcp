@@ -129,7 +129,7 @@ class CPDSConnectionFactory
     char[] getPasswordCharArray() {
         return userPassword;
     }
-    
+
     /**
      * Returns the object pool used to pool connections created by this factory.
      *
