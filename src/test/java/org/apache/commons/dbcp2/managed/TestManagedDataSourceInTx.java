@@ -17,6 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -126,6 +127,41 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             }
         });
         connection.close();
+        transactionManager.commit();
+    }
+
+    @Test
+    public void testDoubleReturn() throws Exception {
+        transactionManager.getTransaction().registerSynchronization(new Synchronization() {
+            private ManagedConnection<?> conn;
+
+            @Override
+            public void beforeCompletion() {
+                try {
+                    conn = (ManagedConnection<?>) ds.getConnection();
+                    assertNotNull(conn);
+                } catch (final SQLException e) {
+                    fail("Could not get connection");
+                }
+            }
+
+            @Override
+            public void afterCompletion(final int i) {
+                final int numActive = pool.getNumActive();
+                try {
+                    conn.checkOpen();
+                } catch (final Exception e) {
+                    // Ignore
+                }
+                assertEquals(numActive, pool.getNumActive());
+                try {
+                    conn.close();
+                } catch (final Exception e) {
+                    fail("Should have been able to close the connection");
+                }
+                // TODO Requires DBCP-515 assertTrue(numActive -1 == pool.getNumActive());
+            }
+        });
         transactionManager.commit();
     }
 
