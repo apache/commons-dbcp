@@ -60,6 +60,41 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         super.tearDown();
     }
 
+    @Test
+    public void testDoubleReturn() throws Exception {
+        final Object o = new Object();
+        transactionManager.getTransaction().registerSynchronization(new Synchronization() {
+            ManagedConnection<?> conn;
+            @Override
+            public void beforeCompletion() {
+                try {
+                    conn = (ManagedConnection<?>) ds.getConnection();
+                } catch (SQLException e) {
+                    fail("Could not get connection");
+                }
+            }
+
+            @Override
+            public void afterCompletion(int i) {
+                int numActive = pool.getNumActive();
+                try {
+                    conn.checkOpen();
+                } catch (Exception e) {
+                    // Ignore
+                }
+                assertTrue(numActive == pool.getNumActive());
+                try {
+                    conn.close();
+                } catch (Exception e) {
+                    fail("Should have been able to close the connection");
+                }
+                // TODO Requires DBCP-515 assertTrue(numActive -1 == pool.getNumActive());
+            }
+        });
+        transactionManager.commit();
+
+    }
+
     /**
      * @see #testSharedConnection()
      */
