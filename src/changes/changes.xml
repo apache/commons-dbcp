@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-517" due-to="Gary Gregory">
         Make defensive copies of char[] passwords.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-515" due-to="Tom Jenkinson, Gary Gregory">
+        Do not try to register synchronization when the transaction is no longer active.
+      </action>
     </release>
     <release version="2.5.0" date="2018-07-15" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="update" issue="DBCP-505" due-to="Gary Gregory">

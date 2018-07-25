@@ -23,23 +23,24 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.transaction.Synchronization;
+import javax.transaction.Transaction;
+
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-
-import javax.transaction.Transaction;
-
 /**
- * TestSuite for ManagedDataSource with an active transaction in progress.
+ * Tests ManagedDataSource with an active transaction in progress.
  */
 public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
@@ -96,6 +97,36 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         for (final Connection element : conn) {
             element.close();
         }
+    }
+
+    @Test
+    public void testGetConnectionInAfterCompletion() throws Exception {
+
+        final DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection();
+        // Don't close so we can check it for warnings in afterCompletion
+        transactionManager.getTransaction().registerSynchronization(new Synchronization() {
+            @Override
+            public void beforeCompletion() {
+                // empty
+            }
+
+            @Override
+            public void afterCompletion(int i) {
+                try {
+                    Connection connection1 = ds.getConnection();
+                    try {
+                        connection1.getWarnings();
+                        fail("Could operate on closed connection");
+                    } catch (SQLException e) {
+                        // This is expected
+                    }
+                } catch (SQLException e) {
+                    fail("Should have been able to get connection");
+                }
+            }
+        });
+        connection.close();
+        transactionManager.commit();
     }
 
     @Override

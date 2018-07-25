@@ -130,6 +130,12 @@ public class TransactionContext {
      */
     public void addTransactionContextListener(final TransactionContextListener listener) throws SQLException {
         try {
+            if (!isActive()) {
+                Transaction transaction = this.transactionRef.get();
+                listener.afterCompletion(TransactionContext.this,
+                        transaction == null ? false : transaction.getStatus() == Status.STATUS_COMMITTED);
+                return;
+            }
             final Synchronization s = new Synchronization() {
                 @Override
                 public void beforeCompletion() {
