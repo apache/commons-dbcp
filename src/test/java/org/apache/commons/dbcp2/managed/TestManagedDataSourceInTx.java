@@ -111,16 +111,16 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             }
 
             @Override
-            public void afterCompletion(int i) {
+            public void afterCompletion(final int i) {
                 try {
-                    Connection connection1 = ds.getConnection();
+                    final Connection connection1 = ds.getConnection();
                     try {
                         connection1.getWarnings();
                         fail("Could operate on closed connection");
-                    } catch (SQLException e) {
+                    } catch (final SQLException e) {
                         // This is expected
                     }
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     fail("Should have been able to get connection");
                 }
             }

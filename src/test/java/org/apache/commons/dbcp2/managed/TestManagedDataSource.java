@@ -54,7 +54,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     protected PoolingDataSource<PoolableConnection> ds = null;
-    private GenericObjectPool<PoolableConnection> pool = null;
+    protected GenericObjectPool<PoolableConnection> pool = null;
     protected TransactionManager transactionManager;
 
     @Before
