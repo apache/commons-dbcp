@@ -647,4 +647,27 @@ class PooledConnectionImpl
     public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(super.toString());
+        builder.append("[connection=");
+        builder.append(connection);
+        builder.append(", delegatingConnection=");
+        builder.append(delegatingConnection);
+        builder.append(", logicalConnection=");
+        builder.append(logicalConnection);
+        builder.append(", eventListeners=");
+        builder.append(eventListeners);
+        builder.append(", statementEventListeners=");
+        builder.append(statementEventListeners);
+        builder.append(", closed=");
+        builder.append(closed);
+        builder.append(", pStmtPool=");
+        builder.append(pStmtPool);
+        builder.append(", accessToUnderlyingConnectionAllowed=");
+        builder.append(accessToUnderlyingConnectionAllowed);
+        builder.append("]");
+        return builder.toString();
+    }
 }

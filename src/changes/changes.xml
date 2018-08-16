@@ -76,6 +76,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" issue="DBCP-518" due-to="Gary Gregory">
         Allow DBCP to work with old Java 6/JDBC drivers without throwing AbstractMethodError.
       </action>
+      <action dev="ggregory" type="add" issue="DBCP-519" due-to="Gary Gregory">
+        Add some toString() methods for debugging (never printing passwords.)
+      </action>
     </release>
     <release version="2.5.0" date="2018-07-15" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="update" issue="DBCP-505" due-to="Gary Gregory">

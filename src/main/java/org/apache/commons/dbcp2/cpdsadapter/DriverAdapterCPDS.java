@@ -730,4 +730,44 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
             }
         }
     }
+
+    /**
+     * Does not print the userPassword field nor the password in the connectionProperties.
+     * 
+     * @since 2.6.0
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(super.toString());
+        builder.append("[description=");
+        builder.append(description);
+        builder.append(", url=");
+        builder.append(url);
+        builder.append(", userName=");
+        builder.append(userName);
+        builder.append(", driver=");
+        builder.append(driver);
+        builder.append(", loginTimeout=");
+        builder.append(loginTimeout);
+        builder.append(", poolPreparedStatements=");
+        builder.append(poolPreparedStatements);
+        builder.append(", maxIdle=");
+        builder.append(maxIdle);
+        builder.append(", timeBetweenEvictionRunsMillis=");
+        builder.append(timeBetweenEvictionRunsMillis);
+        builder.append(", numTestsPerEvictionRun=");
+        builder.append(numTestsPerEvictionRun);
+        builder.append(", minEvictableIdleTimeMillis=");
+        builder.append(minEvictableIdleTimeMillis);
+        builder.append(", maxPreparedStatements=");
+        builder.append(maxPreparedStatements);
+        builder.append(", getConnectionCalled=");
+        builder.append(getConnectionCalled);
+        builder.append(", connectionProperties=");
+        builder.append(((Properties) connectionProperties.clone()).remove("password"));
+        builder.append(", accessToUnderlyingConnectionAllowed=");
+        builder.append(accessToUnderlyingConnectionAllowed);
+        builder.append("]");
+        return builder.toString();
+    }
 }

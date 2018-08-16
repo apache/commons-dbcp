@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -395,5 +396,30 @@ class CPDSConnectionFactory
                         Long.valueOf(maxConnLifetimeMillis)));
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(super.toString());
+        builder.append("[cpds=");
+        builder.append(cpds);
+        builder.append(", validationQuery=");
+        builder.append(validationQuery);
+        builder.append(", validationQueryTimeoutSeconds=");
+        builder.append(validationQueryTimeoutSeconds);
+        builder.append(", rollbackAfterValidation=");
+        builder.append(rollbackAfterValidation);
+        builder.append(", pool=");
+        builder.append(pool);
+        builder.append(", userName=");
+        builder.append(userName);
+        builder.append(", maxConnLifetimeMillis=");
+        builder.append(maxConnLifetimeMillis);
+        builder.append(", validatingSet=");
+        builder.append(validatingSet);
+        builder.append(", pcMap=");
+        builder.append(pcMap);
+        builder.append("]");
+        return builder.toString();
     }
 }
