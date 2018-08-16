@@ -938,7 +938,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public String getSchema() throws SQLException {
         checkOpen();
         try {
-            return connection.getSchema();
+            return Utils.getSchema(connection);
         } catch (final SQLException e) {
             handleException(e);
             return null;
