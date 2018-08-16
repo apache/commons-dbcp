@@ -30,10 +30,10 @@ import javax.sql.StatementEventListener;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
+import org.apache.commons.dbcp2.Jdbc41Bridge;
 import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolableCallableStatement;
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
-import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -296,7 +296,7 @@ class PooledConnectionImpl
 
     private String getSchemaOrNull() {
         try {
-            return connection == null ? null : Utils.getSchema(connection);
+            return connection == null ? null : Jdbc41Bridge.getSchema(connection);
         } catch (final SQLException e) {
             return null;
         }

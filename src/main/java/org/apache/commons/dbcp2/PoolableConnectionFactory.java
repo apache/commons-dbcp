@@ -440,8 +440,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (defaultCatalog != null && !defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(defaultCatalog);
         }
-        if (defaultSchema != null && !defaultSchema.equals(Utils.getSchema(conn))) {
-            conn.setSchema(defaultSchema);
+        if (defaultSchema != null && !defaultSchema.equals(Jdbc41Bridge.getSchema(conn))) {
+            Jdbc41Bridge.setSchema(conn, defaultSchema);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }

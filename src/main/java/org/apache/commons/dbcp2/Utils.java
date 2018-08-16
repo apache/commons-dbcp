@@ -20,7 +20,6 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.HashSet;
@@ -131,24 +130,6 @@ public final class Utils {
         }
     }
 
-    /**
-     * Gets the schema for the given connection while allowing for the underlying JDBC method to be missing when the
-     * driver is written for Java 6/JDBC 4.0.
-     * 
-     * @param conn
-     *            the Connection to query
-     * @return null for a JDBC 4 driver or a value per {@link Connection#getSchema()}.
-     * @throws SQLException
-     *             See {@link Connection#getSchema()}.
-     */
-    public static String getSchema(final Connection conn) throws SQLException {
-        try {
-            return conn.getSchema();
-        } catch (AbstractMethodError e) {
-            return null;
-        }
-    }
-    
     /**
      * Gets the correct i18n message for the given key.
      *
