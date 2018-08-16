@@ -19,6 +19,9 @@ package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -742,6 +745,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         builder.append("[description=");
         builder.append(description);
         builder.append(", url=");
+        // TODO What if the connection string contains a 'password' query parameter but that connection string is not in a legal URL format?
         builder.append(url);
         builder.append(", userName=");
         builder.append(userName);
