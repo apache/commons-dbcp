@@ -411,8 +411,6 @@ class CPDSConnectionFactory
         builder.append(rollbackAfterValidation);
         builder.append(", pool=");
         builder.append(pool);
-        builder.append(", userName=");
-        builder.append(userName);
         builder.append(", maxConnLifetimeMillis=");
         builder.append(maxConnLifetimeMillis);
         builder.append(", validatingSet=");

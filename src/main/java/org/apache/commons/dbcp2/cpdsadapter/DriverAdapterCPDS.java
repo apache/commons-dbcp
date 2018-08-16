@@ -735,7 +735,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Does not print the userPassword field nor the password in the connectionProperties.
+     * Does not print the userName and userPassword field nor the 'user' or 'password' in the connectionProperties.
      * 
      * @since 2.6.0
      */
@@ -745,10 +745,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         builder.append("[description=");
         builder.append(description);
         builder.append(", url=");
-        // TODO What if the connection string contains a 'password' query parameter but that connection string is not in a legal URL format?
+        // TODO What if the connection string contains a 'user' or 'password' query parameter but that connection string is not in a legal URL format?
         builder.append(url);
-        builder.append(", userName=");
-        builder.append(userName);
         builder.append(", driver=");
         builder.append(driver);
         builder.append(", loginTimeout=");

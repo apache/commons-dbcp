@@ -1173,45 +1173,4 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             con.setReadOnly(defaultReadOnly.booleanValue());
         }
     }
-
-    @Override
-    protected void toStringFields(StringBuilder builder) {
-        super.toStringFields(builder);
-        builder.append(", perUserBlockWhenExhausted=");
-        builder.append(perUserBlockWhenExhausted);
-        builder.append(", perUserEvictionPolicyClassName=");
-        builder.append(perUserEvictionPolicyClassName);
-        builder.append(", perUserLifo=");
-        builder.append(perUserLifo);
-        builder.append(", perUserMaxIdle=");
-        builder.append(perUserMaxIdle);
-        builder.append(", perUserMaxTotal=");
-        builder.append(perUserMaxTotal);
-        builder.append(", perUserMaxWaitMillis=");
-        builder.append(perUserMaxWaitMillis);
-        builder.append(", perUserMinEvictableIdleTimeMillis=");
-        builder.append(perUserMinEvictableIdleTimeMillis);
-        builder.append(", perUserMinIdle=");
-        builder.append(perUserMinIdle);
-        builder.append(", perUserNumTestsPerEvictionRun=");
-        builder.append(perUserNumTestsPerEvictionRun);
-        builder.append(", perUserSoftMinEvictableIdleTimeMillis=");
-        builder.append(perUserSoftMinEvictableIdleTimeMillis);
-        builder.append(", perUserTestOnCreate=");
-        builder.append(perUserTestOnCreate);
-        builder.append(", perUserTestOnBorrow=");
-        builder.append(perUserTestOnBorrow);
-        builder.append(", perUserTestOnReturn=");
-        builder.append(perUserTestOnReturn);
-        builder.append(", perUserTestWhileIdle=");
-        builder.append(perUserTestWhileIdle);
-        builder.append(", perUserTimeBetweenEvictionRunsMillis=");
-        builder.append(perUserTimeBetweenEvictionRunsMillis);
-        builder.append(", perUserDefaultAutoCommit=");
-        builder.append(perUserDefaultAutoCommit);
-        builder.append(", perUserDefaultTransactionIsolation=");
-        builder.append(perUserDefaultTransactionIsolation);
-        builder.append(", perUserDefaultReadOnly=");
-        builder.append(perUserDefaultReadOnly);
-    }
 }
