@@ -399,7 +399,7 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[cpds=");
         builder.append(cpds);

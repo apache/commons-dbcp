@@ -1242,8 +1242,8 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     @Override
-    public String toString() {
-        return super.toString() + "[_res=" + resultSet + ", _stmt=" + statement + ", _conn=" + connection + "]";
+    public synchronized String toString() {
+        return super.toString() + "[resultSet=" + resultSet + ", statement=" + statement + ", connection=" + connection + "]";
     }
 
     @Override

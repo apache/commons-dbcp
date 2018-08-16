@@ -88,7 +88,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * Returns a string representation of the metadata associated with the innermost delegate connection.
      */
     @Override
-    public String toString() {
+    public synchronized String toString() {
         String s = null;
 
         final Connection c = this.getInnermostDelegateInternal();

@@ -790,7 +790,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * @return String
      */
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return statement == null ? "NULL" : statement.toString();
     }
 

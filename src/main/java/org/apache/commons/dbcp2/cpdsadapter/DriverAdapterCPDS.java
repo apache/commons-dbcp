@@ -740,7 +740,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @since 2.6.0
      */
     @Override
-    public String toString() {
+    public synchronized String toString() {
         StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[description=");
         builder.append(description);
