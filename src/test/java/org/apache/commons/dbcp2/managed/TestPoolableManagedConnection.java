@@ -83,10 +83,12 @@ public class TestPoolableManagedConnection {
 
     @After
     public void tearDown() throws SQLException {
-        if (conn != null && !conn.isClosed())
+        if (conn != null && !conn.isClosed()) {
             conn.close();
-        if (pool != null && !pool.isClosed())
+        }
+        if (pool != null && !pool.isClosed()) {
             pool.close();
+        }
     }
 
     @Test
