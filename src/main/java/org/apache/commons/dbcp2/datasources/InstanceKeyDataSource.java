@@ -1055,7 +1055,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * @since 2.6.0 
+     * @since 2.6.0
      */
     @Override
     public synchronized String toString() {

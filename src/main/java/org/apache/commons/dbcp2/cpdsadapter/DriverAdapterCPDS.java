@@ -736,7 +736,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     /**
      * Does not print the userName and userPassword field nor the 'user' or 'password' in the connectionProperties.
-     * 
+     *
      * @since 2.6.0
      */
     @Override
