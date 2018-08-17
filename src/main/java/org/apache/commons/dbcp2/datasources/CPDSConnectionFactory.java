@@ -403,7 +403,7 @@ class CPDSConnectionFactory
      */
     @Override
     public synchronized String toString() {
-        StringBuilder builder = new StringBuilder(super.toString());
+        final StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[cpds=");
         builder.append(cpds);
         builder.append(", validationQuery=");

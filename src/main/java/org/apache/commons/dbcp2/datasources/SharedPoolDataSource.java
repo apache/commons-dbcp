@@ -237,7 +237,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected void toStringFields(StringBuilder builder) {
+    protected void toStringFields(final StringBuilder builder) {
         super.toStringFields(builder);
         builder.append(", maxTotal=");
         builder.append(maxTotal);

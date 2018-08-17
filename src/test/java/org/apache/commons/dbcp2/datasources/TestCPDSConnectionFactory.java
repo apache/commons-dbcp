@@ -146,7 +146,7 @@ public class TestCPDSConnectionFactory {
     @Test
     public void testSetPasswordThenModCharArray() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
-        char[] pwd = {'a' };
+        final char[] pwd = {'a' };
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
         pwd[0] = 'b';

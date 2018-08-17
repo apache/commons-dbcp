@@ -1059,14 +1059,14 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     @Override
     public synchronized String toString() {
-        StringBuilder builder = new StringBuilder(super.toString());
+        final StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[");
         toStringFields(builder);
         builder.append("]");
         return builder.toString();
     }
 
-    protected void toStringFields(StringBuilder builder) {
+    protected void toStringFields(final StringBuilder builder) {
         builder.append("getConnectionCalled=");
         builder.append(getConnectionCalled);
         builder.append(", dataSource=");

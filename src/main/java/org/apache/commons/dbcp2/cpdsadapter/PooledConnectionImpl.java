@@ -653,7 +653,7 @@ class PooledConnectionImpl
      */
     @Override
     public synchronized String toString() {
-        StringBuilder builder = new StringBuilder(super.toString());
+        final StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[connection=");
         builder.append(connection);
         builder.append(", delegatingConnection=");
