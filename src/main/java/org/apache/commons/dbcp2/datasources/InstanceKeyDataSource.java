@@ -1054,6 +1054,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         return cpds;
     }
 
+    /**
+     * @since 2.6.0 
+     */
     @Override
     public synchronized String toString() {
         StringBuilder builder = new StringBuilder(super.toString());
