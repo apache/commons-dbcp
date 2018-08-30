@@ -22,6 +22,7 @@ import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.dbcp2.Utils;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
@@ -63,7 +64,7 @@ public class BasicManagedDataSource extends BasicDataSource {
     /** XA data source instance */
     private XADataSource xaDataSourceInstance;
 
-    /** Transaction Manager */
+    /** Transaction Synchronization Registry */
     private transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     /**
@@ -198,7 +199,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
         // finally, create the XAConnectionFactory using the XA data source
         final XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(),
-                xaDataSourceInstance, getUsername(), getPassword());
+                xaDataSourceInstance, getUsername(), Utils.toCharArray(getPassword()), getTransactionSynchronizationRegistry());
         transactionRegistry = xaConnectionFactory.getTransactionRegistry();
         return xaConnectionFactory;
     }
