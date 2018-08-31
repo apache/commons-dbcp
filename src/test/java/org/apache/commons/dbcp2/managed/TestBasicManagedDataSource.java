@@ -17,22 +17,27 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import java.sql.SQLException;
-
-import javax.sql.XADataSource;
-import javax.transaction.xa.XAException;
-
+import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
+import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchronizationRegistryImple;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.h2.Driver;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Test;
+
+import javax.sql.XADataSource;
+import javax.transaction.Synchronization;
+import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
+import javax.transaction.xa.XAException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * TestSuite for BasicManagedDataSource
@@ -169,6 +174,48 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             basicManagedDataSource.setMaxIdle(1);
             basicManagedDataSource.setXaDataSourceInstance(null);
             assertNull(basicManagedDataSource.getXaDataSourceInstance());
+        }
+    }
+
+    @Test
+    public void testTransactionSynchronizationRegistry() throws Exception {
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
+            TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
+            basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
+            JdbcDataSource xaDataSource = new JdbcDataSource();
+            xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+            basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
+            basicManagedDataSource.setMaxIdle(1);
+
+            TransactionManager tm = basicManagedDataSource.getTransactionManager();
+            tm.begin();
+            tsr.registerInterposedSynchronization(new Synchronization() {
+                @Override
+                public void beforeCompletion() {
+                    Connection connection = null;
+                    try {
+                        connection = basicManagedDataSource.getConnection();
+                        assertNotNull(connection);
+                    } catch (SQLException e) {
+                        fail(e.getMessage());
+                    } finally {
+                        if (connection != null) {
+                            try {
+                                connection.close();
+                            } catch (SQLException e) {
+                                fail(e.getMessage());
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void afterCompletion(int i) {
+
+                }
+            });
+            tm.commit();
         }
     }
 }
