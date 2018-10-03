@@ -20,9 +20,11 @@ package org.apache.commons.dbcp2.managed;
 import java.sql.SQLException;
 import javax.transaction.xa.XAResource;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.apache.geronimo.transaction.manager.TransactionImpl;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * TestSuite for TransactionContext
@@ -32,7 +34,7 @@ public class TestTransactionContext {
     /**
      * JIRA: DBCP-428
      */
-    @Test(expected=SQLException.class)
+    @Test
     public void testSetSharedConnectionEnlistFailure() throws Exception {
         final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
@@ -45,7 +47,7 @@ public class TestTransactionContext {
         final UncooperativeTransaction transaction = new UncooperativeTransaction();
         final TransactionContext transactionContext =
                 new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
-        transactionContext.setSharedConnection(conn);
+        assertThrows(SQLException.class, () -> transactionContext.setSharedConnection(conn));
         basicManagedDataSource.close();
     }
 

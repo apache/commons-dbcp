@@ -17,11 +17,11 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for PoolKey.
@@ -32,7 +32,7 @@ public class TestPoolKey {
     private PoolKey poolKey;
     private PoolKey anotherPoolKey;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         poolKey = new PoolKey("ds", "user");
         anotherPoolKey = new PoolKey(null, null);

@@ -17,7 +17,7 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Hashtable;
 
@@ -29,7 +29,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */

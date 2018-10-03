@@ -17,19 +17,19 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.util.Properties;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for PoolingDataSource
@@ -44,7 +44,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     protected PoolingDataSource<PoolableConnection> ds = null;
     private GenericObjectPool<PoolableConnection> pool = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final Properties props = new Properties();
         props.setProperty("user", "userName");
@@ -66,7 +66,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         ds.close();
         super.tearDown();
@@ -85,8 +85,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         final Connection con = newConnection();
-        Assert.assertNotEquals(c[0], con);
-        Assert.assertEquals(
+        Assertions.assertNotEquals(c[0], con);
+        Assertions.assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
         for (final Connection element : c) {

@@ -17,10 +17,11 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -45,8 +46,8 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for LocalXAConnectionFactory$LocalXAResource
@@ -56,7 +57,7 @@ public class TestLocalXaResource {
     private Connection conn;
     private LocalXAConnectionFactory.LocalXAResource resource;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         conn = new TestConnection();
         resource = new LocalXAConnectionFactory.LocalXAResource(conn);
@@ -78,22 +79,22 @@ public class TestLocalXaResource {
         assertFalse(resource.isSameRM(new LocalXAConnectionFactory.LocalXAResource(conn)));
     }
 
-    @Test(expected=XAException.class)
-    public void testStartInvalidFlag() throws XAException {
+    @Test
+    public void testStartInvalidFlag() {
         // currently, valid values are TMNOFLAGS and TMRESUME
-        resource.start(null, XAResource.TMENDRSCAN);
+        assertThrows(XAException.class, () -> resource.start(null, XAResource.TMENDRSCAN));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testStartNoFlagButAlreadyEnlisted() throws XAException {
         resource.start(new TestXid(), XAResource.TMNOFLAGS);
-        resource.start(new TestXid(), XAResource.TMNOFLAGS);
+        assertThrows(XAException.class, () -> resource.start(new TestXid(), XAResource.TMNOFLAGS));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testStartNoFlagResumeButDifferentXid() throws XAException {
         resource.start(new TestXid(), XAResource.TMNOFLAGS);
-        resource.start(new TestXid(), XAResource.TMRESUME);
+        assertThrows(XAException.class, () -> resource.start(new TestXid(), XAResource.TMRESUME));
     }
 
     @Test
@@ -114,22 +115,22 @@ public class TestLocalXaResource {
         assertEquals(xid, resource.getXid());
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test
     public void testStartNoFlagResumeEndMissingXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         // flag is never used in the end
-        resource.end(null, 0);
+        assertThrows(NullPointerException.class, () -> resource.end(null, 0));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testStartNoFlagResumeEndDifferentXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
         // flag is never used in the end
-        resource.end(new TestXid(), 0);
+        assertThrows(XAException.class, () -> resource.end(new TestXid(), 0));
     }
 
     @Test
@@ -209,41 +210,41 @@ public class TestLocalXaResource {
         assertFalse(conn.getAutoCommit());
     }
 
-    @Test(expected=XAException.class)
-    public void testStartFailsWhenCannotSetAutoCommit() throws XAException, SQLException {
+    @Test
+    public void testStartFailsWhenCannotSetAutoCommit() {
         final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenSetAutoCommit = true;
-        resource.start(xid, XAResource.TMNOFLAGS);
+        assertThrows(XAException.class, () -> resource.start(xid, XAResource.TMNOFLAGS));
     }
 
-    @Test(expected=NullPointerException.class)
-    public void testCommitMissingXid() throws SQLException, XAException {
-        resource.commit(null, false);
+    @Test
+    public void testCommitMissingXid() {
+        assertThrows(NullPointerException.class, () -> resource.commit(null, false));
     }
 
-    @Test(expected=XAException.class)
-    public void testCommitNoTransaction() throws SQLException, XAException {
+    @Test
+    public void testCommitNoTransaction() throws SQLException {
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
-        resource.commit(new TestXid(), false);
+        assertThrows(XAException.class, () -> resource.commit(new TestXid(), false));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testCommitInvalidXid() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
-        resource.commit(new TestXid(), false);
+        assertThrows(XAException.class, () -> resource.commit(new TestXid(), false));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testCommitConnectionClosed() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = true;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
-        resource.commit(xid, false);
+        assertThrows(XAException.class, () -> resource.commit(xid, false));
     }
 
     @Test
@@ -266,18 +267,18 @@ public class TestLocalXaResource {
         assertTrue(((TestConnection) conn).committed);
     }
 
-    @Test(expected=NullPointerException.class)
-    public void testRollbackMissingXid() throws XAException {
-        resource.rollback(null);
+    @Test
+    public void testRollbackMissingXid() {
+        assertThrows(NullPointerException.class, () -> resource.rollback(null));
     }
 
-    @Test(expected=XAException.class)
+    @Test
     public void testRollbackInvalidXid() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         resource.start(xid, XAResource.TMNOFLAGS);
-        resource.rollback(new TestXid());
+        assertThrows(XAException.class, () -> resource.rollback(new TestXid()));
     }
 
     @Test

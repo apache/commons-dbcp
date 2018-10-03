@@ -17,7 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Hashtable;
 
@@ -28,9 +28,9 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.dbcp2.datasources.PerUserPoolDataSource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests JNID bind and lookup for DataSource implementations.
@@ -84,13 +84,13 @@ public class TestJndi {
         checkBind(dataSource);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         context = getInitialContext();
         context.createSubcontext(JNDI_SUBCONTEXT);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         context.unbind(JNDI_PATH);
         context.destroySubcontext(JNDI_SUBCONTEXT);

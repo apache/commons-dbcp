@@ -17,8 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for DataSourceConnectionFactory.
@@ -39,7 +39,7 @@ public class TestDataSourceConnectionFactory {
     private DataSource datasource;
     private DataSourceConnectionFactory factory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         datasource = new TestDataSource();
         factory = new DataSourceConnectionFactory(datasource);

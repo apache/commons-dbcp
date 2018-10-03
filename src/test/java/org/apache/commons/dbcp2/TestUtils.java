@@ -19,7 +19,7 @@ package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestUtils {
 

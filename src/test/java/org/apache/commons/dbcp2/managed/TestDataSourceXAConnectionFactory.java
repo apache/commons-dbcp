@@ -17,7 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -32,8 +32,8 @@ import javax.sql.XADataSource;
 
 import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicManagedDataSource when using a
@@ -46,7 +46,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
     public AtomicInteger closeCounter = new AtomicInteger();
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         bmds = new BasicManagedDataSource();

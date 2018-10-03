@@ -17,9 +17,9 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,8 +27,8 @@ import static org.mockito.Mockito.verify;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "deprecation", "rawtypes" }) // BigDecimal methods, and casting for mocks
 public class TestDelegatingPreparedStatement {
@@ -38,7 +38,7 @@ public class TestDelegatingPreparedStatement {
     private PreparedStatement obj = null;
     private DelegatingPreparedStatement delegate = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         testerConn = new TesterConnection("test", "test");
         connection = new DelegatingConnection<>(testerConn);

@@ -22,9 +22,9 @@ import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.TesterClassLoader;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
@@ -48,8 +48,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TestSynchronizationOrder {
 
@@ -119,13 +119,13 @@ public class TestSynchronizationOrder {
         assertTrue(transactionSynchronizationRegistryRegistered);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws SQLException {
         bds.close();
         bmds.close();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         transactionManager = new TransactionManager() {
 
