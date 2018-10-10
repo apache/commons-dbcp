@@ -1220,7 +1220,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public String[] getConnectionInitSqlsAsArray() {
         final Collection<String> result = getConnectionInitSqls();
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**
