@@ -1,5 +1,3 @@
-### https://raw.github.com/github/gitignore/14b7566ce157ce95b07006466bacee160f242284/maven.gitignore
-
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -16,3 +14,10 @@ site-content
 /.settings
 /ObjectStore/
 /bin/
+
+# no IDE stuff in our SCM
+.classpath
+.settings
+.idea
+*.iml
+.nbproject
