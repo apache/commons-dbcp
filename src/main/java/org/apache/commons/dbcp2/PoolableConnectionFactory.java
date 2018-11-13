@@ -468,7 +468,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         return maxOpenPreparedStatements;
     }
 
-    protected boolean getCacheState() {
+    /**
+     * @since Made public in 2.6.0.
+     */
+    public boolean getCacheState() {
         return cacheState;
     }
 
@@ -506,4 +509,81 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Internal constant to indicate the level is not set.
      */
     static final int UNKNOWN_TRANSACTIONISOLATION = -1;
+
+    /**
+     * @since 2.6.0
+     */
+    public ObjectName getDataSourceJmxObjectName() {
+        return dataSourceJmxObjectName;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public String getValidationQuery() {
+        return validationQuery;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public int getValidationQueryTimeoutSeconds() {
+        return validationQueryTimeoutSeconds;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Collection<String> getConnectionInitSqls() {
+        return connectionInitSqls;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Boolean getDefaultReadOnly() {
+        return defaultReadOnly;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Boolean getDefaultAutoCommit() {
+        return defaultAutoCommit;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public int getDefaultTransactionIsolation() {
+        return defaultTransactionIsolation;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public String getDefaultCatalog() {
+        return defaultCatalog;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public String getDefaultSchema() {
+        return defaultSchema;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public long getMaxConnLifetimeMillis() {
+        return maxConnLifetimeMillis;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Integer getDefaultQueryTimeoutSeconds() {
+        return defaultQueryTimeoutSeconds;
+    }
 }

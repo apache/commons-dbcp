@@ -329,4 +329,25 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         fatalSqlExceptionThrown |= isDisconnectionSqlException(e);
         super.handleException(e);
     }
+
+    /**
+     * @since 2.6.0
+     */
+    public ObjectNameWrapper getJmxObjectName() {
+        return jmxObjectName;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Collection<String> getDisconnectionSqlCodes() {
+        return disconnectionSqlCodes;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public boolean isFastFailValidation() {
+        return fastFailValidation;
+    }
 }

@@ -84,4 +84,25 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
         }
         return dataSource.getConnection(userName, Utils.toString(userPassword));
     }
+
+    /**
+     * @since 2.6.0
+     */
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public char[] getUserPassword() {
+        return userPassword;
+    }
 }

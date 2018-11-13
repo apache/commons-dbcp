@@ -38,6 +38,14 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         DriverManager.getDrivers();
     }
 
+    private final String connectionUri;
+
+    private final String userName;
+
+    private final String userPassword;
+
+    private final Properties properties;
+
     /**
      * Constructor for DriverManagerConnectionFactory.
      *
@@ -48,6 +56,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     public DriverManagerConnectionFactory(final String connectionUri) {
         this.connectionUri = connectionUri;
         this.properties = new Properties();
+        this.userName = null;
+        this.userPassword = null;
     }
 
     /**
@@ -62,6 +72,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     public DriverManagerConnectionFactory(final String connectionUri, final Properties properties) {
         this.connectionUri = connectionUri;
         this.properties = properties;
+        this.userName = null;
+        this.userPassword = null;
     }
 
     /**
@@ -79,6 +91,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         this.connectionUri = connectionUri;
         this.userName = userName;
         this.userPassword = userPassword;
+        this.properties = null;
     }
 
     @Override
@@ -92,8 +105,24 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         return DriverManager.getConnection(connectionUri, properties);
     }
 
-    private final String connectionUri;
-    private String userName;
-    private String userPassword;
-    private Properties properties;
+    /**
+     * @since 2.6.0
+     */
+    public String getConnectionUri() {
+        return connectionUri;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public Properties getProperties() {
+        return properties;
+    }
+
+    /**
+     * @since 2.6.0
+     */
+    public String getUserName() {
+        return userName;
+    }
 }
