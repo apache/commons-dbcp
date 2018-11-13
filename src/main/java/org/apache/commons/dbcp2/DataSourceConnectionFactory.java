@@ -58,7 +58,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     public DataSourceConnectionFactory(final DataSource dataSource, final String userName, final char[] userPassword) {
         this.dataSource = dataSource;
         this.userName = userName;
-        this.userPassword = userPassword;
+        this.userPassword = Utils.clone(userPassword);
     }
 
     /**

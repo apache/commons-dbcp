@@ -75,19 +75,19 @@ public class TestDriverManagerConnectionFactory {
 
     @Test(expected=SQLException.class) // thrown by TestDriver due to invalid password
     public void testDriverManagerWithoutPassword() throws SQLException {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", null);
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", (char[]) null);
         cf.createConnection();
     }
 
     @Test(expected=ArrayIndexOutOfBoundsException.class) // thrown by TestDriver due to missing user
     public void testDriverManagerWithoutCredentials() throws SQLException {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null,  null);
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null,  (char[]) null);
         cf.createConnection();
     }
 
     @Test
     public void testDriverManagerCredentialsInUrl() throws SQLException {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver;user=foo;password=bar", null,  null);
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver;user=foo;password=bar", null,  (char[]) null);
         cf.createConnection();
     }
 
