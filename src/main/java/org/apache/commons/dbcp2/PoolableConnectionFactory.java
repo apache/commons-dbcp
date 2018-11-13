@@ -456,11 +456,17 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         }
     }
 
-    protected ConnectionFactory getConnectionFactory() {
+    /**
+     * @since Made public in 2.6.0.
+     */
+    public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
     }
 
-    protected boolean getPoolStatements() {
+    /**
+     * @since Made public in 2.6.0.
+     */
+    public boolean getPoolStatements() {
         return poolStatements;
     }
 
@@ -475,7 +481,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         return cacheState;
     }
 
-    protected ObjectName getDataSourceJmxName() {
+    /**
+     * @since Made public in 2.6.0.
+     */
+    public ObjectName getDataSourceJmxName() {
         return dataSourceJmxObjectName;
     }
 
