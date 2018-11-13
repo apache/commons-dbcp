@@ -309,7 +309,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_DEFAULTTRANSACTIONISOLATION);
         if (value != null) {
-            int level = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+            int level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
             if ("NONE".equalsIgnoreCase(value)) {
                 level = Connection.TRANSACTION_NONE;
             } else if ("READ_COMMITTED".equalsIgnoreCase(value)) {
@@ -327,7 +327,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
                     System.err.println("Could not parse defaultTransactionIsolation: " + value);
                     System.err.println("WARNING: defaultTransactionIsolation not set");
                     System.err.println("using default value of database driver");
-                    level = PoolableConnectionFactory.UNKNOWN_TRANSACTIONISOLATION;
+                    level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
                 }
             }
             dataSource.setDefaultTransactionIsolation(level);

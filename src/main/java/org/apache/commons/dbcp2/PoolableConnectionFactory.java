@@ -430,7 +430,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (defaultAutoCommit != null && conn.getAutoCommit() != defaultAutoCommit.booleanValue()) {
             conn.setAutoCommit(defaultAutoCommit.booleanValue());
         }
-        if (defaultTransactionIsolation != UNKNOWN_TRANSACTIONISOLATION
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTION_ISOLATION
                 && conn.getTransactionIsolation() != defaultTransactionIsolation) {
             conn.setTransactionIsolation(defaultTransactionIsolation);
         }
@@ -504,7 +504,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private Boolean defaultAutoCommit;
     private boolean enableAutoCommitOnReturn = true;
     private boolean rollbackOnReturn = true;
-    private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
+    private int defaultTransactionIsolation = UNKNOWN_TRANSACTION_ISOLATION;
     private String defaultCatalog;
     private String defaultSchema;
     private boolean cacheState;
@@ -517,7 +517,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Internal constant to indicate the level is not set.
      */
-    static final int UNKNOWN_TRANSACTIONISOLATION = -1;
+    static final int UNKNOWN_TRANSACTION_ISOLATION = -1;
 
     /**
      * @since 2.6.0
