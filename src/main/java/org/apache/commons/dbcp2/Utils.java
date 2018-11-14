@@ -59,9 +59,9 @@ public final class Utils {
 
     static {
         DISCONNECTION_SQL_CODES = new HashSet<>();
-        DISCONNECTION_SQL_CODES.add("57P01"); // ADMIN SHUTDOWN
-        DISCONNECTION_SQL_CODES.add("57P02"); // CRASH SHUTDOWN
-        DISCONNECTION_SQL_CODES.add("57P03"); // CANNOT CONNECT NOW
+        DISCONNECTION_SQL_CODES.add("57P01"); // Admin shutdown
+        DISCONNECTION_SQL_CODES.add("57P02"); // Crash shutdown
+        DISCONNECTION_SQL_CODES.add("57P03"); // Cannot connect now
         DISCONNECTION_SQL_CODES.add("01002"); // SQL92 disconnect error
         DISCONNECTION_SQL_CODES.add("JZ0C0"); // Sybase disconnect error
         DISCONNECTION_SQL_CODES.add("JZ0C1"); // Sybase disconnect error
