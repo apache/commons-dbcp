@@ -71,7 +71,7 @@ public class TestParallelCreationWithNoIdle  {
         ds.setInitialSize(8);
         final List<Throwable> errors = Collections.synchronizedList(new ArrayList<>());
 
-        Thread[] threads = new Thread[numThreads];
+        final Thread[] threads = new Thread[numThreads];
         for (int i = 0; i < numThreads; i++) {
             threads[i] = new TestThread(2, 0, 50);
             threads[i].setUncaughtExceptionHandler((t, e) -> errors.add(e));
@@ -119,7 +119,7 @@ public class TestParallelCreationWithNoIdle  {
                              "select 'literal', SYSDATE from dual");
                      ) {
                     System.out.println("Got Connection " + Thread.currentThread().toString());
-                    ResultSet rset = stmt.executeQuery();
+                    final ResultSet rset = stmt.executeQuery();
                     rset.next();
                     sleepMax(delayAfter);
                     rset.close();
@@ -131,7 +131,7 @@ public class TestParallelCreationWithNoIdle  {
             System.out.println("Thread done " + Thread.currentThread().toString());
         }
 
-        private void sleepMax(int timeMax) {
+        private void sleepMax(final int timeMax) {
             if (timeMax == 0) {
                 return;
             }

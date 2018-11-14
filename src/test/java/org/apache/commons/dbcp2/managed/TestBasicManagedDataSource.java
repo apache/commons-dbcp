@@ -181,14 +181,14 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     public void testTransactionSynchronizationRegistry() throws Exception {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
-            TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
+            final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
             basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
-            JdbcDataSource xaDataSource = new JdbcDataSource();
+            final JdbcDataSource xaDataSource = new JdbcDataSource();
             xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
             basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
             basicManagedDataSource.setMaxIdle(1);
 
-            TransactionManager tm = basicManagedDataSource.getTransactionManager();
+            final TransactionManager tm = basicManagedDataSource.getTransactionManager();
             tm.begin();
             tsr.registerInterposedSynchronization(new Synchronization() {
                 @Override
@@ -197,13 +197,13 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
                     try {
                         connection = basicManagedDataSource.getConnection();
                         assertNotNull(connection);
-                    } catch (SQLException e) {
+                    } catch (final SQLException e) {
                         fail(e.getMessage());
                     } finally {
                         if (connection != null) {
                             try {
                                 connection.close();
-                            } catch (SQLException e) {
+                            } catch (final SQLException e) {
                                 fail(e.getMessage());
                             }
                         }
@@ -211,7 +211,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
                 }
 
                 @Override
-                public void afterCompletion(int i) {
+                public void afterCompletion(final int i) {
 
                 }
             });
