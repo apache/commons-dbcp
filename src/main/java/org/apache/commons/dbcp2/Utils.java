@@ -83,6 +83,7 @@ public final class Utils {
      *
      * @param autoCloseable
      *            an AutoCloseable, may be {@code null}
+     * @since 2.6.0
      */
     public static void closeQuietly(final AutoCloseable autoCloseable) {
         if (autoCloseable != null) {
