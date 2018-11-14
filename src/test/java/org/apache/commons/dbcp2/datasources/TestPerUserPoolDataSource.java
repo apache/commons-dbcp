@@ -78,6 +78,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds = tds;
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         super.tearDown();
