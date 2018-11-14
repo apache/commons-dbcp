@@ -212,6 +212,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * @deprecated Use {@link #isAutoCommitOnReturn()}.
      */
+    @Deprecated
     public boolean isEnableAutoCommitOnReturn() {
         return autoCommitOnReturn;
     }
@@ -230,6 +231,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * @deprecated Use {@link setAutoCommitOnReturn(boolean)}.
      */
+    @Deprecated
     public void setEnableAutoCommitOnReturn(final boolean autoCommitOnReturn) {
         this.autoCommitOnReturn = autoCommitOnReturn;
     }
