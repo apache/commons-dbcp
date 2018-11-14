@@ -86,6 +86,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The data source.
      * @since 2.6.0
      */
     public DataSource getDataSource() {
@@ -93,6 +94,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The user name.
      * @since 2.6.0
      */
     public String getUserName() {
@@ -100,6 +102,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The user password.
      * @since 2.6.0
      */
     public char[] getUserPassword() {

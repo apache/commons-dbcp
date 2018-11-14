@@ -71,6 +71,7 @@ public class PoolableManagedConnection extends PoolableConnection {
     }
 
     /**
+     * @return The transaction registry.
      * @since 2.6.0
      */
     public TransactionRegistry getTransactionRegistry() {

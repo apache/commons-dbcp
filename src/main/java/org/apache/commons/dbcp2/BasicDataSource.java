@@ -1963,7 +1963,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @param autoCommitOnReturn
      *            Whether or not connections being returned to the pool will be checked and configured with auto-commit.
-     * @deprecated Use {@linkn #setAutoCommitOnReturn(boolean)}.
+     * @deprecated Use {@link #setAutoCommitOnReturn(boolean)}.
      */
     @Deprecated
     public void setEnableAutoCommitOnReturn(final boolean autoCommitOnReturn) {

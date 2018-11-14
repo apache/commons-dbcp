@@ -336,6 +336,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
     }
 
     /**
+     * @return The connection factory.
      * @since 2.6.0
      */
     public ConnectionFactory getConnectionFactory() {

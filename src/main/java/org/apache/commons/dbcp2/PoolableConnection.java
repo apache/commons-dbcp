@@ -331,13 +331,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * @since 2.6.0
-     */
-    public ObjectNameWrapper getJmxObjectName() {
-        return jmxObjectName;
-    }
-
-    /**
+     * @return The disconnection SQL codes.
      * @since 2.6.0
      */
     public Collection<String> getDisconnectionSqlCodes() {
@@ -345,6 +339,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * @return Whether to fail-fast.
      * @since 2.6.0
      */
     public boolean isFastFailValidation() {

@@ -54,6 +54,7 @@ public class DriverConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The connection String.
      * @since 2.6.0
      */
     public String getConnectionString() {
@@ -61,6 +62,7 @@ public class DriverConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The Driver.
      * @since 2.6.0
      */
     public Driver getDriver() {
@@ -68,6 +70,7 @@ public class DriverConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * @return The Properties.
      * @since 2.6.0
      */
     public Properties getProperties() {
