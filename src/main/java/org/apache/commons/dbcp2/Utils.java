@@ -47,9 +47,9 @@ public final class Utils {
     /**
      * SQL codes of fatal connection errors.
      * <ul>
-     * <li>57P01 (ADMIN SHUTDOWN)</li>
-     * <li>57P02 (CRASH SHUTDOWN)</li>
-     * <li>57P03 (CANNOT CONNECT NOW)</li>
+     * <li>57P01 (Admin shutdown)</li>
+     * <li>57P02 (Crash shutdown)</li>
+     * <li>57P03 (Cannot connect now)</li>
      * <li>01002 (SQL92 disconnect error)</li>
      * <li>JZ0C0 (Sybase disconnect error)</li>
      * <li>JZ0C1 (Sybase disconnect error)</li>
