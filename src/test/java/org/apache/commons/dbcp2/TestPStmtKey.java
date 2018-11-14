@@ -24,8 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.sql.Statement;
 import java.util.Arrays;
 
-import javax.resource.cci.ResultSet;
-
 import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 import org.junit.Assert;
 import org.junit.Test;

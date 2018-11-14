@@ -19,9 +19,6 @@ package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
