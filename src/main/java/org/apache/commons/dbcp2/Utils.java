@@ -67,10 +67,6 @@ public final class Utils {
         DISCONNECTION_SQL_CODES.add("JZ0C1"); // Sybase disconnect error
     }
 
-    private Utils() {
-        // not instantiable
-    }
-
     /**
      * Clones the given char[] if not null.
      *
@@ -83,15 +79,15 @@ public final class Utils {
     }
 
     /**
-     * Closes the ResultSet (which may be null).
+     * Closes the AutoCloseable (which may be null).
      *
-     * @param resultSet
-     *            a ResultSet, may be {@code null}
+     * @param autoCloseable
+     *            an AutoCloseable, may be {@code null}
      */
-    public static void closeQuietly(final ResultSet resultSet) {
-        if (resultSet != null) {
+    public static void closeQuietly(final AutoCloseable autoCloseable) {
+        if (autoCloseable != null) {
             try {
-                resultSet.close();
+                autoCloseable.close();
             } catch (final Exception e) {
                 // ignored
             }
@@ -103,7 +99,9 @@ public final class Utils {
      *
      * @param connection
      *            a Connection, may be {@code null}
+     * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
      */
+    @Deprecated
     public static void closeQuietly(final Connection connection) {
         if (connection != null) {
             try {
@@ -115,11 +113,31 @@ public final class Utils {
     }
 
     /**
+     * Closes the ResultSet (which may be null).
+     *
+     * @param resultSet
+     *            a ResultSet, may be {@code null}
+     * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
+     */
+    @Deprecated
+    public static void closeQuietly(final ResultSet resultSet) {
+        if (resultSet != null) {
+            try {
+                resultSet.close();
+            } catch (final Exception e) {
+                // ignored
+            }
+        }
+    }
+
+    /**
      * Closes the Statement (which may be null).
      *
      * @param statement
      *            a Statement, may be {@code null}.
+     * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
      */
+    @Deprecated
     public static void closeQuietly(final Statement statement) {
         if (statement != null) {
             try {
@@ -179,6 +197,10 @@ public final class Utils {
      */
     public static String toString(final char[] value) {
         return value == null ? null : String.valueOf(value);
+    }
+
+    private Utils() {
+        // not instantiable
     }
 
 }
