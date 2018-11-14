@@ -209,12 +209,29 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
+    /**
+     * @deprecated Use {@link #isAutoCommitOnReturn()}.
+     */
     public boolean isEnableAutoCommitOnReturn() {
-        return enableAutoCommitOnReturn;
+        return autoCommitOnReturn;
     }
 
-    public void setEnableAutoCommitOnReturn(final boolean enableAutoCommitOnReturn) {
-        this.enableAutoCommitOnReturn = enableAutoCommitOnReturn;
+    /**
+     * @since 2.6.0
+     */
+    public boolean isAutoCommitOnReturn() {
+        return autoCommitOnReturn;
+    }
+
+    public void setAutoCommitOnReturn(final boolean autoCommitOnReturn) {
+        this.autoCommitOnReturn = autoCommitOnReturn;
+    }
+
+    /**
+     * @deprecated Use {@link setAutoCommitOnReturn(boolean)}.
+     */
+    public void setEnableAutoCommitOnReturn(final boolean autoCommitOnReturn) {
+        this.autoCommitOnReturn = autoCommitOnReturn;
     }
 
     public boolean isRollbackOnReturn() {
@@ -407,7 +424,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         // DBCP-97 / DBCP-399 / DBCP-351 Idle connections in the pool should
         // have autoCommit enabled
-        if (enableAutoCommitOnReturn) {
+        if (autoCommitOnReturn) {
             if (connAutoCommit == null) {
                 connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
             }
@@ -502,7 +519,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private volatile ObjectPool<PoolableConnection> pool;
     private Boolean defaultReadOnly;
     private Boolean defaultAutoCommit;
-    private boolean enableAutoCommitOnReturn = true;
+    private boolean autoCommitOnReturn = true;
     private boolean rollbackOnReturn = true;
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTION_ISOLATION;
     private String defaultCatalog;
