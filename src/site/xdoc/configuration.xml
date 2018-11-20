@@ -498,6 +498,14 @@ the parent connection.
       <code>fastFailValidation</code> is set to <code>true.</code>
    </td>
 </tr>
+<tr>
+    <td>jmxName</td>
+    <td></td>
+    <td>
+       Registers the DataSource as JMX MBean under specified name. The name has to conform to the JMX Object Name Syntax (see
+       <a href="https://docs.oracle.com/javase/1.5.0/docs/api/javax/management/ObjectName.html">javadoc</a>).
+    </td>
+</tr>
 </table>
 
 </section>
