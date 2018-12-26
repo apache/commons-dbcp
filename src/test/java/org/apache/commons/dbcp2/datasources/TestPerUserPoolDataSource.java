@@ -426,8 +426,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final ObjectOutputStream out = new ObjectOutputStream(baos);
         out.writeObject(ds);
-        final byte[] b = baos.toByteArray();
         out.close();
+        final byte[] b = baos.toByteArray();
 
         final ByteArrayInputStream bais = new ByteArrayInputStream(b);
         final ObjectInputStream in = new ObjectInputStream(bais);
