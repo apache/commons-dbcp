@@ -660,6 +660,34 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Test
+    public void testManualConnectionEvict() throws Exception {
+        ds.setMinIdle(0);
+        ds.setMaxIdle(4);
+        ds.setMinEvictableIdleTimeMillis(10);
+        ds.setNumTestsPerEvictionRun(2);
+
+        final Connection ds2 = ds.createDataSource().getConnection();
+        final Connection ds3 = ds.createDataSource().getConnection();
+
+        assertEquals(0, ds.getNumIdle());
+
+        ds2.close();
+        ds3.close();
+
+        // Make sure MinEvictableIdleTimeMillis has elapsed
+        Thread.sleep(100);
+
+        // Ensure no connections evicted by eviction thread
+        assertEquals(2, ds.getNumIdle());
+
+        // Force Eviction
+        ds.evict();
+
+        // Ensure all connections evicted
+        assertEquals(0, ds.getNumIdle());
+    }
+
+    @Test
     public void testMaxConnLifetimeExceeded() throws Exception {
         try {
             StackMessageLog.lock();

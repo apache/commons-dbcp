@@ -1519,6 +1519,15 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Manually evicts idle connections
+     */
+    public void evict() throws Exception {
+        if (connectionPool != null) {
+            connectionPool.evict();
+        }
+    }
+
+    /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
      *
      * @return true if access to the underlying connection is allowed, false otherwise.
