@@ -61,6 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.6.0" date="2018-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
+        Allow for manual connection eviction.
+      </action>
       <action dev="ggregory" type="add" issue="DBCP-514" due-to="Tom Jenkinson, Gary Gregory">
         Allow DBCP to register with a TransactionSynchronizationRegistry for XA cases.
       </action>
