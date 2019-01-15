@@ -160,6 +160,10 @@
     <contributor>
       <name>James Ring</name>
     </contributor>
+    <contributor>
+      <name>Peter Wicks</name>
+       <email>pwicks@apache.org</email>
+    </contributor>
   </contributors>
 
   <dependencies>
