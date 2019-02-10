@@ -345,8 +345,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         final long end = System.currentTimeMillis();
 
-        System.out.println("testMaxWaitMillis took " + (end-start) +
-                " ms. maxWaitMillis: "+maxWaitMillis);
+        // System.out.println("testMaxWaitMillis took " + (end - start) + " ms. maxWaitMillis: " + maxWaitMillis);
 
         // Threads should time out in parallel - allow double that to be safe
         assertTrue(end-start < 2 * maxWaitMillis);

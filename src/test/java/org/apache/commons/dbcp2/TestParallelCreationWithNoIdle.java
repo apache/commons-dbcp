@@ -111,24 +111,22 @@ public class TestParallelCreationWithNoIdle  {
 
         @Override
         public void run() {
-            System.out.println("Thread started " + Thread.currentThread().toString());
-            for(int i = 0; i< iter; i++) {
+            // System.out.println("Thread started " + Thread.currentThread().toString());
+            for (int i = 0; i < iter; i++) {
                 sleepMax(delay);
                 try (Connection conn = ds.getConnection();
-                     PreparedStatement stmt = conn.prepareStatement(
-                             "select 'literal', SYSDATE from dual");
-                     ) {
-                    System.out.println("Got Connection " + Thread.currentThread().toString());
+                        PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");) {
+                    // System.out.println("Got Connection " + Thread.currentThread().toString());
                     final ResultSet rset = stmt.executeQuery();
                     rset.next();
                     sleepMax(delayAfter);
                     rset.close();
-                } catch(final Exception e) {
+                } catch (final Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
-            System.out.println("Thread done " + Thread.currentThread().toString());
+            // System.out.println("Thread done " + Thread.currentThread().toString());
         }
 
         private void sleepMax(final int timeMax) {
