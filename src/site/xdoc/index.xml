@@ -51,12 +51,14 @@ mechanisms that it utilizes.</p>
 <p>DBCP now comes in four different versions to support different versions of
 JDBC. Here is how it works:
 <ul>
+<li>DBCP 2.6.0 compiles and runs under Java 8 only (JDBC 4.2)</li>
 <li>DBCP 2.5.0 compiles and runs under Java 8 only (JDBC 4.2)</li>
 <li>DBCP 2.4.0 compiles and runs under Java 7 only (JDBC 4.1)</li>
 <li>DBCP 1.4 compiles and runs under Java 6 only (JDBC 4)</li>
 <li>DBCP 1.3 compiles and runs under Java 1.4-5.0 only (JDBC 3)</li>
 </ul>
 </p>
+<p>DBCP 2.6.0 binaries should be used by applications running on Java 8 and above.</p>
 <p>DBCP 2.5.0 binaries should be used by applications running under Java 8.</p>
 <p>DBCP 2.4.0 binaries should be used by applications running under Java 7.</p>
 <p>DBCP 1.4 binaries should be used by applications running under Java 6.</p>
