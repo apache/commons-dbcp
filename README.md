@@ -25,7 +25,7 @@
  | commons-build-plugin/trunk/src/main/resources/commons-xdoc-templates |
  +======================================================================+
  |                                                                      |
- | 1) Re-generate using: mvn commons:readme-md                          |
+ | 1) Re-generate using: mvn commons-build:readme-md                    |
  |                                                                      |
  | 2) Set the following properties in the component's pom:              |
  |    - commons.componentid (required, alphabetic, lower case)          |
@@ -46,7 +46,7 @@ Apache Commons DBCP
 [![Build Status](https://travis-ci.org/apache/commons-dbcp.svg)](https://travis-ci.org/apache/commons-dbcp)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp/badge.svg)](https://coveralls.io/r/apache/commons-dbcp)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.5.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.5.0)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.6.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.6.0)
 
 Apache Commons DBCP software implements Database Connection Pooling
 
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.5.0</version>
+  <version>2.6.0</version>
 </dependency>
 ```
 
