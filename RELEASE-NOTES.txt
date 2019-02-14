@@ -1,8 +1,47 @@
               Apache Apache Commons DBCP
+                 Version 2.6.0
+                 RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.6.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o DBCP-534:  Allow for manual connection eviction. Thanks to Peter Wicks.
+o DBCP-514:  Allow DBCP to register with a TransactionSynchronizationRegistry for XA cases. Thanks to Tom Jenkinson, Gary Gregory.
+o DBCP-519:  Add some toString() methods for debugging (never printing passwords.) Thanks to Gary Gregory.
+o DBCP-527:  Add getters to some classes. Thanks to Gary Gregory.
+o DBCP-528:  org.apache.commons.dbcp2.DriverManagerConnectionFactory should use a char[] instead of a String to store passwords. Thanks to Gary Gregory.
+
+Fixed Bugs:
+o DBCP-518:  Allow DBCP to work with old Java 6/JDBC drivers without throwing AbstractMethodError. Thanks to Gary Gregory.
+
+Changes:
+o DBCP-517:  Make defensive copies of char[] passwords. Thanks to Gary Gregory.
+o DBCP-515:  Do not try to register synchronization when the transaction is no longer active. Thanks to Tom Jenkinson, Gary Gregory.
+o DBCP-516:  Do not double returnObject back to the pool if there is a transaction context with a shared connection. Thanks to Tom Jenkinson, Gary Gregory.
+o DBCP-520:  BasicManagedDataSource needs to pass the TSR with creating DataSourceXAConnectionFactory. Thanks to Zheng Feng.
+o DBCP-537:  Update Apache Commons Pool from 2.6.0 to 2.6.1. Thanks to Gary Gregory.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+http://commons.apache.org/dbcp/
+
+Download page: http://commons.apache.org/dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
                  Version 2.5.0
                  RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.5.0-SNAPSHOT.
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.5.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
