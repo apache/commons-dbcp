@@ -60,10 +60,12 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.6.1" date="2019-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="jleroux" type="add" issue="DBCP-539" due-to="Jacques Le Roux">
-        ManagedDataSource::close should declare used exceptions
+        ManagedDataSource::close should declare used exceptions.
       </action>
+    </release>
+    <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
         Allow for manual connection eviction.
       </action>
