@@ -64,6 +64,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="jleroux" type="add" issue="DBCP-539" due-to="Jacques Le Roux">
         ManagedDataSource::close should declare used exceptions.
       </action>
+      <action dev="ggregory" type="add" issue="DBCP-538" due-to="Ragnar Haugan, Gary Gregory">
+        Wrong JMX base name derived in BasicDataSource#updateJmxName.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
