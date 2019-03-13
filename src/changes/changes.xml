@@ -67,6 +67,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" issue="DBCP-538" due-to="Ragnar Haugan, Gary Gregory">
         Wrong JMX base name derived in BasicDataSource#updateJmxName.
       </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Update tests from H2 1.4.198 to 1.4.199.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
