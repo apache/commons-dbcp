@@ -1519,7 +1519,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Manually evicts idle connections
+     * Manually evicts idle connections.
+     * 
+     * @throws Exception Thrown by {@link GenericObjectPool#evict()}.
+     * @see GenericObjectPool#evict()
      */
     public void evict() throws Exception {
         if (connectionPool != null) {
