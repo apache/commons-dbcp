@@ -418,12 +418,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             registeredJmxObjectName = null;
         }
         closed = true;
-        final GenericObjectPool<?> oldpool = connectionPool;
+        final GenericObjectPool<?> oldPool = connectionPool;
         connectionPool = null;
         dataSource = null;
         try {
-            if (oldpool != null) {
-                oldpool.close();
+            if (oldPool != null) {
+                oldPool.close();
             }
         } catch (final RuntimeException e) {
             throw e;
