@@ -70,6 +70,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from H2 1.4.198 to 1.4.199.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-540" due-to="emopers">
+        Close ObjectOutputStream before calling toByteArray on underlying ByteArrayOutputStream #28.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
