@@ -17,12 +17,13 @@
 
 package org.apache.commons.dbcp2.cpdsadapter;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Properties;
 import java.io.PrintWriter;
@@ -38,9 +39,9 @@ import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for DriverAdapterCPDS
@@ -49,7 +50,7 @@ public class TestDriverAdapterCPDS {
 
     private DriverAdapterCPDS pcds;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
@@ -169,12 +170,12 @@ public class TestDriverAdapterCPDS {
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testSetConnectionPropertiesConnectionCalled() throws Exception {
         final Properties properties = new Properties();
         // call to the connection
         pcds.getPooledConnection().close();
-        pcds.setConnectionProperties(properties);
+        assertThrows(IllegalStateException.class, () -> pcds.setConnectionProperties(properties));
     }
 
     @Test
@@ -268,7 +269,7 @@ public class TestDriverAdapterCPDS {
 
         for (int i = 0; i < threads.length; i++) {
             threads[i].join();
-            Assert.assertFalse("Thread " + i + " has failed",threads[i].isFailed());
+            Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
         }
     }
 
@@ -301,9 +302,9 @@ public class TestDriverAdapterCPDS {
         }
     }
 
-    @Test(expected=SQLFeatureNotSupportedException.class)
-    public void testGetParentLogger() throws SQLFeatureNotSupportedException {
-        pcds.getParentLogger();
+    @Test
+    public void testGetParentLogger() {
+        assertThrows(SQLFeatureNotSupportedException.class, pcds::getParentLogger);
     }
 
     @Test

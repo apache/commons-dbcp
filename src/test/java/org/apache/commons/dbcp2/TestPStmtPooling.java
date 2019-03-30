@@ -17,10 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,8 +34,8 @@ import javax.sql.DataSource;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicDataSource with prepared statement pooling enabled
@@ -75,7 +75,7 @@ public class TestPStmtPooling {
        final Connection conn2 = ds.getConnection();
        final PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
        // Confirm stmt2 now wraps the same PPS wrapped by stmt1
-       Assert.assertSame(pps1, getPoolablePreparedStatement(stmt2));
+       Assertions.assertSame(pps1, getPoolablePreparedStatement(stmt2));
        stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
        assertTrue(!stmt2.isClosed());
        stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
@@ -220,7 +220,7 @@ public class TestPStmtPooling {
         ps.addBatch();
         ps.close();
         conn.close();
-        Assert.assertFalse(inner.isClosed());
+        Assertions.assertFalse(inner.isClosed());
         ds.close();
     }
 }

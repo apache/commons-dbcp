@@ -17,10 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,8 +29,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test suite for {@link DelegatingDatabaseMetaData}.
@@ -42,7 +42,7 @@ public class TestDelegatingDatabaseMetaData {
     private DelegatingDatabaseMetaData delegate = null;
     private DatabaseMetaData obj = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         obj = mock(DatabaseMetaData.class);
         testConn = new TesterConnection("test", "test");

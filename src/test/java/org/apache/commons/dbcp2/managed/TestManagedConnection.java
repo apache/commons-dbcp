@@ -17,7 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -42,9 +42,9 @@ import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for ManagedConnection.
@@ -57,7 +57,7 @@ public class TestManagedConnection {
 
     protected TransactionManager transactionManager;
 
-    @Before
+    @BeforeEach
     public void setUp()
         throws Exception {
         // create a GeronimoTransactionManager for testing
@@ -89,7 +89,7 @@ public class TestManagedConnection {
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
 
-    @After
+    @AfterEach
     public void tearDown()
         throws Exception {
         pool.close();

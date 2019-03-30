@@ -17,7 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,9 +28,9 @@ import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test *must* execute before all other tests to be effective as it tests
@@ -40,12 +41,12 @@ public class TestDriverManagerConnectionFactory {
 
     private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         System.clearProperty(KEY_JDBC_DRIVERS);
     }
@@ -67,22 +68,22 @@ public class TestDriverManagerConnectionFactory {
         testDriverManagerInit(false);
     }
 
-    @Test(expected=IndexOutOfBoundsException.class) // thrown by TestDriver due to missing user
-    public void testDriverManagerWithoutUser() throws SQLException {
+    @Test
+    public void testDriverManagerWithoutUser() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null, "pass");
-        cf.createConnection();
+        assertThrows(IndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
     }
 
-    @Test(expected=SQLException.class) // thrown by TestDriver due to invalid password
-    public void testDriverManagerWithoutPassword() throws SQLException {
+    @Test
+    public void testDriverManagerWithoutPassword() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", (char[]) null);
-        cf.createConnection();
+        assertThrows(SQLException.class, cf::createConnection); // thrown by TestDriver due to invalid password
     }
 
-    @Test(expected=ArrayIndexOutOfBoundsException.class) // thrown by TestDriver due to missing user
-    public void testDriverManagerWithoutCredentials() throws SQLException {
+    @Test
+    public void testDriverManagerWithoutCredentials() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null,  (char[]) null);
-        cf.createConnection();
+        assertThrows(ArrayIndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
     }
 
     @Test

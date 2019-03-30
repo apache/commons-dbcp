@@ -27,16 +27,16 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Stack;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 // XXX FIX ME XXX
 // this class still needs some cleanup, but at least
@@ -49,7 +49,7 @@ import static org.junit.Assert.fail;
  */
 public abstract class TestConnectionPool {
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // Close any connections opened by the test
         while (!connections.isEmpty()) {
@@ -281,31 +281,31 @@ public abstract class TestConnectionPool {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));
 
-        assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
-                conn, statement.getConnection());
+        assertSame(conn,statement.getConnection(),
+                "statement.getConnection() should return the exact same connection instance that was used to create the statement");
 
         final ResultSet resultSet = statement.getResultSet();
         assertFalse(isClosed(resultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, resultSet.getStatement());
+        assertSame(statement, resultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         final ResultSet executeResultSet = statement.executeQuery("select * from dual");
         assertFalse(isClosed(executeResultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, executeResultSet.getStatement());
+        assertSame(statement, executeResultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         final ResultSet keysResultSet = statement.getGeneratedKeys();
         assertFalse(isClosed(keysResultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, keysResultSet.getStatement());
+        assertSame(statement, keysResultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         ResultSet preparedResultSet = null;
         if (statement instanceof PreparedStatement) {
             final PreparedStatement preparedStatement = (PreparedStatement) statement;
             preparedResultSet = preparedStatement.executeQuery();
             assertFalse(isClosed(preparedResultSet));
-            assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                    statement, preparedResultSet.getStatement());
+            assertSame(statement, preparedResultSet.getStatement(),
+                    "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
         }
 
 
@@ -426,7 +426,7 @@ public abstract class TestConnectionPool {
             final Connection con = newConnection();
             final Connection underCon =
                 ((DelegatingConnection<?>) con).getInnermostDelegate();
-            assertTrue("Failed to get connection", underCon != null);
+            assertTrue(underCon != null, "Failed to get connection");
             boolean found = false;
             for (int j = 0; j < c.length; j++) {
                 if (underCon == u[j]) {
@@ -434,7 +434,7 @@ public abstract class TestConnectionPool {
                     break;
                 }
             }
-            assertTrue("New connection not from pool", found);
+            assertTrue(found, "New connection not from pool");
             con.close();
         }
     }
@@ -442,23 +442,23 @@ public abstract class TestConnectionPool {
     @Test
     public void testAutoCommitBehavior() throws Exception {
         final Connection conn0 = newConnection();
-        assertNotNull("connection should not be null", conn0);
-        assertTrue("autocommit should be true for conn0", conn0.getAutoCommit());
+        assertNotNull(conn0, "connection should not be null");
+        assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
 
         final Connection conn1 = newConnection();
-        assertTrue("autocommit should be true for conn1", conn1.getAutoCommit() );
+        assertTrue(conn1.getAutoCommit(), "autocommit should be true for conn1");
         conn1.close();
 
-        assertTrue("autocommit should be true for conn0", conn0.getAutoCommit());
+        assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
         conn0.setAutoCommit(false);
-        assertFalse("autocommit should be false for conn0", conn0.getAutoCommit());
+        assertFalse(conn0.getAutoCommit(), "autocommit should be false for conn0");
         conn0.close();
 
         final Connection conn2 = newConnection();
-        assertTrue("autocommit should be true for conn2", conn2.getAutoCommit() );
+        assertTrue(conn2.getAutoCommit(), "autocommit should be true for conn2");
 
         final Connection conn3 = newConnection();
-        assertTrue("autocommit should be true for conn3", conn3.getAutoCommit() );
+        assertTrue(conn3.getAutoCommit(), "autocommit should be true for conn3");
 
         conn2.close();
 
@@ -844,11 +844,11 @@ public abstract class TestConnectionPool {
                         System.out.println("NOTE: some threads did not run the code: "+didNotRun);
                     }
                     // Perform initial sanity check:
-                    assertTrue("Expected some of the threads to fail",failed > 0);
+                    assertTrue(failed > 0, "Expected some of the threads to fail");
                     // Assume that threads that did not run would have timed out.
-                    assertEquals("WARNING: Expected half the threads to fail",pts.length/2,failed+didNotRun);
+                    assertEquals(pts.length/2, failed+didNotRun, "WARNING: Expected half the threads to fail");
                 } else {
-                    assertEquals("Did not expect any threads to fail",0,failed);
+                    assertEquals(0, failed, "Did not expect any threads to fail");
                 }
             }
     private static int currentThreadCount = 0;

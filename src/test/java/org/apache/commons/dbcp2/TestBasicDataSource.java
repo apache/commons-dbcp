@@ -17,7 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -35,11 +36,11 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicDataSource
@@ -54,13 +55,13 @@ public class TestBasicDataSource extends TestConnectionPool {
     protected BasicDataSource ds = null;
     private static final String CATALOG = "test catalog";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         // register a custom logger which supports inspection of the log messages
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -84,7 +85,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
         ds.close();
@@ -464,7 +465,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             ds.close();
             // Exception must have been swallowed by the pool - verify it is logged
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("bang") > 0);
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().indexOf("Cannot close") > 0);
@@ -487,7 +488,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.clear();
             ds.close();
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("boom") > 0);
         } catch (final IllegalStateException ex) {
             assertTrue(ex.getMessage().indexOf("boom") > 0); // RTE is not wrapped by BDS#close
@@ -698,7 +699,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             conn.close();
             assertEquals(0, ds.getNumIdle());
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("exceeds the maximum permitted value") > 0);
         } finally {
             StackMessageLog.clear();
@@ -718,7 +719,7 @@ public class TestBasicDataSource extends TestConnectionPool {
                 Thread.sleep(500);
             }
             assertEquals(0, ds.getNumIdle());
-            assertTrue(StackMessageLog.getAll().toString(), StackMessageLog.isEmpty());
+            assertTrue(StackMessageLog.isEmpty(), StackMessageLog.getAll().toString());
         } finally {
             StackMessageLog.clear();
             StackMessageLog.unLock();
@@ -865,7 +866,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
         final boolean original = ds.getConnectionPool().getLogAbandoned();
         ds.setLogAbandoned(!original);
-        Assert.assertNotEquals(Boolean.valueOf(original),
+        Assertions.assertNotEquals(Boolean.valueOf(original),
                 Boolean.valueOf(ds.getConnectionPool().getLogAbandoned()));
     }
 }

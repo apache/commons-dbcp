@@ -17,10 +17,10 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,9 +39,9 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -56,7 +56,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     private DataSource ds;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         user = "foo";
         final DriverAdapterCPDS pcds = new DriverAdapterCPDS();
@@ -79,7 +79,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
         ((PerUserPoolDataSource) ds).close();
@@ -527,12 +527,12 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         try {
             final Connection con4 = ds.getConnection(user, "bay"); // new password
             // Idle instances with old password should have been cleared
-            assertEquals("Should be no idle connections in the pool",
-                    0, ((PerUserPoolDataSource) ds).getNumIdle(user));
+            assertEquals(0, ((PerUserPoolDataSource) ds).getNumIdle(user),
+                    "Should be no idle connections in the pool");
             con4.close();
             // Should be one idle instance with new pwd
-            assertEquals("Should be one idle connection in the pool",
-                    1, ((PerUserPoolDataSource) ds).getNumIdle(user));
+            assertEquals(1, ((PerUserPoolDataSource) ds).getNumIdle(user),
+                    "Should be one idle connection in the pool");
             try (Connection c = ds.getConnection(user, "bar")) { // old password
                 fail("Should have generated SQLException");
             } catch (final SQLException expected) {
@@ -540,8 +540,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             final Connection con5 = ds.getConnection(user, "bay"); // take the idle one
             con3.close(); // Return a connection with the old password
             ds.getConnection(user, "bay").close();  // will try bad returned connection and destroy it
-            assertEquals("Should be one idle connection in the pool",
-                    1, ((PerUserPoolDataSource) ds).getNumIdle(user));
+            assertEquals(1, ((PerUserPoolDataSource) ds).getNumIdle(user),
+                    "Should be one idle connection in the pool");
             con5.close();
         } finally {
             TesterDriver.addUser(user,"bar");

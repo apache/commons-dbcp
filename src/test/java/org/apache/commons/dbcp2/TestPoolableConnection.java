@@ -16,19 +16,19 @@
  */
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -36,7 +36,7 @@ public class TestPoolableConnection {
 
     private GenericObjectPool<PoolableConnection> pool = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final PoolableConnectionFactory factory = new PoolableConnectionFactory(
                 new DriverConnectionFactory(
@@ -50,7 +50,7 @@ public class TestPoolableConnection {
         factory.setPool(pool);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         pool.close();
     }
@@ -60,13 +60,13 @@ public class TestPoolableConnection {
         // Grab a new connection from the pool
         final Connection c = pool.borrowObject();
 
-        assertNotNull("Connection should be created and should not be null", c);
-        assertEquals("There should be exactly one active object in the pool", 1, pool.getNumActive());
+        assertNotNull(c, "Connection should be created and should not be null");
+        assertEquals(1, pool.getNumActive(), "There should be exactly one active object in the pool");
 
         // Now return the connection by closing it
         c.close(); // Can't be null
 
-        assertEquals("There should now be zero active objects in the pool", 0, pool.getNumActive());
+        assertEquals(0, pool.getNumActive(), "There should now be zero active objects in the pool");
     }
 
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the
@@ -92,27 +92,26 @@ public class TestPoolableConnection {
             // should *NOT* be returned to the pool
         }
 
-        assertEquals("The pool should have no active connections",
-            0, pool.getNumActive());
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
     }
 
     @Test
     public void testClosingWrappedInDelegate() throws Exception {
-        Assert.assertEquals(0, pool.getNumActive());
+        Assertions.assertEquals(0, pool.getNumActive());
 
         final Connection conn = pool.borrowObject();
         final DelegatingConnection<Connection> outer = new DelegatingConnection<>(conn);
 
-        Assert.assertFalse(outer.isClosed());
-        Assert.assertFalse(conn.isClosed());
-        Assert.assertEquals(1, pool.getNumActive());
+        Assertions.assertFalse(outer.isClosed());
+        Assertions.assertFalse(conn.isClosed());
+        Assertions.assertEquals(1, pool.getNumActive());
 
         outer.close();
 
-        Assert.assertTrue(outer.isClosed());
-        Assert.assertTrue(conn.isClosed());
-        Assert.assertEquals(0, pool.getNumActive());
-        Assert.assertEquals(1, pool.getNumIdle());
+        Assertions.assertTrue(outer.isClosed());
+        Assertions.assertTrue(conn.isClosed());
+        Assertions.assertEquals(0, pool.getNumActive());
+        Assertions.assertEquals(1, pool.getNumIdle());
     }
 
     @Test
@@ -157,10 +156,8 @@ public class TestPoolableConnection {
 
         // verify that bad connection does not get returned to the pool
         conn.close();  // testOnReturn triggers validate, which should fail
-        assertEquals("The pool should have no active connections",
-                0, pool.getNumActive());
-        assertEquals("The pool should have no idle connections",
-                0, pool.getNumIdle());
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+        assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
     }
 
     @Test
@@ -187,9 +184,7 @@ public class TestPoolableConnection {
 
         // verify that bad connection does not get returned to the pool
         conn.close();  // testOnReturn triggers validate, which should fail
-        assertEquals("The pool should have no active connections",
-                0, pool.getNumActive());
-        assertEquals("The pool should have no idle connections",
-                0, pool.getNumIdle());
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+        assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
     }
 }

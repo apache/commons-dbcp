@@ -16,21 +16,21 @@
  */
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestPoolingConnection {
 
     private PoolingConnection con = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         con = new PoolingConnection(new TesterConnection("test", "test"));
         final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
@@ -44,7 +44,7 @@ public class TestPoolingConnection {
         con.setStatementPool(stmtPool);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         con.close();
         con = null;

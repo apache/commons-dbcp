@@ -17,19 +17,19 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -39,7 +39,7 @@ public class TestDelegatingConnection {
     private Connection delegateConn = null;
     private Connection delegateConn2 = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         delegateConn = new TesterConnection("test", "test");
         delegateConn2 = new TesterConnection("test", "test");

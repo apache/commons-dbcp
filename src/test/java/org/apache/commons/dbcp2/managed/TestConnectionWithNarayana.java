@@ -17,7 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,10 +28,10 @@ import java.sql.Timestamp;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
 import com.arjuna.ats.jta.common.jtaPropertyManager;
@@ -62,7 +62,7 @@ public class TestConnectionWithNarayana {
 
     private BasicManagedDataSource mds;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         jtaPropertyManager.getJTAEnvironmentBean().setLastResourceOptimisationInterfaceClassName(
                 "org.apache.commons.dbcp2.managed.LocalXAConnectionFactory$LocalXAResource");
@@ -120,7 +120,7 @@ public class TestConnectionWithNarayana {
         } finally {
             mds.getTransactionManager().rollback();
         }
-        Assert.assertEquals(0, mds.getNumActive());
+        Assertions.assertEquals(0, mds.getNumActive());
     }
 
     @Test
@@ -138,12 +138,12 @@ public class TestConnectionWithNarayana {
                 fail("Should not work after timeout");
             } catch (final SQLException e) {
                 // Expected
-                Assert.assertEquals("Commit can not be set while enrolled in a transaction", e.getMessage());
+                Assertions.assertEquals("Commit can not be set while enrolled in a transaction", e.getMessage());
             }
             mds.getTransactionManager().rollback();
         }
 
-        Assert.assertEquals(0, mds.getNumActive());
+        Assertions.assertEquals(0, mds.getNumActive());
     }
 
     @Test
@@ -218,11 +218,11 @@ public class TestConnectionWithNarayana {
                     conn.close();
                 }
             }
-            Assert.assertEquals(0, mds.getNumActive());
+            Assertions.assertEquals(0, mds.getNumActive());
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         final Connection conn = mds.getConnection();
         final PreparedStatement ps = conn.prepareStatement(DROP_STMT);

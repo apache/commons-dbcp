@@ -17,15 +17,15 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.apache.commons.dbcp2.Utils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for UserPassKey.
@@ -36,7 +36,7 @@ public class TestUserPassKey {
     private UserPassKey userPassKey;
     private UserPassKey anotherUserPassKey;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         userPassKey = new UserPassKey("user", "pass");
         anotherUserPassKey = new UserPassKey((String) null, "");
