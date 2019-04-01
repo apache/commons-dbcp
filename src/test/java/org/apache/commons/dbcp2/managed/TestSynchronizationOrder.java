@@ -63,31 +63,31 @@ public class TestSynchronizationOrder {
 
     @Test
     public void testSessionSynchronization() throws Exception {
-        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager, xads);
+        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
+                xads);
 
-        final PoolableConnectionFactory factory =
-                new PoolableConnectionFactory(xaConnectionFactory, null);
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
         factory.setDefaultReadOnly(Boolean.TRUE);
         factory.setDefaultAutoCommit(Boolean.TRUE);
 
         // create the pool
-        final GenericObjectPool pool = new GenericObjectPool<>(factory);
-        factory.setPool(pool);
-        pool.setMaxTotal(10);
-        pool.setMaxWaitMillis(1000);
+        try (final GenericObjectPool pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.setMaxTotal(10);
+            pool.setMaxWaitMillis(1000);
 
-        // finally create the datasource
-        final ManagedDataSource ds = new ManagedDataSource<>(pool, xaConnectionFactory.getTransactionRegistry());
-        ds.setAccessToUnderlyingConnectionAllowed(true);
+            // finally create the datasource
+            final ManagedDataSource ds = new ManagedDataSource<>(pool, xaConnectionFactory.getTransactionRegistry());
+            ds.setAccessToUnderlyingConnectionAllowed(true);
 
-
-        transactionManager.begin();
-        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection();
-        connectionA.close();
-        transactionManager.commit();
-        assertTrue(transactionManagerRegistered);
-        assertFalse(transactionSynchronizationRegistryRegistered);
+            transactionManager.begin();
+            final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection();
+            connectionA.close();
+            transactionManager.commit();
+            assertTrue(transactionManagerRegistered);
+            assertFalse(transactionSynchronizationRegistryRegistered);
+        }
     }
 
     @Test
