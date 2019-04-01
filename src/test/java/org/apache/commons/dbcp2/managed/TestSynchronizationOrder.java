@@ -297,7 +297,7 @@ public class TestSynchronizationOrder {
             }
         };
         xads = (XADataSource) Proxy.newProxyInstance(
-                InvocationHandler.class.getClassLoader(),
+                TestSynchronizationOrder.class.getClassLoader(),
                 new Class[]{XADataSource.class}, handle);
         bmds.setXaDataSourceInstance(xads);
 
