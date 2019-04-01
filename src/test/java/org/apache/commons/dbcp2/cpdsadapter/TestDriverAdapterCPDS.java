@@ -95,30 +95,30 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testSimple() throws Exception {
-        final Connection conn = pcds.getPooledConnection().getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+        try (final Connection conn = pcds.getPooledConnection().getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
     public void testSimpleWithUsername() throws Exception {
-        final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+        try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
@@ -231,12 +231,13 @@ public class TestDriverAdapterCPDS {
      */
     @Test
     public void testNullValidationQuery() throws Exception {
-        final SharedPoolDataSource spds = new SharedPoolDataSource();
-        spds.setConnectionPoolDataSource(pcds);
-        spds.setDefaultTestOnBorrow(true);
-        final Connection c = spds.getConnection();
-        c.close();
-        spds.close();
+        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
+            spds.setConnectionPoolDataSource(pcds);
+            spds.setDefaultTestOnBorrow(true);
+            try (final Connection c = spds.getConnection()) {
+                // close right away
+            }
+        }
     }
 
     // https://issues.apache.org/jira/browse/DBCP-376
@@ -248,28 +249,29 @@ public class TestDriverAdapterCPDS {
         pcds.setMaxPreparedStatements(-1);
         pcds.setAccessToUnderlyingConnectionAllowed(true);
 
-        final SharedPoolDataSource spds = new SharedPoolDataSource();
-        spds.setConnectionPoolDataSource(pcds);
-        spds.setMaxTotal(threads.length + 10);
-        spds.setDefaultMaxWaitMillis(-1);
-        spds.setDefaultMaxIdle(10);
-        spds.setDefaultAutoCommit(Boolean.FALSE);
+        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
+            spds.setConnectionPoolDataSource(pcds);
+            spds.setMaxTotal(threads.length + 10);
+            spds.setDefaultMaxWaitMillis(-1);
+            spds.setDefaultMaxIdle(10);
+            spds.setDefaultAutoCommit(Boolean.FALSE);
 
-        spds.setValidationQuery("SELECT 1");
-        spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
-        spds.setDefaultNumTestsPerEvictionRun(-1);
-        spds.setDefaultTestWhileIdle(true);
-        spds.setDefaultTestOnBorrow(true);
-        spds.setDefaultTestOnReturn(false);
+            spds.setValidationQuery("SELECT 1");
+            spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
+            spds.setDefaultNumTestsPerEvictionRun(-1);
+            spds.setDefaultTestWhileIdle(true);
+            spds.setDefaultTestOnBorrow(true);
+            spds.setDefaultTestOnReturn(false);
 
-        for (int i = 0; i < threads.length; i++) {
-            threads[i] = new ThreadDbcp367(spds);
-            threads[i].start();
-        }
+            for (int i = 0; i < threads.length; i++) {
+                threads[i] = new ThreadDbcp367(spds);
+                threads[i].start();
+            }
 
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].join();
-            Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
+            for (int i = 0; i < threads.length; i++) {
+                threads[i].join();
+                Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
+            }
         }
     }
 

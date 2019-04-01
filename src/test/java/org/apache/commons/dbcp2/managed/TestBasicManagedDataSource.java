@@ -59,27 +59,27 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
      */
     @Test
     public void testReallyClose() throws Exception {
-        final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
-        basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
-        basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
-        basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-        basicManagedDataSource.setUsername("userName");
-        basicManagedDataSource.setPassword("password");
-        basicManagedDataSource.setMaxIdle(1);
-        // Create two connections
-        final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
-        final ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        conn2.close(); // Return one connection to the pool
-        conn.close();  // No room at the inn - this will trigger reallyClose(), which should unregister
-        try {
-            basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
-            fail("Expecting SQLException - XAResources orphaned");
-        } catch (final SQLException ex) {
-            // expected
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            // Create two connections
+            final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+            assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
+            final ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+            conn2.close(); // Return one connection to the pool
+            conn.close(); // No room at the inn - this will trigger reallyClose(), which should unregister
+            try {
+                basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
+                fail("Expecting SQLException - XAResources orphaned");
+            } catch (final SQLException ex) {
+                // expected
+            }
+            conn2.close();
         }
-        conn2.close();
-        basicManagedDataSource.close();
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testSetDriverName() throws SQLException, XAException {
+    public void testSetDriverName() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setDriverClassName("adams");
             assertEquals("adams", basicManagedDataSource.getDriverClassName());

@@ -77,8 +77,9 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         // normal reuse of statement
         stmt1.close();
-        final PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual");
-        assertNotNull(stmt4);
+        try (final PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual")) {
+            assertNotNull(stmt4);
+        }
     }
 
     /**

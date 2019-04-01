@@ -85,11 +85,11 @@ public class TestConnectionWithNarayana {
         mds.setLogExpiredConnections(true);
         mds.setLifo(false);
 
-        final Connection conn = mds.getConnection();
-        final PreparedStatement ps = conn.prepareStatement(CREATE_STMT);
-        ps.execute();
-        ps.close();
-        conn.close();
+        try (final Connection conn = mds.getConnection()) {
+            try (final PreparedStatement ps = conn.prepareStatement(CREATE_STMT)) {
+                ps.execute();
+            }
+        }
     }
 
     @Test
@@ -224,11 +224,11 @@ public class TestConnectionWithNarayana {
 
     @AfterEach
     public void tearDown() throws Exception {
-        final Connection conn = mds.getConnection();
-        final PreparedStatement ps = conn.prepareStatement(DROP_STMT);
-        ps.execute();
-        ps.close();
-        conn.close();
+        try (final Connection conn = mds.getConnection()) {
+            try (final PreparedStatement ps = conn.prepareStatement(DROP_STMT)) {
+                ps.execute();
+            }
+        }
         if (mds != null) {
             mds.close();
         }

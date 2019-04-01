@@ -196,11 +196,11 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testTransactionIsolationBehavior() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
-        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        conn.close();
+        try (final Connection conn = getConnection()) {
+            assertNotNull(conn);
+            assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        }
 
         final Connection conn2 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
@@ -239,14 +239,15 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         assertTrue(ds.isAccessToUnderlyingConnectionAllowed());
 
-        final Connection conn = getConnection();
-        Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
-        assertNotNull(dconn);
+        try (final Connection conn = getConnection()) {
+            Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
+            assertNotNull(dconn);
 
-        dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        assertNotNull(dconn);
+            dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
+            assertNotNull(dconn);
 
-        assertTrue(dconn instanceof TesterConnection);
+            assertTrue(dconn instanceof TesterConnection);
+        }
     }
 
     @Test
@@ -290,8 +291,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(0);
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -299,8 +301,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(-1);
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -308,8 +311,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(100); // Works for TesterStatement
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -553,16 +557,18 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testInvalidateConnection() throws Exception {
-    	ds.setMaxTotal(2);
-    	final Connection conn1 = ds.getConnection();
-    	final Connection conn2 = ds.getConnection();
-    	ds.invalidateConnection(conn1);
-    	assertTrue(conn1.isClosed());
-    	assertEquals(1, ds.getNumActive());
-    	assertEquals(0, ds.getNumIdle());
-    	final Connection conn3 = ds.getConnection();
-    	conn2.close();
-    	conn3.close();
+        ds.setMaxTotal(2);
+        try (final Connection conn1 = ds.getConnection()) {
+            try (final Connection conn2 = ds.getConnection()) {
+                ds.invalidateConnection(conn1);
+                assertTrue(conn1.isClosed());
+                assertEquals(1, ds.getNumActive());
+                assertEquals(0, ds.getNumIdle());
+                try (final Connection conn3 = ds.getConnection()) {
+                    conn2.close();
+                }
+            }
+        }
     }
 
     /**

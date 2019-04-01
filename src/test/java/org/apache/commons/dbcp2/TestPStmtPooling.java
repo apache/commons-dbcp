@@ -44,7 +44,7 @@ public class TestPStmtPooling {
 
     @Test
     public void testStmtPool() throws Exception {
-        final DataSource ds = createPDS();
+        final DataSource ds = createPoolingDataSource();
         try (Connection conn = ds.getConnection()) {
             final Statement stmt1 = conn.prepareStatement("select 1 from dual");
             final Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
@@ -63,7 +63,7 @@ public class TestPStmtPooling {
      */
     @Test
     public void testMultipleClose() throws Exception {
-       final DataSource ds = createPDS();
+       final DataSource ds = createPoolingDataSource();
        PreparedStatement stmt1 = null;
        final Connection conn = ds.getConnection();
        stmt1 = conn.prepareStatement("select 1 from dual");
@@ -101,7 +101,7 @@ public class TestPStmtPooling {
     }
 
 
-    private DataSource createPDS() throws Exception {
+    private DataSource createPoolingDataSource() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         final ConnectionFactory connFactory = new DriverManagerConnectionFactory(
                 "jdbc:apache:commons:testdriver","u1","p1");
