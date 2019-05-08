@@ -367,4 +367,16 @@ public class TestDriverAdapterCPDS {
         final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
     }
+    
+    @Test
+    public void testToStringWithoutConnectionProperties() throws ClassNotFoundException
+    {
+        final DriverAdapterCPDS cleanCpds = new DriverAdapterCPDS();
+        cleanCpds.setDriver( "org.apache.commons.dbcp2.TesterDriver" );
+        cleanCpds.setUrl( "jdbc:apache:commons:testdriver" );
+        cleanCpds.setUser( "foo" );
+        cleanCpds.setPassword( "bar" );
+
+        cleanCpds.toString();
+    }
 }
