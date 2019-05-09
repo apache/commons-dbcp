@@ -765,7 +765,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         builder.append(", connectionProperties=");
         Properties tmpProps = connectionProperties;
         final String pwdKey = "password";
-        if (connectionProperties.contains(pwdKey)) {
+        if (connectionProperties != null && connectionProperties.contains(pwdKey)) {
             tmpProps = (Properties) connectionProperties.clone();
             tmpProps.remove(pwdKey);
         }
