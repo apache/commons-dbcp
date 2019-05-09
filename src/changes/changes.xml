@@ -82,6 +82,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-543" due-to="Gary Gregory">
         Update Apache Commons Pool from 2.6.1 to 2.6.2.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-546" due-to="Sergey Chupov">
+        Avoid NPE when calling DriverAdapterCPDS.toString().
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
