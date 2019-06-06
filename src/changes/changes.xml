@@ -41,7 +41,7 @@ The <action> type attribute can be add,update,fix,remove.
 
 <document>
   <properties>
-    <title>Commons DBCP Release Notes</title>
+    <title>Apache Commons DBCP Release Notes</title>
   </properties>
     <!-- NOTE:
     The description below is specially formatted so as to improve the layout of the generated release notes:
