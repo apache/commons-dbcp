@@ -376,6 +376,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private ObjectNameWrapper registeredJmxObjectName;
 
     /**
+     * The fully qualified Java class name of the connectionFactoryName to be used.
+     */
+    private String connectionFactoryClassName;
+    
+    /**
      * Adds a custom connection property to the set that will be passed to our JDBC driver. This <strong>MUST</strong>
      * be called before the first connection is retrieved (along with all the other configuration property setters).
      * Calls to this method after the connection pool has been initialized have no effect.
@@ -526,8 +531,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             log("DBCP DataSource configured without a 'password'");
         }
 
-        final ConnectionFactory driverConnectionFactory = new DriverConnectionFactory(driverToUse, url,
-                connectionProperties);
+        final ConnectionFactory driverConnectionFactory = getConnectionFactoryInstance(driverToUse);
         return driverConnectionFactory;
     }
 
@@ -990,6 +994,18 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return this.driverClassName;
     }
 
+    /**
+     * Returns the ConnectionFactoryClassName that has been configured for use by this pool.
+     * <p>
+     * Note: This getter only returns the last value set by a call to {@link #setConnectionFactoryClassName(connectionFactoryClassName)}. 
+     * </p>
+     *
+     * @return the ConnectionFactoryClassName that has been configured for use by this pool
+     */
+    public String getConnectionFactoryClassName() {
+        return this.connectionFactoryClassName;
+    }
+    
     /**
      * Returns the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
@@ -1967,6 +1983,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             this.driverClassName = null;
         }
     }
+    
+    /**
+     * Sets the ConnectionFactory class name.
+     *
+     * @param connectionFactoryClassName
+     *            
+     */
+    
+    public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
+    	if (connectionFactoryClassName != null && connectionFactoryClassName.trim().length() > 0) {
+    		this.connectionFactoryClassName = connectionFactoryClassName;
+    	} else {
+    		this.connectionFactoryClassName = null; 
+    	}
+    }
 
     /**
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
@@ -2526,5 +2557,22 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
+    }
+    
+    private ConnectionFactory getConnectionFactoryInstance(Driver driver)  throws SQLException {
+    	if (connectionFactoryClassName != null) {
+            try {
+            	Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
+            	return (ConnectionFactory) connectionFactoryFromCCL.getConstructor(Driver.class, String.class, Properties.class)
+            													   .newInstance(driver, url, connectionProperties);
+            } catch (final Exception t) {
+                	final String message = "Cannot load ConnectionFactory class '" + connectionFactoryClassName + "'";
+                	logWriter.println(message);
+                	t.printStackTrace(logWriter);
+                	throw new SQLException(message, t);
+                }
+        } else {
+        	return new DriverConnectionFactory(driver, url, connectionProperties);
+        }
     }
 }
