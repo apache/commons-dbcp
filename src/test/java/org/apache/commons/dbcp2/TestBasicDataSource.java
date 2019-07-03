@@ -881,7 +881,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     
     /**
      * JIRA: DBCP-547
-     * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory()
+     * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
      */
     @Test
     public void testCreateConnectionFactory() throws Exception {
