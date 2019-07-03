@@ -85,6 +85,6 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
     }
 
     private void callOracleSetModule(Connection conn) {
-    	// do something
+    	// call oracleSetModule
     }
 }
