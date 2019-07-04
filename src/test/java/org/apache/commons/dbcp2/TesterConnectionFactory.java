@@ -23,10 +23,10 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- *	Simple ConnectionFactory impl class that use BasicDataSource.createConnectionFactory()
+ * Dummy {@link ConnectionFactory} for testing purpose. 
  */
 
-public class TestOracleDriverConnectionFactory implements ConnectionFactory {
+public class TesterConnectionFactory implements ConnectionFactory {
 	private final String connectionString;
     private final Driver driver;
     private final Properties properties;
@@ -41,7 +41,7 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
      * @param properties
      *            The connection properties.
      */
-    public TestOracleDriverConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
+    public TesterConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
         this.driver = driver;
         this.connectionString = connectString;
         this.properties = properties;
@@ -50,13 +50,12 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
     @Override
     public Connection createConnection() throws SQLException {
         Connection conn = driver.connect(connectionString, properties);
-        callOracleSetModule(conn);
+        doSomething(conn);
         return conn;
     }
 
     /**
      * @return The connection String.
-     * @since 2.6.0
      */
     public String getConnectionString() {
         return connectionString;
@@ -64,7 +63,6 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
 
     /**
      * @return The Driver.
-     * @since 2.6.0
      */
     public Driver getDriver() {
         return driver;
@@ -72,7 +70,6 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
 
     /**
      * @return The Properties.
-     * @since 2.6.0
      */
     public Properties getProperties() {
         return properties;
@@ -84,7 +81,7 @@ public class TestOracleDriverConnectionFactory implements ConnectionFactory {
                 + String.valueOf(properties) + "]";
     }
 
-    private void callOracleSetModule(Connection conn) {
-    	// call oracleSetModule
+    private void doSomething(Connection conn) {
+    	// do something
     }
 }

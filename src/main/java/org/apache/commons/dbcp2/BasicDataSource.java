@@ -1992,7 +1992,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     
     public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
-    	if (connectionFactoryClassName != null && connectionFactoryClassName.trim().length() > 0) {
+    	if ( !isEmpty(connectionFactoryClassName)) {
     		this.connectionFactoryClassName = connectionFactoryClassName;
     	} else {
     		this.connectionFactoryClassName = null; 
@@ -2563,8 +2563,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     	if (connectionFactoryClassName != null) {
             try {
             	Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
-            	return (ConnectionFactory) connectionFactoryFromCCL.getConstructor(Driver.class, String.class, Properties.class)
-            													   .newInstance(driver, url, connectionProperties);
+            	return (ConnectionFactory) connectionFactoryFromCCL
+            			.getConstructor(Driver.class, String.class, Properties.class)
+            			.newInstance(driver, url, connectionProperties);
             } catch (final Exception t) {
                 	final String message = "Cannot load ConnectionFactory class '" + connectionFactoryClassName + "'";
                 	logWriter.println(message);
@@ -2574,5 +2575,37 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         } else {
         	return new DriverConnectionFactory(driver, url, connectionProperties);
         }
+    }
+    
+    /**
+     * verify empty string (null, length = 0, contains whitespace)
+     * 
+     * @param s
+     * 			string 
+     * @return boolean
+     */
+    private static boolean isEmpty(String s) {
+		s = (s != null) ? s.trim() : s;
+		return isEmpty((CharSequence) s);
+    }
+    
+    /**
+     * verify empty string (null, length = 0, contains whitespace)
+     * 
+     * @param s
+     * 			string 
+     * @return boolean
+     */
+    private static boolean isEmpty(CharSequence c) {
+    	if (c == null) {
+    		return true;
+    	}
+
+    	for (int i = 0, len = c.length() ; i < len ; i++) {
+    		if ( !Character.isWhitespace(c.charAt(i))) {
+    			return false;
+    		}
+    	}
+    	return true;
     }
 }

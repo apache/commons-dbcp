@@ -908,7 +908,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         properties.put("url", "jdbc:apache:commons:testdriver");
         properties.put("username", "foo");
         properties.put("password", "bar");
-        properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TestOracleDriverConnectionFactory");
+        properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TesterConnectionFactory");
         ds = BasicDataSourceFactory.createDataSource(properties);
         conn = ds.getConnection();
         assertNotNull(conn);
