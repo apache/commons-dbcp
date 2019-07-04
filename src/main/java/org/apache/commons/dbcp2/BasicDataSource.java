@@ -2584,7 +2584,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * 			string 
      * @return boolean
      */
-    private static boolean isEmpty(String s) {
+    private boolean isEmpty(String s) {
 		s = (s != null) ? s.trim() : s;
 		return isEmpty((CharSequence) s);
     }
@@ -2596,7 +2596,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * 			string 
      * @return boolean
      */
-    private static boolean isEmpty(CharSequence c) {
+    private boolean isEmpty(CharSequence c) {
     	if (c == null) {
     		return true;
     	}
