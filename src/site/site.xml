@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<!DOCTYPE org.apache.commons.menus SYSTEM 'http://commons.apache.org/build/maven-build.dtd'>
+<!DOCTYPE org.apache.commons.menus SYSTEM 'https://commons.apache.org/build/maven-build.dtd'>
 <project name="DBCP">
   <bannerRight>
     <name>Commons DBCP</name>

@@ -31,9 +31,9 @@ o DBCP-537:  Update Apache Commons Pool from 2.6.0 to 2.6.1. Thanks to Gary Greg
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download page: http://commons.apache.org/dbcp/download_dbcp.cgi
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
@@ -70,13 +70,13 @@ Note that Clirr incorrectly reports one binary incompatible change because it is
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Download page: http://commons.apache.org/dbcp/download_dbcp.cgi
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
               Apache Apache Commons DBCP
                  Version 2.4.0
@@ -86,7 +86,7 @@ The Apache Commons DBCP team is pleased to announce the release of Apache Apache
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
-This is a minor release, including bug fixes and enhancements, which you can download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+This is a minor release, including bug fixes and enhancements, which you can download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 Changes in this version include:
 
@@ -112,9 +112,9 @@ o DBCP-503:  org.apache.commons.dbcp2.datasources.InstanceKeyDataSourceFactory.c
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
@@ -145,9 +145,9 @@ o DBCP-490:  The method org.apache.commons.dbcp2.PoolingDriver.getConnectionPool
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
@@ -209,9 +209,9 @@ o DBCP-457:  When using a BasicDataSource, pass changes related to the handling 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
@@ -244,6 +244,6 @@ o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
 
-http://commons.apache.org/dbcp/
+https://commons.apache.org/dbcp/
 
-Download from http://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi

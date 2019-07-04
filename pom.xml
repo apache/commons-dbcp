@@ -31,7 +31,7 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
-  <url>http://commons.apache.org/dbcp/</url>
+  <url>https://commons.apache.org/dbcp/</url>
 
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
@@ -400,7 +400,7 @@
         <configuration>
           <links>
             <link>http://docs.oracle.com/javase/7/docs/api</link>
-            <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
+            <link>https://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
             <link>http://docs.oracle.com/javaee/7/api/</link>
           </links>
         </configuration>
@@ -457,7 +457,7 @@
         <configuration>
           <links>
             <link>http://docs.oracle.com/javase/7/docs/api</link>
-            <link>http://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
+            <link>https://commons.apache.org/proper/commons-pool/api-${commons.pool.version}</link>
             <link>http://docs.oracle.com/javaee/7/api/</link>
           </links>
         </configuration>
