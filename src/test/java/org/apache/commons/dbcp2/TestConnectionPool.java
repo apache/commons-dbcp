@@ -465,7 +465,7 @@ public abstract class TestConnectionPool {
         conn3.close();
     }
 
-    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testConnectionsAreDistinct() throws Exception {
         final Connection[] conn = new Connection[getMaxTotal()];
@@ -634,7 +634,7 @@ public abstract class TestConnectionPool {
 
     // Bugzilla Bug 24328: PooledConnectionImpl ignores resultsetType
     // and Concurrency if statement pooling is not enabled
-    // http://issues.apache.org/bugzilla/show_bug.cgi?id=24328
+    // https://issues.apache.org/bugzilla/show_bug.cgi?id=24328
     @Test
     public void testPrepareStatementOptions() throws Exception
     {

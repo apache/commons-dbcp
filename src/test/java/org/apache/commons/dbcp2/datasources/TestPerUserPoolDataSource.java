@@ -88,7 +88,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     /**
      * Switching 'u1 to 'u2' and 'p1' to 'p2' will
      * exhibit the bug detailed in
-     * http://issues.apache.org/bugzilla/show_bug.cgi?id=18905
+     * https://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     @Test
     public void testIncorrectPassword() throws Exception {
@@ -437,7 +437,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
     }
 
-    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue https://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     // unregistered user is in the same pool as without user name
     @Test
     public void testUnregisteredUser() throws Exception {
@@ -469,7 +469,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(1, tds.getNumIdle("u1"));
     }
 
-    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue https://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     @Test
     public void testDefaultUser1() throws Exception {
         TesterDriver.addUser("mkh", "password");
@@ -490,7 +490,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
-    // see issue http://issues.apache.org/bugzilla/show_bug.cgi?id=23843
+    // see issue https://issues.apache.org/bugzilla/show_bug.cgi?id=23843
     @Test
     public void testDefaultUser2() throws Exception {
         TesterDriver.addUser("mkh", "password");

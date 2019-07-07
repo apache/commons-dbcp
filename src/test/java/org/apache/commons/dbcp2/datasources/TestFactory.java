@@ -38,7 +38,7 @@ public class TestFactory {
     // Bugzilla Bug 24082: bug in InstanceKeyDataSourceFactory
     // There's a fatal bug in InstanceKeyDataSourceFactory that means you can't
     // instantiate more than one factory.
-    // http://issues.apache.org/bugzilla/show_bug.cgi?id=24082
+    // https://issues.apache.org/bugzilla/show_bug.cgi?id=24082
     @Test
     public void testJNDI2Pools() throws Exception {
         final Reference refObj = new Reference(SharedPoolDataSource.class.getName());
