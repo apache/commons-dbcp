@@ -17,8 +17,13 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -38,8 +43,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -874,6 +879,42 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setLogAbandoned(!original);
         Assertions.assertNotEquals(Boolean.valueOf(original),
                 Boolean.valueOf(ds.getConnectionPool().getLogAbandoned()));
+    }
+
+    /**
+     * JIRA: DBCP-547
+     * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
+     */
+    @Test
+    public void testCreateConnectionFactory() throws Exception {
+
+    	/** not set ConnectionFactoryClassName */
+    	Properties properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
+        Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        conn.close();
+        ds.close();
+
+        /** set ConnectionFactoryClassName */
+        properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TesterConnectionFactory");
+        ds = BasicDataSourceFactory.createDataSource(properties);
+        conn = ds.getConnection();
+        assertNotNull(conn);
+
+        conn.close();
+        ds.close();
     }
 }
 

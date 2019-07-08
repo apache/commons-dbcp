@@ -60,7 +60,7 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.6.1" date="2019-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.7.0" date="2019-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="jleroux" type="add" issue="DBCP-539" due-to="Jacques Le Roux">
         ManagedDataSource#close() should declare used exceptions.
       </action>
@@ -71,7 +71,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update tests from H2 1.4.198 to 1.4.199.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-540" due-to="emopers">
-        Close ObjectOutputStream before calling toByteArray on underlying ByteArrayOutputStream #28.
+        Close ObjectOutputStream before calling toByteArray() on underlying ByteArrayOutputStream #28.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-541" due-to="Allon Murienik">
         Upgrade to JUnit Jupiter #19.
@@ -84,6 +84,9 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-546" due-to="Sergey Chupov">
         Avoid NPE when calling DriverAdapterCPDS.toString().
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-547" due-to="leechoongyon, Gary Gregory">
+        Add a ConnectionFactory class name setting for BasicDataSource.createConnectionFactory() #33.
       </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">

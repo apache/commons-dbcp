@@ -109,7 +109,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory)
-            throws Exception {
+        throws Exception {
         PoolableConnection conn = null;
         PooledObject<PoolableConnection> p = null;
         try {
@@ -315,6 +315,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private volatile int validationQueryTimeoutSeconds = -1;
 
     /**
+     * The fully qualified Java class name of a {@link ConnectionFactory} implementation.
+     */
+    private String connectionFactoryClassName;
+
+    /**
      * These SQL statements run once after a Connection is created.
      * <p>
      * This property can be used for example to run ALTER SESSION SET NLS_SORT=XCYECH in an Oracle Database only once
@@ -364,7 +369,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The PrintWriter to which log messages should be directed.
      */
     private volatile PrintWriter logWriter = new PrintWriter(
-            new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
+        new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
 
     private AbandonedConfig abandonedConfig;
 
@@ -504,7 +509,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                 }
             } catch (final Exception t) {
                 final String message = "Cannot create JDBC driver of class '"
-                        + (driverClassName != null ? driverClassName : "") + "' for connect URL '" + url + "'";
+                    + (driverClassName != null ? driverClassName : "") + "' for connect URL '" + url + "'";
                 logWriter.println(message);
                 t.printStackTrace(logWriter);
                 throw new SQLException(message, t);
@@ -526,9 +531,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             log("DBCP DataSource configured without a 'password'");
         }
 
-        final ConnectionFactory driverConnectionFactory = new DriverConnectionFactory(driverToUse, url,
-                connectionProperties);
-        return driverConnectionFactory;
+        return createConnectionFactory(driverToUse);
     }
 
     /**
@@ -683,10 +686,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return a non-null instance
      */
     protected GenericObjectPool<PoolableConnection> createObjectPool(final PoolableConnectionFactory factory,
-            final GenericObjectPoolConfig<PoolableConnection> poolConfig, final AbandonedConfig abandonedConfig) {
+        final GenericObjectPoolConfig<PoolableConnection> poolConfig, final AbandonedConfig abandonedConfig) {
         GenericObjectPool<PoolableConnection> gop;
-        if (abandonedConfig != null && (abandonedConfig.getRemoveAbandonedOnBorrow()
-                || abandonedConfig.getRemoveAbandonedOnMaintenance())) {
+        if (abandonedConfig != null
+            && (abandonedConfig.getRemoveAbandonedOnBorrow() || abandonedConfig.getRemoveAbandonedOnMaintenance())) {
             gop = new GenericObjectPool<>(factory, poolConfig, abandonedConfig);
         } else {
             gop = new GenericObjectPool<>(factory, poolConfig);
@@ -706,11 +709,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return A new PoolableConnectionFactory configured with the current configuration of this BasicDataSource
      */
     protected PoolableConnectionFactory createPoolableConnectionFactory(final ConnectionFactory driverConnectionFactory)
-            throws SQLException {
+        throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
             connectionFactory = new PoolableConnectionFactory(driverConnectionFactory,
-                    ObjectNameWrapper.unwrap(registeredJmxObjectName));
+                ObjectNameWrapper.unwrap(registeredJmxObjectName));
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeoutSeconds);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -988,6 +991,20 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public synchronized String getDriverClassName() {
         return this.driverClassName;
+    }
+
+    /**
+     * Returns the ConnectionFactoryClassName that has been configured for use by this pool.
+     * <p>
+     * Note: This getter only returns the last value set by a call to
+     * {@link #setConnectionFactoryClassName(String)}.
+     * </p>
+     *
+     * @return the ConnectionFactoryClassName that has been configured for use by this pool.
+     * @since 2.7.0
+     */
+    public String getConnectionFactoryClassName() {
+        return this.connectionFactoryClassName;
     }
 
     /**
@@ -1505,7 +1522,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             poolableConnection = connection.unwrap(PoolableConnection.class);
             if (poolableConnection == null) {
                 throw new IllegalStateException(
-                        "Cannot invalidate connection: Connection is not a poolable connection.");
+                    "Cannot invalidate connection: Connection is not a poolable connection.");
             }
         } catch (final SQLException e) {
             throw new IllegalStateException("Cannot invalidate connection: Unwrapping poolable connection failed.", e);
@@ -1548,6 +1565,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public synchronized boolean isClosed() {
         return closed;
+    }
+
+    /**
+     * Delegates in a null-safe manner to {@link String#isEmpty()}.
+     *
+     * @param value the string to test, may be null.
+     * @return boolean false if value is null, otherwise {@link String#isEmpty()}.
+     */
+    private boolean isEmpty(String value) {
+        return value == null ? true : value.trim().isEmpty();
     }
 
     /**
@@ -1723,7 +1750,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (connectionInitSqls != null && connectionInitSqls.size() > 0) {
             ArrayList<String> newVal = null;
             for (final String s : connectionInitSqls) {
-                if (s != null && s.trim().length() > 0) {
+                if (!isEmpty(s)) {
                     if (newVal == null) {
                         newVal = new ArrayList<>();
                     }
@@ -1801,10 +1828,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            the default catalog
      */
     public void setDefaultCatalog(final String defaultCatalog) {
-        if (defaultCatalog != null && defaultCatalog.trim().length() > 0) {
-            this.defaultCatalog = defaultCatalog;
-        } else {
+        if (isEmpty(defaultCatalog)) {
             this.defaultCatalog = null;
+        } else {
+            this.defaultCatalog = defaultCatalog;
         }
     }
 
@@ -1851,10 +1878,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.5.0
      */
     public void setDefaultSchema(final String defaultSchema) {
-        if (defaultSchema != null && defaultSchema.trim().length() > 0) {
-            this.defaultSchema = defaultSchema;
-        } else {
+        if (isEmpty(defaultSchema)) {
             this.defaultSchema = null;
+        } else {
+            this.defaultSchema = defaultSchema;
         }
     }
 
@@ -1902,7 +1929,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (disconnectionSqlCodes != null && disconnectionSqlCodes.size() > 0) {
             HashSet<String> newVal = null;
             for (final String s : disconnectionSqlCodes) {
-                if (s != null && s.trim().length() > 0) {
+                if (!isEmpty(s)) {
                     if (newVal == null) {
                         newVal = new HashSet<>();
                     }
@@ -1961,10 +1988,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            the class name of the JDBC driver
      */
     public synchronized void setDriverClassName(final String driverClassName) {
-        if (driverClassName != null && driverClassName.trim().length() > 0) {
-            this.driverClassName = driverClassName;
-        } else {
+        if (isEmpty(driverClassName)) {
             this.driverClassName = null;
+        } else {
+            this.driverClassName = driverClassName;
+        }
+    }
+
+    /**
+     * Sets the ConnectionFactory class name.
+     *
+     * @param connectionFactoryClassName
+     * @since 2.7.0
+     */
+
+    public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
+        if (isEmpty(connectionFactoryClassName)) {
+            this.connectionFactoryClassName = null;
+        } else {
+            this.connectionFactoryClassName = connectionFactoryClassName;
         }
     }
 
@@ -2481,10 +2523,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            the new value for the validation query
      */
     public void setValidationQuery(final String validationQuery) {
-        if (validationQuery != null && validationQuery.trim().length() > 0) {
-            this.validationQuery = validationQuery;
-        } else {
+        if (isEmpty(validationQuery)) {
             this.validationQuery = null;
+        } else {
+            this.validationQuery = validationQuery;
         }
     }
 
@@ -2527,4 +2569,22 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
     }
+
+    private ConnectionFactory createConnectionFactory(final Driver driver) throws SQLException {
+        if (connectionFactoryClassName != null) {
+            try {
+                Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
+                return (ConnectionFactory) connectionFactoryFromCCL
+                    .getConstructor(Driver.class, String.class, Properties.class)
+                    .newInstance(driver, url, connectionProperties);
+            } catch (final Exception t) {
+                final String message = "Cannot load ConnectionFactory implementation '" + connectionFactoryClassName + "'";
+                logWriter.println(message);
+                t.printStackTrace(logWriter);
+                throw new SQLException(message, t);
+            }
+        }
+        return new DriverConnectionFactory(driver, url, connectionProperties);
+    }
+
 }
