@@ -91,6 +91,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="LichKing-lee">
         Fix Javadoc link in README.md #21.
       </action>
+      <action dev="ggregory" type="update" issue="DBCP-529" due-to="Yuri">
+        Add 'jmxName' property to web configuration parameters listing.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
