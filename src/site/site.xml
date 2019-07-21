@@ -53,7 +53,7 @@
         <item name="Mailing&#xA0;Lists"     href="/mail-lists.html"/>
         <item name="Issue&#xA0;Tracking"    href="/issue-tracking.html"/>
         <item name="Team"                   href="/team-list.html"/>
-        <item name="Source&#xA0;Repository" href="/source-repository.html"/>
+        <item name="Source&#xA0;Repository" href="/scm.html"/>
       </menu>
 
     </body>
