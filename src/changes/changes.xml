@@ -64,6 +64,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from com.h2database:h2 1.4.197 to 1.4.199.
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.jboss.narayana.jta:narayana-jta 5.9.2.Final to 5.9.5.Final.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
