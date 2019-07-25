@@ -61,7 +61,9 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.6.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
-        <!-- TODO -->
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from com.h2database:h2 1.4.197 to 1.4.199.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
