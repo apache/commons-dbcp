@@ -739,6 +739,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Manually evicts idle connections
+     *
+     * @throws Exception when there is a problem evicting idle objects.
+     */
+    public void evict() throws Exception {
+        if (connectionPool != null) {
+            connectionPool.evict();
+        }
+    }
+
+    /**
      * Gets the print writer used by this configuration to log information on abandoned objects.
      *
      * @return The print writer used by this configuration to log information on abandoned objects.
@@ -1517,17 +1528,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionPool.invalidateObject(poolableConnection);
         } catch (final Exception e) {
             throw new IllegalStateException("Invalidating connection threw unexpected exception", e);
-        }
-    }
-
-    /**
-     * Manually evicts idle connections
-     *
-     * @throws Exception when there is a problem evicting idle objects.
-     */
-    public void evict() throws Exception {
-        if (connectionPool != null) {
-            connectionPool.evict();
         }
     }
 
