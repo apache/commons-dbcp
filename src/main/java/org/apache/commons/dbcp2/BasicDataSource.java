@@ -467,69 +467,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *            If the connection factort cannot be created
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
-        // Load the JDBC driver class
-        Driver driverToUse = this.driver;
-
-        if (driverToUse == null) {
-            Class<?> driverFromCCL = null;
-            if (driverClassName != null) {
-                try {
-                    try {
-                        if (driverClassLoader == null) {
-                            driverFromCCL = Class.forName(driverClassName);
-                        } else {
-                            driverFromCCL = Class.forName(driverClassName, true, driverClassLoader);
-                        }
-                    } catch (final ClassNotFoundException cnfe) {
-                        driverFromCCL = Thread.currentThread().getContextClassLoader().loadClass(driverClassName);
-                    }
-                } catch (final Exception t) {
-                    final String message = "Cannot load JDBC driver class '" + driverClassName + "'";
-                    logWriter.println(message);
-                    t.printStackTrace(logWriter);
-                    throw new SQLException(message, t);
-                }
-            }
-
-            try {
-                if (driverFromCCL == null) {
-                    driverToUse = DriverManager.getDriver(url);
-                } else {
-                    // Usage of DriverManager is not possible, as it does not
-                    // respect the ContextClassLoader
-                    // N.B. This cast may cause ClassCastException which is handled below
-                    driverToUse = (Driver) driverFromCCL.getConstructor().newInstance();
-                    if (!driverToUse.acceptsURL(url)) {
-                        throw new SQLException("No suitable driver", "08001");
-                    }
-                }
-            } catch (final Exception t) {
-                final String message = "Cannot create JDBC driver of class '"
-                        + (driverClassName != null ? driverClassName : "") + "' for connect URL '" + url + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
-                throw new SQLException(message, t);
-            }
-        }
-
-        // Set up the driver connection factory we will use
-        final String user = userName;
-        if (user != null) {
-            connectionProperties.put("user", user);
-        } else {
-            log("DBCP DataSource configured without a 'username'");
-        }
-
-        final String pwd = password;
-        if (pwd != null) {
-            connectionProperties.put("password", pwd);
-        } else {
-            log("DBCP DataSource configured without a 'password'");
-        }
-
-        final ConnectionFactory driverConnectionFactory = new DriverConnectionFactory(driverToUse, url,
-                connectionProperties);
-        return driverConnectionFactory;
+        return DriverConnectionFactory.createConnectionFactory(this);
     }
 
     /**
@@ -868,7 +806,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return connectionPool;
     }
 
-    // For unit testing
     Properties getConnectionProperties() {
         return connectionProperties;
     }
@@ -1583,10 +1520,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
-    protected void log(final String message) {
+    void log(final String message) {
         if (logWriter != null) {
             logWriter.println(message);
         }
+    }
+
+    void log(Throwable throwable) {
+        if (logWriter != null) {
+            throwable.printStackTrace(logWriter);
+        }        
     }
 
     @Override
@@ -1709,6 +1652,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.cacheState = cacheState;
     }
 
+    // ----------------------------------------------------- DataSource Methods
+
     /**
      * Sets the list of SQL statements to be executed when a physical connection is first created.
      * <p>
@@ -1736,8 +1681,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             this.connectionInitSqls = null;
         }
     }
-
-    // ----------------------------------------------------- DataSource Methods
 
     /**
      * Sets the connection properties passed to driver.connect(...).
@@ -2228,6 +2171,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    // ------------------------------------------------------ Protected Methods
+
     /**
      * Sets the value of the {@link #numTestsPerEvictionRun} property.
      *
@@ -2241,8 +2186,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
         }
     }
-
-    // ------------------------------------------------------ Protected Methods
 
     /**
      * <p>
