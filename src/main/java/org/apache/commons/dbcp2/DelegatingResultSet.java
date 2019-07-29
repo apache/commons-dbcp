@@ -186,11 +186,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     public void close() throws SQLException {
         try {
             if (statement != null) {
-                removeTrace(statement, this);
+                ((AbandonedTrace) statement).removeTrace(this);
                 statement = null;
             }
             if (connection != null) {
-                removeTrace(connection, this);
+                ((AbandonedTrace) connection).removeTrace(this);
                 connection = null;
             }
             resultSet.close();

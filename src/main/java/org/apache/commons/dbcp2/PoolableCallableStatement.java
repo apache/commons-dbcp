@@ -67,7 +67,9 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
 
         // Remove from trace now because this statement will be
         // added by the activate method.
-        removeTrace(getConnectionInternal(), this);
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
+        }
     }
 
     /**
@@ -113,7 +115,9 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     @Override
     public void passivate() throws SQLException {
         setClosedInternal(true);
-        removeTrace(getConnectionInternal(), this);
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
+        }
 
         // The JDBC spec requires that a statement close any open
         // ResultSet's when it is closed.

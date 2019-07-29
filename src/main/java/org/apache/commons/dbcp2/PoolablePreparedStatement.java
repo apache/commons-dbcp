@@ -69,7 +69,9 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
 
         // Remove from trace now because this statement will be
         // added by the activate method.
-        removeTrace(getConnectionInternal(), this);
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
+        }
     }
 
     /**
@@ -126,7 +128,9 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
             clearBatch();
         }
         setClosedInternal(true);
-        removeTrace(getConnectionInternal(), this);
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().removeTrace(this);
+        }
 
         // The JDBC spec requires that a statement closes any open
         // ResultSet's when it is closed.
