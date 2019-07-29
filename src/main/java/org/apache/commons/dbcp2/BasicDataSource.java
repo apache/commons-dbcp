@@ -1520,13 +1520,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
-    void log(final String message) {
+    protected void log(final String message) {
         if (logWriter != null) {
             logWriter.println(message);
         }
     }
 
-    void log(Throwable throwable) {
+    /**
+     * Logs the given throwable.
+     * 
+     * @param throwable the throwable.
+     * @since 2.7.0
+     */
+    protected void log(Throwable throwable) {
         if (logWriter != null) {
             throwable.printStackTrace(logWriter);
         }        

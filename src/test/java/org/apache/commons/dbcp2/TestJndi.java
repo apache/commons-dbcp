@@ -43,12 +43,12 @@ public class TestJndi {
     protected static final String JNDI_SUBCONTEXT = "jdbc";
 
     /**
-     * the full jndi path to the data source.
+     * the full JNDI path to the data source.
      */
     protected static final String JNDI_PATH = JNDI_SUBCONTEXT + "/"
             + "jndiTestDataSource";
 
-    /** jndi context to use in tests **/
+    /** JNDI context to use in tests **/
     protected Context context = null;
 
     /**
@@ -97,7 +97,7 @@ public class TestJndi {
     }
 
     /**
-     * Binds a DataSource to the jndi and checks that we have successfully
+     * Binds a DataSource to the JNDI and checks that we have successfully
      * bound it by looking it up again.
      *
      * @throws Exception if the bind, lookup or connect fails
@@ -108,7 +108,7 @@ public class TestJndi {
     }
 
     /**
-     * Binds a DataSource into jndi.
+     * Binds a DataSource into JNDI.
      *
      * @throws Exception if creation or binding fails.
      */
@@ -117,9 +117,9 @@ public class TestJndi {
     }
 
     /**
-     * Retrieves a DataSource from jndi.
+     * Retrieves a DataSource from JNDI.
      *
-     * @throws Exception if the jndi lookup fails or no DataSource is bound.
+     * @throws Exception if the JNDI lookup fails or no DataSource is bound.
      */
     protected DataSource retrieveDataSource() throws Exception {
         final Context ctx = getInitialContext();
