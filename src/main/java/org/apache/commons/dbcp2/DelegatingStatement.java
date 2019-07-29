@@ -136,11 +136,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                 // ResultSet's when it is closed.
                 // FIXME The PreparedStatement we're wrapping should handle this for us.
                 // See bug 17301 for what could happen when ResultSets are closed twice.
-                final List<AbandonedTrace> resultSets = getTrace();
-                if (resultSets != null) {
-                    final ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
-                    for (final ResultSet element : set) {
-                        element.close();
+                final List<AbandonedTrace> resultSetList = getTrace();
+                if (resultSetList != null) {
+                    final ResultSet[] resultSets = resultSetList.toArray(new ResultSet[resultSetList.size()]);
+                    for (final ResultSet resultSet : resultSets) {
+                        resultSet.close();
                     }
                     clearTrace();
                 }

@@ -312,7 +312,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             }
         }
     }
-    
+
     /**
      * @return Whether to auto-commit on return.
      * @since 2.6.0
@@ -329,7 +329,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public boolean isEnableAutoCommitOnReturn() {
         return autoCommitOnReturn;
     }
-    
+
     /**
      * True means that validation will fail immediately for connections that have previously thrown SQLExceptions with
      * SQL_STATE indicating fatal disconnection errors.
@@ -342,14 +342,14 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public boolean isFastFailValidation() {
         return fastFailValidation;
     }
-    
+
     /**
      * @return Whether to rollback on return.
      */
     public boolean isRollbackOnReturn() {
         return rollbackOnReturn;
     }
-    
+
     @Override
     public PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = connectionFactory.createConnection();
@@ -410,7 +410,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         return new DefaultPooledObject<>(pc);
     }
-    
+
     @Override
     public void passivateObject(final PooledObject<PoolableConnection> p) throws Exception {
 
@@ -440,15 +440,15 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         conn.passivate();
     }
-    
+
     public void setAutoCommitOnReturn(final boolean autoCommitOnReturn) {
         this.autoCommitOnReturn = autoCommitOnReturn;
     }
-    
+
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
     }
-    
+
     /**
      * Sets the SQL statements I use to initialize newly created {@link Connection}s. Using {@code null} turns off
      * connection initialization.
@@ -459,7 +459,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setConnectionInitSql(final Collection<String> connectionInitSqls) {
         this.connectionInitSqls = connectionInitSqls;
     }
-    
+
     /**
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
      *
@@ -469,7 +469,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultAutoCommit(final Boolean defaultAutoCommit) {
         this.defaultAutoCommit = defaultAutoCommit;
     }
-    
+
     /**
      * Sets the default "catalog" setting for borrowed {@link Connection}s
      *
@@ -479,7 +479,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultCatalog(final String defaultCatalog) {
         this.defaultCatalog = defaultCatalog;
     }
-    
+
     public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
         this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
     }
@@ -492,7 +492,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultReadOnly(final Boolean defaultReadOnly) {
         this.defaultReadOnly = defaultReadOnly;
     }
-    
+
     /**
      * Sets the default "schema" setting for borrowed {@link Connection}s
      *
@@ -503,7 +503,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultSchema(final String defaultSchema) {
         this.defaultSchema = defaultSchema;
     }
-    
+
     /**
      * Sets the default "Transaction Isolation" setting for borrowed {@link Connection}s
      *
@@ -513,7 +513,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultTransactionIsolation(final int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
-    
+
     /**
      * @param disconnectionSqlCodes
      *            The disconnection SQL codes.
@@ -523,7 +523,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         this.disconnectionSqlCodes = disconnectionSqlCodes;
     }
-    
+
     /**
      * @param autoCommitOnReturn Whether to auto-commit on return.
      * @deprecated Use {@link #setAutoCommitOnReturn(boolean)}.

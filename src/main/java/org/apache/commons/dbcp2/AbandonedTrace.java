@@ -100,13 +100,15 @@ public class AbandonedTrace implements TrackedUse {
      * Adds an object to the list of objects being traced.
      *
      * @param trace
-     *            AbandonedTrace object to add.
+     *            AbandonedTrace object to add, null is ignored.
      */
     protected void addTrace(final AbandonedTrace trace) {
-        synchronized (this.traceList) {
-            this.traceList.add(new WeakReference<>(trace));
+        if (trace != null) {
+            synchronized (this.traceList) {
+                this.traceList.add(new WeakReference<>(trace));
+            }
+            setLastUsed();
         }
-        setLastUsed();
     }
 
     /**
@@ -155,7 +157,7 @@ public class AbandonedTrace implements TrackedUse {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
                 final AbandonedTrace traceInList = iter.next().get();
-                if (trace.equals(traceInList)) {
+                if (trace != null && trace.equals(traceInList)) {
                     iter.remove();
                     break;
                 } else if (traceInList == null) {
@@ -163,6 +165,19 @@ public class AbandonedTrace implements TrackedUse {
                     iter.remove();
                 }
             }
+        }
+    }
+
+    /**
+     * Removes a child object the given source is tracing.
+     *
+     * @param source The object from which to remove the given {@code trace}, may be null.
+     * @param trace  AbandonedTrace to remove.
+     * @since 2.7.0
+     */
+    protected void removeTrace(final Object source, final AbandonedTrace trace) {
+        if (source instanceof AbandonedTrace) {
+            ((AbandonedTrace) source).removeTrace(trace);
         }
     }
 }
