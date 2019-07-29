@@ -1493,6 +1493,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *             if invalidating the connection failed.
      * @since 2.1
      */
+    @SuppressWarnings("resource")
     public void invalidateConnection(final Connection connection) throws IllegalStateException {
         if (connection == null) {
             return;
