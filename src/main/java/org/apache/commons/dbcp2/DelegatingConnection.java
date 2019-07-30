@@ -246,7 +246,23 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     protected void handleException(final SQLException e) throws SQLException {
-        throw e;
+        handleException(e, true);
+    }
+
+    /**
+     * Rethrows the given {@code SQLException} if {@code rethrow} is true.
+     * 
+     * @param e       The SQLException
+     * @param rethrow Wether or not to rethrow
+     * @return the given {@code SQLException}
+     * @throws SQLException the given {@code SQLException}
+     * @since 2.7.0
+     */
+    protected SQLException handleException(final SQLException e, final boolean rethrow) throws SQLException {
+        if (rethrow) {
+            throw e;
+        }
+        return e;
     }
 
     private void initializeStatement(final DelegatingStatement ds) throws SQLException {
@@ -608,7 +624,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         // Statement's when it is closed.
         // DBCP-288. Not all the traced objects will be statements
         final List<AbandonedTrace> traces = getTrace();
-        if (traces != null && traces.size() > 0) {
+        if (traces != null && !traces.isEmpty()) {
             final Iterator<AbandonedTrace> traceIter = traces.iterator();
             while (traceIter.hasNext()) {
                 final Object trace = traceIter.next();

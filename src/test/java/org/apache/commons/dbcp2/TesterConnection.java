@@ -38,7 +38,8 @@ import java.util.concurrent.Executor;
 /**
  * A dummy {@link Connection}, for testing purposes.
  */
-public class TesterConnection implements Connection {
+public class TesterConnection extends AbandonedTrace implements Connection {
+    
     protected boolean _open = true;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;

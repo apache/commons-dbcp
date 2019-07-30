@@ -40,18 +40,16 @@ import java.sql.SQLXML;
 /**
  * A dummy {@link ResultSet}, for testing purposes.
  */
-public class TesterResultSet implements ResultSet {
+public class TesterResultSet extends AbandonedTrace implements ResultSet {
+    
     protected int _type = ResultSet.TYPE_FORWARD_ONLY;
-
     protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
-
     protected Object[][] _data = null;
-
     protected int _currentRow = -1;
     protected Statement _statement = null;
-
     protected int _rowsLeft = 2;
     protected boolean _open = true;
+    protected boolean _sqlExceptionOnClose = false;
 
     public TesterResultSet(final Statement stmt) {
         _statement = stmt;
@@ -101,6 +99,10 @@ public class TesterResultSet implements ResultSet {
 
     @Override
     public void close() throws SQLException {
+        if (_sqlExceptionOnClose) {
+            throw new SQLException("TestSQLExceptionOnClose");
+        }
+        
         if (!_open) {
             return;
         }
@@ -641,6 +643,10 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
         return _rowsLeft == 0;
     }
 
+    public boolean isSqlExceptionOnClose() {
+        return _sqlExceptionOnClose;
+    }
+
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -720,6 +726,10 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
         checkOpen();
     }
 
+    public void setSqlExceptionOnClose(final boolean sqlExceptionOnClose) {
+        this._sqlExceptionOnClose = sqlExceptionOnClose;
+    }
+
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -742,6 +752,7 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
         throw new SQLException("Not implemented.");
     }
 
+
     @Override
     public void updateAsciiStream(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -753,7 +764,6 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
                final int length) throws SQLException {
         checkOpen();
     }
-
 
     @Override
     public void updateAsciiStream(final String columnLabel, final InputStream inputStream) throws SQLException {
@@ -890,6 +900,7 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
         throw new SQLException("Not implemented.");
     }
 
+
     @Override
     public void updateCharacterStream(final int columnIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -901,7 +912,6 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
                  final int length) throws SQLException {
         checkOpen();
     }
-
 
     @Override
     public void updateCharacterStream(final String columnLabel, final Reader reader) throws SQLException {
@@ -1175,13 +1185,13 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     public void updateTimestamp(final int columnIndex, final java.sql.Timestamp x) throws SQLException {
         checkOpen();
     }
-
+    
     @Override
     public void updateTimestamp(final String columnName, final java.sql.Timestamp x)
       throws SQLException {
         checkOpen();
     }
-
+    
     @Override
     public boolean wasNull() throws SQLException {
         checkOpen();

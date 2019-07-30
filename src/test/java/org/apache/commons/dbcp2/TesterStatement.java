@@ -26,13 +26,11 @@ import java.sql.Statement;
 /**
  * A dummy {@link Statement}, for testing purposes.
  */
-public class TesterStatement implements Statement {
+public class TesterStatement extends AbandonedTrace implements Statement {
+    
     protected Connection _connection = null;
-
     protected boolean _open = true;
-
     protected long _rowsUpdated = 1;
-
     protected boolean _executeResponse = true;
     protected int _maxFieldSize = 1024;
     protected long _maxRows = 1024;
@@ -45,15 +43,18 @@ public class TesterStatement implements Statement {
     protected int _resultSetType = 1;
     private int _resultSetHoldability = 1;
     protected ResultSet _resultSet = null;
+    protected boolean _sqlExceptionOnClose = false;
 
     public TesterStatement(final Connection conn) {
         _connection = conn;
     }
+    
     public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency) {
         _connection = conn;
         _resultSetType = resultSetType;
         _resultSetConcurrency = resultSetConcurrency;
     }
+    
     public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) {
         _connection = conn;
@@ -90,6 +91,10 @@ public class TesterStatement implements Statement {
 
     @Override
     public void close() throws SQLException {
+        if (_sqlExceptionOnClose) {
+            throw new SQLException("TestSQLExceptionOnClose");
+        }
+
         // calling close twice has no effect
         if (!_open) {
             return;
@@ -331,6 +336,10 @@ public class TesterStatement implements Statement {
         throw new SQLException("Not implemented.");
     }
 
+    public boolean isSqlExceptionOnClose() {
+        return _sqlExceptionOnClose;
+    }
+
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -387,6 +396,10 @@ public class TesterStatement implements Statement {
     public void setQueryTimeout(final int seconds) throws SQLException {
         checkOpen();
         _queryTimeout = seconds;
+    }
+
+    public void setSqlExceptionOnClose(final boolean _sqlExceptionOnClose) {
+        this._sqlExceptionOnClose = _sqlExceptionOnClose;
     }
 
     @Override
