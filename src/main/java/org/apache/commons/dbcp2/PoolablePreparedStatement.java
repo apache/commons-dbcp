@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -50,7 +51,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     private volatile boolean batchAdded = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param stmt
      *            my underlying {@link PreparedStatement}
@@ -132,13 +133,23 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
         // See bug 17301 for what could happen when ResultSets are closed twice.
-        final List<AbandonedTrace> resultSets = getTrace();
-        if (resultSets != null) {
-            final ResultSet[] set = resultSets.toArray(new ResultSet[resultSets.size()]);
-            for (final ResultSet element : set) {
-                element.close();
+        final List<AbandonedTrace> resultSetList = getTrace();
+        if (resultSetList != null) {
+            final List<Exception> thrown = new ArrayList<>();
+            final ResultSet[] resultSets = resultSetList.toArray(new ResultSet[resultSetList.size()]);
+            for (final ResultSet resultSet : resultSets) {
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (Exception e) {
+                        thrown.add(e);
+                    }
+                }
             }
             clearTrace();
+            if (!thrown.isEmpty()) {
+                throw new SQLExceptionList(thrown);
+            }
         }
 
         super.passivate();
