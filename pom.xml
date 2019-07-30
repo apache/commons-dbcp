@@ -182,7 +182,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.4.2</version>
+      <version>5.5.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -196,7 +196,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.27.0</version>
+      <version>3.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -279,7 +279,7 @@
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>3.3.2.Final</version>
+      <version>3.4.0.Final</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -316,9 +316,11 @@
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
     <commons.checkstyle.version>3.0.0</commons.checkstyle.version>
+    <commons.javadoc.version>3.1.1</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
-    <commons.pool.version>2.6.2</commons.pool.version>
+    <commons.pool.version>2.7.0</commons.pool.version>
     <commons.japicmp.version>0.13.1</commons.japicmp.version>
+    <commons.jacoco.version>0.8.4</commons.jacoco.version>
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
