@@ -146,7 +146,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Attempt to establish a database connection.
+     * Attempts to establish a database connection.
      *
      * @param pooledUserName
      *            name to be used for the connection
@@ -213,11 +213,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         throw new SQLFeatureNotSupportedException();
     }
 
-    // ----------------------------------------------------------------------
-    // Referenceable implementation
-
     /**
-     * <CODE>Referenceable</CODE> implementation.
+     * Implements {@link Referenceable}.
      */
     @Override
     public Reference getReference() throws NamingException {
@@ -243,11 +240,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return ref;
     }
 
-    // ----------------------------------------------------------------------
-    // ObjectFactory implementation
-
     /**
-     * implements ObjectFactory to create an instance of this class
+     * Implements {@link ObjectFactory} to create an instance of this class
      */
     @Override
     public Object getObjectInstance(final Object refObj, final Name name, final Context context,
@@ -327,9 +321,6 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
             throw new IllegalStateException(GET_CONNECTION_CALLED);
         }
     }
-
-    // ----------------------------------------------------------------------
-    // Properties
 
     /**
      * Gets the connection properties passed to the JDBC driver.
@@ -547,11 +538,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         logWriter = out;
     }
 
-    // ------------------------------------------------------------------
-    // PreparedStatement pool properties
-
     /**
-     * Flag to toggle the pooling of <code>PreparedStatement</code>s
+     * Whether to toggle the pooling of <code>PreparedStatement</code>s
      *
      * @return value of poolPreparedStatements.
      */
@@ -560,7 +548,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Flag to toggle the pooling of <code>PreparedStatement</code>s
+     * Whether to toggle the pooling of <code>PreparedStatement</code>s
      *
      * @param poolPreparedStatements
      *            true to pool statements.
@@ -722,7 +710,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     private void update(final Properties properties, final String key, final String value) {
-        if (properties != null) {
+        if (properties != null && key != null) {
             if (value == null) {
                 properties.remove(key);
             } else {
