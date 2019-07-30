@@ -146,6 +146,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Throws an IllegalStateException, if a PooledConnection has already been requested.
+     * 
+     * @throws IllegalStateException Thrown if a PooledConnection has already been requested.
      */
     protected void assertInitializationAllowed() throws IllegalStateException {
         if (getConnectionCalled) {
