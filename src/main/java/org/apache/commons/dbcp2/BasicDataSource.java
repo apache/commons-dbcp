@@ -446,7 +446,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Creates a JDBC connection factory for this data source. The JDBC driver is loaded using the following algorithm:
+     * Creates a JDBC connection factory for this datasource. The JDBC driver is loaded using the following algorithm:
      * <ol>
      * <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
      * <li>If no Driver instance was specified and {@link #driverClassName} is specified that class is loaded using the
@@ -456,9 +456,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * context class loader of the current thread.</li>
      * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
      * </ol>
-     * <p>
      * This method exists so subclasses can replace the implementation class.
-     * </p>
      *
      * @return A new connection factory.
      *
@@ -1520,8 +1518,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Manually evicts idle connections
-     *
-     * @throws Exception when there is a problem evicting idle objects.
      */
     public void evict() throws Exception {
         if (connectionPool != null) {
