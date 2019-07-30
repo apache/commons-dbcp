@@ -29,10 +29,6 @@ import java.util.Properties;
  */
 public class DriverConnectionFactory implements ConnectionFactory {
 
-    private final String connectionString;
-    private final Driver driver;
-    private final Properties properties;
-
     /**
      * Creates a JDBC connection factory for the given data source. The JDBC driver is loaded using the following
      * algorithm:
@@ -53,13 +49,15 @@ public class DriverConnectionFactory implements ConnectionFactory {
      *
      * @throws SQLException If the connection factory cannot be created
      */
-    static DriverConnectionFactory createConnectionFactory(final BasicDataSource basicDataSource) throws SQLException {
+    static ConnectionFactory createConnectionFactory(final BasicDataSource basicDataSource) throws SQLException {
         // Load the JDBC driver class
         Driver driverToUse = basicDataSource.getDriver();
         final String driverClassName = basicDataSource.getDriverClassName();
         final ClassLoader driverClassLoader = basicDataSource.getDriverClassLoader();
         final String url = basicDataSource.getUrl();
-
+        
+        final Properties connectionProperties = basicDataSource.getConnectionProperties();
+        
         if (driverToUse == null) {
             Class<?> driverFromCCL = null;
             if (driverClassName != null) {
@@ -87,7 +85,8 @@ public class DriverConnectionFactory implements ConnectionFactory {
                 } else {
                     // Usage of DriverManager is not possible, as it does not
                     // respect the ContextClassLoader
-                    // N.B. This cast may cause ClassCastException which is handled below
+                    // N.B. This cast may cause ClassCastException which is
+                    // handled below
                     driverToUse = (Driver) driverFromCCL.getConstructor().newInstance();
                     if (!driverToUse.acceptsURL(url)) {
                         throw new SQLException("No suitable driver", "08001");
@@ -105,20 +104,45 @@ public class DriverConnectionFactory implements ConnectionFactory {
         // Set up the driver connection factory we will use
         final String user = basicDataSource.getUsername();
         if (user != null) {
-            basicDataSource.addConnectionProperty("user", user);
+            connectionProperties.put("user", user);
         } else {
             basicDataSource.log("DBCP DataSource configured without a 'username'");
         }
 
         final String pwd = basicDataSource.getPassword();
         if (pwd != null) {
-            basicDataSource.addConnectionProperty("password", pwd);
+            connectionProperties.put("password", pwd);
         } else {
             basicDataSource.log("DBCP DataSource configured without a 'password'");
         }
 
-        return new DriverConnectionFactory(driverToUse, url, basicDataSource.getConnectionProperties());
+        return createConnectionFactory(basicDataSource, driverToUse);
     }
+    private static ConnectionFactory createConnectionFactory(final BasicDataSource basicDataSource, final Driver driver) throws SQLException {
+        final String connectionFactoryClassName = basicDataSource.getConnectionFactoryClassName();
+        final Properties connectionProperties = basicDataSource.getConnectionProperties();
+        final String url = basicDataSource.getUrl();
+        if (connectionFactoryClassName != null) {
+            try {
+                final Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
+                return (ConnectionFactory) connectionFactoryFromCCL
+                        .getConstructor(Driver.class, String.class, Properties.class)
+                        .newInstance(driver, url, connectionProperties);
+            } catch (final Exception t) {
+                final String message = "Cannot load ConnectionFactory implementation '" + connectionFactoryClassName
+                        + "'";
+                basicDataSource.log(message);
+                basicDataSource.log(t);
+                throw new SQLException(message, t);
+            }
+        }
+        return new DriverConnectionFactory(driver, url, connectionProperties);
+    }
+    private final String connectionString;
+
+    private final Driver driver;
+
+    private final Properties properties;
 
     /**
      * Constructs a connection factory for a given Driver.
