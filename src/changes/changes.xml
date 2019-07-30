@@ -118,6 +118,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-550" due-to="Gary Gregory">
         java.util.IllegalFormatException while building a message for a SQLFeatureNotSupportedException in Jdbc41Bridge.getObject(ResultSet,String,Class).
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Add missing Javadocs.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
