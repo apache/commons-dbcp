@@ -17,7 +17,6 @@ language: java
 sudo: false
 
 jdk:
-  - oraclejdk8
   - oraclejdk11
   - openjdk8
   - openjdk11
