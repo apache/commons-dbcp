@@ -35,6 +35,20 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDelegatingConnection {
 
+    /**
+     * Delegate that will throw RTE on toString
+     * Used to validate fix for DBCP-241
+     */
+    static class RTEGeneratingConnection extends TesterConnection {
+        public RTEGeneratingConnection() {
+            super("","");
+        }
+        @Override
+        public String toString() {
+            throw new RuntimeException("bang!");
+        }
+
+    }
     private DelegatingConnection<? extends Connection> conn = null;
     private Connection delegateConn = null;
     private Connection delegateConn2 = null;
@@ -44,18 +58,6 @@ public class TestDelegatingConnection {
         delegateConn = new TesterConnection("test", "test");
         delegateConn2 = new TesterConnection("test", "test");
         conn = new DelegatingConnection<>(delegateConn);
-    }
-
-    @Test
-    public void testGetDelegate() throws Exception {
-        assertEquals(delegateConn,conn.getDelegate());
-    }
-
-    @Test
-    public void testConnectionToString() throws Exception {
-        final String s = conn.toString();
-        assertNotNull(s);
-        assertTrue(s.length() > 0);
     }
 
     @Test
@@ -114,19 +116,16 @@ public class TestDelegatingConnection {
         }
     }
 
-    /**
-     * Delegate that will throw RTE on toString
-     * Used to validate fix for DBCP-241
-     */
-    static class RTEGeneratingConnection extends TesterConnection {
-        public RTEGeneratingConnection() {
-            super("","");
-        }
-        @Override
-        public String toString() {
-            throw new RuntimeException("bang!");
-        }
+    @Test
+    public void testConnectionToString() throws Exception {
+        final String s = conn.toString();
+        assertNotNull(s);
+        assertTrue(s.length() > 0);
+    }
 
+    @Test
+    public void testGetDelegate() throws Exception {
+        assertEquals(delegateConn,conn.getDelegate());
     }
 
     @Test
