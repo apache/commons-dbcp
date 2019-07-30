@@ -94,6 +94,24 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-529" due-to="Yuri">
         Add 'jmxName' property to web configuration parameters listing.
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from com.h2database:h2 1.4.197 to 1.4.199.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.jboss.narayana.jta:narayana-jta 5.9.2.Final to 5.9.5.Final.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.jboss.logging:jboss-logging 3.3.2.Final to 3.4.0.Final.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.mockito:mockito-core 2.24.0 to 2.28.2.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-548" due-to="Gary Gregory">
+        Update Apache Commons Pool from 2.6.1 to 2.7.0.
+      </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="chtompki" type="add" issue="DBCP-534" due-to="Peter Wicks">
