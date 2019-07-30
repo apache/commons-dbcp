@@ -98,7 +98,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Description */
     private String description;
 
-    /** Environment that may be used to set up a jndi initial context. */
+    /** Environment that may be used to set up a JNDI initial context. */
     private Properties jndiEnvironment;
 
     /** Login TimeOut in seconds */
@@ -520,8 +520,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of connectionPoolDataSource. This method will return null, if the backing datasource is being
-     * accessed via jndi.
+     * Gets the value of connectionPoolDataSource. This method will return null, if the backing data source is being
+     * accessed via JNDI.
      *
      * @return value of connectionPoolDataSource.
      */
@@ -530,8 +530,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the backend ConnectionPoolDataSource. This property should not be set if using jndi to access the
-     * datasource.
+     * Sets the backend ConnectionPoolDataSource. This property should not be set if using JNDI to access the
+     * data source.
      *
      * @param v
      *            Value to assign to connectionPoolDataSource.
@@ -549,8 +549,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
-     * from a jndi service provider.
+     * Gets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the data source
+     * from a JNDI service provider.
      *
      * @return value of dataSourceName.
      */
@@ -559,8 +559,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the datasource
-     * from a jndi service provider.
+     * Sets the name of the ConnectionPoolDataSource which backs this pool. This name is used to look up the data source
+     * from a JNDI service provider.
      *
      * @param v
      *            Value to assign to dataSourceName.
