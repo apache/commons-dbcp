@@ -106,7 +106,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
-    @SuppressWarnings("resource")
     protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory)
             throws Exception {
         PoolableConnection conn = null;
