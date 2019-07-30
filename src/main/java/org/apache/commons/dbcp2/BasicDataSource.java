@@ -76,8 +76,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
-    // ------------------------------------------------------------- Properties
-
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
         DriverManager.getDrivers();
@@ -108,6 +106,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    @SuppressWarnings("resource")
     protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory)
             throws Exception {
         PoolableConnection conn = null;
@@ -450,7 +449,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Creates a JDBC connection factory for this datasource. The JDBC driver is loaded using the following algorithm:
+     * Creates a JDBC connection factory for this data source. The JDBC driver is loaded using the following algorithm:
      * <ol>
      * <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
      * <li>If no Driver instance was specified and {@link #driverClassName} is specified that class is loaded using the
@@ -460,7 +459,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * context class loader of the current thread.</li>
      * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
      * </ol>
+     * <p>
      * This method exists so subclasses can replace the implementation class.
+     * </p>
      *
      * @return A new connection factory.
      *
@@ -731,6 +732,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Manually evicts idle connections
+     *
+     * @throws Exception when there is a problem evicting idle objects.
+     */
+    public void evict() throws Exception {
+        if (connectionPool != null) {
+            connectionPool.evict();
+        }
+    }
+
+    /**
      * Gets the print writer used by this configuration to log information on abandoned objects.
      *
      * @return The print writer used by this configuration to log information on abandoned objects.
@@ -845,7 +857,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return connectionPool;
     }
 
-    // For unit testing
     Properties getConnectionProperties() {
         return connectionProperties;
     }
@@ -1518,18 +1529,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Manually evicts idle connections.
-     *
-     * @throws Exception Thrown by {@link GenericObjectPool#evict()}.
-     * @see GenericObjectPool#evict()
-     */
-    public void evict() throws Exception {
-        if (connectionPool != null) {
-            connectionPool.evict();
-        }
-    }
-
-    /**
      * Returns the value of the accessToUnderlyingConnectionAllowed property.
      *
      * @return true if access to the underlying connection is allowed, false otherwise.
@@ -1540,7 +1539,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * If true, this data source is closed and no more connections can be retrieved from this datasource.
+     * If true, this data source is closed and no more connections can be retrieved from this data source.
      *
      * @return true, if the data source is closed; false otherwise
      */
@@ -1595,6 +1594,18 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (logWriter != null) {
             logWriter.println(message);
         }
+    }
+
+    /**
+     * Logs the given throwable.
+     * 
+     * @param throwable the throwable.
+     * @since 2.7.0
+     */
+    protected void log(Throwable throwable) {
+        if (logWriter != null) {
+            throwable.printStackTrace(logWriter);
+        }        
     }
 
     @Override
@@ -1712,6 +1723,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.cacheState = cacheState;
     }
 
+    // ----------------------------------------------------- DataSource Methods
+
     /**
      * Sets the list of SQL statements to be executed when a physical connection is first created.
      * <p>
@@ -1738,8 +1751,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             this.connectionInitSqls = null;
         }
     }
-
-    // ----------------------------------------------------- DataSource Methods
 
     /**
      * Sets the connection properties passed to driver.connect(...).
@@ -1964,10 +1975,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the ConnectionFactory class name.
      *
-     * @param connectionFactoryClassName
+     * @param connectionFactoryClassName A class name.
      * @since 2.7.0
      */
-
     public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
         if (isEmpty(connectionFactoryClassName)) {
             this.connectionFactoryClassName = null;
@@ -2218,6 +2228,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    // ------------------------------------------------------ Protected Methods
+
     /**
      * Sets the value of the {@link #numTestsPerEvictionRun} property.
      *
@@ -2230,8 +2242,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
         }
     }
-
-    // ------------------------------------------------------ Protected Methods
 
     /**
      * <p>
