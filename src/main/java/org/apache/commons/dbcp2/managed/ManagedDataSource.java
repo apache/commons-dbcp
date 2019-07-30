@@ -66,7 +66,7 @@ public class ManagedDataSource<C extends Connection> extends PoolingDataSource<C
 
     /**
      * Gets the transaction registry.
-     * 
+     *
      * @return The transaction registry.
      * @see #setTransactionRegistry(TransactionRegistry)
      * @since 2.6.0

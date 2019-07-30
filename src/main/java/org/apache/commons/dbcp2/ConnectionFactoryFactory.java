@@ -23,7 +23,7 @@ import java.util.Properties;
 
 /*
  * Creates {@link ConnectionFactory} instances.
- * 
+ *
  * @since 2.7.0
  */
 class ConnectionFactoryFactory {
@@ -31,7 +31,7 @@ class ConnectionFactoryFactory {
     /**
      * Creates a new {@link DriverConnectionFactory} allowing for an override through
      * {@link BasicDataSource#getDriverClassName()}.
-     * 
+     *
      * @param basicDataSource Configures creation.
      * @param driver          The JDBC driver.
      * @return a new {@link DriverConnectionFactory} allowing for a {@link BasicDataSource#getDriverClassName()}

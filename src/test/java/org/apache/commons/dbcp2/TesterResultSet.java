@@ -41,7 +41,7 @@ import java.sql.SQLXML;
  * A dummy {@link ResultSet}, for testing purposes.
  */
 public class TesterResultSet extends AbandonedTrace implements ResultSet {
-    
+
     protected int _type = ResultSet.TYPE_FORWARD_ONLY;
     protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
     protected Object[][] _data = null;
@@ -102,7 +102,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         if (_sqlExceptionOnClose) {
             throw new SQLException("TestSQLExceptionOnClose");
         }
-        
+
         if (!_open) {
             return;
         }
@@ -1185,13 +1185,13 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     public void updateTimestamp(final int columnIndex, final java.sql.Timestamp x) throws SQLException {
         checkOpen();
     }
-    
+
     @Override
     public void updateTimestamp(final String columnName, final java.sql.Timestamp x)
       throws SQLException {
         checkOpen();
     }
-    
+
     @Override
     public boolean wasNull() throws SQLException {
         checkOpen();

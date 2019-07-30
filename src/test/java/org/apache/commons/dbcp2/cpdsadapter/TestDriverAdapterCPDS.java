@@ -367,7 +367,7 @@ public class TestDriverAdapterCPDS {
         final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
     }
-    
+
     @Test
     public void testToStringWithoutConnectionProperties() throws ClassNotFoundException
     {

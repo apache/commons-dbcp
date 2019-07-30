@@ -34,6 +34,7 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -246,22 +247,17 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     protected void handleException(final SQLException e) throws SQLException {
-        handleException(e, true);
+        throw e;
     }
 
     /**
-     * Rethrows the given {@code SQLException} if {@code rethrow} is true.
-     * 
+     * Handles the given {@code SQLException}.
+     *
      * @param e       The SQLException
-     * @param rethrow Wether or not to rethrow
      * @return the given {@code SQLException}
-     * @throws SQLException the given {@code SQLException}
      * @since 2.7.0
      */
-    protected SQLException handleException(final SQLException e, final boolean rethrow) throws SQLException {
-        if (rethrow) {
-            throw e;
-        }
+    protected <T extends Throwable> T handleExceptionNoThrow(final T e) {
         return e;
     }
 
@@ -620,23 +616,35 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     protected void passivate() throws SQLException {
-        // The JDBC spec requires that a Connection close any open
+        // The JDBC specification requires that a Connection close any open
         // Statement's when it is closed.
         // DBCP-288. Not all the traced objects will be statements
         final List<AbandonedTrace> traces = getTrace();
         if (traces != null && !traces.isEmpty()) {
+            final List<Exception> thrown = new ArrayList<>();
             final Iterator<AbandonedTrace> traceIter = traces.iterator();
             while (traceIter.hasNext()) {
                 final Object trace = traceIter.next();
                 if (trace instanceof Statement) {
-                    ((Statement) trace).close();
+                    try {
+                        ((Statement) trace).close();
+                    } catch (Exception e) {
+                        thrown.add(e);
+                    }
                 } else if (trace instanceof ResultSet) {
                     // DBCP-265: Need to close the result sets that are
                     // generated via DatabaseMetaData
-                    ((ResultSet) trace).close();
+                    try {
+                        ((ResultSet) trace).close();
+                    } catch (Exception e) {
+                        thrown.add(e);
+                    }
                 }
             }
             clearTrace();
+            if (!thrown.isEmpty()) {
+                throw new SQLExceptionList(thrown);
+            }
         }
         setLastUsed(0);
     }

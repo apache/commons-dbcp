@@ -126,7 +126,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         if (isClosed()) {
             return;
         }
-        final List<SQLException> thrown = new ArrayList<>();
+        final List<Exception> thrown = new ArrayList<>();
         try {
             if (connection != null) {
                 connection.removeTrace(this);
@@ -145,10 +145,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     if (resultSet != null) {
                         try {
                             resultSet.close();
-                        } catch (SQLException e) {
+                        } catch (Exception e) {
                             if (connection != null) {
                                 // Does not rethrow e.
-                                connection.handleException(e, false);
+                                connection.handleExceptionNoThrow(e);
                             }
                             thrown.add(e);
                         }
@@ -159,10 +159,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             if (statement != null) {
                 try {
                     statement.close();
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     if (connection != null) {
                         // Does not rethrow e.
-                        connection.handleException(e, false);
+                        connection.handleExceptionNoThrow(e);
                     }
                     thrown.add(e);
                 }

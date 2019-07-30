@@ -125,7 +125,10 @@ The <action> type attribute can be add,update,fix,remove.
         Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0.
       </action>
       <action dev="ggregory" type="update" issue="DBCP-551" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.DelegatingStatement.close() should try to close ALL of its result sets.
+        org.apache.commons.dbcp2.DelegatingStatement.close() should try to close ALL of its result sets even when an exception occurs.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-552" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.DelegatingConnection.passivate() should close ALL of its resources even when an exception occurs.
       </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">

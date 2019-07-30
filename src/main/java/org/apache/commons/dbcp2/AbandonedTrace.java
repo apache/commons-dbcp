@@ -168,7 +168,7 @@ public class AbandonedTrace implements TrackedUse {
 
     /**
      * Removes this object the source object is tracing.
-     * 
+     *
      * @param source The object tracing
      * @since 2.7.0
      */

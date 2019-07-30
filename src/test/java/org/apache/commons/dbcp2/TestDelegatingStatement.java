@@ -49,7 +49,7 @@ public class TestDelegatingStatement {
             return false;
         }
     }
-    
+
     private DelegatingConnection<Connection> delegatingConnection;
     private TesterConnection testerConnection;
     private Statement mockedStatement;

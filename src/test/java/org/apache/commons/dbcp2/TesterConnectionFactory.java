@@ -26,7 +26,7 @@ import java.util.Properties;
  * Dummy {@link ConnectionFactory} for testing purpose.
  */
 public class TesterConnectionFactory implements ConnectionFactory {
-    
+
     private final String connectionString;
     private final Driver driver;
     private final Properties properties;

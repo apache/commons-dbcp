@@ -27,34 +27,34 @@ import java.sql.Statement;
  * A dummy {@link Statement}, for testing purposes.
  */
 public class TesterStatement extends AbandonedTrace implements Statement {
-    
-    protected Connection _connection = null;
+
+    protected Connection _connection;
     protected boolean _open = true;
     protected long _rowsUpdated = 1;
     protected boolean _executeResponse = true;
     protected int _maxFieldSize = 1024;
     protected long _maxRows = 1024;
-    protected boolean _escapeProcessing = false;
+    protected boolean _escapeProcessing;
     protected int _queryTimeout = 1000;
-    protected String _cursorName = null;
+    protected String _cursorName;
     protected int _fetchDirection = 1;
     protected int _fetchSize = 1;
     protected int _resultSetConcurrency = 1;
     protected int _resultSetType = 1;
     private int _resultSetHoldability = 1;
-    protected ResultSet _resultSet = null;
-    protected boolean _sqlExceptionOnClose = false;
+    protected ResultSet _resultSet;
+    protected boolean _sqlExceptionOnClose;
 
     public TesterStatement(final Connection conn) {
         _connection = conn;
     }
-    
+
     public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency) {
         _connection = conn;
         _resultSetType = resultSetType;
         _resultSetConcurrency = resultSetConcurrency;
     }
-    
+
     public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) {
         _connection = conn;

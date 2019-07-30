@@ -39,30 +39,44 @@ import java.util.concurrent.Executor;
  * A dummy {@link Connection}, for testing purposes.
  */
 public class TesterConnection extends AbandonedTrace implements Connection {
-    
+
     protected boolean _open = true;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;
     protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
-    protected String _catalog = null;
+    protected String _catalog;
     protected String schema;
-    protected Map<String,Class<?>> _typeMap = null;
-    protected boolean _readOnly = false;
-    protected SQLWarning warnings = null;
-    protected String userName = null;
+    protected Map<String,Class<?>> _typeMap;
+    protected boolean _readOnly;
+    protected SQLWarning warnings;
+    protected String userName;
     protected Exception failure;
+    protected boolean sqlExceptionOnClose;
 
-    public TesterConnection(final String userName,
+    TesterConnection(final String userName,
             @SuppressWarnings("unused") final String password) {
         this.userName = userName;
     }
 
-    public String getUserName() {
-        return this.userName;
+    @Override
+    public void abort(final Executor executor) throws SQLException {
+        throw new SQLException("Not implemented.");
     }
 
-    public void setWarnings(final SQLWarning warning) {
-        this.warnings = warning;
+    protected void checkFailure() throws SQLException {
+        if (failure != null) {
+            if(failure instanceof SQLException) {
+                throw (SQLException)failure;
+            }
+            throw new SQLException("TesterConnection failure", failure);
+        }
+    }
+
+    protected void checkOpen() throws SQLException {
+        if(!_open) {
+            throw new SQLException("Connection is closed.");
+        }
+        checkFailure();
     }
 
     @Override
@@ -83,250 +97,6 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         if (isReadOnly()) {
             throw new SQLException("Cannot commit a readonly connection");
         }
-    }
-
-    @Override
-    public Statement createStatement() throws SQLException {
-        checkOpen();
-        return new TesterStatement(this);
-    }
-
-    @Override
-    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
-        checkOpen();
-        return new TesterStatement(this);
-    }
-
-    @Override
-    public boolean getAutoCommit() throws SQLException {
-        checkOpen();
-        return _autoCommit;
-    }
-
-    @Override
-    public String getCatalog() throws SQLException {
-        checkOpen();
-        return _catalog;
-    }
-
-    @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
-        checkOpen();
-        return _metaData;
-    }
-
-    @Override
-    public int getTransactionIsolation() throws SQLException {
-        checkOpen();
-        return _transactionIsolation;
-    }
-
-    @Override
-    public Map<String,Class<?>> getTypeMap() throws SQLException {
-        checkOpen();
-        return _typeMap;
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        checkOpen();
-        return warnings;
-    }
-
-    @Override
-    public boolean isClosed() throws SQLException {
-        checkFailure();
-        return !_open;
-    }
-
-    @Override
-    public boolean isReadOnly() throws SQLException {
-        checkOpen();
-        return _readOnly;
-    }
-
-    @Override
-    public String nativeSQL(final String sql) throws SQLException {
-        checkOpen();
-        return sql;
-    }
-
-    @Override
-    public CallableStatement prepareCall(final String sql) throws SQLException {
-        checkOpen();
-        if ("warning".equals(sql)) {
-            setWarnings(new SQLWarning("warning in prepareCall"));
-        }
-        return new TesterCallableStatement(this, sql);
-    }
-
-    @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
-        checkOpen();
-        return new TesterCallableStatement(this, sql, resultSetType, resultSetConcurrency);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql) throws SQLException {
-        checkOpen();
-        if("null".equals(sql)) {
-            return null;
-        } if("invalid".equals(sql)) {
-            throw new SQLException("invalid query");
-        } if ("broken".equals(sql)) {
-            throw new SQLException("broken connection");
-        }
-        return new TesterPreparedStatement(this, sql);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
-        checkOpen();
-        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
-    }
-
-    @Override
-    public void rollback() throws SQLException {
-        checkOpen();
-        if (isReadOnly()) {
-            throw new SQLException("Cannot rollback a readonly connection");
-        }
-    }
-
-    @Override
-    public void setAutoCommit(final boolean autoCommit) throws SQLException {
-        checkOpen();
-        _autoCommit = autoCommit;
-    }
-
-    @Override
-    public void setCatalog(final String catalog) throws SQLException {
-        checkOpen();
-        _catalog = catalog;
-    }
-
-    @Override
-    public void setReadOnly(final boolean readOnly) throws SQLException {
-        checkOpen();
-        _readOnly = readOnly;
-    }
-
-    @Override
-    public void setTransactionIsolation(final int level) throws SQLException {
-        checkOpen();
-        _transactionIsolation = level;
-    }
-
-    @Override
-    public void setTypeMap(final Map<String,Class<?>> map) throws SQLException {
-        checkOpen();
-        _typeMap = map;
-    }
-
-    protected void checkOpen() throws SQLException {
-        if(!_open) {
-            throw new SQLException("Connection is closed.");
-        }
-        checkFailure();
-    }
-
-    protected void checkFailure() throws SQLException {
-        if (failure != null) {
-            if(failure instanceof SQLException) {
-                throw (SQLException)failure;
-            }
-            throw new SQLException("TesterConnection failure", failure);
-        }
-    }
-
-    public void setFailure(final Exception failure) {
-        this.failure = failure;
-    }
-
-    @Override
-    public int getHoldability() throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public void setHoldability(final int holdability) throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public java.sql.Savepoint setSavepoint() throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public java.sql.Savepoint setSavepoint(final String name) throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public void rollback(final java.sql.Savepoint savepoint) throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public void releaseSavepoint(final java.sql.Savepoint savepoint) throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public Statement createStatement(final int resultSetType,
-                                     final int resultSetConcurrency,
-                                     final int resultSetHoldability)
-        throws SQLException {
-        return createStatement();
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
-                                              final int resultSetConcurrency,
-                                              final int resultSetHoldability)
-        throws SQLException {
-        checkOpen();
-        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
-    }
-
-    @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType,
-                                         final int resultSetConcurrency,
-                                         final int resultSetHoldability)
-        throws SQLException {
-        checkOpen();
-        return new TesterCallableStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys)
-        throws SQLException {
-        checkOpen();
-        return new TesterPreparedStatement(this, sql, autoGeneratedKeys);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
-        throws SQLException {
-        return new TesterPreparedStatement(this, sql, columnIndexes);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final String columnNames[])
-        throws SQLException {
-        return new TesterPreparedStatement(this, sql, columnNames);
-    }
-
-
-    @Override
-    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        throw new SQLException("Not implemented.");
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> iface) throws SQLException {
-        throw new SQLException("Not implemented.");
     }
 
     @Override
@@ -355,23 +125,40 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     @Override
+    public Statement createStatement() throws SQLException {
+        checkOpen();
+        return new TesterStatement(this);
+    }
+
+    @Override
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
+        checkOpen();
+        return new TesterStatement(this);
+    }
+
+    @Override
+    public Statement createStatement(final int resultSetType,
+                                     final int resultSetConcurrency,
+                                     final int resultSetHoldability)
+        throws SQLException {
+        return createStatement();
+    }
+
+    @Override
     public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public boolean isValid(final int timeout) throws SQLException {
-        return _open;
+    public boolean getAutoCommit() throws SQLException {
+        checkOpen();
+        return _autoCommit;
     }
 
     @Override
-    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
-        throw new SQLClientInfoException();
-    }
-
-    @Override
-    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
-        throw new SQLClientInfoException();
+    public String getCatalog() throws SQLException {
+        checkOpen();
+        return _catalog;
     }
 
     @Override
@@ -385,9 +172,19 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     @Override
-    public void setSchema(final String schema) throws SQLException {
+    public int getHoldability() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public DatabaseMetaData getMetaData() throws SQLException {
         checkOpen();
-        this.schema= schema;
+        return _metaData;
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        throw new SQLException("Not implemented.");
     }
 
     @Override
@@ -397,7 +194,177 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     @Override
-    public void abort(final Executor executor) throws SQLException {
+    public int getTransactionIsolation() throws SQLException {
+        checkOpen();
+        return _transactionIsolation;
+    }
+
+    @Override
+    public Map<String,Class<?>> getTypeMap() throws SQLException {
+        checkOpen();
+        return _typeMap;
+    }
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        checkOpen();
+        return warnings;
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        checkFailure();
+        return !_open;
+    }
+
+    @Override
+    public boolean isReadOnly() throws SQLException {
+        checkOpen();
+        return _readOnly;
+    }
+
+    public boolean isSqlExceptionOnClose() {
+        return sqlExceptionOnClose;
+    }
+
+    @Override
+    public boolean isValid(final int timeout) throws SQLException {
+        return _open;
+    }
+
+    @Override
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public String nativeSQL(final String sql) throws SQLException {
+        checkOpen();
+        return sql;
+    }
+
+    @Override
+    public CallableStatement prepareCall(final String sql) throws SQLException {
+        checkOpen();
+        if ("warning".equals(sql)) {
+            setWarnings(new SQLWarning("warning in prepareCall"));
+        }
+        return new TesterCallableStatement(this, sql);
+    }
+
+    @Override
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
+        checkOpen();
+        return new TesterCallableStatement(this, sql, resultSetType, resultSetConcurrency);
+    }
+
+    @Override
+    public CallableStatement prepareCall(final String sql, final int resultSetType,
+                                         final int resultSetConcurrency,
+                                         final int resultSetHoldability)
+        throws SQLException {
+        checkOpen();
+        return new TesterCallableStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql) throws SQLException {
+        checkOpen();
+        if("null".equals(sql)) {
+            return null;
+        } if("invalid".equals(sql)) {
+            throw new SQLException("invalid query");
+        } if ("broken".equals(sql)) {
+            throw new SQLException("broken connection");
+        }
+        return new TesterPreparedStatement(this, sql);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys)
+        throws SQLException {
+        checkOpen();
+        return new TesterPreparedStatement(this, sql, autoGeneratedKeys);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[])
+        throws SQLException {
+        return new TesterPreparedStatement(this, sql, columnIndexes);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
+        checkOpen();
+        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType,
+                                              final int resultSetConcurrency,
+                                              final int resultSetHoldability)
+        throws SQLException {
+        checkOpen();
+        return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final String columnNames[])
+        throws SQLException {
+        return new TesterPreparedStatement(this, sql, columnNames);
+    }
+
+    @Override
+    public void releaseSavepoint(final java.sql.Savepoint savepoint) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void rollback() throws SQLException {
+        checkOpen();
+        if (isReadOnly()) {
+            throw new SQLException("Cannot rollback a readonly connection");
+        }
+    }
+
+    @Override
+    public void rollback(final java.sql.Savepoint savepoint) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
+        checkOpen();
+        _autoCommit = autoCommit;
+    }
+
+    @Override
+    public void setCatalog(final String catalog) throws SQLException {
+        checkOpen();
+        _catalog = catalog;
+    }
+
+    @Override
+    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
+        throw new SQLClientInfoException();
+    }
+
+    @Override
+    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
+        throw new SQLClientInfoException();
+    }
+
+    public void setFailure(final Exception failure) {
+        this.failure = failure;
+    }
+
+    @Override
+    public void setHoldability(final int holdability) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
@@ -408,7 +375,49 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     @Override
-    public int getNetworkTimeout() throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
+        checkOpen();
+        _readOnly = readOnly;
+    }
+
+    @Override
+    public java.sql.Savepoint setSavepoint() throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public java.sql.Savepoint setSavepoint(final String name) throws SQLException {
+        throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void setSchema(final String schema) throws SQLException {
+        checkOpen();
+        this.schema= schema;
+    }
+
+    public void setSqlExceptionOnClose(boolean sqlExceptionOnClose) {
+        this.sqlExceptionOnClose = sqlExceptionOnClose;
+    }
+
+    @Override
+    public void setTransactionIsolation(final int level) throws SQLException {
+        checkOpen();
+        _transactionIsolation = level;
+    }
+
+    @Override
+    public void setTypeMap(final Map<String,Class<?>> map) throws SQLException {
+        checkOpen();
+        _typeMap = map;
+    }
+
+    public void setWarnings(final SQLWarning warning) {
+        this.warnings = warning;
+    }
+
+    @Override
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 }
