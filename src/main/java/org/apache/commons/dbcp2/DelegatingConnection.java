@@ -89,17 +89,17 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      */
     @Override
     public synchronized String toString() {
-        String str = null;
+        String s = null;
 
-        final Connection conn = this.getInnermostDelegateInternal();
-        if (conn != null) {
+        final Connection c = this.getInnermostDelegateInternal();
+        if (c != null) {
             try {
-                if (conn.isClosed()) {
-                    str = "connection is closed";
+                if (c.isClosed()) {
+                    s = "connection is closed";
                 } else {
                     final StringBuffer sb = new StringBuffer();
                     sb.append(hashCode());
-                    final DatabaseMetaData meta = conn.getMetaData();
+                    final DatabaseMetaData meta = c.getMetaData();
                     if (meta != null) {
                         sb.append(", URL=");
                         sb.append(meta.getURL());
@@ -107,7 +107,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                         sb.append(meta.getUserName());
                         sb.append(", ");
                         sb.append(meta.getDriverName());
-                        str = sb.toString();
+                        s = sb.toString();
                     }
                 }
             } catch (final SQLException ex) {
@@ -115,11 +115,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
             }
         }
 
-        if (str == null) {
-            str = super.toString();
+        if (s == null) {
+            s = super.toString();
         }
 
-        return str;
+        return s;
     }
 
     /**
@@ -175,14 +175,14 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * @return innermost delegate.
      */
     public final Connection getInnermostDelegateInternal() {
-        Connection conn = connection;
-        while (conn != null && conn instanceof DelegatingConnection) {
-            conn = ((DelegatingConnection<?>) conn).getDelegateInternal();
-            if (this == conn) {
+        Connection c = connection;
+        while (c != null && c instanceof DelegatingConnection) {
+            c = ((DelegatingConnection<?>) c).getDelegateInternal();
+            if (this == c) {
                 return null;
             }
         }
-        return conn;
+        return c;
     }
 
     /**

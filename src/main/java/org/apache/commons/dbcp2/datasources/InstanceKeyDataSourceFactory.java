@@ -120,7 +120,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             if (isCorrectClass(ref.getClassName())) {
                 final RefAddr refAddr = ref.get("instanceKey");
                 if (refAddr != null && refAddr.getContent() != null) {
-                    // object was bound to JNDI via Referenceable API.
+                    // object was bound to jndi via Referenceable api.
                     obj = instanceMap.get(refAddr.getContent());
                 } else {
                     // Tomcat JNDI creates a Reference out of server.xml
