@@ -56,20 +56,18 @@ class ConnectionFactoryFactory {
         } else {
             basicDataSource.log("DBCP DataSource configured without a 'password'");
         }
-        if (basicDataSource != null) {
-            final String connectionFactoryClassName = basicDataSource.getConnectionFactoryClassName();
-            if (connectionFactoryClassName != null) {
-                try {
-                    final Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
-                    return (ConnectionFactory) connectionFactoryFromCCL
-                            .getConstructor(Driver.class, String.class, Properties.class)
-                            .newInstance(driver, url, connectionProperties);
-                } catch (final Exception t) {
-                    final String message = "Cannot load ConnectionFactory implementation '" + connectionFactoryClassName
-                            + "'";
-                    basicDataSource.log(message, t);
-                    throw new SQLException(message, t);
-                }
+        final String connectionFactoryClassName = basicDataSource.getConnectionFactoryClassName();
+        if (connectionFactoryClassName != null) {
+            try {
+                final Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
+                return (ConnectionFactory) connectionFactoryFromCCL
+                        .getConstructor(Driver.class, String.class, Properties.class)
+                        .newInstance(driver, url, connectionProperties);
+            } catch (final Exception t) {
+                final String message = "Cannot load ConnectionFactory implementation '" + connectionFactoryClassName
+                        + "'";
+                basicDataSource.log(message, t);
+                throw new SQLException(message, t);
             }
         }
         // Defaults to DriverConnectionFactory
