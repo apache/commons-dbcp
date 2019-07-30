@@ -60,15 +60,12 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-    <release version="2.6.1" date="2019-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.6.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from com.h2database:h2 1.4.197 to 1.4.199.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from org.jboss.narayana.jta:narayana-jta 5.9.2.Final to 5.9.5.Final.
-      </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from org.jboss.logging:jboss-logging 3.3.2.Final to 3.4.0.Final.
       </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
