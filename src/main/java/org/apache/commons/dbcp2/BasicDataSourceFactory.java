@@ -552,10 +552,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_CONNECTION_FACTORY_CLASS_NAME);
         if (value != null) {
-        	dataSource.setConnectionFactoryClassName(value);
+            dataSource.setConnectionFactoryClassName(value);
         }
-
-
 
         // DBCP-215
         // Trick to make sure that initialSize connections are created

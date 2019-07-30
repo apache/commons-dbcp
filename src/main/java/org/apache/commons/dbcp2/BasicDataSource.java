@@ -469,67 +469,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
-        Driver driverToUse = this.driver;
-
-        if (driverToUse == null) {
-            Class<?> driverFromCCL = null;
-            if (driverClassName != null) {
-                try {
-                    try {
-                        if (driverClassLoader == null) {
-                            driverFromCCL = Class.forName(driverClassName);
-                        } else {
-                            driverFromCCL = Class.forName(driverClassName, true, driverClassLoader);
-                        }
-                    } catch (final ClassNotFoundException cnfe) {
-                        driverFromCCL = Thread.currentThread().getContextClassLoader().loadClass(driverClassName);
-                    }
-                } catch (final Exception t) {
-                    final String message = "Cannot load JDBC driver class '" + driverClassName + "'";
-                    logWriter.println(message);
-                    t.printStackTrace(logWriter);
-                    throw new SQLException(message, t);
-                }
-            }
-
-            try {
-                if (driverFromCCL == null) {
-                    driverToUse = DriverManager.getDriver(url);
-                } else {
-                    // Usage of DriverManager is not possible, as it does not
-                    // respect the ContextClassLoader
-                    // N.B. This cast may cause ClassCastException which is
-                    // handled below
-                    driverToUse = (Driver) driverFromCCL.getConstructor().newInstance();
-                    if (!driverToUse.acceptsURL(url)) {
-                        throw new SQLException("No suitable driver", "08001");
-                    }
-                }
-            } catch (final Exception t) {
-                final String message = "Cannot create JDBC driver of class '"
-                        + (driverClassName != null ? driverClassName : "") + "' for connect URL '" + url + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
-                throw new SQLException(message, t);
-            }
-        }
-
-        // Set up the driver connection factory we will use
-        final String user = userName;
-        if (user != null) {
-            connectionProperties.put("user", user);
-        } else {
-            log("DBCP DataSource configured without a 'username'");
-        }
-
-        final String pwd = password;
-        if (pwd != null) {
-            connectionProperties.put("password", pwd);
-        } else {
-            log("DBCP DataSource configured without a 'password'");
-        }
-
-        return createConnectionFactory(driverToUse);
+        return ConnectionFactoryFactory.createConnectionFactory(this, DriverFactory.createDriver(this));
     }
 
     /**
@@ -831,6 +771,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Returns the ConnectionFactoryClassName that has been configured for use by this pool.
+     * <p>
+     * Note: This getter only returns the last value set by a call to {@link #setConnectionFactoryClassName(String)}.
+     * </p>
+     *
+     * @return the ConnectionFactoryClassName that has been configured for use by this pool.
+     * @since 2.7.0
+     */
+    public String getConnectionFactoryClassName() {
+        return this.connectionFactoryClassName;
+    }
+
+    /**
      * Returns the list of SQL statements executed when a physical connection is first created. Returns an empty list if
      * there are no initialization statements configured.
      *
@@ -988,19 +941,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public synchronized String getDriverClassName() {
         return this.driverClassName;
-    }
-
-    /**
-     * Returns the ConnectionFactoryClassName that has been configured for use by this pool.
-     * <p>
-     * Note: This getter only returns the last value set by a call to {@link #setConnectionFactoryClassName(String)}.
-     * </p>
-     *
-     * @return the ConnectionFactoryClassName that has been configured for use by this pool.
-     * @since 2.7.0
-     */
-    public String getConnectionFactoryClassName() {
-        return this.connectionFactoryClassName;
     }
 
     /**
@@ -1599,12 +1539,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Logs the given throwable.
-     * 
+     * @param message TODO
      * @param throwable the throwable.
+     * 
      * @since 2.7.0
      */
-    protected void log(Throwable throwable) {
+    protected void log(String message, Throwable throwable) {
         if (logWriter != null) {
+            logWriter.println(message);
             throwable.printStackTrace(logWriter);
         }        
     }
@@ -1715,6 +1657,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.autoCommitOnReturn = autoCommitOnReturn;
     }
 
+    // ----------------------------------------------------- DataSource Methods
+
     /**
      * Sets the state caching flag.
      *
@@ -1724,7 +1668,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.cacheState = cacheState;
     }
 
-    // ----------------------------------------------------- DataSource Methods
+    /**
+     * Sets the ConnectionFactory class name.
+     *
+     * @param connectionFactoryClassName A class name.
+     * @since 2.7.0
+     */
+    public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
+        if (isEmpty(connectionFactoryClassName)) {
+            this.connectionFactoryClassName = null;
+        } else {
+            this.connectionFactoryClassName = connectionFactoryClassName;
+        }
+    }
 
     /**
      * Sets the list of SQL statements to be executed when a physical connection is first created.
@@ -1974,20 +1930,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the ConnectionFactory class name.
-     *
-     * @param connectionFactoryClassName A class name.
-     * @since 2.7.0
-     */
-    public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
-        if (isEmpty(connectionFactoryClassName)) {
-            this.connectionFactoryClassName = null;
-        } else {
-            this.connectionFactoryClassName = connectionFactoryClassName;
-        }
-    }
-
-    /**
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
@@ -2214,6 +2156,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    // ------------------------------------------------------ Protected Methods
+
     /**
      * Sets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections are
      * available when the idle object evictor runs. The value of this property has no effect unless
@@ -2228,8 +2172,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionPool.setMinIdle(minIdle);
         }
     }
-
-    // ------------------------------------------------------ Protected Methods
 
     /**
      * Sets the value of the {@link #numTestsPerEvictionRun} property.
@@ -2513,24 +2455,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
-    }
-
-    private ConnectionFactory createConnectionFactory(final Driver driver) throws SQLException {
-        if (connectionFactoryClassName != null) {
-            try {
-                Class<?> connectionFactoryFromCCL = Class.forName(connectionFactoryClassName);
-                return (ConnectionFactory) connectionFactoryFromCCL
-                        .getConstructor(Driver.class, String.class, Properties.class)
-                        .newInstance(driver, url, connectionProperties);
-            } catch (final Exception t) {
-                final String message = "Cannot load ConnectionFactory implementation '" + connectionFactoryClassName
-                        + "'";
-                logWriter.println(message);
-                t.printStackTrace(logWriter);
-                throw new SQLException(message, t);
-            }
-        }
-        return new DriverConnectionFactory(driver, url, connectionProperties);
     }
 
 }
