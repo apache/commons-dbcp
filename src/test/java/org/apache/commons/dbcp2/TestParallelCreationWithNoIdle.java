@@ -17,9 +17,9 @@
 package org.apache.commons.dbcp2;
 
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test if the pooling if no idle objects are used
@@ -40,13 +40,13 @@ public class TestParallelCreationWithNoIdle  {
     protected BasicDataSource ds = null;
     private static final String CATALOG = "test catalog";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         // register a custom logger which supports inspection of the log messages
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         ds = new BasicDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");

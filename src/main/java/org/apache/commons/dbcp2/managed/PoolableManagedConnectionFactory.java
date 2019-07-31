@@ -29,9 +29,9 @@ import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.

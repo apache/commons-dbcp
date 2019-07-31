@@ -20,9 +20,11 @@ package org.apache.commons.dbcp2.managed;
 import java.sql.SQLException;
 import javax.transaction.xa.XAResource;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.apache.geronimo.transaction.manager.TransactionImpl;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * TestSuite for TransactionContext
@@ -32,21 +34,22 @@ public class TestTransactionContext {
     /**
      * JIRA: DBCP-428
      */
-    @Test(expected=SQLException.class)
+    @Test
     public void testSetSharedConnectionEnlistFailure() throws Exception {
-        final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
-        basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
-        basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
-        basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-        basicManagedDataSource.setUsername("userName");
-        basicManagedDataSource.setPassword("password");
-        basicManagedDataSource.setMaxIdle(1);
-        final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        final UncooperativeTransaction transaction = new UncooperativeTransaction();
-        final TransactionContext transactionContext =
-                new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
-        transactionContext.setSharedConnection(conn);
-        basicManagedDataSource.close();
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            try (final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection()) {
+                final UncooperativeTransaction transaction = new UncooperativeTransaction();
+                final TransactionContext transactionContext = new TransactionContext(
+                        basicManagedDataSource.getTransactionRegistry(), transaction);
+                assertThrows(SQLException.class, () -> transactionContext.setSharedConnection(conn));
+            }
+        }
     }
 
     /**

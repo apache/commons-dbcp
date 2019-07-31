@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
@@ -22,29 +23,22 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * A {@link Driver}-based implementation of {@link ConnectionFactory}.
- *
- * @since 2.0
+ * Dummy {@link ConnectionFactory} for testing purpose.
  */
-public class DriverConnectionFactory implements ConnectionFactory {
+public class TesterConnectionFactory implements ConnectionFactory {
 
     private final String connectionString;
-
     private final Driver driver;
-
     private final Properties properties;
 
     /**
      * Constructs a connection factory for a given Driver.
      *
-     * @param driver
-     *            The Driver.
-     * @param connectString
-     *            The connection string.
-     * @param properties
-     *            The connection properties.
+     * @param driver        The Driver.
+     * @param connectString The connection string.
+     * @param properties    The connection properties.
      */
-    public DriverConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
+    public TesterConnectionFactory(final Driver driver, final String connectString, final Properties properties) {
         this.driver = driver;
         this.connectionString = connectString;
         this.properties = properties;
@@ -52,12 +46,17 @@ public class DriverConnectionFactory implements ConnectionFactory {
 
     @Override
     public Connection createConnection() throws SQLException {
-        return driver.connect(connectionString, properties);
+        Connection conn = driver.connect(connectionString, properties);
+        doSomething(conn);
+        return conn;
+    }
+
+    private void doSomething(Connection conn) {
+        // do something
     }
 
     /**
      * @return The connection String.
-     * @since 2.6.0
      */
     public String getConnectionString() {
         return connectionString;
@@ -65,7 +64,6 @@ public class DriverConnectionFactory implements ConnectionFactory {
 
     /**
      * @return The Driver.
-     * @since 2.6.0
      */
     public Driver getDriver() {
         return driver;
@@ -73,7 +71,6 @@ public class DriverConnectionFactory implements ConnectionFactory {
 
     /**
      * @return The Properties.
-     * @since 2.6.0
      */
     public Properties getProperties() {
         return properties;
@@ -82,6 +79,6 @@ public class DriverConnectionFactory implements ConnectionFactory {
     @Override
     public String toString() {
         return this.getClass().getName() + " [" + String.valueOf(driver) + ";" + String.valueOf(connectionString) + ";"
-                + String.valueOf(properties) + "]";
+            + String.valueOf(properties) + "]";
     }
 }

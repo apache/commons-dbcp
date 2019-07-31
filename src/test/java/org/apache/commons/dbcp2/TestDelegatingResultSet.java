@@ -17,10 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,9 +29,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for DelegatingResultSet.
@@ -44,7 +44,7 @@ public class TestDelegatingResultSet {
     private ResultSet rs;
     private DelegatingResultSet delegate;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         testConn = new TesterConnection("foo", "bar");
         conn = new DelegatingConnection<>(testConn);
@@ -179,7 +179,7 @@ public class TestDelegatingResultSet {
     }
 
     // FIXME: this appears to be a bug
-    @Ignore
+    @Disabled
     @Test
     public void testGetBigDecimalStringInteger() throws Exception {
         try {
@@ -190,7 +190,7 @@ public class TestDelegatingResultSet {
     }
 
     // FIXME: this appears to be a bug
-    @Ignore
+    @Disabled
     @Test
     public void testGetBigDecimalIntegerInteger() throws Exception {
         try {
@@ -1630,7 +1630,7 @@ public class TestDelegatingResultSet {
     }
 
     // FIXME this appears to be a bug
-    @Ignore
+    @Disabled
     @Test
     public void testUpdateObjectStringObjectInteger() throws Exception {
         try {
@@ -1641,7 +1641,7 @@ public class TestDelegatingResultSet {
     }
 
     // FIXME: this appears to be a bug
-    @Ignore
+    @Disabled
     @Test
     public void testUpdateObjectIntegerObjectInteger() throws Exception {
         try {

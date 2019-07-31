@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<!DOCTYPE org.apache.commons.menus SYSTEM 'http://commons.apache.org/build/maven-build.dtd'>
+<!DOCTYPE org.apache.commons.menus SYSTEM 'https://commons.apache.org/build/maven-build.dtd'>
 <project name="DBCP">
   <bannerRight>
     <name>Commons DBCP</name>
@@ -37,6 +37,7 @@
         <item name="Javadoc&#xA0;2.4.0"     href="/api-2.4.0/index.html"/>
         <item name="Javadoc&#xA0;2.5.0"     href="/api-2.5.0/index.html"/>
         <item name="Javadoc&#xA0;2.6.0"     href="/api-2.6.0/index.html"/>
+        <item name="Javadoc&#xA0;2.7.0"     href="/api-2.7.0/index.html"/>
         <item name="Developers&#xA0;Guide"  href="/guide/index.html" collapse="true">
         <item name="JNDI&#xA0;Howto"        href="/guide/jndi-howto.html"/>
         <item name="Class&#xA0;Diagrams"    href="/guide/classdiagrams.html"/>
@@ -53,7 +54,7 @@
         <item name="Mailing&#xA0;Lists"     href="/mail-lists.html"/>
         <item name="Issue&#xA0;Tracking"    href="/issue-tracking.html"/>
         <item name="Team"                   href="/team-list.html"/>
-        <item name="Source&#xA0;Repository" href="/source-repository.html"/>
+        <item name="Source&#xA0;Repository" href="/scm.html"/>
       </menu>
 
     </body>

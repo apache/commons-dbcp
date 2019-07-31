@@ -17,7 +17,13 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -35,11 +41,11 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicDataSource
@@ -54,13 +60,13 @@ public class TestBasicDataSource extends TestConnectionPool {
     protected BasicDataSource ds = null;
     private static final String CATALOG = "test catalog";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         // register a custom logger which supports inspection of the log messages
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         ds = createDataSource();
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -84,7 +90,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
         ds.close();
@@ -195,11 +201,11 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testTransactionIsolationBehavior() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
-        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        conn.close();
+        try (final Connection conn = getConnection()) {
+            assertNotNull(conn);
+            assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        }
 
         final Connection conn2 = getConnection();
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
@@ -238,14 +244,15 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         assertTrue(ds.isAccessToUnderlyingConnectionAllowed());
 
-        final Connection conn = getConnection();
-        Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
-        assertNotNull(dconn);
+        try (final Connection conn = getConnection()) {
+            Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
+            assertNotNull(dconn);
 
-        dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        assertNotNull(dconn);
+            dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
+            assertNotNull(dconn);
 
-        assertTrue(dconn instanceof TesterConnection);
+            assertTrue(dconn instanceof TesterConnection);
+        }
     }
 
     @Test
@@ -289,8 +296,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(0);
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -298,8 +306,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(-1);
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -307,8 +316,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
         ds.setValidationQueryTimeout(100); // Works for TesterStatement
-        final Connection con = ds.getConnection();
-        con.close();
+        try (final Connection con = ds.getConnection()) {
+            // close right away.
+        }
     }
 
     @Test
@@ -464,7 +474,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             ds.close();
             // Exception must have been swallowed by the pool - verify it is logged
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("bang") > 0);
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().indexOf("Cannot close") > 0);
@@ -487,7 +497,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.clear();
             ds.close();
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("boom") > 0);
         } catch (final IllegalStateException ex) {
             assertTrue(ex.getMessage().indexOf("boom") > 0); // RTE is not wrapped by BDS#close
@@ -552,16 +562,18 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testInvalidateConnection() throws Exception {
-    	ds.setMaxTotal(2);
-    	final Connection conn1 = ds.getConnection();
-    	final Connection conn2 = ds.getConnection();
-    	ds.invalidateConnection(conn1);
-    	assertTrue(conn1.isClosed());
-    	assertEquals(1, ds.getNumActive());
-    	assertEquals(0, ds.getNumIdle());
-    	final Connection conn3 = ds.getConnection();
-    	conn2.close();
-    	conn3.close();
+        ds.setMaxTotal(2);
+        try (final Connection conn1 = ds.getConnection()) {
+            try (final Connection conn2 = ds.getConnection()) {
+                ds.invalidateConnection(conn1);
+                assertTrue(conn1.isClosed());
+                assertEquals(1, ds.getNumActive());
+                assertEquals(0, ds.getNumIdle());
+                try (final Connection conn3 = ds.getConnection()) {
+                    conn2.close();
+                }
+            }
+        }
     }
 
     /**
@@ -698,7 +710,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             conn.close();
             assertEquals(0, ds.getNumIdle());
             final String message = StackMessageLog.popMessage();
-            Assert.assertNotNull(message);
+            Assertions.assertNotNull(message);
             assertTrue(message.indexOf("exceeds the maximum permitted value") > 0);
         } finally {
             StackMessageLog.clear();
@@ -718,7 +730,7 @@ public class TestBasicDataSource extends TestConnectionPool {
                 Thread.sleep(500);
             }
             assertEquals(0, ds.getNumIdle());
-            assertTrue(StackMessageLog.getAll().toString(), StackMessageLog.isEmpty());
+            assertTrue(StackMessageLog.isEmpty(), StackMessageLog.getAll().toString());
         } finally {
             StackMessageLog.clear();
             StackMessageLog.unLock();
@@ -865,8 +877,44 @@ public class TestBasicDataSource extends TestConnectionPool {
         final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
         final boolean original = ds.getConnectionPool().getLogAbandoned();
         ds.setLogAbandoned(!original);
-        Assert.assertNotEquals(Boolean.valueOf(original),
+        Assertions.assertNotEquals(Boolean.valueOf(original),
                 Boolean.valueOf(ds.getConnectionPool().getLogAbandoned()));
+    }
+
+    /**
+     * JIRA: DBCP-547
+     * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
+     */
+    @Test
+    public void testCreateConnectionFactory() throws Exception {
+
+    	/** not set ConnectionFactoryClassName */
+    	Properties properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
+        Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        conn.close();
+        ds.close();
+
+        /** set ConnectionFactoryClassName */
+        properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TesterConnectionFactory");
+        ds = BasicDataSourceFactory.createDataSource(properties);
+        conn = ds.getConnection();
+        assertNotNull(conn);
+
+        conn.close();
+        ds.close();
     }
 }
 

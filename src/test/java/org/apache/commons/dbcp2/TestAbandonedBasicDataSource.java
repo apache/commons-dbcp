@@ -17,9 +17,9 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,9 +31,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicDataSource with abandoned connection trace enabled
@@ -43,7 +43,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     private StringWriter sw;
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         // abandoned enabled but should not affect the basic tests
@@ -95,7 +95,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         conn1.close();
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
-        assertTrue(string, string.contains("testAbandonedClose"));
+        assertTrue(string.contains("testAbandonedClose"), string);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         }
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
-        assertTrue(string, string.contains("testAbandonedCloseWithExceptions"));
+        assertTrue(string.contains("testAbandonedCloseWithExceptions"), string);
     }
 
     /**
@@ -193,10 +193,10 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
                 Statement st = conn1.createStatement()) {
             final String querySQL = "SELECT 1 FROM DUAL";
             Thread.sleep(500);
-            Assert.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
             Thread.sleep(800);
             final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
-            Assert.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
             conn2.close();
             Thread.sleep(500);
             st.executeUpdate(""); // Should also reset
@@ -218,10 +218,10 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
                 Statement st = conn1.createStatement()) {
             final String querySQL = "SELECT 1 FROM DUAL";
             Thread.sleep(500);
-            Assert.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
             Thread.sleep(800);
             final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
-            Assert.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
             conn2.close();
             Thread.sleep(500);
             st.executeLargeUpdate(""); // Should also reset
@@ -256,11 +256,11 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     @Test
     public void testGarbageCollectorCleanUp01() throws Exception {
         final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        Assert.assertEquals(0, conn.getTrace().size());
+        Assertions.assertEquals(0, conn.getTrace().size());
         createStatement(conn);
-        Assert.assertEquals(1, conn.getTrace().size());
+        Assertions.assertEquals(1, conn.getTrace().size());
         System.gc();
-        Assert.assertEquals(0, conn.getTrace().size());
+        Assertions.assertEquals(0, conn.getTrace().size());
     }
 
     /**
@@ -277,11 +277,11 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         final
         GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
                 (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pstmtPool");
-        Assert.assertEquals(0, conn.getTrace().size());
-        Assert.assertEquals(0, gkop.getNumActive());
+        Assertions.assertEquals(0, conn.getTrace().size());
+        Assertions.assertEquals(0, gkop.getNumActive());
         createStatement(conn);
-        Assert.assertEquals(1, conn.getTrace().size());
-        Assert.assertEquals(1, gkop.getNumActive());
+        Assertions.assertEquals(1, conn.getTrace().size());
+        Assertions.assertEquals(1, gkop.getNumActive());
         System.gc();
         // Finalization happens in a separate thread. Give the test time for
         // that to complete.
@@ -290,13 +290,13 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             Thread.sleep(100);
             count++;
         }
-        Assert.assertEquals(0, gkop.getNumActive());
-        Assert.assertEquals(0, conn.getTrace().size());
+        Assertions.assertEquals(0, gkop.getNumActive());
+        Assertions.assertEquals(0, conn.getTrace().size());
     }
 
     private void createStatement(final Connection conn) throws Exception{
         final PreparedStatement ps = conn.prepareStatement("");
-        Assert.assertNotNull(ps);
+        Assertions.assertNotNull(ps);
     }
 
 
@@ -314,7 +314,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertAndReset(conn);
         st.executeLargeBatch();
         assertAndReset(conn);
-        Assert.assertNotNull(st.executeQuery(""));
+        Assertions.assertNotNull(st.executeQuery(""));
         assertAndReset(conn);
         st.executeUpdate("");
         assertAndReset(conn);
@@ -338,7 +338,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
         ps.execute();
         assertAndReset(conn);
-        Assert.assertNotNull(ps.executeQuery());
+        Assertions.assertNotNull(ps.executeQuery());
         assertAndReset(conn);
         ps.executeUpdate();
         assertAndReset(conn);

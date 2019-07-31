@@ -17,12 +17,13 @@
 
 package org.apache.commons.dbcp2.cpdsadapter;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Properties;
 import java.io.PrintWriter;
@@ -38,9 +39,9 @@ import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for DriverAdapterCPDS
@@ -49,7 +50,7 @@ public class TestDriverAdapterCPDS {
 
     private DriverAdapterCPDS pcds;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         pcds = new DriverAdapterCPDS();
         pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
@@ -94,30 +95,30 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testSimple() throws Exception {
-        final Connection conn = pcds.getPooledConnection().getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+        try (final Connection conn = pcds.getPooledConnection().getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
     public void testSimpleWithUsername() throws Exception {
-        final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+        try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
@@ -169,12 +170,12 @@ public class TestDriverAdapterCPDS {
         assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testSetConnectionPropertiesConnectionCalled() throws Exception {
         final Properties properties = new Properties();
         // call to the connection
         pcds.getPooledConnection().close();
-        pcds.setConnectionProperties(properties);
+        assertThrows(IllegalStateException.class, () -> pcds.setConnectionProperties(properties));
     }
 
     @Test
@@ -230,12 +231,13 @@ public class TestDriverAdapterCPDS {
      */
     @Test
     public void testNullValidationQuery() throws Exception {
-        final SharedPoolDataSource spds = new SharedPoolDataSource();
-        spds.setConnectionPoolDataSource(pcds);
-        spds.setDefaultTestOnBorrow(true);
-        final Connection c = spds.getConnection();
-        c.close();
-        spds.close();
+        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
+            spds.setConnectionPoolDataSource(pcds);
+            spds.setDefaultTestOnBorrow(true);
+            try (final Connection c = spds.getConnection()) {
+                // close right away
+            }
+        }
     }
 
     // https://issues.apache.org/jira/browse/DBCP-376
@@ -247,28 +249,29 @@ public class TestDriverAdapterCPDS {
         pcds.setMaxPreparedStatements(-1);
         pcds.setAccessToUnderlyingConnectionAllowed(true);
 
-        final SharedPoolDataSource spds = new SharedPoolDataSource();
-        spds.setConnectionPoolDataSource(pcds);
-        spds.setMaxTotal(threads.length + 10);
-        spds.setDefaultMaxWaitMillis(-1);
-        spds.setDefaultMaxIdle(10);
-        spds.setDefaultAutoCommit(Boolean.FALSE);
+        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
+            spds.setConnectionPoolDataSource(pcds);
+            spds.setMaxTotal(threads.length + 10);
+            spds.setDefaultMaxWaitMillis(-1);
+            spds.setDefaultMaxIdle(10);
+            spds.setDefaultAutoCommit(Boolean.FALSE);
 
-        spds.setValidationQuery("SELECT 1");
-        spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
-        spds.setDefaultNumTestsPerEvictionRun(-1);
-        spds.setDefaultTestWhileIdle(true);
-        spds.setDefaultTestOnBorrow(true);
-        spds.setDefaultTestOnReturn(false);
+            spds.setValidationQuery("SELECT 1");
+            spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
+            spds.setDefaultNumTestsPerEvictionRun(-1);
+            spds.setDefaultTestWhileIdle(true);
+            spds.setDefaultTestOnBorrow(true);
+            spds.setDefaultTestOnReturn(false);
 
-        for (int i = 0; i < threads.length; i++) {
-            threads[i] = new ThreadDbcp367(spds);
-            threads[i].start();
-        }
+            for (int i = 0; i < threads.length; i++) {
+                threads[i] = new ThreadDbcp367(spds);
+                threads[i].start();
+            }
 
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].join();
-            Assert.assertFalse("Thread " + i + " has failed",threads[i].isFailed());
+            for (int i = 0; i < threads.length; i++) {
+                threads[i].join();
+                Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
+            }
         }
     }
 
@@ -301,9 +304,9 @@ public class TestDriverAdapterCPDS {
         }
     }
 
-    @Test(expected=SQLFeatureNotSupportedException.class)
-    public void testGetParentLogger() throws SQLFeatureNotSupportedException {
-        pcds.getParentLogger();
+    @Test
+    public void testGetParentLogger() {
+        assertThrows(SQLFeatureNotSupportedException.class, pcds::getParentLogger);
     }
 
     @Test
@@ -363,5 +366,17 @@ public class TestDriverAdapterCPDS {
         ref.add(new StringRefAddr("description", "anything"));
         final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
+    }
+
+    @Test
+    public void testToStringWithoutConnectionProperties() throws ClassNotFoundException
+    {
+        final DriverAdapterCPDS cleanCpds = new DriverAdapterCPDS();
+        cleanCpds.setDriver( "org.apache.commons.dbcp2.TesterDriver" );
+        cleanCpds.setUrl( "jdbc:apache:commons:testdriver" );
+        cleanCpds.setUser( "foo" );
+        cleanCpds.setPassword( "bar" );
+
+        cleanCpds.toString();
     }
 }

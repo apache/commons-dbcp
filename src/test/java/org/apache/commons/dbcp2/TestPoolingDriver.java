@@ -17,11 +17,11 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -36,10 +36,10 @@ import javax.sql.DataSource;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
@@ -53,7 +53,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     private PoolingDriver driver = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
 
@@ -84,7 +84,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         driver.closePool("test");
         super.tearDown();
@@ -101,7 +101,7 @@ public class TestPoolingDriver extends TestConnectionPool {
                 new GenericObjectPool<>(pcf);
         pcf.setPool(connectionPool);
         final DataSource ds = new PoolingDataSource<>(connectionPool);
-        Assert.assertNotNull(ds);
+        Assertions.assertNotNull(ds);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver2.registerPool("example",connectionPool);
     }
 
-    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
+    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
     @Test
     public void testReportedBug28912() throws Exception {
         final Connection conn1 = getConnection();
@@ -137,7 +137,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         assertFalse(conn2.isClosed());
     }
 
-    /** "http://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
     public void testReportedBug12400() throws Exception {
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();

@@ -17,12 +17,12 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -35,10 +35,10 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests ManagedDataSource with an active transaction in progress.
@@ -46,14 +46,14 @@ import org.junit.Test;
 public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         transactionManager.begin();
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (transactionManager.getTransaction() != null) {
             transactionManager.commit();
@@ -86,12 +86,12 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
                 // two connections should be distinct instances
-                Assert.assertNotSame(conn[j], conn[i]);
+                Assertions.assertNotSame(conn[j], conn[i]);
                 // neither should they should be equivalent even though they are
                 // sharing the same underlying connection
-                Assert.assertNotEquals(conn[j], conn[i]);
+                Assertions.assertNotEquals(conn[j], conn[i]);
                 // Check underlying connection is the same
-                Assert.assertEquals(((DelegatingConnection<?>) conn[j]).getInnermostDelegateInternal(),
+                Assertions.assertEquals(((DelegatingConnection<?>) conn[j]).getInnermostDelegateInternal(),
                         ((DelegatingConnection<?>) conn[i]).getInnermostDelegateInternal());
             }
         }
@@ -174,7 +174,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertNotNull(conn2);
 
         // shared connections should not have the same hashcode
-        Assert.assertNotEquals(conn1.hashCode(), conn2.hashCode());
+        Assertions.assertNotEquals(conn1.hashCode(), conn2.hashCode());
     }
 
     @Override
@@ -308,11 +308,11 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         final Connection connection = newConnection();
 
-        assertFalse("Connection should be open", connection.isClosed());
+        assertFalse(connection.isClosed(), "Connection should be open");
 
         connection.close();
 
-        assertTrue("Connection should be closed", connection.isClosed());
+        assertTrue(connection.isClosed(), "Connection should be closed");
     }
 
     @Override
@@ -321,7 +321,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final Connection connection = newConnection();
 
         // auto commit should be off
-        assertFalse("Auto-commit should be disabled", connection.getAutoCommit());
+        assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
 
         // attempt to set auto commit
         try {
@@ -332,7 +332,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
 
         // make sure it is still disabled
-        assertFalse("Auto-commit should be disabled", connection.getAutoCommit());
+        assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
 
         // close connection
         connection.close();
@@ -343,7 +343,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final Connection connection = newConnection();
 
         // connection should be open
-        assertFalse("Connection should be open", connection.isClosed());
+        assertFalse(connection.isClosed(), "Connection should be open");
 
         // attempt commit directly
         try {
@@ -354,7 +354,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
 
         // make sure it is still open
-        assertFalse("Connection should be open", connection.isClosed());
+        assertFalse(connection.isClosed(), "Connection should be open");
 
         // close connection
         connection.close();
@@ -367,7 +367,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         // NOTE: This test class uses connections that are read-only by default
 
         // connection should be read only
-        assertTrue("Connection be read-only", connection.isReadOnly());
+        assertTrue(connection.isReadOnly(), "Connection be read-only");
 
         // attempt to setReadOnly
         try {
@@ -378,7 +378,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
 
         // make sure it is still read-only
-        assertTrue("Connection be read-only", connection.isReadOnly());
+        assertTrue(connection.isReadOnly(), "Connection be read-only");
 
         // attempt to setReadonly
         try {
@@ -389,7 +389,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         }
 
         // make sure it is still read-only
-        assertTrue("Connection be read-only", connection.isReadOnly());
+        assertTrue(connection.isReadOnly(), "Connection be read-only");
 
         // close connection
         connection.close();
@@ -401,31 +401,31 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));
 
-        assertSame("statement.getConnection() should return the exact same connection instance that was used to create the statement",
-                conn, statement.getConnection());
+        assertSame(conn, statement.getConnection(),
+                "statement.getConnection() should return the exact same connection instance that was used to create the statement");
 
         final ResultSet resultSet = statement.getResultSet();
         assertFalse(isClosed(resultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, resultSet.getStatement());
+        assertSame(statement, resultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         final ResultSet executeResultSet = statement.executeQuery("select * from dual");
         assertFalse(isClosed(executeResultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, executeResultSet.getStatement());
+        assertSame(statement, executeResultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         final ResultSet keysResultSet = statement.getGeneratedKeys();
         assertFalse(isClosed(keysResultSet));
-        assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                statement, keysResultSet.getStatement());
+        assertSame(statement, keysResultSet.getStatement(),
+                "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
 
         ResultSet preparedResultSet = null;
         if (statement instanceof PreparedStatement) {
             final PreparedStatement preparedStatement = (PreparedStatement) statement;
             preparedResultSet = preparedStatement.executeQuery();
             assertFalse(isClosed(preparedResultSet));
-            assertSame("resultSet.getStatement() should return the exact same statement instance that was used to create the result set",
-                    statement, preparedResultSet.getStatement());
+            assertSame(statement, preparedResultSet.getStatement(),
+                    "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
         }
 
 

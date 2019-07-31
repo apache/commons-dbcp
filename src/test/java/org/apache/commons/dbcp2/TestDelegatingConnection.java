@@ -17,53 +17,63 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
 public class TestDelegatingConnection {
 
-    private DelegatingConnection<? extends Connection> conn = null;
-    private Connection delegateConn = null;
-    private Connection delegateConn2 = null;
+    /**
+     * Delegate that will throw RTE on toString
+     * Used to validate fix for DBCP-241
+     */
+    static class RTEGeneratingConnection extends TesterConnection {
 
-    @Before
+        public RTEGeneratingConnection() {
+            super("","");
+        }
+
+        @Override
+        public String toString() {
+            throw new RuntimeException("bang!");
+        }
+
+    }
+
+    private DelegatingConnection<? extends Connection> delegatingConnection;
+    private Connection connection;
+    private Connection connection2;
+    private TesterStatement testerStatement;
+    private TesterResultSet testerResultSet;
+
+    @BeforeEach
     public void setUp() throws Exception {
-        delegateConn = new TesterConnection("test", "test");
-        delegateConn2 = new TesterConnection("test", "test");
-        conn = new DelegatingConnection<>(delegateConn);
-    }
-
-    @Test
-    public void testGetDelegate() throws Exception {
-        assertEquals(delegateConn,conn.getDelegate());
-    }
-
-    @Test
-    public void testConnectionToString() throws Exception {
-        final String s = conn.toString();
-        assertNotNull(s);
-        assertTrue(s.length() > 0);
+        connection = new TesterConnection("test", "test");
+        connection2 = new TesterConnection("test", "test");
+        delegatingConnection = new DelegatingConnection<>(connection);
+        testerStatement = new TesterStatement(delegatingConnection);
+        testerResultSet = new TesterResultSet(testerStatement);
     }
 
     @Test
     public void testCheckOpen() throws Exception {
-        conn.checkOpen();
-        conn.close();
+        delegatingConnection.checkOpen();
+        delegatingConnection.close();
         try {
-            conn.checkOpen();
+            delegatingConnection.checkOpen();
             fail("Expecting SQLException");
         } catch (final SQLException ex) {
             // expected
@@ -76,73 +86,118 @@ public class TestDelegatingConnection {
     @Test
     public void testCheckOpenNull() throws Exception {
         try {
-            conn.close();
-            conn.checkOpen();
+            delegatingConnection.close();
+            delegatingConnection.checkOpen();
             fail("Expecting SQLException");
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
 
         try {
-            conn = new DelegatingConnection<>(null);
-            conn.setClosedInternal(true);
-            conn.checkOpen();
+            delegatingConnection = new DelegatingConnection<>(null);
+            delegatingConnection.setClosedInternal(true);
+            delegatingConnection.checkOpen();
             fail("Expecting SQLException");
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is null."));
         }
 
         try {
-            final PoolingConnection pc = new PoolingConnection(delegateConn2);
+            final PoolingConnection pc = new PoolingConnection(connection2);
             pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
-            conn = new DelegatingConnection<>(pc);
+            delegatingConnection = new DelegatingConnection<>(pc);
             pc.close();
-            conn.close();
-            try (PreparedStatement ps = conn.prepareStatement("")){}
+            delegatingConnection.close();
+            try (PreparedStatement ps = delegatingConnection.prepareStatement("")){}
             fail("Expecting SQLException");
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
 
         try {
-            conn = new DelegatingConnection<>(new RTEGeneratingConnection());
-            conn.close();
-            conn.checkOpen();
+            delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
+            delegatingConnection.close();
+            delegatingConnection.checkOpen();
             fail("Expecting SQLException");
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
     }
 
-    /**
-     * Delegate that will throw RTE on toString
-     * Used to validate fix for DBCP-241
-     */
-    static class RTEGeneratingConnection extends TesterConnection {
-        public RTEGeneratingConnection() {
-            super("","");
-        }
-        @Override
-        public String toString() {
-            throw new RuntimeException("bang!");
-        }
+    @Test
+    public void testConnectionToString() throws Exception {
+        final String s = delegatingConnection.toString();
+        assertNotNull(s);
+        assertTrue(s.length() > 0);
+    }
 
+    @Test
+    public void testGetDelegate() throws Exception {
+        assertEquals(connection,delegatingConnection.getDelegate());
     }
 
     @Test
     public void testIsClosed() throws Exception {
-        conn.checkOpen();
-        assertFalse(conn.isClosed());
-        conn.close();
-        assertTrue(conn.isClosed());
+        delegatingConnection.checkOpen();
+        assertFalse(delegatingConnection.isClosed());
+        delegatingConnection.close();
+        assertTrue(delegatingConnection.isClosed());
     }
 
     @Test
     public void testIsClosedNullDelegate() throws Exception {
-        conn.checkOpen();
-        assertFalse(conn.isClosed());
-        conn.setDelegate(null);
-        assertTrue(conn.isClosed());
+        delegatingConnection.checkOpen();
+        assertFalse(delegatingConnection.isClosed());
+        delegatingConnection.setDelegate(null);
+        assertTrue(delegatingConnection.isClosed());
+    }
+
+    @Test
+    public void testPassivateWithResultSetCloseException() {
+        try {
+            testerResultSet.setSqlExceptionOnClose(true);
+            delegatingConnection.addTrace(testerResultSet);
+            delegatingConnection.passivate();
+            Assertions.fail("Expected SQLExceptionList");
+        } catch (SQLException e) {
+            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
+        } finally {
+            testerResultSet.setSqlExceptionOnClose(false);
+        }
+    }
+
+    @Test
+    public void testPassivateWithResultSetCloseExceptionAndStatementCloseException() {
+        try {
+            testerStatement.setSqlExceptionOnClose(true);
+            testerResultSet.setSqlExceptionOnClose(true);
+            delegatingConnection.addTrace(testerStatement);
+            delegatingConnection.addTrace(testerResultSet);
+            delegatingConnection.passivate();
+            Assertions.fail("Expected SQLExceptionList");
+        } catch (SQLException e) {
+            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
+        } finally {
+            testerStatement.setSqlExceptionOnClose(false);
+        testerResultSet.setSqlExceptionOnClose(false);
+        }
+    }
+
+    @Test
+    public void testPassivateWithStatementCloseException() {
+        try {
+            testerStatement.setSqlExceptionOnClose(true);
+            delegatingConnection.addTrace(testerStatement);
+            delegatingConnection.passivate();
+            Assertions.fail("Expected SQLExceptionList");
+        } catch (SQLException e) {
+            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
+        } finally {
+            testerStatement.setSqlExceptionOnClose(false);
+        }
     }
 
 }

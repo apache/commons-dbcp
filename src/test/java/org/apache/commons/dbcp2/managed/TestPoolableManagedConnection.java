@@ -18,10 +18,10 @@
 
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,9 +36,9 @@ import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for PoolableManagedConnection.
@@ -51,7 +51,7 @@ public class TestPoolableManagedConnection {
     private Connection conn;
     private PoolableManagedConnection poolableManagedConnection;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // create a GeronimoTransactionManager for testing
         transactionManager = new TransactionManagerImpl();
@@ -81,7 +81,7 @@ public class TestPoolableManagedConnection {
         pool.setMaxWaitMillis(100);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws SQLException {
         if (conn != null && !conn.isClosed()) {
             conn.close();

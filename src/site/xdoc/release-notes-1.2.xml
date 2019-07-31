@@ -54,36 +54,36 @@ underlying connection is needed, you have to enable it: PoolingDriver.setAccessT
 <li>The following issues were resolved since v1.1: (see Bugzilla for complete description)
 <table>
 <tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24562">24562</a></td><td>2003-11-10</td><td>Enh</td><td>FIXE</td><td>PoolingDriver needs a closePool method</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24328">24328</a></td><td>2003-11-10</td><td>Nor</td><td>FIXE</td><td>PooledConnectionImpl ignores resultsetType and Concurrency</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24678">24678</a></td><td>2003-11-14</td><td>Maj</td><td>INVA</td><td>DelegatingStatement.getResultSet() never returns null</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25096">25096</a></td><td>2003-11-30</td><td>Enh</td><td>FIXE</td><td>PoolableConnectionFactory synchronized methods</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25001">25001</a></td><td>2003-11-30</td><td>Nor</td><td>FIXE</td><td>Oracle 9i and default isolation settings</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25762">25762</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>SharedPoolDataSource getConnection() throws ClassCastException</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25067">25067</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>Please give possibility to access ObjectPools from PoolingDriver</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25795">25795</a></td><td>2003-12-29</td><td>Nor</td><td>DUPL</td><td>NumberFormatException: For input string: "myDB"</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25794">25794</a></td><td>2003-12-29</td><td>Nor</td><td>FIXE</td><td>ClassNotFoundException: org.apache.xerces.parsers.SAXParser</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24966">24966</a></td><td>2004-01-06</td><td>Nor</td><td>FIXE</td><td>NullPointer with Oracle 9 driver</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=26072">26072</a></td><td>2004-01-18</td><td>Nor</td><td>FIXE</td><td>Null pointer exception being thrown in SQLNestedException</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=26262">26262</a></td><td>2004-01-20</td><td>Min</td><td>FIXE</td><td>DBCP log message in tomcat has incorrect day</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=26422">26422</a></td><td>2004-01-25</td><td>Enh</td><td>FIXE</td><td>Add BasicDataSourceFactory.createDataSource(Properties properties)</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25514">25514</a></td><td>2004-02-07</td><td>Enh</td><td>FIXE</td><td>Add initialSize parameter to do pre-loading of the connection</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24082">24082</a></td><td>2004-02-28</td><td>Blo</td><td>FIXE</td><td>NumberFormatException: For input string: "myDB"</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24136">24136</a></td><td>2004-02-28</td><td>Nor</td><td>FIXE</td><td>ClassCastException in DriverAdapterCPDS when setPoolPreparedStatements(true)</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27214">27214</a></td><td>2004-02-29</td><td>Enh</td><td>FIXE</td><td>bad &amp;gt; entity in javadoc</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27320">27320</a></td><td>2004-02-29</td><td>Nor</td><td>FIXE</td><td>DBCP 1.1 incompatible with Informix (driver doesn't support setReadOnly(...))</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27465">27465</a></td><td>2004-03-07</td><td>Maj</td><td>FIXE</td><td>memory leak in KeyedCPDSConnectionFactory</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=26966">26966</a></td><td>2004-03-07</td><td>Nor</td><td>WORK</td><td>Connectionpool's connections always returns same hashCode</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27246">27246</a></td><td>2004-03-07</td><td>Nor</td><td>FIXE</td><td>PreparedStatement cache should be different depending on the Catalog</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27436">27436</a></td><td>2004-03-08</td><td>Enh</td><td>FIXE</td><td>With Oracle jdbc driver, an unnecessary SQL "set transaction read write" is issued each time a connection is retrieved from the pool</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28579">28579</a></td><td>2004-04-25</td><td>Nor</td><td>FIXE</td><td>NumActive can become incorrect when removeAbandoned=true</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28580">28580</a></td><td>2004-04-25</td><td>Enh</td><td>FIXE</td><td>AbandonedObjectPool/Trace should log to stdout</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28251">28251</a></td><td>2004-05-01</td><td>Nor</td><td>FIXE</td><td>Returning dead database connections to BasicDataSource</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28688">28688</a></td><td>2004-05-01</td><td>Cri</td><td>INVA</td><td>Cant Deserialize the Class PerUserPoolDataSource</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28893">28893</a></td><td>2004-05-12</td><td>Min</td><td>FIXE</td><td>PoolableConnectionFactory has incomplete javadoc on validationQuery</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28912">28912</a></td><td>2004-05-17</td><td>Maj</td><td>FIXE</td><td>Connection re-use conflates logical and physical connections</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=29054">29054</a></td><td>2004-05-20</td><td>Nor</td><td>FIXE</td><td>setTestOnReturn(boolean)</td></tr>
-<tr><td><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=29055">29055</a></td><td>2004-05-20</td><td>Nor</td><td>FIXE</td><td>AutoCommit and ReadOnly</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24562">24562</a></td><td>2003-11-10</td><td>Enh</td><td>FIXE</td><td>PoolingDriver needs a closePool method</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24328">24328</a></td><td>2003-11-10</td><td>Nor</td><td>FIXE</td><td>PooledConnectionImpl ignores resultsetType and Concurrency</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24678">24678</a></td><td>2003-11-14</td><td>Maj</td><td>INVA</td><td>DelegatingStatement.getResultSet() never returns null</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25096">25096</a></td><td>2003-11-30</td><td>Enh</td><td>FIXE</td><td>PoolableConnectionFactory synchronized methods</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25001">25001</a></td><td>2003-11-30</td><td>Nor</td><td>FIXE</td><td>Oracle 9i and default isolation settings</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25762">25762</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>SharedPoolDataSource getConnection() throws ClassCastException</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25067">25067</a></td><td>2003-12-26</td><td>Nor</td><td>FIXE</td><td>Please give possibility to access ObjectPools from PoolingDriver</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25795">25795</a></td><td>2003-12-29</td><td>Nor</td><td>DUPL</td><td>NumberFormatException: For input string: "myDB"</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25794">25794</a></td><td>2003-12-29</td><td>Nor</td><td>FIXE</td><td>ClassNotFoundException: org.apache.xerces.parsers.SAXParser</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24966">24966</a></td><td>2004-01-06</td><td>Nor</td><td>FIXE</td><td>NullPointer with Oracle 9 driver</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26072">26072</a></td><td>2004-01-18</td><td>Nor</td><td>FIXE</td><td>Null pointer exception being thrown in SQLNestedException</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26262">26262</a></td><td>2004-01-20</td><td>Min</td><td>FIXE</td><td>DBCP log message in tomcat has incorrect day</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26422">26422</a></td><td>2004-01-25</td><td>Enh</td><td>FIXE</td><td>Add BasicDataSourceFactory.createDataSource(Properties properties)</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=25514">25514</a></td><td>2004-02-07</td><td>Enh</td><td>FIXE</td><td>Add initialSize parameter to do pre-loading of the connection</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24082">24082</a></td><td>2004-02-28</td><td>Blo</td><td>FIXE</td><td>NumberFormatException: For input string: "myDB"</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=24136">24136</a></td><td>2004-02-28</td><td>Nor</td><td>FIXE</td><td>ClassCastException in DriverAdapterCPDS when setPoolPreparedStatements(true)</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=27214">27214</a></td><td>2004-02-29</td><td>Enh</td><td>FIXE</td><td>bad &amp;gt; entity in javadoc</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=27320">27320</a></td><td>2004-02-29</td><td>Nor</td><td>FIXE</td><td>DBCP 1.1 incompatible with Informix (driver doesn't support setReadOnly(...))</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=27465">27465</a></td><td>2004-03-07</td><td>Maj</td><td>FIXE</td><td>memory leak in KeyedCPDSConnectionFactory</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26966">26966</a></td><td>2004-03-07</td><td>Nor</td><td>WORK</td><td>Connectionpool's connections always returns same hashCode</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=27246">27246</a></td><td>2004-03-07</td><td>Nor</td><td>FIXE</td><td>PreparedStatement cache should be different depending on the Catalog</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=27436">27436</a></td><td>2004-03-08</td><td>Enh</td><td>FIXE</td><td>With Oracle jdbc driver, an unnecessary SQL "set transaction read write" is issued each time a connection is retrieved from the pool</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28579">28579</a></td><td>2004-04-25</td><td>Nor</td><td>FIXE</td><td>NumActive can become incorrect when removeAbandoned=true</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28580">28580</a></td><td>2004-04-25</td><td>Enh</td><td>FIXE</td><td>AbandonedObjectPool/Trace should log to stdout</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28251">28251</a></td><td>2004-05-01</td><td>Nor</td><td>FIXE</td><td>Returning dead database connections to BasicDataSource</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28688">28688</a></td><td>2004-05-01</td><td>Cri</td><td>INVA</td><td>Cant Deserialize the Class PerUserPoolDataSource</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28893">28893</a></td><td>2004-05-12</td><td>Min</td><td>FIXE</td><td>PoolableConnectionFactory has incomplete javadoc on validationQuery</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=28912">28912</a></td><td>2004-05-17</td><td>Maj</td><td>FIXE</td><td>Connection re-use conflates logical and physical connections</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=29054">29054</a></td><td>2004-05-20</td><td>Nor</td><td>FIXE</td><td>setTestOnReturn(boolean)</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=29055">29055</a></td><td>2004-05-20</td><td>Nor</td><td>FIXE</td><td>AutoCommit and ReadOnly</td></tr>
 </table>
 </li>
 </ul>

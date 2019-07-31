@@ -24,7 +24,7 @@ import org.apache.commons.dbcp2.TestBasicDataSource;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.h2.Driver;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.XADataSource;
 import javax.transaction.Synchronization;
@@ -34,10 +34,11 @@ import javax.transaction.xa.XAException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * TestSuite for BasicManagedDataSource
@@ -58,27 +59,27 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
      */
     @Test
     public void testReallyClose() throws Exception {
-        final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
-        basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
-        basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
-        basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-        basicManagedDataSource.setUsername("userName");
-        basicManagedDataSource.setPassword("password");
-        basicManagedDataSource.setMaxIdle(1);
-        // Create two connections
-        final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
-        final ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
-        conn2.close(); // Return one connection to the pool
-        conn.close();  // No room at the inn - this will trigger reallyClose(), which should unregister
-        try {
-            basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
-            fail("Expecting SQLException - XAResources orphaned");
-        } catch (final SQLException ex) {
-            // expected
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setMaxIdle(1);
+            // Create two connections
+            final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+            assertNotNull(basicManagedDataSource.getTransactionRegistry().getXAResource(conn));
+            final ManagedConnection<?> conn2 = (ManagedConnection<?>) basicManagedDataSource.getConnection();
+            conn2.close(); // Return one connection to the pool
+            conn.close(); // No room at the inn - this will trigger reallyClose(), which should unregister
+            try {
+                basicManagedDataSource.getTransactionRegistry().getXAResource(conn);
+                fail("Expecting SQLException - XAResources orphaned");
+            } catch (final SQLException ex) {
+                // expected
+            }
+            conn2.close();
         }
-        conn2.close();
-        basicManagedDataSource.close();
     }
 
     @Test
@@ -98,15 +99,15 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         }
     }
 
-    @Test(expected=SQLException.class)
+    @Test
     public void testTransactionManagerNotSet() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.createConnectionFactory();
+            assertThrows(SQLException.class, basicManagedDataSource::createConnectionFactory);
         }
     }
 
     @Test
-    public void testSetDriverName() throws SQLException, XAException {
+    public void testSetDriverName() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setDriverClassName("adams");
             assertEquals("adams", basicManagedDataSource.getDriverClassName());
@@ -135,7 +136,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         }
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test
     public void testRuntimeExceptionsAreRethrown() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
@@ -145,7 +146,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             basicManagedDataSource.setPassword("password");
             basicManagedDataSource.setMaxIdle(1);
             // results in a NPE
-            basicManagedDataSource.createPoolableConnectionFactory(null);
+            assertThrows(NullPointerException.class, () -> basicManagedDataSource.createPoolableConnectionFactory(null));
         }
     }
 

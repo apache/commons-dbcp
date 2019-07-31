@@ -17,23 +17,22 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.sql.SQLTransientException;
+import java.util.Collections;
+import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-/**
- * Tests for Constants.
- */
-public class TestConstants {
+public class TestSQLExceptionList {
 
     @Test
-    public void testConstants() {
-        assertNotNull(new Constants());
-        assertEquals(",connectionpool=", Constants.JMX_CONNECTION_POOL_BASE_EXT);
-        assertEquals("connections", Constants.JMX_CONNECTION_POOL_PREFIX);
-        assertEquals(",connectionpool=connections,connection=", Constants.JMX_CONNECTION_BASE_EXT);
-        assertEquals(",connectionpool=connections,connection=", Constants.JMX_STATEMENT_POOL_BASE_EXT);
-        assertEquals(",statementpool=statements", Constants.JMX_STATEMENT_POOL_PREFIX);
+    public void testCause() {
+        final SQLTransientException cause = new SQLTransientException();
+        final List<SQLTransientException> list = Collections.singletonList(cause);
+        final SQLExceptionList sqlExceptionList = new SQLExceptionList(list);
+        Assertions.assertEquals(cause, sqlExceptionList.getCause());
+        Assertions.assertEquals(list, sqlExceptionList.getCauseList());
+        sqlExceptionList.printStackTrace();
     }
 }

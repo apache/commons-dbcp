@@ -17,10 +17,10 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
@@ -33,7 +33,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for BasicDataSourceFactory
@@ -66,7 +66,7 @@ public class TestBasicDataSourceFactory {
             final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
             basicDataSourceFactory.getObjectInstance(ref, null, null, null);
             final List<String> messages = StackMessageLog.getAll();
-            assertEquals(messages.toString(), 2, messages.size());
+            assertEquals(2, messages.size(), messages.toString());
             for (final String message : messages) {
                 if (message.contains("maxWait")) {
                     assertTrue(message.contains("use maxWaitMillis"));

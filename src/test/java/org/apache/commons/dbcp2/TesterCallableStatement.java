@@ -76,7 +76,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     /**
-     * @deprecated
+     * @deprecated See {@link CallableStatement#getBigDecimal(int,int)}.
      */
     @Deprecated
     @Override

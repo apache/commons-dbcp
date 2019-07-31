@@ -17,12 +17,13 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -30,9 +31,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -46,7 +47,7 @@ public class TestInstanceKeyDataSource {
     private final static String USER = "foo";
     private final static String PASS = "bar";
 
-    @Before
+    @BeforeEach
     public void setUp() throws ClassNotFoundException {
         pcds = new DriverAdapterCPDS();
         pcds.setDriver(DRIVER);
@@ -58,7 +59,7 @@ public class TestInstanceKeyDataSource {
         spds.setConnectionPoolDataSource(pcds);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         spds.close();
     }
@@ -102,16 +103,16 @@ public class TestInstanceKeyDataSource {
         assertEquals(pcds, spds.getConnectionPoolDataSource());
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testConnectionPoolDataSourceAlreadySet() {
-        spds.setConnectionPoolDataSource(new DriverAdapterCPDS());
+        assertThrows(IllegalStateException.class, () -> spds.setConnectionPoolDataSource(new DriverAdapterCPDS()));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testConnectionPoolDataSourceAlreadySetUsingJndi() {
         spds = new SharedPoolDataSource();
         spds.setDataSourceName("anything");
-        spds.setConnectionPoolDataSource(new DriverAdapterCPDS());
+        assertThrows(IllegalStateException.class, () -> spds.setConnectionPoolDataSource(new DriverAdapterCPDS()));
     }
 
     @Test
@@ -122,16 +123,16 @@ public class TestInstanceKeyDataSource {
         assertEquals("anything", spds.getDataSourceName());
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testDataSourceNameAlreadySet() {
-        spds.setDataSourceName("anything");
+        assertThrows(IllegalStateException.class, () -> spds.setDataSourceName("anything"));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testDataSourceNameAlreadySetUsingJndi() {
         spds = new SharedPoolDataSource();
         spds.setDataSourceName("anything");
-        spds.setDataSourceName("anything");
+        assertThrows(IllegalStateException.class, () -> spds.setDataSourceName("anything"));
     }
 
     @Test
@@ -141,10 +142,10 @@ public class TestInstanceKeyDataSource {
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, spds.getDefaultTransactionIsolation());
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testDefaultTransactionIsolationInvalid() {
         assertEquals(InstanceKeyDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
-        spds.setDefaultTransactionIsolation(Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> spds.setDefaultTransactionIsolation(Integer.MAX_VALUE));
     }
 
     @Test
@@ -153,9 +154,9 @@ public class TestInstanceKeyDataSource {
         assertEquals("anything", spds.getDescription());
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test
     public void testJndiNullProperties() {
-        spds.setJndiEnvironment(null);
+        assertThrows(NullPointerException.class, () -> spds.setJndiEnvironment(null));
     }
 
     @Test
@@ -210,11 +211,11 @@ public class TestInstanceKeyDataSource {
         assertEquals("anything", spds.getValidationQuery());
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testValidationQueryWithConnectionCalled() throws SQLException {
         spds.getConnection();
         assertNull(spds.getValidationQuery());
-        spds.setValidationQuery("anything");
+        assertThrows(IllegalStateException.class, () -> spds.setValidationQuery("anything"));
     }
 
     @Test
@@ -231,12 +232,11 @@ public class TestInstanceKeyDataSource {
         assertEquals(true, spds.isRollbackAfterValidation());
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testRollbackAfterValidationWithConnectionCalled() throws SQLException {
         spds.getConnection();
         assertFalse(spds.isRollbackAfterValidation());
-        spds.setRollbackAfterValidation(true);
-        assertEquals(true, spds.isRollbackAfterValidation());
+        assertThrows(IllegalStateException.class, () -> spds.setRollbackAfterValidation(true));
     }
 
     @Test

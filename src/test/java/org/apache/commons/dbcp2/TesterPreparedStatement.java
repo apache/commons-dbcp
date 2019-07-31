@@ -39,6 +39,7 @@ import java.sql.SQLXML;
  * A dummy {@link PreparedStatement}, for testing purposes.
  */
 public class TesterPreparedStatement extends TesterStatement implements PreparedStatement {
+
     private final ResultSetMetaData _resultSetMetaData = null;
     private String _sql = null;
     private String _catalog = null;

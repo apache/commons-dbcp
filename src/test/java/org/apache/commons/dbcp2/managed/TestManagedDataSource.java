@@ -17,11 +17,12 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DelegatingConnection;
@@ -33,10 +34,10 @@ import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.transaction.TransactionManager;
 
@@ -57,7 +58,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     protected GenericObjectPool<PoolableConnection> pool = null;
     protected TransactionManager transactionManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // create a GeronimoTransactionManager for testing
         transactionManager = new TransactionManagerImpl();
@@ -90,7 +91,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Override
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         pool.close();
         super.tearDown();
@@ -159,8 +160,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         final Connection con = newConnection();
-        Assert.assertNotEquals(c[0], con);
-        Assert.assertEquals(
+        Assertions.assertNotEquals(c[0], con);
+        Assertions.assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
         for (final Connection element : c) {
@@ -182,8 +183,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         final Connection con = newConnection();
-        Assert.assertNotEquals(c[0], con);
-        Assert.assertEquals(
+        Assertions.assertNotEquals(c[0], con);
+        Assertions.assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
         for (final Connection element : c) {
@@ -257,23 +258,23 @@ public class TestManagedDataSource extends TestConnectionPool {
         c2.close();
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testTransactionRegistryNotInitialized() throws Exception {
         try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
-            ds.getConnection();
+            assertThrows(IllegalStateException.class, ds::getConnection);
         }
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testSetTransactionRegistryAlreadySet() {
         final ManagedDataSource<?> managed = (ManagedDataSource<?>) ds;
-        managed.setTransactionRegistry(null);
+        assertThrows(IllegalStateException.class, () -> managed.setTransactionRegistry(null));
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test
     public void testSetNullTransactionRegistry() throws Exception {
         try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
-            ds.setTransactionRegistry(null);
+            assertThrows(NullPointerException.class, () -> ds.setTransactionRegistry(null));
         }
     }
 

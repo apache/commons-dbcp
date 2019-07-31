@@ -17,7 +17,7 @@
 
 package org.apache.commons.dbcp2.datasources;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Hashtable;
 
@@ -29,7 +29,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -38,7 +38,7 @@ public class TestFactory {
     // Bugzilla Bug 24082: bug in InstanceKeyDataSourceFactory
     // There's a fatal bug in InstanceKeyDataSourceFactory that means you can't
     // instantiate more than one factory.
-    // http://issues.apache.org/bugzilla/show_bug.cgi?id=24082
+    // https://issues.apache.org/bugzilla/show_bug.cgi?id=24082
     @Test
     public void testJNDI2Pools() throws Exception {
         final Reference refObj = new Reference(SharedPoolDataSource.class.getName());
