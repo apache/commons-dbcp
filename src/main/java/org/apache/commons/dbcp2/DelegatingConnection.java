@@ -253,7 +253,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Handles the given {@code SQLException}.
      *
-     * @param e       The SQLException
+     * @param <T> The throwable type.
+     * @param e   The SQLException
      * @return the given {@code SQLException}
      * @since 2.7.0
      */
