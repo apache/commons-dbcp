@@ -1,4 +1,58 @@
               Apache Apache Commons DBCP
+                 Version 2.7.0
+                 RELEASE NOTES
+                 7 July 2019
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.7.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o DBCP-539:  ManagedDataSource#close() should declare used exceptions. Thanks to Jacques Le Roux.
+o DBCP-547:  Add a ConnectionFactory class name setting for BasicDataSource.createConnectionFactory() #33. Thanks to leechoongyon, Gary Gregory.
+o            Add missing Javadocs. Thanks to Gary Gregory.
+
+Fixed Bugs:
+o DBCP-538:  Wrong JMX base name derived in BasicDataSource#updateJmxName. Thanks to Ragnar Haugan, Gary Gregory.
+o DBCP-546:  Avoid NPE when calling DriverAdapterCPDS.toString(). Thanks to Sergey Chupov.
+o DBCP-550:  java.util.IllegalFormatException while building a message for a SQLFeatureNotSupportedException in Jdbc41Bridge.getObject(ResultSet,String,Class). Thanks to Gary Gregory.
+o            Fix Javadoc link in README.md #21. Thanks to LichKing-lee.
+
+Changes:
+o DBCP-540:  Close ObjectOutputStream before calling toByteArray() on underlying ByteArrayOutputStream #28. Thanks to emopers.
+o DBCP-541:  Upgrade to JUnit Jupiter #19. Thanks to Allon Murienik.
+o DBCP-542:  Fix tests on Java 11. Thanks to Zheng Feng, Gary Gregory.
+o DBCP-543:  Update Apache Commons Pool from 2.6.1 to 2.6.2. Thanks to Gary Gregory.
+o DBCP-529:  Add 'jmxName' property to web configuration parameters listing. Thanks to Yuri.
+o DBCP-548:  Update Apache Commons Pool from 2.6.2 to 2.7.0. Thanks to Gary Gregory.
+o DBCP-549:  Make org.apache.commons.dbcp2.AbandonedTrace.removeTrace(AbandonedTrace) null-safe. Thanks to Gary Gregory.
+o DBCP-551:  org.apache.commons.dbcp2.DelegatingStatement.close() should try to close ALL of its result sets even when an exception occurs. Thanks to Gary Gregory.
+o DBCP-552:  org.apache.commons.dbcp2.DelegatingConnection.passivate() should close ALL of its resources even when an exception occurs. Thanks to Gary Gregory.
+o DBCP-553:  org.apache.commons.dbcp2.PoolablePreparedStatement.passivate() should close ALL of its resources even when an exception occurs. Thanks to Gary Gregory.
+o DBCP-554:  org.apache.commons.dbcp2.PoolableCallableStatement.passivate() should close ALL of its resources even when an exception occurs. Thanks to Gary Gregory.
+o            Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0. Thanks to Gary Gregory.
+o            Update tests from H2 1.4.198 to 1.4.199. Thanks to Gary Gregory.
+o            Update tests from com.h2database:h2 1.4.197 to 1.4.199. Thanks to Gary Gregory.
+o            Update tests from org.jboss.narayana.jta:narayana-jta 5.9.2.Final to 5.9.5.Final. Thanks to Gary Gregory.
+o            Update tests from org.jboss.logging:jboss-logging 3.3.2.Final to 3.4.0.Final. Thanks to Gary Gregory.
+o            Update tests from org.mockito:mockito-core 2.24.0 to 2.28.2. Thanks to Gary Gregory.
+o            Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0. Thanks to Gary Gregory.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+https://commons.apache.org/dbcp/
+
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
                  Version 2.6.0
                  RELEASE NOTES
 

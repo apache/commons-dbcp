@@ -61,15 +61,30 @@ The <action> type attribute can be add,update,fix,remove.
 
   <body>
     <release version="2.7.0" date="2019-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <!-- add -->
       <action dev="jleroux" type="add" issue="DBCP-539" due-to="Jacques Le Roux">
         ManagedDataSource#close() should declare used exceptions.
       </action>
-      <action dev="ggregory" type="add" issue="DBCP-538" due-to="Ragnar Haugan, Gary Gregory">
+      <action dev="ggregory" type="add" issue="DBCP-547" due-to="leechoongyon, Gary Gregory">
+        Add a ConnectionFactory class name setting for BasicDataSource.createConnectionFactory() #33.
+      </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Add missing Javadocs.
+      </action>
+      <!-- fix -->
+      <action dev="ggregory" type="fix" issue="DBCP-538" due-to="Ragnar Haugan, Gary Gregory">
         Wrong JMX base name derived in BasicDataSource#updateJmxName.
       </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from H2 1.4.198 to 1.4.199.
+      <action dev="ggregory" type="fix" issue="DBCP-546" due-to="Sergey Chupov">
+        Avoid NPE when calling DriverAdapterCPDS.toString().
       </action>
+      <action dev="ggregory" type="fix" issue="DBCP-550" due-to="Gary Gregory">
+        java.util.IllegalFormatException while building a message for a SQLFeatureNotSupportedException in Jdbc41Bridge.getObject(ResultSet,String,Class).
+      </action>
+      <action dev="ggregory" type="fix" due-to="LichKing-lee">
+        Fix Javadoc link in README.md #21.
+      </action>      
+      <!-- update -->
       <action dev="ggregory" type="update" issue="DBCP-540" due-to="emopers">
         Close ObjectOutputStream before calling toByteArray() on underlying ByteArrayOutputStream #28.
       </action>
@@ -82,17 +97,33 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" issue="DBCP-543" due-to="Gary Gregory">
         Update Apache Commons Pool from 2.6.1 to 2.6.2.
       </action>
-      <action dev="ggregory" type="update" issue="DBCP-546" due-to="Sergey Chupov">
-        Avoid NPE when calling DriverAdapterCPDS.toString().
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-547" due-to="leechoongyon, Gary Gregory">
-        Add a ConnectionFactory class name setting for BasicDataSource.createConnectionFactory() #33.
-      </action>
-      <action dev="ggregory" type="update" due-to="LichKing-lee">
-        Fix Javadoc link in README.md #21.
-      </action>
       <action dev="ggregory" type="update" issue="DBCP-529" due-to="Yuri">
         Add 'jmxName' property to web configuration parameters listing.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-548" due-to="Gary Gregory">
+        Update Apache Commons Pool from 2.6.2 to 2.7.0.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-549" due-to="Gary Gregory">
+        Make org.apache.commons.dbcp2.AbandonedTrace.removeTrace(AbandonedTrace) null-safe.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-551" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.DelegatingStatement.close() should try to close ALL of its result sets even when an exception occurs.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-552" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.DelegatingConnection.passivate() should close ALL of its resources even when an exception occurs.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-553" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.PoolablePreparedStatement.passivate() should close ALL of its resources even when an exception occurs.
+      </action>
+      <action dev="ggregory" type="update" issue="DBCP-554" due-to="Gary Gregory">
+        org.apache.commons.dbcp2.PoolableCallableStatement.passivate() should close ALL of its resources even when an exception occurs.
+      </action>
+      <!-- update, no Jira -->     
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from H2 1.4.198 to 1.4.199.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from com.h2database:h2 1.4.197 to 1.4.199.
@@ -108,33 +139,6 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-548" due-to="Gary Gregory">
-        Update Apache Commons Pool from 2.6.1 to 2.7.0.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-549" due-to="Gary Gregory">
-        Make org.apache.commons.dbcp2.AbandonedTrace.removeTrace(AbandonedTrace) null-safe.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-550" due-to="Gary Gregory">
-        java.util.IllegalFormatException while building a message for a SQLFeatureNotSupportedException in Jdbc41Bridge.getObject(ResultSet,String,Class).
-      </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Add missing Javadocs.
-      </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-551" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.DelegatingStatement.close() should try to close ALL of its result sets even when an exception occurs.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-552" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.DelegatingConnection.passivate() should close ALL of its resources even when an exception occurs.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-553" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.PoolablePreparedStatement.passivate() should close ALL of its resources even when an exception occurs.
-      </action>
-      <action dev="ggregory" type="update" issue="DBCP-554" due-to="Gary Gregory">
-        org.apache.commons.dbcp2.PoolableCallableStatement.passivate() should close ALL of its resources even when an exception occurs.
       </action>
     </release>
     <release version="2.6.0" date="2019-02-14" description="This is a minor release, including bug fixes and enhancements.">
