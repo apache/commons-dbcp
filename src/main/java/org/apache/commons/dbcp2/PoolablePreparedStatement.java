@@ -30,6 +30,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * {@link PreparedStatement}s.
  * <p>
  * My {@link #close} method returns me to my containing pool. (See {@link PoolingConnection}.)
+ * </p>
  *
  * @param <K>
  *            the key type
@@ -38,6 +39,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * @since 2.0
  */
 public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
+    
     /**
      * The {@link KeyedObjectPool} from which I was obtained.
      */
