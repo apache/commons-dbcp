@@ -35,4 +35,11 @@ public class TestSQLExceptionList {
         Assertions.assertEquals(list, sqlExceptionList.getCauseList());
         sqlExceptionList.printStackTrace();
     }
+
+    @Test
+    public void testNullCause() {
+        final SQLExceptionList sqlExceptionList = new SQLExceptionList(null);
+        Assertions.assertNull(sqlExceptionList.getCause());
+        Assertions.assertNull(sqlExceptionList.getCauseList());
+    }
 }
