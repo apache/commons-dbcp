@@ -58,9 +58,8 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     /**
      * Wraps the given result set in a delegate.
      *
-     * @param connection
-     *            The Connection which created the ResultSet.
-     * @param resultSet The ResultSet to wrap.
+     * @param connection The Connection which created the ResultSet.
+     * @param resultSet  The ResultSet to wrap.
      * @return a new delegate.
      */
     public static ResultSet wrapResultSet(final Connection connection, final ResultSet resultSet) {
@@ -101,7 +100,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * </p>
      *
      * @param conn Connection which created this ResultSet
-     * @param res ResultSet to wrap
+     * @param res  ResultSet to wrap
      */
     private DelegatingResultSet(final Connection conn, final ResultSet res) {
         super((AbandonedTrace) conn);
@@ -623,7 +622,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     @Override
     protected void handleException(final SQLException e) throws SQLException {
         if (statement != null && statement instanceof DelegatingStatement) {
-            ((DelegatingStatement) statement).handleException(e);
+            ((DelegatingStatement<?>) statement).handleException(e);
         } else if (connection != null && connection instanceof DelegatingConnection) {
             ((DelegatingConnection<?>) connection).handleException(e);
         } else {
@@ -735,7 +734,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     @Override
     public synchronized String toString() {
         return super.toString() + "[resultSet=" + resultSet + ", statement=" + statement + ", connection=" + connection
-                + "]";
+            + "]";
     }
 
     @Override
@@ -771,7 +770,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateAsciiStream(final int columnIndex, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateAsciiStream, columnIndex, inputStream, length);
     }
 
@@ -787,7 +786,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateAsciiStream(final String columnLabel, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateAsciiStream, columnLabel, inputStream, length);
     }
 
@@ -813,7 +812,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateBinaryStream(final int columnIndex, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateBinaryStream, columnIndex, inputStream, length);
     }
 
@@ -829,7 +828,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateBinaryStream(final String columnLabel, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateBinaryStream, columnLabel, inputStream, length);
     }
 
@@ -845,7 +844,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateBlob(final int columnIndex, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateBlob, columnIndex, inputStream, length);
     }
 
@@ -861,7 +860,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateBlob(final String columnLabel, final InputStream inputStream, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateBlob, columnLabel, inputStream, length);
     }
 
@@ -907,7 +906,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateCharacterStream(final int columnIndex, final Reader reader, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateCharacterStream, columnIndex, reader, length);
     }
 
@@ -918,13 +917,13 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateCharacterStream(final String columnName, final Reader reader, final int length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateCharacterStream, columnName, reader, length);
     }
 
     @Override
     public void updateCharacterStream(final String columnLabel, final Reader reader, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateCharacterStream, columnLabel, reader, length);
     }
 
@@ -1015,7 +1014,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateNCharacterStream(final int columnIndex, final Reader reader, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateNCharacterStream, columnIndex, reader, length);
     }
 
@@ -1026,7 +1025,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public void updateNCharacterStream(final String columnLabel, final Reader reader, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateNCharacterStream, columnLabel, reader, length);
     }
 
@@ -1103,7 +1102,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      */
     @Override
     public void updateObject(final int columnIndex, final Object x, final SQLType targetSqlType,
-            final int scaleOrLength) throws SQLException {
+        final int scaleOrLength) throws SQLException {
         accept(resultSet::updateObject, columnIndex, x, targetSqlType, scaleOrLength);
     }
 
@@ -1122,7 +1121,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      */
     @Override
     public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType)
-            throws SQLException {
+        throws SQLException {
         accept(resultSet::updateObject, columnLabel, x, targetSqlType);
     }
 
@@ -1131,7 +1130,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      */
     @Override
     public void updateObject(final String columnLabel, final Object x, final SQLType targetSqlType,
-            final int scaleOrLength) throws SQLException {
+        final int scaleOrLength) throws SQLException {
         accept(resultSet::updateObject, columnLabel, x, targetSqlType, scaleOrLength);
     }
 
