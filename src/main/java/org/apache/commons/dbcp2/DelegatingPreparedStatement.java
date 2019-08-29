@@ -49,11 +49,9 @@ import java.util.Calendar;
  * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
  * </p>
  *
- * @param <S> PreparedStatement or a sub-type.
  * @since 2.0
  */
-public class DelegatingPreparedStatement<S extends PreparedStatement> extends DelegatingStatement<S>
-    implements PreparedStatement {
+public class DelegatingPreparedStatement extends DelegatingStatement implements PreparedStatement {
 
     /**
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
@@ -62,23 +60,23 @@ public class DelegatingPreparedStatement<S extends PreparedStatement> extends De
      * @param statement  the {@link PreparedStatement} to delegate all calls to.
      * @param connection the {@link DelegatingConnection} that created this statement.
      */
-    public DelegatingPreparedStatement(final DelegatingConnection<?> connection, final S statement) {
+    public DelegatingPreparedStatement(final DelegatingConnection<?> connection, final PreparedStatement statement) {
         super(connection, statement);
     }
 
     @Override
     public void addBatch() throws SQLException {
-        accept(S::addBatch, getDelegate());
+        accept(PreparedStatement::addBatch, getDelegatePreparedStatement());
     }
 
     @Override
     public void clearParameters() throws SQLException {
-        accept(S::clearParameters, getDelegate());
+        accept(PreparedStatement::clearParameters, getDelegatePreparedStatement());
     }
 
     @Override
     public boolean execute() throws SQLException {
-        return applyTo(S::execute, getDelegate(), false);
+        return applyTo(PreparedStatement::execute, getDelegatePreparedStatement(), false);
     }
 
     /**
@@ -86,219 +84,224 @@ public class DelegatingPreparedStatement<S extends PreparedStatement> extends De
      */
     @Override
     public long executeLargeUpdate() throws SQLException {
-        return applyTo(S::executeLargeUpdate, getDelegate(), 0L);
+        return applyTo(PreparedStatement::executeLargeUpdate, getDelegatePreparedStatement(), 0L);
     }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        return apply(() -> DelegatingResultSet.wrapResultSet(this, getDelegate().executeQuery()));
+        return apply(() -> DelegatingResultSet.wrapResultSet(this, getDelegatePreparedStatement().executeQuery()));
     }
 
     @Override
     public int executeUpdate() throws SQLException {
-        return applyTo(S::executeUpdate, getDelegate(), 0);
+        return applyTo(PreparedStatement::executeUpdate, getDelegatePreparedStatement(), 0);
+    }
+
+    private PreparedStatement getDelegatePreparedStatement() {
+        return (PreparedStatement) getDelegate();
     }
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return apply(S::getMetaData, getDelegate());
+        return apply(PreparedStatement::getMetaData, getDelegatePreparedStatement());
     }
 
     @Override
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
-        return apply(S::getParameterMetaData, getDelegate());
+        return apply(PreparedStatement::getParameterMetaData, getDelegatePreparedStatement());
     }
 
     @Override
     public void setArray(final int inputStream, final Array value) throws SQLException {
-        accept(S::setArray, getDelegate(), inputStream, value);
+        accept(PreparedStatement::setArray, getDelegatePreparedStatement(), inputStream, value);
     }
 
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream value) throws SQLException {
-        accept(S::setAsciiStream, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setAsciiStream, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream value, final int length)
         throws SQLException {
-        accept(S::setAsciiStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setAsciiStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream value, final long length)
         throws SQLException {
-        accept(S::setAsciiStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setAsciiStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setBigDecimal(final int parameterIndex, final BigDecimal value) throws SQLException {
-        accept(S::setBigDecimal, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBigDecimal, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream value) throws SQLException {
-        accept(S::setBinaryStream, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBinaryStream, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream value, final int length)
         throws SQLException {
-        accept(S::setBinaryStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setBinaryStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream value, final long length)
         throws SQLException {
-        accept(S::setBinaryStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setBinaryStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setBlob(final int parameterIndex, final Blob value) throws SQLException {
-        accept(S::setBlob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBlob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setBlob(final int parameterIndex, final InputStream value) throws SQLException {
-        accept(S::setBlob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBlob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setBlob(final int parameterIndex, final InputStream value, final long length) throws SQLException {
-        accept(S::setBlob, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setBlob, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setBoolean(final int parameterIndex, final boolean value) throws SQLException {
-        accept(S::setBoolean, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBoolean, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setByte(final int parameterIndex, final byte value) throws SQLException {
-        accept(S::setByte, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setByte, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setBytes(final int parameterIndex, final byte[] value) throws SQLException {
-        accept(S::setBytes, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setBytes, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader value) throws SQLException {
-        accept(S::setCharacterStream, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setCharacterStream, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader value, final int length) throws SQLException {
-        accept(S::setCharacterStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader value, final long length)
         throws SQLException {
-        accept(S::setCharacterStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setClob(final int parameterIndex, final Clob value) throws SQLException {
-        accept(S::setClob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setClob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setClob(final int parameterIndex, final Reader value) throws SQLException {
-        accept(S::setClob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setClob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setClob(final int parameterIndex, final Reader value, final long length) throws SQLException {
-        accept(S::setClob, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setClob, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setDate(final int parameterIndex, final Date value) throws SQLException {
-        accept(S::setDate, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setDate, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setDate(final int parameterIndex, final Date value, final Calendar calendar) throws SQLException {
-        accept(S::setDate, getDelegate(), parameterIndex, value, calendar);
+        accept(PreparedStatement::setDate, getDelegatePreparedStatement(), parameterIndex, value, calendar);
     }
 
     @Override
     public void setDouble(final int parameterIndex, final double value) throws SQLException {
-        accept(S::setDouble, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setDouble, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setFloat(final int parameterIndex, final float value) throws SQLException {
-        accept(S::setFloat, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setFloat, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setInt(final int parameterIndex, final int value) throws SQLException {
-        accept(S::setInt, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setInt, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setLong(final int parameterIndex, final long value) throws SQLException {
-        accept(S::setLong, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setLong, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setNCharacterStream(final int parameterIndex, final Reader value) throws SQLException {
-        accept(S::setNCharacterStream, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setNCharacterStream, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setNCharacterStream(final int parameterIndex, final Reader value, final long length)
         throws SQLException {
-        accept(S::setNCharacterStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setNCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setNClob(final int parameterIndex, final NClob value) throws SQLException {
-        accept(S::setNClob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setNClob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setNClob(final int parameterIndex, final Reader value) throws SQLException {
-        accept(S::setNClob, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setNClob, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setNClob(final int parameterIndex, final Reader value, final long length) throws SQLException {
-        accept(S::setNClob, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setNClob, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setNString(final int parameterIndex, final String value) throws SQLException {
-        accept(S::setNString, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setNString, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setNull(final int parameterIndex, final int sqlType) throws SQLException {
-        accept(S::setNull, getDelegate(), parameterIndex, sqlType);
+        accept(PreparedStatement::setNull, getDelegatePreparedStatement(), parameterIndex, sqlType);
     }
 
     @Override
     public void setNull(final int parameterIndex, final int sqlType, final String typeName) throws SQLException {
-        accept(S::setNull, getDelegate(), parameterIndex, sqlType, typeName);
+        accept(PreparedStatement::setNull, getDelegatePreparedStatement(), parameterIndex, sqlType, typeName);
     }
 
     @Override
     public void setObject(final int parameterIndex, final Object value) throws SQLException {
-        accept(S::setObject, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setObject(final int parameterIndex, final Object value, final int targetSqlType) throws SQLException {
-        accept(S::setObject, getDelegate(), parameterIndex, value, targetSqlType);
+        accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType);
     }
 
     @Override
     public void setObject(final int parameterIndex, final Object value, final int targetSqlType, final int scale)
         throws SQLException {
-        accept(S::setObject, getDelegate(), parameterIndex, value, targetSqlType, scale);
+        accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType,
+            scale);
     }
 
     /**
@@ -307,7 +310,7 @@ public class DelegatingPreparedStatement<S extends PreparedStatement> extends De
     @Override
     public void setObject(final int parameterIndex, final Object value, final SQLType targetSqlType)
         throws SQLException {
-        accept(S::setObject, getDelegate(), parameterIndex, value, targetSqlType);
+        accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType);
     }
 
     /**
@@ -316,53 +319,54 @@ public class DelegatingPreparedStatement<S extends PreparedStatement> extends De
     @Override
     public void setObject(final int parameterIndex, final Object value, final SQLType targetSqlType,
         final int scaleOrLength) throws SQLException {
-        accept(S::setObject, getDelegate(), parameterIndex, value, targetSqlType, scaleOrLength);
+        accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType,
+            scaleOrLength);
     }
 
     @Override
     public void setRef(final int parameterIndex, final Ref value) throws SQLException {
-        accept(S::setRef, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setRef, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setRowId(final int parameterIndex, final RowId value) throws SQLException {
-        accept(S::setRowId, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setRowId, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setShort(final int parameterIndex, final short value) throws SQLException {
-        accept(S::setShort, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setShort, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setSQLXML(final int parameterIndex, final SQLXML value) throws SQLException {
-        accept(S::setSQLXML, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setSQLXML, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setString(final int parameterIndex, final String value) throws SQLException {
-        accept(S::setString, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setString, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setTime(final int parameterIndex, final Time value) throws SQLException {
-        accept(S::setTime, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setTime, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setTime(final int parameterIndex, final Time value, final Calendar calendar) throws SQLException {
-        accept(S::setTime, getDelegate(), parameterIndex, value, calendar);
+        accept(PreparedStatement::setTime, getDelegatePreparedStatement(), parameterIndex, value, calendar);
     }
 
     @Override
     public void setTimestamp(final int parameterIndex, final Timestamp value) throws SQLException {
-        accept(S::setTimestamp, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setTimestamp, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
     public void setTimestamp(final int parameterIndex, final Timestamp value, final Calendar calendar)
         throws SQLException {
-        accept(S::setTimestamp, getDelegate(), parameterIndex, value, calendar);
+        accept(PreparedStatement::setTimestamp, getDelegatePreparedStatement(), parameterIndex, value, calendar);
     }
 
     /** @deprecated Use setAsciiStream(), setCharacterStream() or setNCharacterStream() */
@@ -370,12 +374,12 @@ public class DelegatingPreparedStatement<S extends PreparedStatement> extends De
     @Override
     public void setUnicodeStream(final int parameterIndex, final InputStream value, final int length)
         throws SQLException {
-        accept(S::setUnicodeStream, getDelegate(), parameterIndex, value, length);
+        accept(PreparedStatement::setUnicodeStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setURL(final int parameterIndex, final java.net.URL value) throws SQLException {
-        accept(S::setURL, getDelegate(), parameterIndex, value);
+        accept(PreparedStatement::setURL, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     /**

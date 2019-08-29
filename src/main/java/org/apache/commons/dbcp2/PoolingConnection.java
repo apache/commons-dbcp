@@ -41,8 +41,8 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @see PoolablePreparedStatement
  * @since 2.0
  */
-public class PoolingConnection<S extends PreparedStatement> extends DelegatingConnection<Connection>
-        implements KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement<S>> {
+public class PoolingConnection extends DelegatingConnection<Connection>
+        implements KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement> {
 
     /**
      * Statement types.
@@ -64,7 +64,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
     }
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement<S>> pStmtPool;
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pStmtPool;
 
     /**
      * Constructor.
@@ -85,7 +85,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      *            wrapped pooled statement to be activated
      */
     @Override
-    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement<S>> pooledObject)
+    public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws Exception {
         pooledObject.getObject().activate();
     }
@@ -98,7 +98,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
     public synchronized void close() throws SQLException {
         try {
             if (null != pStmtPool) {
-                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement<S>> oldpool = pStmtPool;
+                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldpool = pStmtPool;
                 pStmtPool = null;
                 try {
                     oldpool.close();
@@ -262,7 +262,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      *            the wrapped pooled statement to be destroyed.
      */
     @Override
-    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement<S>> pooledObject)
+    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws Exception {
         pooledObject.getObject().getInnermostDelegate().close();
     }
@@ -298,7 +298,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      */
     @SuppressWarnings("resource")
     @Override
-    public PooledObject<DelegatingPreparedStatement<S>> makeObject(final PStmtKey key) throws Exception {
+    public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws Exception {
         if (null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
@@ -334,7 +334,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      *            a wrapped {@link PreparedStatement}
      */
     @Override
-    public void passivateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement<S>> pooledObject)
+    public void passivateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws Exception {
         @SuppressWarnings("resource")
         final DelegatingPreparedStatement dps = pooledObject.getObject();
@@ -505,7 +505,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      * @param pool
      *            the prepared statement pool.
      */
-    public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement<S>> pool) {
+    public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
         pStmtPool = pool;
     }
 
@@ -527,7 +527,7 @@ public class PoolingConnection<S extends PreparedStatement> extends DelegatingCo
      * @return {@code true}
      */
     @Override
-    public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement<S>> pooledObject) {
+    public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
     }
 }

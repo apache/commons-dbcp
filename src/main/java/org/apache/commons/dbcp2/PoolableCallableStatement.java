@@ -31,18 +31,16 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * {@link CallableStatement}s.
  * <p>
  * The {@link #close} method returns this statement to its containing pool. (See {@link PoolingConnection}.)
- * </p>
  *
- * @param <S> CallableStatement or a sub-type.
  * @see PoolingConnection
  * @since 2.0
  */
-public class PoolableCallableStatement<S extends CallableStatement> extends DelegatingCallableStatement<S> {
+public class PoolableCallableStatement extends DelegatingCallableStatement {
 
     /**
      * The {@link KeyedObjectPool} from which this CallableStatement was obtained.
      */
-    private final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement<S>> pool;
+    private final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool;
 
     /**
      * Key for this statement in the containing {@link KeyedObjectPool}.
@@ -61,8 +59,8 @@ public class PoolableCallableStatement<S extends CallableStatement> extends Dele
      * @param connection
      *            the {@link DelegatingConnection} that created this CallableStatement
      */
-    public PoolableCallableStatement(final S callableStatement, final PStmtKey key,
-            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement<S>> pool,
+    public PoolableCallableStatement(final CallableStatement callableStatement, final PStmtKey key,
+            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool,
             final DelegatingConnection<Connection> connection) {
         super(connection, callableStatement);
         this.pool = pool;
