@@ -22,6 +22,14 @@ import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
+import org.apache.commons.dbcp2.function.SQLFunction0;
+import org.apache.commons.dbcp2.function.SQLFunction1;
+import org.apache.commons.dbcp2.function.SQLFunction2;
+import org.apache.commons.dbcp2.function.SQLFunction3;
+import org.apache.commons.dbcp2.function.SQLFunction4;
+import org.apache.commons.dbcp2.function.SQLFunction5;
+import org.apache.commons.dbcp2.function.SQLFunction6;
+
 /**
  * <p>
  * A base delegating implementation of {@link DatabaseMetaData}.
@@ -33,7 +41,7 @@ import java.sql.SQLException;
  *
  * @since 2.0
  */
-public class DelegatingDatabaseMetaData implements DatabaseMetaData {
+public class DelegatingDatabaseMetaData extends ResourceFunctions implements DatabaseMetaData {
 
     /** My delegate {@link DatabaseMetaData} */
     private final DatabaseMetaData databaseMetaData;
@@ -44,10 +52,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     /**
      * Constructs a new instance for the given delegating connection and database meta data.
      *
-     * @param connection
-     *            the delegating connection
-     * @param databaseMetaData
-     *            the database meta data
+     * @param connection the delegating connection
+     * @param databaseMetaData the database meta data
      */
     public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection,
             final DatabaseMetaData databaseMetaData) {
@@ -58,177 +64,87 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-        try {
-            return databaseMetaData.allProceduresAreCallable();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::allProceduresAreCallable);
     }
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
-        try {
-            return databaseMetaData.allTablesAreSelectable();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::allTablesAreSelectable);
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        try {
-            return databaseMetaData.autoCommitFailureClosesAllResultSets();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::autoCommitFailureClosesAllResultSets);
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-        try {
-            return databaseMetaData.dataDefinitionCausesTransactionCommit();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::dataDefinitionCausesTransactionCommit);
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-        try {
-            return databaseMetaData.dataDefinitionIgnoredInTransactions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::dataDefinitionIgnoredInTransactions);
     }
 
     @Override
     public boolean deletesAreDetected(final int type) throws SQLException {
-        try {
-            return databaseMetaData.deletesAreDetected(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::deletesAreDetected, type, false);
     }
 
     @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
-        try {
-            return databaseMetaData.doesMaxRowSizeIncludeBlobs();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::doesMaxRowSizeIncludeBlobs);
     }
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        connection.checkOpen();
-        try {
-            return Jdbc41Bridge.generatedKeyAlwaysReturned(databaseMetaData);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::generatedKeyAlwaysReturned);
     }
 
     @Override
     public ResultSet getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
             final String attributeNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getAttributes, catalog, schemaPattern, typeNamePattern,
+                attributeNamePattern);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(final String catalog, final String schema, final String table,
             final int scope, final boolean nullable) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getBestRowIdentifier, catalog, schema, table, scope, nullable);
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getCatalogs());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getCatalogs);
     }
 
     @Override
     public String getCatalogSeparator() throws SQLException {
-        try {
-            return databaseMetaData.getCatalogSeparator();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getCatalogSeparator);
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        try {
-            return databaseMetaData.getCatalogTerm();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getCatalogTerm);
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getClientInfoProperties());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getClientInfoProperties);
     }
 
     @Override
     public ResultSet getColumnPrivileges(final String catalog, final String schema, final String table,
             final String columnNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getColumnPrivileges, catalog, schema, table, columnNamePattern);
     }
 
     @Override
     public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
             final String columnNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getColumns, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     @Override
@@ -239,64 +155,33 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
             final String foreignCatalog, final String foreignSchema, final String foreignTable) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getCrossReference(parentCatalog,
-                    parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getCrossReference, parentCatalog, parentSchema, parentTable,
+                foreignCatalog, foreignSchema, foreignTable);
     }
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        try {
-            return databaseMetaData.getDatabaseMajorVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getDatabaseMajorVersion);
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        try {
-            return databaseMetaData.getDatabaseMinorVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getDatabaseMinorVersion);
     }
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        try {
-            return databaseMetaData.getDatabaseProductName();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getDatabaseProductName);
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        try {
-            return databaseMetaData.getDatabaseProductVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getDatabaseProductVersion);
     }
 
     @Override
     public int getDefaultTransactionIsolation() throws SQLException {
-        try {
-            return databaseMetaData.getDefaultTransactionIsolation();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getDefaultTransactionIsolation);
     }
 
     /**
@@ -320,107 +205,53 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDriverName() throws SQLException {
-        try {
-            return databaseMetaData.getDriverName();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getDriverName);
     }
 
     @Override
     public String getDriverVersion() throws SQLException {
-        try {
-            return databaseMetaData.getDriverVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getDriverVersion);
     }
 
     @Override
     public ResultSet getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getExportedKeys(catalog, schema, table));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getExportedKeys, catalog, schema, table);
     }
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-        try {
-            return databaseMetaData.getExtraNameCharacters();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getExtraNameCharacters);
     }
 
     @Override
     public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
             final String functionNamePattern, final String columnNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getFunctionColumns(catalog,
-                    schemaPattern, functionNamePattern, columnNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getFunctionColumns, catalog, schemaPattern, functionNamePattern,
+                columnNamePattern);
     }
 
     @Override
     public ResultSet getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getFunctions, catalog, schemaPattern, functionNamePattern);
     }
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
-        try {
-            return databaseMetaData.getIdentifierQuoteString();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getIdentifierQuoteString);
     }
 
     @Override
     public ResultSet getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getImportedKeys(catalog, schema, table));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getImportedKeys, catalog, schema, table);
     }
 
     @Override
     public ResultSet getIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
             final boolean approximate) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getIndexInfo, catalog, schema, table, unique, approximate);
     }
 
     /**
@@ -450,142 +281,72 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        try {
-            return databaseMetaData.getJDBCMajorVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getJDBCMajorVersion);
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        try {
-            return databaseMetaData.getJDBCMinorVersion();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getJDBCMinorVersion);
     }
 
     @Override
     public int getMaxBinaryLiteralLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxBinaryLiteralLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxBinaryLiteralLength);
     }
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxCatalogNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxCatalogNameLength);
     }
 
     @Override
     public int getMaxCharLiteralLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxCharLiteralLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxCharLiteralLength);
     }
 
     @Override
     public int getMaxColumnNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnNameLength);
     }
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnsInGroupBy();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnsInGroupBy);
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnsInIndex();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnsInIndex);
     }
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnsInOrderBy();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnsInOrderBy);
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnsInSelect();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnsInSelect);
     }
 
     @Override
     public int getMaxColumnsInTable() throws SQLException {
-        try {
-            return databaseMetaData.getMaxColumnsInTable();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxColumnsInTable);
     }
 
     @Override
     public int getMaxConnections() throws SQLException {
-        try {
-            return databaseMetaData.getMaxConnections();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxConnections);
     }
 
     @Override
     public int getMaxCursorNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxCursorNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxCursorNameLength);
     }
 
     @Override
     public int getMaxIndexLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxIndexLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxIndexLength);
     }
 
     /**
@@ -593,397 +354,196 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      */
     @Override
     public long getMaxLogicalLobSize() throws SQLException {
-        try {
-            return databaseMetaData.getMaxLogicalLobSize();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0L(databaseMetaData::getMaxLogicalLobSize);
     }
 
     @Override
     public int getMaxProcedureNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxProcedureNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxProcedureNameLength);
     }
 
     @Override
     public int getMaxRowSize() throws SQLException {
-        try {
-            return databaseMetaData.getMaxRowSize();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxRowSize);
     }
 
     @Override
     public int getMaxSchemaNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxSchemaNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxSchemaNameLength);
     }
 
     @Override
     public int getMaxStatementLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxStatementLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxStatementLength);
     }
 
     @Override
     public int getMaxStatements() throws SQLException {
-        try {
-            return databaseMetaData.getMaxStatements();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxStatements);
     }
 
     @Override
     public int getMaxTableNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxTableNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxTableNameLength);
     }
 
     @Override
     public int getMaxTablesInSelect() throws SQLException {
-        try {
-            return databaseMetaData.getMaxTablesInSelect();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxTablesInSelect);
     }
 
     @Override
     public int getMaxUserNameLength() throws SQLException {
-        try {
-            return databaseMetaData.getMaxUserNameLength();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getMaxUserNameLength);
     }
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        try {
-            return databaseMetaData.getNumericFunctions();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getNumericFunctions);
     }
 
     @Override
     public ResultSet getPrimaryKeys(final String catalog, final String schema, final String table) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getPrimaryKeys(catalog, schema, table));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getPrimaryKeys, catalog, schema, table);
     }
 
     @Override
     public ResultSet getProcedureColumns(final String catalog, final String schemaPattern,
             final String procedureNamePattern, final String columnNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getProcedureColumns(catalog,
-                    schemaPattern, procedureNamePattern, columnNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getProcedureColumns, catalog, schemaPattern, procedureNamePattern,
+                columnNamePattern);
     }
 
     @Override
     public ResultSet getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getProcedures, catalog, schemaPattern, procedureNamePattern);
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
-        try {
-            return databaseMetaData.getProcedureTerm();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getProcedureTerm);
     }
 
     @Override
     public ResultSet getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
             final String columnNamePattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, Jdbc41Bridge.getPseudoColumns(databaseMetaData,
-                    catalog, schemaPattern, tableNamePattern, columnNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getPseudoColumns, catalog, schemaPattern, tableNamePattern,
+                columnNamePattern);
     }
 
     @Override
     public int getResultSetHoldability() throws SQLException {
-        try {
-            return databaseMetaData.getResultSetHoldability();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return applyTo0(databaseMetaData::getResultSetHoldability);
     }
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-        try {
-            return databaseMetaData.getRowIdLifetime();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getRowIdLifetime);
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getSchemas());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getSchemas);
     }
 
     @Override
     public ResultSet getSchemas(final String catalog, final String schemaPattern) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getSchemas(catalog, schemaPattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getSchemas, catalog, schemaPattern);
     }
 
     @Override
     public String getSchemaTerm() throws SQLException {
-        try {
-            return databaseMetaData.getSchemaTerm();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getSchemaTerm);
     }
 
     @Override
     public String getSearchStringEscape() throws SQLException {
-        try {
-            return databaseMetaData.getSearchStringEscape();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getSearchStringEscape);
     }
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        try {
-            return databaseMetaData.getSQLKeywords();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getSQLKeywords);
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
-        try {
-            return databaseMetaData.getSQLStateType();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
+        return apply(databaseMetaData::getSQLStateType);
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        try {
-            return databaseMetaData.getStringFunctions();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getStringFunctions);
     }
 
     @Override
     public ResultSet getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getSuperTables,catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getSuperTypes,catalog, schemaPattern, typeNamePattern);
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        try {
-            return databaseMetaData.getSystemFunctions();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getSystemFunctions);
     }
 
     @Override
     public ResultSet getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getTablePrivileges,catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
             final String[] types) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getTables,catalog, schemaPattern, tableNamePattern, types);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getTableTypes());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getTableTypes);
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        try {
-            return databaseMetaData.getTimeDateFunctions();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getTimeDateFunctions);
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection, databaseMetaData.getTypeInfo());
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getTypeInfo);
     }
 
     @Override
     public ResultSet getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
             final int[] types) throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getUDTs,catalog, schemaPattern, typeNamePattern, types);
     }
 
     @Override
     public String getURL() throws SQLException {
-        try {
-            return databaseMetaData.getURL();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getURL);
     }
 
     @Override
     public String getUserName() throws SQLException {
-        try {
-            return databaseMetaData.getUserName();
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return apply(databaseMetaData::getUserName);
     }
 
     @Override
     public ResultSet getVersionColumns(final String catalog, final String schema, final String table)
             throws SQLException {
-        connection.checkOpen();
-        try {
-            return DelegatingResultSet.wrapResultSet(connection,
-                    databaseMetaData.getVersionColumns(catalog, schema, table));
-        } catch (final SQLException e) {
-            handleException(e);
-            throw new AssertionError();
-        }
+        return toResultSet(databaseMetaData::getVersionColumns,catalog, schema, table);
     }
 
+    @Override
     protected void handleException(final SQLException e) throws SQLException {
         if (connection != null) {
             connection.handleException(e);
@@ -994,32 +554,17 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean insertsAreDetected(final int type) throws SQLException {
-        try {
-            return databaseMetaData.insertsAreDetected(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::insertsAreDetected, type, false);
     }
 
     @Override
     public boolean isCatalogAtStart() throws SQLException {
-        try {
-            return databaseMetaData.isCatalogAtStart();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::isCatalogAtStart);
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        try {
-            return databaseMetaData.isReadOnly();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::isReadOnly);
     }
 
     @Override
@@ -1035,632 +580,317 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-        try {
-            return databaseMetaData.locatorsUpdateCopy();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::locatorsUpdateCopy);
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
-        try {
-            return databaseMetaData.nullPlusNonNullIsNull();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::nullPlusNonNullIsNull);
     }
 
     @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
-        try {
-            return databaseMetaData.nullsAreSortedAtEnd();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::nullsAreSortedAtEnd);
     }
 
     @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
-        try {
-            return databaseMetaData.nullsAreSortedAtStart();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::nullsAreSortedAtStart);
     }
 
     @Override
     public boolean nullsAreSortedHigh() throws SQLException {
-        try {
-            return databaseMetaData.nullsAreSortedHigh();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::nullsAreSortedHigh);
     }
 
     @Override
     public boolean nullsAreSortedLow() throws SQLException {
-        try {
-            return databaseMetaData.nullsAreSortedLow();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::nullsAreSortedLow);
     }
 
     @Override
     public boolean othersDeletesAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.othersDeletesAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::othersDeletesAreVisible, type, false);
     }
 
     @Override
     public boolean othersInsertsAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.othersInsertsAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::othersInsertsAreVisible, type, false);
     }
 
     @Override
     public boolean othersUpdatesAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.othersUpdatesAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::othersUpdatesAreVisible, type, false);
     }
 
     @Override
     public boolean ownDeletesAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.ownDeletesAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::ownDeletesAreVisible, type, false);
     }
 
     @Override
     public boolean ownInsertsAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.ownInsertsAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::ownInsertsAreVisible, type, false);
     }
 
     @Override
     public boolean ownUpdatesAreVisible(final int type) throws SQLException {
-        try {
-            return databaseMetaData.ownUpdatesAreVisible(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyIntTo(databaseMetaData::ownUpdatesAreVisible, type, false);
     }
 
     @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesLowerCaseIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesLowerCaseIdentifiers);
     }
 
     @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesLowerCaseQuotedIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesLowerCaseQuotedIdentifiers);
     }
 
     @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesMixedCaseIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesMixedCaseIdentifiers);
     }
 
     @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesMixedCaseQuotedIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesMixedCaseQuotedIdentifiers);
     }
 
     @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesUpperCaseIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesUpperCaseIdentifiers);
     }
 
     @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.storesUpperCaseQuotedIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::storesUpperCaseQuotedIdentifiers);
     }
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        try {
-            return databaseMetaData.supportsAlterTableWithAddColumn();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsAlterTableWithAddColumn);
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        try {
-            return databaseMetaData.supportsAlterTableWithDropColumn();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsAlterTableWithDropColumn);
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        try {
-            return databaseMetaData.supportsANSI92EntryLevelSQL();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsANSI92EntryLevelSQL);
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
-        try {
-            return databaseMetaData.supportsANSI92FullSQL();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsANSI92FullSQL);
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        try {
-            return databaseMetaData.supportsANSI92IntermediateSQL();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsANSI92IntermediateSQL);
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-        try {
-            return databaseMetaData.supportsBatchUpdates();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsBatchUpdates);
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
-        try {
-            return databaseMetaData.supportsCatalogsInDataManipulation();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCatalogsInDataManipulation);
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsCatalogsInIndexDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCatalogsInIndexDefinitions);
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsCatalogsInPrivilegeDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCatalogsInPrivilegeDefinitions);
     }
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        try {
-            return databaseMetaData.supportsCatalogsInProcedureCalls();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCatalogsInProcedureCalls);
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsCatalogsInTableDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCatalogsInTableDefinitions);
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
-        try {
-            return databaseMetaData.supportsColumnAliasing();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsColumnAliasing);
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
-        try {
-            return databaseMetaData.supportsConvert();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsConvert);
     }
 
     @Override
     public boolean supportsConvert(final int fromType, final int toType) throws SQLException {
-        try {
-            return databaseMetaData.supportsConvert(fromType, toType);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyTo(databaseMetaData::supportsConvert, fromType, toType, false);
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
-        try {
-            return databaseMetaData.supportsCoreSQLGrammar();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCoreSQLGrammar);
     }
 
     @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
-        try {
-            return databaseMetaData.supportsCorrelatedSubqueries();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsCorrelatedSubqueries);
     }
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
-        try {
-            return databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsDataDefinitionAndDataManipulationTransactions);
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
-        try {
-            return databaseMetaData.supportsDataManipulationTransactionsOnly();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsDataManipulationTransactionsOnly);
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        try {
-            return databaseMetaData.supportsDifferentTableCorrelationNames();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsDifferentTableCorrelationNames);
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
-        try {
-            return databaseMetaData.supportsExpressionsInOrderBy();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsExpressionsInOrderBy);
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
-        try {
-            return databaseMetaData.supportsExtendedSQLGrammar();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsExtendedSQLGrammar);
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
-        try {
-            return databaseMetaData.supportsFullOuterJoins();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsFullOuterJoins);
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-        try {
-            return databaseMetaData.supportsGetGeneratedKeys();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsGetGeneratedKeys);
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
-        try {
-            return databaseMetaData.supportsGroupBy();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsGroupBy);
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
-        try {
-            return databaseMetaData.supportsGroupByBeyondSelect();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsGroupByBeyondSelect);
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
-        try {
-            return databaseMetaData.supportsGroupByUnrelated();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsGroupByUnrelated);
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        try {
-            return databaseMetaData.supportsIntegrityEnhancementFacility();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsIntegrityEnhancementFacility);
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
-        try {
-            return databaseMetaData.supportsLikeEscapeClause();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsLikeEscapeClause);
     }
 
     @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
-        try {
-            return databaseMetaData.supportsLimitedOuterJoins();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsLimitedOuterJoins);
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
-        try {
-            return databaseMetaData.supportsMinimumSQLGrammar();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMinimumSQLGrammar);
     }
 
     @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.supportsMixedCaseIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMixedCaseIdentifiers);
     }
 
     @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
-        try {
-            return databaseMetaData.supportsMixedCaseQuotedIdentifiers();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMixedCaseQuotedIdentifiers);
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-        try {
-            return databaseMetaData.supportsMultipleOpenResults();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMultipleOpenResults);
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
-        try {
-            return databaseMetaData.supportsMultipleResultSets();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMultipleResultSets);
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
-        try {
-            return databaseMetaData.supportsMultipleTransactions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsMultipleTransactions);
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        try {
-            return databaseMetaData.supportsNamedParameters();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsNamedParameters);
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
-        try {
-            return databaseMetaData.supportsNonNullableColumns();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsNonNullableColumns);
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-        try {
-            return databaseMetaData.supportsOpenCursorsAcrossCommit();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOpenCursorsAcrossCommit);
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-        try {
-            return databaseMetaData.supportsOpenCursorsAcrossRollback();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOpenCursorsAcrossRollback);
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-        try {
-            return databaseMetaData.supportsOpenStatementsAcrossCommit();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOpenStatementsAcrossCommit);
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-        try {
-            return databaseMetaData.supportsOpenStatementsAcrossRollback();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOpenStatementsAcrossRollback);
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
-        try {
-            return databaseMetaData.supportsOrderByUnrelated();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOrderByUnrelated);
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
-        try {
-            return databaseMetaData.supportsOuterJoins();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsOuterJoins);
     }
 
     @Override
     public boolean supportsPositionedDelete() throws SQLException {
-        try {
-            return databaseMetaData.supportsPositionedDelete();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsPositionedDelete);
     }
 
     @Override
     public boolean supportsPositionedUpdate() throws SQLException {
-        try {
-            return databaseMetaData.supportsPositionedUpdate();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsPositionedUpdate);
     }
 
     /**
@@ -1668,234 +898,161 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      */
     @Override
     public boolean supportsRefCursors() throws SQLException {
-        try {
-            return databaseMetaData.supportsRefCursors();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsRefCursors);
     }
 
     @Override
     public boolean supportsResultSetConcurrency(final int type, final int concurrency) throws SQLException {
-        try {
-            return databaseMetaData.supportsResultSetConcurrency(type, concurrency);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyTo(databaseMetaData::supportsResultSetConcurrency, type, concurrency, false);
     }
 
     @Override
     public boolean supportsResultSetHoldability(final int holdability) throws SQLException {
-        try {
-            return databaseMetaData.supportsResultSetHoldability(holdability);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyTo(databaseMetaData::supportsResultSetHoldability, holdability, false);
     }
 
     @Override
     public boolean supportsResultSetType(final int type) throws SQLException {
-        try {
-            return databaseMetaData.supportsResultSetType(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyTo(databaseMetaData::supportsResultSetType, type, false);
     }
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-        try {
-            return databaseMetaData.supportsSavepoints();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSavepoints);
     }
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        try {
-            return databaseMetaData.supportsSchemasInDataManipulation();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSchemasInDataManipulation);
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsSchemasInIndexDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSchemasInIndexDefinitions);
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsSchemasInPrivilegeDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSchemasInPrivilegeDefinitions);
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        try {
-            return databaseMetaData.supportsSchemasInProcedureCalls();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSchemasInProcedureCalls);
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        try {
-            return databaseMetaData.supportsSchemasInTableDefinitions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSchemasInTableDefinitions);
     }
 
     @Override
     public boolean supportsSelectForUpdate() throws SQLException {
-        try {
-            return databaseMetaData.supportsSelectForUpdate();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsSelectForUpdate);
     }
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-        try {
-            return databaseMetaData.supportsStatementPooling();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsStatementPooling);
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        try {
-            return databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsStoredFunctionsUsingCallSyntax);
     }
 
     @Override
     public boolean supportsStoredProcedures() throws SQLException {
-        try {
-            return databaseMetaData.supportsStoredProcedures();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsStoredProcedures);
+    }
+
+    @Override
+    public boolean supportsSubqueriesInComparisons() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsSubqueriesInComparisons);
+    }
+
+    @Override
+    public boolean supportsSubqueriesInExists() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsSubqueriesInExists);
+    }
+
+    @Override
+    public boolean supportsSubqueriesInIns() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsSubqueriesInIns);
+    }
+
+    @Override
+    public boolean supportsSubqueriesInQuantifieds() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsSubqueriesInQuantifieds);
+    }
+
+    @Override
+    public boolean supportsTableCorrelationNames() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsTableCorrelationNames);
+    }
+
+    @Override
+    public boolean supportsTransactionIsolationLevel(final int level) throws SQLException {
+        return applyTo(databaseMetaData::supportsTransactionIsolationLevel, level, false);
+    }
+
+    @Override
+    public boolean supportsTransactions() throws SQLException {
+        return applyToFalse(databaseMetaData::supportsTransactions);
     }
 
     /* JDBC_4_ANT_KEY_BEGIN */
 
     @Override
-    public boolean supportsSubqueriesInComparisons() throws SQLException {
-        try {
-            return databaseMetaData.supportsSubqueriesInComparisons();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsSubqueriesInExists() throws SQLException {
-        try {
-            return databaseMetaData.supportsSubqueriesInExists();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsSubqueriesInIns() throws SQLException {
-        try {
-            return databaseMetaData.supportsSubqueriesInIns();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsSubqueriesInQuantifieds() throws SQLException {
-        try {
-            return databaseMetaData.supportsSubqueriesInQuantifieds();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsTableCorrelationNames() throws SQLException {
-        try {
-            return databaseMetaData.supportsTableCorrelationNames();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsTransactionIsolationLevel(final int level) throws SQLException {
-        try {
-            return databaseMetaData.supportsTransactionIsolationLevel(level);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean supportsTransactions() throws SQLException {
-        try {
-            return databaseMetaData.supportsTransactions();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
     public boolean supportsUnion() throws SQLException {
-        try {
-            return databaseMetaData.supportsUnion();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsUnion);
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
-        try {
-            return databaseMetaData.supportsUnionAll();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::supportsUnionAll);
+    }
+
+    private ResultSet toResultSet(final SQLFunction0<ResultSet> callableResultSet) throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply()));
+    }
+
+    private <T> ResultSet toResultSet(final SQLFunction1<T, ResultSet> callableResultSet, final T t)
+            throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t)));
+    }
+
+    private <T, U> ResultSet toResultSet(final SQLFunction2<T, U, ResultSet> callableResultSet, final T t, final U u)
+            throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u)));
+    }
+
+    private <T, U, V> ResultSet toResultSet(final SQLFunction3<T, U, V, ResultSet> callableResultSet, final T t,
+            final U u, final V v) throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v)));
+    }
+
+    private <T, U, V, X> ResultSet toResultSet(final SQLFunction4<T, U, V, X, ResultSet> callableResultSet, final T t,
+            final U u, final V v, final X x) throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x)));
+    }
+
+    private <T, U, V, X, Y> ResultSet toResultSet(final SQLFunction5<T, U, V, X, Y, ResultSet> callableResultSet,
+            final T t, final U u, final V v, final X x, final Y y) throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x, y)));
+    }
+
+    private <T, U, V, X, Y, Z> ResultSet toResultSet(
+            final SQLFunction6<T, U, V, X, Y, Z, ResultSet> callableResultSet, final T t, final U u, final V v,
+            final X x, final Y y, final Z z) throws SQLException {
+        connection.checkOpen();
+        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x, y, z)));
     }
 
     /* JDBC_4_ANT_KEY_END */
@@ -1913,31 +1070,16 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean updatesAreDetected(final int type) throws SQLException {
-        try {
-            return databaseMetaData.updatesAreDetected(type);
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyTo(databaseMetaData::updatesAreDetected, type, false);
     }
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
-        try {
-            return databaseMetaData.usesLocalFilePerTable();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::usesLocalFilePerTable);
     }
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
-        try {
-            return databaseMetaData.usesLocalFiles();
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
+        return applyToFalse(databaseMetaData::usesLocalFiles);
     }
 }

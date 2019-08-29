@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -35,6 +36,7 @@ import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolableCallableStatement;
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.dbcp2.PoolingConnection.StatementType;
+import org.apache.commons.dbcp2.function.SQLFunction0;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -477,6 +479,29 @@ class PooledConnectionImpl
     }
 
     /**
+     * Borrows a prepared statement.
+     * 
+     * @param nullPoolFunction Return the result of calling this function if our {@code pStmtPool} is null.
+     * @param callableCreateKey Use result of calling this function to borrow a statement if our {@code pStmtPool} is
+     *        not null.
+     * @return a prepared statement.
+     * @throws SQLException
+     */
+    private PreparedStatement borrow(SQLFunction0<PreparedStatement> nullPoolFunction, Callable<PStmtKey> callableCreateKey)
+            throws SQLException {
+        if (pStmtPool == null) {
+            return nullPoolFunction.apply();
+        }
+        try {
+            return pStmtPool.borrowObject(callableCreateKey.call());
+        } catch (final RuntimeException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new SQLException("Borrow prepareCall from pool failed", e);
+        }
+    }
+
+    /**
      * Creates or obtains a {@link CallableStatement} from my pool.
      *
      * @param sql
@@ -488,16 +513,8 @@ class PooledConnectionImpl
      * @since 2.4.0
      */
     CallableStatement prepareCall(final String sql) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareCall(sql);
-        }
-        try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareCall from pool failed", e);
-        }
+        return (CallableStatement) borrow(() -> connection.prepareCall(sql),
+                () -> createKey(sql, StatementType.CALLABLE_STATEMENT));
     }
 
     /**
@@ -521,17 +538,8 @@ class PooledConnectionImpl
      */
     CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
             throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
-        }
-        try {
-            return (CallableStatement) pStmtPool.borrowObject(
-                    createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareCall from pool failed", e);
-        }
+        return (CallableStatement) borrow(() -> connection.prepareCall(sql, resultSetType, resultSetConcurrency),
+                () -> createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
     }
 
     /**
@@ -558,17 +566,10 @@ class PooledConnectionImpl
      */
     CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
-        }
-        try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
-                    resultSetHoldability, StatementType.CALLABLE_STATEMENT));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareCall from pool failed", e);
-        }
+        return (CallableStatement) borrow(
+                () -> connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability),
+                () -> createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability,
+                        StatementType.CALLABLE_STATEMENT));
     }
 
     /**
@@ -579,16 +580,7 @@ class PooledConnectionImpl
      * @return a {@link PoolablePreparedStatement}
      */
     PreparedStatement prepareStatement(final String sql) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql), () -> createKey(sql));
     }
 
     /**
@@ -603,29 +595,12 @@ class PooledConnectionImpl
      * @see Connection#prepareStatement(String, int)
      */
     PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql, autoGeneratedKeys);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql, autoGeneratedKeys));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql, autoGeneratedKeys),
+                () -> createKey(sql, autoGeneratedKeys));
     }
 
     PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql, columnIndexes);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql, columnIndexes));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql, columnIndexes),() -> createKey(sql, columnIndexes));
     }
 
     /**
@@ -646,43 +621,18 @@ class PooledConnectionImpl
      */
     PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
             throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql, resultSetType, resultSetConcurrency),
+                () -> createKey(sql, resultSetType, resultSetConcurrency));
     }
 
     PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability),
+                () -> createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
     }
 
     PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
-        if (pStmtPool == null) {
-            return connection.prepareStatement(sql, columnNames);
-        }
-        try {
-            return pStmtPool.borrowObject(createKey(sql, columnNames));
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
+        return borrow(() -> connection.prepareStatement(sql, columnNames), () -> createKey(sql, columnNames));
     }
 
     /**

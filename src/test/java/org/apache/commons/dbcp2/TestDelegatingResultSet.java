@@ -45,7 +45,7 @@ public class TestDelegatingResultSet {
     private DelegatingResultSet delegate;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws SQLException {
         testConn = new TesterConnection("foo", "bar");
         conn = new DelegatingConnection<>(testConn);
         rs = mock(ResultSet.class);
