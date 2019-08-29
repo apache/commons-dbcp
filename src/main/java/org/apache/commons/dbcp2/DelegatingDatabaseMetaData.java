@@ -23,7 +23,6 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp2.function.SQLFunction0;
-import org.apache.commons.dbcp2.function.SQLFunction1;
 import org.apache.commons.dbcp2.function.SQLFunction2;
 import org.apache.commons.dbcp2.function.SQLFunction3;
 import org.apache.commons.dbcp2.function.SQLFunction4;
@@ -52,11 +51,11 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
     /**
      * Constructs a new instance for the given delegating connection and database meta data.
      *
-     * @param connection the delegating connection
+     * @param connection       the delegating connection
      * @param databaseMetaData the database meta data
      */
     public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection,
-            final DatabaseMetaData databaseMetaData) {
+        final DatabaseMetaData databaseMetaData) {
         super();
         this.connection = connection;
         this.databaseMetaData = databaseMetaData;
@@ -104,14 +103,14 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-            final String attributeNamePattern) throws SQLException {
+        final String attributeNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getAttributes, catalog, schemaPattern, typeNamePattern,
-                attributeNamePattern);
+            attributeNamePattern);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(final String catalog, final String schema, final String table,
-            final int scope, final boolean nullable) throws SQLException {
+        final int scope, final boolean nullable) throws SQLException {
         return toResultSet(databaseMetaData::getBestRowIdentifier, catalog, schema, table, scope, nullable);
     }
 
@@ -137,13 +136,13 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getColumnPrivileges(final String catalog, final String schema, final String table,
-            final String columnNamePattern) throws SQLException {
+        final String columnNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getColumnPrivileges, catalog, schema, table, columnNamePattern);
     }
 
     @Override
     public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String columnNamePattern) throws SQLException {
+        final String columnNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getColumns, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
@@ -154,9 +153,9 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
-            final String foreignCatalog, final String foreignSchema, final String foreignTable) throws SQLException {
+        final String foreignCatalog, final String foreignSchema, final String foreignTable) throws SQLException {
         return toResultSet(databaseMetaData::getCrossReference, parentCatalog, parentSchema, parentTable,
-                foreignCatalog, foreignSchema, foreignTable);
+            foreignCatalog, foreignSchema, foreignTable);
     }
 
     @Override
@@ -215,7 +214,7 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getExportedKeys(final String catalog, final String schema, final String table)
-            throws SQLException {
+        throws SQLException {
         return toResultSet(databaseMetaData::getExportedKeys, catalog, schema, table);
     }
 
@@ -226,14 +225,14 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
-            final String functionNamePattern, final String columnNamePattern) throws SQLException {
+        final String functionNamePattern, final String columnNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getFunctionColumns, catalog, schemaPattern, functionNamePattern,
-                columnNamePattern);
+            columnNamePattern);
     }
 
     @Override
     public ResultSet getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern)
-            throws SQLException {
+        throws SQLException {
         return toResultSet(databaseMetaData::getFunctions, catalog, schemaPattern, functionNamePattern);
     }
 
@@ -244,13 +243,13 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getImportedKeys(final String catalog, final String schema, final String table)
-            throws SQLException {
+        throws SQLException {
         return toResultSet(databaseMetaData::getImportedKeys, catalog, schema, table);
     }
 
     @Override
     public ResultSet getIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
-            final boolean approximate) throws SQLException {
+        final boolean approximate) throws SQLException {
         return toResultSet(databaseMetaData::getIndexInfo, catalog, schema, table, unique, approximate);
     }
 
@@ -409,14 +408,14 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getProcedureColumns(final String catalog, final String schemaPattern,
-            final String procedureNamePattern, final String columnNamePattern) throws SQLException {
+        final String procedureNamePattern, final String columnNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getProcedureColumns, catalog, schemaPattern, procedureNamePattern,
-                columnNamePattern);
+            columnNamePattern);
     }
 
     @Override
     public ResultSet getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern)
-            throws SQLException {
+        throws SQLException {
         return toResultSet(databaseMetaData::getProcedures, catalog, schemaPattern, procedureNamePattern);
     }
 
@@ -427,9 +426,9 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String columnNamePattern) throws SQLException {
+        final String columnNamePattern) throws SQLException {
         return toResultSet(databaseMetaData::getPseudoColumns, catalog, schemaPattern, tableNamePattern,
-                columnNamePattern);
+            columnNamePattern);
     }
 
     @Override
@@ -479,14 +478,14 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern)
-            throws SQLException {
-        return toResultSet(databaseMetaData::getSuperTables,catalog, schemaPattern, tableNamePattern);
+        throws SQLException {
+        return toResultSet(databaseMetaData::getSuperTables, catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern)
-            throws SQLException {
-        return toResultSet(databaseMetaData::getSuperTypes,catalog, schemaPattern, typeNamePattern);
+        throws SQLException {
+        return toResultSet(databaseMetaData::getSuperTypes, catalog, schemaPattern, typeNamePattern);
     }
 
     @Override
@@ -496,14 +495,14 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern)
-            throws SQLException {
-        return toResultSet(databaseMetaData::getTablePrivileges,catalog, schemaPattern, tableNamePattern);
+        throws SQLException {
+        return toResultSet(databaseMetaData::getTablePrivileges, catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String[] types) throws SQLException {
-        return toResultSet(databaseMetaData::getTables,catalog, schemaPattern, tableNamePattern, types);
+        final String[] types) throws SQLException {
+        return toResultSet(databaseMetaData::getTables, catalog, schemaPattern, tableNamePattern, types);
     }
 
     @Override
@@ -523,8 +522,8 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
-            final int[] types) throws SQLException {
-        return toResultSet(databaseMetaData::getUDTs,catalog, schemaPattern, typeNamePattern, types);
+        final int[] types) throws SQLException {
+        return toResultSet(databaseMetaData::getUDTs, catalog, schemaPattern, typeNamePattern, types);
     }
 
     @Override
@@ -539,8 +538,8 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
 
     @Override
     public ResultSet getVersionColumns(final String catalog, final String schema, final String table)
-            throws SQLException {
-        return toResultSet(databaseMetaData::getVersionColumns,catalog, schema, table);
+        throws SQLException {
+        return toResultSet(databaseMetaData::getVersionColumns, catalog, schema, table);
     }
 
     @Override
@@ -1018,39 +1017,32 @@ public class DelegatingDatabaseMetaData extends ResourceFunctions implements Dat
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply()));
     }
 
-    private <T> ResultSet toResultSet(final SQLFunction1<T, ResultSet> callableResultSet, final T t)
-            throws SQLException {
-        connection.checkOpen();
-        return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t)));
-    }
-
     private <T, U> ResultSet toResultSet(final SQLFunction2<T, U, ResultSet> callableResultSet, final T t, final U u)
-            throws SQLException {
+        throws SQLException {
         connection.checkOpen();
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u)));
     }
 
     private <T, U, V> ResultSet toResultSet(final SQLFunction3<T, U, V, ResultSet> callableResultSet, final T t,
-            final U u, final V v) throws SQLException {
+        final U u, final V v) throws SQLException {
         connection.checkOpen();
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v)));
     }
 
     private <T, U, V, X> ResultSet toResultSet(final SQLFunction4<T, U, V, X, ResultSet> callableResultSet, final T t,
-            final U u, final V v, final X x) throws SQLException {
+        final U u, final V v, final X x) throws SQLException {
         connection.checkOpen();
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x)));
     }
 
     private <T, U, V, X, Y> ResultSet toResultSet(final SQLFunction5<T, U, V, X, Y, ResultSet> callableResultSet,
-            final T t, final U u, final V v, final X x, final Y y) throws SQLException {
+        final T t, final U u, final V v, final X x, final Y y) throws SQLException {
         connection.checkOpen();
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x, y)));
     }
 
-    private <T, U, V, X, Y, Z> ResultSet toResultSet(
-            final SQLFunction6<T, U, V, X, Y, Z, ResultSet> callableResultSet, final T t, final U u, final V v,
-            final X x, final Y y, final Z z) throws SQLException {
+    private <T, U, V, X, Y, Z> ResultSet toResultSet(final SQLFunction6<T, U, V, X, Y, Z, ResultSet> callableResultSet,
+        final T t, final U u, final V v, final X x, final Y y, final Z z) throws SQLException {
         connection.checkOpen();
         return apply(() -> DelegatingResultSet.wrapResultSet(connection, callableResultSet.apply(t, u, v, x, y, z)));
     }

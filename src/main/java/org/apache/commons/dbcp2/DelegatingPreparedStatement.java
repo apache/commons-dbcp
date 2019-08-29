@@ -57,7 +57,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
      * which created it.
      *
-     * @param statement the {@link PreparedStatement} to delegate all calls to.
+     * @param statement  the {@link PreparedStatement} to delegate all calls to.
      * @param connection the {@link DelegatingConnection} that created this statement.
      */
     public DelegatingPreparedStatement(final DelegatingConnection<?> connection, final PreparedStatement statement) {
@@ -122,13 +122,14 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     @Override
-    public void setAsciiStream(final int parameterIndex, final InputStream value, final int length) throws SQLException {
+    public void setAsciiStream(final int parameterIndex, final InputStream value, final int length)
+        throws SQLException {
         accept(PreparedStatement::setAsciiStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream value, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setAsciiStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
@@ -144,13 +145,13 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
 
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream value, final int length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setBinaryStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream value, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setBinaryStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
@@ -165,8 +166,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     @Override
-    public void setBlob(final int parameterIndex, final InputStream value, final long length)
-            throws SQLException {
+    public void setBlob(final int parameterIndex, final InputStream value, final long length) throws SQLException {
         accept(PreparedStatement::setBlob, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
@@ -191,14 +191,13 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     @Override
-    public void setCharacterStream(final int parameterIndex, final Reader value, final int length)
-            throws SQLException {
+    public void setCharacterStream(final int parameterIndex, final Reader value, final int length) throws SQLException {
         accept(PreparedStatement::setCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader value, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
@@ -254,7 +253,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
 
     @Override
     public void setNCharacterStream(final int parameterIndex, final Reader value, final long length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setNCharacterStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
@@ -300,9 +299,9 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
 
     @Override
     public void setObject(final int parameterIndex, final Object value, final int targetSqlType, final int scale)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType,
-                scale);
+            scale);
     }
 
     /**
@@ -310,7 +309,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      */
     @Override
     public void setObject(final int parameterIndex, final Object value, final SQLType targetSqlType)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType);
     }
 
@@ -319,9 +318,9 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      */
     @Override
     public void setObject(final int parameterIndex, final Object value, final SQLType targetSqlType,
-            final int scaleOrLength) throws SQLException {
+        final int scaleOrLength) throws SQLException {
         accept(PreparedStatement::setObject, getDelegatePreparedStatement(), parameterIndex, value, targetSqlType,
-                scaleOrLength);
+            scaleOrLength);
     }
 
     @Override
@@ -346,12 +345,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
 
     @Override
     public void setString(final int parameterIndex, final String value) throws SQLException {
-        checkOpen();
-        try {
-            getDelegatePreparedStatement().setString(parameterIndex, value);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
+        accept(PreparedStatement::setString, getDelegatePreparedStatement(), parameterIndex, value);
     }
 
     @Override
@@ -371,7 +365,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
 
     @Override
     public void setTimestamp(final int parameterIndex, final Timestamp value, final Calendar calendar)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setTimestamp, getDelegatePreparedStatement(), parameterIndex, value, calendar);
     }
 
@@ -379,7 +373,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     @Deprecated
     @Override
     public void setUnicodeStream(final int parameterIndex, final InputStream value, final int length)
-            throws SQLException {
+        throws SQLException {
         accept(PreparedStatement::setUnicodeStream, getDelegatePreparedStatement(), parameterIndex, value, length);
     }
 
