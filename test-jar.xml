@@ -19,8 +19,6 @@
  */
  -->
 
-<!-- $Id$ -->
-
 <!-- 
      Compiles DBCP unit tests and attempts to run them using the compiled dbcp jar
      specified in the "commons-dbcp.jar" property.  Set this property in build.properties
