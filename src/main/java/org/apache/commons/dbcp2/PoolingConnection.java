@@ -352,15 +352,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      */
     @Override
     public CallableStatement prepareCall(final String sql) throws SQLException {
-        try {
-            return (CallableStatement) pstmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT));
-        } catch (final NoSuchElementException e) {
-            throw new SQLException("MaxOpenCallableStatements limit reached", e);
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow callableStatement from pool failed", e);
-        }
+        return prepareCall(createKey(sql, StatementType.CALLABLE_STATEMENT));
     }
 
     /**
@@ -379,16 +371,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
             throws SQLException {
-        try {
-            return (CallableStatement) pstmtPool.borrowObject(
-                    createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
-        } catch (final NoSuchElementException e) {
-            throw new SQLException("MaxOpenCallableStatements limit reached", e);
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow callableStatement from pool failed", e);
-        }
+        return prepareCall(createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
     }
 
     /**
@@ -409,9 +392,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) throws SQLException {
+        return prepareCall(createKey(sql, resultSetType, resultSetConcurrency,
+                resultSetHoldability, StatementType.CALLABLE_STATEMENT));
+    }
+
+    private CallableStatement prepareCall(PStmtKey key) throws SQLException {
         try {
-            return (CallableStatement) pstmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
-                    resultSetHoldability, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) pstmtPool.borrowObject(key);
         } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenCallableStatements limit reached", e);
         } catch (final RuntimeException e) {
