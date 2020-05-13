@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2.managed;
 import org.apache.commons.dbcp2.ConnectionFactory;
 
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
@@ -310,15 +311,32 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      *
      * @param transactionManager
      *            the transaction manager in which connections will be enlisted
+     * @param transactionSynchronizationRegistry
+     *            the optional TSR to register synchronizations with
+     * @param connectionFactory
+     *            the connection factory from which connections will be retrieved
+     */
+    public LocalXAConnectionFactory(final TransactionManager transactionManager,
+            final TransactionSynchronizationRegistry transactionSynchronizationRegistry,
+            final ConnectionFactory connectionFactory) {
+        Objects.requireNonNull(transactionManager, "transactionManager is null");
+        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
+        this.transactionRegistry = new TransactionRegistry(transactionManager, transactionSynchronizationRegistry);
+        this.connectionFactory = connectionFactory;
+    }
+
+    /**
+     * Creates an LocalXAConnectionFactory which uses the specified connection factory to create database connections.
+     * The connections are enlisted into transactions using the specified transaction manager.
+     *
+     * @param transactionManager
+     *            the transaction manager in which connections will be enlisted
      * @param connectionFactory
      *            the connection factory from which connections will be retrieved
      */
     public LocalXAConnectionFactory(final TransactionManager transactionManager,
             final ConnectionFactory connectionFactory) {
-        Objects.requireNonNull(transactionManager, "transactionManager is null");
-        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
-        this.transactionRegistry = new TransactionRegistry(transactionManager);
-        this.connectionFactory = connectionFactory;
+        this(transactionManager, null, connectionFactory);
     }
 
     @Override

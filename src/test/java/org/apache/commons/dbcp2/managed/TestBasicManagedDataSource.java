@@ -48,7 +48,9 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     @Override
     protected BasicDataSource createDataSource() throws Exception {
         final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
-        basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
+        TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        basicManagedDataSource.setTransactionManager(transactionManager);
+        basicManagedDataSource.setTransactionSynchronizationRegistry(transactionManager);
         return basicManagedDataSource;
     }
 
@@ -218,5 +220,26 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             });
             tm.commit();
         }
+    }
+
+    /** DBCP-564 */
+    @Test
+    public void testSetRollbackOnlyBeforeGetConnectionDoesNotLeak() throws Exception {
+        final TransactionManager transactionManager = ((BasicManagedDataSource) ds).getTransactionManager();
+        final int n = 3;
+        ds.setMaxIdle(n);
+        ds.setMaxTotal(n);
+
+        for (int i = 0; i <= n; i++) { // loop n+1 times
+            transactionManager.begin();
+            transactionManager.setRollbackOnly();
+            final Connection conn = getConnection();
+            assertNotNull(conn);
+            conn.close();
+            transactionManager.rollback();
+        }
+
+        assertEquals(0, ds.getNumActive());
+        assertEquals(1, ds.getNumIdle());
     }
 }
