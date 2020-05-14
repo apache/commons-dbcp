@@ -83,7 +83,10 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from junit-jupiter 5.5.1 to 5.5.2.
       </action>
-      <action dev="ggregory" type="add" issue="DBCP-564" due-to="Gary Gregory">
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Update tests from org.slf4j:slf4j-simple 1.7.26 to 1.7.30.
+      </action>
+      <action dev="ggregory" type="add" issue="DBCP-564" due-to="Florent Guillaume">
         Fix BasicManagedDataSource leak of connections opened after transaction is rollback-only #39.
       </action>
     </release>
