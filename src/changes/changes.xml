@@ -72,7 +72,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update tests from H2 1.4.199 to 1.4.200.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from Mockito 3.0.0 to 3.2.0.
+        Update tests from Mockito 3.0.0 to 3.3.3.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from jboss-logging 3.4.0.Final to 3.4.1.Final.
