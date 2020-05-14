@@ -311,18 +311,12 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      *
      * @param transactionManager
      *            the transaction manager in which connections will be enlisted
-     * @param transactionSynchronizationRegistry
-     *            the optional TSR to register synchronizations with
      * @param connectionFactory
      *            the connection factory from which connections will be retrieved
      */
     public LocalXAConnectionFactory(final TransactionManager transactionManager,
-            final TransactionSynchronizationRegistry transactionSynchronizationRegistry,
             final ConnectionFactory connectionFactory) {
-        Objects.requireNonNull(transactionManager, "transactionManager is null");
-        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
-        this.transactionRegistry = new TransactionRegistry(transactionManager, transactionSynchronizationRegistry);
-        this.connectionFactory = connectionFactory;
+        this(transactionManager, null, connectionFactory);
     }
 
     /**
@@ -331,12 +325,19 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      *
      * @param transactionManager
      *            the transaction manager in which connections will be enlisted
+     * @param transactionSynchronizationRegistry
+     *            the optional TSR to register synchronizations with
      * @param connectionFactory
      *            the connection factory from which connections will be retrieved
+     * @since 2.8.0
      */
     public LocalXAConnectionFactory(final TransactionManager transactionManager,
+            final TransactionSynchronizationRegistry transactionSynchronizationRegistry,
             final ConnectionFactory connectionFactory) {
-        this(transactionManager, null, connectionFactory);
+        Objects.requireNonNull(transactionManager, "transactionManager is null");
+        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
+        this.transactionRegistry = new TransactionRegistry(transactionManager, transactionSynchronizationRegistry);
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
