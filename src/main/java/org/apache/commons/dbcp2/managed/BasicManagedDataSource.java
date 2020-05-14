@@ -174,7 +174,7 @@ public class BasicManagedDataSource extends BasicDataSource {
         if (xaDataSource == null) {
             final ConnectionFactory connectionFactory = super.createConnectionFactory();
             final XAConnectionFactory xaConnectionFactory = new LocalXAConnectionFactory(getTransactionManager(),
-                    connectionFactory);
+                    getTransactionSynchronizationRegistry(), connectionFactory);
             transactionRegistry = xaConnectionFactory.getTransactionRegistry();
             return xaConnectionFactory;
         }
