@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -915,6 +916,36 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         conn.close();
         ds.close();
+    }
+
+    @Test
+    public void testEvict() throws Exception {
+        long delay = 1000;
+
+        ds.setInitialSize(10);
+        ds.setMaxIdle(10);
+        ds.setMaxTotal(10);
+        ds.setMinIdle(5);
+        ds.setNumTestsPerEvictionRun(3);
+        ds.setMinEvictableIdleTimeMillis(100);
+        ds.setTimeBetweenEvictionRunsMillis(delay);
+        ds.setPoolPreparedStatements(true);
+
+        Connection conn = ds.getConnection();
+        conn.close();
+
+        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        while (Arrays.stream(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
+                .anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
+            if (ds.getNumIdle() <= ds.getMinIdle()) {
+                break;
+            }
+            Thread.sleep(delay);
+        }
+        if (ds.getNumIdle() > ds.getMinIdle()) {
+            fail("EvictionTimer thread was destroyed with numIdle=" + ds.getNumIdle() + "(expected: less or equal than "
+                    + ds.getMinIdle() + ")");
+        }
     }
 }
 
