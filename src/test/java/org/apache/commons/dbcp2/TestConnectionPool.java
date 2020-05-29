@@ -690,6 +690,15 @@ public abstract class TestConnectionPool {
             // closed, but could throw an exception for other reasons
             // in this case it is good enough to assume the statement
             // is closed
+        }
+        try {
+            statement.getFetchSize();
+            return false;
+        } catch (final SQLException e) {
+            // getWarnings throws an exception if the statement is
+            // closed, but could throw an exception for other reasons
+            // in this case it is good enough to assume the statement
+            // is closed
             return true;
         }
     }

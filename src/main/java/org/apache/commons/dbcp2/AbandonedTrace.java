@@ -32,7 +32,7 @@ import org.apache.commons.pool2.TrackedUse;
  *
  * @since 2.0
  */
-public class AbandonedTrace implements TrackedUse {
+public class AbandonedTrace extends ResourceFunctions implements TrackedUse {
 
     /** A list of objects created by children of this object. */
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
@@ -50,8 +50,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Constructs a new AbandonedTrace with a parent object.
      *
-     * @param parent
-     *            AbandonedTrace parent object.
+     * @param parent AbandonedTrace parent object.
      */
     public AbandonedTrace(final AbandonedTrace parent) {
         init(parent);
@@ -60,8 +59,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Adds an object to the list of objects being traced.
      *
-     * @param trace
-     *            AbandonedTrace object to add.
+     * @param trace AbandonedTrace object to add.
      */
     protected void addTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
@@ -118,8 +116,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Initializes abandoned tracing for this object.
      *
-     * @param parent
-     *            AbandonedTrace parent object.
+     * @param parent AbandonedTrace parent object.
      */
     private void init(final AbandonedTrace parent) {
         if (parent != null) {
@@ -142,8 +139,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Removes a child object this object is tracing.
      *
-     * @param trace
-     *            AbandonedTrace object to remove.
+     * @param trace AbandonedTrace object to remove.
      */
     protected void removeTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
@@ -171,8 +167,7 @@ public class AbandonedTrace implements TrackedUse {
     /**
      * Sets the time in milliseconds this object was last used.
      *
-     * @param lastUsedMillis
-     *            time in milliseconds.
+     * @param lastUsedMillis time in milliseconds.
      */
     protected void setLastUsed(final long lastUsedMillis) {
         this.lastUsedMillis = lastUsedMillis;
