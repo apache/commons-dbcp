@@ -233,6 +233,52 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner2);
     }
 
+    @Test
+    public void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
+        ds.setMaxTotal(1); // only one connection in pool needed
+        ds.setMaxIdle(1);
+        ds.setClearStatementPoolOnReturn(true);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        final Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        assertNotNull(inner1);
+        stmt1.close();
+        
+        final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt2);
+        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        assertNotNull(inner2);
+        assertSame(inner1, inner2); // from the same connection the statement must be pooled
+        stmt2.close();
+        
+        conn1.close();
+        assertTrue(inner1.isClosed());
+        assertTrue(inner2.isClosed());
+
+        assertEquals(0, ds.getNumActive());
+        assertEquals(1, ds.getNumIdle());
+
+        final Connection conn2 = getConnection();
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        final PreparedStatement stmt3 = conn2.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt3);
+        final Statement inner3 = ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
+        assertNotNull(inner3);
+
+        assertNotSame(inner1, inner3); // when aquiring the connection the next time, statement must be new
+        
+        conn2.close();
+    }
+
     /**
      * Tests high-concurrency contention for connections and pooled prepared statements.
      * DBCP-414

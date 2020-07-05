@@ -65,6 +65,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
     private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool;
 
+    private boolean clearStatementPoolOnReturn = false;
+    
     /**
      * Constructor.
      *
@@ -578,6 +580,10 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         pstmtPool = pool;
     }
 
+    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
+        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
+    }
+    
     @Override
     public synchronized String toString() {
         if (pstmtPool != null) {
@@ -598,5 +604,20 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
+    }
+
+    /**
+     * Notification from {@link PoolableConnection} that we returned to the pool.
+     * 
+     * @throws SQLException
+     */
+    public void connectionReturnedToPool() throws SQLException {
+        if (pstmtPool != null && clearStatementPoolOnReturn) {
+            try {
+                pstmtPool.clear();
+            } catch (Exception e) {
+                throw new SQLException("Error clearing statement pool", e);
+            }
+        }
     }
 }
