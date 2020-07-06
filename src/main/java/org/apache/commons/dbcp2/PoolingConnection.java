@@ -581,6 +581,16 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
+     * Returns the prepared statement pool we're using.
+     * 
+     * @return statement pool
+     * @since 2.8.0
+     */
+    public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
+        return pstmtPool;
+    }
+    
+    /**
      * Sets wheter the pool of statements should be cleared when the connection is returned to its pool. 
      * Default is false.
      * 

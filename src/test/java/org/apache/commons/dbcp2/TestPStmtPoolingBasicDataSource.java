@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -251,6 +252,12 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
+        @SuppressWarnings("unchecked")
+        final DelegatingConnection<Connection> poolableConn = 
+            (DelegatingConnection<Connection>) ((DelegatingConnection<Connection>) conn1).getDelegateInternal();
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = 
+            ((PoolingConnection) poolableConn.getDelegateInternal()).getStatementPool();
+
         final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
         assertNotNull(stmt1);
         final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
@@ -266,6 +273,9 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         
         conn1.close();
         assertTrue(inner1.isClosed());
+        
+        assertEquals(0, stmtPool.getNumActive());
+        assertEquals(0, stmtPool.getNumIdle());
 
         assertEquals(0, ds.getNumActive());
         assertEquals(1, ds.getNumIdle());
