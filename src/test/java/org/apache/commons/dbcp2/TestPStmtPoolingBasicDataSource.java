@@ -259,7 +259,6 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         
         conn1.close();
         assertTrue(inner1.isClosed());
-        assertTrue(inner2.isClosed());
 
         assertEquals(0, ds.getNumActive());
         assertEquals(1, ds.getNumIdle());
