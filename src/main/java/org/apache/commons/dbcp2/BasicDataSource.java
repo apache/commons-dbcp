@@ -1516,6 +1516,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Returns true if the statement pool is cleared when the connection is returned to its pool.
      * 
      * @return true if the statement pool is cleared at connection return 
+     * @since 2.8.0
      */
     @Override
     public boolean isClearStatementPoolOnReturn() {
@@ -2236,6 +2237,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * be cleared when the connection is returned to its pool. Default is false.
      * 
      * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
      */
     public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
         this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;

@@ -233,6 +233,13 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertSame(inner1, inner2);
     }
 
+    /**
+     * Tests clearStatementPoolOnReturn introduced with DBCP-566.
+     * When turned on, the statement pool must be empty after the connection is closed.
+     *  
+     * @throws Exception
+     * @since 2.8.0
+     */
     @Test
     public void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
@@ -273,7 +280,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         final Statement inner3 = ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
         assertNotNull(inner3);
 
-        assertNotSame(inner1, inner3); // when aquiring the connection the next time, statement must be new
+        assertNotSame(inner1, inner3); // when acquiring the connection the next time, statement must be new
         
         conn2.close();
     }

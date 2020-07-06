@@ -580,6 +580,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         pstmtPool = pool;
     }
 
+    /**
+     * Sets wheter the pool of statements should be cleared when the connection is returned to its pool. 
+     * Default is false.
+     * 
+     * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
+     */
     public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
         this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
@@ -610,6 +617,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * Notification from {@link PoolableConnection} that we returned to the pool.
      * 
      * @throws SQLException
+     * @since 2.8.0
      */
     public void connectionReturnedToPool() throws SQLException {
         if (pstmtPool != null && clearStatementPoolOnReturn) {
