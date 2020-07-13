@@ -46,7 +46,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 
 /**
  * TestSuite for BasicDataSource
@@ -919,6 +922,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Test
+    @Disabled
     public void testEvict() throws Exception {
         long delay = 1000;
 
