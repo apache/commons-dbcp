@@ -81,7 +81,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update tests from narayana-jta 5.9.5.Final to 5.10.5.Final.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from junit-jupiter 5.5.1 to 5.5.2.
+        Update tests from junit-jupiter 5.5.1 to 5.6.2.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from org.slf4j:slf4j-simple 1.7.26 to 1.7.30.
