@@ -47,8 +47,6 @@
 
     <module name="TreeWalker">
 
-        <property name="cacheFile" value="${checkstyle.cache.file}"/>
-
         <!-- ************************************************************** -->
         <!-- Checks that are different from the sun coding conventions ones -->
         <!-- ************************************************************** -->
@@ -81,12 +79,9 @@
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
           <property name="scope" value="protected"/>
-          <property name="allowUndeclaredRTE" value="true"/>
           <!-- very loose, for now -->
           <property name="allowMissingReturnTag" value="true"/>
           <property name="allowMissingParamTags" value="true"/>
-          <property name="allowMissingJavadoc" value="true"/>
-          <property name="allowMissingThrowsTags" value="true"/>
         </module>
         <module name="JavadocType">
           <property name="scope" value="protected"/>
