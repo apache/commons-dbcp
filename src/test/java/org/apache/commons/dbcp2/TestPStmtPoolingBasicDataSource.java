@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -231,6 +232,67 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertNotNull(inner2);
 
         assertSame(inner1, inner2);
+    }
+
+    /**
+     * Tests clearStatementPoolOnReturn introduced with DBCP-566.
+     * When turned on, the statement pool must be empty after the connection is closed.
+     *  
+     * @throws Exception
+     * @since 2.8.0
+     */
+    @Test
+    public void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
+        ds.setMaxTotal(1); // only one connection in pool needed
+        ds.setMaxIdle(1);
+        ds.setClearStatementPoolOnReturn(true);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        final Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        @SuppressWarnings("unchecked")
+        final DelegatingConnection<Connection> poolableConn = 
+            (DelegatingConnection<Connection>) ((DelegatingConnection<Connection>) conn1).getDelegateInternal();
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = 
+            ((PoolingConnection) poolableConn.getDelegateInternal()).getStatementPool();
+
+        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        assertNotNull(inner1);
+        stmt1.close();
+        
+        final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt2);
+        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        assertNotNull(inner2);
+        assertSame(inner1, inner2); // from the same connection the statement must be pooled
+        stmt2.close();
+        
+        conn1.close();
+        assertTrue(inner1.isClosed());
+        
+        assertEquals(0, stmtPool.getNumActive());
+        assertEquals(0, stmtPool.getNumIdle());
+
+        assertEquals(0, ds.getNumActive());
+        assertEquals(1, ds.getNumIdle());
+
+        final Connection conn2 = getConnection();
+        assertNotNull(conn2);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        final PreparedStatement stmt3 = conn2.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt3);
+        final Statement inner3 = ((DelegatingPreparedStatement) stmt3).getInnermostDelegate();
+        assertNotNull(inner3);
+
+        assertNotSame(inner1, inner3); // when acquiring the connection the next time, statement must be new
+        
+        conn2.close();
     }
 
     /**

@@ -237,6 +237,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setDefaultSchema(getDefaultSchema());
             connectionFactory.setCacheState(getCacheState());
             connectionFactory.setPoolStatements(isPoolPreparedStatements());
+            connectionFactory.setClearStatementPoolOnReturn(isClearStatementPoolOnReturn());
             connectionFactory.setMaxOpenPreparedStatements(getMaxOpenPreparedStatements());
             connectionFactory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());

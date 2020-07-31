@@ -137,6 +137,7 @@ public class TestBasicDataSourceFactory {
         properties.setProperty("logAbandoned", "true");
         properties.setProperty("abandonedUsageTracking", "true");
         properties.setProperty("poolPreparedStatements", "true");
+        properties.setProperty("clearStatementPoolOnReturn", "true");
         properties.setProperty("maxOpenPreparedStatements", "10");
         properties.setProperty("lifo", "true");
         properties.setProperty("fastFailValidation", "true");
@@ -180,6 +181,7 @@ public class TestBasicDataSourceFactory {
         assertTrue(ds.getLogAbandoned());
         assertTrue(ds.getAbandonedUsageTracking());
         assertTrue(ds.isPoolPreparedStatements());
+        assertTrue(ds.isClearStatementPoolOnReturn());
         assertEquals(10, ds.getMaxOpenPreparedStatements());
         assertTrue(ds.getLifo());
         assertTrue(ds.getFastFailValidation());
