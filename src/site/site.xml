@@ -26,18 +26,9 @@
       <menu name="Commons&#xA0;DBCP">
         <item name="Overview"               href="/index.html" />
         <item name="Configuration"          href="/configuration.html" />
-        <item name="Javadoc&#xA0;1.2.2"     href="/api-1.2.2/index.html"/>
-        <item name="Javadoc&#xA0;1.3"       href="/api-1.3/index.html"/>
-        <item name="Javadoc&#xA0;1.4"       href="/api-1.4/index.html"/>
-        <item name="Javadoc&#xA0;2.0.1"     href="/api-2.0.1/index.html"/>
-        <item name="Javadoc&#xA0;2.1"       href="/api-2.1/index.html"/>
-        <item name="Javadoc&#xA0;2.1.1"     href="/api-2.1.1/index.html"/>
-        <item name="Javadoc&#xA0;2.2.0"     href="/api-2.2.0/index.html"/>
-        <item name="Javadoc&#xA0;2.3.0"     href="/api-2.3.0/index.html"/>
-        <item name="Javadoc&#xA0;2.4.0"     href="/api-2.4.0/index.html"/>
-        <item name="Javadoc&#xA0;2.5.0"     href="/api-2.5.0/index.html"/>
-        <item name="Javadoc&#xA0;2.6.0"     href="/api-2.6.0/index.html"/>
-        <item name="Javadoc&#xA0;2.7.0"     href="/api-2.7.0/index.html"/>
+        <item name="Javadoc"                href="/apidocs/index.html"/>
+        <item name="Javadoc 2.x Archive"    href="https://javadoc.io/doc/org.apache.commons/commons-dbcp2/latest/index.html"/>
+        <item name="Javadoc 1.x Archive"    href="https://javadoc.io/doc/commons-dbcp/commons-dbcp/latest/index.html"/>
         <item name="Developers&#xA0;Guide"  href="/guide/index.html" collapse="true">
         <item name="JNDI&#xA0;Howto"        href="/guide/jndi-howto.html"/>
         <item name="Class&#xA0;Diagrams"    href="/guide/classdiagrams.html"/>
