@@ -601,7 +601,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Sets wheter the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should 
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should 
      * be cleared when the connection is returned to its pool. Default is false.
      * 
      * @param clearStatementPoolOnReturn clear or not

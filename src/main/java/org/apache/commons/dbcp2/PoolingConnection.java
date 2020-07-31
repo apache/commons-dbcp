@@ -591,7 +591,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
     
     /**
-     * Sets wheter the pool of statements should be cleared when the connection is returned to its pool. 
+     * Sets whether the pool of statements should be cleared when the connection is returned to its pool. 
      * Default is false.
      * 
      * @param clearStatementPoolOnReturn clear or not
@@ -626,7 +626,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /**
      * Notification from {@link PoolableConnection} that we returned to the pool.
      * 
-     * @throws SQLException
+     * @throws SQLException when <code>clearStatementPoolOnReturn</code> is true and the statement pool could not be
+     *                      cleared
      * @since 2.8.0
      */
     public void connectionReturnedToPool() throws SQLException {

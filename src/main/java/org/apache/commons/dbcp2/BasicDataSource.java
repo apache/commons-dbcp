@@ -2233,7 +2233,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets wheter the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
      * be cleared when the connection is returned to its pool. Default is false.
      * 
      * @param clearStatementPoolOnReturn clear or not
