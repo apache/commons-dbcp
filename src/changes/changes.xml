@@ -65,8 +65,8 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" issue="DBCP-555" due-to="Gary Gregory">
         NPE when creating a SQLExceptionList with a null list.
       </action>
-      <action dev="ggregory" type="update" issue="DBCP-650" due-to="Gary Gregory">
-        Update Apache Commons Pool from 2.7.0 to 2.8.0.
+      <action dev="ggregory" type="update" issue="DBCP-650" due-to="Gary Gregory, Dependabot">
+        Update Apache Commons Pool from 2.7.0 to 2.8.1, #48.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from H2 1.4.199 to 1.4.200.
