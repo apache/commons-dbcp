@@ -37,6 +37,7 @@ import javax.naming.spi.ObjectFactory;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.Utils;
@@ -621,17 +622,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Sets the number of statements to examine during each run of the idle object evictor thread (if any).
      * <p>
-     * When a negative value is supplied, <tt>ceil({*link #numIdle})/abs({*link #getNumTestsPerEvictionRun})</tt> tests
-     * will be run. I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the idle objects will be tested per
-     * run.
+     * When a negative value is supplied,
+     * <code>ceil({@link BasicDataSource#getNumIdle})/abs({@link #getNumTestsPerEvictionRun})</code> tests will be run.
+     * I.e., when the value is <i>-n</i>, roughly one <i>n</i>th of the idle objects will be tested per run.
      * </p>
      *
-     * @param numTestsPerEvictionRun
-     *            number of statements to examine per run
+     * @param numTestsPerEvictionRun number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
      * @see #setTimeBetweenEvictionRunsMillis(long)
-     * @throws IllegalStateException
-     *             if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         assertInitializationAllowed();
