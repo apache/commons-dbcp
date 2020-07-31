@@ -65,6 +65,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" issue="DBCP-564" due-to="Florent Guillaume">
         Fix BasicManagedDataSource leak of connections opened after transaction is rollback-only #39.
       </action>
+      <action dev="ggregory" type="add" issue="DBCP-566" due-to="Robert Paschek, Gary Gregory, Phil Steitz">
+        Add clearStatementPoolOnReturn #42.
+      </action>
       <!-- fix -->
       <action dev="ggregory" type="fix" issue="DBCP-555" due-to="Gary Gregory">
         NPE when creating a SQLExceptionList with a null list.
