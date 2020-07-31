@@ -221,6 +221,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     private boolean poolPreparedStatements = false;
 
+    private boolean clearStatementPoolOnReturn = false;
+    
     /**
      * <p>
      * The maximum number of open statements that can be allocated from the statement pool at the same time, or negative
@@ -655,6 +657,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultSchema(defaultSchema);
             connectionFactory.setCacheState(cacheState);
             connectionFactory.setPoolStatements(poolPreparedStatements);
+            connectionFactory.setClearStatementPoolOnReturn(clearStatementPoolOnReturn);
             connectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
@@ -1509,6 +1512,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return this.poolPreparedStatements;
     }
 
+    /**
+     * Returns true if the statement pool is cleared when the connection is returned to its pool.
+     * 
+     * @return true if the statement pool is cleared at connection return 
+     * @since 2.8.0
+     */
+    @Override
+    public boolean isClearStatementPoolOnReturn() {
+        return clearStatementPoolOnReturn;
+    }
+
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return false;
@@ -2216,6 +2230,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setPoolPreparedStatements(final boolean poolingStatements) {
         this.poolPreparedStatements = poolingStatements;
+    }
+
+    /**
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
+     * be cleared when the connection is returned to its pool. Default is false.
+     * 
+     * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
+     */
+    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
+        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
 
     /**

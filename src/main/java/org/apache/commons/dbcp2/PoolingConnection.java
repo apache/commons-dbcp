@@ -65,6 +65,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
     private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool;
 
+    private boolean clearStatementPoolOnReturn = false;
+    
     /**
      * Constructor.
      *
@@ -578,6 +580,27 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         pstmtPool = pool;
     }
 
+    /**
+     * Returns the prepared statement pool we're using.
+     * 
+     * @return statement pool
+     * @since 2.8.0
+     */
+    public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
+        return pstmtPool;
+    }
+    
+    /**
+     * Sets whether the pool of statements should be cleared when the connection is returned to its pool. 
+     * Default is false.
+     * 
+     * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
+     */
+    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
+        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
+    }
+    
     @Override
     public synchronized String toString() {
         if (pstmtPool != null) {
@@ -598,5 +621,22 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
+    }
+
+    /**
+     * Notification from {@link PoolableConnection} that we returned to the pool.
+     * 
+     * @throws SQLException when <code>clearStatementPoolOnReturn</code> is true and the statement pool could not be
+     *                      cleared
+     * @since 2.8.0
+     */
+    public void connectionReturnedToPool() throws SQLException {
+        if (pstmtPool != null && clearStatementPoolOnReturn) {
+            try {
+                pstmtPool.clear();
+            } catch (Exception e) {
+                throw new SQLException("Error clearing statement pool", e);
+            }
+        }
     }
 }

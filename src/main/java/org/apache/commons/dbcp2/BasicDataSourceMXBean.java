@@ -132,6 +132,16 @@ public interface BasicDataSourceMXBean {
     boolean isPoolPreparedStatements();
 
     /**
+     * See {@link BasicDataSource#isClearStatementPoolOnReturn()}
+     * 
+     * @return {@link BasicDataSource#isClearStatementPoolOnReturn()}
+     * @since 2.8.0
+     */
+    default boolean isClearStatementPoolOnReturn() {
+        return false;
+    }
+    
+    /**
      * See {@link BasicDataSource#getMaxOpenPreparedStatements()}
      *
      * @return {@link BasicDataSource#getMaxOpenPreparedStatements()}

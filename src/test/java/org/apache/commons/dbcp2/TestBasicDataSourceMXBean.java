@@ -42,6 +42,11 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
+        public boolean isClearStatementPoolOnReturn() {
+            return false;
+        }
+        
+        @Override
         public boolean isClosed() {
             return false;
         }
