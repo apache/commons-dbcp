@@ -53,6 +53,40 @@ public class TestDelegatingConnection {
 
     }
 
+    /**
+     * Delegate that doesn't support read-only or auto-commit.
+     * It will merely take the input value of setReadOnly and
+     * setAutoCommit and discard it, to keep false.
+     */
+    static class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
+        private final boolean readOnly = false;
+        private final boolean autoCommit = false;
+
+        public NoReadOnlyOrAutoCommitConnection() {
+            super("","");
+        }
+        
+        @Override
+        public void setReadOnly(boolean readOnly) {
+            // Do nothing
+        }
+
+        @Override
+        public boolean isReadOnly() throws SQLException {
+            return readOnly;
+        }
+
+        @Override
+        public void setAutoCommit(boolean autoCommit) {
+            // Do nothing
+        }
+
+        @Override
+        public boolean getAutoCommit() {
+            return autoCommit;
+        }
+    }
+
     private DelegatingConnection<? extends Connection> delegatingConnection;
     private Connection connection;
     private Connection connection2;
@@ -198,6 +232,28 @@ public class TestDelegatingConnection {
         } finally {
             testerStatement.setSqlExceptionOnClose(false);
         }
+    }
+
+    @Test
+    public void testReadOnlyCaching() throws SQLException {
+        Connection con = new NoReadOnlyOrAutoCommitConnection();
+        DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+
+        delCon.setReadOnly(true);
+
+        assertFalse(con.isReadOnly());
+        assertFalse(delCon.isReadOnly());
+    }
+
+    @Test
+    public void testAutoCommitCaching() throws SQLException {
+        Connection con = new NoReadOnlyOrAutoCommitConnection();
+        DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+
+        delCon.setAutoCommit(true);
+
+        assertFalse(con.getAutoCommit());
+        assertFalse(delCon.getAutoCommit());
     }
 
 }
