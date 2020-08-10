@@ -113,7 +113,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update maven-checkstyle-plugin from 3.0.0 to 3.1.1.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Update actions/checkout from v1 to v2.3.1 #44.
+        Update actions/checkout from v1 to v2.3.2, #44, #51.
       </action>
     </release>
     <release version="2.7.0" date="2019-07-31" description="This is a minor release, including bug fixes and enhancements.">
