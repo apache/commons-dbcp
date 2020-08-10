@@ -16,6 +16,8 @@
  */
 package org.apache.commons.dbcp2;
 
+import java.sql.SQLException;
+
 /**
  * Defines the methods that will be made available via JMX.
  *
@@ -325,4 +327,21 @@ public interface BasicDataSourceMXBean {
      * @since 2.1
      */
     String[] getDisconnectionSqlCodesAsArray();
+
+    /**
+     * See {@link BasicDataSource#start()}
+     *
+     * @throws SQLException if an error occurs initializing the datasource
+     *
+     * @since 2.8
+     */
+    default void start() throws SQLException {}
+
+    /**
+     * See {@link BasicDataSource#restart()}
+     * @throws SQLException if an error occurs initializing the datasource
+     *
+     * @since 2.8
+     */
+    default void restart() throws SQLException {}
 }
