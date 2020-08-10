@@ -951,7 +951,78 @@ public class TestBasicDataSource extends TestConnectionPool {
                     + ds.getMinIdle() + ")");
         }
     }
+
+    @Test
+    public void testStart() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        ds.setMaxTotal(2);
+        final DelegatingConnection<?> conn1 = (DelegatingConnection<?>) ds.getConnection();
+        final DelegatingConnection<?> conn2 = (DelegatingConnection<?>) ds.getConnection();
+        final Connection inner1 = conn1.getInnermostDelegate();
+        final Connection inner2 = conn2.getInnermostDelegate();
+        assertFalse(inner2.isClosed());
+        conn2.close();
+        assertFalse(inner2.isClosed());
+        // One active, one idle in the pool
+        ds.close();
+        // Idle connection should be physically closed, checked out unaffected
+        assertFalse(conn1.isClosed());
+        assertTrue(inner2.isClosed());
+        assertEquals(0, ds.getNumIdle());
+
+        // Reopen creates a new pool, so we can have three out
+        ds.start();
+        final Connection conn3 = ds.getConnection();
+        final Connection conn4 = ds.getConnection();
+        conn3.close();
+        conn4.close();
+
+        // Old pool's orphan should get physically closed on return
+        conn1.close();
+        assertTrue(inner1.isClosed());
+    }
+
+    @Test
+    public void testStartInitializes() throws Exception {
+        ds.setInitialSize(2);
+        // Note: if we ever move away from lazy init, next two will fail
+        assertEquals(0, ds.getNumIdle());
+        assertNull(ds.getRegisteredJmxName());
+
+        // Start forces init
+        ds.start();
+        assertEquals(2, ds.getNumIdle());
+        assertNotNull(ds.getRegisteredJmxName());
+    }
+
+    @Test
+    public void testRestart() throws Exception {
+        ds.setMaxTotal(2);
+        ds.setTimeBetweenEvictionRunsMillis(100);
+        ds.setNumTestsPerEvictionRun(2);
+        ds.setMinEvictableIdleTimeMillis(60000);
+        ds.setInitialSize(2);
+        ds.setDefaultCatalog("foo");
+        final Connection conn1 = ds.getConnection();
+        Thread.sleep(200);
+        // Now set some property that will not have effect until restart
+        ds.setDefaultCatalog("bar");
+        ds.setInitialSize(1);
+        // restart will load new properties
+        ds.restart();
+        assertEquals("bar", ds.getDefaultCatalog());
+        assertEquals(1, ds.getInitialSize());
+        ds.getLogWriter();  // side effect is to init
+        assertEquals(0, ds.getNumActive());
+        assertEquals(1, ds.getNumIdle());
+        conn1.close();
+        // verify old pool connection is not returned to pool
+        assertEquals(1, ds.getNumIdle());
+        ds.close();
+    }
 }
+
+
 
 /**
  * TesterDriver that keeps a static count of connection requests.
