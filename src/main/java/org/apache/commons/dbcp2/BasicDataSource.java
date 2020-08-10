@@ -425,55 +425,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Starts the datasource.
-     * <p>
-     * It is not necessary to call this method before using a newly created BasicDataSource instance, but
-     * calling it in that context causes the datasource to be immediately initialized (instead of waiting for
-     * the first {@link #getConnection()} request). Its primary use is to restart and reinitialize a
-     * datasource that has been closed.
-     * <p>
-     * When this method is called after {@link #close()}, connections checked out by clients
-     * before the datasource was stopped do not count in {@link #getMaxTotal()} or {@link #getNumActive()}.
-     * For example, if there are 3 connections checked out by clients when {@link #close()} is invoked and they are
-     * not returned before {@link #start()} is invoked, after this method is called, {@link #getNumActive()} will
-     * return 0.  These connections will be physically closed when they are returned, but they will not count against
-     * the maximum allowed in the newly started datasource.
-     *
-     * @throws SQLException if an error occurs initializing the datasource
-     */
-    @Override
-    public synchronized void start() throws SQLException {
-        closed = false;
-        createDataSource();
-    }
-
-    /**
-     * Restarts the datasource.
-     * <p>
-     * This method calls {@link #close()} and {@link #start()} in sequence within synchronized scope so any
-     * connection requests that come in while the datsource is shutting down will be served by the new pool.
-     * <p>
-     * Idle connections that are stored in the connection pool when this method is invoked are closed, but
-     * connections that are checked out to clients when this method is invoked are not affected. When client
-     * applications subsequently invoke {@link Connection#close()} to return these connections to the pool, the
-     * underlying JDBC connections are closed. These connections do not count in {@link #getMaxTotal()} or
-     * {@link #getNumActive()} after invoking this method. For example, if there are 3 connections checked out by
-     * clients when {@link #restart()} is invoked, after this method is called, {@link #getNumActive()} will
-     * return 0 and up to {@link #getMaxTotal()} + 3 connections may be open until the connections sourced from
-     * the original pool are returned.
-     * <p>
-     * The new connection pool created by this method is initialized with currently set configuration properties.
-     *
-     * @throws SQLException if an error occurs initializing the datasource
-     */
-    @Override
-    public synchronized void restart() throws SQLException {
-        close();
-        start();
-    }
-
-
-    /**
      * Closes the connection pool, silently swallowing any exception that occurs.
      */
     private void closeConnectionPool() {
@@ -511,6 +462,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         // Load the JDBC driver class
         return ConnectionFactoryFactory.createConnectionFactory(this, DriverFactory.createDriver(this));
     }
+
 
     /**
      * Creates a connection pool for this datasource. This method only exists so subclasses can replace the
@@ -1485,6 +1437,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Returns true if the statement pool is cleared when the connection is returned to its pool.
+     * 
+     * @return true if the statement pool is cleared at connection return 
+     * @since 2.8.0
+     */
+    @Override
+    public boolean isClearStatementPoolOnReturn() {
+        return clearStatementPoolOnReturn;
+    }
+
+    /**
      * If true, this data source is closed and no more connections can be retrieved from this data source.
      *
      * @return true, if the data source is closed; false otherwise
@@ -1512,17 +1475,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public synchronized boolean isPoolPreparedStatements() {
         return this.poolPreparedStatements;
-    }
-
-    /**
-     * Returns true if the statement pool is cleared when the connection is returned to its pool.
-     * 
-     * @return true if the statement pool is cleared at connection return 
-     * @since 2.8.0
-     */
-    @Override
-    public boolean isClearStatementPoolOnReturn() {
-        return clearStatementPoolOnReturn;
     }
 
     @Override
@@ -1609,6 +1561,31 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Restarts the datasource.
+     * <p>
+     * This method calls {@link #close()} and {@link #start()} in sequence within synchronized scope so any
+     * connection requests that come in while the datsource is shutting down will be served by the new pool.
+     * <p>
+     * Idle connections that are stored in the connection pool when this method is invoked are closed, but
+     * connections that are checked out to clients when this method is invoked are not affected. When client
+     * applications subsequently invoke {@link Connection#close()} to return these connections to the pool, the
+     * underlying JDBC connections are closed. These connections do not count in {@link #getMaxTotal()} or
+     * {@link #getNumActive()} after invoking this method. For example, if there are 3 connections checked out by
+     * clients when {@link #restart()} is invoked, after this method is called, {@link #getNumActive()} will
+     * return 0 and up to {@link #getMaxTotal()} + 3 connections may be open until the connections sourced from
+     * the original pool are returned.
+     * <p>
+     * The new connection pool created by this method is initialized with currently set configuration properties.
+     *
+     * @throws SQLException if an error occurs initializing the datasource
+     */
+    @Override
+    public synchronized void restart() throws SQLException {
+        close();
+        start();
+    }
+
+    /**
      * Sets the print writer to be used by this configuration to log information on abandoned objects.
      *
      * @param logWriter The new log writer
@@ -1680,6 +1657,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
+    }
+
+    /**
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
+     * be cleared when the connection is returned to its pool. Default is false.
+     * 
+     * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
+     */
+    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
+        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
 
     /**
@@ -2217,17 +2205,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
-     * be cleared when the connection is returned to its pool. Default is false.
-     * 
-     * @param clearStatementPoolOnReturn clear or not
-     * @since 2.8.0
-     */
-    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
-        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
-    }
-
-    /**
      * @param removeAbandonedOnBorrow true means abandoned connections may be removed when connections are borrowed from
      *                                the pool.
      * @see #getRemoveAbandonedOnBorrow()
@@ -2436,6 +2413,29 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setValidationQueryTimeout(final int validationQueryTimeoutSeconds) {
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
+    }
+
+    /**
+     * Starts the datasource.
+     * <p>
+     * It is not necessary to call this method before using a newly created BasicDataSource instance, but
+     * calling it in that context causes the datasource to be immediately initialized (instead of waiting for
+     * the first {@link #getConnection()} request). Its primary use is to restart and reinitialize a
+     * datasource that has been closed.
+     * <p>
+     * When this method is called after {@link #close()}, connections checked out by clients
+     * before the datasource was stopped do not count in {@link #getMaxTotal()} or {@link #getNumActive()}.
+     * For example, if there are 3 connections checked out by clients when {@link #close()} is invoked and they are
+     * not returned before {@link #start()} is invoked, after this method is called, {@link #getNumActive()} will
+     * return 0.  These connections will be physically closed when they are returned, but they will not count against
+     * the maximum allowed in the newly started datasource.
+     *
+     * @throws SQLException if an error occurs initializing the datasource
+     */
+    @Override
+    public synchronized void start() throws SQLException {
+        closed = false;
+        createDataSource();
     }
 
     /**
