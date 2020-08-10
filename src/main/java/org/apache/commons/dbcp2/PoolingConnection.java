@@ -392,15 +392,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     private CallableStatement prepareCall(final PStmtKey key) throws SQLException {
-        try {
-            return (CallableStatement) pstmtPool.borrowObject(key);
-        } catch (final NoSuchElementException e) {
-            throw new SQLException("MaxOpenCallableStatements limit reached", e);
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow callableStatement from pool failed", e);
-        }
+        return (CallableStatement) prepareStatement(key);
     }
 
     /**
