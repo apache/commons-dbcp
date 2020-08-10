@@ -63,17 +63,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  */
 public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable {
 
-    /**
-     * @since 2.0
-     */
-    private class PaGetConnection implements PrivilegedExceptionAction<Connection> {
-
-        @Override
-        public Connection run() throws SQLException {
-            return createDataSource().getConnection();
-        }
-    }
-
     private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
     static {
@@ -582,7 +571,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             if (dataSource != null) {
                 return dataSource;
             }
-
             jmxRegister();
 
             // create factory which returns raw physical connections
@@ -596,10 +584,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                 poolableConnectionFactory.setPoolStatements(poolPreparedStatements);
                 poolableConnectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
                 success = true;
-            } catch (final SQLException se) {
+            } catch (final SQLException | RuntimeException se) {
                 throw se;
-            } catch (final RuntimeException rte) {
-                throw rte;
             } catch (final Exception ex) {
                 throw new SQLException("Error creating connection factory", ex);
             }
@@ -616,10 +602,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                 newDataSource = createDataSourceInstance();
                 newDataSource.setLogWriter(logWriter);
                 success = true;
-            } catch (final SQLException se) {
+            } catch (final SQLException | RuntimeException se) {
                 throw se;
-            } catch (final RuntimeException rte) {
-                throw rte;
             } catch (final Exception ex) {
                 throw new SQLException("Error creating datasource", ex);
             } finally {
@@ -740,10 +724,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return The print writer used by this configuration to log information on abandoned objects.
      */
     public PrintWriter getAbandonedLogWriter() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getLogWriter();
-        }
-        return null;
+        return abandonedConfig == null ? null : abandonedConfig.getLogWriter();
     }
 
     /**
@@ -755,10 +736,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public boolean getAbandonedUsageTracking() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getUseUsageTracking();
-        }
-        return false;
+        return abandonedConfig == null ? false : abandonedConfig.getUseUsageTracking();
     }
 
     /**
@@ -791,7 +769,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public Connection getConnection() throws SQLException {
         if (Utils.IS_SECURITY_ENABLED) {
-            final PrivilegedExceptionAction<Connection> action = new PaGetConnection();
+            final PrivilegedExceptionAction<Connection> action = () -> createDataSource().getConnection();
             try {
                 return AccessController.doPrivileged(action);
             } catch (final PrivilegedActionException e) {
@@ -843,10 +821,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public List<String> getConnectionInitSqls() {
         final List<String> result = connectionInitSqls;
-        if (result == null) {
-            return Collections.emptyList();
-        }
-        return result;
+        return result == null ? Collections.emptyList() : result;
     }
 
     /**
@@ -937,10 +912,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public Set<String> getDisconnectionSqlCodes() {
         final Set<String> result = disconnectionSqlCodes;
-        if (result == null) {
-            return Collections.emptySet();
-        }
-        return result;
+        return result == null ? Collections.emptySet() : result;
     }
 
     /**
@@ -1074,10 +1046,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public boolean getLogAbandoned() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getLogAbandoned();
-        }
-        return false;
+        return abandonedConfig == null ? false : abandonedConfig.getLogAbandoned();
     }
 
     /**
@@ -1108,8 +1077,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public int getLoginTimeout() throws SQLException {
-        // This method isn't supported by the PoolingDataSource returned by the
-        // createDataSource
+        // This method isn't supported by the PoolingDataSource returned by the createDataSource
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
     }
 
@@ -1223,10 +1191,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public int getNumActive() {
         // Copy reference to avoid NPE if close happens after null check
         final GenericObjectPool<PoolableConnection> pool = connectionPool;
-        if (pool != null) {
-            return pool.getNumActive();
-        }
-        return 0;
+        return pool == null ? 0 : pool.getNumActive();
     }
 
     /**
@@ -1238,10 +1203,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public int getNumIdle() {
         // Copy reference to avoid NPE if close happens after null check
         final GenericObjectPool<PoolableConnection> pool = connectionPool;
-        if (pool != null) {
-            return pool.getNumIdle();
-        }
-        return 0;
+        return pool == null ? 0 : pool.getNumIdle();
     }
 
     /**
@@ -1299,10 +1261,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public boolean getRemoveAbandonedOnBorrow() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getRemoveAbandonedOnBorrow();
-        }
-        return false;
+        return abandonedConfig == null ? false : abandonedConfig.getRemoveAbandonedOnBorrow();
     }
 
     /**
@@ -1323,10 +1282,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public boolean getRemoveAbandonedOnMaintenance() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getRemoveAbandonedOnMaintenance();
-        }
-        return false;
+        return abandonedConfig == null ? false : abandonedConfig.getRemoveAbandonedOnMaintenance();
     }
 
     /**
@@ -1351,10 +1307,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public int getRemoveAbandonedTimeout() {
-        if (abandonedConfig != null) {
-            return abandonedConfig.getRemoveAbandonedTimeout();
-        }
-        return 300;
+        return abandonedConfig == null ? 300 : abandonedConfig.getRemoveAbandonedTimeout();
     }
 
     /**
@@ -1720,8 +1673,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.autoCommitOnReturn = autoCommitOnReturn;
     }
 
-    // ----------------------------------------------------- DataSource Methods
-
     /**
      * Sets the state caching flag.
      *
@@ -1738,11 +1689,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.7.0
      */
     public void setConnectionFactoryClassName(final String connectionFactoryClassName) {
-        if (isEmpty(connectionFactoryClassName)) {
-            this.connectionFactoryClassName = null;
-        } else {
-            this.connectionFactoryClassName = connectionFactoryClassName;
-        }
+        this.connectionFactoryClassName = isEmpty(connectionFactoryClassName) ? null : connectionFactoryClassName;
     }
 
     /**
@@ -1833,11 +1780,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param defaultCatalog the default catalog
      */
     public void setDefaultCatalog(final String defaultCatalog) {
-        if (isEmpty(defaultCatalog)) {
-            this.defaultCatalog = null;
-        } else {
-            this.defaultCatalog = defaultCatalog;
-        }
+        this.defaultCatalog = isEmpty(defaultCatalog) ? null : defaultCatalog;
     }
 
     /**
@@ -1880,11 +1823,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.5.0
      */
     public void setDefaultSchema(final String defaultSchema) {
-        if (isEmpty(defaultSchema)) {
-            this.defaultSchema = null;
-        } else {
-            this.defaultSchema = defaultSchema;
-        }
+        this.defaultSchema = isEmpty(defaultSchema) ? null : defaultSchema;
     }
 
     /**
@@ -1985,11 +1924,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param driverClassName the class name of the JDBC driver
      */
     public synchronized void setDriverClassName(final String driverClassName) {
-        if (isEmpty(driverClassName)) {
-            this.driverClassName = null;
-        } else {
-            this.driverClassName = driverClassName;
-        }
+        this.driverClassName = isEmpty(driverClassName) ? null : driverClassName;
     }
 
     /**
@@ -2485,11 +2420,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param validationQuery the new value for the validation query
      */
     public void setValidationQuery(final String validationQuery) {
-        if (isEmpty(validationQuery)) {
-            this.validationQuery = null;
-        } else {
-            this.validationQuery = validationQuery;
-        }
+        this.validationQuery = isEmpty(validationQuery) ? null : validationQuery;
     }
 
     /**
