@@ -119,6 +119,23 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
+     * Notification from {@link PoolableConnection} that we returned to the pool.
+     * 
+     * @throws SQLException when <code>clearStatementPoolOnReturn</code> is true and the statement pool could not be
+     *                      cleared
+     * @since 2.8.0
+     */
+    public void connectionReturnedToPool() throws SQLException {
+        if (pstmtPool != null && clearStatementPoolOnReturn) {
+            try {
+                pstmtPool.clear();
+            } catch (Exception e) {
+                throw new SQLException("Error clearing statement pool", e);
+            }
+        }
+    }
+
+    /**
      * Creates a PStmtKey for the given arguments.
      *
      * @param sql
@@ -301,6 +318,16 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
+     * Returns the prepared statement pool we're using.
+     * 
+     * @return statement pool
+     * @since 2.8.0
+     */
+    public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
+        return pstmtPool;
+    }
+
+    /**
      * {@link KeyedPooledObjectFactory} method for creating {@link PoolablePreparedStatement}s or
      * {@link PoolableCallableStatement}s. The <code>stmtType</code> field in the key determines whether a
      * PoolablePreparedStatement or PoolableCallableStatement is created.
@@ -353,6 +380,27 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         final DelegatingPreparedStatement dps = pooledObject.getObject();
         dps.clearParameters();
         dps.passivate();
+    }
+
+    /**
+     * Creates or obtains a {@link CallableStatement} from the pool.
+     *
+     * @param key 
+     *            a {@link PStmtKey} for the given arguments
+     * @return a {@link PoolableCallableStatement}
+     * @throws SQLException
+     *             Wraps an underlying exception.
+     */
+    private CallableStatement prepareCall(final PStmtKey key) throws SQLException {
+        try {
+            return (CallableStatement) pstmtPool.borrowObject(key);
+        } catch (final NoSuchElementException e) {
+            throw new SQLException("MaxOpenCallableStatements limit reached", e);
+        } catch (final RuntimeException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new SQLException("Borrow callableStatement from pool failed", e);
+        }
     }
 
     /**
@@ -411,23 +459,26 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Creates or obtains a {@link CallableStatement} from the pool.
+     * Creates or obtains a {@link PreparedStatement} from the pool.
      *
      * @param key 
      *            a {@link PStmtKey} for the given arguments
-     * @return a {@link PoolableCallableStatement}
+     * @return a {@link PoolablePreparedStatement}
      * @throws SQLException
      *             Wraps an underlying exception.
      */
-    private CallableStatement prepareCall(final PStmtKey key) throws SQLException {
+    private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
+        if (null == pstmtPool) {
+            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
+        }
         try {
-            return (CallableStatement) pstmtPool.borrowObject(key);
+            return pstmtPool.borrowObject(key);
         } catch (final NoSuchElementException e) {
-            throw new SQLException("MaxOpenCallableStatements limit reached", e);
+            throw new SQLException("MaxOpenPreparedStatements limit reached", e);
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
-            throw new SQLException("Borrow callableStatement from pool failed", e);
+            throw new SQLException("Borrow prepareStatement from pool failed", e);
         }
     }
 
@@ -535,50 +586,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
         return prepareStatement(createKey(sql, columnNames));
     }
-
-    /**
-     * Creates or obtains a {@link PreparedStatement} from the pool.
-     *
-     * @param key 
-     *            a {@link PStmtKey} for the given arguments
-     * @return a {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
-     */
-    private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
-        if (null == pstmtPool) {
-            throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
-        }
-        try {
-            return pstmtPool.borrowObject(key);
-        } catch (final NoSuchElementException e) {
-            throw new SQLException("MaxOpenPreparedStatements limit reached", e);
-        } catch (final RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new SQLException("Borrow prepareStatement from pool failed", e);
-        }
-    }
-
-    /**
-     * Sets the prepared statement pool.
-     *
-     * @param pool
-     *            the prepared statement pool.
-     */
-    public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
-        pstmtPool = pool;
-    }
-
-    /**
-     * Returns the prepared statement pool we're using.
-     * 
-     * @return statement pool
-     * @since 2.8.0
-     */
-    public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
-        return pstmtPool;
-    }
     
     /**
      * Sets whether the pool of statements should be cleared when the connection is returned to its pool. 
@@ -591,6 +598,16 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
     
+    /**
+     * Sets the prepared statement pool.
+     *
+     * @param pool
+     *            the prepared statement pool.
+     */
+    public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
+        pstmtPool = pool;
+    }
+
     @Override
     public synchronized String toString() {
         if (pstmtPool != null) {
@@ -611,22 +628,5 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public boolean validateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) {
         return true;
-    }
-
-    /**
-     * Notification from {@link PoolableConnection} that we returned to the pool.
-     * 
-     * @throws SQLException when <code>clearStatementPoolOnReturn</code> is true and the statement pool could not be
-     *                      cleared
-     * @since 2.8.0
-     */
-    public void connectionReturnedToPool() throws SQLException {
-        if (pstmtPool != null && clearStatementPoolOnReturn) {
-            try {
-                pstmtPool.clear();
-            } catch (Exception e) {
-                throw new SQLException("Error clearing statement pool", e);
-            }
-        }
     }
 }
