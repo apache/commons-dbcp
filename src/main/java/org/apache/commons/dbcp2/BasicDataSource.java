@@ -211,7 +211,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private boolean poolPreparedStatements = false;
 
     private boolean clearStatementPoolOnReturn = false;
-    
+
     /**
      * <p>
      * The maximum number of open statements that can be allocated from the statement pool at the same time, or negative
@@ -456,7 +456,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return A new connection factory.
      *
-     * @throws SQLException If the connection factort cannot be created
+     * @throws SQLException If the connection factory cannot be created
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
@@ -1438,8 +1438,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Returns true if the statement pool is cleared when the connection is returned to its pool.
-     * 
-     * @return true if the statement pool is cleared at connection return 
+     *
+     * @return true if the statement pool is cleared at connection return
      * @since 2.8.0
      */
     @Override
@@ -1660,9 +1660,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should 
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolPreparedStatements(boolean)}) should
      * be cleared when the connection is returned to its pool. Default is false.
-     * 
+     *
      * @param clearStatementPoolOnReturn clear or not
      * @since 2.8.0
      */
