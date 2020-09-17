@@ -77,7 +77,10 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-558" due-to="louislatreille">
         Fix DelegatingConnection readOnly and autoCommit caching mechanism #35.
-      </action>     
+      </action>
+      <action dev="markt" type="fix" due-to="Sebastian Haas">
+        Fix regression introduced by unreleased code clean-up #63.
+      </action>
       <!-- update -->
       <action dev="ggregory" type="update" due-to="DoiMasayuki, Alexander Norz, Gary Gregory">
         Update to PR#36 - PrepareStatement and prepareCall methods are extracted #37.
