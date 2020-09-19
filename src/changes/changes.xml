@@ -122,7 +122,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update org.apache.commons:commons-parent from 48 to 51.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update jacoco-maven-plugin from 0.8.4 to 0.8.5.
+        Update jacoco-maven-plugin from 0.8.4 to 0.8.6.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update maven-checkstyle-plugin from 3.0.0 to 3.1.1.
