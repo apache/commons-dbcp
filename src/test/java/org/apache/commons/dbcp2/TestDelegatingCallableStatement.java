@@ -745,10 +745,10 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetAsciiStreamStringInputStreamLong() throws Exception {
         try {
-            delegate.setAsciiStream("foo", (java.io.InputStream) null, 1l);
+            delegate.setAsciiStream("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setAsciiStream("foo", (java.io.InputStream) null, 1l);
+        verify(obj, times(1)).setAsciiStream("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
@@ -781,19 +781,19 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetBinaryStreamStringInputStreamLong() throws Exception {
         try {
-            delegate.setBinaryStream("foo", (java.io.InputStream) null, 1l);
+            delegate.setBinaryStream("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setBinaryStream("foo", (java.io.InputStream) null, 1l);
+        verify(obj, times(1)).setBinaryStream("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
     public void testSetBlobStringInputStreamLong() throws Exception {
         try {
-            delegate.setBlob("foo", (java.io.InputStream) null, 1l);
+            delegate.setBlob("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setBlob("foo", (java.io.InputStream) null, 1l);
+        verify(obj, times(1)).setBlob("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
@@ -862,10 +862,10 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetCharacterStreamStringReaderLong() throws Exception {
         try {
-            delegate.setCharacterStream("foo", (java.io.StringReader) null, 1l);
+            delegate.setCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setCharacterStream("foo", (java.io.StringReader) null, 1l);
+        verify(obj, times(1)).setCharacterStream("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -880,10 +880,10 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetClobStringReaderLong() throws Exception {
         try {
-            delegate.setClob("foo", (java.io.StringReader) null, 1l);
+            delegate.setClob("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setClob("foo", (java.io.StringReader) null, 1l);
+        verify(obj, times(1)).setClob("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -898,19 +898,19 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetDateStringSqlDateCalendar() throws Exception {
         try {
-            delegate.setDate("foo", new java.sql.Date(1529827548745l), (java.util.Calendar) null);
+            delegate.setDate("foo", new java.sql.Date(1529827548745L), (java.util.Calendar) null);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setDate("foo", new java.sql.Date(1529827548745l), (java.util.Calendar) null);
+        verify(obj, times(1)).setDate("foo", new java.sql.Date(1529827548745L), (java.util.Calendar) null);
     }
 
     @Test
     public void testSetDateStringSqlDate() throws Exception {
         try {
-            delegate.setDate("foo", new java.sql.Date(1529827548745l));
+            delegate.setDate("foo", new java.sql.Date(1529827548745L));
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setDate("foo", new java.sql.Date(1529827548745l));
+        verify(obj, times(1)).setDate("foo", new java.sql.Date(1529827548745L));
     }
 
     @Test
@@ -943,19 +943,19 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetLongStringLong() throws Exception {
         try {
-            delegate.setLong("foo", 1l);
+            delegate.setLong("foo", 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setLong("foo", 1l);
+        verify(obj, times(1)).setLong("foo", 1L);
     }
 
     @Test
     public void testSetNCharacterStreamStringReaderLong() throws Exception {
         try {
-            delegate.setNCharacterStream("foo", (java.io.StringReader) null, 1l);
+            delegate.setNCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setNCharacterStream("foo", (java.io.StringReader) null, 1l);
+        verify(obj, times(1)).setNCharacterStream("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -970,10 +970,10 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testSetNClobStringReaderLong() throws Exception {
         try {
-            delegate.setNClob("foo", (java.io.StringReader) null, 1l);
+            delegate.setNClob("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(obj, times(1)).setNClob("foo", (java.io.StringReader) null, 1l);
+        verify(obj, times(1)).setNClob("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test

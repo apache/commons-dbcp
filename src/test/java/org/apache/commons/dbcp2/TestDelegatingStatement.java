@@ -557,10 +557,10 @@ public class TestDelegatingStatement {
     @Test
     public void testSetLargeMaxRowsLong() throws Exception {
         try {
-            delegatingStatement.setLargeMaxRows(1l);
+            delegatingStatement.setLargeMaxRows(1L);
         } catch (final SQLException e) {
         }
-        verify(mockedStatement, times(1)).setLargeMaxRows(1l);
+        verify(mockedStatement, times(1)).setLargeMaxRows(1L);
     }
 
     @Test
