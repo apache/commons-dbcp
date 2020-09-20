@@ -142,9 +142,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetAsciiStreamIntegerInputStreamLong() throws Exception {
         try {
-            delegate.setAsciiStream(1,(java.io.InputStream) null,1l);
+            delegate.setAsciiStream(1,(java.io.InputStream) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null,1l);
+        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -174,9 +174,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetBinaryStreamIntegerInputStreamLong() throws Exception {
         try {
-            delegate.setBinaryStream(1,(java.io.InputStream) null,1l);
+            delegate.setBinaryStream(1,(java.io.InputStream) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setBinaryStream(1,(java.io.InputStream) null,1l);
+        verify(obj, times(1)).setBinaryStream(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -214,9 +214,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetBlobIntegerInputStreamLong() throws Exception {
         try {
-            delegate.setBlob(1,(java.io.InputStream) null,1l);
+            delegate.setBlob(1,(java.io.InputStream) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setBlob(1,(java.io.InputStream) null,1l);
+        verify(obj, times(1)).setBlob(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -262,9 +262,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetCharacterStreamIntegerReaderLong() throws Exception {
         try {
-            delegate.setCharacterStream(1,(java.io.StringReader) null,1l);
+            delegate.setCharacterStream(1,(java.io.StringReader) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setCharacterStream(1,(java.io.StringReader) null,1l);
+        verify(obj, times(1)).setCharacterStream(1,(java.io.StringReader) null,1L);
     }
 
     @Test
@@ -278,9 +278,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetClobIntegerReaderLong() throws Exception {
         try {
-            delegate.setClob(1,(java.io.StringReader) null,1l);
+            delegate.setClob(1,(java.io.StringReader) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setClob(1,(java.io.StringReader) null,1l);
+        verify(obj, times(1)).setClob(1,(java.io.StringReader) null,1L);
     }
 
     @Test
@@ -294,17 +294,17 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetDateIntegerSqlDateCalendar() throws Exception {
         try {
-            delegate.setDate(1,new java.sql.Date(1529827548745l),(java.util.Calendar) null);
+            delegate.setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745l),(java.util.Calendar) null);
+        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
     }
 
     @Test
     public void testSetDateIntegerSqlDate() throws Exception {
         try {
-            delegate.setDate(1,new java.sql.Date(1529827548745l));
+            delegate.setDate(1,new java.sql.Date(1529827548745L));
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745l));
+        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745L));
     }
 
     @Test
@@ -334,9 +334,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetLongIntegerLong() throws Exception {
         try {
-            delegate.setLong(1,1l);
+            delegate.setLong(1,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setLong(1,1l);
+        verify(obj, times(1)).setLong(1,1L);
     }
 
     @Test
@@ -350,9 +350,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetNCharacterStreamIntegerReaderLong() throws Exception {
         try {
-            delegate.setNCharacterStream(1,(java.io.StringReader) null,1l);
+            delegate.setNCharacterStream(1,(java.io.StringReader) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setNCharacterStream(1,(java.io.StringReader) null,1l);
+        verify(obj, times(1)).setNCharacterStream(1,(java.io.StringReader) null,1L);
     }
 
     @Test
@@ -374,9 +374,9 @@ public class TestDelegatingPreparedStatement {
     @Test
     public void testSetNClobIntegerReaderLong() throws Exception {
         try {
-            delegate.setNClob(1,(java.io.StringReader) null,1l);
+            delegate.setNClob(1,(java.io.StringReader) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setNClob(1,(java.io.StringReader) null,1l);
+        verify(obj, times(1)).setNClob(1,(java.io.StringReader) null,1L);
     }
 
     @Test
