@@ -120,12 +120,4 @@ class UserPassKey implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer(super.toString());
-        sb.append("[");
-        sb.append(userName);
-        sb.append(']');
-        return sb.toString();
-    }
 }
