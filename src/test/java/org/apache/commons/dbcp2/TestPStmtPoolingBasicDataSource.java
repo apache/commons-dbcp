@@ -237,7 +237,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     /**
      * Tests clearStatementPoolOnReturn introduced with DBCP-566.
      * When turned on, the statement pool must be empty after the connection is closed.
-     *  
+     *
      * @throws Exception
      * @since 2.8.0
      */
@@ -253,9 +253,9 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertEquals(0, ds.getNumIdle());
 
         @SuppressWarnings("unchecked")
-        final DelegatingConnection<Connection> poolableConn = 
+        final DelegatingConnection<Connection> poolableConn =
             (DelegatingConnection<Connection>) ((DelegatingConnection<Connection>) conn1).getDelegateInternal();
-        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = 
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool =
             ((PoolingConnection) poolableConn.getDelegateInternal()).getStatementPool();
 
         final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
@@ -263,17 +263,17 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
         assertNotNull(inner1);
         stmt1.close();
-        
+
         final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
         assertNotNull(stmt2);
         final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
         assertNotNull(inner2);
         assertSame(inner1, inner2); // from the same connection the statement must be pooled
         stmt2.close();
-        
+
         conn1.close();
         assertTrue(inner1.isClosed());
-        
+
         assertEquals(0, stmtPool.getNumActive());
         assertEquals(0, stmtPool.getNumIdle());
 
@@ -291,7 +291,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertNotNull(inner3);
 
         assertNotSame(inner1, inner3); // when acquiring the connection the next time, statement must be new
-        
+
         conn2.close();
     }
 

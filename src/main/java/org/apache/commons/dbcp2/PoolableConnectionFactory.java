@@ -601,16 +601,16 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Sets whether the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should 
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should
      * be cleared when the connection is returned to its pool. Default is false.
-     * 
+     *
      * @param clearStatementPoolOnReturn clear or not
      * @since 2.8.0
      */
     public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
         this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
-    
+
     public void setRollbackOnReturn(final boolean rollbackOnReturn) {
         this.rollbackOnReturn = rollbackOnReturn;
     }

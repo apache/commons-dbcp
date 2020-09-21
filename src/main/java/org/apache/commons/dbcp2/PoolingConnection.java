@@ -66,7 +66,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool;
 
     private boolean clearStatementPoolOnReturn = false;
-    
+
     /**
      * Constructor.
      *
@@ -120,7 +120,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Notification from {@link PoolableConnection} that we returned to the pool.
-     * 
+     *
      * @throws SQLException when <code>clearStatementPoolOnReturn</code> is true and the statement pool could not be
      *                      cleared
      * @since 2.8.0
@@ -319,7 +319,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Returns the prepared statement pool we're using.
-     * 
+     *
      * @return statement pool
      * @since 2.8.0
      */
@@ -385,7 +385,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /**
      * Creates or obtains a {@link CallableStatement} from the pool.
      *
-     * @param key 
+     * @param key
      *            a {@link PStmtKey} for the given arguments
      * @return a {@link PoolableCallableStatement}
      * @throws SQLException
@@ -453,7 +453,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /**
      * Creates or obtains a {@link PreparedStatement} from the pool.
      *
-     * @param key 
+     * @param key
      *            a {@link PStmtKey} for the given arguments
      * @return a {@link PoolablePreparedStatement}
      * @throws SQLException
@@ -516,7 +516,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @return a {@link PoolablePreparedStatement}
      * @throws SQLException
      *             Wraps an underlying exception.
-     *             
+     *
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
@@ -578,18 +578,18 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
         return prepareStatement(createKey(sql, columnNames));
     }
-    
+
     /**
-     * Sets whether the pool of statements should be cleared when the connection is returned to its pool. 
+     * Sets whether the pool of statements should be cleared when the connection is returned to its pool.
      * Default is false.
-     * 
+     *
      * @param clearStatementPoolOnReturn clear or not
      * @since 2.8.0
      */
     public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
         this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
     }
-    
+
     /**
      * Sets the prepared statement pool.
      *
