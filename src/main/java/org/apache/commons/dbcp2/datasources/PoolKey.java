@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @since 2.0
@@ -45,18 +46,10 @@ class PoolKey implements Serializable {
             return false;
         }
         final PoolKey other = (PoolKey) obj;
-        if (dataSourceName == null) {
-            if (other.dataSourceName != null) {
-                return false;
-            }
-        } else if (!dataSourceName.equals(other.dataSourceName)) {
+        if (!Objects.equals(dataSourceName, other.dataSourceName)) {
             return false;
         }
-        if (userName == null) {
-            if (other.userName != null) {
-                return false;
-            }
-        } else if (!userName.equals(other.userName)) {
+        if (!Objects.equals(userName, other.userName)) {
             return false;
         }
         return true;

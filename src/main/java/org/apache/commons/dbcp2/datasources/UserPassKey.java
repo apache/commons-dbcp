@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.apache.commons.dbcp2.Utils;
 
@@ -75,11 +76,7 @@ class UserPassKey implements Serializable {
             return false;
         }
         final UserPassKey other = (UserPassKey) obj;
-        if (userName == null) {
-            if (other.userName != null) {
-                return false;
-            }
-        } else if (!userName.equals(other.userName)) {
+        if (!Objects.equals(userName, other.userName)) {
             return false;
         }
         return true;
