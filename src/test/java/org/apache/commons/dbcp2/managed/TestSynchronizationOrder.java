@@ -272,7 +272,7 @@ public class TestSynchronizationOrder {
         bds.setUsername("userName");
         bds.setPassword("password");
         bds.setValidationQuery("SELECT DUMMY FROM DUAL");
-        bds.setConnectionInitSqls(Arrays.asList(new String[]{"SELECT 1", "SELECT 2"}));
+        bds.setConnectionInitSqls(Arrays.asList("SELECT 1", "SELECT 2"));
         bds.setDriverClassLoader(new TesterClassLoader());
         bds.setJmxName("org.apache.commons.dbcp2:name=test");
         final AtomicInteger closeCounter = new AtomicInteger();
