@@ -1,4 +1,55 @@
               Apache Apache Commons DBCP
+                 Version 2.8.0
+                 RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.8.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o DBCP-564:  Fix BasicManagedDataSource leak of connections opened after transaction is rollback-only #39. Thanks to Florent Guillaume.
+o DBCP-566:  Add clearStatementPoolOnReturn #42. Thanks to Robert Paschek, Gary Gregory, Phil Steitz.
+o DBCP-559:  Add start, restart methods to BasicDataSource. #50. Thanks to Phil Steitz.
+
+Fixed Bugs:
+o DBCP-555:  NPE when creating a SQLExceptionList with a null list. Thanks to Gary Gregory.
+o DBCP-558:  Fix DelegatingConnection readOnly and autoCommit caching mechanism #35. Thanks to louislatreille.
+o            Fix regression introduced by unreleased code clean-up #63. Thanks to Sebastian Haas.
+
+Changes:
+o            Update to PR#36 - PrepareStatement and prepareCall methods are extracted #37. Thanks to DoiMasayuki, Alexander Norz, Gary Gregory.
+o            Mask out user name and password from DriverAdapterCPDS.toString(). Thanks to Gary Gregory.
+o DBCP-650:  Update Apache Commons Pool from 2.7.0 to 2.8.1, #48. Thanks to Gary Gregory, Dependabot.
+o            Update tests from H2 1.4.199 to 1.4.200. Thanks to Gary Gregory.
+o            Update tests from Mockito 3.0.0 to 3.5.11 #47, #60, #64. Thanks to Gary Gregory, Dependabot.
+o            Update tests from jboss-logging 3.4.0.Final to 3.4.1.Final. Thanks to Gary Gregory.
+o            Update tests from narayana-jta 5.9.5.Final to 5.10.6.Final, #61. Thanks to Gary Gregory.
+o            Update tests from junit-jupiter 5.5.1 to 5.7.0 #62. Thanks to Gary Gregory.
+o            Update tests from org.slf4j:slf4j-simple 1.7.26 to 1.7.30. Thanks to Gary Gregory.
+o            Update build from com.github.siom79.japicmp:japicmp-maven-plugin 0.13.1 to 0.14.3. Thanks to Gary Gregory.
+o            Update build from maven-javadoc-plugin 3.1.1 to 3.2.0. Thanks to Gary Gregory.
+o            Update build from maven-pmd-plugin 3.12.0 to 3.13.0. Thanks to Gary Gregory.
+o            Update org.apache.commons:commons-parent from 48 to 51. Thanks to Gary Gregory.
+o            Update jacoco-maven-plugin from 0.8.4 to 0.8.6. Thanks to Gary Gregory.
+o            Update maven-checkstyle-plugin from 3.0.0 to 3.1.1. Thanks to Gary Gregory.
+o            Update actions/checkout from v1 to v2.3.2, #44, #51. Thanks to Dependabot.
+o            Update actions/setup-java from v1.4.0 to v1.4.2 #58. Thanks to Dependabot.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+https://commons.apache.org/dbcp/
+
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
                  Version 2.7.0
                  RELEASE NOTES
                  7 July 2019
