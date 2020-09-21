@@ -65,7 +65,7 @@ public class TestDelegatingConnection {
         public NoReadOnlyOrAutoCommitConnection() {
             super("","");
         }
-        
+
         @Override
         public void setReadOnly(boolean readOnly) {
             // Do nothing
