@@ -81,13 +81,25 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="markt" type="fix" due-to="Sebastian Haas">
         Fix regression introduced by unreleased code clean-up #63.
       </action>
-      <!-- update -->
       <action dev="ggregory" type="update" due-to="DoiMasayuki, Alexander Norz, Gary Gregory">
         Update to PR#36 - PrepareStatement and prepareCall methods are extracted #37.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Mask out user name and password from DriverAdapterCPDS.toString().
+        Do not display credentials in DriverAdapterCPDS.toString().
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Do not display credentials in DelegatingConnection.toString().
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Do not display credentials in DriverConnectionFactory.toString().
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Do not display credentials in PoolKey.toString().
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Do not display credentials in UserPassKey.toString().
+      </action>
+      <!-- UPDATES -->
       <action dev="ggregory" type="update" issue="DBCP-650" due-to="Gary Gregory, Dependabot">
         Update Apache Commons Pool from 2.7.0 to 2.8.1, #48.
       </action>
