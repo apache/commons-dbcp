@@ -69,7 +69,7 @@ public class TestParallelCreationWithNoIdle  {
         ds.setUsername("userName");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
-        ds.setConnectionInitSqls(Arrays.asList(new String[] { "SELECT 1", "SELECT 2"}));
+        ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "SELECT 2"));
         ds.setDriverClassLoader(new TesterClassLoader());
         ds.setJmxName("org.apache.commons.dbcp2:name=test");
     }

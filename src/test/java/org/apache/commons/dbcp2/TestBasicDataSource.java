@@ -84,7 +84,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setUsername("userName");
         ds.setPassword("password");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
-        ds.setConnectionInitSqls(Arrays.asList(new String[] { "SELECT 1", "SELECT 2"}));
+        ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "SELECT 2"));
         ds.setDriverClassLoader(new TesterClassLoader());
         ds.setJmxName("org.apache.commons.dbcp2:name=test");
     }
@@ -327,7 +327,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testEmptyInitConnectionSql() throws Exception {
-        ds.setConnectionInitSqls(Arrays.asList(new String[]{"", "   "}));
+        ds.setConnectionInitSqls(Arrays.asList("", "   "));
         assertNotNull(ds.getConnectionInitSqls());
         assertEquals(0, ds.getConnectionInitSqls().size());
 
@@ -339,7 +339,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testInvalidConnectionInitSql() {
         try {
-            ds.setConnectionInitSqls(Arrays.asList(new String[]{"SELECT 1","invalid"}));
+            ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "invalid"));
             try (Connection c = ds.getConnection()) {}
             fail("expected SQLException");
         }
