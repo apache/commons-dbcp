@@ -726,24 +726,18 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             dataSources.add(dataSource);
         }
 
-        final Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (final SharedPoolDataSource dataSource : dataSources) {
-                    dataSource.setDataSourceName("a");
-                }
+        final Thread t1 = new Thread(() -> {
+            for (final SharedPoolDataSource dataSource : dataSources) {
+                dataSource.setDataSourceName("a");
             }
         });
 
-        final Thread t2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (final SharedPoolDataSource dataSource : dataSources) {
-                    try {
-                        dataSource.close();
-                    } catch (final Exception e) {
-                        // Ignore
-                    }
+        final Thread t2 = new Thread(() -> {
+            for (final SharedPoolDataSource dataSource : dataSources) {
+                try {
+                    dataSource.close();
+                } catch (final Exception e) {
+                    // Ignore
                 }
             }
         });
