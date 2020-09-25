@@ -711,7 +711,7 @@ public abstract class TestConnectionPool {
         Boolean.valueOf(System.getProperty("TestConnectionPool.display.thread.details", "false")).booleanValue();
     // To pass this to a Maven test, use:
     // mvn test -DargLine="-DTestConnectionPool.display.thread.details=true"
-    // @see http://jira.codehaus.org/browse/SUREFIRE-121
+    // @see https://issues.apache.org/jira/browse/SUREFIRE-121
 
     /**
      * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection
