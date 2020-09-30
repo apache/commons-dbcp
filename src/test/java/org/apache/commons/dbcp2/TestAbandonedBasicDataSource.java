@@ -87,6 +87,9 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertEquals(1, ds.getNumActive());
         // Verify that conn1 is closed
         assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
+        // Verify that conn1 is aborted
+        final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1).getInnermostDelegate();
+        assertTrue(tCon.isAborted());
 
         conn2.close();
         assertEquals(0, ds.getNumActive());

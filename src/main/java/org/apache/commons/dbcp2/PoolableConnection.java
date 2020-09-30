@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.concurrent.Executor;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
@@ -233,6 +234,16 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         super.closeInternal();
+    }
+
+    /**
+     * Abort my underlying {@link Connection}.
+     */
+    public void abort(Executor executor) throws SQLException {
+        if (jmxObjectName != null) {
+            jmxObjectName.unregisterMBean();
+        }
+        super.abort(executor);
     }
 
     /**

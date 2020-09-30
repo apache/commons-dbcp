@@ -968,7 +968,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     @Override
     public void abort(final Executor executor) throws SQLException {
-        checkOpen();
         try {
             Jdbc41Bridge.abort(connection, executor);
         } catch (final SQLException e) {
