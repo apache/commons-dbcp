@@ -173,7 +173,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @SuppressWarnings("resource")
     public final Connection getInnermostDelegateInternal() {
         Connection conn = connection;
-        while (conn != null && conn instanceof DelegatingConnection) {
+        while (conn instanceof DelegatingConnection) {
             conn = ((DelegatingConnection<?>) conn).getDelegateInternal();
             if (this == conn) {
                 return null;

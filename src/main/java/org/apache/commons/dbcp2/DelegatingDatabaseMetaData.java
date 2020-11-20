@@ -439,7 +439,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      */
     public DatabaseMetaData getInnermostDelegate() {
         DatabaseMetaData m = databaseMetaData;
-        while (m != null && m instanceof DelegatingDatabaseMetaData) {
+        while (m instanceof DelegatingDatabaseMetaData) {
             m = ((DelegatingDatabaseMetaData) m).getDelegate();
             if (this == m) {
                 return null;

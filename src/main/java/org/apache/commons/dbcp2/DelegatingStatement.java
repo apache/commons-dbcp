@@ -467,7 +467,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     @SuppressWarnings("resource")
     public Statement getInnermostDelegate() {
         Statement s = statement;
-        while (s != null && s instanceof DelegatingStatement) {
+        while (s instanceof DelegatingStatement) {
             s = ((DelegatingStatement) s).getDelegate();
             if (this == s) {
                 return null;
