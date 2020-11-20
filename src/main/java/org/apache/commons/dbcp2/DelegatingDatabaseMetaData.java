@@ -51,7 +51,6 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      */
     public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection,
             final DatabaseMetaData databaseMetaData) {
-        super();
         this.connection = connection;
         this.databaseMetaData = databaseMetaData;
     }

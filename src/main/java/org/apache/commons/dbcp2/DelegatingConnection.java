@@ -81,7 +81,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      *            the {@link Connection} to delegate all calls to.
      */
     public DelegatingConnection(final C c) {
-        super();
         connection = c;
     }
 

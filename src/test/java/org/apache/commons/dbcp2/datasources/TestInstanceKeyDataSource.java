@@ -89,7 +89,6 @@ public class TestInstanceKeyDataSource {
         private static final long serialVersionUID = -448025812063133259L;
 
         ThrowOnSetupDefaultsDataSource() {
-            super();
         }
         @Override
         protected void setupDefaults(final Connection connection, final String userName)
