@@ -608,7 +608,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     @SuppressWarnings("resource")
     public ResultSet getInnermostDelegate() {
         ResultSet r = resultSet;
-        while (r != null && r instanceof DelegatingResultSet) {
+        while (r instanceof DelegatingResultSet) {
             r = ((DelegatingResultSet) r).getDelegate();
             if (this == r) {
                 return null;
@@ -1047,9 +1047,9 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     protected void handleException(final SQLException e) throws SQLException {
-        if (statement != null && statement instanceof DelegatingStatement) {
+        if (statement instanceof DelegatingStatement) {
             ((DelegatingStatement) statement).handleException(e);
-        } else if (connection != null && connection instanceof DelegatingConnection) {
+        } else if (connection instanceof DelegatingConnection) {
             ((DelegatingConnection<?>) connection).handleException(e);
         } else {
             throw e;
