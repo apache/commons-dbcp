@@ -129,7 +129,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
-        PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pc, userName, upkey.getPasswordCharArray());
+        final PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pc, userName, upkey.getPasswordCharArray());
         pcMap.put(pc, pci);
 
         return new DefaultPooledObject<>(pci);

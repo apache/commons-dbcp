@@ -924,7 +924,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     @Disabled
     public void testEvict() throws Exception {
-        long delay = 1000;
+        final long delay = 1000;
 
         ds.setInitialSize(10);
         ds.setMaxIdle(10);
@@ -935,10 +935,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTimeBetweenEvictionRunsMillis(delay);
         ds.setPoolPreparedStatements(true);
 
-        Connection conn = ds.getConnection();
+        final Connection conn = ds.getConnection();
         conn.close();
 
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         while (Arrays.stream(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
                 .anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
             if (ds.getNumIdle() <= ds.getMinIdle()) {

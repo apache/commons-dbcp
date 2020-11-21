@@ -48,7 +48,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     @Override
     protected BasicDataSource createDataSource() throws Exception {
         final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
-        TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        final TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         basicManagedDataSource.setTransactionManager(transactionManager);
         basicManagedDataSource.setTransactionSynchronizationRegistry(transactionManager);
         return basicManagedDataSource;

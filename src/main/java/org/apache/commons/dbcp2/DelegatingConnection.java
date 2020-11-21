@@ -626,7 +626,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                 if (trace instanceof Statement) {
                     try {
                         ((Statement) trace).close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         thrownList.add(e);
                     }
                 } else if (trace instanceof ResultSet) {
@@ -634,7 +634,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                     // generated via DatabaseMetaData
                     try {
                         ((ResultSet) trace).close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         thrownList.add(e);
                     }
                 }

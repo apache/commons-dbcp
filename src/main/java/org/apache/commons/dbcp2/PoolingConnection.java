@@ -129,7 +129,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         if (pstmtPool != null && clearStatementPoolOnReturn) {
             try {
                 pstmtPool.clear();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new SQLException("Error clearing statement pool", e);
             }
         }

@@ -526,7 +526,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         spDs.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
-        DataSource myDs = spDs;
+        final DataSource myDs = spDs;
 
         Connection conn = ds.getConnection();
         callBack.setConnection(conn);

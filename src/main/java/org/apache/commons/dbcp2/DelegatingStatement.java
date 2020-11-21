@@ -145,7 +145,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                     if (resultSet != null) {
                         try {
                             resultSet.close();
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             if (connection != null) {
                                 // Does not rethrow e.
                                 connection.handleExceptionNoThrow(e);
@@ -159,7 +159,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             if (statement != null) {
                 try {
                     statement.close();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     if (connection != null) {
                         // Does not rethrow e.
                         connection.handleExceptionNoThrow(e);

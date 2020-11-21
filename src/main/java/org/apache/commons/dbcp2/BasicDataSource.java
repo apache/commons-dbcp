@@ -1462,7 +1462,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param value the string to test, may be null.
      * @return boolean false if value is null, otherwise {@link String#isEmpty()}.
      */
-    private boolean isEmpty(String value) {
+    private boolean isEmpty(final String value) {
         return value == null ? true : value.trim().isEmpty();
     }
 
@@ -1511,7 +1511,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @since 2.7.0
      */
-    protected void log(String message, Throwable throwable) {
+    protected void log(final String message, final Throwable throwable) {
         if (logWriter != null) {
             logWriter.println(message);
             throwable.printStackTrace(logWriter);

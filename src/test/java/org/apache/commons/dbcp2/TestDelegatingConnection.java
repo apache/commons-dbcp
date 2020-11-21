@@ -67,7 +67,7 @@ public class TestDelegatingConnection {
         }
 
         @Override
-        public void setReadOnly(boolean readOnly) {
+        public void setReadOnly(final boolean readOnly) {
             // Do nothing
         }
 
@@ -77,7 +77,7 @@ public class TestDelegatingConnection {
         }
 
         @Override
-        public void setAutoCommit(boolean autoCommit) {
+        public void setAutoCommit(final boolean autoCommit) {
             // Do nothing
         }
 
@@ -193,7 +193,7 @@ public class TestDelegatingConnection {
             delegatingConnection.addTrace(testerResultSet);
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             Assertions.assertTrue(e instanceof SQLExceptionList);
             Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
         } finally {
@@ -210,7 +210,7 @@ public class TestDelegatingConnection {
             delegatingConnection.addTrace(testerResultSet);
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             Assertions.assertTrue(e instanceof SQLExceptionList);
             Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
         } finally {
@@ -226,7 +226,7 @@ public class TestDelegatingConnection {
             delegatingConnection.addTrace(testerStatement);
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             Assertions.assertTrue(e instanceof SQLExceptionList);
             Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
         } finally {
@@ -236,8 +236,8 @@ public class TestDelegatingConnection {
 
     @Test
     public void testReadOnlyCaching() throws SQLException {
-        Connection con = new NoReadOnlyOrAutoCommitConnection();
-        DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+        final Connection con = new NoReadOnlyOrAutoCommitConnection();
+        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
 
         delCon.setReadOnly(true);
 
@@ -247,8 +247,8 @@ public class TestDelegatingConnection {
 
     @Test
     public void testAutoCommitCaching() throws SQLException {
-        Connection con = new NoReadOnlyOrAutoCommitConnection();
-        DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+        final Connection con = new NoReadOnlyOrAutoCommitConnection();
+        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
 
         delCon.setAutoCommit(true);
 
