@@ -113,8 +113,6 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      */
     @Override
     public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey upkey) throws Exception {
-        PooledConnectionAndInfo pci = null;
-
         PooledConnection pc = null;
         final String userName = upkey.getUsername();
         final String password = upkey.getPassword();
@@ -131,7 +129,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pc.addConnectionEventListener(this);
-        pci = new PooledConnectionAndInfo(pc, userName, upkey.getPasswordCharArray());
+        PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pc, userName, upkey.getPasswordCharArray());
         pcMap.put(pc, pci);
 
         return new DefaultPooledObject<>(pci);

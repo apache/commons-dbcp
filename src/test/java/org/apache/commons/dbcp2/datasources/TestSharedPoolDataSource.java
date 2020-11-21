@@ -512,7 +512,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private void doTestPoolCallableStatements(final PrepareCallCallback callBack)
     throws Exception {
         final DriverAdapterCPDS myPcds = new DriverAdapterCPDS();
-        DataSource myDs = null;
         myPcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         myPcds.setUrl("jdbc:apache:commons:testdriver");
         myPcds.setUser("foo");
@@ -527,19 +526,17 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         spDs.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
-        myDs = spDs;
+        DataSource myDs = spDs;
 
         Connection conn = ds.getConnection();
         callBack.setConnection(conn);
-        CallableStatement stmt = null;
-        ResultSet rset = null;
 
         assertNotNull(conn);
 
-        stmt = callBack.getCallableStatement();
+        CallableStatement stmt = callBack.getCallableStatement();
         assertNotNull(stmt);
         final long l1HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
-        rset = stmt.executeQuery();
+        ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
         assertTrue(rset.next());
         rset.close();
@@ -590,7 +587,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private void doTestPoolPreparedStatements(final PrepareStatementCallback callBack)
     throws Exception {
         final DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
-        DataSource myds = null;
+        DataSource myds;
         mypcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         mypcds.setUrl("jdbc:apache:commons:testdriver");
         mypcds.setUser("foo");
@@ -609,8 +606,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         Connection conn = ds.getConnection();
         callBack.setConnection(conn);
-        PreparedStatement stmt = null;
-        ResultSet rset = null;
+        PreparedStatement stmt;
+        ResultSet rset;
 
         assertNotNull(conn);
 
