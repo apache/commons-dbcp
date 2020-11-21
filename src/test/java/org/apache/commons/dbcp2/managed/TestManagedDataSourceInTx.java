@@ -435,7 +435,6 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testConnectionReturnOnCommit() throws Exception {
-         // override with no-op test
-         return;
+       // override with no-op test
     }
 }
