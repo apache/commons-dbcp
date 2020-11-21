@@ -46,12 +46,12 @@ public class TesterConnectionFactory implements ConnectionFactory {
 
     @Override
     public Connection createConnection() throws SQLException {
-        Connection conn = driver.connect(connectionString, properties);
+        final Connection conn = driver.connect(connectionString, properties);
         doSomething(conn);
         return conn;
     }
 
-    private void doSomething(Connection conn) {
+    private void doSomething(final Connection conn) {
         // do something
     }
 

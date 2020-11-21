@@ -87,7 +87,7 @@ public final class Utils {
      */
     public static Properties cloneWithoutCredentials(final Properties properties) {
         if (properties != null) {
-            Properties temp = (Properties) properties.clone();
+            final Properties temp = (Properties) properties.clone();
             temp.remove("user");
             temp.remove("password");
             return temp;

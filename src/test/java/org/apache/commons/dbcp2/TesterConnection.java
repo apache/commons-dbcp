@@ -396,7 +396,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         this.schema= schema;
     }
 
-    public void setSqlExceptionOnClose(boolean sqlExceptionOnClose) {
+    public void setSqlExceptionOnClose(final boolean sqlExceptionOnClose) {
         this.sqlExceptionOnClose = sqlExceptionOnClose;
     }
 

@@ -70,7 +70,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         stmt2.close();
 
         // test cleanup the 'b' statement
-        PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
+        final PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
         assertNotNull(stmt3);
         assertTrue(stmt3 != stmt1);
         assertTrue(stmt3 != stmt2);

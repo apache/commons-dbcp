@@ -246,8 +246,8 @@ public class TestManagedDataSource extends TestConnectionPool {
     public void testNestedConnections() throws Exception {
         transactionManager.begin();
 
-        Connection c1 = newConnection();
-        Connection c2 = newConnection();
+        final Connection c1 = newConnection();
+        final Connection c2 = newConnection();
 
         transactionManager.commit();
 

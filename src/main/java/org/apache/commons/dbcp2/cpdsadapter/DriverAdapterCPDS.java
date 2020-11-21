@@ -147,7 +147,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         }
     }
 
-    private boolean getBooleanContentString(RefAddr ra) {
+    private boolean getBooleanContentString(final RefAddr ra) {
         return Boolean.valueOf(getStringContent(ra)).booleanValue();
     }
 
@@ -436,7 +436,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return ref;
     }
 
-    private String getStringContent(RefAddr ra) {
+    private String getStringContent(final RefAddr ra) {
         return ra.getContent().toString();
     }
 
@@ -478,7 +478,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return this.accessToUnderlyingConnectionAllowed;
     }
 
-    private boolean isNotEmpty(RefAddr ra) {
+    private boolean isNotEmpty(final RefAddr ra) {
         return ra != null && ra.getContent() != null;
     }
 
