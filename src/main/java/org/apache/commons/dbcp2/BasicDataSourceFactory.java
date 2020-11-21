@@ -299,9 +299,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     public static BasicDataSource createDataSource(final Properties properties) throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
-        String value = null;
-
-        value = properties.getProperty(PROP_DEFAULT_AUTO_COMMIT);
+        String value = properties.getProperty(PROP_DEFAULT_AUTO_COMMIT);
         if (value != null) {
             dataSource.setDefaultAutoCommit(Boolean.valueOf(value));
         }

@@ -61,7 +61,6 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertTrue(stmt1 != stmt2);
 
         // go over the maxOpen limit
-        PreparedStatement stmt3 = null;
         try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
             fail("expected SQLException");
         }
@@ -71,7 +70,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         stmt2.close();
 
         // test cleanup the 'b' statement
-        stmt3 = conn.prepareStatement("select 'c' from dual");
+        PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
         assertNotNull(stmt3);
         assertTrue(stmt3 != stmt1);
         assertTrue(stmt3 != stmt2);

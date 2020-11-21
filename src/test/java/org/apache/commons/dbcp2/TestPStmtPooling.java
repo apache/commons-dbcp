@@ -64,9 +64,8 @@ public class TestPStmtPooling {
     @Test
     public void testMultipleClose() throws Exception {
        final DataSource ds = createPoolingDataSource();
-       PreparedStatement stmt1 = null;
        final Connection conn = ds.getConnection();
-       stmt1 = conn.prepareStatement("select 1 from dual");
+       final PreparedStatement stmt1 = conn.prepareStatement("select 1 from dual");
        final PoolablePreparedStatement<?> pps1 = getPoolablePreparedStatement(stmt1);
        conn.close();
        assertTrue(stmt1.isClosed());  // Closing conn should close stmt
