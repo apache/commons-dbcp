@@ -128,7 +128,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
                 if (resultSet != null) {
                     try {
                         resultSet.close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         thrownList.add(e);
                     }
                 }
