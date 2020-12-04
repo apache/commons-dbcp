@@ -52,7 +52,7 @@ public class TestConnectionWithNarayana {
         sb.append("payload");
         for (int i = 0; i < 10000; i++) {
             sb.append("...");
-            sb.append(String.valueOf(i));
+            sb.append(i);
         }
         sb.append("End");
         sb.append("payload");

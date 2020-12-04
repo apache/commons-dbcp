@@ -78,7 +78,6 @@ public class TesterConnectionFactory implements ConnectionFactory {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [" + String.valueOf(driver) + ";" + String.valueOf(connectionString) + ";"
-            + String.valueOf(properties) + "]";
+        return this.getClass().getName() + " [" + driver + ";" + connectionString + ";" + properties + "]";
     }
 }
