@@ -59,8 +59,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     /**
      * Map of PooledConnections for which close events are ignored. Connections are muted when they are being validated.
      */
-    private final Set<PooledConnection> validatingSet = Collections
-            .newSetFromMap(new ConcurrentHashMap<PooledConnection, Boolean>());
+    private final Set<PooledConnection> validatingSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     /**
      * Map of PooledConnectionAndInfo instances
