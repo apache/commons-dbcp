@@ -154,11 +154,9 @@ public class PoolingDriver implements Driver {
                     return null;
                 }
                 return new PoolGuardConnectionWrapper(pool, conn);
-            } catch (final SQLException e) {
-                throw e;
             } catch (final NoSuchElementException e) {
                 throw new SQLException("Cannot get a connection, pool error: " + e.getMessage(), e);
-            } catch (final RuntimeException e) {
+            } catch (final SQLException | RuntimeException e) {
                 throw e;
             } catch (final Exception e) {
                 throw new SQLException("Cannot get a connection, general error: " + e.getMessage(), e);

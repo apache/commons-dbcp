@@ -205,9 +205,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 // pool is closed, so close the connection
                 passivate();
                 getInnermostDelegate().close();
-            } catch (final SQLException e) {
-                throw e;
-            } catch (final RuntimeException e) {
+            } catch (final SQLException | RuntimeException e) {
                 throw e;
             } catch (final Exception e) {
                 throw new SQLException("Cannot close connection (return to pool failed)", e);
