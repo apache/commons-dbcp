@@ -115,15 +115,15 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         final PoolableConnection conn = p.getObject();
         conn.activate();
 
-        if (defaultAutoCommit != null && conn.getAutoCommit() != defaultAutoCommit.booleanValue()) {
-            conn.setAutoCommit(defaultAutoCommit.booleanValue());
+        if (defaultAutoCommit != null && conn.getAutoCommit() != defaultAutoCommit) {
+            conn.setAutoCommit(defaultAutoCommit);
         }
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTION_ISOLATION
                 && conn.getTransactionIsolation() != defaultTransactionIsolation) {
             conn.setTransactionIsolation(defaultTransactionIsolation);
         }
-        if (defaultReadOnly != null && conn.isReadOnly() != defaultReadOnly.booleanValue()) {
-            conn.setReadOnly(defaultReadOnly.booleanValue());
+        if (defaultReadOnly != null && conn.isReadOnly() != defaultReadOnly) {
+            conn.setReadOnly(defaultReadOnly);
         }
         if (defaultCatalog != null && !defaultCatalog.equals(conn.getCatalog())) {
             conn.setCatalog(defaultCatalog);
@@ -422,8 +422,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         final PoolableConnection conn = p.getObject();
         Boolean connAutoCommit = null;
         if (rollbackOnReturn) {
-            connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
-            if (!connAutoCommit.booleanValue() && !conn.isReadOnly()) {
+            connAutoCommit = conn.getAutoCommit();
+            if (!connAutoCommit && !conn.isReadOnly()) {
                 conn.rollback();
             }
         }
@@ -434,9 +434,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         // have autoCommit enabled
         if (autoCommitOnReturn) {
             if (connAutoCommit == null) {
-                connAutoCommit = Boolean.valueOf(conn.getAutoCommit());
+                connAutoCommit = conn.getAutoCommit();
             }
-            if (!connAutoCommit.booleanValue()) {
+            if (!connAutoCommit) {
                 conn.setAutoCommit(true);
             }
         }
@@ -649,7 +649,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             final long lifetime = System.currentTimeMillis() - p.getCreateTime();
             if (lifetime > maxConnLifetimeMillis) {
                 throw new LifetimeExceededException(Utils.getMessage("connectionFactory.lifetimeExceeded",
-                        Long.valueOf(lifetime), Long.valueOf(maxConnLifetimeMillis)));
+                        lifetime, maxConnLifetimeMillis));
             }
         }
     }

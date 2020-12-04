@@ -224,7 +224,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     @Test
     public void testManagedConnectionEqualsType() throws Exception {
         final Connection con1 = ds.getConnection();
-        final Integer con2 = Integer.valueOf(0);
+        final Integer con2 = 0;
         assertFalse(con1.equals(con2));
         con1.close();
     }
