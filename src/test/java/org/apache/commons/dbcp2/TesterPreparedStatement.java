@@ -77,7 +77,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         }
     }
 
-    public TesterPreparedStatement(final Connection conn, final String sql, final int columnIndexes[]) {
+    public TesterPreparedStatement(final Connection conn, final String sql, final int[] columnIndexes) {
         super(conn);
         _sql = sql;
         _columnIndexes = columnIndexes;
@@ -109,7 +109,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         }
     }
 
-    public TesterPreparedStatement(final Connection conn, final String sql, final String columnNames[]) {
+    public TesterPreparedStatement(final Connection conn, final String sql, final String[] columnNames) {
         super(conn);
         _sql = sql;
         _columnNames = columnNames;
@@ -142,13 +142,13 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     }
 
     @Override
-    public boolean execute(final String sl, final int columnIndexes[]) throws SQLException {
+    public boolean execute(final String sl, final int[] columnIndexes) throws SQLException {
         checkOpen();
         return true;
     }
 
     @Override
-    public boolean execute(final String sql, final String columnNames[]) throws SQLException {
+    public boolean execute(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         return true;
     }
@@ -172,13 +172,13 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     }
 
     @Override
-    public long executeLargeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
+    public long executeLargeUpdate(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         return 0;
     }
 
     @Override
-    public long executeLargeUpdate(final String sql, final String columnNames[]) throws SQLException {
+    public long executeLargeUpdate(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         return 0;
     }
@@ -224,13 +224,13 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     }
 
     @Override
-    public int executeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
+    public int executeUpdate(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         return 0;
     }
 
     @Override
-    public int executeUpdate(final String sql, final String columnNames[]) throws SQLException {
+    public int executeUpdate(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         return 0;
     }
@@ -344,7 +344,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     }
 
     @Override
-    public void setBytes(final int parameterIndex, final byte x[]) throws SQLException {
+    public void setBytes(final int parameterIndex, final byte[] x) throws SQLException {
         checkOpen();
     }
 

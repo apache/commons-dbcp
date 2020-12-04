@@ -214,7 +214,7 @@ class PooledConnectionImpl
      *            rows.
      * @return a key to uniquely identify a prepared statement.
      */
-    protected PStmtKey createKey(final String sql, final int columnIndexes[]) {
+    protected PStmtKey createKey(final String sql, final int[] columnIndexes) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), getSchemaOrNull(), columnIndexes);
     }
 
@@ -327,7 +327,7 @@ class PooledConnectionImpl
      *            An array of column names indicating the columns that should be returned from the inserted row or rows.
      * @return a key to uniquely identify a prepared statement.
      */
-    protected PStmtKey createKey(final String sql, final String columnNames[]) {
+    protected PStmtKey createKey(final String sql, final String[] columnNames) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), getSchemaOrNull(), columnNames);
     }
 
@@ -615,7 +615,7 @@ class PooledConnectionImpl
         }
     }
 
-    PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
+    PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
         if (pStmtPool == null) {
             return connection.prepareStatement(sql, columnIndexes);
         }
@@ -672,7 +672,7 @@ class PooledConnectionImpl
         }
     }
 
-    PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
+    PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
         if (pStmtPool == null) {
             return connection.prepareStatement(sql, columnNames);
         }

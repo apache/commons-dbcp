@@ -767,7 +767,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
@@ -781,7 +781,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         try {
             final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,

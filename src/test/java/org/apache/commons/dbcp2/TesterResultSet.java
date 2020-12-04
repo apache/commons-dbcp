@@ -879,12 +879,12 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
     }
 
     @Override
-    public void updateBytes(final int columnIndex, final byte x[]) throws SQLException {
+    public void updateBytes(final int columnIndex, final byte[] x) throws SQLException {
         checkOpen();
     }
 
     @Override
-    public void updateBytes(final String columnName, final byte x[]) throws SQLException {
+    public void updateBytes(final String columnName, final byte[] x) throws SQLException {
         checkOpen();
     }
 
