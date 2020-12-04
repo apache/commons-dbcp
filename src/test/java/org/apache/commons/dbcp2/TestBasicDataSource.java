@@ -276,7 +276,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (Connection c = ds.getConnection()) {
             fail("expected SQLException");
         } catch (final SQLException e) {
-            if (e.toString().indexOf("invalid") < 0) {
+            if (!e.toString().contains("invalid")) {
                 fail("expected detailed error message");
             }
         }
@@ -289,7 +289,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (Connection c = ds.getConnection()) {
             fail("expected SQLException");
         } catch (final SQLException ex) {
-            if (ex.toString().indexOf("timeout") < 0) {
+            if (!ex.toString().contains("timeout")) {
                 fail("expected timeout error message");
             }
         }
@@ -344,7 +344,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             fail("expected SQLException");
         }
         catch (final SQLException e) {
-            if (e.toString().indexOf("invalid") < 0) {
+            if (!e.toString().contains("invalid")) {
                 fail("expected detailed error message");
             }
         }
