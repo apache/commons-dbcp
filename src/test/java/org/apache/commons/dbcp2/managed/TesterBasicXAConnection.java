@@ -175,13 +175,13 @@ public class TesterBasicXAConnection implements XAConnection {
                 throws Throwable {
             final String methodName = method.getName();
             if (methodName.equals("hashCode")) {
-                return Integer.valueOf(System.identityHashCode(proxy));
+                return System.identityHashCode(proxy);
             }
             if (methodName.equals("equals")) {
-                return Boolean.valueOf(proxy == args[0]);
+                return proxy == args[0];
             }
             if (methodName.equals("isClosed")) {
-                return Boolean.valueOf(conn == null);
+                return conn == null;
             }
             if (methodName.equals("close")) {
                 return close();

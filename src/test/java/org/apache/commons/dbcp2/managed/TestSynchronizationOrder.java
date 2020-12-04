@@ -282,10 +282,10 @@ public class TestSynchronizationOrder {
                     throws Throwable {
                 final String methodName = method.getName();
                 if (methodName.equals("hashCode")) {
-                    return Integer.valueOf(System.identityHashCode(proxy));
+                    return System.identityHashCode(proxy);
                 }
                 if (methodName.equals("equals")) {
-                    return Boolean.valueOf(proxy == args[0]);
+                    return proxy == args[0];
                 }
                 if (methodName.equals("getXAConnection")) {
                     // both zero and 2-arg signatures

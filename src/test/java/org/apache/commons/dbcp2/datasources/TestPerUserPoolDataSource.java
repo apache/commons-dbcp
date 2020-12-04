@@ -70,8 +70,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
         tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
-        tds.setPerUserMaxTotal(user, Integer.valueOf(getMaxTotal()));
-        tds.setPerUserMaxWaitMillis(user, Long.valueOf(getMaxWaitMillis()));
+        tds.setPerUserMaxTotal(user, getMaxTotal());
+        tds.setPerUserMaxWaitMillis(user, getMaxWaitMillis());
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
@@ -318,7 +318,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testMaxWaitMillisZero() throws Exception {
         final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWaitMillis(0);
-        tds.setPerUserMaxTotal("u1", Integer.valueOf(1));
+        tds.setPerUserMaxTotal("u1", 1);
         final Connection conn = tds.getConnection("u1", "p1");
         try (Connection c2 = tds.getConnection("u1", "p1")){
             fail("Expecting Pool Exhausted exception");
@@ -333,8 +333,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
 
         // you need to set per user maxTotal otherwise there is no accounting
-        tds.setPerUserMaxTotal("u1", Integer.valueOf(5));
-        tds.setPerUserMaxTotal("u2", Integer.valueOf(5));
+        tds.setPerUserMaxTotal("u1", 5);
+        tds.setPerUserMaxTotal("u2", 5);
 
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumActive("u1"));
@@ -384,7 +384,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // some JVMs, e.g. Windows.
         final int defaultMaxWaitMillis = 430;
         ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user,new Long(defaultMaxWaitMillis));
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user, (long) defaultMaxWaitMillis);
         multipleThreads(1, false, false, defaultMaxWaitMillis);
     }
 
@@ -392,7 +392,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testMultipleThreads2() throws Exception {
         final int defaultMaxWaitMillis = 500;
         ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user,new Long(defaultMaxWaitMillis));
+        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user, (long) defaultMaxWaitMillis);
         multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
     }
 
@@ -477,7 +477,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
+        puds.setPerUserMaxTotal("jsmith", 2);
         final String[] users = {"mkh", "hanafey", "jsmith"};
         final String password = "password";
         final Connection[] c = new Connection[users.length];
@@ -498,7 +498,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         TesterDriver.addUser("jsmith", "password");
 
         final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
-        puds.setPerUserMaxTotal("jsmith", Integer.valueOf(2));
+        puds.setPerUserMaxTotal("jsmith", 2);
         final String[] users = {"jsmith", "hanafey", "mkh"};
         final String password = "password";
         final Connection[] c = new Connection[users.length];

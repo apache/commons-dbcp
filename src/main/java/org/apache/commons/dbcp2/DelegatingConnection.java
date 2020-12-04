@@ -259,8 +259,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     private void initializeStatement(final DelegatingStatement ds) throws SQLException {
-        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds.intValue() != ds.getQueryTimeout()) {
-            ds.setQueryTimeout(defaultQueryTimeoutSeconds.intValue());
+        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != ds.getQueryTimeout()) {
+            ds.setQueryTimeout(defaultQueryTimeoutSeconds);
         }
     }
 
@@ -381,11 +381,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public boolean getAutoCommit() throws SQLException {
         checkOpen();
         if (cacheState && autoCommitCached != null) {
-            return autoCommitCached.booleanValue();
+            return autoCommitCached;
         }
         try {
-            autoCommitCached = Boolean.valueOf(connection.getAutoCommit());
-            return autoCommitCached.booleanValue();
+            autoCommitCached = connection.getAutoCommit();
+            return autoCommitCached;
         } catch (final SQLException e) {
             handleException(e);
             return false;
@@ -451,11 +451,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public boolean isReadOnly() throws SQLException {
         checkOpen();
         if (cacheState && readOnlyCached != null) {
-            return readOnlyCached.booleanValue();
+            return readOnlyCached;
         }
         try {
-            readOnlyCached = Boolean.valueOf(connection.isReadOnly());
-            return readOnlyCached.booleanValue();
+            readOnlyCached = connection.isReadOnly();
+            return readOnlyCached;
         } catch (final SQLException e) {
             handleException(e);
             return false;
@@ -532,7 +532,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         try {
             connection.setAutoCommit(autoCommit);
             if (cacheState) {
-                autoCommitCached = Boolean.valueOf(connection.getAutoCommit());
+                autoCommitCached = connection.getAutoCommit();
             }
         } catch (final SQLException e) {
             autoCommitCached = null;
@@ -556,7 +556,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         try {
             connection.setReadOnly(readOnly);
             if (cacheState) {
-                readOnlyCached = Boolean.valueOf(connection.isReadOnly());
+                readOnlyCached = connection.isReadOnly();
             }
         } catch (final SQLException e) {
             readOnlyCached = null;
