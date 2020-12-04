@@ -98,7 +98,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                 if (conn.isClosed()) {
                     str = "connection is closed";
                 } else {
-                    final StringBuffer sb = new StringBuffer();
+                    final StringBuilder sb = new StringBuilder();
                     sb.append(hashCode());
                     final DatabaseMetaData meta = conn.getMetaData();
                     if (meta != null) {

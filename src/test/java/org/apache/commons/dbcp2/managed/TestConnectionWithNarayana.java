@@ -47,7 +47,7 @@ public class TestConnectionWithNarayana {
     private static final String DROP_STMT = "DROP TABLE TEST_DATA";
 
     static {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append("Start");
         sb.append("payload");
         for (int i = 0; i < 10000; i++) {
