@@ -48,7 +48,7 @@ public class StackMessageLog extends SimpleLog {
     protected void log(final int type, final Object message, final Throwable t) {
         lock.lock();
         try {
-            final StringBuffer buf = new StringBuffer();
+            final StringBuilder buf = new StringBuilder();
             buf.append(message.toString());
             if(t != null) {
                 buf.append(" <");

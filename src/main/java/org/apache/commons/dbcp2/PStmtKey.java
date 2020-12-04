@@ -934,7 +934,7 @@ public class PStmtKey {
 
     @Override
     public String toString() {
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         buf.append("PStmtKey: sql=");
         buf.append(sql);
         buf.append(", catalog=");
