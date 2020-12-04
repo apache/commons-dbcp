@@ -36,7 +36,6 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -620,9 +619,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         final List<AbandonedTrace> traces = getTrace();
         if (traces != null && !traces.isEmpty()) {
             final List<Exception> thrownList = new ArrayList<>();
-            final Iterator<AbandonedTrace> traceIter = traces.iterator();
-            while (traceIter.hasNext()) {
-                final Object trace = traceIter.next();
+            for (Object trace : traces) {
                 if (trace instanceof Statement) {
                     try {
                         ((Statement) trace).close();
