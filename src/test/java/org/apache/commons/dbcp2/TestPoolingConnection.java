@@ -112,7 +112,7 @@ public class TestPoolingConnection {
     @Test
     public void testPrepareStatementWithColumnNames() throws Exception {
         final String sql = "select 'a' from dual";
-        final String columnNames[] = new String[]{"columnName1"};
+        final String[] columnNames = new String[]{"columnName1"};
         final DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, columnNames);
         final TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
         // assert

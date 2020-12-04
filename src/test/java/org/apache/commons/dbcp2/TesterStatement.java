@@ -128,13 +128,13 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public boolean execute(final String sql, final int columnIndexes[])
+    public boolean execute(final String sql, final int[] columnIndexes)
         throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public boolean execute(final String sql, final String columnNames[])
+    public boolean execute(final String sql, final String[] columnNames)
         throws SQLException {
         throw new SQLException("Not implemented.");
     }
@@ -208,12 +208,12 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public int executeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
+    public int executeUpdate(final String sql, final int[] columnIndexes) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
     @Override
-    public int executeUpdate(final String sql, final String columnNames[]) throws SQLException {
+    public int executeUpdate(final String sql, final String[] columnNames) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 

@@ -211,7 +211,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public boolean execute(final String sql, final int columnIndexes[]) throws SQLException {
+    public boolean execute(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         setLastUsedInParent();
         try {
@@ -223,7 +223,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public boolean execute(final String sql, final String columnNames[]) throws SQLException {
+    public boolean execute(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         setLastUsedInParent();
         try {
@@ -358,7 +358,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public int executeUpdate(final String sql, final int columnIndexes[]) throws SQLException {
+    public int executeUpdate(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         setLastUsedInParent();
         try {
@@ -370,7 +370,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     @Override
-    public int executeUpdate(final String sql, final String columnNames[]) throws SQLException {
+    public int executeUpdate(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         setLastUsedInParent();
         try {

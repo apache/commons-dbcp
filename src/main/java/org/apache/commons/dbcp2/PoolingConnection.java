@@ -158,7 +158,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      * @return the PStmtKey created for the given arguments.
      */
-    protected PStmtKey createKey(final String sql, final int columnIndexes[]) {
+    protected PStmtKey createKey(final String sql, final int[] columnIndexes) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), getSchemaOrNull(), columnIndexes);
     }
 
@@ -278,7 +278,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      * @return the PStmtKey created for the given arguments.
      */
-    protected PStmtKey createKey(final String sql, final String columnNames[]) {
+    protected PStmtKey createKey(final String sql, final String[] columnNames) {
         return new PStmtKey(normalizeSQL(sql), getCatalogOrNull(), getSchemaOrNull(), columnNames);
     }
 
@@ -519,7 +519,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int columnIndexes[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
         return prepareStatement(createKey(sql, columnIndexes));
     }
 
@@ -575,7 +575,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     @Override
-    public PreparedStatement prepareStatement(final String sql, final String columnNames[]) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
         return prepareStatement(createKey(sql, columnNames));
     }
 

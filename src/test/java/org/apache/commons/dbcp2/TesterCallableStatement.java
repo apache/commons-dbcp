@@ -472,7 +472,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setBytes(final String parameterName, final byte x[]) throws SQLException {
+    public void setBytes(final String parameterName, final byte[] x) throws SQLException {
     }
 
     @Override
