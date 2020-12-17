@@ -544,7 +544,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     /**
-     * Bugzilla Bug 29832: Broken behaviour for BasicDataSource.setMaxTotal(0)
+     * Bugzilla Bug 29832: Broken behavior for BasicDataSource.setMaxTotal(0)
      * MaxTotal == 0 should throw SQLException on getConnection.
      * Results from Bug 29863 in commons-pool.
      */
