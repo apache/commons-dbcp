@@ -49,7 +49,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * <code>BasicDataSource</code> bean properties with the following exceptions:
  * </p>
  * <ul>
- * <li><code>connectionInitSqls</code> must be passed to this factory as a single String using semi-colon to delimit the
+ * <li><code>connectionInitSqls</code> must be passed to this factory as a single String using semicolon to delimit the
  * statements whereas <code>BasicDataSource</code> requires a collection of Strings.</li>
  * </ul>
  *
