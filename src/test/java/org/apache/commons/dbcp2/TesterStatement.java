@@ -28,10 +28,10 @@ import java.sql.Statement;
  */
 public class TesterStatement extends AbandonedTrace implements Statement {
 
-    protected Connection _connection;
+    protected final Connection _connection;
     protected boolean _open = true;
-    protected long _rowsUpdated = 1;
-    protected boolean _executeResponse = true;
+    protected final long _rowsUpdated = 1;
+    protected final boolean _executeResponse = true;
     protected int _maxFieldSize = 1024;
     protected long _maxRows = 1024;
     protected boolean _escapeProcessing;

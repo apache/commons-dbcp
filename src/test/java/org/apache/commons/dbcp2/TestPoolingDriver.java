@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -208,7 +209,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     @Test
     public void testLogWriter() throws Exception {
         final PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, "UTF-8");
-        final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), "UTF-8"));
+        final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), StandardCharsets.UTF_8));
         System.setErr(new PrintStream(new ByteArrayOutputStream(), false, "UTF-8"));
         SQLException ex;
 

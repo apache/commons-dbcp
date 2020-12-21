@@ -889,7 +889,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testCreateConnectionFactory() throws Exception {
 
-    	/** not set ConnectionFactoryClassName */
+        /* not set ConnectionFactoryClassName */
     	Properties properties = new Properties();
         properties.put("initialSize", "1");
         properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
@@ -902,7 +902,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         conn.close();
         ds.close();
 
-        /** set ConnectionFactoryClassName */
+        /* set ConnectionFactoryClassName */
         properties = new Properties();
         properties.put("initialSize", "1");
         properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
@@ -1026,7 +1026,7 @@ public class TestBasicDataSource extends TestConnectionPool {
  */
 class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
-    private static AtomicInteger connectionRequestCount = new AtomicInteger(0);
+    private static final AtomicInteger connectionRequestCount = new AtomicInteger(0);
 
     public TesterConnRequestCountDriver() {
         // DBCP expects an explicit no-arg constructor

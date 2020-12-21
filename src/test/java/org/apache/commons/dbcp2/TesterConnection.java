@@ -43,13 +43,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     protected boolean _open = true;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;
-    protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
+    protected final DatabaseMetaData _metaData = new TesterDatabaseMetaData();
     protected String _catalog;
     protected String schema;
     protected Map<String,Class<?>> _typeMap;
     protected boolean _readOnly;
     protected SQLWarning warnings;
-    protected String userName;
+    protected final String userName;
     protected Exception failure;
     protected boolean sqlExceptionOnClose;
 

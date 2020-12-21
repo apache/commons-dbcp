@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -32,7 +33,6 @@ import java.util.Calendar;
 import java.util.Map;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.sql.NClob;
 import java.sql.RowId;
 import java.sql.SQLXML;
@@ -241,12 +241,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public byte[] getBytes(final String columnName) throws SQLException {
         checkOpen();
-        try {
-            return columnName.getBytes("UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            // Impossible. JVMs are required to support UTF-8
-            return null;
-        }
+        return columnName.getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
@@ -675,10 +670,7 @@ public java.sql.Date getDate(final int columnIndex, final Calendar cal) throws S
             _currentRow++;
             return _currentRow < _data.length;
         }
-        if(--_rowsLeft > 0) {
-            return true;
-        }
-        return false;
+        return --_rowsLeft > 0;
     }
 
     @Override

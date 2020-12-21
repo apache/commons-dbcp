@@ -619,7 +619,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         final List<AbandonedTrace> traces = getTrace();
         if (traces != null && !traces.isEmpty()) {
             final List<Exception> thrownList = new ArrayList<>();
-            for (Object trace : traces) {
+            for (final Object trace : traces) {
                 if (trace instanceof Statement) {
                     try {
                         ((Statement) trace).close();

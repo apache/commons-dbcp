@@ -49,10 +49,7 @@ class PoolKey implements Serializable {
         if (!Objects.equals(dataSourceName, other.dataSourceName)) {
             return false;
         }
-        if (!Objects.equals(userName, other.userName)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(userName, other.userName);
     }
 
     @Override
