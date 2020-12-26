@@ -330,6 +330,9 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         if (isReadOnly()) {
             throw new SQLException("Cannot rollback a readonly connection");
         }
+        if (getAutoCommit()) {
+            throw new SQLException("Cannot rollback a connection in auto-commit");
+        }
     }
 
     @Override

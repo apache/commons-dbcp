@@ -77,6 +77,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Dependabot">
          Bump japicmp-maven-plugin from 0.14.3 to 0.14.4 #71.
       </action>
+      <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
+         ManagedConnection must clear its cached state after transaction completes #75.
+      </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
       <!-- add -->
