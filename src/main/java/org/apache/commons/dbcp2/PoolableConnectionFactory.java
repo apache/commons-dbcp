@@ -17,16 +17,11 @@
 
 package org.apache.commons.dbcp2;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.management.ObjectName;
@@ -48,26 +43,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @since 2.0
  */
 public class PoolableConnectionFactory implements PooledObjectFactory<PoolableConnection>, AutoCloseable {
-
-    /**
-     * Thread factory that creates daemon threads, with the context class loader from this class.
-     */
-    private static class AbortThreadFactory implements ThreadFactory {
-
-        private static final AbortThreadFactory INSTANCE = new AbortThreadFactory();
-
-        @Override
-        public Thread newThread(final Runnable runnable) {
-            final Thread thread = new Thread(null, runnable, "commons-dbcp-abort-thread");
-            thread.setDaemon(true); // POOL-363 - Required for applications using Runtime.addShutdownHook().
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                thread.setContextClassLoader(AbortThreadFactory.class.getClassLoader());
-                return null;
-            });
-
-            return thread;
-        }
-    }
 
     private static final Log log = LogFactory.getLog(PoolableConnectionFactory.class);
 
@@ -120,8 +95,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private Integer defaultQueryTimeoutSeconds;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(3, AbortThreadFactory.INSTANCE);
-
     /**
      * Creates a new {@code PoolableConnectionFactory}.
      *
@@ -167,7 +140,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     @Override
     public void close() {
-        executor.shutdown();
+        // no-op
     }
 
     @Override
@@ -181,7 +154,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     @Override
     public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws Exception {
         if (mode != null && mode.equals(DestroyMode.ABANDONED)) {
-            p.getObject().getInnermostDelegate().abort(executor);
+            p.getObject().getInnermostDelegate().abort(Runnable::run);
         } else {
             p.getObject().reallyClose();
         }
