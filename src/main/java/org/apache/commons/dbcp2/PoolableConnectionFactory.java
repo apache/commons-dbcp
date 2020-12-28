@@ -147,6 +147,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         p.getObject().reallyClose();
     }
 
+    /**
+     * @since 2.9.0
+     */
     @Override
     public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws Exception {
         if (mode != null && mode.equals(DestroyMode.ABANDONED)) {
@@ -686,6 +689,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         }
     }
 
+    /**
+     * @since 2.9.0
+     */
     @Override
     public void close() {
         executor.shutdown();
