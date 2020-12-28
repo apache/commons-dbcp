@@ -66,7 +66,7 @@ The <action> type attribute can be add,update,fix,remove.
         Update mockito-core from 3.5.11 to 3.5.15 #66, #72.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Update actions/checkout from v2.3.2 to v2.3.3 #65.
+        Update actions/checkout from v2.3.2 to v2.3.4 #65, #74.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Update commons-pool2 from 2.8.1 to 2.9.0.
