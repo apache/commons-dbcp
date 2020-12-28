@@ -41,6 +41,7 @@ import java.util.concurrent.Executor;
 public class TesterConnection extends AbandonedTrace implements Connection {
 
     protected boolean _open = true;
+    protected boolean _aborted = false;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;
     protected DatabaseMetaData _metaData = new TesterDatabaseMetaData();
@@ -60,7 +61,9 @@ public class TesterConnection extends AbandonedTrace implements Connection {
 
     @Override
     public void abort(final Executor executor) throws SQLException {
-        throw new SQLException("Not implemented.");
+        checkFailure();
+        _aborted = true;
+        _open = false;
     }
 
     protected void checkFailure() throws SQLException {
@@ -219,6 +222,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     public boolean isClosed() throws SQLException {
         checkFailure();
         return !_open;
+    }
+
+    public boolean isAborted() throws SQLException {
+        checkFailure();
+        return _aborted;
     }
 
     @Override

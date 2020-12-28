@@ -77,6 +77,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     @Override
     public void close() throws RuntimeException, SQLException {
         try {
+            if (pool instanceof GenericObjectPool) {
+                ((PoolableConnectionFactory) ((GenericObjectPool<?>) pool).getFactory()).close();
+            }
             pool.close();
         } catch (final RuntimeException rte) {
             throw new RuntimeException(Utils.getMessage("pool.close.fail"), rte);
