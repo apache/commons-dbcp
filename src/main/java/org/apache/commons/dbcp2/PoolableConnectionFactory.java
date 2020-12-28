@@ -100,7 +100,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private Integer defaultQueryTimeoutSeconds;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(3, new AbortThreadFactory());
+    private final ExecutorService executor = Executors.newFixedThreadPool(3, AbortThreadFactory.INSTANCE);
 
     /**
      * Creates a new {@code PoolableConnectionFactory}.
@@ -695,6 +695,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Thread factory that creates daemon threads, with the context class loader from this class.
      */
     private static class AbortThreadFactory implements ThreadFactory {
+
+        private static final AbortThreadFactory INSTANCE = new AbortThreadFactory();
 
         @Override
         public Thread newThread(final Runnable runnable) {
