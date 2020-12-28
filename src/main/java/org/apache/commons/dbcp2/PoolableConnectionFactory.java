@@ -49,6 +49,26 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class PoolableConnectionFactory implements PooledObjectFactory<PoolableConnection>, AutoCloseable {
 
+    /**
+     * Thread factory that creates daemon threads, with the context class loader from this class.
+     */
+    private static class AbortThreadFactory implements ThreadFactory {
+
+        private static final AbortThreadFactory INSTANCE = new AbortThreadFactory();
+
+        @Override
+        public Thread newThread(final Runnable runnable) {
+            final Thread thread = new Thread(null, runnable, "commons-dbcp-abort-thread");
+            thread.setDaemon(true); // POOL-363 - Required for applications using Runtime.addShutdownHook().
+            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                thread.setContextClassLoader(AbortThreadFactory.class.getClassLoader());
+                return null;
+            });
+
+            return thread;
+        }
+    }
+
     private static final Log log = LogFactory.getLog(PoolableConnectionFactory.class);
 
     /**
@@ -140,6 +160,14 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             Jdbc41Bridge.setSchema(conn, defaultSchema);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
+    }
+
+    /**
+     * @since 2.9.0
+     */
+    @Override
+    public void close() {
+        executor.shutdown();
     }
 
     @Override
@@ -289,7 +317,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     protected int getMaxOpenPreparedStatements() {
         return maxOpenPreparedStatements;
     }
-
     /**
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      *
@@ -298,7 +325,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public synchronized ObjectPool<PoolableConnection> getPool() {
         return pool;
     }
-
     /**
      * @return Whether to pool statements.
      * @since Made public in 2.6.0.
@@ -313,6 +339,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public String getValidationQuery() {
         return validationQuery;
     }
+
     /**
      * @return Validation query timeout in seconds.
      * @since 2.6.0
@@ -320,6 +347,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public int getValidationQueryTimeoutSeconds() {
         return validationQueryTimeoutSeconds;
     }
+
     protected void initializeConnection(final Connection conn) throws SQLException {
         final Collection<String> sqls = connectionInitSqls;
         if (conn.isClosed()) {
@@ -473,6 +501,17 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Sets whether the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should
+     * be cleared when the connection is returned to its pool. Default is false.
+     *
+     * @param clearStatementPoolOnReturn clear or not
+     * @since 2.8.0
+     */
+    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
+        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
+    }
+
+    /**
      * Sets the SQL statements I use to initialize newly created {@link Connection}s. Using {@code null} turns off
      * connection initialization.
      *
@@ -482,7 +521,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setConnectionInitSql(final Collection<String> connectionInitSqls) {
         this.connectionInitSqls = connectionInitSqls;
     }
-
     /**
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
      *
@@ -506,6 +544,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
         this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
     }
+
     /**
      * Sets the default "read only" setting for borrowed {@link Connection}s
      *
@@ -620,17 +659,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.poolStatements = poolStatements;
     }
 
-    /**
-     * Sets whether the pool of statements (which was enabled with {@link #setPoolStatements(boolean)}) should
-     * be cleared when the connection is returned to its pool. Default is false.
-     *
-     * @param clearStatementPoolOnReturn clear or not
-     * @since 2.8.0
-     */
-    public void setClearStatementPoolOnReturn(final boolean clearStatementPoolOnReturn) {
-        this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
-    }
-
     public void setRollbackOnReturn(final boolean rollbackOnReturn) {
         this.rollbackOnReturn = rollbackOnReturn;
     }
@@ -686,34 +714,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
                 log.debug(Utils.getMessage("poolableConnectionFactory.validateObject.fail"), e);
             }
             return false;
-        }
-    }
-
-    /**
-     * @since 2.9.0
-     */
-    @Override
-    public void close() {
-        executor.shutdown();
-    }
-
-    /**
-     * Thread factory that creates daemon threads, with the context class loader from this class.
-     */
-    private static class AbortThreadFactory implements ThreadFactory {
-
-        private static final AbortThreadFactory INSTANCE = new AbortThreadFactory();
-
-        @Override
-        public Thread newThread(final Runnable runnable) {
-            final Thread thread = new Thread(null, runnable, "commons-dbcp-abort-thread");
-            thread.setDaemon(true); // POOL-363 - Required for applications using Runtime.addShutdownHook().
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                thread.setContextClassLoader(AbortThreadFactory.class.getClassLoader());
-                return null;
-            });
-
-            return thread;
         }
     }
 }
