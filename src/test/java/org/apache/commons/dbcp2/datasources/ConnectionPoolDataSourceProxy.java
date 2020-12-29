@@ -28,8 +28,7 @@ import javax.sql.PooledConnection;
 import org.apache.commons.dbcp2.Jdbc41Bridge;
 
 /**
- * ConnectionPoolDataSource implementation that proxies another
- * ConnectionPoolDataSource.
+ * ConnectionPoolDataSource implementation that proxies another ConnectionPoolDataSource.
  */
 public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 
@@ -54,7 +53,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     }
 
     /**
-     * Return a TesterPooledConnection with notifyOnClose turned on
+     * Gets a TesterPooledConnection with notifyOnClose turned on
      */
     @Override
     public PooledConnection getPooledConnection() throws SQLException {
@@ -62,7 +61,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     }
 
     /**
-     * Return a TesterPooledConnection with notifyOnClose turned on
+     * Gets a TesterPooledConnection with notifyOnClose turned on
      */
     @Override
     public PooledConnection getPooledConnection(final String user, final String password)
@@ -86,7 +85,7 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     }
 
     /**
-     * Create a TesterPooledConnection with notifyOnClose turned on
+     * Creates a TesterPooledConnection with notifyOnClose turned on
      */
     protected PooledConnection wrapPooledConnection(final PooledConnection pc) {
         final PooledConnectionProxy tpc = new PooledConnectionProxy(pc);
