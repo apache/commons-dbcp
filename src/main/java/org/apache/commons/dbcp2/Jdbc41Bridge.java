@@ -43,6 +43,9 @@ import javax.sql.CommonDataSource;
 /**
  * Defines bridge methods to JDBC 4.1 (Java 7) methods to allow call sites to operate safely (without
  * {@link AbstractMethodError}) when using a JDBC driver written for JDBC 4.0 (Java 6).
+ * <p>
+ * This should probably be moved or at least copied in some form to Apache Commons DbUtils.
+ * </p>
  *
  * @since 2.6.0
  */
