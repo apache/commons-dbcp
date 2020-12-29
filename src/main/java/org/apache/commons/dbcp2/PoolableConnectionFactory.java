@@ -42,7 +42,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  *
  * @since 2.0
  */
-public class PoolableConnectionFactory implements PooledObjectFactory<PoolableConnection>, AutoCloseable {
+public class PoolableConnectionFactory implements PooledObjectFactory<PoolableConnection> {
 
     private static final Log log = LogFactory.getLog(PoolableConnectionFactory.class);
 
@@ -133,14 +133,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             Jdbc41Bridge.setSchema(conn, defaultSchema);
         }
         conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
-    }
-
-    /**
-     * @since 2.9.0
-     */
-    @Override
-    public void close() {
-        // no-op
     }
 
     @Override
