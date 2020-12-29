@@ -108,10 +108,7 @@ class PooledConnectionImpl
     /**
      * My {@link KeyedPooledObjectFactory} method for activating {@link PreparedStatement}s.
      *
-     * @param key
-     *            Ignored.
-     * @param pooledObject
-     *            Ignored.
+     * @param pooledObject Activates the underlying object.
      */
     @Override
     public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
