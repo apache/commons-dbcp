@@ -78,7 +78,7 @@ The <action> type attribute can be add,update,fix,remove.
          Bump japicmp-maven-plugin from 0.14.3 to 0.15.1 #71.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-         Bump mockito-core from 3.5.15 to 3.6.28 #77.
+         Bump mockito-core from 3.5.15 to 3.6.0, #77, #85.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
          Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76.
