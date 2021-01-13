@@ -75,7 +75,7 @@ public abstract class TestConnectionPool {
     }
 
     /** Connections opened during the course of a test */
-    protected Stack<Connection> connections = new Stack<>();
+    protected final Stack<Connection> connections = new Stack<>();
 
     /** Acquire a connection and push it onto the connections stack */
     protected Connection newConnection() throws Exception {
@@ -578,7 +578,7 @@ public abstract class TestConnectionPool {
     }
 
     class TestThread implements Runnable {
-        java.util.Random _random = new java.util.Random();
+        final java.util.Random _random = new java.util.Random();
         boolean _complete = false;
         boolean _failed = false;
         int _iter = 100;
@@ -615,7 +615,7 @@ public abstract class TestConnectionPool {
                 try (Connection conn = newConnection();
                         PreparedStatement stmt = conn.prepareStatement(
                                 "select 'literal', SYSDATE from dual");
-                        ResultSet rset = stmt.executeQuery();) {
+                        ResultSet rset = stmt.executeQuery()) {
                     try {
                         Thread.sleep(_random.nextInt(_delay));
                     } catch(final Exception e) {

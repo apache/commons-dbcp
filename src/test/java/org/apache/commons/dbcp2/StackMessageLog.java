@@ -34,8 +34,8 @@ import org.apache.commons.logging.impl.SimpleLog;
 public class StackMessageLog extends SimpleLog {
 
     private static final long serialVersionUID = 1L;
-    private static Stack<String> messageStack = new Stack<>();
-    private static Lock lock = new ReentrantLock();
+    private static final Stack<String> messageStack = new Stack<>();
+    private static final Lock lock = new ReentrantLock();
 
     public StackMessageLog(final String name) {
         super(name);

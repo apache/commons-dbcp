@@ -412,7 +412,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         }
 
         // Register this connection with JMX
-        ObjectName connJmxName;
+        final ObjectName connJmxName;
         if (dataSourceJmxObjectName == null) {
             connJmxName = null;
         } else {
