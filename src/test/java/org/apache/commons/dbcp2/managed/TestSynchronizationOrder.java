@@ -135,24 +135,11 @@ public class TestSynchronizationOrder {
     public void setup() {
         transactionManager = new TransactionManager() {
 
+            private Transaction transaction;
+
             @Override
             public void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Override
-            public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-            @Override
-            public int getStatus() throws SystemException {
-                return 0;
-            }
-
-            @Override
-            public Transaction getTransaction() throws SystemException {
-                return new Transaction() {
+                transaction = new Transaction() {
 
                     @Override
                     public void commit() throws HeuristicMixedException, HeuristicRollbackException, RollbackException, SecurityException, SystemException {
@@ -190,6 +177,21 @@ public class TestSynchronizationOrder {
 
                     }
                 };
+            }
+
+            @Override
+            public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
+
+            }
+
+            @Override
+            public int getStatus() throws SystemException {
+                return 0;
+            }
+
+            @Override
+            public Transaction getTransaction() throws SystemException {
+                return transaction;
             }
 
             @Override
