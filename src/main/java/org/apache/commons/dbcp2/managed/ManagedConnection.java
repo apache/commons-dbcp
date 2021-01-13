@@ -216,6 +216,9 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             isSharedConnection = false;
         }
 
+        // autoCommit may have been changed directly on the underlying connection
+        clearCachedState();
+
         // If this connection was closed during the transaction and there is
         // still a delegate present close it
         final Connection delegate = getDelegateInternal();
