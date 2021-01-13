@@ -121,7 +121,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
         final List<AbandonedTrace> resultSetList = getTrace();
         if (resultSetList != null) {
             final List<Exception> thrownList = new ArrayList<>();
-            final ResultSet[] resultSets = resultSetList.toArray(new ResultSet[resultSetList.size()]);
+            final ResultSet[] resultSets = resultSetList.toArray(Utils.EMPTY_RESULT_SET_ARRAY);
             for (final ResultSet resultSet : resultSets) {
                 if (resultSet != null) {
                     try {

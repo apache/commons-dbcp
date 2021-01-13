@@ -58,6 +58,9 @@ public final class Utils {
      */
     public static final Set<String> DISCONNECTION_SQL_CODES;
 
+    static final ResultSet[] EMPTY_RESULT_SET_ARRAY = new ResultSet[0];
+    static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     static {
         DISCONNECTION_SQL_CODES = new HashSet<>();
         DISCONNECTION_SQL_CODES.add("57P01"); // Admin shutdown

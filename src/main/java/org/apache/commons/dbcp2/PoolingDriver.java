@@ -25,7 +25,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.commons.pool2.ObjectPool;
@@ -134,8 +133,7 @@ public class PoolingDriver implements Driver {
      * @return the pool names.
      */
     public synchronized String[] getPoolNames() {
-        final Set<String> names = pools.keySet();
-        return names.toArray(new String[names.size()]);
+        return pools.keySet().toArray(Utils.EMPTY_STRING_ARRAY);
     }
 
     @Override

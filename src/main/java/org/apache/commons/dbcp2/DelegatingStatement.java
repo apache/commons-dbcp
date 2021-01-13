@@ -140,7 +140,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             final List<AbandonedTrace> resultSetList = getTrace();
             if (resultSetList != null) {
                 final int size = resultSetList.size();
-                final ResultSet[] resultSets = resultSetList.toArray(new ResultSet[size]);
+                final ResultSet[] resultSets = resultSetList.toArray(Utils.EMPTY_RESULT_SET_ARRAY);
                 for (final ResultSet resultSet : resultSets) {
                     if (resultSet != null) {
                         try {
