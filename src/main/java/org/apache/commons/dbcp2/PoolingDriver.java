@@ -36,6 +36,8 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolingDriver implements Driver {
 
+    private static final DriverPropertyInfo[] EMPTY_DRIVER_PROPERTY_INFO_ARRAY = new DriverPropertyInfo[0];
+
     /* Register myself with the {@link DriverManager}. */
     static {
         try {
@@ -209,7 +211,7 @@ public class PoolingDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
-        return new DriverPropertyInfo[0];
+        return EMPTY_DRIVER_PROPERTY_INFO_ARRAY;
     }
 
     /** My URL prefix */

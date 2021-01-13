@@ -50,6 +50,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      * @since 2.0
      */
     protected static class LocalXAResource implements XAResource {
+        private static final Xid[] EMPTY_XID_ARRAY = new Xid[0];
         private final Connection connection;
         private Xid currentXid; // @GuardedBy("this")
         private boolean originalAutoCommit; // @GuardedBy("this")
@@ -207,7 +208,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public Xid[] recover(final int flag) {
-            return new Xid[0];
+            return EMPTY_XID_ARRAY;
         }
 
         /**
