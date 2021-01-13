@@ -89,6 +89,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-567" dev="ggregory" type="update" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
          Use abort rather than close to clean up abandoned connections.
       </action>
+      <!--  FIXES -->
       <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
          Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
       </action>
