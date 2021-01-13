@@ -93,7 +93,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     public void testIncorrectPassword() throws Exception {
         // Use bad password
-        try (Connection c = ds.getConnection("u1", "zlsafjk");){
+        try (Connection c = ds.getConnection("u1", "zlsafjk")){
             fail("Able to retrieve connection with incorrect password");
         } catch (final SQLException e1) {
             // should fail

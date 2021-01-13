@@ -76,10 +76,7 @@ class UserPassKey implements Serializable {
             return false;
         }
         final UserPassKey other = (UserPassKey) obj;
-        if (!Objects.equals(userName, other.userName)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(userName, other.userName);
     }
 
     /**

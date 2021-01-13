@@ -824,10 +824,7 @@ public class PStmtKey {
         if (!Objects.equals(sql, other.sql)) {
             return false;
         }
-        if (statementType != other.statementType) {
-            return false;
-        }
-        return true;
+        return statementType == other.statementType;
     }
 
     /**

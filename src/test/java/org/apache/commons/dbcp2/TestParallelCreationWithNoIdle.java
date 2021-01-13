@@ -112,7 +112,7 @@ public class TestParallelCreationWithNoIdle  {
 
 
     class TestThread extends Thread {
-        java.util.Random _random = new java.util.Random();
+        final java.util.Random _random = new java.util.Random();
         final int iter;
         final int delay;
         final int delayAfter;
@@ -131,7 +131,7 @@ public class TestParallelCreationWithNoIdle  {
             for (int i = 0; i < iter; i++) {
                 sleepMax(delay);
                 try (Connection conn = ds.getConnection();
-                        PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");) {
+                        PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual")) {
                     // System.out.println("Got Connection " + Thread.currentThread().toString());
                     final ResultSet rset = stmt.executeQuery();
                     rset.next();

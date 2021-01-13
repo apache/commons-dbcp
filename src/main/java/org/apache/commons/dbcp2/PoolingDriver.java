@@ -37,7 +37,7 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolingDriver implements Driver {
 
-    /** Register myself with the {@link DriverManager}. */
+    /* Register myself with the {@link DriverManager}. */
     static {
         try {
             DriverManager.registerDriver(new PoolingDriver());
@@ -140,7 +140,7 @@ public class PoolingDriver implements Driver {
 
     @Override
     public boolean acceptsURL(final String url) throws SQLException {
-        return url == null ? false : url.startsWith(URL_PREFIX);
+        return url != null && url.startsWith(URL_PREFIX);
     }
 
     @Override
