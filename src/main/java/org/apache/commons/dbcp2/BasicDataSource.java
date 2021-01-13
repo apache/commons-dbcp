@@ -428,7 +428,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     private void closeConnectionPool() {
         final GenericObjectPool<?> oldPool = connectionPool;
-        ((PoolableConnectionFactory) connectionPool.getFactory()).close();
         connectionPool = null;
         try {
             if (oldPool != null) {
