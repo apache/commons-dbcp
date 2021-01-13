@@ -92,6 +92,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Arturo Bernal">
         Minor Improvements #78.
       </action>
+      <action dev="ggregory" type="update" due-to="John Patrick">
+        Update Hamcrest 1.3 -> 2.2 #70.
+      </action>
       <!--  FIXES -->
       <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
          Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
