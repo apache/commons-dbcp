@@ -278,7 +278,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
-        if (sql == null || sql.length() == 0) {
+        if (sql == null || sql.isEmpty()) {
             if (timeoutSeconds < 0) {
                 timeoutSeconds = 0;
             }
