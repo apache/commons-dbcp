@@ -1688,7 +1688,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param connectionInitSqls Collection of SQL statements to execute on connection creation
      */
     public void setConnectionInitSqls(final Collection<String> connectionInitSqls) {
-        if (connectionInitSqls != null && connectionInitSqls.size() > 0) {
+        if (connectionInitSqls != null && !connectionInitSqls.isEmpty()) {
             ArrayList<String> newVal = null;
             for (final String s : connectionInitSqls) {
                 if (!isEmpty(s)) {
@@ -1850,7 +1850,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-        if (disconnectionSqlCodes != null && disconnectionSqlCodes.size() > 0) {
+        if (disconnectionSqlCodes != null && !disconnectionSqlCodes.isEmpty()) {
             HashSet<String> newVal = null;
             for (final String s : disconnectionSqlCodes) {
                 if (!isEmpty(s)) {
