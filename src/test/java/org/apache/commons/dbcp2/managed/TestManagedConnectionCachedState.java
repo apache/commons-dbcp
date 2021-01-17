@@ -115,7 +115,7 @@ public class TestManagedConnectionCachedState {
 
     private static class SwallowedExceptionRecorder implements SwallowedExceptionListener {
 
-        private List<Exception> exceptions = new ArrayList<>();
+        private final List<Exception> exceptions = new ArrayList<>();
 
         @Override
         public void onSwallowException(final Exception e) {
