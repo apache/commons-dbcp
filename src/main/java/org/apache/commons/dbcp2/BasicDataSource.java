@@ -1720,7 +1720,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final String[] entries = connectionProperties.split(";");
         final Properties properties = new Properties();
         for (final String entry : entries) {
-            if (entry.length() > 0) {
+            if (!entry.isEmpty()) {
                 final int index = entry.indexOf('=');
                 if (index > 0) {
                     final String name = entry.substring(0, index);

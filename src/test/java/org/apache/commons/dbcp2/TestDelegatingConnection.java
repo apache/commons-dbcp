@@ -162,7 +162,7 @@ public class TestDelegatingConnection {
     public void testConnectionToString() throws Exception {
         final String s = delegatingConnection.toString();
         assertNotNull(s);
-        assertTrue(s.length() > 0);
+        assertFalse(s.isEmpty());
     }
 
     @Test
