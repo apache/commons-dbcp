@@ -752,7 +752,7 @@ public abstract class TestConnectionPool {
     protected void multipleThreads(final int holdTime,
             final boolean expectError, final boolean loopOnce,
             final long maxWaitMillis, final int numStatements, final int numThreads, final long duration) throws Exception {
-                final long startTime = timeStamp();
+                final long startTimeMillis = timeStampMillis();
                 final PoolTest[] pts = new PoolTest[numThreads];
                 // Catch Exception so we can stop all threads if one fails
                 final ThreadGroup threadGroup = new ThreadGroup("foo") {
@@ -808,8 +808,8 @@ public abstract class TestConnectionPool {
                     }
                 }
 
-                final long time = timeStamp() - startTime;
-                System.out.println("Multithread test time = " + time
+                final long timeMillis = timeStampMillis() - startTimeMillis;
+                System.out.println("Multithread test time = " + timeMillis
                         + " ms. Threads: " + pts.length
                         + ". Loops: " + loops
                         + ". Hold time: " + holdTime
@@ -821,7 +821,7 @@ public abstract class TestConnectionPool {
                         );
                 if (expectError) {
                     if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
-                        final long offset = pts[0].created - 1000; // To reduce size of output numbers, but ensure they have 4 digits
+                        final long offset = pts[0].createdMillis - 1000; // To reduce size of output numbers, but ensure they have 4 digits
                         System.out.println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
                             final PoolTest pt = pts[i];
@@ -829,7 +829,7 @@ public abstract class TestConnectionPool {
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
                                     + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
                                     + ". Hash: " + pt.connHash
-                                    + ". Startup: " + (pt.started-pt.created)
+                                    + ". Startup: " + (pt.started-pt.createdMillis)
                                     + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
                                     + ". Runtime: " + (pt.ended-pt.started)
                                     + ". IDX: " + i
@@ -846,7 +846,7 @@ public abstract class TestConnectionPool {
                     // Perform initial sanity check:
                     assertTrue(failed > 0, "Expected some of the threads to fail");
                     // Assume that threads that did not run would have timed out.
-                    assertEquals(pts.length/2, failed+didNotRun, "WARNING: Expected half the threads to fail");
+                    assertEquals(pts.length / 2, failed + didNotRun, "WARNING: Expected half the threads to fail");
                 } else {
                     assertEquals(0, failed, "Did not expect any threads to fail");
                 }
@@ -874,7 +874,7 @@ public abstract class TestConnectionPool {
         private final Random random = new Random();
 
         // Debug for DBCP-318
-        private final long created; // When object was created
+        private final long createdMillis; // When object was created
         private long started; // when thread started
         private long ended; // when thread ended
         private long preconnected; // just before connect
@@ -904,7 +904,7 @@ public abstract class TestConnectionPool {
             thread =
                 new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
-            created = timeStamp();
+            createdMillis = timeStampMillis();
             this.numStatements = numStatements;
         }
 
@@ -914,15 +914,15 @@ public abstract class TestConnectionPool {
 
         @Override
         public void run() {
-            started = timeStamp();
+            started = timeStampMillis();
             try {
                 while (isRun) {
                     loops++;
                     state = "Getting Connection";
-                    preconnected = timeStamp();
+                    preconnected = timeStampMillis();
                     final Connection conn = getConnection();
                     connHash = System.identityHashCode(((DelegatingConnection<?>)conn).getInnermostDelegate());
-                    connected = timeStamp();
+                    connected = timeStampMillis();
                     state = "Using Connection";
                     assertNotNull(conn);
                     final String sql = numStatements == 1 ? "select * from dual" : "select count " + random.nextInt(numStatements - 1);
@@ -940,7 +940,7 @@ public abstract class TestConnectionPool {
                     stmt.close();
                     state = "Closing Connection";
                     conn.close();
-                    postconnected = timeStamp();
+                    postconnected = timeStampMillis();
                     state = "Closed";
                     if (loopOnce){
                         break; // Or could set isRun=false
@@ -953,7 +953,7 @@ public abstract class TestConnectionPool {
                     throw new RuntimeException();
                 }
             } finally {
-                ended = timeStamp();
+                ended = timeStampMillis();
             }
         }
 
@@ -966,7 +966,7 @@ public abstract class TestConnectionPool {
         }
     }
 
-    long timeStamp() {
+    long timeStampMillis() {
         return System.currentTimeMillis();// JVM 1.5+ System.nanoTime() / 1000000;
     }
 }

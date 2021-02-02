@@ -325,7 +325,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             assertTrue(c[i] != null);
         }
 
-        final long start = System.currentTimeMillis();
+        final long startMillis = System.currentTimeMillis();
 
         // Run a thread test with minimal hold time
         // All threads should end after maxWaitMillis - DBCP-291
@@ -343,12 +343,12 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
 
 
-        final long end = System.currentTimeMillis();
+        final long endMillis = System.currentTimeMillis();
 
         // System.out.println("testMaxWaitMillis took " + (end - start) + " ms. maxWaitMillis: " + maxWaitMillis);
 
         // Threads should time out in parallel - allow double that to be safe
-        assertTrue(end-start < 2 * maxWaitMillis);
+        assertTrue(endMillis - startMillis < 2 * maxWaitMillis);
 
         // Put all the connections back in the pool
         for (final Connection element : c) {
