@@ -83,7 +83,7 @@ public final class Utils {
 
     /**
      * Clones the given {@link Properties} without the standard "user" or "password" entries.
-     * 
+     *
      * @param properties may be null
      * @return a clone of the input without the standard "user" or "password" entries.
      * @since 2.8.0

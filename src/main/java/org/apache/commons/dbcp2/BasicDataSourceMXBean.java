@@ -341,7 +341,7 @@ public interface BasicDataSourceMXBean {
 
     /**
      * See {@link BasicDataSource#restart()}
-     * 
+     *
      * @throws SQLException if an error occurs initializing the datasource
      *
      * @since 2.8.0

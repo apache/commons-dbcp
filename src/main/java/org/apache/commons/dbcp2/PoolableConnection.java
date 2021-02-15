@@ -236,7 +236,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     /**
      * Abort my underlying {@link Connection}.
-     * 
+     *
      * @since 2.9.0
      */
     @Override
