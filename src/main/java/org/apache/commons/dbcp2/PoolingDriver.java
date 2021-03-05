@@ -180,17 +180,16 @@ public class PoolingDriver implements Driver {
      *             the connection
      */
     public void invalidateConnection(final Connection conn) throws SQLException {
-        if (conn instanceof PoolGuardConnectionWrapper) { // normal case
-            final PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
-            @SuppressWarnings("unchecked")
-            final ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
-            try {
-                pool.invalidateObject(pgconn.getDelegateInternal());
-            } catch (final Exception e) {
-                // Ignore.
-            }
-        } else {
+        if (!(conn instanceof PoolGuardConnectionWrapper)) {
             throw new SQLException("Invalid connection class");
+        }
+        final PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
+        @SuppressWarnings("unchecked")
+        final ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
+        try {
+            pool.invalidateObject(pgconn.getDelegateInternal());
+        } catch (final Exception e) {
+            // Ignore.
         }
     }
 

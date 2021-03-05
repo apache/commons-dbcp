@@ -1012,12 +1012,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                 ctx = new InitialContext(jndiEnvironment);
             }
             final Object ds = ctx.lookup(dataSourceName);
-            if (ds instanceof ConnectionPoolDataSource) {
-                cpds = (ConnectionPoolDataSource) ds;
-            } else {
+            if (!(ds instanceof ConnectionPoolDataSource)) {
                 throw new SQLException("Illegal configuration: " + "DataSource " + dataSourceName + " ("
                         + ds.getClass().getName() + ")" + " doesn't implement javax.sql.ConnectionPoolDataSource");
             }
+            cpds = (ConnectionPoolDataSource) ds;
         }
 
         // try to get a connection with the supplied userName/password

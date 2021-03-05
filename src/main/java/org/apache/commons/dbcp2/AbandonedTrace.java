@@ -153,7 +153,8 @@ public class AbandonedTrace implements TrackedUse {
                 if (trace != null && trace.equals(traceInList)) {
                     iter.remove();
                     break;
-                } else if (traceInList == null) {
+                }
+                if (traceInList == null) {
                     // Clean-up since we are here anyway
                     iter.remove();
                 }

@@ -798,22 +798,22 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return true;
-        } else if (iface.isAssignableFrom(connection.getClass())) {
-            return true;
-        } else {
-            return connection.isWrapperFor(iface);
         }
+        if (iface.isAssignableFrom(connection.getClass())) {
+            return true;
+        }
+        return connection.isWrapperFor(iface);
     }
 
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
-        } else if (iface.isAssignableFrom(connection.getClass())) {
-            return iface.cast(connection);
-        } else {
-            return connection.unwrap(iface);
         }
+        if (iface.isAssignableFrom(connection.getClass())) {
+            return iface.cast(connection);
+        }
+        return connection.unwrap(iface);
     }
 
     @Override

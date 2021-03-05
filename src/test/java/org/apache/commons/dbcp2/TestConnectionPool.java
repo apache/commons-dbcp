@@ -410,14 +410,13 @@ public abstract class TestConnectionPool {
         final Connection[] u = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
-            if (c[i] instanceof DelegatingConnection) {
-                u[i] = ((DelegatingConnection<?>) c[i]).getInnermostDelegate();
-            } else {
+            if (!(c[i] instanceof DelegatingConnection)) {
                 for (int j = 0; j <= i; j++) {
                     c[j].close();
                 }
                 return; // skip this test
             }
+            u[i] = ((DelegatingConnection<?>) c[i]).getInnermostDelegate();
         }
         // Close connections one at a time and get new ones, making sure
         // the new ones come from the pool

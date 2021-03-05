@@ -90,11 +90,10 @@ public class TestPStmtPooling {
             if (s instanceof PoolablePreparedStatement) {
                 return (PoolablePreparedStatement<?>) s;
             }
-            if (s instanceof DelegatingPreparedStatement) {
-                s = ((DelegatingPreparedStatement) s).getDelegate();
-            } else {
+            if (!(s instanceof DelegatingPreparedStatement)) {
                 return null;
             }
+            s = ((DelegatingPreparedStatement) s).getDelegate();
         }
         return null;
     }
