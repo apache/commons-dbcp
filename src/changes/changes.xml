@@ -61,12 +61,22 @@ The <action> type attribute can be add,update,fix,remove.
      -->
   <body>
     <release version="2.9.0" date="202Y-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <!--  FIXES -->
+      <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
+         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
+      </action>
+      <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
+         ManagedConnection must clear its cached state after transaction completes #75.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Update mockito-core from 3.5.11 to 3.5.15 #66, #72.
+        Update mockito-core from 3.5.11 to 3.8.0 #66, #72, #77, #85, #91.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Update actions/checkout from v2.3.2 to v2.3.4 #65, #74.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump actions/cache from v2 to v2.1.4 #90.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Update commons-pool2 from 2.8.1 to 2.9.0.
@@ -76,9 +86,6 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
          Bump japicmp-maven-plugin from 0.14.3 to 0.15.2 #71, #82.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-         Bump mockito-core from 3.5.15 to 3.6.0, #77, #85.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
          Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76.
@@ -98,12 +105,11 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory, DaGeRe">
         Performance Enhancement: Call toArray with Zero Array Size #20.
       </action>
-      <!--  FIXES -->
-      <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
-         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #88.
       </action>
-      <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
-         ManagedConnection must clear its cached state after transaction completes #75.
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump junit-jupiter from 5.7.0 to 5.7.1 #89.
       </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
