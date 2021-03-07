@@ -91,7 +91,7 @@ The <action> type attribute can be add,update,fix,remove.
          Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-        Bump japicmp-maven-plugin from 0.14.4 to 0.15.2, #83.
+        Bump japicmp-maven-plugin from 0.14.4 to 0.15.3, #83.
       </action>
       <action issue="DBCP-567" dev="ggregory" type="update" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
         Use abort rather than close to clean up abandoned connections.
