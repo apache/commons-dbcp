@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -1016,6 +1017,18 @@ public class TestBasicDataSource extends TestConnectionPool {
         // verify old pool connection is not returned to pool
         assertEquals(1, ds.getNumIdle());
         ds.close();
+    }
+
+    @Test
+    public void testIsWrapperFor() throws Exception {
+        assertTrue(ds.isWrapperFor(BasicDataSource.class));
+        assertTrue(ds.isWrapperFor(AutoCloseable.class));
+    }
+
+    @Test
+    public void testUnwrap() throws Exception {
+        assertSame(ds.unwrap(BasicDataSource.class), ds);
+        assertSame(ds.unwrap(AutoCloseable.class), ds);
     }
 }
 
