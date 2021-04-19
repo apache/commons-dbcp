@@ -81,8 +81,8 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Update commons-pool2 from 2.8.1 to 2.9.0.
       </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-         Bump actions/setup-java from v1.4.2 to v1.4.3 #69.
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+         Bump actions/setup-java from v1.4.2 to v2 #69.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
          Bump japicmp-maven-plugin from 0.14.3 to 0.15.2 #71, #82.
