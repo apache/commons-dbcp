@@ -77,10 +77,9 @@ public class TesterBasicXAConnection implements XAConnection {
             throw e;
         }
         handle = new ConnectionHandle(conn, this);
-        final Connection proxy = (Connection) Proxy.newProxyInstance(
+        return (Connection) Proxy.newProxyInstance(
                 getClass().getClassLoader(), new Class[] { Connection.class },
                 handle);
-        return proxy;
     }
 
     protected void closeHandle() throws SQLException {

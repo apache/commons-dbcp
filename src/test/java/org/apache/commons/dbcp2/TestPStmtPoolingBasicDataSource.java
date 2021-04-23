@@ -183,12 +183,11 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         stmt1.close();
 
-        final Connection conn2 = conn1;
-        assertNotNull(conn2);
+        assertNotNull(conn1);
         assertEquals(1, ds.getNumActive());
         assertEquals(0, ds.getNumIdle());
 
-        final PreparedStatement stmt2 = conn2.prepareStatement("select 'a' from dual");
+        final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
         assertNotNull(stmt2);
 
         final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();

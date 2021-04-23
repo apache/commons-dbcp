@@ -249,7 +249,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
         @Override
         public boolean isClosed() throws SQLException {
-            return getDelegateInternal() == null ? true : super.isClosed();
+            return getDelegateInternal() == null || super.isClosed();
         }
     }
 }
