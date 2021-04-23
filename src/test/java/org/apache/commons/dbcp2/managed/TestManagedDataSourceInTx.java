@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -245,8 +246,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -260,8 +261,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
         // in a transaction the inner connections should be equal
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -272,8 +273,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionB.getAutoCommit();
 
         // no there is no transaction so inner connections should not be equal
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertFalse(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertFalse(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -284,8 +285,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         connectionB.getAutoCommit();
 
         // back in a transaction so inner connections should be equal again
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -298,8 +299,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 

@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.datasources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -242,10 +243,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
             for (int j=0; j<=i; j++)
             {
-                assertTrue(!c[j].isClosed());
+                assertFalse(c[j].isClosed());
             }
         }
 
@@ -297,7 +298,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
         }
 
         try (Connection conn = ds.getConnection()){
@@ -322,7 +323,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection("foo","bar");
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
         }
 
         final long startMillis = System.currentTimeMillis();
@@ -578,7 +579,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         // prepared statement pooling is working
-        assertTrue(l3HashCode == l4HashCode);
+        assertEquals(l3HashCode, l4HashCode);
         conn.close();
         conn = null;
         spDs.close();
@@ -656,7 +657,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         // prepared statement pooling is working
-        assertTrue(l3HashCode == l4HashCode);
+        assertEquals(l3HashCode, l4HashCode);
         conn.close();
         conn = null;
         tds.close();

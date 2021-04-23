@@ -60,7 +60,7 @@ public class TestDelegatingDatabaseMetaData {
     public void testCheckOpen() throws Exception {
         delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
         final ResultSet rst = delegate.getSchemas();
-        assertTrue(!rst.isClosed());
+        assertFalse(rst.isClosed());
         conn.close();
         assertTrue(rst.isClosed());
     }

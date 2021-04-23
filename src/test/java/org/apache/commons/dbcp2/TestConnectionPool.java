@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -102,7 +103,7 @@ public abstract class TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
 
             // generate SQLWarning on connection
             try (CallableStatement cs = c[i].prepareCall("warning")){
@@ -136,7 +137,7 @@ public abstract class TestConnectionPool {
         for(int i=0;i<getMaxTotal();i++) {
             final Connection conn = newConnection();
             assertNotNull(conn);
-            assertTrue(!conn.isClosed());
+            assertFalse(conn.isClosed());
             final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
             final ResultSet rset = stmt.executeQuery();
@@ -158,7 +159,7 @@ public abstract class TestConnectionPool {
         for (int i = 0; i < getMaxTotal(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final Connection conn = newConnection();
             assertNotNull(conn);
-            assertTrue(!conn.isClosed());
+            assertFalse(conn.isClosed());
             conn.close();
             assertTrue(conn.isClosed());
             conn.close();
@@ -170,7 +171,7 @@ public abstract class TestConnectionPool {
     public void testCanCloseStatementTwice() throws Exception {
         final Connection conn = newConnection();
         assertNotNull(conn);
-        assertTrue(!conn.isClosed());
+        assertFalse(conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final Statement stmt = conn.createStatement();
             assertNotNull(stmt);
@@ -189,7 +190,7 @@ public abstract class TestConnectionPool {
     public void testCanClosePreparedStatementTwice() throws Exception {
         final Connection conn = newConnection();
         assertNotNull(conn);
-        assertTrue(!conn.isClosed());
+        assertFalse(conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
@@ -208,7 +209,7 @@ public abstract class TestConnectionPool {
     public void testCanCloseCallableStatementTwice() throws Exception {
         final Connection conn = newConnection();
         assertNotNull(conn);
-        assertTrue(!conn.isClosed());
+        assertFalse(conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final PreparedStatement stmt = conn.prepareCall("select * from dual");
             assertNotNull(stmt);
@@ -227,7 +228,7 @@ public abstract class TestConnectionPool {
     public void testCanCloseResultSetTwice() throws Exception {
         final Connection conn = newConnection();
         assertNotNull(conn);
-        assertTrue(!conn.isClosed());
+        assertFalse(conn.isClosed());
         for(int i=0;i<2;i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final PreparedStatement stmt = conn.prepareStatement("select * from dual");
             assertNotNull(stmt);
@@ -425,7 +426,7 @@ public abstract class TestConnectionPool {
             final Connection con = newConnection();
             final Connection underCon =
                 ((DelegatingConnection<?>) con).getInnermostDelegate();
-            assertTrue(underCon != null, "Failed to get connection");
+            assertNotNull(underCon, "Failed to get connection");
             boolean found = false;
             for (int j = 0; j < c.length; j++) {
                 if (underCon == u[j]) {
@@ -471,8 +472,8 @@ public abstract class TestConnectionPool {
         for(int i=0;i<conn.length;i++) {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
-                assertTrue(conn[j] != conn[i]);
-                assertTrue(!conn[j].equals(conn[i]));
+                assertNotSame(conn[j], conn[i]);
+                assertFalse(conn[j].equals(conn[i]));
             }
         }
         for (final Connection element : conn) {
@@ -486,9 +487,9 @@ public abstract class TestConnectionPool {
         // test that opening new connections is not closing previous
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
             for (int j = 0; j <= i; j++) {
-                assertTrue(!c[j].isClosed());
+                assertFalse(c[j].isClosed());
             }
         }
 
@@ -522,7 +523,7 @@ public abstract class TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = newConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
         }
 
         try {

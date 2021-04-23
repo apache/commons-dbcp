@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,8 +126,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
         final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
 
-        assertFalse(connectionA.equals(connectionB));
-        assertFalse(connectionB.equals(connectionA));
+        assertNotEquals(connectionA, connectionB);
+        assertNotEquals(connectionB, connectionA);
         assertFalse(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
         assertFalse(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
@@ -199,8 +200,8 @@ public class TestManagedDataSource extends TestConnectionPool {
     public void testManagedConnectionEqualsReflexive() throws Exception {
         final Connection con = ds.getConnection();
         final Connection con2 = con;
-        assertTrue(con2.equals(con));
-        assertTrue(con.equals(con2));
+        assertEquals(con2, con);
+        assertEquals(con, con2);
         con.close();
     }
 
@@ -208,7 +209,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     public void testManagedConnectionEqualsFail() throws Exception {
         final Connection con1 = ds.getConnection();
         final Connection con2 = ds.getConnection();
-        assertFalse(con1.equals(con2));
+        assertNotEquals(con1, con2);
         con1.close();
         con2.close();
     }
@@ -217,7 +218,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     public void testManagedConnectionEqualsNull() throws Exception {
         final Connection con1 = ds.getConnection();
         final Connection con2 = null;
-        assertFalse(con1.equals(con2));
+        assertNotEquals(con2, con1);
         con1.close();
     }
 
@@ -225,7 +226,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     public void testManagedConnectionEqualsType() throws Exception {
         final Connection con1 = ds.getConnection();
         final Integer con2 = 0;
-        assertFalse(con1.equals(con2));
+        assertNotEquals(con2, con1);
         con1.close();
     }
 
@@ -236,10 +237,10 @@ public class TestManagedDataSource extends TestConnectionPool {
         final Connection inner = con.getInnermostDelegate();
         ds.setAccessToUnderlyingConnectionAllowed(false);
         final DelegatingConnection<Connection> con2 = new DelegatingConnection<>(inner);
-        assertFalse(con2.equals(con));
+        assertNotEquals(con2, con);
         assertTrue(con.innermostDelegateEquals(con2.getInnermostDelegate()));
         assertTrue(con2.innermostDelegateEquals(inner));
-        assertFalse(con.equals(con2));
+        assertNotEquals(con, con2);
     }
 
     @Test
