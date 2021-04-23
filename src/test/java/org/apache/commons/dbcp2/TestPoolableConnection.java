@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestPoolableConnection {
 
-    private GenericObjectPool<PoolableConnection> pool = null;
+    private GenericObjectPool<PoolableConnection> pool;
 
     @BeforeEach
     public void setUp() throws Exception {

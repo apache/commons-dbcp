@@ -49,7 +49,7 @@ public class TestJndi {
             + "jndiTestDataSource";
 
     /** JNDI context to use in tests **/
-    protected Context context = null;
+    protected Context context;
 
     /**
      * Test BasicDatasource bind and lookup

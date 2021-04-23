@@ -578,8 +578,8 @@ public abstract class TestConnectionPool {
 
     class TestThread implements Runnable {
         final java.util.Random _random = new java.util.Random();
-        boolean _complete = false;
-        boolean _failed = false;
+        boolean _complete;
+        boolean _failed;
         int _iter = 100;
         int _delay = 50;
 
@@ -850,7 +850,7 @@ public abstract class TestConnectionPool {
                     assertEquals(0, failed, "Did not expect any threads to fail");
                 }
             }
-    private static int currentThreadCount = 0;
+    private static int currentThreadCount;
 
     private static final String DONE = "Done";
 
@@ -879,8 +879,8 @@ public abstract class TestConnectionPool {
         private long preconnected; // just before connect
         private long connected; // when thread last connected
         private long postconnected; // when thread released connection
-        private int loops = 0;
-        private int connHash = 0; // Connection identity hashCode (to see which one is reused)
+        private int loops;
+        private int connHash; // Connection identity hashCode (to see which one is reused)
 
         private final boolean stopOnException; // If true, don't rethrow Exception
 

@@ -41,8 +41,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    protected PoolingDataSource<PoolableConnection> ds = null;
-    private GenericObjectPool<PoolableConnection> pool = null;
+    protected PoolingDataSource<PoolableConnection> ds;
+    private GenericObjectPool<PoolableConnection> pool;
 
     @BeforeEach
     public void setUp() throws Exception {

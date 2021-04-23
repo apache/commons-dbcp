@@ -33,10 +33,10 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings({ "deprecation", "rawtypes" }) // BigDecimal methods, and casting for mocks
 public class TestDelegatingPreparedStatement {
 
-    private TesterConnection testerConn = null;
-    private DelegatingConnection connection = null;
-    private PreparedStatement obj = null;
-    private DelegatingPreparedStatement delegate = null;
+    private TesterConnection testerConn;
+    private DelegatingConnection connection;
+    private PreparedStatement obj;
+    private DelegatingPreparedStatement delegate;
 
     @BeforeEach
     public void setUp() throws Exception {

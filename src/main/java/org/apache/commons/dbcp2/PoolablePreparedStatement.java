@@ -50,7 +50,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
      */
     private final K key;
 
-    private volatile boolean batchAdded = false;
+    private volatile boolean batchAdded;
 
     /**
      * Constructor.

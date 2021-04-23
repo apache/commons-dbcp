@@ -195,7 +195,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The initial number of connections that are created when the pool is started.
      */
-    private int initialSize = 0;
+    private int initialSize;
 
     /**
      * The maximum number of milliseconds that the pool will wait (when there are no available connections) for a
@@ -207,9 +207,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Prepared statement pooling for this pool. When this property is set to <code>true</code> both PreparedStatements
      * and CallableStatements are pooled.
      */
-    private boolean poolPreparedStatements = false;
+    private boolean poolPreparedStatements;
 
-    private boolean clearStatementPoolOnReturn = false;
+    private boolean clearStatementPoolOnReturn;
 
     /**
      * <p>
@@ -230,7 +230,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The indication of whether objects will be validated as soon as they have been created by the pool. If the object
      * fails to validate, the borrow operation that triggered the creation will fail.
      */
-    private boolean testOnCreate = false;
+    private boolean testOnCreate;
 
     /**
      * The indication of whether objects will be validated before being borrowed from the pool. If the object fails to
@@ -241,7 +241,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The indication of whether objects will be validated before being returned to the pool.
      */
-    private boolean testOnReturn = false;
+    private boolean testOnReturn;
 
     /**
      * The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no idle
@@ -274,7 +274,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The indication of whether objects will be validated by the idle object evictor (if any). If an object fails to
      * validate, it will be dropped from the pool.
      */
-    private boolean testWhileIdle = false;
+    private boolean testWhileIdle;
 
     /**
      * The connection password to be passed to our JDBC driver to establish a connection.
@@ -320,7 +320,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Controls access to the underlying connection.
      */
-    private boolean accessToUnderlyingConnectionAllowed = false;
+    private boolean accessToUnderlyingConnectionAllowed;
 
     private long maxConnLifetimeMillis = -1;
 

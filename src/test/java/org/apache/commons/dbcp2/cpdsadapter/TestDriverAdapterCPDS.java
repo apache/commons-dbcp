@@ -279,7 +279,7 @@ public class TestDriverAdapterCPDS {
 
         private final DataSource ds;
 
-        private volatile boolean failed = false;
+        private volatile boolean failed;
 
         public ThreadDbcp367(final DataSource ds) {
             this.ds = ds;

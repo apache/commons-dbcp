@@ -41,7 +41,7 @@ import java.util.concurrent.Executor;
 public class TesterConnection extends AbandonedTrace implements Connection {
 
     protected boolean _open = true;
-    protected boolean _aborted = false;
+    protected boolean _aborted;
     protected boolean _autoCommit = true;
     protected int _transactionIsolation = 1;
     protected final DatabaseMetaData _metaData = new TesterDatabaseMetaData();
