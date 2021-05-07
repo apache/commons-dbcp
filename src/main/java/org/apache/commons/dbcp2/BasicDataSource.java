@@ -2447,7 +2447,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     @SuppressWarnings("unchecked")
     public <T> T unwrap(final Class<T> iface) throws SQLException {
-        if (iface.isInstance(this)) {
+        if (isWrapperFor(iface)) {
             return (T) this;
         }
         throw new SQLException(this + " is not a wrapper for " + iface);
