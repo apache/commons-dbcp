@@ -17,11 +17,9 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Arrays;
 
 import org.apache.commons.dbcp2.Utils;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +44,7 @@ public class TestUserPassKey {
     public void testGettersAndSetters() {
         assertEquals("user", userPassKey.getUsername());
         assertEquals("pass", userPassKey.getPassword());
-        assertTrue(Arrays.equals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray()));
+        assertArrayEquals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray());
     }
 
     @Test

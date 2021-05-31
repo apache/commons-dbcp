@@ -18,7 +18,9 @@
 package org.apache.commons.dbcp2.datasources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -253,10 +255,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         for (int i=0; i<c.length; i++)
         {
             c[i] = ds.getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
             for (int j=0; j<=i; j++)
             {
-                assertTrue(!c[j].isClosed());
+                assertFalse(c[j].isClosed());
             }
         }
 
@@ -295,7 +297,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i=0; i<c.length; i++) {
             c[i] = ds.getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
         }
 
         try (Connection conn = ds.getConnection()){
@@ -666,7 +668,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values = new HashMap<>();
         values.put("anonymous", Boolean.FALSE);
         ds.setPerUserDefaultAutoCommit(values);
-        assertEquals(null, ds.getPerUserDefaultAutoCommit("key"));
+        assertNull(ds.getPerUserDefaultAutoCommit("key"));
         assertEquals(Boolean.FALSE, ds.getPerUserDefaultAutoCommit("anonymous"));
     }
 
@@ -677,7 +679,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values.put("key", Boolean.FALSE);
         ds.setPerUserDefaultAutoCommit(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultAutoCommit("missingkey"));
+        assertNull(ds.getPerUserDefaultAutoCommit("missingkey"));
     }
 
     @Test
@@ -702,7 +704,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultAutoCommit("whatismyuseragain?", Boolean.FALSE);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultAutoCommit("missingkey"));
+        assertNull(ds.getPerUserDefaultAutoCommit("missingkey"));
     }
 
     // -- per user default read only
@@ -726,7 +728,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values = new HashMap<>();
         values.put("anonymous", Boolean.FALSE);
         ds.setPerUserDefaultReadOnly(values);
-        assertEquals(null, ds.getPerUserDefaultReadOnly("key"));
+        assertNull(ds.getPerUserDefaultReadOnly("key"));
         assertEquals(Boolean.FALSE, ds.getPerUserDefaultReadOnly("anonymous"));
     }
 
@@ -737,7 +739,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values.put("key", Boolean.FALSE);
         ds.setPerUserDefaultReadOnly(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultReadOnly("missingkey"));
+        assertNull(ds.getPerUserDefaultReadOnly("missingkey"));
     }
 
     @Test
@@ -762,7 +764,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultReadOnly("whatismyuseragain?", Boolean.FALSE);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultReadOnly("missingkey"));
+        assertNull(ds.getPerUserDefaultReadOnly("missingkey"));
     }
 
     // -- per user default transaction isolation
@@ -787,7 +789,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values.put("anonymous", 0);
         ds.setPerUserDefaultTransactionIsolation(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("key"));
+        assertNull(ds.getPerUserDefaultTransactionIsolation("key"));
         assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation("anonymous"));
     }
 
@@ -798,7 +800,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         values.put("key", 0);
         ds.setPerUserDefaultTransactionIsolation(values);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("missingkey"));
+        assertNull(ds.getPerUserDefaultTransactionIsolation("missingkey"));
     }
 
     @Test
@@ -823,7 +825,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserDefaultTransactionIsolation("whatismyuseragain?", 0);
         // TODO this is not consistent with the other methods
-        assertEquals(null, ds.getPerUserDefaultTransactionIsolation("missingkey"));
+        assertNull(ds.getPerUserDefaultTransactionIsolation("missingkey"));
     }
 
     // -- per user eviction policy class name
