@@ -36,7 +36,7 @@ import org.apache.commons.pool2.ObjectPool;
  */
 public class PoolingDriver implements Driver {
 
-    private static final DriverPropertyInfo[] EMPTY_DRIVER_PROPERTY_INFO_ARRAY = new DriverPropertyInfo[0];
+    private static final DriverPropertyInfo[] EMPTY_DRIVER_PROPERTY_INFO_ARRAY = {};
 
     /* Register myself with the {@link DriverManager}. */
     static {

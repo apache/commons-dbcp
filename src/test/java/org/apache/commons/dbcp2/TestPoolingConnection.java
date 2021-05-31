@@ -101,7 +101,7 @@ public class TestPoolingConnection {
     @Test
     public void testPrepareStatementWithColumnIndexes() throws Exception {
         final String sql = "select 'a' from dual";
-        final int[] columnIndexes = new int[]{1};
+        final int[] columnIndexes = {1};
         final DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, columnIndexes);
         final TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
         // assert
@@ -112,7 +112,7 @@ public class TestPoolingConnection {
     @Test
     public void testPrepareStatementWithColumnNames() throws Exception {
         final String sql = "select 'a' from dual";
-        final String[] columnNames = new String[]{"columnName1"};
+        final String[] columnNames = {"columnName1"};
         final DelegatingPreparedStatement statement = (DelegatingPreparedStatement)con.prepareStatement(sql, columnNames);
         final TesterPreparedStatement testStatement = (TesterPreparedStatement) statement.getInnermostDelegate();
         // assert

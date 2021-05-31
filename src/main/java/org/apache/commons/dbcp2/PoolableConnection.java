@@ -240,7 +240,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * @since 2.9.0
      */
     @Override
-    public void abort(Executor executor) throws SQLException {
+    public void abort(final Executor executor) throws SQLException {
         if (jmxObjectName != null) {
             jmxObjectName.unregisterMBean();
         }
