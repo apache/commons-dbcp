@@ -123,6 +123,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump commons.jacoco.version 0.8.6 -> 0.8.7.
       </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump jboss-logging from 3.4.1.Final to 3.4.2.Final #109.
+      </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
       <!-- add -->
