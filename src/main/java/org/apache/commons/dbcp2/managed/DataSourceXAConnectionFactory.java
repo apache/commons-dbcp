@@ -206,10 +206,20 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         return userName;
     }
 
+    /**
+     * Gets the user password.
+     *
+     * @return the user password.
+     */
     public char[] getUserPassword() {
         return userPassword == null ? null : userPassword.clone();
     }
 
+    /**
+     * Gets the XA data source.
+     *
+     * @return the XA data source.
+     */
     public XADataSource getXaDataSource() {
         return xaDataSource;
     }

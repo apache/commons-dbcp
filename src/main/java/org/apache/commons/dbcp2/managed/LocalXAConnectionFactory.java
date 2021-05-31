@@ -36,6 +36,7 @@ import java.util.Objects;
  * @since 2.0
  */
 public class LocalXAConnectionFactory implements XAConnectionFactory {
+
     /**
      * LocalXAResource is a fake XAResource for non-XA connections. When a transaction is started the connection
      * auto-commit is turned off. When the connection is committed or rolled back, the commit or rollback method is
@@ -44,8 +45,10 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      * The LocalXAResource also respects the connection read-only setting. If the connection is read-only the commit
      * method will not be called, and the prepare method returns the XA_RDONLY.
      * </p>
+     * <p>
      * It is assumed that the wrapper around a managed connection disables the setAutoCommit(), commit(), rollback() and
      * setReadOnly() methods while a transaction is in progress.
+     * </p>
      *
      * @since 2.0
      */
@@ -55,6 +58,11 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         private Xid currentXid; // @GuardedBy("this")
         private boolean originalAutoCommit; // @GuardedBy("this")
 
+        /**
+         * Construct a new instance for a given connection.
+         *
+         * @param localTransaction A connection.
+         */
         public LocalXAResource(final Connection localTransaction) {
             this.connection = localTransaction;
         }

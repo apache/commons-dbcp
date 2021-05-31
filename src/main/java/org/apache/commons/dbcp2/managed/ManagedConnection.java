@@ -201,6 +201,9 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         super.setReadOnly(readOnly);
     }
 
+    /**
+     * Completes the transaction.
+     */
     protected void transactionComplete() {
         lock.lock();
         try {
