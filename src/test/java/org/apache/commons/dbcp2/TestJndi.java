@@ -142,7 +142,6 @@ public class TestJndi {
         final Hashtable<String, String> environment = new Hashtable<>();
         environment.put(Context.INITIAL_CONTEXT_FACTORY,
                 org.apache.naming.java.javaURLContextFactory.class.getName());
-        final InitialContext ctx = new InitialContext(environment);
-        return ctx;
+        return new InitialContext(environment);
     }
 }
