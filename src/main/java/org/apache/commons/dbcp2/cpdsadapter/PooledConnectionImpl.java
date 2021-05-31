@@ -21,7 +21,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -68,12 +70,12 @@ class PooledConnectionImpl
     /**
      * ConnectionEventListeners.
      */
-    private final Vector<ConnectionEventListener> eventListeners;
+    private final List<ConnectionEventListener> eventListeners;
 
     /**
      * StatementEventListeners.
      */
-    private final Vector<StatementEventListener> statementEventListeners = new Vector<>();
+    private final List<StatementEventListener> statementEventListeners = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Flag set to true, once {@link #close()} is called.
@@ -101,7 +103,7 @@ class PooledConnectionImpl
         } else {
             this.delegatingConnection = new DelegatingConnection<>(connection);
         }
-        eventListeners = new Vector<>();
+        eventListeners = Collections.synchronizedList(new ArrayList<>());
         closed = false;
     }
 

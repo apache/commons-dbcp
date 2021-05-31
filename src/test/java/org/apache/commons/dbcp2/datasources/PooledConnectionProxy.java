@@ -19,9 +19,11 @@ package org.apache.commons.dbcp2.datasources;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -41,7 +43,7 @@ public class PooledConnectionProxy implements PooledConnection,
     /**
      * ConnectionEventListeners
      */
-    private final Vector<EventListener> eventListeners = new Vector<>();
+    private final List<EventListener> eventListeners = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * True means we will (dubiously) notify listeners with a
