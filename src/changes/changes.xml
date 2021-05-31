@@ -77,6 +77,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory, DaGeRe">
         Performance Enhancement: Call toArray with Zero Array Size #20.
       </action>
+      <action issue="DBCP-562" dev="ggregory" type="update" due-to="Frank Gasdorf, Gary Gregory">
+        Avoid exposing password via JMX #38.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.10.0 #66, #72, #77, #85, #91, #105.
