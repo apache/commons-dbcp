@@ -820,7 +820,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return The default query timeout in seconds.
      */
-    @Override
     public Integer getDefaultQueryTimeout() {
         return defaultQueryTimeoutSeconds;
     }
@@ -938,7 +937,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return The EvictionPolicy implementation in use with this connection pool.
      */
-    @Override
     public synchronized String getEvictionPolicyClassName() {
         return evictionPolicyClassName;
     }
@@ -1270,7 +1268,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return whether a connection will be rolled back when it is returned to the pool.
      */
-    @Override
     public boolean getRollbackOnReturn() {
         return rollbackOnReturn;
     }
@@ -1326,7 +1323,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return true if objects are validated before being returned to the pool
      * @see #testOnReturn
      */
-    @Override
     public synchronized boolean getTestOnReturn() {
         return this.testOnReturn;
     }

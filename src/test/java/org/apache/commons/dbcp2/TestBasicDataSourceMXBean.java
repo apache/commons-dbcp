@@ -97,18 +97,8 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public boolean getTestOnReturn() {
-            return false;
-        }
-
-        @Override
         public long getSoftMinEvictableIdleTimeMillis() {
             return 0;
-        }
-
-        @Override
-        public String getEvictionPolicyClassName() {
-            return null;
         }
 
         @Override
@@ -217,11 +207,6 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public boolean getRollbackOnReturn() {
-            return false;
-        }
-
-        @Override
         public int getDefaultTransactionIsolation() {
             return 0;
         }
@@ -239,11 +224,6 @@ public class TestBasicDataSourceMXBean {
         @Override
         public Boolean getDefaultAutoCommit() {
             return false;
-        }
-
-        @Override
-        public Integer getDefaultQueryTimeout() {
-            return 0;
         }
 
         @Override
