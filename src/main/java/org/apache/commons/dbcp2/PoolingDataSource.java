@@ -108,14 +108,13 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        return iface.isInstance(this);
+        return iface != null && iface.isInstance(this);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (isWrapperFor(iface)) {
-            return (T) this;
+            return iface.cast(this);
         }
         throw new SQLException(this + " is not a wrapper for " + iface);
     }

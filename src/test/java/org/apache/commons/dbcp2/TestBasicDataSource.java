@@ -1054,12 +1054,16 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testIsWrapperFor() throws Exception {
         assertTrue(ds.isWrapperFor(BasicDataSource.class));
         assertTrue(ds.isWrapperFor(AutoCloseable.class));
+        assertFalse(ds.isWrapperFor(String.class));
+        assertFalse(ds.isWrapperFor(null));
     }
 
     @Test
     public void testUnwrap() throws Exception {
         assertSame(ds.unwrap(BasicDataSource.class), ds);
         assertSame(ds.unwrap(AutoCloseable.class), ds);
+        assertThrows(SQLException.class, () -> ds.unwrap(String.class));
+        assertThrows(SQLException.class, () -> ds.unwrap(null));
     }
 }
 

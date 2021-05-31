@@ -18,13 +18,17 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
+
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -204,11 +208,15 @@ public class TestPoolingDataSource extends TestConnectionPool {
     public void testIsWrapperFor() throws Exception {
         assertTrue(ds.isWrapperFor(PoolingDataSource.class));
         assertTrue(ds.isWrapperFor(AutoCloseable.class));
+        assertFalse(ds.isWrapperFor(String.class));
+        assertFalse(ds.isWrapperFor(null));
     }
 
     @Test
     public void testUnwrap() throws Exception {
         assertSame(ds.unwrap(PoolingDataSource.class), ds);
         assertSame(ds.unwrap(AutoCloseable.class), ds);
+        assertThrows(SQLException.class, () -> ds.unwrap(String.class));
+        assertThrows(SQLException.class, () -> ds.unwrap(null));
     }
 }

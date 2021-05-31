@@ -1479,7 +1479,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        return iface.isInstance(this);
+        return iface != null && iface.isInstance(this);
     }
 
     private void jmxRegister() {
@@ -2440,10 +2440,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (isWrapperFor(iface)) {
-            return (T) this;
+            return iface.cast(this);
         }
         throw new SQLException(this + " is not a wrapper for " + iface);
     }

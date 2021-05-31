@@ -86,7 +86,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action issue="DBCP-577" dev="ggregory" type="update" due-to="Arturo Bernal">
         Simplify test assertions #100. 
       </action>
-      <action issue="DBCP-573" dev="ggregory" type="update" due-to="Réda Housni Alaoui">
+      <action issue="DBCP-573" dev="ggregory" type="update" due-to="Réda Housni Alaoui, Gary Gregory">
         DataSource implementations do not implement Wrapper interface correctly #93.
       </action>
       <!-- UPDATES -->
