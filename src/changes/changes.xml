@@ -113,6 +113,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix">
         org.apache.commons.dbcp2.PStmtKey.getColumnNames() may expose internal representation by returning PStmtKey.columnNames.
       </action>
+      <action issue="DBCP-578" dev="ggregory" type="fix" due-to="Arturo Bernal">
+        Use Collections.synchronizedList Instead Of Vector #101.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.10.0 #66, #72, #77, #85, #91, #105.
