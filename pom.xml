@@ -330,6 +330,8 @@
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
+    <spotbugs.plugin.version>4.2.3</spotbugs.plugin.version>
+    <spotbugs.impl.version>4.2.3</spotbugs.impl.version>
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.8.0</commons.bc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
@@ -337,7 +339,9 @@
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
 
     <japicmp.skip>false</japicmp.skip>
+    <spotbugs.skip>false</spotbugs.skip>
     <clirr.skip>true</clirr.skip>
+    <findbugs.skip>true</findbugs.skip>
   </properties>
 
   <build>
@@ -362,6 +366,21 @@
           <configuration>
             <configLocation>${basedir}/checkstyle.xml</configLocation>
             <enableRulesSummary>false</enableRulesSummary>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs.plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>${spotbugs.impl.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
           </configuration>
         </plugin>
       </plugins>
@@ -451,14 +470,8 @@
         </configuration>
       </plugin>    
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.5</version>
-        <configuration>
-          <threshold>Normal</threshold>
-          <effort>Default</effort>
-          <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
-        </configuration>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

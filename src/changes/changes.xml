@@ -62,32 +62,35 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.9.0" date="202Y-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!--  FIXES -->
-      <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
+      <action dev="ggregory" type="fix" issue="DBCP-569" due-to="Florent Guillaume">
          Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
          ManagedConnection must clear its cached state after transaction completes, #75.
       </action>
-      <action dev="ggregory" type="update" due-to="Arturo Bernal">
+      <action dev="ggregory" type="fix" due-to="Arturo Bernal">
         Minor Improvements #78.
       </action>
-      <action issue="DBCP-567" dev="ggregory" type="update" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
+      <action issue="DBCP-567" dev="ggregory" type="fix" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
         Use abort rather than close to clean up abandoned connections.
       </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory, DaGeRe">
+      <action dev="ggregory" type="fix" due-to="Gary Gregory, DaGeRe">
         Performance Enhancement: Call toArray with Zero Array Size #20.
       </action>
-      <action issue="DBCP-562" dev="ggregory" type="update" due-to="Frank Gasdorf, Gary Gregory">
+      <action issue="DBCP-562" dev="ggregory" type="fix" due-to="Frank Gasdorf, Gary Gregory">
         Avoid exposing password via JMX #38.
       </action>
-      <action issue="DBCP-575" dev="ggregory" type="update" due-to="Arturo Bernal">
+      <action issue="DBCP-575" dev="ggregory" type="fix" due-to="Arturo Bernal">
         Remove redundant initializers #98.
       </action>
-      <action issue="DBCP-577" dev="ggregory" type="update" due-to="Arturo Bernal">
+      <action issue="DBCP-577" dev="ggregory" type="fix" due-to="Arturo Bernal">
         Simplify test assertions #100. 
       </action>
-      <action issue="DBCP-573" dev="ggregory" type="update" due-to="Réda Housni Alaoui, Gary Gregory">
+      <action issue="DBCP-573" dev="ggregory" type="fix" due-to="Réda Housni Alaoui, Gary Gregory">
         DataSource implementations do not implement Wrapper interface correctly #93.
+      </action>
+      <action dev="ggregory" type="fix">
+        Replace FindBugs with SpotBugs.
       </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
