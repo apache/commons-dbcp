@@ -63,53 +63,71 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.9.0" date="202Y-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!--  FIXES -->
       <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
-         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
+         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
-         ManagedConnection must clear its cached state after transaction completes #75.
-      </action>
-      <!-- UPDATES -->
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Update mockito-core from 3.5.11 to 3.8.0 #66, #72, #77, #85, #91.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Update actions/checkout from v2.3.2 to v2.3.4 #65, #74.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump actions/cache from v2 to v2.1.4 #90.
-      </action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Update commons-pool2 from 2.8.1 to 2.9.0.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-         Bump actions/setup-java from v1.4.2 to v1.4.3 #69.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-         Bump japicmp-maven-plugin from 0.14.3 to 0.15.2 #71, #82.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-         Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-        Bump japicmp-maven-plugin from 0.14.4 to 0.15.3, #83.
-      </action>
-      <action issue="DBCP-567" dev="ggregory" type="update" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
-        Use abort rather than close to clean up abandoned connections.
+         ManagedConnection must clear its cached state after transaction completes, #75.
       </action>
       <action dev="ggregory" type="update" due-to="Arturo Bernal">
         Minor Improvements #78.
       </action>
-      <action dev="ggregory" type="update" due-to="John Patrick">
-        Update Hamcrest 1.3 -> 2.2 #70.
+      <action issue="DBCP-567" dev="ggregory" type="update" due-to="Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau">
+        Use abort rather than close to clean up abandoned connections.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, DaGeRe">
         Performance Enhancement: Call toArray with Zero Array Size #20.
+      </action>
+      <action issue="DBCP-562" dev="ggregory" type="update" due-to="Frank Gasdorf, Gary Gregory">
+        Avoid exposing password via JMX #38.
+      </action>
+      <action issue="DBCP-575" dev="ggregory" type="update" due-to="Arturo Bernal">
+        Remove redundant initializers #98.
+      </action>
+      <!-- UPDATES -->
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump mockito-core from 3.5.11 to 3.10.0 #66, #72, #77, #85, #91, #105.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump actions/checkout from v2.3.2 to v2.3.4 #65, #74.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump actions/cache from v2 to v2.1.6 #90, #108.
+      </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons-pool2 from 2.8.1 to 2.9.0.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+        Bump actions/setup-java from v1.4.2 to v2 #69.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+        Bump japicmp-maven-plugin from 0.14.3 to 0.15.2 #71, #82.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+        Bump japicmp-maven-plugin from 0.14.4 to 0.15.3, #83.
+      </action>
+      <action dev="ggregory" type="update" due-to="John Patrick">
+        Bump Hamcrest 1.3 -> 2.2 #70.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #88.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump junit-jupiter from 5.7.0 to 5.7.1 #89.
+        Bump junit-jupiter from 5.7.0 to 5.7.2, #89, #106.
+      </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump narayana-jta from 5.10.6.Final to 5.11.2.Final #103.
+      </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump maven-javadoc-plugin from 3.2.0 to 3.3.0 #107.
+      </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons.jacoco.version 0.8.6 -> 0.8.7.
+      </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump jboss-logging from 3.4.1.Final to 3.4.2.Final #109.
       </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">

@@ -208,7 +208,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /** My log writer. */
-    private PrintWriter logWriter = null;
+    private PrintWriter logWriter;
 
     private final ObjectPool<C> pool;
 

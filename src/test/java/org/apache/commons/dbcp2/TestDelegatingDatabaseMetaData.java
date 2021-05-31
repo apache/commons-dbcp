@@ -38,9 +38,9 @@ import org.junit.jupiter.api.Test;
 public class TestDelegatingDatabaseMetaData {
 
     private TesterConnection testConn;
-    private DelegatingConnection<?> conn = null;
-    private DelegatingDatabaseMetaData delegate = null;
-    private DatabaseMetaData obj = null;
+    private DelegatingConnection<?> conn;
+    private DelegatingDatabaseMetaData delegate;
+    private DatabaseMetaData obj;
 
     @BeforeEach
     public void setUp() throws Exception {

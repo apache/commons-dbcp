@@ -40,7 +40,9 @@ import java.util.logging.Logger;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
+import javax.management.StandardMBean;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -53,10 +55,11 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
+ * Basic implementation of <code>javax.sql.DataSource</code> that is configured via JavaBeans properties.
+ *
  * <p>
- * Basic implementation of <code>javax.sql.DataSource</code> that is configured via JavaBeans properties. This is not
- * the only way to combine the <em>commons-dbcp2</em> and <em>commons-pool2</em> packages, but provides a "one stop
- * shopping" solution for basic requirements.
+ * This is not the only way to combine the <em>commons-dbcp2</em> and <em>commons-pool2</em> packages, but provides a
+ * one-stop solution for basic requirements.
  * </p>
  *
  * @since 2.0
@@ -195,7 +198,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The initial number of connections that are created when the pool is started.
      */
-    private int initialSize = 0;
+    private int initialSize;
 
     /**
      * The maximum number of milliseconds that the pool will wait (when there are no available connections) for a
@@ -207,9 +210,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Prepared statement pooling for this pool. When this property is set to <code>true</code> both PreparedStatements
      * and CallableStatements are pooled.
      */
-    private boolean poolPreparedStatements = false;
+    private boolean poolPreparedStatements;
 
-    private boolean clearStatementPoolOnReturn = false;
+    private boolean clearStatementPoolOnReturn;
 
     /**
      * <p>
@@ -230,7 +233,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The indication of whether objects will be validated as soon as they have been created by the pool. If the object
      * fails to validate, the borrow operation that triggered the creation will fail.
      */
-    private boolean testOnCreate = false;
+    private boolean testOnCreate;
 
     /**
      * The indication of whether objects will be validated before being borrowed from the pool. If the object fails to
@@ -241,7 +244,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The indication of whether objects will be validated before being returned to the pool.
      */
-    private boolean testOnReturn = false;
+    private boolean testOnReturn;
 
     /**
      * The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no idle
@@ -274,7 +277,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The indication of whether objects will be validated by the idle object evictor (if any). If an object fails to
      * validate, it will be dropped from the pool.
      */
-    private boolean testWhileIdle = false;
+    private boolean testWhileIdle;
 
     /**
      * The connection password to be passed to our JDBC driver to establish a connection.
@@ -320,7 +323,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Controls access to the underlying connection.
      */
-    private boolean accessToUnderlyingConnectionAllowed = false;
+    private boolean accessToUnderlyingConnectionAllowed;
 
     private long maxConnLifetimeMillis = -1;
 
@@ -1489,9 +1492,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (requestedName == null) {
             return;
         }
+        registeredJmxObjectName = registerJmxObjectName(requestedName, null);
         try {
-            ObjectNameWrapper.wrap(requestedName).registerMBean(this);
-        } catch (final MalformedObjectNameException e) {
+            final StandardMBean standardMBean = new StandardMBean(this, DataSourceMXBean.class);
+            registeredJmxObjectName.registerMBean(standardMBean);
+        } catch (final NotCompliantMBeanException e) {
             log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
         }
     }
@@ -1533,17 +1538,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     @Override
     public ObjectName preRegister(final MBeanServer server, final ObjectName objectName) {
-        final String requestedName = getJmxName();
-        if (requestedName != null) {
-            try {
-                registeredJmxObjectName = ObjectNameWrapper.wrap(requestedName);
-            } catch (final MalformedObjectNameException e) {
-                log.warn("The requested JMX name [" + requestedName + "] was not valid and will be ignored.");
-            }
-        }
-        if (registeredJmxObjectName == null) {
-            registeredJmxObjectName = ObjectNameWrapper.wrap(objectName);
-        }
+        registeredJmxObjectName = registerJmxObjectName(getJmxName(), objectName);
         return ObjectNameWrapper.unwrap(registeredJmxObjectName);
     }
 
@@ -2461,6 +2456,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
+    }
+
+    private ObjectNameWrapper registerJmxObjectName(final String requestedName, final ObjectName objectName) {
+        ObjectNameWrapper objectNameWrapper = null;
+        if (requestedName != null) {
+            try {
+                objectNameWrapper = ObjectNameWrapper.wrap(requestedName);
+            } catch (final MalformedObjectNameException e) {
+                log.warn("The requested JMX name '" + requestedName + "' was not valid and will be ignored.");
+            }
+        }
+        if (objectNameWrapper == null) {
+            objectNameWrapper = ObjectNameWrapper.wrap(objectName);
+        }
+        return objectNameWrapper;
     }
 
 }

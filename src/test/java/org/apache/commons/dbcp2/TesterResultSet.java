@@ -44,12 +44,12 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
     protected int _type = ResultSet.TYPE_FORWARD_ONLY;
     protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
-    protected Object[][] _data = null;
+    protected Object[][] _data;
     protected int _currentRow = -1;
-    protected Statement _statement = null;
+    protected Statement _statement;
     protected int _rowsLeft = 2;
     protected boolean _open = true;
-    protected boolean _sqlExceptionOnClose = false;
+    protected boolean _sqlExceptionOnClose;
 
     public TesterResultSet(final Statement stmt) {
         _statement = stmt;

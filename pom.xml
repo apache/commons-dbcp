@@ -182,7 +182,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.7.1</version>
+      <version>5.7.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -196,7 +196,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.8.0</version>
+      <version>3.10.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -255,7 +255,7 @@
     <dependency>
       <groupId>org.jboss.narayana.jta</groupId>
       <artifactId>narayana-jta</artifactId>
-      <version>5.10.6.Final</version>
+      <version>5.11.2.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -279,7 +279,7 @@
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>3.4.1.Final</version>
+      <version>3.4.2.Final</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -322,7 +322,7 @@
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
     <commons.checkstyle.version>3.1.2</commons.checkstyle.version>
-    <commons.javadoc.version>3.2.0</commons.javadoc.version>
+    <commons.javadoc.version>3.3.0</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.9.0</commons.pool.version>
     <commons.japicmp.version>0.15.3</commons.japicmp.version>

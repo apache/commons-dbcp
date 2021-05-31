@@ -36,7 +36,7 @@ import javax.sql.StatementEventListener;
 public class PooledConnectionProxy implements PooledConnection,
     ConnectionEventListener {
 
-    protected PooledConnection delegate = null;
+    protected PooledConnection delegate;
 
     /**
      * ConnectionEventListeners
@@ -48,7 +48,7 @@ public class PooledConnectionProxy implements PooledConnection,
      * ConnectionClosed event when this (i.e. the PooledConnection itself)
      * is closed
      */
-    private boolean notifyOnClose = false;
+    private boolean notifyOnClose;
 
     public PooledConnectionProxy(final PooledConnection pooledConnection) {
         this.delegate = pooledConnection;

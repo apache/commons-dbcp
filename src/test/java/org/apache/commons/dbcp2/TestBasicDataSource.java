@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -37,6 +38,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
@@ -60,7 +63,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    protected BasicDataSource ds = null;
+    protected BasicDataSource ds;
     private static final String CATALOG = "test catalog";
 
     @BeforeAll
@@ -1017,6 +1020,34 @@ public class TestBasicDataSource extends TestConnectionPool {
         // verify old pool connection is not returned to pool
         assertEquals(1, ds.getNumIdle());
         ds.close();
+    }
+
+    /**
+     * Tests JIRA <a href="https://issues.apache.org/jira/browse/DBCP-562">DBCP-562</a>.
+     * <p>
+     * Make sure Password Attribute is not exported via JMXBean.
+     * </p>
+     */
+    @Test
+    public void testJmxDoesNotExposePassword() throws Exception {
+        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+
+        try (Connection c = ds.getConnection()) {
+            // nothing
+        }
+        final ObjectName objectName = new ObjectName(ds.getJmxName());
+
+        final MBeanAttributeInfo[] attributes = mbs.getMBeanInfo(objectName).getAttributes();
+
+        assertTrue(attributes != null && attributes.length > 0);
+
+        Arrays.asList(attributes).forEach(attrInfo -> {
+            assertFalse("password".equalsIgnoreCase(attrInfo.getName()));
+        });
+
+        assertThrows(AttributeNotFoundException.class, () -> {
+            mbs.getAttribute(objectName, "Password");
+        });
     }
 
     @Test

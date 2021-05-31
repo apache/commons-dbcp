@@ -51,9 +51,9 @@ import org.junit.jupiter.api.Test;
  */
 public class TestManagedConnection {
 
-    protected PoolingDataSource<PoolableConnection> ds = null;
+    protected PoolingDataSource<PoolableConnection> ds;
 
-    private GenericObjectPool<PoolableConnection> pool = null;
+    private GenericObjectPool<PoolableConnection> pool;
 
     protected TransactionManager transactionManager;
 

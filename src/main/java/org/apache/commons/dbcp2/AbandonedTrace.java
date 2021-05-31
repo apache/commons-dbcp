@@ -38,7 +38,7 @@ public class AbandonedTrace implements TrackedUse {
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
 
     /** Last time this connection was used. */
-    private volatile long lastUsedMillis = 0;
+    private volatile long lastUsedMillis;
 
     /**
      * Creates a new AbandonedTrace without config and without doing abandoned tracing.

@@ -64,7 +64,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Indicate that unrecoverable SQLException was thrown when using this connection. Such a connection should be
      * considered broken and not pass validation in the future.
      */
-    private boolean fatalSqlExceptionThrown = false;
+    private boolean fatalSqlExceptionThrown;
 
     /**
      * SQL_STATE codes considered to signal fatal conditions. Overrides the defaults in
