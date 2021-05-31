@@ -139,7 +139,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             // See bug 17301 for what could happen when ResultSets are closed twice.
             final List<AbandonedTrace> resultSetList = getTrace();
             if (resultSetList != null) {
-                final int size = resultSetList.size();
                 final ResultSet[] resultSets = resultSetList.toArray(Utils.EMPTY_RESULT_SET_ARRAY);
                 for (final ResultSet resultSet : resultSets) {
                     if (resultSet != null) {
