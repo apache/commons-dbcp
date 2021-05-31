@@ -62,7 +62,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         return ds.getConnection();
     }
 
-    protected BasicDataSource ds = null;
+    protected BasicDataSource ds;
     private static final String CATALOG = "test catalog";
 
     @BeforeAll

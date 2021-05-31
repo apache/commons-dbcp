@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestPoolingConnection {
 
-    private PoolingConnection con = null;
+    private PoolingConnection con;
 
     @BeforeEach
     public void setUp() throws Exception {

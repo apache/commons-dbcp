@@ -32,7 +32,7 @@ import org.apache.commons.dbcp2.Jdbc41Bridge;
  */
 public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
 
-    protected ConnectionPoolDataSource delegate = null;
+    protected ConnectionPoolDataSource delegate;
 
     public ConnectionPoolDataSourceProxy(final ConnectionPoolDataSource cpds) {
         this.delegate = cpds;

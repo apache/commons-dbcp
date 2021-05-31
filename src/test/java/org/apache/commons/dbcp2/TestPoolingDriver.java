@@ -52,7 +52,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         return DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
     }
 
-    private PoolingDriver driver = null;
+    private PoolingDriver driver;
 
     @BeforeEach
     public void setUp() throws Exception {

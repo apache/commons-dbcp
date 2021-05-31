@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestCPDSConnectionFactory {
 
-    protected ConnectionPoolDataSourceProxy cpds = null;
+    protected ConnectionPoolDataSourceProxy cpds;
 
     @BeforeEach
     public void setUp() throws Exception {

@@ -293,13 +293,13 @@ public class TestLocalXaResource {
 
     private static class TestConnection implements Connection {
 
-        public boolean throwWhenGetAutoCommit = false;
-        public boolean throwWhenSetAutoCommit = false;
-        boolean autoCommit = false;
-        boolean readOnly = false;
-        public boolean committed = false;
-        public boolean rolledback = false;
-        public boolean closed = false;
+        public boolean throwWhenGetAutoCommit;
+        public boolean throwWhenSetAutoCommit;
+        boolean autoCommit;
+        boolean readOnly;
+        public boolean committed;
+        public boolean rolledback;
+        public boolean closed;
 
         @Override
         public <T> T unwrap(final Class<T> iface) throws SQLException {

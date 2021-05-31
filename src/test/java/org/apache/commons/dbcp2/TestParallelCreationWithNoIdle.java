@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestParallelCreationWithNoIdle  {
 
 
-    protected BasicDataSource ds = null;
+    protected BasicDataSource ds;
     private static final String CATALOG = "test catalog";
 
     @BeforeAll
