@@ -103,15 +103,15 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * Private to ensure all construction is {@link #wrapResultSet(Connection, ResultSet)}
      * </p>
      *
-     * @param conn
+     * @param connection
      *            Connection which created this ResultSet
-     * @param res
+     * @param resultSet
      *            ResultSet to wrap
      */
-    private DelegatingResultSet(final Connection conn, final ResultSet res) {
-        super((AbandonedTrace) conn);
-        this.connection = conn;
-        this.resultSet = res;
+    private DelegatingResultSet(final Connection connection, final ResultSet resultSet) {
+        super((AbandonedTrace) connection);
+        this.connection = connection;
+        this.resultSet = resultSet;
     }
 
     /**
