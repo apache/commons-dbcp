@@ -64,4 +64,10 @@
     <Method name="prepareStatement" />
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION" />
   </Match>
+  <Match>
+    <!-- MUST keep for binary compatibility until 3.0.0 -->
+    <Class name="org.apache.commons.dbcp2.PoolingDriver" />
+    <Field name="pools" />
+    <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT" />
+  </Match>
 </FindBugsFilter>
