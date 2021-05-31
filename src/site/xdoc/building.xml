@@ -46,14 +46,6 @@ limitations under the License.
     The result will be in "target/site".
   </p>
 </section>
-<!-- ================================================== -->
-<section name="Ant Goals">
-  <p>
-    To build a jar file and the javadocs, change into DBCP's root directory
-    and run <strong><code>ant dist</code></strong>.
-    The result will be in the "dist" subdirectory.
-  </p>
-</section>
 
 <!-- ================================================== -->
 </body>
