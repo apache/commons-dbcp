@@ -63,10 +63,10 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.9.0" date="202Y-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!--  FIXES -->
       <action dev="ggregory" type="update" issue="DBCP-569" due-to="Florent Guillaume">
-         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization #84.
+         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
-         ManagedConnection must clear its cached state after transaction completes #75.
+         ManagedConnection must clear its cached state after transaction completes, #75.
       </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
@@ -116,6 +116,9 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump maven-javadoc-plugin from 3.2.0 to 3.3.0 #107.
+      </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons.jacoco.version 0.8.6 -> 0.8.7.
       </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
