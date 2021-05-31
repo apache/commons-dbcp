@@ -92,6 +92,21 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix">
         Replace FindBugs with SpotBugs.
       </action>
+      <action dev="ggregory" type="fix">
+        DataSourceConnectionFactory.getUserPassword() may expose internal representation by returning DataSourceConnectionFactory.userPassword.
+      </action>
+      <action dev="ggregory" type="fix">
+        DataSourceXAConnectionFactory.getUserPassword() may expose internal representation by returning DataSourceXAConnectionFactory.userPassword.
+      </action>
+      <action dev="ggregory" type="fix">
+        DriverAdapterCPDS.getPasswordCharArray() may expose internal representation by returning DriverAdapterCPDS.userPassword.
+      </action>
+      <action dev="ggregory" type="fix">
+        new org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory(TransactionManager, XADataSource, String, char[], TransactionSynchronizationRegistry) may expose internal representation by storing an externally mutable object into DataSourceXAConnectionFactory.userPassword.
+      </action>
+      <action dev="ggregory" type="fix">
+        org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory.setPassword(char[]) may expose internal representation by storing an externally mutable object into DataSourceXAConnectionFactory.userPassword.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.10.0 #66, #72, #77, #85, #91, #105.

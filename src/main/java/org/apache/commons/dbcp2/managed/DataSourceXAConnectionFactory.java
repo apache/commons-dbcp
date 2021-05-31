@@ -101,7 +101,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         this.transactionRegistry = new TransactionRegistry(transactionManager, transactionSynchronizationRegistry);
         this.xaDataSource = xaDataSource;
         this.userName = userName;
-        this.userPassword = userPassword;
+        this.userPassword = userPassword == null ? null : userPassword.clone();
     }
 
     /**
@@ -207,7 +207,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     }
 
     public char[] getUserPassword() {
-        return userPassword;
+        return userPassword == null ? null : userPassword.clone();
     }
 
     public XADataSource getXaDataSource() {
@@ -222,7 +222,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      * @since 2.4.0
      */
     public void setPassword(final char[] userPassword) {
-        this.userPassword = userPassword;
+        this.userPassword = userPassword == null ? null : userPassword.clone();
     }
 
     /**

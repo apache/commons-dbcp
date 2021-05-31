@@ -337,7 +337,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @since 2.4.0
      */
     public char[] getPasswordCharArray() {
-        return userPassword;
+        return userPassword == null ? null : userPassword.clone();
     }
 
     /**
