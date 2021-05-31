@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -29,7 +30,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -306,5 +306,17 @@ public class TestInstanceKeyDataSource {
         assertNull(info.getPassword());
         final Connection conn = spds.getConnection();
         assertNotNull(conn);
+    }
+
+    @Test
+    public void testIsWrapperFor() throws Exception {
+        assertTrue(spds.isWrapperFor(InstanceKeyDataSource.class));
+        assertTrue(spds.isWrapperFor(AutoCloseable.class));
+    }
+
+    @Test
+    public void testUnwrap() throws Exception {
+        assertSame(spds.unwrap(InstanceKeyDataSource.class), spds);
+        assertSame(spds.unwrap(AutoCloseable.class), spds);
     }
 }
