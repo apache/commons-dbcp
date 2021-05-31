@@ -111,6 +111,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump junit-jupiter from 5.7.0 to 5.7.1 #89.
       </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump narayana-jta from 5.10.6.Final to 5.11.2.Final #103.
+      </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
       <!-- add -->
