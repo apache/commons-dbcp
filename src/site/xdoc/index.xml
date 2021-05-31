@@ -44,28 +44,34 @@ within Apache products and elsewhere.  This Commons package provides an
 opportunity to coordinate the efforts required to create and maintain an
 efficient, feature-rich package under the ASF license.</p>
 
-<p>The <code>commons-dbcp2</code> package relies on code in the
-<code>commons-pool2</code> package to provide the underlying object pool
-mechanisms that it utilizes.</p>
+<p>The <code>commons-dbcp2</code> artifact relies on code in the
+<code>commons-pool2</code> artifact to provide the underlying object pool
+mechanisms.</p>
 
 <p>DBCP now comes in four different versions to support different versions of
-JDBC. Here is how it works:
+JDBC. Here is how it works:</p>
+<p>Developing</p>
 <ul>
-<li>DBCP 2.7.0 compiles and runs under Java 8 only (JDBC 4.2)</li>
-<li>DBCP 2.6.0 compiles and runs under Java 8 only (JDBC 4.2)</li>
-<li>DBCP 2.5.0 compiles and runs under Java 8 only (JDBC 4.2)</li>
-<li>DBCP 2.4.0 compiles and runs under Java 7 only (JDBC 4.1)</li>
-<li>DBCP 1.4 compiles and runs under Java 6 only (JDBC 4)</li>
-<li>DBCP 1.3 compiles and runs under Java 1.4-5.0 only (JDBC 3)</li>
+<li>DBCP 2.9.0 compiles and runs under Java 8 (JDBC 4.2) and above.</li>
+<li>DBCP 2.8.0 compiles and runs under Java 8 (JDBC 4.2) and above.</li>
+<li>DBCP 2.7.0 compiles and runs under Java 8 (JDBC 4.2) and above.</li>
+<li>DBCP 2.6.0 compiles and runs under Java 8 (JDBC 4.2) and above.</li>
+<li>DBCP 2.5.0 compiles and runs under Java 8 (JDBC 4.2) and above.</li>
+<li>DBCP 2.4.0 compiles and runs under Java 7 (JDBC 4.1) and above.</li>
+<li>DBCP 1.4 compiles and runs under Java 6 (JDBC 4) and above.</li>
+<li>DBCP 1.3 compiles and runs under Java 1.4-5.0 (JDBC 3) and above.</li>
 </ul>
-</p>
-<p>DBCP 2.7.0 binaries should be used by applications running on Java 8 and above.</p>
-<p>DBCP 2.6.0 binaries should be used by applications running on Java 8 and above.</p>
-<p>DBCP 2.5.0 binaries should be used by applications running under Java 8.</p>
-<p>DBCP 2.4.0 binaries should be used by applications running under Java 7.</p>
-<p>DBCP 1.4 binaries should be used by applications running under Java 6.</p>
-<p>DBCP 1.3 should be used when running under Java 1.4 and 5.0.</p>
-
+<p>Running</p>
+<ul>
+<li>DBCP 2.9.0 binaries should be used by applications running on Java 8 and above.</li>
+<li>DBCP 2.8.0 binaries should be used by applications running on Java 8 and above.</li>
+<li>DBCP 2.7.0 binaries should be used by applications running on Java 8 and above.</li>
+<li>DBCP 2.6.0 binaries should be used by applications running on Java 8 and above.</li>
+<li>DBCP 2.5.0 binaries should be used by applications running under Java 8.</li>
+<li>DBCP 2.4.0 binaries should be used by applications running under Java 7.</li>
+<li>DBCP 1.4 binaries should be used by applications running under Java 6.</li>
+<li>DBCP 1.3 should be used when running under Java 1.4 and 5.0.</li>
+</ul>
 <p>DBCP 2 is based on Commons Pool 2 and provides increased performance, JMX
 support as well as numerous other new features compared to DBCP 1.x. Users
 upgrading to 2.x should be aware that the Java package name has changed, as well
