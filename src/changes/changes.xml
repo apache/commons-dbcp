@@ -109,7 +109,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #88.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump junit-jupiter from 5.7.0 to 5.7.1 #89.
+        Bump junit-jupiter from 5.7.0 to 5.7.2, #89, #106.
       </action>
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump narayana-jta from 5.10.6.Final to 5.11.2.Final #103.
