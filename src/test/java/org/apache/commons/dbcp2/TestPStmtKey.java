@@ -17,10 +17,11 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
 
@@ -221,30 +222,30 @@ public class TestPStmtKey {
         final PStmtKey pStmtKey = new PStmtKey("SELECT 1", "catalog", "public",
                 java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
                 StatementType.CALLABLE_STATEMENT);
-        assertTrue(pStmtKey.equals(pStmtKey));
-        assertFalse(pStmtKey.equals(null));
-        assertFalse(pStmtKey.equals(new Object()));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 2", "catalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.CALLABLE_STATEMENT)));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 1", "anothercatalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.CALLABLE_STATEMENT)));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 1", "catalog", "private",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.CALLABLE_STATEMENT)));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 1", "catalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_SENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.CALLABLE_STATEMENT)));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 1", "catalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_UPDATABLE,
-                StatementType.CALLABLE_STATEMENT)));
-        assertFalse(pStmtKey.equals(new PStmtKey("SELECT 1", "catalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.PREPARED_STATEMENT)));
-        assertTrue(pStmtKey.equals(new PStmtKey("SELECT 1", "catalog", "public",
-                java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
-                StatementType.CALLABLE_STATEMENT)));
+        assertEquals(pStmtKey, pStmtKey);
+        assertNotEquals(null, pStmtKey);
+        assertNotEquals(pStmtKey, new Object());
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 2", "catalog", "public",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.CALLABLE_STATEMENT));
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 1", "anothercatalog", "public",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.CALLABLE_STATEMENT));
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 1", "catalog", "private",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.CALLABLE_STATEMENT));
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 1", "catalog", "public",
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.CALLABLE_STATEMENT));
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 1", "catalog", "public",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE,
+                StatementType.CALLABLE_STATEMENT));
+        assertNotEquals(pStmtKey, new PStmtKey("SELECT 1", "catalog", "public",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.PREPARED_STATEMENT));
+        assertEquals(pStmtKey, new PStmtKey("SELECT 1", "catalog", "public",
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY,
+                StatementType.CALLABLE_STATEMENT));
         assertEquals(pStmtKey.hashCode(), new PStmtKey("SELECT 1", "catalog", "public",
                 java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
                 StatementType.CALLABLE_STATEMENT).hashCode());

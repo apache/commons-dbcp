@@ -378,7 +378,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
             c[i] = getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
             assertEquals(CATALOG, c[i].getCatalog());
         }
 
@@ -389,7 +389,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
         for (int i = 0; i < c.length; i++) {
             c[i] = getConnection();
-            assertTrue(c[i] != null);
+            assertNotNull(c[i]);
             assertEquals(CATALOG, c[i].getCatalog());
         }
 

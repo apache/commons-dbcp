@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -163,8 +164,8 @@ public class TestPoolingDriver extends TestConnectionPool {
         for(int i=0;i<25;i++) {
             conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
             for(int j=0;j<i;j++) {
-                assertTrue(conn[j] != conn[i]);
-                assertTrue(!conn[j].equals(conn[i]));
+                assertNotSame(conn[j], conn[i]);
+                assertFalse(conn[j].equals(conn[i]));
             }
         }
         for(int i=0;i<25;i++) {

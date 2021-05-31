@@ -188,7 +188,7 @@ public class TestDriverAdapterCPDS {
         pcds.setUser("Alice");
         assertEquals("Alice", pcds.getUser());
         pcds.setUser(null);
-        assertEquals(null, pcds.getUser());
+        assertNull(pcds.getUser());
     }
 
     @Test
@@ -197,7 +197,7 @@ public class TestDriverAdapterCPDS {
         pcds.setUser("Alice");
         assertEquals("Alice", pcds.getUser());
         pcds.setUser(null);
-        assertEquals(null, pcds.getUser());
+        assertNull(pcds.getUser());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class TestDriverAdapterCPDS {
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
         pcds.setPassword((char[]) null);
-        assertEquals(null, pcds.getPassword());
+        assertNull(pcds.getPassword());
     }
 
     @Test
@@ -223,7 +223,7 @@ public class TestDriverAdapterCPDS {
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
         pcds.setPassword((char[]) null);
-        assertEquals(null, pcds.getPassword());
+        assertNull(pcds.getPassword());
     }
 
     /**

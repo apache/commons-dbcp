@@ -18,8 +18,8 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,7 +57,7 @@ public class TestDelegatingCallableStatement {
     public void testExecuteQueryReturnsNotNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
         obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
-        assertTrue(null != obj.executeQuery());
+        assertNotNull(obj.executeQuery());
     }
 
     @Test

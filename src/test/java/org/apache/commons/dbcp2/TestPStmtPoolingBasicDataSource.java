@@ -58,7 +58,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         final PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
         assertNotNull(stmt2);
 
-        assertTrue(stmt1 != stmt2);
+        assertNotSame(stmt1, stmt2);
 
         // go over the maxOpen limit
         try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
@@ -72,8 +72,8 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         // test cleanup the 'b' statement
         final PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
         assertNotNull(stmt3);
-        assertTrue(stmt3 != stmt1);
-        assertTrue(stmt3 != stmt2);
+        assertNotSame(stmt3, stmt1);
+        assertNotSame(stmt3, stmt2);
 
         // normal reuse of statement
         stmt1.close();

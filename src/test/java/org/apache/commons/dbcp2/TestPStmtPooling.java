@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,7 +77,7 @@ public class TestPStmtPooling {
        // Confirm stmt2 now wraps the same PPS wrapped by stmt1
        Assertions.assertSame(pps1, getPoolablePreparedStatement(stmt2));
        stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
-       assertTrue(!stmt2.isClosed());
+        assertFalse(stmt2.isClosed());
        stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
        conn2.close();
        assertTrue(stmt1.isClosed());

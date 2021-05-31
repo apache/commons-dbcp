@@ -228,7 +228,7 @@ public class TestInstanceKeyDataSource {
     public void testRollbackAfterValidation() {
         assertFalse(spds.isRollbackAfterValidation());
         spds.setRollbackAfterValidation(true);
-        assertEquals(true, spds.isRollbackAfterValidation());
+        assertTrue(spds.isRollbackAfterValidation());
     }
 
     @Test
