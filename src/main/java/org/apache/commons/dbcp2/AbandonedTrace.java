@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.pool2.TrackedUse;
 
 /**
- * Tracks db connection usage for recovering and reporting abandoned db connections.
+ * Tracks connection usage for recovering and reporting abandoned connections.
  * <p>
  * The JDBC Connection, Statement, and ResultSet classes extend this class.
  * </p>
