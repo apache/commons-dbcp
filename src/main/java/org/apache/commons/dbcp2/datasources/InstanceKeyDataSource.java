@@ -162,7 +162,6 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return iface.isInstance(this);

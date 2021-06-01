@@ -881,8 +881,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
-
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return false;

@@ -128,7 +128,6 @@ class PooledConnectionImpl
         }
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public void addStatementEventListener(final StatementEventListener listener) {
         if (!statementEventListeners.contains(listener)) {
@@ -697,7 +696,6 @@ class PooledConnectionImpl
         eventListeners.remove(listener);
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public void removeStatementEventListener(final StatementEventListener listener) {
         statementEventListeners.remove(listener);

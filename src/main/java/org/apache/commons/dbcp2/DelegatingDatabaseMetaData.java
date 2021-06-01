@@ -1804,8 +1804,6 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
-
     @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
         try {

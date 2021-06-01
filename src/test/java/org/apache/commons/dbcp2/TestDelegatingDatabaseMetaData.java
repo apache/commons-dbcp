@@ -56,7 +56,6 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    /* JDBC_4_ANT_KEY_BEGIN */
     public void testCheckOpen() throws Exception {
         delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
         final ResultSet rst = delegate.getSchemas();

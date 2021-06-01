@@ -81,7 +81,6 @@ public class PooledConnectionProxy implements PooledConnection,
         eventListeners.remove(listener);
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public void removeStatementEventListener(final StatementEventListener listener) {
         eventListeners.remove(listener);
@@ -117,7 +116,6 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public void addStatementEventListener(final StatementEventListener listener) {
         if (!eventListeners.contains(listener)) {

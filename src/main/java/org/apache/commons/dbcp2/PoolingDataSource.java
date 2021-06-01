@@ -105,7 +105,6 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         this.accessToUnderlyingConnectionAllowed = allow;
     }
 
-    /* JDBC_4_ANT_KEY_BEGIN */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return iface != null && iface.isInstance(this);
