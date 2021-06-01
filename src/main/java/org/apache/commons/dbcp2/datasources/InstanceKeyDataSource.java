@@ -182,9 +182,6 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         throw new SQLFeatureNotSupportedException();
     }
 
-    // -------------------------------------------------------------------
-    // Properties
-
     /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getBlockWhenExhausted()} for each per user pool.
      *
@@ -879,12 +876,6 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
-
-    // ----------------------------------------------------------------------
-    // Instrumentation Methods
-
-    // ----------------------------------------------------------------------
-    // DataSource implementation
 
     /**
      * Attempts to establish a database connection.
