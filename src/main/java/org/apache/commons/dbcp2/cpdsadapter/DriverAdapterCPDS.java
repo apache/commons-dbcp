@@ -556,15 +556,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      */
     @Override
     public void setLoginTimeout(final int seconds) {
-        loginTimeout = seconds;
+        this.loginTimeout = seconds;
     }
 
     /**
      * Sets the log writer for this data source. NOT USED.
      */
     @Override
-    public void setLogWriter(final PrintWriter out) {
-        logWriter = out;
+    public void setLogWriter(final PrintWriter logWriter) {
+        this.logWriter = logWriter;
     }
 
     /**
@@ -683,13 +683,13 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Sets the value of default user (login or user name).
      *
-     * @param v Value to assign to user.
+     * @param userName Value to assign to user.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setUser(final String v) {
+    public void setUser(final String userName) {
         assertInitializationAllowed();
-        this.userName = v;
-        update(connectionProperties, Constants.KEY_USER, v);
+        this.userName = userName;
+        update(connectionProperties, Constants.KEY_USER, userName);
     }
 
     /**
