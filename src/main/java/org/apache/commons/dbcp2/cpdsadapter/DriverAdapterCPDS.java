@@ -529,25 +529,25 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of description. This property is here for use by the code which will deploy this datasource. It is
      * not used internally.
      *
-     * @param v Value to assign to description.
+     * @param description Value to assign to description.
      */
-    public void setDescription(final String v) {
-        this.description = v;
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     /**
      * Sets the driver class name. Setting the driver class name cause the driver to be registered with the
      * DriverManager.
      *
-     * @param v Value to assign to driver.
+     * @param driver Value to assign to driver.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      * @throws ClassNotFoundException if the class cannot be located
      */
-    public void setDriver(final String v) throws ClassNotFoundException {
+    public void setDriver(final String driver) throws ClassNotFoundException {
         assertInitializationAllowed();
-        this.driver = v;
+        this.driver = driver;
         // make sure driver is registered
-        Class.forName(v);
+        Class.forName(driver);
     }
 
     /**
