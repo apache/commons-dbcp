@@ -94,8 +94,8 @@ public class TesterDriver implements Driver {
             String password = "test";
             if (info != null)
             {
-                userName = info.getProperty("user");
-                password = info.getProperty("password");
+                userName = info.getProperty(Constants.KEY_USER);
+                password = info.getProperty(Constants.KEY_PASSWORD);
                 if (userName == null) {
                     final String[] parts = url.split(";");
                     userName = parts[1];

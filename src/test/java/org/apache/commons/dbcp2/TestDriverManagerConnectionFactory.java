@@ -98,8 +98,8 @@ public class TestDriverManagerConnectionFactory {
         config.setMaxIdle(0);
         final Properties properties = new Properties();
         // The names "user" and "password" are specified in java.sql.DriverManager.getConnection(String, String, String)
-        properties.put("user", "foo");
-        properties.put("password", "bar");
+        properties.setProperty(Constants.KEY_USER, "foo");
+        properties.setProperty(Constants.KEY_PASSWORD, "bar");
         final ConnectionFactory connectionFactory = withProperties ?
                 new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties) :
                 new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "foo", "bar");

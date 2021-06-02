@@ -50,13 +50,13 @@ public class TestPoolingDataSource extends TestConnectionPool {
 
     @BeforeEach
     public void setUp() throws Exception {
-        final Properties props = new Properties();
-        props.setProperty("user", "userName");
-        props.setProperty("password", "password");
+        final Properties properties = new Properties();
+        properties.setProperty(Constants.KEY_USER, "userName");
+        properties.setProperty(Constants.KEY_PASSWORD, "password");
         final PoolableConnectionFactory factory =
             new PoolableConnectionFactory(
                     new DriverConnectionFactory(new TesterDriver(),
-                            "jdbc:apache:commons:testdriver", props),
+                            "jdbc:apache:commons:testdriver", properties),
                     null);
         factory.setValidationQuery("SELECT DUMMY FROM DUAL");
         factory.setDefaultReadOnly(Boolean.TRUE);
@@ -156,13 +156,13 @@ public class TestPoolingDataSource extends TestConnectionPool {
      */
     @Test
     public void testFixFactoryConfig() throws Exception {
-        final Properties props = new Properties();
-        props.setProperty("user", "userName");
-        props.setProperty("password", "password");
+        final Properties properties = new Properties();
+        properties.setProperty(Constants.KEY_USER, "userName");
+        properties.setProperty(Constants.KEY_PASSWORD, "password");
         final PoolableConnectionFactory f =
             new PoolableConnectionFactory(
                     new DriverConnectionFactory(new TesterDriver(),
-                            "jdbc:apache:commons:testdriver", props),
+                            "jdbc:apache:commons:testdriver", properties),
                     null);
         f.setValidationQuery("SELECT DUMMY FROM DUAL");
         f.setDefaultReadOnly(Boolean.TRUE);
@@ -178,13 +178,13 @@ public class TestPoolingDataSource extends TestConnectionPool {
     @Test
     public void testClose() throws Exception {
 
-        final Properties props = new Properties();
-        props.setProperty("user", "userName");
-        props.setProperty("password", "password");
+        final Properties properties = new Properties();
+        properties.setProperty(Constants.KEY_USER, "userName");
+        properties.setProperty(Constants.KEY_PASSWORD, "password");
         final PoolableConnectionFactory f =
             new PoolableConnectionFactory(
                     new DriverConnectionFactory(new TesterDriver(),
-                            "jdbc:apache:commons:testdriver", props),
+                            "jdbc:apache:commons:testdriver", properties),
                     null);
         f.setValidationQuery("SELECT DUMMY FROM DUAL");
         f.setDefaultReadOnly(Boolean.TRUE);

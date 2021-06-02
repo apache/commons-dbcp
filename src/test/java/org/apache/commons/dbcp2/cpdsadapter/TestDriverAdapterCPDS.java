@@ -38,6 +38,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.Constants;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -155,8 +156,8 @@ public class TestDriverAdapterCPDS {
         // Supply correct value in connection properties
         // This will overwrite field value
         final Properties properties = new Properties();
-        properties.put("user", "foo");
-        properties.put("password", pcds.getPassword());
+        properties.put(Constants.KEY_USER, "foo");
+        properties.put(Constants.KEY_PASSWORD, pcds.getPassword());
         pcds.setConnectionProperties(properties);
         pcds.getPooledConnection().close();
         assertEquals("foo", pcds.getUser());

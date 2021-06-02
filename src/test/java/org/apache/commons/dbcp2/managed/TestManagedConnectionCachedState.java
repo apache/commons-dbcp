@@ -29,6 +29,7 @@ import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAException;
 
 import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.Constants;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
@@ -61,8 +62,8 @@ public class TestManagedConnectionCachedState {
 
         // create a driver connection factory
         final Properties properties = new Properties();
-        properties.setProperty("user", "userName");
-        properties.setProperty("password", "password");
+        properties.setProperty(Constants.KEY_USER, "userName");
+        properties.setProperty(Constants.KEY_PASSWORD, "password");
         final ConnectionFactory connectionFactory = new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties);
 
         // wrap it with a LocalXAConnectionFactory
