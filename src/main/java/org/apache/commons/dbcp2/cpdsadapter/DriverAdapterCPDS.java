@@ -672,12 +672,12 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Sets the value of URL string used to locate the database for this datasource.
      *
-     * @param v Value to assign to url.
+     * @param url Value to assign to url.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setUrl(final String v) {
+    public void setUrl(final String url) {
         assertInitializationAllowed();
-        this.url = v;
+        this.url = url;
     }
 
     /**
