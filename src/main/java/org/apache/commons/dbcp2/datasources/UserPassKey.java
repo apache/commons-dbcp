@@ -24,10 +24,10 @@ import org.apache.commons.dbcp2.Utils;
 
 /**
  * <p>
- * Holds a user name and password pair. Serves as a poolable object key for the KeyedObjectPool backing a
- * SharedPoolDataSource. Two instances with the same user name are considered equal. This ensures that there will be
- * only one keyed pool for each user in the pool. The password is used (along with the user name) by the
- * KeyedCPDSConnectionFactory when creating new connections.
+ * Holds a user name and password pair. Serves as a poolable object key for the {@link KeyedObjectPool} backing a
+ * {@link SharedPoolDataSource}. Two instances with the same user name are considered equal. This ensures that there
+ * will be only one keyed pool for each user in the pool. The password is used (along with the user name) by the
+ * {@code KeyedCPDSConnectionFactory} when creating new connections.
  * </p>
  *
  * <p>
