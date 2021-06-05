@@ -84,7 +84,7 @@ class UserPassKey implements Serializable {
      *
      * @return value of password.
      */
-    public String getPassword() {
+    String getPassword() {
         return Utils.toString(userPassword);
     }
 
@@ -93,7 +93,7 @@ class UserPassKey implements Serializable {
      *
      * @return value of password.
      */
-    public char[] getPasswordCharArray() {
+    char[] getPasswordCharArray() {
         return userPassword;
     }
 
@@ -102,7 +102,7 @@ class UserPassKey implements Serializable {
      *
      * @return value of user name.
      */
-    public String getUsername() {
+    String getUsername() {
         return userName;
     }
 
