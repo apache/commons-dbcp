@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import org.apache.commons.dbcp2.Utils;
+import org.apache.commons.pool2.KeyedObjectPool;
 
 /**
  * <p>
@@ -102,7 +103,7 @@ class UserPassKey implements Serializable {
      *
      * @return value of user name.
      */
-    String getUsername() {
+    String getUserName() {
         return userName;
     }
 

@@ -42,7 +42,7 @@ public class TestUserPassKey {
 
     @Test
     public void testGettersAndSetters() {
-        assertEquals("user", userPassKey.getUsername());
+        assertEquals("user", userPassKey.getUserName());
         assertEquals("pass", userPassKey.getPassword());
         assertArrayEquals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray());
     }

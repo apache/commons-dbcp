@@ -76,9 +76,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
-    // -------------------------------------------------------------------
-    // Properties
-
     /**
      * Gets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      *
@@ -120,9 +117,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         return pool == null ? 0 : pool.getNumIdle();
     }
 
-    // ----------------------------------------------------------------------
-    // Inherited abstract methods
-
     @Override
     protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String userPassword)
             throws SQLException {
@@ -155,7 +149,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Returns a <code>SharedPoolDataSource</code> {@link Reference}.
+     * Creates a new {@link Reference} to a {@link SharedPoolDataSource}.
      */
     @Override
     public Reference getReference() throws NamingException {

@@ -138,7 +138,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private Boolean defaultReadOnly;
 
     /**
-     * Default no-arg constructor for Serialization
+     * Default no-arg constructor for Serialization.
      */
     public InstanceKeyDataSource() {
     }
