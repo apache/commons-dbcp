@@ -67,13 +67,16 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="add" due-to="Frank Gasdorf, Gary Gregory">
          Add and reuse DataSourceMXBean.
-      </action>      
+      </action>
+      <action dev="ggregory" type="add" due-to="Frank Gasdorf, Gary Gregory">
+         Add and reuse DriverAdapterCPDS.{get|set}DurationBetweenEvictionRuns(), deprecate {get|set}TimeBetweenEvictionRunsMillis().
+      </action>
       <!--  FIXES -->
       <action dev="ggregory" type="fix" issue="DBCP-569" due-to="Florent Guillaume">
-         Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84.
+        Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84.
       </action>
       <action dev="ggregory" type="fix" issue="DBCP-568" due-to="Florent Guillaume">
-         ManagedConnection must clear its cached state after transaction completes, #75.
+        ManagedConnection must clear its cached state after transaction completes, #75.
       </action>
       <action dev="ggregory" type="fix" due-to="Arturo Bernal">
         Minor Improvements #78.
@@ -121,7 +124,7 @@ The <action> type attribute can be add,update,fix,remove.
         org.apache.commons.dbcp2.PStmtKey.getColumnNames() may expose internal representation by returning PStmtKey.columnNames.
       </action>
       <action issue="DBCP-578" dev="ggregory" type="fix" due-to="Arturo Bernal">
-        Use Collections.synchronizedList Instead Of Vector #101.
+        Use Collections.synchronizedList() Instead Of Vector #101.
       </action>
       <action issue="DBCP-576" dev="ggregory" type="fix" due-to="Arturo Bernal">
         Simplify and inline variables #99.

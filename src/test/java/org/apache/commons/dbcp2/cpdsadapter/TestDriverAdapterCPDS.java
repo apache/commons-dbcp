@@ -333,6 +333,7 @@ public class TestDriverAdapterCPDS {
         pcds.setMaxIdle(100);
         assertEquals(100, pcds.getMaxIdle());
         pcds.setTimeBetweenEvictionRunsMillis(100);
+        assertEquals(100, pcds.getDurationBetweenEvictionRuns().toMillis());
         assertEquals(100, pcds.getTimeBetweenEvictionRunsMillis());
         pcds.setNumTestsPerEvictionRun(1);
         assertEquals(1, pcds.getNumTestsPerEvictionRun());

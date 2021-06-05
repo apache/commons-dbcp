@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.Duration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -109,10 +110,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     /** Log stream. NOT USED */
     private transient PrintWriter logWriter;
+
     // PreparedStatement pool properties
     private boolean poolPreparedStatements;
     private int maxIdle = 10;
-    private long timeBetweenEvictionRunsMillis = BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+    private Duration durationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS;
     private int numTestsPerEvictionRun = -1;
     private int minEvictableIdleTimeMillis = -1;
 
@@ -130,7 +132,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     private boolean accessToUnderlyingConnectionAllowed;
 
     /**
-     * Default no-arg constructor for Serialization
+     * Default no-argument constructor for Serialization
      */
     public DriverAdapterCPDS() {
     }
@@ -158,8 +160,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the value of description. This property is here for use by the code which will deploy this datasource. It is
-     * not used internally.
+     * Gets the value of description. This property is here for use by the code which will deploy this data source. It
+     * is not used internally.
      *
      * @return value of description, may be null.
      * @see #setDescription(String)
@@ -205,7 +207,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @return the value of maxIdle
      */
     public int getMaxIdle() {
-        return this.maxIdle;
+        return maxIdle;
     }
 
     /**
@@ -388,7 +390,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
             if (getMaxPreparedStatements() <= 0) {
                 // Since there is no limit, create a prepared statement pool with an eviction thread;
                 // evictor settings are the same as the connection pool settings.
-                config.setTimeBetweenEvictionRunsMillis(getTimeBetweenEvictionRunsMillis());
+                config.setTimeBetweenEvictionRuns(getDurationBetweenEvictionRuns());
                 config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
                 config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
             } else {
@@ -425,6 +427,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
         ref.add(new StringRefAddr("poolPreparedStatements", String.valueOf(isPoolPreparedStatements())));
         ref.add(new StringRefAddr("maxIdle", String.valueOf(getMaxIdle())));
+        ref.add(new StringRefAddr("durationBetweenEvictionRuns", String.valueOf(getDurationBetweenEvictionRuns())));
         ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis", String.valueOf(getTimeBetweenEvictionRunsMillis())));
         ref.add(new StringRefAddr("numTestsPerEvictionRun", String.valueOf(getNumTestsPerEvictionRun())));
         ref.add(new StringRefAddr("minEvictableIdleTimeMillis", String.valueOf(getMinEvictableIdleTimeMillis())));
@@ -438,14 +441,28 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
+     * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     *
+     * @return the value of the evictor thread timer
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @since 2.9.0
+     */
+    public Duration getDurationBetweenEvictionRuns() {
+        return durationBetweenEvictionRuns;
+    }
+
+    /**
      * Gets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
      *
      * @return the value of the evictor thread timer
      * @see #setTimeBetweenEvictionRunsMillis(long)
+     * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */
+    @Deprecated
     public long getTimeBetweenEvictionRunsMillis() {
-        return timeBetweenEvictionRunsMillis;
+        return durationBetweenEvictionRuns.toMillis();
     }
 
     /**
@@ -656,6 +673,21 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
+     * Sets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     *
+     * @param durationBetweenEvictionRuns The duration to sleep between runs of the idle object evictor
+     *        thread. When non-positive, no idle object evictor thread will be run.
+     * @see #getDurationBetweenEvictionRuns()
+     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @since 2.9.0
+     */
+    public void setDurationBetweenEvictionRuns(final Duration durationBetweenEvictionRuns) {
+        assertInitializationAllowed();
+        this.durationBetweenEvictionRuns = durationBetweenEvictionRuns;
+    }
+
+    /**
      * Sets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
      *
@@ -663,10 +695,12 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *        thread. When non-positive, no idle object evictor thread will be run.
      * @see #getTimeBetweenEvictionRunsMillis()
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @deprecated Use {@link #setDurationBetweenEvictionRuns(Duration)}.
      */
+    @Deprecated
     public void setTimeBetweenEvictionRunsMillis(final long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
-        this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+        this.durationBetweenEvictionRuns = Duration.ofMillis(timeBetweenEvictionRunsMillis);
     }
 
     /**
@@ -715,7 +749,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         builder.append(", maxIdle=");
         builder.append(maxIdle);
         builder.append(", timeBetweenEvictionRunsMillis=");
-        builder.append(timeBetweenEvictionRunsMillis);
+        builder.append(durationBetweenEvictionRuns);
         builder.append(", numTestsPerEvictionRun=");
         builder.append(numTestsPerEvictionRun);
         builder.append(", minEvictableIdleTimeMillis=");

@@ -960,14 +960,14 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             }
         }
 
-        final Connection con = info.getPooledConnection().getConnection();
+        final Connection connection = info.getPooledConnection().getConnection();
         try {
-            setupDefaults(con, userName);
-            con.clearWarnings();
-            return con;
+            setupDefaults(connection, userName);
+            connection.clearWarnings();
+            return connection;
         } catch (final SQLException ex) {
             try {
-                con.close();
+                connection.close();
             } catch (final Exception exc) {
                 getLogWriter().println("ignoring exception during close: " + exc);
             }
