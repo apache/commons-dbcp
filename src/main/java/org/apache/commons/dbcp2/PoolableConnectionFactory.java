@@ -145,7 +145,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     @Override
     public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws Exception {
-        if (mode != null && mode.equals(DestroyMode.ABANDONED)) {
+        if (mode == DestroyMode.ABANDONED) {
             p.getObject().getInnermostDelegate().abort(Runnable::run);
         } else {
             p.getObject().reallyClose();
@@ -153,6 +153,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Gets the cache state.
+     *
      * @return The cache state.
      * @since Made public in 2.6.0.
      */
@@ -161,6 +163,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Gets the connection factory.
+     *
      * @return The connection factory.
      * @since Made public in 2.6.0.
      */
