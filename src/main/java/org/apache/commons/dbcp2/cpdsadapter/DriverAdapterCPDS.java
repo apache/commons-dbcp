@@ -116,7 +116,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     private int maxIdle = 10;
     private Duration durationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS;
     private int numTestsPerEvictionRun = -1;
-    private int minEvictableIdleTimeMillis = -1;
+    private Duration minEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME;
 
     private int maxPreparedStatements = -1;
 
@@ -223,12 +223,27 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Gets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
      * idle object evictor (if any).
      *
+     * @see #setMinEvictableIdleDuration
+     * @see #setDurationBetweenEvictionRuns
+     * @return the minimum amount of time a statement may sit idle in the pool.
+     * @since 2.9.0
+     */
+    public Duration getMinEvictableIdleDuration() {
+        return minEvictableIdleDuration;
+    }
+
+    /**
+     * Gets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
+     * idle object evictor (if any).
+     *
      * @see #setMinEvictableIdleTimeMillis
      * @see #setTimeBetweenEvictionRunsMillis
      * @return the minimum amount of time a statement may sit idle in the pool.
+     * @deprecated USe {@link #getMinEvictableIdleDuration()}.
      */
+    @Deprecated
     public int getMinEvictableIdleTimeMillis() {
-        return minEvictableIdleTimeMillis;
+        return (int) minEvictableIdleDuration.toMillis();
     }
 
     /**
@@ -299,6 +314,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                 if (isNotEmpty(ra)) {
                     setMinEvictableIdleTimeMillis(getIntegerStringContent(ra));
                 }
+
                 ra = ref.get("maxPreparedStatements");
                 if (isNotEmpty(ra)) {
                     setMaxPreparedStatements(getIntegerStringContent(ra));
@@ -392,15 +408,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                 // evictor settings are the same as the connection pool settings.
                 config.setTimeBetweenEvictionRuns(getDurationBetweenEvictionRuns());
                 config.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
-                config.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
+                config.setMinEvictableIdleTime(getMinEvictableIdleDuration());
             } else {
                 // Since there is a limit, create a prepared statement pool without an eviction thread;
                 // pool has LRU functionality so when the limit is reached, 15% of the pool is cleared.
                 // see org.apache.commons.pool2.impl.GenericKeyedObjectPool.clearOldest method
                 config.setMaxTotal(getMaxPreparedStatements());
-                config.setTimeBetweenEvictionRunsMillis(-1);
+                config.setTimeBetweenEvictionRuns(Duration.ofMillis(-1));
                 config.setNumTestsPerEvictionRun(0);
-                config.setMinEvictableIdleTimeMillis(0);
+                config.setMinEvictableIdleTime(Duration.ZERO);
             }
             stmtPool = new GenericKeyedObjectPool<>(pooledConnection, config);
             pooledConnection.setStatementPool(stmtPool);
@@ -427,11 +443,16 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
         ref.add(new StringRefAddr("poolPreparedStatements", String.valueOf(isPoolPreparedStatements())));
         ref.add(new StringRefAddr("maxIdle", String.valueOf(getMaxIdle())));
+        ref.add(new StringRefAddr("numTestsPerEvictionRun", String.valueOf(getNumTestsPerEvictionRun())));
+        ref.add(new StringRefAddr("maxPreparedStatements", String.valueOf(getMaxPreparedStatements())));
+        //
+        // Pair of current and deprecated.
         ref.add(new StringRefAddr("durationBetweenEvictionRuns", String.valueOf(getDurationBetweenEvictionRuns())));
         ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis", String.valueOf(getTimeBetweenEvictionRunsMillis())));
-        ref.add(new StringRefAddr("numTestsPerEvictionRun", String.valueOf(getNumTestsPerEvictionRun())));
+        //
+        // Pair of current and deprecated.
+        ref.add(new StringRefAddr("minEvictableIdleDuration", String.valueOf(getMinEvictableIdleDuration())));
         ref.add(new StringRefAddr("minEvictableIdleTimeMillis", String.valueOf(getMinEvictableIdleTimeMillis())));
-        ref.add(new StringRefAddr("maxPreparedStatements", String.valueOf(getMaxPreparedStatements())));
 
         return ref;
     }
@@ -457,7 +478,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * idle object evictor thread will be run.
      *
      * @return the value of the evictor thread timer
-     * @see #setTimeBetweenEvictionRunsMillis(long)
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */
     @Deprecated
@@ -609,14 +630,31 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
      * idle object evictor (if any). When non-positive, no objects will be evicted from the pool due to idle time alone.
      *
-     * @param minEvictableIdleTimeMillis minimum time to set (in ms)
-     * @see #getMinEvictableIdleTimeMillis()
-     * @see #setTimeBetweenEvictionRunsMillis(long)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @param minEvictableIdleDuration minimum time to set in milliseconds.
+     * @see #getMinEvictableIdleDuration()
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @throws IllegalStateException if {@link #getPooledConnection()} has been called.
+     * @since 2.9.0
      */
+    public void setMinEvictableIdleDuration(final Duration minEvictableIdleDuration) {
+        assertInitializationAllowed();
+        this.minEvictableIdleDuration = minEvictableIdleDuration;
+    }
+
+    /**
+     * Sets the minimum amount of time a statement may sit idle in the pool before it is eligible for eviction by the
+     * idle object evictor (if any). When non-positive, no objects will be evicted from the pool due to idle time alone.
+     *
+     * @param minEvictableIdleTimeMillis minimum time to set in milliseconds.
+     * @see #getMinEvictableIdleDuration()
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @deprecated Use {@link #setMinEvictableIdleDuration(Duration)}.
+     */
+    @Deprecated
     public void setMinEvictableIdleTimeMillis(final int minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
-        this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+        this.minEvictableIdleDuration = Duration.ofMillis(minEvictableIdleTimeMillis);
     }
 
     /**
@@ -629,7 +667,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @param numTestsPerEvictionRun number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
-     * @see #setTimeBetweenEvictionRunsMillis(long)
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
     public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
@@ -753,7 +791,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         builder.append(", numTestsPerEvictionRun=");
         builder.append(numTestsPerEvictionRun);
         builder.append(", minEvictableIdleTimeMillis=");
-        builder.append(minEvictableIdleTimeMillis);
+        builder.append(minEvictableIdleDuration);
         builder.append(", maxPreparedStatements=");
         builder.append(maxPreparedStatements);
         builder.append(", getConnectionCalled=");

@@ -25,13 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Properties;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.Duration;
+import java.util.Properties;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -333,12 +334,15 @@ public class TestDriverAdapterCPDS {
         pcds.setMaxIdle(100);
         assertEquals(100, pcds.getMaxIdle());
         pcds.setTimeBetweenEvictionRunsMillis(100);
-        assertEquals(100, pcds.getDurationBetweenEvictionRuns().toMillis());
         assertEquals(100, pcds.getTimeBetweenEvictionRunsMillis());
+        pcds.setDurationBetweenEvictionRuns(Duration.ofMillis(100));
+        assertEquals(100, pcds.getDurationBetweenEvictionRuns().toMillis());
         pcds.setNumTestsPerEvictionRun(1);
         assertEquals(1, pcds.getNumTestsPerEvictionRun());
         pcds.setMinEvictableIdleTimeMillis(11);
         assertEquals(11, pcds.getMinEvictableIdleTimeMillis());
+        pcds.setMinEvictableIdleDuration(Duration.ofMillis(11));
+        assertEquals(Duration.ofMillis(11), pcds.getMinEvictableIdleDuration());
         pcds.setDescription("jo");
         assertEquals("jo", pcds.getDescription());
     }
