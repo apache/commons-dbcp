@@ -52,8 +52,7 @@ class CPDSConnectionFactory
     private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> pool;
-    private char[] userName;
-    private char[] userPassword;
+    private UserPassKey userPassKey;
     private Duration maxConnLifetime = Duration.ofMillis(-1);
 
     /**
@@ -87,12 +86,11 @@ class CPDSConnectionFactory
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
             final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
-            final char[] userPassword) {
+        final char[] userPassword) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
-        this.userName = Utils.toCharArray(userName);
-        this.userPassword = userPassword;
+        this.userPassKey = new UserPassKey(userName, userPassword);
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
@@ -127,7 +125,7 @@ class CPDSConnectionFactory
      * @return value of password.
      */
     char[] getPasswordCharArray() {
-        return userPassword;
+        return userPassKey.getPasswordCharArray();
     }
 
     /**
@@ -153,10 +151,10 @@ class CPDSConnectionFactory
         final PooledConnectionAndInfo pci;
         try {
             PooledConnection pc = null;
-            if (userName == null) {
+            if (userPassKey.getUserName() == null) {
                 pc = cpds.getPooledConnection();
             } else {
-                pc = cpds.getPooledConnection(Utils.toString(userName), Utils.toString(userPassword));
+                pc = cpds.getPooledConnection(userPassKey.getUserName(), userPassKey.getPassword());
             }
 
             if (pc == null) {
@@ -166,7 +164,7 @@ class CPDSConnectionFactory
             // should we add this object as a listener or the pool.
             // consider the validateObject method in decision
             pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, userName, userPassword);
+            pci = new PooledConnectionAndInfo(pc, userPassKey);
             pcMap.put(pc, pci);
         } catch (final SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -340,7 +338,7 @@ class CPDSConnectionFactory
      *            new password
      */
     public synchronized void setPassword(final char[] userPassword) {
-        this.userPassword =  Utils.clone(userPassword);
+        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
     }
 
     /**
@@ -351,7 +349,7 @@ class CPDSConnectionFactory
      */
     @Override
     public synchronized void setPassword(final String userPassword) {
-        this.userPassword = Utils.toCharArray(userPassword);
+        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
     }
 
     /**
@@ -386,7 +384,7 @@ class CPDSConnectionFactory
     @Override
     public void closePool(final String userName) throws SQLException {
         synchronized (this) {
-            if (userName == null || !userName.equals(this.userName)) {
+            if (userName == null || !userName.equals(this.userPassKey.getUserName())) {
                 return;
             }
         }

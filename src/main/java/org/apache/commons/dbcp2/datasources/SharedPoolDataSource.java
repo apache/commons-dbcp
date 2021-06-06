@@ -126,25 +126,20 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
                 try {
                     registerPool(userName, userPassword);
                 } catch (final NamingException e) {
-                    throw new SQLException("RegisterPool failed", e);
+                    throw new SQLException("registerPool failed", e);
                 }
             }
         }
 
-        PooledConnectionAndInfo info = null;
-
-        final UserPassKey key = new UserPassKey(userName, userPassword);
-
         try {
-            info = pool.borrowObject(key);
+            return pool.borrowObject(new UserPassKey(userName, userPassword));
         } catch (final Exception e) {
             throw new SQLException("Could not retrieve connection info from pool", e);
         }
-        return info;
     }
 
     @Override
-    protected PooledConnectionManager getConnectionManager(final UserPassKey upkey) {
+    protected PooledConnectionManager getConnectionManager(final UserPassKey userPassKey) {
         return factory;
     }
 
