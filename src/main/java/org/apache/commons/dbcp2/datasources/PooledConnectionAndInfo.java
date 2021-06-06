@@ -46,16 +46,6 @@ final class PooledConnectionAndInfo {
     }
 
     /**
-     * Constructs a new instance.
-     *
-     * @deprecated Since 2.4.0
-     */
-    @Deprecated
-    PooledConnectionAndInfo(final PooledConnection pc, final String userName, final String userPassword) {
-        this(pc, userName, Utils.toCharArray(userPassword));
-    }
-
-    /**
      * Gets the pooled connection.
      *
      * @return
