@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.Duration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -130,7 +131,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private String validationQuery;
     private int validationQueryTimeoutSeconds = -1;
     private boolean rollbackAfterValidation;
-    private long maxConnLifetimeMillis = -1;
+    private Duration maxConnLifetimeMillis = Duration.ofMillis(-1);
 
     // Connection properties
     private Boolean defaultAutoCommit;
@@ -848,14 +849,46 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Returns the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
+     * Gets the maximum permitted lifetime of a connection. A value of zero or less indicates an
+     * infinite lifetime.
+     *
+     * @return The maximum permitted lifetime of a connection. A value of zero or less indicates an
+     *         infinite lifetime.
+     */
+    public Duration getMaxConnLifetime() {
+        return maxConnLifetimeMillis;
+    }
+
+    /**
+     * Gets the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      * infinite lifetime.
      *
      * @return The maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      *         infinite lifetime.
+     * @deprecated Use {@link #getMaxConnLifetime()}.
      */
     public long getMaxConnLifetimeMillis() {
-        return maxConnLifetimeMillis;
+        return maxConnLifetimeMillis.toMillis();
+    }
+
+    /**
+     * <p>
+     * Sets the maximum permitted lifetime of a connection. A value of zero or less indicates an
+     * infinite lifetime.
+     * </p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
+     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * </p>
+     *
+     * @param maxConnLifetimeMillis
+     *            The maximum permitted lifetime of a connection. A value of zero or less indicates an
+     *            infinite lifetime.
+     * @since 2.9.0
+     */
+    public void setMaxConnLifetime(final Duration maxConnLifetimeMillis) {
+        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
     }
 
     /**
@@ -872,9 +905,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @param maxConnLifetimeMillis
      *            The maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      *            infinite lifetime.
+     * @deprecated Use {@link #setMaxConnLifetime(Duration)}.
      */
+    @Deprecated
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
-        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+        setMaxConnLifetime(Duration.ofMillis(maxConnLifetimeMillis));
     }
 
     /**

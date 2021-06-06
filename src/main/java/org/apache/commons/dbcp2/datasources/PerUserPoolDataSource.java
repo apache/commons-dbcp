@@ -623,7 +623,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     private synchronized void registerPool(final String userName, final String password)
-            throws NamingException, SQLException {
+        throws NamingException, SQLException {
 
         final ConnectionPoolDataSource cpds = testCPDS(userName, password);
 
@@ -631,8 +631,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         // the factory with the pool, so we do not have to do so
         // explicitly)
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, getValidationQuery(),
-                getValidationQueryTimeout(), isRollbackAfterValidation(), userName, password);
-        factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
+            getValidationQueryTimeout(), isRollbackAfterValidation(), userName, password);
+        factory.setMaxConnLifetime(getMaxConnLifetime());
 
         // Create an object pool to contain our PooledConnections
         final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);

@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
-    private long maxConnLifetimeMillis = -1;
+    private Duration maxConnLifetime = Duration.ofMillis(-1);
 
     /**
      * Map of PooledConnections for which close events are ignored. Connections are muted when they are being validated.
@@ -102,10 +103,10 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     }
 
     /**
-     * Creates a new {@link PooledConnectionAndInfo} from the given {@link UserPassKey}.
+     * Creates a new {@code PooledConnectionAndInfo} from the given {@code UserPassKey}.
      *
      * @param upkey
-     *            {@link UserPassKey} containing user credentials
+     *            {@code UserPassKey} containing user credentials
      * @throws SQLException
      *             if the connection could not be created.
      * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(java.lang.Object)
@@ -309,14 +310,28 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     }
 
     /**
+     * Sets the maximum lifetime of a connection after which the connection will always fail activation,
+     * passivation and validation.
+     *
+     * @param maxConnLifetimeMillis
+     *            A value of zero or less indicates an infinite lifetime. The default value is -1 milliseconds.
+     * @since 2.9.0
+     */
+    public void setMaxConnLifetime(final Duration maxConnLifetimeMillis) {
+        this.maxConnLifetime = maxConnLifetimeMillis;
+    }
+
+    /**
      * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
      * passivation and validation.
      *
      * @param maxConnLifetimeMillis
      *            A value of zero or less indicates an infinite lifetime. The default value is -1.
+     * @deprecated Use {@link #setMaxConnLifetime(Duration)}.
      */
+    @Deprecated
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
-        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+        setMaxConnLifetime(Duration.ofMillis(maxConnLifetimeMillis));
     }
 
     /**
@@ -333,11 +348,11 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     }
 
     private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
-        if (maxConnLifetimeMillis > 0) {
+        if (maxConnLifetime.compareTo(Duration.ZERO) > 0) {
             final long lifetimeMillis = System.currentTimeMillis() - p.getCreateTime();
-            if (lifetimeMillis > maxConnLifetimeMillis) {
-                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeMillis,
-                        maxConnLifetimeMillis));
+            if (lifetimeMillis > maxConnLifetime.toMillis()) {
+                throw new Exception(
+                    Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeMillis, maxConnLifetime));
             }
         }
     }

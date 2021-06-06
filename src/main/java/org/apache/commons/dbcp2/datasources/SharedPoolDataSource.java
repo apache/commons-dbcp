@@ -164,8 +164,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeout(),
-                isRollbackAfterValidation());
-        factory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
+            isRollbackAfterValidation());
+        factory.setMaxConnLifetime(getMaxConnLifetime());
 
         final GenericKeyedObjectPoolConfig<PooledConnectionAndInfo> config = new GenericKeyedObjectPoolConfig<>();
         config.setBlockWhenExhausted(getDefaultBlockWhenExhausted());
@@ -186,7 +186,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         config.setTimeBetweenEvictionRunsMillis(getDefaultTimeBetweenEvictionRunsMillis());
 
         final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> tmpPool = new GenericKeyedObjectPool<>(factory,
-                config);
+            config);
         factory.setPool(tmpPool);
         pool = tmpPool;
     }
