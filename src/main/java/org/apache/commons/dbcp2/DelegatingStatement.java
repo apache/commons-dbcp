@@ -320,6 +320,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public ResultSet executeQuery(final String sql) throws SQLException {
         checkOpen();
@@ -436,6 +437,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
         checkOpen();
@@ -558,6 +560,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public ResultSet getResultSet() throws SQLException {
         checkOpen();

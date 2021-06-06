@@ -76,11 +76,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Creates a wrapper for the Connection which traces this Connection in the AbandonedObjectPool.
      *
-     * @param c
-     *            the {@link Connection} to delegate all calls to.
+     * @param connection the {@link Connection} to delegate all calls to.
      */
-    public DelegatingConnection(final C c) {
-        connection = c;
+    public DelegatingConnection(final C connection) {
+        this.connection = connection;
     }
 
     /**
@@ -124,6 +123,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         return getDelegateInternal();
     }
 
+    /**
+     * Gets the delegate connection.
+     *
+     * @return the delegate connection.
+     */
     protected final C getDelegateInternal() {
         return connection;
     }
@@ -264,90 +268,91 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         return e;
     }
 
-    private void initializeStatement(final DelegatingStatement ds) throws SQLException {
-        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != ds.getQueryTimeout()) {
-            ds.setQueryTimeout(defaultQueryTimeoutSeconds);
+    /**
+     * Initializes the given statement with this connection's settings.
+     * 
+     * @param <T> The DelegatingStatement type.
+     * @param delegatingStatement The DelegatingStatement to initialize.
+     * @return The given DelegatingStatement.
+     * @throws SQLException if a database access error occurs, this method is called on a closed Statement.
+     */
+    private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
+        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != delegatingStatement.getQueryTimeout()) {
+            delegatingStatement.setQueryTimeout(defaultQueryTimeoutSeconds);
         }
+        return delegatingStatement;
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public Statement createStatement() throws SQLException {
         checkOpen();
         try {
-            final DelegatingStatement ds = new DelegatingStatement(this, connection.createStatement());
-            initializeStatement(ds);
-            return ds;
+            return init(new DelegatingStatement(this, connection.createStatement()));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         try {
-            final DelegatingStatement ds = new DelegatingStatement(this,
-                    connection.createStatement(resultSetType, resultSetConcurrency));
-            initializeStatement(ds);
-            return ds;
+            return init(new DelegatingStatement(this, connection.createStatement(resultSetType, resultSetConcurrency)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
-            throws SQLException {
+        throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql, resultSetType, resultSetConcurrency));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this,
+                connection.prepareStatement(sql, resultSetType, resultSetConcurrency)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public CallableStatement prepareCall(final String sql) throws SQLException {
         checkOpen();
         try {
-            final DelegatingCallableStatement dcs = new DelegatingCallableStatement(this, connection.prepareCall(sql));
-            initializeStatement(dcs);
-            return dcs;
+            return init(new DelegatingCallableStatement(this, connection.prepareCall(sql)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
-            throws SQLException {
+        throws SQLException {
         checkOpen();
         try {
-            final DelegatingCallableStatement dcs = new DelegatingCallableStatement(this,
-                    connection.prepareCall(sql, resultSetType, resultSetConcurrency));
-            initializeStatement(dcs);
-            return dcs;
+            return init(new DelegatingCallableStatement(this,
+                connection.prepareCall(sql, resultSetType, resultSetConcurrency)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
@@ -713,87 +718,78 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public Statement createStatement(final int resultSetType, final int resultSetConcurrency,
-            final int resultSetHoldability) throws SQLException {
+        final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            final DelegatingStatement ds = new DelegatingStatement(this,
-                    connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
-            initializeStatement(ds);
-            return ds;
+            return init(new DelegatingStatement(this,
+                connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
-            final int resultSetHoldability) throws SQLException {
+        final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this,
+                connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
-            final int resultSetHoldability) throws SQLException {
+        final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
-            final DelegatingCallableStatement dcs = new DelegatingCallableStatement(this,
-                    connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-            initializeStatement(dcs);
-            return dcs;
+            return init(new DelegatingCallableStatement(this,
+                connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql, autoGeneratedKeys));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, autoGeneratedKeys)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql, columnIndexes));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnIndexes)));
         } catch (final SQLException e) {
             handleException(e);
             return null;
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
         checkOpen();
         try {
-            final DelegatingPreparedStatement dps = new DelegatingPreparedStatement(this,
-                    connection.prepareStatement(sql, columnNames));
-            initializeStatement(dps);
-            return dps;
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnNames)));
         } catch (final SQLException e) {
             handleException(e);
             return null;

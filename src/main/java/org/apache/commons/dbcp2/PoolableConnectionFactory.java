@@ -113,26 +113,26 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         validateLifetime(p);
 
-        final PoolableConnection conn = p.getObject();
-        conn.activate();
+        final PoolableConnection pConnection = p.getObject();
+        pConnection.activate();
 
-        if (defaultAutoCommit != null && conn.getAutoCommit() != defaultAutoCommit) {
-            conn.setAutoCommit(defaultAutoCommit);
+        if (defaultAutoCommit != null && pConnection.getAutoCommit() != defaultAutoCommit) {
+            pConnection.setAutoCommit(defaultAutoCommit);
         }
         if (defaultTransactionIsolation != UNKNOWN_TRANSACTION_ISOLATION
-                && conn.getTransactionIsolation() != defaultTransactionIsolation) {
-            conn.setTransactionIsolation(defaultTransactionIsolation);
+                && pConnection.getTransactionIsolation() != defaultTransactionIsolation) {
+            pConnection.setTransactionIsolation(defaultTransactionIsolation);
         }
-        if (defaultReadOnly != null && conn.isReadOnly() != defaultReadOnly) {
-            conn.setReadOnly(defaultReadOnly);
+        if (defaultReadOnly != null && pConnection.isReadOnly() != defaultReadOnly) {
+            pConnection.setReadOnly(defaultReadOnly);
         }
-        if (defaultCatalog != null && !defaultCatalog.equals(conn.getCatalog())) {
-            conn.setCatalog(defaultCatalog);
+        if (defaultCatalog != null && !defaultCatalog.equals(pConnection.getCatalog())) {
+            pConnection.setCatalog(defaultCatalog);
         }
-        if (defaultSchema != null && !defaultSchema.equals(Jdbc41Bridge.getSchema(conn))) {
-            Jdbc41Bridge.setSchema(conn, defaultSchema);
+        if (defaultSchema != null && !defaultSchema.equals(Jdbc41Bridge.getSchema(pConnection))) {
+            Jdbc41Bridge.setSchema(pConnection, defaultSchema);
         }
-        conn.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
+        pConnection.setDefaultQueryTimeout(defaultQueryTimeoutSeconds);
     }
 
     @Override
