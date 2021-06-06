@@ -321,7 +321,8 @@
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
-    <commons.checkstyle.version>3.1.2</commons.checkstyle.version>
+    <commons.checkstyle-plugin.version>3.1.2</commons.checkstyle-plugin.version>
+    <commons.checkstyle.version>8.43</commons.checkstyle.version>
     <commons.javadoc.version>3.3.0</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.10.0</commons.pool.version>
@@ -362,7 +363,14 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${commons.checkstyle.version}</version>
+          <version>${commons.checkstyle-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${commons.checkstyle.version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
             <configLocation>${basedir}/checkstyle.xml</configLocation>
             <enableRulesSummary>false</enableRulesSummary>
