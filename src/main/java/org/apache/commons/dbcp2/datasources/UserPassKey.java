@@ -40,13 +40,13 @@ import org.apache.commons.pool2.KeyedObjectPool;
 class UserPassKey implements Serializable {
     private static final long serialVersionUID = 5142970911626584817L;
 
-    private final CharArray userName;
-    private final CharArray userPassword;
+    private final CharArray name;
+    private final CharArray password;
 
     UserPassKey(CharArray userName, CharArray userPassword) {
         super();
-        this.userName = userName;
-        this.userPassword = userPassword;
+        this.name = userName;
+        this.password = userPassword;
     }
 
     UserPassKey(final String userName) {
@@ -80,7 +80,7 @@ class UserPassKey implements Serializable {
             return false;
         }
         final UserPassKey other = (UserPassKey) obj;
-        return Objects.equals(userName, other.userName);
+        return Objects.equals(name, other.name);
     }
 
     /**
@@ -89,7 +89,7 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     String getPassword() {
-        return userPassword.asString();
+        return password.asString();
     }
 
     /**
@@ -98,7 +98,7 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     char[] getPasswordCharArray() {
-        return userPassword.get();
+        return password.get();
     }
 
     /**
@@ -107,7 +107,7 @@ class UserPassKey implements Serializable {
      * @return value of user name.
      */
     String getUserName() {
-        return userName.asString();
+        return name.asString();
     }
 
     /**
@@ -115,7 +115,7 @@ class UserPassKey implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(userName);
+        return Objects.hash(name);
     }
 
 }

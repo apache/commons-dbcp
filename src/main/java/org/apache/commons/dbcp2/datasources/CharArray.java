@@ -36,11 +36,11 @@ final class CharArray {
     private final char[] chars;
 
     CharArray(final char[] chars) {
-        this.chars = chars;
+        this.chars = Utils.clone(chars);
     }
 
     CharArray(final String string) {
-        this(Utils.toCharArray(string));
+        this.chars = Utils.toCharArray(string);
     }
 
     @Override
