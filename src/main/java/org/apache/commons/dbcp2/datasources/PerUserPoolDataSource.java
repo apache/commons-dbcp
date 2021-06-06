@@ -346,7 +346,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Gets the user specific value for {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the specified
+     * Gets the user specific value for {@link GenericObjectPool#getMinEvictableIdleTime()} for the specified
      * user's pool or the default if no user specific value is defined.
      *
      * @param userName
@@ -403,7 +403,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Gets the user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the specified
+     * Gets the user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTime()} for the specified
      * user's pool or the default if no user specific value is defined.
      *
      * @param userName
@@ -498,7 +498,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis()} for the specified
+     * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRuns()} for the specified
      * user's pool or the default if no user specific value is defined.
      *
      * @param userName
@@ -908,7 +908,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Sets a user specific value for {@link GenericObjectPool#getMinEvictableIdleTimeMillis()} for the specified user's
+     * Sets a user specific value for {@link GenericObjectPool#getMinEvictableIdleTime()} for the specified user's
      * pool.
      *
      * @param userName
@@ -988,7 +988,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Sets a user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for the specified
+     * Sets a user specific value for {@link GenericObjectPool#getSoftMinEvictableIdleTime()} for the specified
      * user's pool.
      *
      * @param userName
@@ -1119,7 +1119,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Sets a user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for the specified
+     * Sets a user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRuns()} for the specified
      * user's pool.
      *
      * @param userName

@@ -169,7 +169,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         config.setMaxIdlePerKey(getDefaultMaxIdle());
         config.setMaxTotal(getMaxTotal());
         config.setMaxTotalPerKey(getDefaultMaxTotal());
-        config.setMaxWaitMillis(getDefaultMaxWaitMillis());
+        config.setMaxWaitMillis(getDefaultMaxWait().toMillis());
         config.setMinEvictableIdleTimeMillis(getDefaultMinEvictableIdleTimeMillis());
         config.setMinIdlePerKey(getDefaultMinIdle());
         config.setNumTestsPerEvictionRun(getDefaultNumTestsPerEvictionRun());

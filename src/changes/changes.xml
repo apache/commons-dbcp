@@ -63,22 +63,28 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="2.9.0" date="202Y-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- ADDS -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-         Add and reuse Constants.KEY_USER and Constants.KEY_PASSWORD.
+        Add and reuse Constants.KEY_USER and Constants.KEY_PASSWORD.
       </action>
       <action dev="ggregory" type="add" due-to="Frank Gasdorf, Gary Gregory">
-         Add and reuse DataSourceMXBean.
+        Add and reuse DataSourceMXBean.
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-         Add and reuse DriverAdapterCPDS.{get|set}DurationBetweenEvictionRuns(), deprecate {get|set}TimeBetweenEvictionRunsMillis(long).
+        Add and reuse DriverAdapterCPDS.{get|set}DurationBetweenEvictionRuns(), deprecate {get|set}TimeBetweenEvictionRunsMillis(long).
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-         Add and reuse DriverAdapterCPDS.{get|set}MinEvictableIdleDuration(), deprecate {get|set}MinEvictableIdleTimeMillis(int).
+        Add and reuse DriverAdapterCPDS.{get|set}MinEvictableIdleDuration(), deprecate {get|set}MinEvictableIdleTimeMillis(int).
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-         Add and reuse CPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long).
+        Add and reuse CPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long).
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-         Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long).
+        Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long).
+      </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long).
+      </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Add and reuse InstanceKeyDataSource.{get|set}DefaultMaxWait(Duration), deprecate {get|set}DefaultMaxWaitMillis(long).
       </action>
       <!--  FIXES -->
       <action dev="ggregory" type="fix" issue="DBCP-569" due-to="Florent Guillaume">

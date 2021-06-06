@@ -116,7 +116,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private boolean defaultLifo = BaseObjectPoolConfig.DEFAULT_LIFO;
     private int defaultMaxIdle = GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
     private int defaultMaxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
-    private long defaultMaxWaitMillis = BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
+    private Duration defaultMaxWaitDuration = BaseObjectPoolConfig.DEFAULT_MAX_WAIT;
     private long defaultMinEvictableIdleTimeMillis = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
     private int defaultMinIdle = GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
     private int defaultNumTestsPerEvictionRun = BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
@@ -293,9 +293,21 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
      *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @since 2.9.0
      */
+    public Duration getDefaultMaxWait() {
+        return this.defaultMaxWaitDuration;
+    }
+
+    /**
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     *
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @deprecated Use {@link #getDefaultMaxWait()}.
+     */
+    @Deprecated
     public long getDefaultMaxWaitMillis() {
-        return this.defaultMaxWaitMillis;
+        return getDefaultMaxWait().toMillis();
     }
 
     /**
@@ -303,17 +315,30 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @param maxWaitMillis
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @since 2.9.0
      */
-    public void setDefaultMaxWaitMillis(final long maxWaitMillis) {
+    public void setDefaultMaxWait(final Duration maxWaitMillis) {
         assertInitializationAllowed();
-        this.defaultMaxWaitMillis = maxWaitMillis;
+        this.defaultMaxWaitDuration = maxWaitMillis;
     }
 
     /**
-     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per user
+     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     *
+     * @param maxWaitMillis
+     *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @deprecated Use {@link #setDefaultMaxWait(Duration)}.
+     */
+    @Deprecated
+    public void setDefaultMaxWaitMillis(final long maxWaitMillis) {
+        setDefaultMaxWait(Duration.ofMillis(maxWaitMillis));
+    }
+
+    /**
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per user
      * pool.
      *
-     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per
      *         user pool.
      */
     public long getDefaultMinEvictableIdleTimeMillis() {
@@ -321,11 +346,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each per user
+     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per user
      * pool.
      *
      * @param minEvictableIdleTimeMillis
-     *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()} for each
+     *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each
      *            per user pool.
      */
     public void setDefaultMinEvictableIdleTimeMillis(final long minEvictableIdleTimeMillis) {
@@ -1113,8 +1138,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(defaultMaxIdle);
         builder.append(", defaultMaxTotal=");
         builder.append(defaultMaxTotal);
-        builder.append(", defaultMaxWaitMillis=");
-        builder.append(defaultMaxWaitMillis);
+        builder.append(", defaultMaxWait=");
+        builder.append(defaultMaxWaitDuration);
         builder.append(", defaultMinEvictableIdleTimeMillis=");
         builder.append(defaultMinEvictableIdleTimeMillis);
         builder.append(", defaultMinIdle=");
