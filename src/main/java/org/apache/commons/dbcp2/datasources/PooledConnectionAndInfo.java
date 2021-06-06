@@ -28,7 +28,7 @@ import javax.sql.PooledConnection;
 final class PooledConnectionAndInfo {
 
     private final PooledConnection pooledConnection;
-    private final UserPassKey upKey;
+    private final UserPassKey userPassKey;
 
     /**
      * Constructs a new instance.
@@ -37,7 +37,16 @@ final class PooledConnectionAndInfo {
      */
     PooledConnectionAndInfo(final PooledConnection pc, final String userName, final char[] userPassword) {
         this.pooledConnection = pc;
-        this.upKey = new UserPassKey(userName, userPassword);
+        this.userPassKey = new UserPassKey(userName, userPassword);
+    }
+
+    /**
+     * Gets the value of password.
+     *
+     * @return value of password.
+     */
+    String getPassword() {
+        return userPassKey.getPassword();
     }
 
     /**
@@ -49,25 +58,16 @@ final class PooledConnectionAndInfo {
         return pooledConnection;
     }
 
-    UserPassKey getUserPassKey() {
-        return upKey;
-    }
-
-    /**
-     * Gets the value of password.
-     *
-     * @return value of password.
-     */
-    String getPassword() {
-        return upKey.getPassword();
-    }
-
     /**
      * Gets the value of userName.
      *
      * @return value of userName.
      */
     String getUsername() {
-        return upKey.getUserName();
+        return userPassKey.getUserName();
+    }
+
+    UserPassKey getUserPassKey() {
+        return userPassKey;
     }
 }

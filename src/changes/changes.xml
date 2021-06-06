@@ -141,6 +141,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         Update PoolKey#toString() to avoid revealing a user name is here.
       </action>
+      <action dev="ggregory" type="fix" due-to="Gary Gregory">
+        Internal package private UserPassKey class stores its user name as a char[] as it already does the password.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.11.0 #66, #72, #77, #85, #91, #105, #110.

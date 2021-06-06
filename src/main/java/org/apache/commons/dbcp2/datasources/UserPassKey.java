@@ -20,7 +20,6 @@ package org.apache.commons.dbcp2.datasources;
 import java.io.Serializable;
 import java.util.Objects;
 
-import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 
 /**
@@ -40,26 +39,26 @@ import org.apache.commons.pool2.KeyedObjectPool;
  */
 class UserPassKey implements Serializable {
     private static final long serialVersionUID = 5142970911626584817L;
-    private final String userName;
-    private final char[] userPassword;
 
-    /**
-     * @since 2.4.0
-     */
-    UserPassKey(final String userName) {
-        this(userName, (char[]) null);
+    private final CharArray userName;
+    private final CharArray userPassword;
+
+    UserPassKey(CharArray userName, CharArray userPassword) {
+        super();
+        this.userName = userName;
+        this.userPassword = userPassword;
     }
 
-    /**
-     * @since 2.4.0
-     */
+    UserPassKey(final String userName) {
+        this(new CharArray(userName), CharArray.NULL);
+    }
+
     UserPassKey(final String userName, final char[] password) {
-        this.userName = userName;
-        this.userPassword = password;
+        this(new CharArray(userName), new CharArray(password));
     }
 
     UserPassKey(final String userName, final String userPassword) {
-        this(userName, Utils.toCharArray(userPassword));
+        this(new CharArray(userName), new CharArray(userPassword));
     }
 
     /**
@@ -86,7 +85,7 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     String getPassword() {
-        return Utils.toString(userPassword);
+        return userPassword.asString();
     }
 
     /**
@@ -95,7 +94,7 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     char[] getPasswordCharArray() {
-        return userPassword == null ? userPassword : userPassword.clone();
+        return userPassword.get();
     }
 
     /**
@@ -104,7 +103,7 @@ class UserPassKey implements Serializable {
      * @return value of user name.
      */
     String getUserName() {
-        return userName;
+        return userName.asString();
     }
 
     /**
