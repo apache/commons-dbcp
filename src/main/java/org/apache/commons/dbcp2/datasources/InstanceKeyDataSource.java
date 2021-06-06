@@ -922,7 +922,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Attempts to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the
-     * provided user name and password. The password on the {@link PooledConnectionAndInfo} instance returned by
+     * provided user name and password. The password on the {@code PooledConnectionAndInfo} instance returned by
      * <code>getPooledConnectionAndInfo</code> is compared to the <code>password</code> parameter. If the comparison
      * fails, a database connection using the supplied user name and password is attempted. If the connection attempt
      * fails, an SQLException is thrown, indicating that the given password did not match the password used to create
