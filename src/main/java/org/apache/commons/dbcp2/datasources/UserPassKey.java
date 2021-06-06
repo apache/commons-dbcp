@@ -95,7 +95,7 @@ class UserPassKey implements Serializable {
      * @return value of password.
      */
     char[] getPasswordCharArray() {
-        return userPassword;
+        return userPassword == null ? userPassword : userPassword.clone();
     }
 
     /**
