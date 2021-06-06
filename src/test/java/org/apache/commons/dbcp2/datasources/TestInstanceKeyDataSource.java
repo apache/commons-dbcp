@@ -302,7 +302,7 @@ public class TestInstanceKeyDataSource {
         pcds.setUrl(URL);
         spds.setConnectionPoolDataSource(pcds);
         final PooledConnectionAndInfo info = spds.getPooledConnectionAndInfo(null, null);
-        assertNull(info.getUsername());
+        assertNull(info.getUserName());
         assertNull(info.getPassword());
         final Connection conn = spds.getConnection();
         assertNotNull(conn);

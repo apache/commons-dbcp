@@ -52,7 +52,7 @@ class CPDSConnectionFactory
     private final int validationQueryTimeoutSeconds;
     private final boolean rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> pool;
-    private final String userName;
+    private char[] userName;
     private char[] userPassword;
     private Duration maxConnLifetime = Duration.ofMillis(-1);
 
@@ -91,7 +91,7 @@ class CPDSConnectionFactory
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
-        this.userName = userName;
+        this.userName = Utils.toCharArray(userName);
         this.userPassword = userPassword;
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
@@ -116,9 +116,9 @@ class CPDSConnectionFactory
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
             final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
-            final String userPassword) {
+        final String userPassword) {
         this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName,
-                Utils.toCharArray(userPassword));
+            Utils.toCharArray(userPassword));
     }
 
     /**
@@ -156,7 +156,7 @@ class CPDSConnectionFactory
             if (userName == null) {
                 pc = cpds.getPooledConnection();
             } else {
-                pc = cpds.getPooledConnection(userName, Utils.toString(userPassword));
+                pc = cpds.getPooledConnection(Utils.toString(userName), Utils.toString(userPassword));
             }
 
             if (pc == null) {

@@ -105,17 +105,17 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     /**
      * Creates a new {@code PooledConnectionAndInfo} from the given {@code UserPassKey}.
      *
-     * @param upkey
+     * @param userPassKey
      *            {@code UserPassKey} containing user credentials
      * @throws SQLException
      *             if the connection could not be created.
      * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(java.lang.Object)
      */
     @Override
-    public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey upkey) throws Exception {
+    public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey userPassKey) throws Exception {
         PooledConnection pooledConnection = null;
-        final String userName = upkey.getUserName();
-        final String password = upkey.getPassword();
+        final String userName = userPassKey.getUserName();
+        final String password = userPassKey.getPassword();
         if (userName == null) {
             pooledConnection = cpds.getPooledConnection();
         } else {
@@ -129,7 +129,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pooledConnection.addConnectionEventListener(this);
-        final PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pooledConnection, userName, upkey.getPasswordCharArray());
+        final PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pooledConnection, userPassKey);
         pcMap.put(pooledConnection, pci);
 
         return new DefaultPooledObject<>(pci);
@@ -152,7 +152,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * @param key
      *            ignored
      * @param pooledObject
-     *            wrapped {@link PooledConnectionAndInfo} containing the connection to validate
+     *            wrapped {@code PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation succeeds
      */
     @Override

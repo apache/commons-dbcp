@@ -24,7 +24,7 @@ import org.apache.commons.dbcp2.Utils;
 /**
  * A {@code char} array wrapper that does not reveal its contents inadvertently through toString(). In contrast to, for
  * example, AtomicReference which toString()'s its contents.
- * 
+ *
  * May contain null.
  *
  * @since 2.9.0

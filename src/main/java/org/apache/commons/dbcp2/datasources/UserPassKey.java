@@ -53,6 +53,10 @@ class UserPassKey implements Serializable {
         this(new CharArray(userName), CharArray.NULL);
     }
 
+    UserPassKey(final char[] userName, final char[] password) {
+        this(new CharArray(userName), new CharArray(password));
+    }
+
     UserPassKey(final String userName, final char[] password) {
         this(new CharArray(userName), new CharArray(password));
     }
