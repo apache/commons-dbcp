@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.datasources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -115,7 +116,7 @@ public class TestCPDSConnectionFactory {
 
         // Ask for another connection
         final PooledConnection pcon3 = pool.borrowObject().getPooledConnection();
-        assertFalse(pcon3.equals(pcon1)); // better not get baddie back
+        assertNotEquals(pcon3, pcon1); // better not get baddie back
         assertFalse(pc.getListeners().contains(factory)); // verify cleanup
         assertEquals(2, pool.getNumActive());
         assertEquals(0, pool.getNumIdle());
