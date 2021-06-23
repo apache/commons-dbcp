@@ -1037,7 +1037,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * This method is protected but can only be implemented in this package because PooledConnectionAndInfo is a package private type.
+     * This method is protected but can only be implemented in this package because PooledConnectionAndInfo is a package
+     * private type.
+     *
+     * @param userName The user name.
+     * @param userPassword The user password.
+     * @return Matching PooledConnectionAndInfo.
+     * @throws SQLException Connection or registration failure.
      */
     protected abstract PooledConnectionAndInfo getPooledConnectionAndInfo(String userName, String userPassword)
             throws SQLException;
