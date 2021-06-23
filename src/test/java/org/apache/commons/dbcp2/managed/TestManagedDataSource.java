@@ -25,6 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Connection;
+import java.util.Properties;
+
+import javax.transaction.TransactionManager;
+
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.Constants;
 import org.apache.commons.dbcp2.DelegatingConnection;
@@ -40,11 +45,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.transaction.TransactionManager;
-
-import java.sql.Connection;
-import java.util.Properties;
 
 /**
  * TestSuite for ManagedDataSource without a transaction in progress.

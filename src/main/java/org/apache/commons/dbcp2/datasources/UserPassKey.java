@@ -43,8 +43,7 @@ class UserPassKey implements Serializable {
     private final CharArray name;
     private final CharArray password;
 
-    UserPassKey(CharArray userName, CharArray userPassword) {
-        super();
+    UserPassKey(final CharArray userName, final CharArray userPassword) {
         this.name = userName;
         this.password = userPassword;
     }

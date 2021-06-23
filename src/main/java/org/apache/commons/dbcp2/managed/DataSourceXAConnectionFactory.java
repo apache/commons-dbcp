@@ -17,6 +17,10 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Objects;
+
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.PooledConnection;
@@ -27,10 +31,6 @@ import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAResource;
 
 import org.apache.commons.dbcp2.Utils;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Objects;
 
 /**
  * An implementation of XAConnectionFactory which uses a real XADataSource to obtain connections and XAResources.

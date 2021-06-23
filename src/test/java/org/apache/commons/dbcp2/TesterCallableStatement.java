@@ -27,16 +27,16 @@ import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.NClob;
 import java.sql.Ref;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLType;
+import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
-import java.sql.NClob;
-import java.sql.RowId;
-import java.sql.SQLXML;
 
 /**
  * Trivial implementation of a CallableStatement to avoid null pointer exceptions in tests.

@@ -17,23 +17,23 @@
 
 package org.apache.commons.dbcp2;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLType;
-import java.util.Calendar;
-import java.io.InputStream;
-import java.io.Reader;
-import java.sql.NClob;
-import java.sql.RowId;
 import java.sql.SQLXML;
+import java.util.Calendar;
 
 /**
  * A dummy {@link PreparedStatement}, for testing purposes.

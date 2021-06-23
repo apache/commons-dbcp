@@ -17,6 +17,11 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import java.lang.ref.WeakReference;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Objects;
+
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
@@ -24,10 +29,6 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAResource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Objects;
-import java.lang.ref.WeakReference;
 
 /**
  * TransactionContext represents the association between a single XAConnectionFactory and a Transaction. This context

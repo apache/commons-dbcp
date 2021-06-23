@@ -892,6 +892,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *         infinite lifetime.
      * @deprecated Use {@link #getMaxConnLifetime()}.
      */
+    @Deprecated
     public long getMaxConnLifetimeMillis() {
         return maxConnLifetimeMillis.toMillis();
     }

@@ -26,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.management.ObjectName;
 import javax.sql.DataSource;

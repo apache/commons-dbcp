@@ -26,8 +26,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.dbcp2.datasources.PerUserPoolDataSource;
+import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

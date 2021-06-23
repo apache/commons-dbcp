@@ -17,12 +17,12 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.dbcp2.PoolingDataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
+
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.ObjectPool;
 
 /**
  * The ManagedDataSource is a PoolingDataSource that creates ManagedConnections.

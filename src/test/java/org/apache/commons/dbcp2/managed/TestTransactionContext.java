@@ -17,14 +17,15 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.sql.SQLException;
+
 import javax.transaction.xa.XAResource;
 
-import org.junit.jupiter.api.Test;
-import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.apache.geronimo.transaction.manager.TransactionImpl;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestSuite for TransactionContext
