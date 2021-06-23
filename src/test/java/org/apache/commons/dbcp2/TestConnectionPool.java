@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -473,7 +474,7 @@ public abstract class TestConnectionPool {
             conn[i] = newConnection();
             for(int j=0;j<i;j++) {
                 assertNotSame(conn[j], conn[i]);
-                assertFalse(conn[j].equals(conn[i]));
+                assertNotEquals(conn[j], conn[i]);
             }
         }
         for (final Connection element : conn) {
