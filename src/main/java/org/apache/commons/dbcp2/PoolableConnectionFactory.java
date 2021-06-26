@@ -91,7 +91,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private long maxConnLifetimeMillis = -1;
 
-    private final AtomicLong connectionIndex = new AtomicLong(0);
+    private final AtomicLong connectionIndex = new AtomicLong();
 
     private Integer defaultQueryTimeoutSeconds;
 
