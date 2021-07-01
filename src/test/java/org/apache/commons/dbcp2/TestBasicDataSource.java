@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.MBeanAttributeInfo;
@@ -940,7 +941,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         conn.close();
 
         final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        while (Arrays.stream(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
+        while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
                 .anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
             if (ds.getNumIdle() <= ds.getMinIdle()) {
                 break;
