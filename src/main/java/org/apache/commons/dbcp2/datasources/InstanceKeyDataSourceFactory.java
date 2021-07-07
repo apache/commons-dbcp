@@ -317,18 +317,9 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      *            If an I/O error occurs during the deserialization of a configuration parameter.
      */
     protected static final Object deserialize(final byte[] data) throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new ByteArrayInputStream(data));
+        try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data))) {
             return in.readObject();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException ex) {
-                    // ignore
-                }
-            }
         }
+        // ignore
     }
 }

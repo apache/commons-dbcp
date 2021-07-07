@@ -170,23 +170,9 @@ public class TestConnectionWithNarayana {
                         n++;
                     }
 
-                    Connection c = null;
-                    PreparedStatement ps2 = null;
-                    ResultSet rs = null;
-                    try {
-                        c = mds.getConnection();
-                        ps2 = c.prepareStatement(SELECT_STMT);
-                        rs = ps2.executeQuery();
-                    } finally {
-                        if (rs != null) {
-                            rs.close();
-                        }
-                        if (ps2 != null) {
-                            ps2.close();
-                        }
-                        if (c != null) {
-                            c.close();
-                        }
+                    try (Connection c = mds.getConnection();
+                         PreparedStatement ps2 = c.prepareStatement(SELECT_STMT);
+                         ResultSet rs = ps2.executeQuery()) {
                     }
                 } while (n < 2);
 
