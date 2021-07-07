@@ -804,13 +804,13 @@ public abstract class TestConnectionPool {
                     if (thrown != null) {
                         failed++;
                         if (!expectError || !(thrown instanceof SQLException)){
-                            System.out.println("Unexpected error: "+thrown.getMessage());
+                            System.err.println("Unexpected error: " + thrown.getMessage());
                         }
                     }
                 }
 
                 final long timeMillis = timeStampMillis() - startTimeMillis;
-                System.out.println("Multithread test time = " + timeMillis
+                println("Multithread test time = " + timeMillis
                         + " ms. Threads: " + pts.length
                         + ". Loops: " + loops
                         + ". Hold time: " + holdTime
@@ -823,10 +823,10 @@ public abstract class TestConnectionPool {
                 if (expectError) {
                     if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
                         final long offset = pts[0].createdMillis - 1000; // To reduce size of output numbers, but ensure they have 4 digits
-                        System.out.println("Offset: "+offset);
+                        println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
                             final PoolTest pt = pts[i];
-                            System.out.println(
+                            println(
                                     "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
                                     + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
                                     + ". Hash: " + pt.connHash
@@ -842,7 +842,7 @@ public abstract class TestConnectionPool {
                         }
                     }
                     if (didNotRun > 0){
-                        System.out.println("NOTE: some threads did not run the code: "+didNotRun);
+                        println("NOTE: some threads did not run the code: "+didNotRun);
                     }
                     // Perform initial sanity check:
                     assertTrue(failed > 0, "Expected some of the threads to fail");
@@ -852,6 +852,13 @@ public abstract class TestConnectionPool {
                     assertEquals(0, failed, "Did not expect any threads to fail");
                 }
             }
+    
+            void println(String string) {
+                if (Boolean.getBoolean(getClass().getSimpleName() + ".debug")) {
+                    System.out.println(string);
+                }
+            }
+
     private static int currentThreadCount;
 
     private static final String DONE = "Done";
