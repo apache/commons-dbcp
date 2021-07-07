@@ -71,6 +71,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     private boolean cacheState = true;
     private Boolean cachedAutoCommit;
     private Boolean cachedReadOnly;
+    private String cachedCatalog;
+    private String cachedSchema;
     private Integer defaultQueryTimeoutSeconds;
 
     /**
@@ -406,8 +408,12 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public String getCatalog() throws SQLException {
         checkOpen();
+        if (cacheState && cachedCatalog != null) {
+            return cachedCatalog;
+        }
         try {
-            return connection.getCatalog();
+            cachedCatalog = connection.getCatalog();
+            return cachedCatalog;
         } catch (final SQLException e) {
             handleException(e);
             return null;
@@ -532,6 +538,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public void clearCachedState() {
         cachedAutoCommit = null;
         cachedReadOnly = null;
+        cachedSchema = null;
+        cachedCatalog = null;
         if (connection instanceof DelegatingConnection) {
             ((DelegatingConnection<?>) connection).clearCachedState();
         }
@@ -556,7 +564,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         checkOpen();
         try {
             connection.setCatalog(catalog);
+            if (cacheState) {
+                cachedCatalog = connection.getCatalog();
+            }
         } catch (final SQLException e) {
+            cachedCatalog = null;
             handleException(e);
         }
     }
@@ -948,7 +960,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         checkOpen();
         try {
             Jdbc41Bridge.setSchema(connection, schema);
+            if (cacheState) {
+                cachedSchema = connection.getSchema();
+            }
         } catch (final SQLException e) {
+            cachedSchema = null;
             handleException(e);
         }
     }
@@ -956,8 +972,12 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public String getSchema() throws SQLException {
         checkOpen();
+        if (cacheState && cachedSchema != null) {
+            return cachedSchema;
+        }
         try {
-            return Jdbc41Bridge.getSchema(connection);
+            cachedSchema = Jdbc41Bridge.getSchema(connection);
+            return cachedSchema;
         } catch (final SQLException e) {
             handleException(e);
             return null;

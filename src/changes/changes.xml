@@ -150,6 +150,11 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         Internal package private UserPassKey class stores its user name as a char[] as it already does the password.
       </action>
+      <action issue="DBCP-579" dev="ggregory" type="fix" due-to="Shaktisinh Jhala, Gary Gregory">
+		Performance of DelegatingConnection.prepareStatement(String) regressed enormously in 2.8.0 compared to 1.4.
+        DelegatingConnection should also cache connection schema string to avoid calling the Connection#getSchema() for each key creation.
+        DelegatingConnection should also cache connection catalog string to avoid calling the Connection#getCatalog() for each key creation.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.11.2 #66, #72, #77, #85, #91, #105, #110, #116.
