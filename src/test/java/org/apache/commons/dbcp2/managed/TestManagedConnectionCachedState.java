@@ -103,13 +103,12 @@ public class TestManagedConnectionCachedState {
         // begin a transaction
         transactionManager.begin();
         // acquire a connection enlisted in the transaction
-        final Connection conn = getConnection();
-        // check the autocommit status to trigger internal caching
-        conn.getAutoCommit();
-        // ask the transaction manager to rollback
-        transactionManager.rollback();
-        // close the connection
-        conn.close();
+        try (final Connection conn = getConnection()) {
+            // check the autocommit status to trigger internal caching
+            conn.getAutoCommit();
+            // ask the transaction manager to rollback
+            transactionManager.rollback();
+        }
         // check that no exceptions about failed rollback during close were logged
         assertEquals(0, swallowedExceptionRecorder.getExceptions().size());
     }
