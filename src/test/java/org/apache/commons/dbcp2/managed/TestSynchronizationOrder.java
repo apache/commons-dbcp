@@ -48,6 +48,9 @@ import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.TesterClassLoader;
+import org.apache.commons.dbcp2.transaction.TransactionAdapter;
+import org.apache.commons.dbcp2.transaction.TransactionManagerAdapter;
+import org.apache.commons.dbcp2.transaction.TransactionSynchronizationRegistryAdapter;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,23 +138,13 @@ public class TestSynchronizationOrder {
 
     @BeforeEach
     public void setup() {
-        transactionManager = new TransactionManager() {
+        transactionManager = new TransactionManagerAdapter() {
 
             private Transaction transaction;
 
             @Override
             public void begin() throws NotSupportedException, SystemException {
-                transaction = new Transaction() {
-
-                    @Override
-                    public void commit() throws HeuristicMixedException, HeuristicRollbackException, RollbackException, SecurityException, SystemException {
-
-                    }
-
-                    @Override
-                    public boolean delistResource(final XAResource xaResource, final int i) throws IllegalStateException, SystemException {
-                        return false;
-                    }
+                transaction = new TransactionAdapter() {
 
                     @Override
                     public boolean enlistResource(final XAResource xaResource) throws IllegalStateException, RollbackException, SystemException {
@@ -160,35 +153,10 @@ public class TestSynchronizationOrder {
                     }
 
                     @Override
-                    public int getStatus() throws SystemException {
-                        return 0;
-                    }
-
-                    @Override
                     public void registerSynchronization(final Synchronization synchronization) throws IllegalStateException, RollbackException, SystemException {
                         transactionManagerRegistered = true;
                     }
-
-                    @Override
-                    public void rollback() throws IllegalStateException, SystemException {
-
-                    }
-
-                    @Override
-                    public void setRollbackOnly() throws IllegalStateException, SystemException {
-
-                    }
                 };
-            }
-
-            @Override
-            public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-            @Override
-            public int getStatus() throws SystemException {
-                return 0;
             }
 
             @Override
@@ -196,68 +164,15 @@ public class TestSynchronizationOrder {
                 return transaction;
             }
 
-            @Override
-            public void resume(final Transaction transaction) throws IllegalStateException, InvalidTransactionException, SystemException {
-
-            }
-
-            @Override
-            public void rollback() throws IllegalStateException, SecurityException, SystemException {
-
-            }
-
-            @Override
-            public void setRollbackOnly() throws IllegalStateException, SystemException {
-
-            }
-
-            @Override
-            public void setTransactionTimeout(final int i) throws SystemException {
-
-            }
-
-            @Override
-            public Transaction suspend() throws SystemException {
-                return null;
-            }
         };
 
-        transactionSynchronizationRegistry = new TransactionSynchronizationRegistry() {
-
-            @Override
-            public Object getResource(final Object o) {
-                return null;
-            }
-
-            @Override
-            public boolean getRollbackOnly() {
-                return false;
-            }
-
-            @Override
-            public Object getTransactionKey() {
-                return null;
-            }
-
-            @Override
-            public int getTransactionStatus() {
-                return 0;
-            }
-
-            @Override
-            public void putResource(final Object o, final Object o1) {
-
-            }
+        transactionSynchronizationRegistry = new TransactionSynchronizationRegistryAdapter() {
 
             @Override
             public void registerInterposedSynchronization(final Synchronization synchronization) {
                 transactionSynchronizationRegistryRegistered = true;
             }
 
-            @Override
-            public void setRollbackOnly() {
-
-            }
         };
 
         bmds = new BasicManagedDataSource();
