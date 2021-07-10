@@ -37,12 +37,12 @@ public class TransactionAdapter implements Transaction {
     }
 
     @Override
-    public boolean delistResource(XAResource arg0, int arg1) throws IllegalStateException, SystemException {
+    public boolean delistResource(final XAResource arg0, final int arg1) throws IllegalStateException, SystemException {
         return false;
     }
 
     @Override
-    public boolean enlistResource(XAResource arg0) throws IllegalStateException, RollbackException, SystemException {
+    public boolean enlistResource(final XAResource arg0) throws IllegalStateException, RollbackException, SystemException {
         return false;
     }
 
@@ -52,7 +52,7 @@ public class TransactionAdapter implements Transaction {
     }
 
     @Override
-    public void registerSynchronization(Synchronization arg0)
+    public void registerSynchronization(final Synchronization arg0)
         throws IllegalStateException, RollbackException, SystemException {
         // Noop
     }

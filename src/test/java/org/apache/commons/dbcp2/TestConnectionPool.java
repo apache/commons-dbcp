@@ -852,8 +852,8 @@ public abstract class TestConnectionPool {
                     assertEquals(0, failed, "Did not expect any threads to fail");
                 }
             }
-    
-            void println(String string) {
+
+            void println(final String string) {
                 if (Boolean.getBoolean(getClass().getSimpleName() + ".debug")) {
                     System.out.println(string);
                 }

@@ -26,7 +26,7 @@ import javax.transaction.TransactionSynchronizationRegistry;
 public class TransactionSynchronizationRegistryAdapter implements TransactionSynchronizationRegistry {
 
     @Override
-    public Object getResource(Object arg0) {
+    public Object getResource(final Object arg0) {
         return null;
     }
 
@@ -46,12 +46,12 @@ public class TransactionSynchronizationRegistryAdapter implements TransactionSyn
     }
 
     @Override
-    public void putResource(Object arg0, Object arg1) {
+    public void putResource(final Object arg0, final Object arg1) {
         // Noop
     }
 
     @Override
-    public void registerInterposedSynchronization(Synchronization arg0) {
+    public void registerInterposedSynchronization(final Synchronization arg0) {
         // Noop
     }
 

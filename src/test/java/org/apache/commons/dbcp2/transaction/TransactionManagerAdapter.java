@@ -53,7 +53,7 @@ public class TransactionManagerAdapter implements TransactionManager {
     }
 
     @Override
-    public void resume(Transaction arg0) throws IllegalStateException, InvalidTransactionException, SystemException {
+    public void resume(final Transaction arg0) throws IllegalStateException, InvalidTransactionException, SystemException {
         // Noop
     }
 
@@ -68,7 +68,7 @@ public class TransactionManagerAdapter implements TransactionManager {
     }
 
     @Override
-    public void setTransactionTimeout(int arg0) throws SystemException {
+    public void setTransactionTimeout(final int arg0) throws SystemException {
         // Noop
     }
 
