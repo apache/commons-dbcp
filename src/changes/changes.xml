@@ -213,6 +213,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump spotbugs from 4.2.3 to 4.3.0 #117.
       </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump spotbugs-maven-plugin from 4.2.3 to 4.3.0 #118.
+      </action>
     </release>
     <release version="2.8.0" date="2020-09-21" description="This is a minor release, including bug fixes and enhancements.">
       <!-- add -->
