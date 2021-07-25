@@ -31,9 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.InvalidTransactionException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Synchronization;
