@@ -47,7 +47,7 @@ Apache Commons DBCP
 [![GitHub Actions Status](https://github.com/apache/commons-dbcp/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-dbcp/actions)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp/badge.svg)](https://coveralls.io/r/apache/commons-dbcp)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.8.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.8.0)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.9.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.9.0)
 
 Apache Commons DBCP software implements Database Connection Pooling
 
@@ -68,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.8.0</version>
+  <version>2.9.0</version>
 </dependency>
 ```
 
