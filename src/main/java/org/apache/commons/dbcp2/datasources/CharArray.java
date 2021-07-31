@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.commons.dbcp2.Utils;
 
@@ -45,9 +46,7 @@ final class CharArray {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        final int result = 1;
-        return prime * result + Arrays.hashCode(chars);
+        return Objects.hash(Arrays.hashCode(chars));
     }
 
     @Override
