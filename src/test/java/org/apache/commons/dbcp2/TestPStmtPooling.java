@@ -43,63 +43,6 @@ import org.junit.jupiter.api.Test;
  */
 public class TestPStmtPooling {
 
-    @Test
-    public void testStmtPool() throws Exception {
-        final DataSource ds = createPoolingDataSource();
-        try (Connection conn = ds.getConnection()) {
-            final Statement stmt1 = conn.prepareStatement("select 1 from dual");
-            final Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
-            stmt1.close();
-            final Statement stmt2 = conn.prepareStatement("select 1 from dual");
-            final Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
-            stmt2.close();
-            assertSame(ustmt1, ustmt2);
-        }
-    }
-
-    /**
-     * Verifies that executing close() on an already closed DelegatingStatement
-     * that wraps a PoolablePreparedStatement does not "re-close" the PPS
-     * (which could be in use by another client - see DBCP-414).
-     */
-    @Test
-    public void testMultipleClose() throws Exception {
-       final DataSource ds = createPoolingDataSource();
-       final Connection conn = ds.getConnection();
-       final PreparedStatement stmt1 = conn.prepareStatement("select 1 from dual");
-       final PoolablePreparedStatement<?> pps1 = getPoolablePreparedStatement(stmt1);
-       conn.close();
-       assertTrue(stmt1.isClosed());  // Closing conn should close stmt
-       stmt1.close(); // Should already be closed - no-op
-       assertTrue(stmt1.isClosed());
-       final Connection conn2 = ds.getConnection();
-       final PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
-       // Confirm stmt2 now wraps the same PPS wrapped by stmt1
-       Assertions.assertSame(pps1, getPoolablePreparedStatement(stmt2));
-       stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
-        assertFalse(stmt2.isClosed());
-       stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
-       conn2.close();
-       assertTrue(stmt1.isClosed());
-       assertTrue(stmt2.isClosed());
-    }
-
-
-    private PoolablePreparedStatement<?> getPoolablePreparedStatement(Statement s) {
-
-        while (s != null) {
-            if (s instanceof PoolablePreparedStatement) {
-                return (PoolablePreparedStatement<?>) s;
-            }
-            if (!(s instanceof DelegatingPreparedStatement)) {
-                return null;
-            }
-            s = ((DelegatingPreparedStatement) s).getDelegate();
-        }
-        return null;
-    }
-
-
     private DataSource createPoolingDataSource() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         final ConnectionFactory connFactory = new DriverManagerConnectionFactory(
@@ -116,6 +59,49 @@ public class TestPStmtPooling {
         return new PoolingDataSource<>(connPool);
 
     }
+
+    private PoolablePreparedStatement<?> getPoolablePreparedStatement(Statement s) {
+
+        while (s != null) {
+            if (s instanceof PoolablePreparedStatement) {
+                return (PoolablePreparedStatement<?>) s;
+            }
+            if (!(s instanceof DelegatingPreparedStatement)) {
+                return null;
+            }
+            s = ((DelegatingPreparedStatement) s).getDelegate();
+        }
+        return null;
+    }
+
+
+    @Test
+    public void testBatchUpdate() throws Exception {
+        DriverManager.registerDriver(new TesterDriver());
+        final ConnectionFactory connFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver","u1","p1");
+
+        final PoolableConnectionFactory pcf =
+            new PoolableConnectionFactory(connFactory, null);
+        pcf.setPoolStatements(true);
+        pcf.setDefaultReadOnly(Boolean.FALSE);
+        pcf.setDefaultAutoCommit(Boolean.TRUE);
+        final ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
+        pcf.setPool(connPool);
+
+        final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
+
+        final Connection conn = ds.getConnection();
+        final PreparedStatement ps = conn.prepareStatement("select 1 from dual");
+        final Statement inner = ((DelegatingPreparedStatement) ps).getInnermostDelegate();
+        // Check DBCP-372
+        ps.addBatch();
+        ps.close();
+        conn.close();
+        Assertions.assertFalse(inner.isClosed());
+        ds.close();
+    }
+
 
     @Test
     public void testCallableStatementPooling() throws Exception {
@@ -196,30 +182,44 @@ public class TestPStmtPooling {
         ds.close();
     }
 
+    /**
+     * Verifies that executing close() on an already closed DelegatingStatement
+     * that wraps a PoolablePreparedStatement does not "re-close" the PPS
+     * (which could be in use by another client - see DBCP-414).
+     */
     @Test
-    public void testBatchUpdate() throws Exception {
-        DriverManager.registerDriver(new TesterDriver());
-        final ConnectionFactory connFactory = new DriverManagerConnectionFactory(
-                "jdbc:apache:commons:testdriver","u1","p1");
+    public void testMultipleClose() throws Exception {
+       final DataSource ds = createPoolingDataSource();
+       final Connection conn = ds.getConnection();
+       final PreparedStatement stmt1 = conn.prepareStatement("select 1 from dual");
+       final PoolablePreparedStatement<?> pps1 = getPoolablePreparedStatement(stmt1);
+       conn.close();
+       assertTrue(stmt1.isClosed());  // Closing conn should close stmt
+       stmt1.close(); // Should already be closed - no-op
+       assertTrue(stmt1.isClosed());
+       final Connection conn2 = ds.getConnection();
+       final PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
+       // Confirm stmt2 now wraps the same PPS wrapped by stmt1
+       Assertions.assertSame(pps1, getPoolablePreparedStatement(stmt2));
+       stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
+        assertFalse(stmt2.isClosed());
+       stmt2.executeQuery();  // wrapped PPS needs to work here - pre DBCP-414 fix this throws
+       conn2.close();
+       assertTrue(stmt1.isClosed());
+       assertTrue(stmt2.isClosed());
+    }
 
-        final PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connFactory, null);
-        pcf.setPoolStatements(true);
-        pcf.setDefaultReadOnly(Boolean.FALSE);
-        pcf.setDefaultAutoCommit(Boolean.TRUE);
-        final ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
-        pcf.setPool(connPool);
-
-        final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
-
-        final Connection conn = ds.getConnection();
-        final PreparedStatement ps = conn.prepareStatement("select 1 from dual");
-        final Statement inner = ((DelegatingPreparedStatement) ps).getInnermostDelegate();
-        // Check DBCP-372
-        ps.addBatch();
-        ps.close();
-        conn.close();
-        Assertions.assertFalse(inner.isClosed());
-        ds.close();
+    @Test
+    public void testStmtPool() throws Exception {
+        final DataSource ds = createPoolingDataSource();
+        try (Connection conn = ds.getConnection()) {
+            final Statement stmt1 = conn.prepareStatement("select 1 from dual");
+            final Statement ustmt1 = ((DelegatingStatement) stmt1).getInnermostDelegate();
+            stmt1.close();
+            final Statement stmt2 = conn.prepareStatement("select 1 from dual");
+            final Statement ustmt2 = ((DelegatingStatement) stmt2).getInnermostDelegate();
+            stmt2.close();
+            assertSame(ustmt1, ustmt2);
+        }
     }
 }

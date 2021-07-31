@@ -20,10 +20,6 @@ import java.lang.reflect.Field;
 
 public class TesterUtils {
 
-    private TesterUtils() {
-        // Utility class - hide default constructor
-    }
-
     /**
      * Access a private field. Do it this way rather than increasing the
      * visibility of the field in the public API.
@@ -34,5 +30,9 @@ public class TesterUtils {
         final Field f = clazz.getDeclaredField(fieldName);
         f.setAccessible(true);
         return f.get(target);
+    }
+
+    private TesterUtils() {
+        // Utility class - hide default constructor
     }
 }

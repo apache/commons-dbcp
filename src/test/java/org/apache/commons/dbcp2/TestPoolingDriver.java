@@ -49,12 +49,12 @@ import org.junit.jupiter.api.Test;
  */
 public class TestPoolingDriver extends TestConnectionPool {
 
+    private PoolingDriver driver;
+
     @Override
     protected Connection getConnection() throws Exception {
         return DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
     }
-
-    private PoolingDriver driver;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -117,61 +117,6 @@ public class TestPoolingDriver extends TestConnectionPool {
         final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         final PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example",connectionPool);
-    }
-
-    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
-    @Test
-    public void testReportedBug28912() throws Exception {
-        final Connection conn1 = getConnection();
-        assertNotNull(conn1);
-        assertFalse(conn1.isClosed());
-        conn1.close();
-
-        final Connection conn2 = getConnection();
-        assertNotNull(conn2);
-
-        assertTrue(conn1.isClosed());
-        assertFalse(conn2.isClosed());
-
-        // should be able to call close multiple times with no effect
-        conn1.close();
-
-        assertTrue(conn1.isClosed());
-        assertFalse(conn2.isClosed());
-    }
-
-    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
-    @Test
-    public void testReportedBug12400() throws Exception {
-        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
-        config.setMaxTotal(70);
-        config.setMaxWaitMillis(60000);
-        config.setMaxIdle(10);
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-            "jdbc:apache:commons:testdriver",
-            "userName",
-            "password");
-        final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory, null);
-        poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
-        poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
-        final ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory,
-                config);
-        poolableConnectionFactory.setPool(connectionPool);
-        assertNotNull(poolableConnectionFactory);
-        final PoolingDriver driver2 = new PoolingDriver();
-        driver2.registerPool("neusoftim",connectionPool);
-        final Connection[] conn = new Connection[25];
-        for(int i=0;i<25;i++) {
-            conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
-            for(int j=0;j<i;j++) {
-                assertNotSame(conn[j], conn[i]);
-                assertNotEquals(conn[j], conn[i]);
-            }
-        }
-        for(int i=0;i<25;i++) {
-            conn[i].close();
-        }
     }
 
     @Test
@@ -250,5 +195,60 @@ public class TestPoolingDriver extends TestConnectionPool {
         ex.printStackTrace();
         ex.printStackTrace(ps);
         ex.printStackTrace(pw);
+    }
+
+    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
+    @Test
+    public void testReportedBug12400() throws Exception {
+        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
+        config.setMaxTotal(70);
+        config.setMaxWaitMillis(60000);
+        config.setMaxIdle(10);
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+            "jdbc:apache:commons:testdriver",
+            "userName",
+            "password");
+        final PoolableConnectionFactory poolableConnectionFactory =
+            new PoolableConnectionFactory(connectionFactory, null);
+        poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
+        poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
+        final ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory,
+                config);
+        poolableConnectionFactory.setPool(connectionPool);
+        assertNotNull(poolableConnectionFactory);
+        final PoolingDriver driver2 = new PoolingDriver();
+        driver2.registerPool("neusoftim",connectionPool);
+        final Connection[] conn = new Connection[25];
+        for(int i=0;i<25;i++) {
+            conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
+            for(int j=0;j<i;j++) {
+                assertNotSame(conn[j], conn[i]);
+                assertNotEquals(conn[j], conn[i]);
+            }
+        }
+        for(int i=0;i<25;i++) {
+            conn[i].close();
+        }
+    }
+
+    /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
+    @Test
+    public void testReportedBug28912() throws Exception {
+        final Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertFalse(conn1.isClosed());
+        conn1.close();
+
+        final Connection conn2 = getConnection();
+        assertNotNull(conn2);
+
+        assertTrue(conn1.isClosed());
+        assertFalse(conn2.isClosed());
+
+        // should be able to call close multiple times with no effect
+        conn1.close();
+
+        assertTrue(conn1.isClosed());
+        assertFalse(conn2.isClosed());
     }
 }

@@ -179,6 +179,18 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return driver;
     }
 
+    /**
+     * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     *
+     * @return the value of the evictor thread timer
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @since 2.9.0
+     */
+    public Duration getDurationBetweenEvictionRuns() {
+        return durationBetweenEvictionRuns;
+    }
+
     private int getIntegerStringContent(final RefAddr ra) {
         return Integer.parseInt(getStringContent(ra));
     }
@@ -462,18 +474,6 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
-     * idle object evictor thread will be run.
-     *
-     * @return the value of the evictor thread timer
-     * @see #setDurationBetweenEvictionRuns(Duration)
-     * @since 2.9.0
-     */
-    public Duration getDurationBetweenEvictionRuns() {
-        return durationBetweenEvictionRuns;
-    }
-
-    /**
      * Gets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
      *
@@ -586,6 +586,21 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         this.driver = driver;
         // make sure driver is registered
         Class.forName(driver);
+    }
+
+    /**
+     * Sets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     *
+     * @param durationBetweenEvictionRuns The duration to sleep between runs of the idle object evictor
+     *        thread. When non-positive, no idle object evictor thread will be run.
+     * @see #getDurationBetweenEvictionRuns()
+     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @since 2.9.0
+     */
+    public void setDurationBetweenEvictionRuns(final Duration durationBetweenEvictionRuns) {
+        assertInitializationAllowed();
+        this.durationBetweenEvictionRuns = durationBetweenEvictionRuns;
     }
 
     /**
@@ -708,21 +723,6 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     public void setPoolPreparedStatements(final boolean poolPreparedStatements) {
         assertInitializationAllowed();
         this.poolPreparedStatements = poolPreparedStatements;
-    }
-
-    /**
-     * Sets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
-     * idle object evictor thread will be run.
-     *
-     * @param durationBetweenEvictionRuns The duration to sleep between runs of the idle object evictor
-     *        thread. When non-positive, no idle object evictor thread will be run.
-     * @see #getDurationBetweenEvictionRuns()
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
-     * @since 2.9.0
-     */
-    public void setDurationBetweenEvictionRuns(final Duration durationBetweenEvictionRuns) {
-        assertInitializationAllowed();
-        this.durationBetweenEvictionRuns = durationBetweenEvictionRuns;
     }
 
     /**

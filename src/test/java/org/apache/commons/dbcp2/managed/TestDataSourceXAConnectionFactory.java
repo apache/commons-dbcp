@@ -41,29 +41,15 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
 
-    protected BasicManagedDataSource bmds;
-
-    public final AtomicInteger closeCounter = new AtomicInteger();
-
-    @Override
-    @BeforeEach
-    public void setUp() throws Exception {
-        super.setUp();
-        bmds = new BasicManagedDataSource();
-        bmds.setTransactionManager(new TransactionManagerImpl());
-        bmds.setXADataSource("notnull");
-        final XADataSourceHandle handle = new XADataSourceHandle();
-        final XADataSource xads = (XADataSource) Proxy.newProxyInstance(
-                XADataSourceHandle.class.getClassLoader(),
-                new Class[] { XADataSource.class }, handle);
-        bmds.setXaDataSourceInstance(xads);
-    }
-
     /**
      * Delegates everything to the BasicDataSource (ds field), except for
      * getXAConnection which creates a BasicXAConnection.
      */
     public class XADataSourceHandle implements InvocationHandler {
+
+        protected XAConnection getXAConnection() throws SQLException {
+            return new TesterBasicXAConnection(ds.getConnection(), closeCounter);
+        }
 
         @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args)
@@ -85,10 +71,24 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
                 throw e.getTargetException();
             }
         }
+    }
 
-        protected XAConnection getXAConnection() throws SQLException {
-            return new TesterBasicXAConnection(ds.getConnection(), closeCounter);
-        }
+    protected BasicManagedDataSource bmds;
+
+    public final AtomicInteger closeCounter = new AtomicInteger();
+
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+        bmds = new BasicManagedDataSource();
+        bmds.setTransactionManager(new TransactionManagerImpl());
+        bmds.setXADataSource("notnull");
+        final XADataSourceHandle handle = new XADataSourceHandle();
+        final XADataSource xads = (XADataSource) Proxy.newProxyInstance(
+                XADataSourceHandle.class.getClassLoader(),
+                new Class[] { XADataSource.class }, handle);
+        bmds.setXaDataSourceInstance(xads);
     }
 
     /**

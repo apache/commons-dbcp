@@ -51,21 +51,6 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDelegate() throws Exception {
-        assertEquals(obj ,delegate.getDelegate());
-    }
-
-    @Test
-    public void testCheckOpen() throws Exception {
-        delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
-        final ResultSet rst = delegate.getSchemas();
-        assertFalse(rst.isClosed());
-        conn.close();
-        assertTrue(rst.isClosed());
-    }
-    /* JDBC_4_ANT_KEY_END */
-
-    @Test
     public void testAllProceduresAreCallable() throws Exception {
         try {
             delegate.allProceduresAreCallable();
@@ -88,6 +73,16 @@ public class TestDelegatingDatabaseMetaData {
         } catch (final SQLException e) {}
         verify(obj, times(1)).autoCommitFailureClosesAllResultSets();
     }
+
+    @Test
+    public void testCheckOpen() throws Exception {
+        delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
+        final ResultSet rst = delegate.getSchemas();
+        assertFalse(rst.isClosed());
+        conn.close();
+        assertTrue(rst.isClosed());
+    }
+    /* JDBC_4_ANT_KEY_END */
 
     @Test
     public void testDataDefinitionCausesTransactionCommit() throws Exception {
@@ -146,6 +141,14 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
+    public void testGetCatalogs() throws Exception {
+        try {
+            delegate.getCatalogs();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getCatalogs();
+    }
+
+    @Test
     public void testGetCatalogSeparator() throws Exception {
         try {
             delegate.getCatalogSeparator();
@@ -159,14 +162,6 @@ public class TestDelegatingDatabaseMetaData {
             delegate.getCatalogTerm();
         } catch (final SQLException e) {}
         verify(obj, times(1)).getCatalogTerm();
-    }
-
-    @Test
-    public void testGetCatalogs() throws Exception {
-        try {
-            delegate.getCatalogs();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getCatalogs();
     }
 
     @Test
@@ -252,6 +247,11 @@ public class TestDelegatingDatabaseMetaData {
             delegate.getDefaultTransactionIsolation();
         } catch (final SQLException e) {}
         verify(obj, times(1)).getDefaultTransactionIsolation();
+    }
+
+    @Test
+    public void testGetDelegate() throws Exception {
+        assertEquals(obj ,delegate.getDelegate());
     }
 
     @Test
@@ -547,19 +547,19 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetProcedureTerm() throws Exception {
-        try {
-            delegate.getProcedureTerm();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getProcedureTerm();
-    }
-
-    @Test
     public void testGetProceduresStringStringString() throws Exception {
         try {
             delegate.getProcedures("foo","foo","foo");
         } catch (final SQLException e) {}
         verify(obj, times(1)).getProcedures("foo","foo","foo");
+    }
+
+    @Test
+    public void testGetProcedureTerm() throws Exception {
+        try {
+            delegate.getProcedureTerm();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getProcedureTerm();
     }
 
     @Test
@@ -587,6 +587,38 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
+    public void testGetSchemas() throws Exception {
+        try {
+            delegate.getSchemas();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getSchemas();
+    }
+
+    @Test
+    public void testGetSchemasStringString() throws Exception {
+        try {
+            delegate.getSchemas("foo","foo");
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getSchemas("foo","foo");
+    }
+
+    @Test
+    public void testGetSchemaTerm() throws Exception {
+        try {
+            delegate.getSchemaTerm();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getSchemaTerm();
+    }
+
+    @Test
+    public void testGetSearchStringEscape() throws Exception {
+        try {
+            delegate.getSearchStringEscape();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getSearchStringEscape();
+    }
+
+    @Test
     public void testGetSQLKeywords() throws Exception {
         try {
             delegate.getSQLKeywords();
@@ -600,38 +632,6 @@ public class TestDelegatingDatabaseMetaData {
             delegate.getSQLStateType();
         } catch (final SQLException e) {}
         verify(obj, times(1)).getSQLStateType();
-    }
-
-    @Test
-    public void testGetSchemaTerm() throws Exception {
-        try {
-            delegate.getSchemaTerm();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getSchemaTerm();
-    }
-
-    @Test
-    public void testGetSchemasStringString() throws Exception {
-        try {
-            delegate.getSchemas("foo","foo");
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getSchemas("foo","foo");
-    }
-
-    @Test
-    public void testGetSchemas() throws Exception {
-        try {
-            delegate.getSchemas();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getSchemas();
-    }
-
-    @Test
-    public void testGetSearchStringEscape() throws Exception {
-        try {
-            delegate.getSearchStringEscape();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getSearchStringEscape();
     }
 
     @Test
@@ -675,19 +675,19 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTableTypes() throws Exception {
-        try {
-            delegate.getTableTypes();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).getTableTypes();
-    }
-
-    @Test
     public void testGetTablesStringStringStringStringArray() throws Exception {
         try {
             delegate.getTables("foo","foo","foo",(String[]) null);
         } catch (final SQLException e) {}
         verify(obj, times(1)).getTables("foo","foo","foo",(String[]) null);
+    }
+
+    @Test
+    public void testGetTableTypes() throws Exception {
+        try {
+            delegate.getTableTypes();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).getTableTypes();
     }
 
     @Test
@@ -907,6 +907,22 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
+    public void testSupportsAlterTableWithAddColumn() throws Exception {
+        try {
+            delegate.supportsAlterTableWithAddColumn();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).supportsAlterTableWithAddColumn();
+    }
+
+    @Test
+    public void testSupportsAlterTableWithDropColumn() throws Exception {
+        try {
+            delegate.supportsAlterTableWithDropColumn();
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).supportsAlterTableWithDropColumn();
+    }
+
+    @Test
     public void testSupportsANSI92EntryLevelSQL() throws Exception {
         try {
             delegate.supportsANSI92EntryLevelSQL();
@@ -928,22 +944,6 @@ public class TestDelegatingDatabaseMetaData {
             delegate.supportsANSI92IntermediateSQL();
         } catch (final SQLException e) {}
         verify(obj, times(1)).supportsANSI92IntermediateSQL();
-    }
-
-    @Test
-    public void testSupportsAlterTableWithAddColumn() throws Exception {
-        try {
-            delegate.supportsAlterTableWithAddColumn();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).supportsAlterTableWithAddColumn();
-    }
-
-    @Test
-    public void testSupportsAlterTableWithDropColumn() throws Exception {
-        try {
-            delegate.supportsAlterTableWithDropColumn();
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).supportsAlterTableWithDropColumn();
     }
 
     @Test
@@ -1003,19 +1003,19 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsConvertIntegerInteger() throws Exception {
-        try {
-            delegate.supportsConvert(1,1);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).supportsConvert(1,1);
-    }
-
-    @Test
     public void testSupportsConvert() throws Exception {
         try {
             delegate.supportsConvert();
         } catch (final SQLException e) {}
         verify(obj, times(1)).supportsConvert();
+    }
+
+    @Test
+    public void testSupportsConvertIntegerInteger() throws Exception {
+        try {
+            delegate.supportsConvert(1,1);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).supportsConvert(1,1);
     }
 
     @Test

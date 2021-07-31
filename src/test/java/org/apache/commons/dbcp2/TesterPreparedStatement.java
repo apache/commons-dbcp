@@ -77,17 +77,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         }
     }
 
-    public TesterPreparedStatement(final Connection conn, final String sql, final int[] columnIndexes) {
-        super(conn);
-        _sql = sql;
-        _columnIndexes = columnIndexes;
-        try {
-            _catalog = conn.getCatalog();
-        } catch (final SQLException e) {
-            // Ignored
-        }
-    }
-
     public TesterPreparedStatement(final Connection conn, final String sql, final int resultSetType, final int resultSetConcurrency) {
         super(conn, resultSetType, resultSetConcurrency);
         _sql = sql;
@@ -102,6 +91,17 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
             final int resultSetHoldability) {
         super(conn, resultSetType, resultSetConcurrency, resultSetHoldability);
         _sql = sql;
+        try {
+            _catalog = conn.getCatalog();
+        } catch (final SQLException e) {
+            // Ignored
+        }
+    }
+
+    public TesterPreparedStatement(final Connection conn, final String sql, final int[] columnIndexes) {
+        super(conn);
+        _sql = sql;
+        _columnIndexes = columnIndexes;
         try {
             _catalog = conn.getCatalog();
         } catch (final SQLException e) {

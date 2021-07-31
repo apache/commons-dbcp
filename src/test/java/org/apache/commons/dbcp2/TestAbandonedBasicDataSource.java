@@ -42,6 +42,65 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
 
     private StringWriter sw;
 
+    /**
+     * Verifies that con.lastUsed has been updated and then resets it to 0
+     */
+    private void assertAndReset(final DelegatingConnection<?> con) {
+        assertTrue(con.getLastUsed() > 0);
+        con.setLastUsed(0);
+    }
+
+    // ---------- Abandoned Test -----------
+
+    /**
+     * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
+     */
+    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
+        ps.execute();
+        assertAndReset(conn);
+        Assertions.assertNotNull(ps.executeQuery());
+        assertAndReset(conn);
+        ps.executeUpdate();
+        assertAndReset(conn);
+    }
+
+    /**
+     * Verifies that Statement executeXxx methods update lastUsed on the parent connection
+     */
+    private void checkLastUsedStatement(final Statement st, final DelegatingConnection<?> conn) throws Exception {
+        st.execute("");
+        assertAndReset(conn);
+        st.execute("", new int[] {});
+        assertAndReset(conn);
+        st.execute("", 0);
+        assertAndReset(conn);
+        st.executeBatch();
+        assertAndReset(conn);
+        st.executeLargeBatch();
+        assertAndReset(conn);
+        Assertions.assertNotNull(st.executeQuery(""));
+        assertAndReset(conn);
+        st.executeUpdate("");
+        assertAndReset(conn);
+        st.executeUpdate("", new int[] {});
+        assertAndReset(conn);
+        st.executeLargeUpdate("", new int[] {});
+        assertAndReset(conn);
+        st.executeUpdate("", 0);
+        assertAndReset(conn);
+        st.executeLargeUpdate("", 0);
+        assertAndReset(conn);
+        st.executeUpdate("", new String[] {});
+        assertAndReset(conn);
+        st.executeLargeUpdate("", new String[] {});
+        assertAndReset(conn);
+    }
+
+    private void createStatement(final Connection conn) throws Exception{
+        final PreparedStatement ps = conn.prepareStatement("");
+        Assertions.assertNotNull(ps);
+    }
+
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -55,8 +114,6 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         sw = new StringWriter();
         ds.setAbandonedLogWriter(new PrintWriter(sw));
     }
-
-    // ---------- Abandoned Test -----------
 
     @Test
     public void testAbandoned() throws Exception {
@@ -139,6 +196,52 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
+     * DBCP-180 - verify that a GC can clean up an unused Statement when it is
+     * no longer referenced even when it is tracked via the AbandonedTrace
+     * mechanism.
+     */
+    @Test
+    public void testGarbageCollectorCleanUp01() throws Exception {
+        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        Assertions.assertEquals(0, conn.getTrace().size());
+        createStatement(conn);
+        Assertions.assertEquals(1, conn.getTrace().size());
+        System.gc();
+        Assertions.assertEquals(0, conn.getTrace().size());
+    }
+
+    /**
+     * DBCP-180 - things get more interesting with statement pooling.
+     */
+    @Test
+    public void testGarbageCollectorCleanUp02() throws Exception {
+        ds.setPoolPreparedStatements(true);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+        final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
+        final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
+        @SuppressWarnings("unchecked")
+        final
+        GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
+                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pstmtPool");
+        Assertions.assertEquals(0, conn.getTrace().size());
+        Assertions.assertEquals(0, gkop.getNumActive());
+        createStatement(conn);
+        Assertions.assertEquals(1, conn.getTrace().size());
+        Assertions.assertEquals(1, gkop.getNumActive());
+        System.gc();
+        // Finalization happens in a separate thread. Give the test time for
+        // that to complete.
+        int count = 0;
+        while (count < 50 && gkop.getNumActive() > 0) {
+            Thread.sleep(100);
+            count++;
+        }
+        Assertions.assertEquals(0, gkop.getNumActive());
+        Assertions.assertEquals(0, conn.getTrace().size());
+    }
+
+    /**
      * Verify that lastUsed property is updated when a connection
      * creates or prepares a statement
      */
@@ -160,6 +263,32 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             try (Statement s = conn1.createStatement()) {}
         }
     }
+
+    /**
+     * DBCP-343 - verify that using a DelegatingStatement updates
+     * the lastUsed on the parent connection
+     */
+    @Test
+    public void testLastUsedLargePreparedStatementUse() throws Exception {
+        ds.setRemoveAbandonedTimeout(1);
+        ds.setMaxTotal(2);
+        try (Connection conn1 = ds.getConnection();
+                Statement st = conn1.createStatement()) {
+            final String querySQL = "SELECT 1 FROM DUAL";
+            Thread.sleep(500);
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
+            Thread.sleep(800);
+            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
+            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
+            conn2.close();
+            Thread.sleep(500);
+            st.executeLargeUpdate(""); // Should also reset
+            Thread.sleep(800);
+            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
+            try (Statement s = conn1.createStatement()) {}  // Connection should still be good
+        }
+    }
+
 
     /**
      * Verify that lastUsed property is updated when a connection
@@ -210,31 +339,6 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * DBCP-343 - verify that using a DelegatingStatement updates
-     * the lastUsed on the parent connection
-     */
-    @Test
-    public void testLastUsedLargePreparedStatementUse() throws Exception {
-        ds.setRemoveAbandonedTimeout(1);
-        ds.setMaxTotal(2);
-        try (Connection conn1 = ds.getConnection();
-                Statement st = conn1.createStatement()) {
-            final String querySQL = "SELECT 1 FROM DUAL";
-            Thread.sleep(500);
-            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
-            Thread.sleep(800);
-            final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
-            Assertions.assertNotNull(st.executeQuery(querySQL)); // Should still be OK
-            conn2.close();
-            Thread.sleep(500);
-            st.executeLargeUpdate(""); // Should also reset
-            Thread.sleep(800);
-            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
-            try (Statement s = conn1.createStatement()) {}  // Connection should still be good
-        }
-    }
-
-    /**
      * DBCP-343 - verify additional operations reset lastUsed on
      * the parent connection
      */
@@ -249,109 +353,5 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         checkLastUsedStatement(cs, conn);
         checkLastUsedPreparedStatement(cs, conn);
         checkLastUsedStatement(st, conn);
-    }
-
-    /**
-     * DBCP-180 - verify that a GC can clean up an unused Statement when it is
-     * no longer referenced even when it is tracked via the AbandonedTrace
-     * mechanism.
-     */
-    @Test
-    public void testGarbageCollectorCleanUp01() throws Exception {
-        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        Assertions.assertEquals(0, conn.getTrace().size());
-        createStatement(conn);
-        Assertions.assertEquals(1, conn.getTrace().size());
-        System.gc();
-        Assertions.assertEquals(0, conn.getTrace().size());
-    }
-
-    /**
-     * DBCP-180 - things get more interesting with statement pooling.
-     */
-    @Test
-    public void testGarbageCollectorCleanUp02() throws Exception {
-        ds.setPoolPreparedStatements(true);
-        ds.setAccessToUnderlyingConnectionAllowed(true);
-        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
-        final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
-        @SuppressWarnings("unchecked")
-        final
-        GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
-                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pstmtPool");
-        Assertions.assertEquals(0, conn.getTrace().size());
-        Assertions.assertEquals(0, gkop.getNumActive());
-        createStatement(conn);
-        Assertions.assertEquals(1, conn.getTrace().size());
-        Assertions.assertEquals(1, gkop.getNumActive());
-        System.gc();
-        // Finalization happens in a separate thread. Give the test time for
-        // that to complete.
-        int count = 0;
-        while (count < 50 && gkop.getNumActive() > 0) {
-            Thread.sleep(100);
-            count++;
-        }
-        Assertions.assertEquals(0, gkop.getNumActive());
-        Assertions.assertEquals(0, conn.getTrace().size());
-    }
-
-    private void createStatement(final Connection conn) throws Exception{
-        final PreparedStatement ps = conn.prepareStatement("");
-        Assertions.assertNotNull(ps);
-    }
-
-
-    /**
-     * Verifies that Statement executeXxx methods update lastUsed on the parent connection
-     */
-    private void checkLastUsedStatement(final Statement st, final DelegatingConnection<?> conn) throws Exception {
-        st.execute("");
-        assertAndReset(conn);
-        st.execute("", new int[] {});
-        assertAndReset(conn);
-        st.execute("", 0);
-        assertAndReset(conn);
-        st.executeBatch();
-        assertAndReset(conn);
-        st.executeLargeBatch();
-        assertAndReset(conn);
-        Assertions.assertNotNull(st.executeQuery(""));
-        assertAndReset(conn);
-        st.executeUpdate("");
-        assertAndReset(conn);
-        st.executeUpdate("", new int[] {});
-        assertAndReset(conn);
-        st.executeLargeUpdate("", new int[] {});
-        assertAndReset(conn);
-        st.executeUpdate("", 0);
-        assertAndReset(conn);
-        st.executeLargeUpdate("", 0);
-        assertAndReset(conn);
-        st.executeUpdate("", new String[] {});
-        assertAndReset(conn);
-        st.executeLargeUpdate("", new String[] {});
-        assertAndReset(conn);
-    }
-
-    /**
-     * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
-     */
-    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
-        ps.execute();
-        assertAndReset(conn);
-        Assertions.assertNotNull(ps.executeQuery());
-        assertAndReset(conn);
-        ps.executeUpdate();
-        assertAndReset(conn);
-    }
-
-    /**
-     * Verifies that con.lastUsed has been updated and then resets it to 0
-     */
-    private void assertAndReset(final DelegatingConnection<?> con) {
-        assertTrue(con.getLastUsed() > 0);
-        con.setLastUsed(0);
     }
 }

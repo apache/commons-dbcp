@@ -44,30 +44,6 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
     private static final Map<String, InstanceKeyDataSource> INSTANCE_MAP = new ConcurrentHashMap<>();
 
-    static synchronized String registerNewInstance(final InstanceKeyDataSource ds) {
-        int max = 0;
-        for (final String s : INSTANCE_MAP.keySet()) {
-            if (s != null) {
-                try {
-                    max = Math.max(max, Integer.parseInt(s));
-                } catch (final NumberFormatException e) {
-                    // no sweat, ignore those keys
-                }
-            }
-        }
-        final String instanceKey = String.valueOf(max + 1);
-        // Put a placeholder here for now, so other instances will not
-        // take our key. We will replace with a pool when ready.
-        INSTANCE_MAP.put(instanceKey, ds);
-        return instanceKey;
-    }
-
-    static void removeInstance(final String key) {
-        if (key != null) {
-            INSTANCE_MAP.remove(key);
-        }
-    }
-
     /**
      * Closes all pools associated with this class.
      *
@@ -99,6 +75,74 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             throw new ListException("Could not close all InstanceKeyDataSource instances.", exceptionList);
         }
     }
+
+    /**
+     * Deserializes the provided byte array to create an object.
+     *
+     * @param data
+     *            Data to deserialize to create the configuration parameter.
+     *
+     * @return The Object created by deserializing the data.
+     *
+     * @throws ClassNotFoundException
+     *            If a class cannot be found during the deserialization of a configuration parameter.
+     * @throws IOException
+     *            If an I/O error occurs during the deserialization of a configuration parameter.
+     */
+    protected static final Object deserialize(final byte[] data) throws IOException, ClassNotFoundException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new ByteArrayInputStream(data));
+            return in.readObject();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException ex) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    static synchronized String registerNewInstance(final InstanceKeyDataSource ds) {
+        int max = 0;
+        for (final String s : INSTANCE_MAP.keySet()) {
+            if (s != null) {
+                try {
+                    max = Math.max(max, Integer.parseInt(s));
+                } catch (final NumberFormatException e) {
+                    // no sweat, ignore those keys
+                }
+            }
+        }
+        final String instanceKey = String.valueOf(max + 1);
+        // Put a placeholder here for now, so other instances will not
+        // take our key. We will replace with a pool when ready.
+        INSTANCE_MAP.put(instanceKey, ds);
+        return instanceKey;
+    }
+
+    static void removeInstance(final String key) {
+        if (key != null) {
+            INSTANCE_MAP.remove(key);
+        }
+    }
+
+    /**
+     * Creates an instance of the subclass and sets any properties contained in the Reference.
+     *
+     * @param ref
+     *            The properties to be set on the created DataSource
+     *
+     * @return A configured DataSource of the appropriate type.
+     *
+     * @throws ClassNotFoundException
+     *            If a class cannot be found during the deserialization of a configuration parameter.
+     * @throws IOException
+     *            If an I/O error occurs during the deserialization of a configuration parameter.
+     */
+    protected abstract InstanceKeyDataSource getNewInstance(Reference ref) throws IOException, ClassNotFoundException;
 
     /**
      * Implements ObjectFactory to create an instance of SharedPoolDataSource or PerUserPoolDataSource
@@ -138,6 +182,14 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
         return obj;
     }
+
+    /**
+     * @param className
+     *            The class name to test.
+     *
+     * @return true if and only if className is the value returned from getClass().getName().toString()
+     */
+    protected abstract boolean isCorrectClass(String className);
 
     private void setCommonProperties(final Reference ref, final InstanceKeyDataSource ikds)
             throws IOException, ClassNotFoundException {
@@ -277,58 +329,6 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         refAddr = ref.get("defaultReadOnly");
         if (refAddr != null && refAddr.getContent() != null) {
             ikds.setDefaultReadOnly(Boolean.valueOf(refAddr.getContent().toString()));
-        }
-    }
-
-    /**
-     * @param className
-     *            The class name to test.
-     *
-     * @return true if and only if className is the value returned from getClass().getName().toString()
-     */
-    protected abstract boolean isCorrectClass(String className);
-
-    /**
-     * Creates an instance of the subclass and sets any properties contained in the Reference.
-     *
-     * @param ref
-     *            The properties to be set on the created DataSource
-     *
-     * @return A configured DataSource of the appropriate type.
-     *
-     * @throws ClassNotFoundException
-     *            If a class cannot be found during the deserialization of a configuration parameter.
-     * @throws IOException
-     *            If an I/O error occurs during the deserialization of a configuration parameter.
-     */
-    protected abstract InstanceKeyDataSource getNewInstance(Reference ref) throws IOException, ClassNotFoundException;
-
-    /**
-     * Deserializes the provided byte array to create an object.
-     *
-     * @param data
-     *            Data to deserialize to create the configuration parameter.
-     *
-     * @return The Object created by deserializing the data.
-     *
-     * @throws ClassNotFoundException
-     *            If a class cannot be found during the deserialization of a configuration parameter.
-     * @throws IOException
-     *            If an I/O error occurs during the deserialization of a configuration parameter.
-     */
-    protected static final Object deserialize(final byte[] data) throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new ByteArrayInputStream(data));
-            return in.readObject();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException ex) {
-                    // ignore
-                }
-            }
         }
     }
 }

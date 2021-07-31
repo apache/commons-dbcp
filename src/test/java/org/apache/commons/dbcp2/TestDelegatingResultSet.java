@@ -53,7 +53,7 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testAbsolutes() throws Exception {
+    public void testAbsoluteInteger() throws Exception {
         try {
             delegate.absolute(1);
         } catch (final SQLException e) {
@@ -62,7 +62,7 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testAbsoluteInteger() throws Exception {
+    public void testAbsolutes() throws Exception {
         try {
             delegate.absolute(1);
         } catch (final SQLException e) {
@@ -178,15 +178,13 @@ public class TestDelegatingResultSet {
         verify(rs, times(1)).getAsciiStream("foo");
     }
 
-    // FIXME: this appears to be a bug
-    @Disabled
     @Test
-    public void testGetBigDecimalStringInteger() throws Exception {
+    public void testGetBigDecimalInteger() throws Exception {
         try {
-            delegate.getBigDecimal("foo", 1);
+            delegate.getBigDecimal(1);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getBigDecimal("foo", 1);
+        verify(rs, times(1)).getBigDecimal(1);
     }
 
     // FIXME: this appears to be a bug
@@ -201,15 +199,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetBigDecimalInteger() throws Exception {
-        try {
-            delegate.getBigDecimal(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getBigDecimal(1);
-    }
-
-    @Test
     public void testGetBigDecimalString() throws Exception {
         try {
             delegate.getBigDecimal("foo");
@@ -218,13 +207,15 @@ public class TestDelegatingResultSet {
         verify(rs, times(1)).getBigDecimal("foo");
     }
 
+    // FIXME: this appears to be a bug
+    @Disabled
     @Test
-    public void testGetBinaryStreamString() throws Exception {
+    public void testGetBigDecimalStringInteger() throws Exception {
         try {
-            delegate.getBinaryStream("foo");
+            delegate.getBigDecimal("foo", 1);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getBinaryStream("foo");
+        verify(rs, times(1)).getBigDecimal("foo", 1);
     }
 
     @Test
@@ -237,12 +228,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetBlobString() throws Exception {
+    public void testGetBinaryStreamString() throws Exception {
         try {
-            delegate.getBlob("foo");
+            delegate.getBinaryStream("foo");
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getBlob("foo");
+        verify(rs, times(1)).getBinaryStream("foo");
     }
 
     @Test
@@ -252,6 +243,15 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getBlob(1);
+    }
+
+    @Test
+    public void testGetBlobString() throws Exception {
+        try {
+            delegate.getBlob("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getBlob("foo");
     }
 
     @Test
@@ -270,15 +270,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getBoolean("foo");
-    }
-
-    @Test
-    public void testGetByteString() throws Exception {
-        try {
-            delegate.getByte("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getByte("foo");
     }
 
     @Test
@@ -309,12 +300,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetCharacterStreamString() throws Exception {
+    public void testGetByteString() throws Exception {
         try {
-            delegate.getCharacterStream("foo");
+            delegate.getByte("foo");
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getCharacterStream("foo");
+        verify(rs, times(1)).getByte("foo");
     }
 
     @Test
@@ -324,6 +315,15 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getCharacterStream(1);
+    }
+
+    @Test
+    public void testGetCharacterStreamString() throws Exception {
+        try {
+            delegate.getCharacterStream("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getCharacterStream("foo");
     }
 
     @Test
@@ -372,6 +372,15 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testGetDateIntegerCalendar() throws Exception {
+        try {
+            delegate.getDate(1, (java.util.Calendar) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getDate(1, (java.util.Calendar) null);
+    }
+
+    @Test
     public void testGetDateString() throws Exception {
         try {
             delegate.getDate("foo");
@@ -390,12 +399,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetDateIntegerCalendar() throws Exception {
+    public void testGetDoubleInteger() throws Exception {
         try {
-            delegate.getDate(1, (java.util.Calendar) null);
+            delegate.getDouble(1);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getDate(1, (java.util.Calendar) null);
+        verify(rs, times(1)).getDouble(1);
     }
 
     @Test
@@ -405,15 +414,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getDouble("foo");
-    }
-
-    @Test
-    public void testGetDoubleInteger() throws Exception {
-        try {
-            delegate.getDouble(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getDouble(1);
     }
 
     @Test
@@ -435,21 +435,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetFloatString() throws Exception {
-        try {
-            delegate.getFloat("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getFloat("foo");
-    }
-
-    @Test
     public void testGetFloatInteger() throws Exception {
         try {
             delegate.getFloat(1);
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getFloat(1);
+    }
+
+    @Test
+    public void testGetFloatString() throws Exception {
+        try {
+            delegate.getFloat("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getFloat("foo");
     }
 
     @Test
@@ -507,15 +507,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetNCharacterStreamString() throws Exception {
-        try {
-            delegate.getNCharacterStream("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getNCharacterStream("foo");
-    }
-
-    @Test
     public void testGetNCharacterStreamInteger() throws Exception {
         try {
             delegate.getNCharacterStream(1);
@@ -525,12 +516,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetNClobString() throws Exception {
+    public void testGetNCharacterStreamString() throws Exception {
         try {
-            delegate.getNClob("foo");
+            delegate.getNCharacterStream("foo");
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getNClob("foo");
+        verify(rs, times(1)).getNCharacterStream("foo");
     }
 
     @Test
@@ -543,12 +534,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetNStringString() throws Exception {
+    public void testGetNClobString() throws Exception {
         try {
-            delegate.getNString("foo");
+            delegate.getNClob("foo");
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getNString("foo");
+        verify(rs, times(1)).getNClob("foo");
     }
 
     @Test
@@ -558,6 +549,24 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getNString(1);
+    }
+
+    @Test
+    public void testGetNStringString() throws Exception {
+        try {
+            delegate.getNString("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getNString("foo");
+    }
+
+    @Test
+    public void testGetObjectInteger() throws Exception {
+        try {
+            delegate.getObject(1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getObject(1);
     }
 
     @Test
@@ -588,30 +597,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetObjectStringMap() throws Exception {
-        try {
-            delegate.getObject("foo", (java.util.Map) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getObject("foo", (java.util.Map) null);
-    }
-
-    @Test
-    public void testGetObjectInteger() throws Exception {
-        try {
-            delegate.getObject(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getObject(1);
-    }
-
-    @Test
     public void testGetObjectStringClass() throws Exception {
         try {
             delegate.getObject("foo", Object.class);
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getObject("foo", Object.class);
+    }
+
+    @Test
+    public void testGetObjectStringMap() throws Exception {
+        try {
+            delegate.getObject("foo", (java.util.Map) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getObject("foo", (java.util.Map) null);
     }
 
     @Test
@@ -642,15 +642,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetRowIdString() throws Exception {
-        try {
-            delegate.getRowId("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getRowId("foo");
-    }
-
-    @Test
     public void testGetRowIdInteger() throws Exception {
         try {
             delegate.getRowId(1);
@@ -660,21 +651,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetSQLXMLString() throws Exception {
+    public void testGetRowIdString() throws Exception {
         try {
-            delegate.getSQLXML("foo");
+            delegate.getRowId("foo");
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).getSQLXML("foo");
-    }
-
-    @Test
-    public void testGetSQLXMLInteger() throws Exception {
-        try {
-            delegate.getSQLXML(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getSQLXML(1);
+        verify(rs, times(1)).getRowId("foo");
     }
 
     @Test
@@ -693,6 +675,24 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getShort("foo");
+    }
+
+    @Test
+    public void testGetSQLXMLInteger() throws Exception {
+        try {
+            delegate.getSQLXML(1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getSQLXML(1);
+    }
+
+    @Test
+    public void testGetSQLXMLString() throws Exception {
+        try {
+            delegate.getSQLXML("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getSQLXML("foo");
     }
 
     /**
@@ -748,6 +748,42 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testGetTimestampInteger() throws Exception {
+        try {
+            delegate.getTimestamp(1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getTimestamp(1);
+    }
+
+    @Test
+    public void testGetTimestampIntegerCalendar() throws Exception {
+        try {
+            delegate.getTimestamp(1, (java.util.Calendar) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getTimestamp(1, (java.util.Calendar) null);
+    }
+
+    @Test
+    public void testGetTimestampString() throws Exception {
+        try {
+            delegate.getTimestamp("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getTimestamp("foo");
+    }
+
+    @Test
+    public void testGetTimestampStringCalendar() throws Exception {
+        try {
+            delegate.getTimestamp("foo", (java.util.Calendar) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getTimestamp("foo", (java.util.Calendar) null);
+    }
+
+    @Test
     public void testGetTimeString() throws Exception {
         try {
             delegate.getTime("foo");
@@ -766,48 +802,30 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testGetTimestampString() throws Exception {
-        try {
-            delegate.getTimestamp("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getTimestamp("foo");
-    }
-
-    @Test
-    public void testGetTimestampIntegerCalendar() throws Exception {
-        try {
-            delegate.getTimestamp(1, (java.util.Calendar) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getTimestamp(1, (java.util.Calendar) null);
-    }
-
-    @Test
-    public void testGetTimestampInteger() throws Exception {
-        try {
-            delegate.getTimestamp(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getTimestamp(1);
-    }
-
-    @Test
-    public void testGetTimestampStringCalendar() throws Exception {
-        try {
-            delegate.getTimestamp("foo", (java.util.Calendar) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getTimestamp("foo", (java.util.Calendar) null);
-    }
-
-    @Test
     public void testGetType() throws Exception {
         try {
             delegate.getType();
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getType();
+    }
+
+    @Test
+    public void testGetUnicodeStreamInteger() throws Exception {
+        try {
+            delegate.getUnicodeStream(1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getUnicodeStream(1);
+    }
+
+    @Test
+    public void testGetUnicodeStreamString() throws Exception {
+        try {
+            delegate.getUnicodeStream("foo");
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).getUnicodeStream("foo");
     }
 
     @Test
@@ -826,24 +844,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).getURL("foo");
-    }
-
-    @Test
-    public void testGetUnicodeStreamString() throws Exception {
-        try {
-            delegate.getUnicodeStream("foo");
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getUnicodeStream("foo");
-    }
-
-    @Test
-    public void testGetUnicodeStreamInteger() throws Exception {
-        try {
-            delegate.getUnicodeStream(1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).getUnicodeStream(1);
     }
 
     @Test
@@ -1018,12 +1018,10 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateArrayStringArray() throws Exception {
-        try {
-            delegate.updateArray("foo", (java.sql.Array) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateArray("foo", (java.sql.Array) null);
+    public void testToString() {
+        final String toString = delegate.toString();
+        assertTrue(toString.contains("DelegatingResultSet"));
+        assertTrue(toString.contains("Mock for ResultSet"));
     }
 
     @Test
@@ -1036,30 +1034,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateAsciiStreamStringInputStreamInteger() throws Exception {
+    public void testUpdateArrayStringArray() throws Exception {
         try {
-            delegate.updateAsciiStream("foo", (java.io.InputStream) null, 1);
+            delegate.updateArray("foo", (java.sql.Array) null);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateAsciiStream("foo", (java.io.InputStream) null, 1);
-    }
-
-    @Test
-    public void testUpdateAsciiStreamStringInputStreamLong() throws Exception {
-        try {
-            delegate.updateAsciiStream("foo", (java.io.InputStream) null, 1L);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateAsciiStream("foo", (java.io.InputStream) null, 1L);
-    }
-
-    @Test
-    public void testUpdateAsciiStreamIntegerInputStreamInteger() throws Exception {
-        try {
-            delegate.updateAsciiStream(1, (java.io.InputStream) null, 1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateAsciiStream(1, (java.io.InputStream) null, 1);
+        verify(rs, times(1)).updateArray("foo", (java.sql.Array) null);
     }
 
     @Test
@@ -1069,6 +1049,15 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateAsciiStream(1, (java.io.InputStream) null);
+    }
+
+    @Test
+    public void testUpdateAsciiStreamIntegerInputStreamInteger() throws Exception {
+        try {
+            delegate.updateAsciiStream(1, (java.io.InputStream) null, 1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateAsciiStream(1, (java.io.InputStream) null, 1);
     }
 
     @Test
@@ -1090,12 +1079,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateBigDecimalStringBigDecimal() throws Exception {
+    public void testUpdateAsciiStreamStringInputStreamInteger() throws Exception {
         try {
-            delegate.updateBigDecimal("foo", java.math.BigDecimal.valueOf(1.0d));
+            delegate.updateAsciiStream("foo", (java.io.InputStream) null, 1);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateBigDecimal("foo", java.math.BigDecimal.valueOf(1.0d));
+        verify(rs, times(1)).updateAsciiStream("foo", (java.io.InputStream) null, 1);
+    }
+
+    @Test
+    public void testUpdateAsciiStreamStringInputStreamLong() throws Exception {
+        try {
+            delegate.updateAsciiStream("foo", (java.io.InputStream) null, 1L);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateAsciiStream("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
@@ -1105,6 +1103,15 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateBigDecimal(1, java.math.BigDecimal.valueOf(1.0d));
+    }
+
+    @Test
+    public void testUpdateBigDecimalStringBigDecimal() throws Exception {
+        try {
+            delegate.updateBigDecimal("foo", java.math.BigDecimal.valueOf(1.0d));
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateBigDecimal("foo", java.math.BigDecimal.valueOf(1.0d));
     }
 
     @Test
@@ -1135,12 +1142,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateBinaryStreamStringInputStreamLong() throws Exception {
+    public void testUpdateBinaryStreamStringInputStream() throws Exception {
         try {
-            delegate.updateBinaryStream("foo", (java.io.InputStream) null, 1L);
+            delegate.updateBinaryStream("foo", (java.io.InputStream) null);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateBinaryStream("foo", (java.io.InputStream) null, 1L);
+        verify(rs, times(1)).updateBinaryStream("foo", (java.io.InputStream) null);
     }
 
     @Test
@@ -1153,12 +1160,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateBinaryStreamStringInputStream() throws Exception {
+    public void testUpdateBinaryStreamStringInputStreamLong() throws Exception {
         try {
-            delegate.updateBinaryStream("foo", (java.io.InputStream) null);
+            delegate.updateBinaryStream("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateBinaryStream("foo", (java.io.InputStream) null);
+        verify(rs, times(1)).updateBinaryStream("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
@@ -1168,33 +1175,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateBlob(1, (java.sql.Blob) null);
-    }
-
-    @Test
-    public void testUpdateBlobStringInputStream() throws Exception {
-        try {
-            delegate.updateBlob("foo", (java.io.InputStream) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateBlob("foo", (java.io.InputStream) null);
-    }
-
-    @Test
-    public void testUpdateBlobStringBlob() throws Exception {
-        try {
-            delegate.updateBlob("foo", (java.sql.Blob) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateBlob("foo", (java.sql.Blob) null);
-    }
-
-    @Test
-    public void testUpdateBlobStringInputStreamLong() throws Exception {
-        try {
-            delegate.updateBlob("foo", (java.io.InputStream) null, 1L);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateBlob("foo", (java.io.InputStream) null, 1L);
     }
 
     @Test
@@ -1216,6 +1196,33 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testUpdateBlobStringBlob() throws Exception {
+        try {
+            delegate.updateBlob("foo", (java.sql.Blob) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateBlob("foo", (java.sql.Blob) null);
+    }
+
+    @Test
+    public void testUpdateBlobStringInputStream() throws Exception {
+        try {
+            delegate.updateBlob("foo", (java.io.InputStream) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateBlob("foo", (java.io.InputStream) null);
+    }
+
+    @Test
+    public void testUpdateBlobStringInputStreamLong() throws Exception {
+        try {
+            delegate.updateBlob("foo", (java.io.InputStream) null, 1L);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateBlob("foo", (java.io.InputStream) null, 1L);
+    }
+
+    @Test
     public void testUpdateBooleanIntegerBoolean() throws Exception {
         try {
             delegate.updateBoolean(1, Boolean.TRUE);
@@ -1231,15 +1238,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateBoolean("foo", Boolean.TRUE);
-    }
-
-    @Test
-    public void testUpdateByteStringByte() throws Exception {
-        try {
-            delegate.updateByte("foo", (byte) 1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateByte("foo", (byte) 1);
     }
 
     @Test
@@ -1270,6 +1268,24 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testUpdateByteStringByte() throws Exception {
+        try {
+            delegate.updateByte("foo", (byte) 1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateByte("foo", (byte) 1);
+    }
+
+    @Test
+    public void testUpdateCharacterStreamIntegerReader() throws Exception {
+        try {
+            delegate.updateCharacterStream(1, (java.io.StringReader) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateCharacterStream(1, (java.io.StringReader) null);
+    }
+
+    @Test
     public void testUpdateCharacterStreamIntegerReaderInteger() throws Exception {
         try {
             delegate.updateCharacterStream(1, (java.io.StringReader) null, 1);
@@ -1285,24 +1301,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateCharacterStream(1, (java.io.StringReader) null, 1L);
-    }
-
-    @Test
-    public void testUpdateCharacterStreamStringReaderLong() throws Exception {
-        try {
-            delegate.updateCharacterStream("foo", (java.io.StringReader) null, 1L);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateCharacterStream("foo", (java.io.StringReader) null, 1L);
-    }
-
-    @Test
-    public void testUpdateCharacterStreamIntegerReader() throws Exception {
-        try {
-            delegate.updateCharacterStream(1, (java.io.StringReader) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateCharacterStream(1, (java.io.StringReader) null);
     }
 
     @Test
@@ -1324,30 +1322,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateClobStringReaderLong() throws Exception {
+    public void testUpdateCharacterStreamStringReaderLong() throws Exception {
         try {
-            delegate.updateClob("foo", (java.io.StringReader) null, 1L);
+            delegate.updateCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateClob("foo", (java.io.StringReader) null, 1L);
-    }
-
-    @Test
-    public void testUpdateClobStringReader() throws Exception {
-        try {
-            delegate.updateClob("foo", (java.io.StringReader) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateClob("foo", (java.io.StringReader) null);
-    }
-
-    @Test
-    public void testUpdateClobIntegerReader() throws Exception {
-        try {
-            delegate.updateClob(1, (java.io.StringReader) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateClob(1, (java.io.StringReader) null);
+        verify(rs, times(1)).updateCharacterStream("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -1360,12 +1340,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateClobStringClob() throws Exception {
+    public void testUpdateClobIntegerReader() throws Exception {
         try {
-            delegate.updateClob("foo", (java.sql.Clob) null);
+            delegate.updateClob(1, (java.io.StringReader) null);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateClob("foo", (java.sql.Clob) null);
+        verify(rs, times(1)).updateClob(1, (java.io.StringReader) null);
     }
 
     @Test
@@ -1375,6 +1355,33 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateClob(1, (java.io.StringReader) null, 1L);
+    }
+
+    @Test
+    public void testUpdateClobStringClob() throws Exception {
+        try {
+            delegate.updateClob("foo", (java.sql.Clob) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateClob("foo", (java.sql.Clob) null);
+    }
+
+    @Test
+    public void testUpdateClobStringReader() throws Exception {
+        try {
+            delegate.updateClob("foo", (java.io.StringReader) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateClob("foo", (java.io.StringReader) null);
+    }
+
+    @Test
+    public void testUpdateClobStringReaderLong() throws Exception {
+        try {
+            delegate.updateClob("foo", (java.io.StringReader) null, 1L);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateClob("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -1414,15 +1421,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateFloatStringFloat() throws Exception {
-        try {
-            delegate.updateFloat("foo", 1.0f);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateFloat("foo", 1.0f);
-    }
-
-    @Test
     public void testUpdateFloatIntegerFloat() throws Exception {
         try {
             delegate.updateFloat(1, 1.0f);
@@ -1432,12 +1430,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateIntStringInteger() throws Exception {
+    public void testUpdateFloatStringFloat() throws Exception {
         try {
-            delegate.updateInt("foo", 1);
+            delegate.updateFloat("foo", 1.0f);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateInt("foo", 1);
+        verify(rs, times(1)).updateFloat("foo", 1.0f);
     }
 
     @Test
@@ -1450,12 +1448,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateLongStringLong() throws Exception {
+    public void testUpdateIntStringInteger() throws Exception {
         try {
-            delegate.updateLong("foo", 1L);
+            delegate.updateInt("foo", 1);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateLong("foo", 1L);
+        verify(rs, times(1)).updateInt("foo", 1);
     }
 
     @Test
@@ -1468,12 +1466,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateNCharacterStreamStringReader() throws Exception {
+    public void testUpdateLongStringLong() throws Exception {
         try {
-            delegate.updateNCharacterStream("foo", (java.io.StringReader) null);
+            delegate.updateLong("foo", 1L);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateNCharacterStream("foo", (java.io.StringReader) null);
+        verify(rs, times(1)).updateLong("foo", 1L);
     }
 
     @Test
@@ -1486,15 +1484,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateNCharacterStreamStringReaderLong() throws Exception {
-        try {
-            delegate.updateNCharacterStream("foo", (java.io.StringReader) null, 1L);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateNCharacterStream("foo", (java.io.StringReader) null, 1L);
-    }
-
-    @Test
     public void testUpdateNCharacterStreamIntegerReaderLong() throws Exception {
         try {
             delegate.updateNCharacterStream(1, (java.io.StringReader) null, 1L);
@@ -1504,21 +1493,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateNClobStringNClob() throws Exception {
+    public void testUpdateNCharacterStreamStringReader() throws Exception {
         try {
-            delegate.updateNClob("foo", (java.sql.NClob) null);
+            delegate.updateNCharacterStream("foo", (java.io.StringReader) null);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateNClob("foo", (java.sql.NClob) null);
+        verify(rs, times(1)).updateNCharacterStream("foo", (java.io.StringReader) null);
     }
 
     @Test
-    public void testUpdateNClobIntegerReaderLong() throws Exception {
+    public void testUpdateNCharacterStreamStringReaderLong() throws Exception {
         try {
-            delegate.updateNClob(1, (java.io.StringReader) null, 1L);
+            delegate.updateNCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateNClob(1, (java.io.StringReader) null, 1L);
+        verify(rs, times(1)).updateNCharacterStream("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -1540,12 +1529,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateNClobStringReaderLong() throws Exception {
+    public void testUpdateNClobIntegerReaderLong() throws Exception {
         try {
-            delegate.updateNClob("foo", (java.io.StringReader) null, 1L);
+            delegate.updateNClob(1, (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateNClob("foo", (java.io.StringReader) null, 1L);
+        verify(rs, times(1)).updateNClob(1, (java.io.StringReader) null, 1L);
+    }
+
+    @Test
+    public void testUpdateNClobStringNClob() throws Exception {
+        try {
+            delegate.updateNClob("foo", (java.sql.NClob) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateNClob("foo", (java.sql.NClob) null);
     }
 
     @Test
@@ -1555,6 +1553,15 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateNClob("foo", (java.io.StringReader) null);
+    }
+
+    @Test
+    public void testUpdateNClobStringReaderLong() throws Exception {
+        try {
+            delegate.updateNClob("foo", (java.io.StringReader) null, 1L);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateNClob("foo", (java.io.StringReader) null, 1L);
     }
 
     @Test
@@ -1594,6 +1601,64 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testUpdateObjectIntegerObject() throws Exception {
+        try {
+            delegate.updateObject(1, System.err);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject(1, System.err);
+    }
+
+    // FIXME: this appears to be a bug
+    @Disabled
+    @Test
+    public void testUpdateObjectIntegerObjectInteger() throws Exception {
+        try {
+            delegate.updateObject(1, System.err, 1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject(1, System.err, 1);
+    }
+
+    @Test
+    public void testUpdateObjectIntegerObjectSQLType() throws Exception {
+        try {
+            delegate.updateObject(1, System.err, (java.sql.SQLType) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject(1, System.err, (java.sql.SQLType) null);
+    }
+
+    @Test
+    public void testUpdateObjectIntegerObjectSQLTypeInteger() throws Exception {
+        try {
+            delegate.updateObject(1, System.err, (java.sql.SQLType) null, 1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject(1, System.err, (java.sql.SQLType) null, 1);
+    }
+
+    @Test
+    public void testUpdateObjectStringObject() throws Exception {
+        try {
+            delegate.updateObject("foo", System.err);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject("foo", System.err);
+    }
+
+    // FIXME this appears to be a bug
+    @Disabled
+    @Test
+    public void testUpdateObjectStringObjectInteger() throws Exception {
+        try {
+            delegate.updateObject("foo", System.err, 1);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateObject("foo", System.err, 1);
+    }
+
+    @Test
     public void testUpdateObjectStringObjectSQLType() throws Exception {
         try {
             delegate.updateObject("foo", System.err, (java.sql.SQLType) null);
@@ -1609,64 +1674,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateObject("foo", System.err, (java.sql.SQLType) null, 1);
-    }
-
-    @Test
-    public void testUpdateObjectIntegerObject() throws Exception {
-        try {
-            delegate.updateObject(1, System.err);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject(1, System.err);
-    }
-
-    @Test
-    public void testUpdateObjectIntegerObjectSQLTypeInteger() throws Exception {
-        try {
-            delegate.updateObject(1, System.err, (java.sql.SQLType) null, 1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject(1, System.err, (java.sql.SQLType) null, 1);
-    }
-
-    // FIXME this appears to be a bug
-    @Disabled
-    @Test
-    public void testUpdateObjectStringObjectInteger() throws Exception {
-        try {
-            delegate.updateObject("foo", System.err, 1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject("foo", System.err, 1);
-    }
-
-    // FIXME: this appears to be a bug
-    @Disabled
-    @Test
-    public void testUpdateObjectIntegerObjectInteger() throws Exception {
-        try {
-            delegate.updateObject(1, System.err, 1);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject(1, System.err, 1);
-    }
-
-    @Test
-    public void testUpdateObjectStringObject() throws Exception {
-        try {
-            delegate.updateObject("foo", System.err);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject("foo", System.err);
-    }
-
-    @Test
-    public void testUpdateObjectIntegerObjectSQLType() throws Exception {
-        try {
-            delegate.updateObject(1, System.err, (java.sql.SQLType) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateObject(1, System.err, (java.sql.SQLType) null);
     }
 
     @Test
@@ -1697,15 +1704,6 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateRowIdStringRowId() throws Exception {
-        try {
-            delegate.updateRowId("foo", (java.sql.RowId) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateRowId("foo", (java.sql.RowId) null);
-    }
-
-    @Test
     public void testUpdateRowIdIntegerRowId() throws Exception {
         try {
             delegate.updateRowId(1, (java.sql.RowId) null);
@@ -1715,21 +1713,12 @@ public class TestDelegatingResultSet {
     }
 
     @Test
-    public void testUpdateSQLXMLIntegerSQLXML() throws Exception {
+    public void testUpdateRowIdStringRowId() throws Exception {
         try {
-            delegate.updateSQLXML(1, (java.sql.SQLXML) null);
+            delegate.updateRowId("foo", (java.sql.RowId) null);
         } catch (final SQLException e) {
         }
-        verify(rs, times(1)).updateSQLXML(1, (java.sql.SQLXML) null);
-    }
-
-    @Test
-    public void testUpdateSQLXMLStringSQLXML() throws Exception {
-        try {
-            delegate.updateSQLXML("foo", (java.sql.SQLXML) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateSQLXML("foo", (java.sql.SQLXML) null);
+        verify(rs, times(1)).updateRowId("foo", (java.sql.RowId) null);
     }
 
     @Test
@@ -1751,6 +1740,24 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testUpdateSQLXMLIntegerSQLXML() throws Exception {
+        try {
+            delegate.updateSQLXML(1, (java.sql.SQLXML) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateSQLXML(1, (java.sql.SQLXML) null);
+    }
+
+    @Test
+    public void testUpdateSQLXMLStringSQLXML() throws Exception {
+        try {
+            delegate.updateSQLXML("foo", (java.sql.SQLXML) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateSQLXML("foo", (java.sql.SQLXML) null);
+    }
+
+    @Test
     public void testUpdateStringIntegerString() throws Exception {
         try {
             delegate.updateString(1, "foo");
@@ -1766,15 +1773,6 @@ public class TestDelegatingResultSet {
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).updateString("foo", "foo");
-    }
-
-    @Test
-    public void testUpdateTimeStringTime() throws Exception {
-        try {
-            delegate.updateTime("foo", (java.sql.Time) null);
-        } catch (final SQLException e) {
-        }
-        verify(rs, times(1)).updateTime("foo", (java.sql.Time) null);
     }
 
     @Test
@@ -1805,19 +1803,21 @@ public class TestDelegatingResultSet {
     }
 
     @Test
+    public void testUpdateTimeStringTime() throws Exception {
+        try {
+            delegate.updateTime("foo", (java.sql.Time) null);
+        } catch (final SQLException e) {
+        }
+        verify(rs, times(1)).updateTime("foo", (java.sql.Time) null);
+    }
+
+    @Test
     public void testWasNull() throws Exception {
         try {
             delegate.wasNull();
         } catch (final SQLException e) {
         }
         verify(rs, times(1)).wasNull();
-    }
-
-    @Test
-    public void testToString() {
-        final String toString = delegate.toString();
-        assertTrue(toString.contains("DelegatingResultSet"));
-        assertTrue(toString.contains("Mock for ResultSet"));
     }
 
     @Test

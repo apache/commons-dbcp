@@ -126,6 +126,15 @@ public class TestDelegatingStatement {
     }
 
     @Test
+    public void testCloseOnCompletion() throws Exception {
+        try {
+            delegatingStatement.closeOnCompletion();
+        } catch (final SQLException e) {
+        }
+        verify(mockedStatement, times(1)).closeOnCompletion();
+    }
+
+    @Test
     public void testCloseWithResultSetCloseException() throws Exception {
         try {
             testerResultSet.setSqlExceptionOnClose(true);
@@ -151,15 +160,6 @@ public class TestDelegatingStatement {
         } finally {
             testerStatement.setSqlExceptionOnClose(false);
         }
-    }
-
-    @Test
-    public void testCloseOnCompletion() throws Exception {
-        try {
-            delegatingStatement.closeOnCompletion();
-        } catch (final SQLException e) {
-        }
-        verify(mockedStatement, times(1)).closeOnCompletion();
     }
 
     @Test

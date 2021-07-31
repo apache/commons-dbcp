@@ -53,6 +53,13 @@ public class TesterDriver implements Driver {
         validUserPasswords.put("userName", "password");
     }
 
+    private static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
+
+    // version numbers
+    private static final int MAJOR_VERSION = 1;
+
+    private static final int MINOR_VERSION = 0;
+
     /**
      * TesterDriver specific method to add users to the list of valid users
      */
@@ -122,24 +129,17 @@ public class TesterDriver implements Driver {
     }
 
     @Override
-    public boolean jdbcCompliant() {
-        return true;
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
         return new DriverPropertyInfo[0];
     }
-
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException();
+    public boolean jdbcCompliant() {
+        return true;
     }
-
-    private static final String CONNECT_STRING = "jdbc:apache:commons:testdriver";
-
-    // version numbers
-    private static final int MAJOR_VERSION = 1;
-    private static final int MINOR_VERSION = 0;
 
 }

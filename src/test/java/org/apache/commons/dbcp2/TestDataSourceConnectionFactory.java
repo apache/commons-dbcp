@@ -36,7 +36,53 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDataSourceConnectionFactory {
 
+    private static class TestDataSource implements DataSource {
+
+        @Override
+        public Connection getConnection() throws SQLException {
+            return new TesterConnection(null, null);
+        }
+
+        @Override
+        public Connection getConnection(final String username, final String password) throws SQLException {
+            return new TesterConnection(username, password);
+        }
+
+        @Override
+        public int getLoginTimeout() throws SQLException {
+            return 0;
+        }
+
+        @Override
+        public PrintWriter getLogWriter() throws SQLException {
+            return null;
+        }
+
+        @Override
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return null;
+        }
+
+        @Override
+        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
+            return false;
+        }
+
+        @Override
+        public void setLoginTimeout(final int seconds) throws SQLException {
+        }
+
+        @Override
+        public void setLogWriter(final PrintWriter out) throws SQLException {
+        }
+
+        @Override
+        public <T> T unwrap(final Class<T> iface) throws SQLException {
+            return null;
+        }
+    }
     private DataSource datasource;
+
     private DataSourceConnectionFactory factory;
 
     @BeforeEach
@@ -46,16 +92,16 @@ public class TestDataSourceConnectionFactory {
     }
 
     @Test
-    public void testDefaultValues() throws SQLException {
-        final Connection conn = factory.createConnection();
-        assertNull(((TesterConnection) conn).getUserName());
-    }
-
-    @Test
     public void testCredentials() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", "bar");
         final Connection conn = factory.createConnection();
         assertEquals("foo", ((TesterConnection) conn).getUserName());
+    }
+
+    @Test
+    public void testDefaultValues() throws SQLException {
+        final Connection conn = factory.createConnection();
+        assertNull(((TesterConnection) conn).getUserName());
     }
 
     @Test
@@ -70,51 +116,5 @@ public class TestDataSourceConnectionFactory {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] {'a'});
         final Connection conn = factory.createConnection();
         assertNull(((TesterConnection) conn).getUserName());
-    }
-
-    private static class TestDataSource implements DataSource {
-
-        @Override
-        public PrintWriter getLogWriter() throws SQLException {
-            return null;
-        }
-
-        @Override
-        public void setLogWriter(final PrintWriter out) throws SQLException {
-        }
-
-        @Override
-        public void setLoginTimeout(final int seconds) throws SQLException {
-        }
-
-        @Override
-        public int getLoginTimeout() throws SQLException {
-            return 0;
-        }
-
-        @Override
-        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-            return null;
-        }
-
-        @Override
-        public <T> T unwrap(final Class<T> iface) throws SQLException {
-            return null;
-        }
-
-        @Override
-        public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-            return false;
-        }
-
-        @Override
-        public Connection getConnection() throws SQLException {
-            return new TesterConnection(null, null);
-        }
-
-        @Override
-        public Connection getConnection(final String username, final String password) throws SQLException {
-            return new TesterConnection(username, password);
-        }
     }
 }

@@ -41,13 +41,6 @@ public class TestUserPassKey {
     }
 
     @Test
-    public void testGettersAndSetters() {
-        assertEquals("user", userPassKey.getUserName());
-        assertEquals("pass", userPassKey.getPassword());
-        assertArrayEquals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray());
-    }
-
-    @Test
     public void testEquals() {
         assertEquals(new UserPassKey("user"), new UserPassKey("user", (char[]) null));
         assertEquals(userPassKey, userPassKey);
@@ -56,6 +49,13 @@ public class TestUserPassKey {
         assertNotEquals(new UserPassKey(null), userPassKey);
         assertEquals(new UserPassKey(null), new UserPassKey(null));
         assertNotEquals(new UserPassKey("user", "pass"), new UserPassKey("foo", "pass"));
+    }
+
+    @Test
+    public void testGettersAndSetters() {
+        assertEquals("user", userPassKey.getUserName());
+        assertEquals("pass", userPassKey.getPassword());
+        assertArrayEquals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray());
     }
 
     @Test

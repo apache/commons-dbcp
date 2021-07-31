@@ -44,399 +44,6 @@ import org.junit.jupiter.api.Test;
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
 
-    @Override
-    protected Connection getConnection() throws Exception {
-        return ds.getConnection("foo","bar");
-    }
-
-    private DriverAdapterCPDS pcds;
-    private DataSource ds;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        pcds = new DriverAdapterCPDS();
-        pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
-        pcds.setUrl("jdbc:apache:commons:testdriver");
-        pcds.setUser("foo");
-        pcds.setPassword("bar");
-        pcds.setPoolPreparedStatements(false);
-        pcds.setAccessToUnderlyingConnectionAllowed(true);
-
-        final SharedPoolDataSource tds = new SharedPoolDataSource();
-        tds.setConnectionPoolDataSource(pcds);
-        tds.setMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
-        tds.setDefaultTransactionIsolation(
-            Connection.TRANSACTION_READ_COMMITTED);
-        tds.setDefaultAutoCommit(Boolean.TRUE);
-
-        ds = tds;
-    }
-
-
-    /**
-     * Starting with a successful connection, then incorrect password,
-     * then correct password for same user illustrates
-     * JIRA: DBCP-245
-     */
-    @Test
-    public void testIncorrectPassword() throws Exception {
-
-        ds.getConnection("u2", "p2").close();
-        try (Connection c = ds.getConnection("u1", "zlsafjk")){ // Use bad password
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e1) {
-            // should fail
-        }
-
-        // Use good password
-        ds.getConnection("u1", "p1").close();
-        try (Connection c = ds.getConnection("u1", "x")) {
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e) {
-            if (!e.getMessage().startsWith("Given password did not match")) {
-                throw e;
-            }
-            // else the exception was expected
-        }
-
-        // Make sure we can still use our good password.
-        ds.getConnection("u1", "p1").close();
-
-        // Try related users and passwords
-        ds.getConnection("foo", "bar").close();
-        try (Connection c = ds.getConnection("u1", "ar")) {
-            fail("Should have caused an SQLException");
-        } catch (final SQLException expected) {
-        }
-        try (Connection c = ds.getConnection("u1", "baz")) {
-            fail("Should have generated SQLException");
-        } catch (final SQLException expected) {
-        }
-    }
-
-
-    @Override
-    @Test
-    public void testSimple() throws Exception
-    {
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    @Test
-    public void testSimpleWithUsername() throws Exception
-    {
-        final Connection conn = ds.getConnection("u1", "p1");
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    @Test
-    public void testClosingWithUserName()
-        throws Exception
-    {
-        final Connection[] c = new Connection[getMaxTotal()];
-        // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
-            c[i] = ds.getConnection("u1", "p1");
-        }
-
-        // close one of the connections
-        c[0].close();
-        assertTrue(c[0].isClosed());
-        // get a new connection
-        c[0] = ds.getConnection("u1", "p1");
-
-        for (final Connection element : c) {
-            element.close();
-        }
-
-        // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
-            c[i] = ds.getConnection("u1", "p1");
-        }
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
-
-    @Override
-    @Test
-    public void testSimple2()
-        throws Exception
-    {
-        Connection conn = ds.getConnection();
-        assertNotNull(conn);
-
-        PreparedStatement stmt =
-            conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        conn.close();
-        try (Statement s = conn.createStatement()){
-            fail("Can't use closed connections");
-        } catch(final SQLException e) {
-            // expected
-        }
-
-        conn = ds.getConnection();
-        assertNotNull(conn);
-
-        stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        conn.close();
-        conn = null;
-    }
-
-    @Override
-    @Test
-    public void testOpening()
-        throws Exception
-    {
-        final Connection[] c = new Connection[getMaxTotal()];
-        // test that opening new connections is not closing previous
-        for (int i=0; i<c.length; i++)
-        {
-            c[i] = ds.getConnection();
-            assertNotNull(c[i]);
-            for (int j=0; j<=i; j++)
-            {
-                assertFalse(c[j].isClosed());
-            }
-        }
-
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
-
-    @Override
-    @Test
-    public void testClosing()
-        throws Exception
-    {
-        final Connection[] c = new Connection[getMaxTotal()];
-        // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
-            c[i] = ds.getConnection();
-        }
-
-        // close one of the connections
-        c[0].close();
-        assertTrue(c[0].isClosed());
-
-        // get a new connection
-        c[0] = ds.getConnection();
-
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
-
-    /**
-     * Test pool close.  Illustrates BZ 37359.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testClosePool() throws Exception {
-      ((SharedPoolDataSource)ds).close();
-      final SharedPoolDataSource tds = new SharedPoolDataSource();
-      // NPE before BZ 37359 fix
-      tds.close();
-    }
-
-    @Override
-    @Test
-    public void testMaxTotal() throws Exception {
-        final Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) {
-            c[i] = ds.getConnection();
-            assertNotNull(c[i]);
-        }
-
-        try (Connection conn = ds.getConnection()){
-            fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch(final java.sql.SQLException e) {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        }
-
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
-
-    @Test
-    public void testMaxWaitMillis() throws Exception {
-        final int maxWaitMillis = 1000;
-        final int theadCount = 20;
-
-        ((SharedPoolDataSource)ds).setDefaultMaxWaitMillis(maxWaitMillis);
-        // Obtain all the connections from the pool
-        final Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) {
-            c[i] = ds.getConnection("foo","bar");
-            assertNotNull(c[i]);
-        }
-
-        final long startMillis = System.currentTimeMillis();
-
-        // Run a thread test with minimal hold time
-        // All threads should end after maxWaitMillis - DBCP-291
-        final PoolTest[] pts = new PoolTest[theadCount];
-        final ThreadGroup threadGroup = new ThreadGroup("testMaxWaitMillis");
-
-        // Should take ~maxWaitMillis for threads to stop
-        for (int i = 0; i < pts.length; i++) {
-            (pts[i] = new PoolTest(threadGroup, 1, true)).start();
-        }
-
-        // Wait for all the threads to complete
-        for (final PoolTest poolTest : pts) {
-            poolTest.getThread().join();
-        }
-
-
-        final long endMillis = System.currentTimeMillis();
-
-        // System.out.println("testMaxWaitMillis took " + (end - start) + " ms. maxWaitMillis: " + maxWaitMillis);
-
-        // Threads should time out in parallel - allow double that to be safe
-        assertTrue(endMillis - startMillis < 2 * maxWaitMillis);
-
-        // Put all the connections back in the pool
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
-
-    @Test
-    public void testMultipleThreads1() throws Exception {
-        // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
-        // some JVMs, e.g. Windows.
-        final int defaultMaxWaitMillis = 430;
-        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        multipleThreads(1, false, false, defaultMaxWaitMillis);
-    }
-
-    @Test
-    public void testMultipleThreads2() throws Exception {
-        final int defaultMaxWaitMillis = 500;
-        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
-    }
-
-    @Test
-    public void testTransactionIsolationBehavior() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn.getTransactionIsolation());
-        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        conn.close();
-
-        final Connection conn2 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn2.getTransactionIsolation());
-
-        final Connection conn3 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn3.getTransactionIsolation());
-        conn2.close();
-        conn3.close();
-    }
-
-    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
-    // when setPoolPreparedStatements(true)
-    @Test
-    public void testPoolPrepareCall() throws Exception {
-        pcds.setPoolPreparedStatements(true);
-
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareCall("{call home()}");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    @Test
-    public void testPoolPrepareStatement() throws Exception {
-        pcds.setPoolPreparedStatements(true);
-
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
-    }
-
-    // There are 3 different prepareCall statement methods so add a little
-    // complexity to reduce what would otherwise be lots of copy and paste
-    private static abstract class PrepareCallCallback {
-        protected Connection conn;
-        void setConnection(final Connection conn) {
-            this.conn = conn;
-        }
-        abstract CallableStatement getCallableStatement() throws SQLException;
-    }
-
     private static class CscbString extends PrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
@@ -450,7 +57,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             return conn.prepareCall("{call home()}", 0, 0);
         }
     }
-
     private static class CscbStringIntIntInt extends PrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
@@ -458,27 +64,32 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    // There are 3 different prepareCall statement methods so add a little
+    // complexity to reduce what would otherwise be lots of copy and paste
+    private static abstract class PrepareCallCallback {
+        protected Connection conn;
+        abstract CallableStatement getCallableStatement() throws SQLException;
+        void setConnection(final Connection conn) {
+            this.conn = conn;
+        }
+    }
+
+
     // There are 6 different prepareStatement statement methods so add a little
     // complexity to reduce what would otherwise be lots of copy and paste
     private static abstract class PrepareStatementCallback {
         protected Connection conn;
+        abstract PreparedStatement getPreparedStatement() throws SQLException;
         void setConnection(final Connection conn) {
             this.conn = conn;
         }
-        abstract PreparedStatement getPreparedStatement() throws SQLException;
     }
+
 
     private static class PscbString extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
             return conn.prepareStatement("select * from dual");
-        }
-    }
-
-    private static class PscbStringIntInt extends PrepareStatementCallback {
-        @Override
-        PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual", 0, 0);
         }
     }
 
@@ -496,10 +107,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    private static class PscbStringStringArray extends PrepareStatementCallback {
+    private static class PscbStringIntInt extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual", new String[0]);
+            return conn.prepareStatement("select * from dual", 0, 0);
         }
     }
 
@@ -509,6 +120,17 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             return conn.prepareStatement("select * from dual", 0, 0, 0);
         }
     }
+
+    private static class PscbStringStringArray extends PrepareStatementCallback {
+        @Override
+        PreparedStatement getPreparedStatement() throws SQLException {
+            return conn.prepareStatement("select * from dual", new String[0]);
+        }
+    }
+
+    private DriverAdapterCPDS pcds;
+
+    private DataSource ds;
 
     private void doTestPoolCallableStatements(final PrepareCallCallback callBack)
     throws Exception {
@@ -663,21 +285,30 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         tds.close();
     }
 
-    @Test
-    public void testPoolPreparedCalls() throws Exception {
-        doTestPoolCallableStatements(new CscbString());
-        doTestPoolCallableStatements(new CscbStringIntInt());
-        doTestPoolCallableStatements(new CscbStringIntIntInt());
+    @Override
+    protected Connection getConnection() throws Exception {
+        return ds.getConnection("foo","bar");
     }
 
-    @Test
-    public void testPoolPreparedStatements() throws Exception {
-        doTestPoolPreparedStatements(new PscbString());
-        doTestPoolPreparedStatements(new PscbStringIntInt());
-        doTestPoolPreparedStatements(new PscbStringInt());
-        doTestPoolPreparedStatements(new PscbStringIntArray());
-        doTestPoolPreparedStatements(new PscbStringStringArray());
-        doTestPoolPreparedStatements(new PscbStringIntIntInt());
+    @BeforeEach
+    public void setUp() throws Exception {
+        pcds = new DriverAdapterCPDS();
+        pcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
+        pcds.setUrl("jdbc:apache:commons:testdriver");
+        pcds.setUser("foo");
+        pcds.setPassword("bar");
+        pcds.setPoolPreparedStatements(false);
+        pcds.setAccessToUnderlyingConnectionAllowed(true);
+
+        final SharedPoolDataSource tds = new SharedPoolDataSource();
+        tds.setConnectionPoolDataSource(pcds);
+        tds.setMaxTotal(getMaxTotal());
+        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
+        tds.setDefaultTransactionIsolation(
+            Connection.TRANSACTION_READ_COMMITTED);
+        tds.setDefaultAutoCommit(Boolean.TRUE);
+
+        ds = tds;
     }
 
     // See DBCP-8
@@ -716,6 +347,74 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
+    /**
+     * Test pool close.  Illustrates BZ 37359.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testClosePool() throws Exception {
+      ((SharedPoolDataSource)ds).close();
+      final SharedPoolDataSource tds = new SharedPoolDataSource();
+      // NPE before BZ 37359 fix
+      tds.close();
+    }
+
+    @Override
+    @Test
+    public void testClosing()
+        throws Exception
+    {
+        final Connection[] c = new Connection[getMaxTotal()];
+        // open the maximum connections
+        for (int i=0; i<c.length; i++)
+        {
+            c[i] = ds.getConnection();
+        }
+
+        // close one of the connections
+        c[0].close();
+        assertTrue(c[0].isClosed());
+
+        // get a new connection
+        c[0] = ds.getConnection();
+
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
+
+    @Test
+    public void testClosingWithUserName()
+        throws Exception
+    {
+        final Connection[] c = new Connection[getMaxTotal()];
+        // open the maximum connections
+        for (int i=0; i<c.length; i++)
+        {
+            c[i] = ds.getConnection("u1", "p1");
+        }
+
+        // close one of the connections
+        c[0].close();
+        assertTrue(c[0].isClosed());
+        // get a new connection
+        c[0] = ds.getConnection("u1", "p1");
+
+        for (final Connection element : c) {
+            element.close();
+        }
+
+        // open the maximum connections
+        for (int i=0; i<c.length; i++)
+        {
+            c[i] = ds.getConnection("u1", "p1");
+        }
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
+
     @Test
     public void testDbcp369() {
         final ArrayList<SharedPoolDataSource> dataSources = new ArrayList<>();
@@ -749,5 +448,306 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         } catch (final InterruptedException ie) {
             // Ignore
         }
+    }
+
+    /**
+     * Starting with a successful connection, then incorrect password,
+     * then correct password for same user illustrates
+     * JIRA: DBCP-245
+     */
+    @Test
+    public void testIncorrectPassword() throws Exception {
+
+        ds.getConnection("u2", "p2").close();
+        try (Connection c = ds.getConnection("u1", "zlsafjk")){ // Use bad password
+            fail("Able to retrieve connection with incorrect password");
+        } catch (final SQLException e1) {
+            // should fail
+        }
+
+        // Use good password
+        ds.getConnection("u1", "p1").close();
+        try (Connection c = ds.getConnection("u1", "x")) {
+            fail("Able to retrieve connection with incorrect password");
+        } catch (final SQLException e) {
+            if (!e.getMessage().startsWith("Given password did not match")) {
+                throw e;
+            }
+            // else the exception was expected
+        }
+
+        // Make sure we can still use our good password.
+        ds.getConnection("u1", "p1").close();
+
+        // Try related users and passwords
+        ds.getConnection("foo", "bar").close();
+        try (Connection c = ds.getConnection("u1", "ar")) {
+            fail("Should have caused an SQLException");
+        } catch (final SQLException expected) {
+        }
+        try (Connection c = ds.getConnection("u1", "baz")) {
+            fail("Should have generated SQLException");
+        } catch (final SQLException expected) {
+        }
+    }
+
+    @Override
+    @Test
+    public void testMaxTotal() throws Exception {
+        final Connection[] c = new Connection[getMaxTotal()];
+        for (int i=0; i<c.length; i++) {
+            c[i] = ds.getConnection();
+            assertNotNull(c[i]);
+        }
+
+        try (Connection conn = ds.getConnection()){
+            fail("Allowed to open more than DefaultMaxTotal connections.");
+        } catch(final java.sql.SQLException e) {
+            // should only be able to open 10 connections, so this test should
+            // throw an exception
+        }
+
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
+
+    @Test
+    public void testMaxWaitMillis() throws Exception {
+        final int maxWaitMillis = 1000;
+        final int theadCount = 20;
+
+        ((SharedPoolDataSource)ds).setDefaultMaxWaitMillis(maxWaitMillis);
+        // Obtain all the connections from the pool
+        final Connection[] c = new Connection[getMaxTotal()];
+        for (int i=0; i<c.length; i++) {
+            c[i] = ds.getConnection("foo","bar");
+            assertNotNull(c[i]);
+        }
+
+        final long startMillis = System.currentTimeMillis();
+
+        // Run a thread test with minimal hold time
+        // All threads should end after maxWaitMillis - DBCP-291
+        final PoolTest[] pts = new PoolTest[theadCount];
+        final ThreadGroup threadGroup = new ThreadGroup("testMaxWaitMillis");
+
+        // Should take ~maxWaitMillis for threads to stop
+        for (int i = 0; i < pts.length; i++) {
+            (pts[i] = new PoolTest(threadGroup, 1, true)).start();
+        }
+
+        // Wait for all the threads to complete
+        for (final PoolTest poolTest : pts) {
+            poolTest.getThread().join();
+        }
+
+
+        final long endMillis = System.currentTimeMillis();
+
+        // System.out.println("testMaxWaitMillis took " + (end - start) + " ms. maxWaitMillis: " + maxWaitMillis);
+
+        // Threads should time out in parallel - allow double that to be safe
+        assertTrue(endMillis - startMillis < 2 * maxWaitMillis);
+
+        // Put all the connections back in the pool
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
+
+    @Test
+    public void testMultipleThreads1() throws Exception {
+        // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
+        // some JVMs, e.g. Windows.
+        final int defaultMaxWaitMillis = 430;
+        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
+        multipleThreads(1, false, false, defaultMaxWaitMillis);
+    }
+
+    @Test
+    public void testMultipleThreads2() throws Exception {
+        final int defaultMaxWaitMillis = 500;
+        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
+        multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
+    }
+
+    @Override
+    @Test
+    public void testOpening()
+        throws Exception
+    {
+        final Connection[] c = new Connection[getMaxTotal()];
+        // test that opening new connections is not closing previous
+        for (int i=0; i<c.length; i++)
+        {
+            c[i] = ds.getConnection();
+            assertNotNull(c[i]);
+            for (int j=0; j<=i; j++)
+            {
+                assertFalse(c[j].isClosed());
+            }
+        }
+
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
+
+    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
+    // when setPoolPreparedStatements(true)
+    @Test
+    public void testPoolPrepareCall() throws Exception {
+        pcds.setPoolPreparedStatements(true);
+
+        final Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        final PreparedStatement stmt = conn.prepareCall("{call home()}");
+        assertNotNull(stmt);
+        final ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    @Test
+    public void testPoolPreparedCalls() throws Exception {
+        doTestPoolCallableStatements(new CscbString());
+        doTestPoolCallableStatements(new CscbStringIntInt());
+        doTestPoolCallableStatements(new CscbStringIntIntInt());
+    }
+
+    @Test
+    public void testPoolPreparedStatements() throws Exception {
+        doTestPoolPreparedStatements(new PscbString());
+        doTestPoolPreparedStatements(new PscbStringIntInt());
+        doTestPoolPreparedStatements(new PscbStringInt());
+        doTestPoolPreparedStatements(new PscbStringIntArray());
+        doTestPoolPreparedStatements(new PscbStringStringArray());
+        doTestPoolPreparedStatements(new PscbStringIntIntInt());
+    }
+
+    @Test
+    public void testPoolPrepareStatement() throws Exception {
+        pcds.setPoolPreparedStatements(true);
+
+        final Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        final ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    @Override
+    @Test
+    public void testSimple() throws Exception
+    {
+        final Connection conn = ds.getConnection();
+        assertNotNull(conn);
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        final ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    @Override
+    @Test
+    public void testSimple2()
+        throws Exception
+    {
+        Connection conn = ds.getConnection();
+        assertNotNull(conn);
+
+        PreparedStatement stmt =
+            conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        conn.close();
+        try (Statement s = conn.createStatement()){
+            fail("Can't use closed connections");
+        } catch(final SQLException e) {
+            // expected
+        }
+
+        conn = ds.getConnection();
+        assertNotNull(conn);
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+
+        conn.close();
+        conn = null;
+    }
+
+    @Test
+    public void testSimpleWithUsername() throws Exception
+    {
+        final Connection conn = ds.getConnection("u1", "p1");
+        assertNotNull(conn);
+        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
+        assertNotNull(stmt);
+        final ResultSet rset = stmt.executeQuery();
+        assertNotNull(rset);
+        assertTrue(rset.next());
+        rset.close();
+        stmt.close();
+        conn.close();
+    }
+
+    @Test
+    public void testTransactionIsolationBehavior() throws Exception {
+        final Connection conn = getConnection();
+        assertNotNull(conn);
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
+                     conn.getTransactionIsolation());
+        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        conn.close();
+
+        final Connection conn2 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
+                     conn2.getTransactionIsolation());
+
+        final Connection conn3 = getConnection();
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
+                     conn3.getTransactionIsolation());
+        conn2.close();
+        conn3.close();
     }
 }

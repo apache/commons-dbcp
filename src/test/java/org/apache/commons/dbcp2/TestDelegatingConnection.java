@@ -37,6 +37,40 @@ import org.junit.jupiter.api.Test;
 public class TestDelegatingConnection {
 
     /**
+     * Delegate that doesn't support read-only or auto-commit.
+     * It will merely take the input value of setReadOnly and
+     * setAutoCommit and discard it, to keep false.
+     */
+    static class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
+        private final boolean readOnly = false;
+        private final boolean autoCommit = false;
+
+        public NoReadOnlyOrAutoCommitConnection() {
+            super("","");
+        }
+
+        @Override
+        public boolean getAutoCommit() {
+            return autoCommit;
+        }
+
+        @Override
+        public boolean isReadOnly() throws SQLException {
+            return readOnly;
+        }
+
+        @Override
+        public void setAutoCommit(final boolean autoCommit) {
+            // Do nothing
+        }
+
+        @Override
+        public void setReadOnly(final boolean readOnly) {
+            // Do nothing
+        }
+    }
+
+    /**
      * Delegate that will throw RTE on toString
      * Used to validate fix for DBCP-241
      */
@@ -53,40 +87,6 @@ public class TestDelegatingConnection {
 
     }
 
-    /**
-     * Delegate that doesn't support read-only or auto-commit.
-     * It will merely take the input value of setReadOnly and
-     * setAutoCommit and discard it, to keep false.
-     */
-    static class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
-        private final boolean readOnly = false;
-        private final boolean autoCommit = false;
-
-        public NoReadOnlyOrAutoCommitConnection() {
-            super("","");
-        }
-
-        @Override
-        public void setReadOnly(final boolean readOnly) {
-            // Do nothing
-        }
-
-        @Override
-        public boolean isReadOnly() throws SQLException {
-            return readOnly;
-        }
-
-        @Override
-        public void setAutoCommit(final boolean autoCommit) {
-            // Do nothing
-        }
-
-        @Override
-        public boolean getAutoCommit() {
-            return autoCommit;
-        }
-    }
-
     private DelegatingConnection<? extends Connection> delegatingConnection;
     private Connection connection;
     private Connection connection2;
@@ -100,6 +100,17 @@ public class TestDelegatingConnection {
         delegatingConnection = new DelegatingConnection<>(connection);
         testerStatement = new TesterStatement(delegatingConnection);
         testerResultSet = new TesterResultSet(testerStatement);
+    }
+
+    @Test
+    public void testAutoCommitCaching() throws SQLException {
+        final Connection con = new NoReadOnlyOrAutoCommitConnection();
+        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+
+        delCon.setAutoCommit(true);
+
+        assertFalse(con.getAutoCommit());
+        assertFalse(delCon.getAutoCommit());
     }
 
     @Test
@@ -243,17 +254,6 @@ public class TestDelegatingConnection {
 
         assertFalse(con.isReadOnly());
         assertFalse(delCon.isReadOnly());
-    }
-
-    @Test
-    public void testAutoCommitCaching() throws SQLException {
-        final Connection con = new NoReadOnlyOrAutoCommitConnection();
-        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
-
-        delCon.setAutoCommit(true);
-
-        assertFalse(con.getAutoCommit());
-        assertFalse(delCon.getAutoCommit());
     }
 
 }

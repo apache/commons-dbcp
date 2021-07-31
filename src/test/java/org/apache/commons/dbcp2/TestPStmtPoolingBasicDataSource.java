@@ -47,41 +47,6 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         ds.setMaxOpenPreparedStatements(2);
     }
 
-    @Test
-    public void testPreparedStatementPooling() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-
-        final PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
-        assertNotNull(stmt1);
-
-        final PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
-        assertNotNull(stmt2);
-
-        assertNotSame(stmt1, stmt2);
-
-        // go over the maxOpen limit
-        try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
-            fail("expected SQLException");
-        }
-        catch (final SQLException e) {}
-
-        // make idle
-        stmt2.close();
-
-        // test cleanup the 'b' statement
-        final PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
-        assertNotNull(stmt3);
-        assertNotSame(stmt3, stmt1);
-        assertNotSame(stmt3, stmt2);
-
-        // normal reuse of statement
-        stmt1.close();
-        try (final PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual")) {
-            assertNotNull(stmt4);
-        }
-    }
-
     /**
      * Verifies that the prepared statement pool behaves as an LRU cache,
      * closing least-recently-used statements idle in the pool to make room
@@ -138,6 +103,53 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         inner3.clearParameters();
     }
 
+    /**
+     * Tests high-concurrency contention for connections and pooled prepared statements.
+     * DBCP-414
+     */
+    @Test
+    public void testMultipleThreads1() throws Exception {
+        ds.setMaxWaitMillis(-1);
+        ds.setMaxTotal(5);
+        ds.setMaxOpenPreparedStatements(-1);
+        multipleThreads(5, false, false, -1, 3, 100, 10000);
+    }
+
+    @Test
+    public void testPreparedStatementPooling() throws Exception {
+        final Connection conn = getConnection();
+        assertNotNull(conn);
+
+        final PreparedStatement stmt1 = conn.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+
+        final PreparedStatement stmt2 = conn.prepareStatement("select 'b' from dual");
+        assertNotNull(stmt2);
+
+        assertNotSame(stmt1, stmt2);
+
+        // go over the maxOpen limit
+        try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
+            fail("expected SQLException");
+        }
+        catch (final SQLException e) {}
+
+        // make idle
+        stmt2.close();
+
+        // test cleanup the 'b' statement
+        final PreparedStatement stmt3 = conn.prepareStatement("select 'c' from dual");
+        assertNotNull(stmt3);
+        assertNotSame(stmt3, stmt1);
+        assertNotSame(stmt3, stmt2);
+
+        // normal reuse of statement
+        stmt1.close();
+        try (final PreparedStatement stmt4 = conn.prepareStatement("select 'a' from dual")) {
+            assertNotNull(stmt4);
+        }
+    }
+
     // Bugzilla Bug 27246
     // PreparedStatement cache should be different depending on the Catalog
     @Test
@@ -163,37 +175,6 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
 
         assertNotSame(inner1, inner2);
         assertSame(inner1, inner3);
-    }
-
-    @Test
-    public void testPStmtPoolingWithNoClose() throws Exception {
-        ds.setMaxTotal(1); // only one connection in pool needed
-        ds.setMaxIdle(1);
-        ds.setAccessToUnderlyingConnectionAllowed(true);
-        final Connection conn1 = getConnection();
-        assertNotNull(conn1);
-        assertEquals(1, ds.getNumActive());
-        assertEquals(0, ds.getNumIdle());
-
-        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
-        assertNotNull(stmt1);
-
-        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
-        assertNotNull(inner1);
-
-        stmt1.close();
-
-        assertNotNull(conn1);
-        assertEquals(1, ds.getNumActive());
-        assertEquals(0, ds.getNumIdle());
-
-        final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
-        assertNotNull(stmt2);
-
-        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
-        assertNotNull(inner2);
-
-        assertSame(inner1, inner2);
     }
 
     @Test
@@ -293,15 +274,34 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         conn2.close();
     }
 
-    /**
-     * Tests high-concurrency contention for connections and pooled prepared statements.
-     * DBCP-414
-     */
     @Test
-    public void testMultipleThreads1() throws Exception {
-        ds.setMaxWaitMillis(-1);
-        ds.setMaxTotal(5);
-        ds.setMaxOpenPreparedStatements(-1);
-        multipleThreads(5, false, false, -1, 3, 100, 10000);
+    public void testPStmtPoolingWithNoClose() throws Exception {
+        ds.setMaxTotal(1); // only one connection in pool needed
+        ds.setMaxIdle(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        final Connection conn1 = getConnection();
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        final PreparedStatement stmt1 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt1);
+
+        final Statement inner1 = ((DelegatingPreparedStatement) stmt1).getInnermostDelegate();
+        assertNotNull(inner1);
+
+        stmt1.close();
+
+        assertNotNull(conn1);
+        assertEquals(1, ds.getNumActive());
+        assertEquals(0, ds.getNumIdle());
+
+        final PreparedStatement stmt2 = conn1.prepareStatement("select 'a' from dual");
+        assertNotNull(stmt2);
+
+        final Statement inner2 = ((DelegatingPreparedStatement) stmt2).getInnermostDelegate();
+        assertNotNull(inner2);
+
+        assertSame(inner1, inner2);
     }
 }

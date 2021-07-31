@@ -50,6 +50,35 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDriverAdapterCPDS {
 
+    private static class ThreadDbcp367 extends Thread {
+
+        private final DataSource ds;
+
+        private volatile boolean failed;
+
+        public ThreadDbcp367(final DataSource ds) {
+            this.ds = ds;
+        }
+
+        public boolean isFailed() {
+            return failed;
+        }
+
+        @Override
+        public void run() {
+            Connection c = null;
+            try {
+                for (int j=0; j < 5000; j++) {
+                    c = ds.getConnection();
+                    c.close();
+                }
+            } catch (final SQLException sqle) {
+                failed = true;
+                sqle.printStackTrace();
+            }
+        }
+    }
+
     private DriverAdapterCPDS pcds;
 
     @BeforeEach
@@ -60,67 +89,6 @@ public class TestDriverAdapterCPDS {
         pcds.setUser("foo");
         pcds.setPassword("bar");
         pcds.setPoolPreparedStatements(false);
-    }
-
-    /**
-     * JIRA: DBCP-245
-     */
-    @Test
-    public void testIncorrectPassword() throws Exception
-    {
-        pcds.getPooledConnection("u2", "p2").close();
-        try {
-            // Use bad password
-            pcds.getPooledConnection("u1", "zlsafjk");
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e1) {
-            // should fail
-
-        }
-
-        // Use good password
-        pcds.getPooledConnection("u1", "p1").close();
-        try {
-            pcds.getPooledConnection("u1", "x");
-            fail("Able to retrieve connection with incorrect password");
-        }
-        catch (final SQLException e) {
-            if (!e.getMessage().startsWith("x is not the correct password")) {
-                throw e;
-            }
-            // else the exception was expected
-        }
-
-        // Make sure we can still use our good password.
-        pcds.getPooledConnection("u1", "p1").close();
-    }
-
-    @Test
-    public void testSimple() throws Exception {
-        try (final Connection conn = pcds.getPooledConnection().getConnection()) {
-            assertNotNull(conn);
-            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
-                assertNotNull(stmt);
-                try (final ResultSet rset = stmt.executeQuery()) {
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
-                }
-            }
-        }
-    }
-
-    @Test
-    public void testSimpleWithUsername() throws Exception {
-        try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
-            assertNotNull(conn);
-            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
-                assertNotNull(stmt);
-                try (final ResultSet rset = stmt.executeQuery()) {
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
-                }
-            }
-        }
     }
 
     @Test
@@ -147,98 +115,6 @@ public class TestDriverAdapterCPDS {
         }
         for (final Connection element : c) {
             element.close();
-        }
-    }
-
-    @Test
-    public void testSetConnectionProperties() throws Exception {
-        // Set user property to bad value
-        pcds.setUser("bad");
-        // Supply correct value in connection properties
-        // This will overwrite field value
-        final Properties properties = new Properties();
-        properties.put(Constants.KEY_USER, "foo");
-        properties.put(Constants.KEY_PASSWORD, pcds.getPassword());
-        pcds.setConnectionProperties(properties);
-        pcds.getPooledConnection().close();
-        assertEquals("foo", pcds.getUser());
-        // Put bad password into properties
-        properties.put("password", "bad");
-        // This does not change local field
-        assertEquals("bar", pcds.getPassword());
-        // Supply correct password in getPooledConnection
-        // Call will succeed and overwrite property
-        pcds.getPooledConnection("foo", "bar").close();
-        assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
-    }
-
-    @Test
-    public void testSetConnectionPropertiesConnectionCalled() throws Exception {
-        final Properties properties = new Properties();
-        // call to the connection
-        pcds.getPooledConnection().close();
-        assertThrows(IllegalStateException.class, () -> pcds.setConnectionProperties(properties));
-    }
-
-    @Test
-    public void testSetConnectionPropertiesNull() throws Exception {
-        pcds.setConnectionProperties(null);
-    }
-
-    @Test
-    public void testSetUserNull() throws Exception {
-        pcds.setUser("Alice");
-        assertEquals("Alice", pcds.getUser());
-        pcds.setUser(null);
-        assertNull(pcds.getUser());
-    }
-
-    @Test
-    public void testSetUserNullWithConnectionProperties() throws Exception {
-        pcds.setConnectionProperties(new Properties());
-        pcds.setUser("Alice");
-        assertEquals("Alice", pcds.getUser());
-        pcds.setUser(null);
-        assertNull(pcds.getUser());
-    }
-
-    @Test
-    public void testSetPasswordNull() throws Exception {
-        pcds.setPassword("Secret");
-        assertEquals("Secret", pcds.getPassword());
-        pcds.setPassword((char[]) null);
-        assertNull(pcds.getPassword());
-    }
-
-    @Test
-    public void testSetPasswordThenModCharArray() {
-        final char[] pwd = {'a' };
-        pcds.setPassword(pwd);
-        assertEquals("a", pcds.getPassword());
-        pwd[0] = 'b';
-        assertEquals("a", pcds.getPassword());
-    }
-
-    @Test
-    public void testSetPasswordNullWithConnectionProperties() throws Exception {
-        pcds.setConnectionProperties(new Properties());
-        pcds.setPassword("Secret");
-        assertEquals("Secret", pcds.getPassword());
-        pcds.setPassword((char[]) null);
-        assertNull(pcds.getPassword());
-    }
-
-    /**
-     * JIRA: DBCP-442
-     */
-    @Test
-    public void testNullValidationQuery() throws Exception {
-        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
-            spds.setConnectionPoolDataSource(pcds);
-            spds.setDefaultTestOnBorrow(true);
-            try (final Connection c = spds.getConnection()) {
-                // close right away
-            }
         }
     }
 
@@ -277,33 +153,31 @@ public class TestDriverAdapterCPDS {
         }
     }
 
-    private static class ThreadDbcp367 extends Thread {
+    @Test
+    public void testGetObjectInstance() throws Exception {
+        final Reference ref = pcds.getReference();
+        final Object o = pcds.getObjectInstance(ref, null, null, null);
+        assertEquals(pcds.getDriver(), ((DriverAdapterCPDS) o).getDriver());
+    }
 
-        private final DataSource ds;
-
-        private volatile boolean failed;
-
-        public ThreadDbcp367(final DataSource ds) {
-            this.ds = ds;
-        }
-
-        @Override
-        public void run() {
-            Connection c = null;
-            try {
-                for (int j=0; j < 5000; j++) {
-                    c = ds.getConnection();
-                    c.close();
-                }
-            } catch (final SQLException sqle) {
-                failed = true;
-                sqle.printStackTrace();
+    @Test
+    public void testGetObjectInstanceChangeDescription() throws Exception {
+        final Reference ref = pcds.getReference();
+        for (int i = 0; i < ref.size(); i++) {
+            if (ref.get(i).getType().equals("description")) {
+                ref.remove(i);
+                break;
             }
         }
+        ref.add(new StringRefAddr("description", "anything"));
+        final Object o = pcds.getObjectInstance(ref, null, null, null);
+        assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
+    }
 
-        public boolean isFailed() {
-            return failed;
-        }
+    @Test
+    public void testGetObjectInstanceNull() throws Exception {
+        final Object o = pcds.getObjectInstance(null, null, null, null);
+        assertNull(o);
     }
 
     @Test
@@ -347,31 +221,157 @@ public class TestDriverAdapterCPDS {
         assertEquals("jo", pcds.getDescription());
     }
 
+    /**
+     * JIRA: DBCP-245
+     */
     @Test
-    public void testGetObjectInstanceNull() throws Exception {
-        final Object o = pcds.getObjectInstance(null, null, null, null);
-        assertNull(o);
+    public void testIncorrectPassword() throws Exception
+    {
+        pcds.getPooledConnection("u2", "p2").close();
+        try {
+            // Use bad password
+            pcds.getPooledConnection("u1", "zlsafjk");
+            fail("Able to retrieve connection with incorrect password");
+        } catch (final SQLException e1) {
+            // should fail
+
+        }
+
+        // Use good password
+        pcds.getPooledConnection("u1", "p1").close();
+        try {
+            pcds.getPooledConnection("u1", "x");
+            fail("Able to retrieve connection with incorrect password");
+        }
+        catch (final SQLException e) {
+            if (!e.getMessage().startsWith("x is not the correct password")) {
+                throw e;
+            }
+            // else the exception was expected
+        }
+
+        // Make sure we can still use our good password.
+        pcds.getPooledConnection("u1", "p1").close();
     }
 
+    /**
+     * JIRA: DBCP-442
+     */
     @Test
-    public void testGetObjectInstance() throws Exception {
-        final Reference ref = pcds.getReference();
-        final Object o = pcds.getObjectInstance(ref, null, null, null);
-        assertEquals(pcds.getDriver(), ((DriverAdapterCPDS) o).getDriver());
-    }
-
-    @Test
-    public void testGetObjectInstanceChangeDescription() throws Exception {
-        final Reference ref = pcds.getReference();
-        for (int i = 0; i < ref.size(); i++) {
-            if (ref.get(i).getType().equals("description")) {
-                ref.remove(i);
-                break;
+    public void testNullValidationQuery() throws Exception {
+        try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
+            spds.setConnectionPoolDataSource(pcds);
+            spds.setDefaultTestOnBorrow(true);
+            try (final Connection c = spds.getConnection()) {
+                // close right away
             }
         }
-        ref.add(new StringRefAddr("description", "anything"));
-        final Object o = pcds.getObjectInstance(ref, null, null, null);
-        assertEquals(pcds.getDescription(), ((DriverAdapterCPDS) o).getDescription());
+    }
+
+    @Test
+    public void testSetConnectionProperties() throws Exception {
+        // Set user property to bad value
+        pcds.setUser("bad");
+        // Supply correct value in connection properties
+        // This will overwrite field value
+        final Properties properties = new Properties();
+        properties.put(Constants.KEY_USER, "foo");
+        properties.put(Constants.KEY_PASSWORD, pcds.getPassword());
+        pcds.setConnectionProperties(properties);
+        pcds.getPooledConnection().close();
+        assertEquals("foo", pcds.getUser());
+        // Put bad password into properties
+        properties.put("password", "bad");
+        // This does not change local field
+        assertEquals("bar", pcds.getPassword());
+        // Supply correct password in getPooledConnection
+        // Call will succeed and overwrite property
+        pcds.getPooledConnection("foo", "bar").close();
+        assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
+    }
+
+    @Test
+    public void testSetConnectionPropertiesConnectionCalled() throws Exception {
+        final Properties properties = new Properties();
+        // call to the connection
+        pcds.getPooledConnection().close();
+        assertThrows(IllegalStateException.class, () -> pcds.setConnectionProperties(properties));
+    }
+
+    @Test
+    public void testSetConnectionPropertiesNull() throws Exception {
+        pcds.setConnectionProperties(null);
+    }
+
+    @Test
+    public void testSetPasswordNull() throws Exception {
+        pcds.setPassword("Secret");
+        assertEquals("Secret", pcds.getPassword());
+        pcds.setPassword((char[]) null);
+        assertNull(pcds.getPassword());
+    }
+
+    @Test
+    public void testSetPasswordNullWithConnectionProperties() throws Exception {
+        pcds.setConnectionProperties(new Properties());
+        pcds.setPassword("Secret");
+        assertEquals("Secret", pcds.getPassword());
+        pcds.setPassword((char[]) null);
+        assertNull(pcds.getPassword());
+    }
+
+    @Test
+    public void testSetPasswordThenModCharArray() {
+        final char[] pwd = {'a' };
+        pcds.setPassword(pwd);
+        assertEquals("a", pcds.getPassword());
+        pwd[0] = 'b';
+        assertEquals("a", pcds.getPassword());
+    }
+
+    @Test
+    public void testSetUserNull() throws Exception {
+        pcds.setUser("Alice");
+        assertEquals("Alice", pcds.getUser());
+        pcds.setUser(null);
+        assertNull(pcds.getUser());
+    }
+
+    @Test
+    public void testSetUserNullWithConnectionProperties() throws Exception {
+        pcds.setConnectionProperties(new Properties());
+        pcds.setUser("Alice");
+        assertEquals("Alice", pcds.getUser());
+        pcds.setUser(null);
+        assertNull(pcds.getUser());
+    }
+
+    @Test
+    public void testSimple() throws Exception {
+        try (final Connection conn = pcds.getPooledConnection().getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testSimpleWithUsername() throws Exception {
+        try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test

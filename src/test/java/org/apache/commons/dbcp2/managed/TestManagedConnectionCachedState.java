@@ -47,6 +47,20 @@ import org.junit.jupiter.api.Test;
  */
 public class TestManagedConnectionCachedState {
 
+    private static class SwallowedExceptionRecorder implements SwallowedExceptionListener {
+
+        private final List<Exception> exceptions = new ArrayList<>();
+
+        public List<Exception> getExceptions() {
+            return exceptions;
+        }
+
+        @Override
+        public void onSwallowException(final Exception e) {
+            exceptions.add(e);
+        }
+    }
+
     private PoolingDataSource<PoolableConnection> ds;
 
     private GenericObjectPool<PoolableConnection> pool;
@@ -54,6 +68,10 @@ public class TestManagedConnectionCachedState {
     private TransactionManager transactionManager;
 
     private SwallowedExceptionRecorder swallowedExceptionRecorder;
+
+    public Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    }
 
     @BeforeEach
     public void setUp() throws XAException {
@@ -92,10 +110,6 @@ public class TestManagedConnectionCachedState {
         pool.close();
     }
 
-    public Connection getConnection() throws SQLException {
-        return ds.getConnection();
-    }
-
     @Test
     public void testConnectionCachedState() throws Exception {
         // see DBCP-568
@@ -111,20 +125,6 @@ public class TestManagedConnectionCachedState {
         }
         // check that no exceptions about failed rollback during close were logged
         assertEquals(0, swallowedExceptionRecorder.getExceptions().size());
-    }
-
-    private static class SwallowedExceptionRecorder implements SwallowedExceptionListener {
-
-        private final List<Exception> exceptions = new ArrayList<>();
-
-        @Override
-        public void onSwallowException(final Exception e) {
-            exceptions.add(e);
-        }
-
-        public List<Exception> getExceptions() {
-            return exceptions;
-        }
     }
 
 }

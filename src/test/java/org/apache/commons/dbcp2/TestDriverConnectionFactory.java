@@ -31,18 +31,18 @@ import org.junit.jupiter.api.Test;
 public class TestDriverConnectionFactory {
 
     @Test
-    public void testDriverConnectionFactoryToString() {
-        final DriverConnectionFactory cf = new DriverConnectionFactory(
-                new TesterDriver(), "jdbc:apache:commons:testdriver", null);
-        final String toString = cf.toString();
-        assertTrue(toString.contains("jdbc:apache:commons:testdriver"));
-    }
-
-    @Test
     public void testCreateConnection() throws SQLException {
         final DriverConnectionFactory cf = new DriverConnectionFactory(
                 new TesterDriver(), "jdbc:apache:commons:testdriver", null);
         final Connection conn = cf.createConnection();
         assertEquals(0, conn.getMetaData().getDriverMajorVersion());
+    }
+
+    @Test
+    public void testDriverConnectionFactoryToString() {
+        final DriverConnectionFactory cf = new DriverConnectionFactory(
+                new TesterDriver(), "jdbc:apache:commons:testdriver", null);
+        final String toString = cf.toString();
+        assertTrue(toString.contains("jdbc:apache:commons:testdriver"));
     }
 }

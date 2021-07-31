@@ -58,55 +58,6 @@ public class PooledConnectionProxy implements PooledConnection,
     }
 
     /**
-     * If notifyOnClose is on, notify listeners
-     */
-    @Override
-    public void close() throws SQLException {
-        delegate.close();
-        if (isNotifyOnClose()) {
-           notifyListeners();
-        }
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException {
-        return delegate.getConnection();
-    }
-
-    /**
-     * Remove event listeners.
-     */
-    @Override
-    public void removeConnectionEventListener(final ConnectionEventListener listener) {
-        eventListeners.remove(listener);
-    }
-
-    @Override
-    public void removeStatementEventListener(final StatementEventListener listener) {
-        eventListeners.remove(listener);
-    }
-    /* JDBC_4_ANT_KEY_END */
-
-    public boolean isNotifyOnClose() {
-        return notifyOnClose;
-    }
-
-    public void setNotifyOnClose(final boolean notifyOnClose) {
-        this.notifyOnClose = notifyOnClose;
-    }
-
-    /**
-     * sends a connectionClosed event to listeners.
-     */
-    void notifyListeners() {
-        final ConnectionEvent event = new ConnectionEvent(this);
-        final Object[] listeners = eventListeners.toArray();
-        for (final Object listener : listeners) {
-            ((ConnectionEventListener) listener).connectionClosed(event);
-        }
-    }
-
-    /**
      * Add event listeners.
      */
     @Override
@@ -123,6 +74,17 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
     /* JDBC_4_ANT_KEY_END */
+
+    /**
+     * If notifyOnClose is on, notify listeners
+     */
+    @Override
+    public void close() throws SQLException {
+        delegate.close();
+        if (isNotifyOnClose()) {
+           notifyListeners();
+        }
+    }
 
     /**
      * Pass closed events on to listeners
@@ -143,12 +105,9 @@ public class PooledConnectionProxy implements PooledConnection,
         }
     }
 
-    /**
-     * Generate a connection error event
-     */
-    public void throwConnectionError() {
-        final ConnectionEvent event = new ConnectionEvent(this);
-        connectionErrorOccurred(event);
+    @Override
+    public Connection getConnection() throws SQLException {
+        return delegate.getConnection();
     }
 
     /**
@@ -156,6 +115,47 @@ public class PooledConnectionProxy implements PooledConnection,
      */
     public Collection<EventListener> getListeners() {
         return eventListeners;
+    }
+
+    public boolean isNotifyOnClose() {
+        return notifyOnClose;
+    }
+
+    /**
+     * sends a connectionClosed event to listeners.
+     */
+    void notifyListeners() {
+        final ConnectionEvent event = new ConnectionEvent(this);
+        final Object[] listeners = eventListeners.toArray();
+        for (final Object listener : listeners) {
+            ((ConnectionEventListener) listener).connectionClosed(event);
+        }
+    }
+
+    /**
+     * Remove event listeners.
+     */
+    @Override
+    public void removeConnectionEventListener(final ConnectionEventListener listener) {
+        eventListeners.remove(listener);
+    }
+
+    @Override
+    public void removeStatementEventListener(final StatementEventListener listener) {
+        eventListeners.remove(listener);
+    }
+    /* JDBC_4_ANT_KEY_END */
+
+    public void setNotifyOnClose(final boolean notifyOnClose) {
+        this.notifyOnClose = notifyOnClose;
+    }
+
+    /**
+     * Generate a connection error event
+     */
+    public void throwConnectionError() {
+        final ConnectionEvent event = new ConnectionEvent(this);
+        connectionErrorOccurred(event);
     }
 
 }

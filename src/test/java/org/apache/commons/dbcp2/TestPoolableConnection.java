@@ -56,46 +56,6 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testConnectionPool() throws Exception {
-        // Grab a new connection from the pool
-        final Connection c = pool.borrowObject();
-
-        assertNotNull(c, "Connection should be created and should not be null");
-        assertEquals(1, pool.getNumActive(), "There should be exactly one active object in the pool");
-
-        // Now return the connection by closing it
-        c.close(); // Can't be null
-
-        assertEquals(0, pool.getNumActive(), "There should now be zero active objects in the pool");
-    }
-
-    // Bugzilla Bug 33591: PoolableConnection leaks connections if the
-    // delegated connection closes itself.
-    @Test
-    public void testPoolableConnectionLeak() throws Exception {
-        // 'Borrow' a connection from the pool
-        final Connection conn = pool.borrowObject();
-
-        // Now close our innermost delegate, simulating the case where the
-        // underlying connection closes itself
-        ((PoolableConnection)conn).getInnermostDelegate().close();
-
-        // At this point, we can close the pooled connection. The
-        // PoolableConnection *should* realize that its underlying
-        // connection is gone and invalidate itself. The pool should have no
-        // active connections.
-
-        try {
-            conn.close();
-        } catch (final SQLException e) {
-            // Here we expect 'connection already closed', but the connection
-            // should *NOT* be returned to the pool
-        }
-
-        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
-    }
-
-    @Test
     public void testClosingWrappedInDelegate() throws Exception {
         Assertions.assertEquals(0, pool.getNumActive());
 
@@ -112,6 +72,20 @@ public class TestPoolableConnection {
         Assertions.assertTrue(conn.isClosed());
         Assertions.assertEquals(0, pool.getNumActive());
         Assertions.assertEquals(1, pool.getNumIdle());
+    }
+
+    @Test
+    public void testConnectionPool() throws Exception {
+        // Grab a new connection from the pool
+        final Connection c = pool.borrowObject();
+
+        assertNotNull(c, "Connection should be created and should not be null");
+        assertEquals(1, pool.getNumActive(), "There should be exactly one active object in the pool");
+
+        // Now return the connection by closing it
+        c.close(); // Can't be null
+
+        assertEquals(0, pool.getNumActive(), "There should now be zero active objects in the pool");
     }
 
     @Test
@@ -186,5 +160,31 @@ public class TestPoolableConnection {
         conn.close();  // testOnReturn triggers validate, which should fail
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
         assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
+    }
+
+    // Bugzilla Bug 33591: PoolableConnection leaks connections if the
+    // delegated connection closes itself.
+    @Test
+    public void testPoolableConnectionLeak() throws Exception {
+        // 'Borrow' a connection from the pool
+        final Connection conn = pool.borrowObject();
+
+        // Now close our innermost delegate, simulating the case where the
+        // underlying connection closes itself
+        ((PoolableConnection)conn).getInnermostDelegate().close();
+
+        // At this point, we can close the pooled connection. The
+        // PoolableConnection *should* realize that its underlying
+        // connection is gone and invalidate itself. The pool should have no
+        // active connections.
+
+        try {
+            conn.close();
+        } catch (final SQLException e) {
+            // Here we expect 'connection already closed', but the connection
+            // should *NOT* be returned to the pool
+        }
+
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
     }
 }

@@ -184,111 +184,6 @@ public class BasicDataSourceFactory implements ObjectFactory {
     // -------------------------------------------------- ObjectFactory Methods
 
     /**
-     * <p>
-     * Create and return a new <code>BasicDataSource</code> instance. If no instance can be created, return
-     * <code>null</code> instead.
-     * </p>
-     *
-     * @param obj
-     *            The possibly null object containing location or reference information that can be used in creating an
-     *            object
-     * @param name
-     *            The name of this object relative to <code>nameCtx</code>
-     * @param nameCtx
-     *            The context relative to which the <code>name</code> parameter is specified, or <code>null</code> if
-     *            <code>name</code> is relative to the default initial context
-     * @param environment
-     *            The possibly null environment that is used in creating this object
-     *
-     * @throws Exception
-     *             if an exception occurs creating the instance
-     */
-    @Override
-    public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx,
-            final Hashtable<?, ?> environment) throws Exception {
-
-        // We only know how to deal with <code>javax.naming.Reference</code>s
-        // that specify a class name of "javax.sql.DataSource"
-        if (obj == null || !(obj instanceof Reference)) {
-            return null;
-        }
-        final Reference ref = (Reference) obj;
-        if (!"javax.sql.DataSource".equals(ref.getClassName())) {
-            return null;
-        }
-
-        // Check property names and log warnings about obsolete and / or unknown properties
-        final List<String> warnings = new ArrayList<>();
-        final List<String> infoMessages = new ArrayList<>();
-        validatePropertyNames(ref, name, warnings, infoMessages);
-        for (final String warning : warnings) {
-            log.warn(warning);
-        }
-        for (final String infoMessage : infoMessages) {
-            log.info(infoMessage);
-        }
-
-        final Properties properties = new Properties();
-        for (final String propertyName : ALL_PROPERTIES) {
-            final RefAddr ra = ref.get(propertyName);
-            if (ra != null) {
-                final String propertyValue = ra.getContent().toString();
-                properties.setProperty(propertyName, propertyValue);
-            }
-        }
-
-        return createDataSource(properties);
-    }
-
-    /**
-     * Collects warnings and info messages. Warnings are generated when an obsolete property is set. Unknown properties
-     * generate info messages.
-     *
-     * @param ref
-     *            Reference to check properties of
-     * @param name
-     *            Name provided to getObject
-     * @param warnings
-     *            container for warning messages
-     * @param infoMessages
-     *            container for info messages
-     */
-    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnings,
-            final List<String> infoMessages) {
-        final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
-        final String nameString = name != null ? "Name = " + name.toString() + " " : "";
-        if (NUPROP_WARNTEXT != null && !NUPROP_WARNTEXT.isEmpty()) {
-            for (final String propertyName : NUPROP_WARNTEXT.keySet()) {
-                final RefAddr ra = ref.get(propertyName);
-                if (ra != null && !allPropsAsList.contains(ra.getType())) {
-                    final StringBuilder stringBuilder = new StringBuilder(nameString);
-                    final String propertyValue = ra.getContent().toString();
-                    stringBuilder.append(NUPROP_WARNTEXT.get(propertyName)).append(" You have set value of \"")
-                            .append(propertyValue).append("\" for \"").append(propertyName)
-                            .append("\" property, which is being ignored.");
-                    warnings.add(stringBuilder.toString());
-                }
-            }
-        }
-
-        final Enumeration<RefAddr> allRefAddrs = ref.getAll();
-        while (allRefAddrs.hasMoreElements()) {
-            final RefAddr ra = allRefAddrs.nextElement();
-            final String propertyName = ra.getType();
-            // If property name is not in the properties list, we haven't warned on it
-            // and it is not in the "silent" list, tell user we are ignoring it.
-            if (!(allPropsAsList.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName)
-                    || SILENT_PROPERTIES.contains(propertyName))) {
-                final String propertyValue = ra.getContent().toString();
-                final StringBuilder stringBuilder = new StringBuilder(nameString);
-                stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue)
-                        .append("\" for \"").append(propertyName).append("\" property");
-                infoMessages.add(stringBuilder.toString());
-            }
-        }
-    }
-
-    /**
      * Creates and configures a {@link BasicDataSource} instance based on the given properties.
      *
      * @param properties
@@ -603,5 +498,110 @@ public class BasicDataSourceFactory implements ObjectFactory {
             tokens.add(tokenizer.nextToken());
         }
         return tokens;
+    }
+
+    /**
+     * <p>
+     * Create and return a new <code>BasicDataSource</code> instance. If no instance can be created, return
+     * <code>null</code> instead.
+     * </p>
+     *
+     * @param obj
+     *            The possibly null object containing location or reference information that can be used in creating an
+     *            object
+     * @param name
+     *            The name of this object relative to <code>nameCtx</code>
+     * @param nameCtx
+     *            The context relative to which the <code>name</code> parameter is specified, or <code>null</code> if
+     *            <code>name</code> is relative to the default initial context
+     * @param environment
+     *            The possibly null environment that is used in creating this object
+     *
+     * @throws Exception
+     *             if an exception occurs creating the instance
+     */
+    @Override
+    public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx,
+            final Hashtable<?, ?> environment) throws Exception {
+
+        // We only know how to deal with <code>javax.naming.Reference</code>s
+        // that specify a class name of "javax.sql.DataSource"
+        if (obj == null || !(obj instanceof Reference)) {
+            return null;
+        }
+        final Reference ref = (Reference) obj;
+        if (!"javax.sql.DataSource".equals(ref.getClassName())) {
+            return null;
+        }
+
+        // Check property names and log warnings about obsolete and / or unknown properties
+        final List<String> warnings = new ArrayList<>();
+        final List<String> infoMessages = new ArrayList<>();
+        validatePropertyNames(ref, name, warnings, infoMessages);
+        for (final String warning : warnings) {
+            log.warn(warning);
+        }
+        for (final String infoMessage : infoMessages) {
+            log.info(infoMessage);
+        }
+
+        final Properties properties = new Properties();
+        for (final String propertyName : ALL_PROPERTIES) {
+            final RefAddr ra = ref.get(propertyName);
+            if (ra != null) {
+                final String propertyValue = ra.getContent().toString();
+                properties.setProperty(propertyName, propertyValue);
+            }
+        }
+
+        return createDataSource(properties);
+    }
+
+    /**
+     * Collects warnings and info messages. Warnings are generated when an obsolete property is set. Unknown properties
+     * generate info messages.
+     *
+     * @param ref
+     *            Reference to check properties of
+     * @param name
+     *            Name provided to getObject
+     * @param warnings
+     *            container for warning messages
+     * @param infoMessages
+     *            container for info messages
+     */
+    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnings,
+            final List<String> infoMessages) {
+        final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
+        final String nameString = name != null ? "Name = " + name.toString() + " " : "";
+        if (NUPROP_WARNTEXT != null && !NUPROP_WARNTEXT.isEmpty()) {
+            for (final String propertyName : NUPROP_WARNTEXT.keySet()) {
+                final RefAddr ra = ref.get(propertyName);
+                if (ra != null && !allPropsAsList.contains(ra.getType())) {
+                    final StringBuilder stringBuilder = new StringBuilder(nameString);
+                    final String propertyValue = ra.getContent().toString();
+                    stringBuilder.append(NUPROP_WARNTEXT.get(propertyName)).append(" You have set value of \"")
+                            .append(propertyValue).append("\" for \"").append(propertyName)
+                            .append("\" property, which is being ignored.");
+                    warnings.add(stringBuilder.toString());
+                }
+            }
+        }
+
+        final Enumeration<RefAddr> allRefAddrs = ref.getAll();
+        while (allRefAddrs.hasMoreElements()) {
+            final RefAddr ra = allRefAddrs.nextElement();
+            final String propertyName = ra.getType();
+            // If property name is not in the properties list, we haven't warned on it
+            // and it is not in the "silent" list, tell user we are ignoring it.
+            if (!(allPropsAsList.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName)
+                    || SILENT_PROPERTIES.contains(propertyName))) {
+                final String propertyValue = ra.getContent().toString();
+                final StringBuilder stringBuilder = new StringBuilder(nameString);
+                stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue)
+                        .append("\" for \"").append(propertyName).append("\" property");
+                infoMessages.add(stringBuilder.toString());
+            }
+        }
     }
 }

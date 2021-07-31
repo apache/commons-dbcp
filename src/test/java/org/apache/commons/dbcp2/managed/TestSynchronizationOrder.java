@@ -63,76 +63,6 @@ public class TestSynchronizationOrder {
     private BasicManagedDataSource bmds;
     private BasicDataSource bds;
 
-    @Test
-    public void testSessionSynchronization() throws Exception {
-        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
-            xads);
-
-        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
-        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
-        factory.setDefaultReadOnly(Boolean.TRUE);
-        factory.setDefaultAutoCommit(Boolean.TRUE);
-
-        // create the pool
-        try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
-            factory.setPool(pool);
-            pool.setMaxTotal(10);
-            pool.setMaxWaitMillis(1000);
-
-            // finally create the datasource
-            try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
-                xaConnectionFactory.getTransactionRegistry())) {
-                ds.setAccessToUnderlyingConnectionAllowed(true);
-
-                transactionManager.begin();
-                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
-                    // close right away.
-                }
-                transactionManager.commit();
-                assertTrue(transactionManagerRegistered);
-                assertFalse(transactionSynchronizationRegistryRegistered);
-            }
-        }
-    }
-
-    @Test
-    public void testInterposedSynchronization() throws Exception {
-        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
-            xads, transactionSynchronizationRegistry);
-
-        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
-        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
-        factory.setDefaultReadOnly(Boolean.TRUE);
-        factory.setDefaultAutoCommit(Boolean.TRUE);
-
-        // create the pool
-        try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
-            factory.setPool(pool);
-            pool.setMaxTotal(10);
-            pool.setMaxWaitMillis(1000);
-
-            // finally create the datasource
-            try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
-                xaConnectionFactory.getTransactionRegistry())) {
-                ds.setAccessToUnderlyingConnectionAllowed(true);
-
-                transactionManager.begin();
-                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
-                    // Close right away.
-                }
-                transactionManager.commit();
-                assertFalse(transactionManagerRegistered);
-                assertTrue(transactionSynchronizationRegistryRegistered);
-            }
-        }
-    }
-
-    @AfterEach
-    public void tearDown() throws SQLException {
-        bds.close();
-        bmds.close();
-    }
-
     @BeforeEach
     public void setup() {
         transactionManager = new TransactionManagerAdapter() {
@@ -193,6 +123,10 @@ public class TestSynchronizationOrder {
         bds.setJmxName("org.apache.commons.dbcp2:name=test");
         final AtomicInteger closeCounter = new AtomicInteger();
         final InvocationHandler handle = new InvocationHandler() {
+            protected XAConnection getXAConnection() throws SQLException {
+                return new TesterBasicXAConnection(bds.getConnection(), closeCounter);
+            }
+
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args)
                     throws Throwable {
@@ -213,15 +147,81 @@ public class TestSynchronizationOrder {
                     throw e.getTargetException();
                 }
             }
-
-            protected XAConnection getXAConnection() throws SQLException {
-                return new TesterBasicXAConnection(bds.getConnection(), closeCounter);
-            }
         };
         xads = (XADataSource) Proxy.newProxyInstance(
                 TestSynchronizationOrder.class.getClassLoader(),
                 new Class[]{XADataSource.class}, handle);
         bmds.setXaDataSourceInstance(xads);
 
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        bds.close();
+        bmds.close();
+    }
+
+    @Test
+    public void testInterposedSynchronization() throws Exception {
+        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
+            xads, transactionSynchronizationRegistry);
+
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
+        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
+        factory.setDefaultReadOnly(Boolean.TRUE);
+        factory.setDefaultAutoCommit(Boolean.TRUE);
+
+        // create the pool
+        try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.setMaxTotal(10);
+            pool.setMaxWaitMillis(1000);
+
+            // finally create the datasource
+            try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
+                xaConnectionFactory.getTransactionRegistry())) {
+                ds.setAccessToUnderlyingConnectionAllowed(true);
+
+                transactionManager.begin();
+                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
+                    // Close right away.
+                }
+                transactionManager.commit();
+                assertFalse(transactionManagerRegistered);
+                assertTrue(transactionSynchronizationRegistryRegistered);
+            }
+        }
+    }
+
+    @Test
+    public void testSessionSynchronization() throws Exception {
+        final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
+            xads);
+
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(xaConnectionFactory, null);
+        factory.setValidationQuery("SELECT DUMMY FROM DUAL");
+        factory.setDefaultReadOnly(Boolean.TRUE);
+        factory.setDefaultAutoCommit(Boolean.TRUE);
+
+        // create the pool
+        try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.setMaxTotal(10);
+            pool.setMaxWaitMillis(1000);
+
+            // finally create the datasource
+            try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
+                xaConnectionFactory.getTransactionRegistry())) {
+                ds.setAccessToUnderlyingConnectionAllowed(true);
+
+                transactionManager.begin();
+                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
+                    // close right away.
+                }
+                transactionManager.commit();
+                assertTrue(transactionManagerRegistered);
+                assertFalse(transactionSynchronizationRegistryRegistered);
+            }
+        }
     }
 }

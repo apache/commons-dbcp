@@ -119,140 +119,28 @@ class CPDSConnectionFactory
             Utils.toCharArray(userPassword));
     }
 
-    /**
-     * (Testing API) Gets the value of password for the default user.
-     *
-     * @return value of password.
-     */
-    char[] getPasswordCharArray() {
-        return userPassKey.getPasswordCharArray();
-    }
-
-    /**
-     * Returns the object pool used to pool connections created by this factory.
-     *
-     * @return ObjectPool managing pooled connections
-     */
-    public ObjectPool<PooledConnectionAndInfo> getPool() {
-        return pool;
-    }
-
-    /**
-     *
-     * @param pool
-     *            the {@link ObjectPool} in which to pool those {@link Connection}s
-     */
-    public void setPool(final ObjectPool<PooledConnectionAndInfo> pool) {
-        this.pool = pool;
-    }
-
-    @Override
-    public synchronized PooledObject<PooledConnectionAndInfo> makeObject() {
-        final PooledConnectionAndInfo pci;
-        try {
-            PooledConnection pc = null;
-            if (userPassKey.getUserName() == null) {
-                pc = cpds.getPooledConnection();
-            } else {
-                pc = cpds.getPooledConnection(userPassKey.getUserName(), userPassKey.getPassword());
-            }
-
-            if (pc == null) {
-                throw new IllegalStateException("Connection pool data source returned null from getPooledConnection");
-            }
-
-            // should we add this object as a listener or the pool.
-            // consider the validateObject method in decision
-            pc.addConnectionEventListener(this);
-            pci = new PooledConnectionAndInfo(pc, userPassKey);
-            pcMap.put(pc, pci);
-        } catch (final SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return new DefaultPooledObject<>(pci);
-    }
-
-    /**
-     * Closes the PooledConnection and stops listening for events from it.
-     */
-    @Override
-    public void destroyObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
-        doDestroyObject(p.getObject());
-    }
-
-    private void doDestroyObject(final PooledConnectionAndInfo pci) throws Exception {
-        final PooledConnection pc = pci.getPooledConnection();
-        pc.removeConnectionEventListener(this);
-        pcMap.remove(pc);
-        pc.close();
-    }
-
-    @Override
-    public boolean validateObject(final PooledObject<PooledConnectionAndInfo> p) {
-        try {
-            validateLifetime(p);
-        } catch (final Exception e) {
-            return false;
-        }
-        boolean valid = false;
-        final PooledConnection pconn = p.getObject().getPooledConnection();
-        Connection conn = null;
-        validatingSet.add(pconn);
-        if (null == validationQuery) {
-            int timeoutSeconds = validationQueryTimeoutSeconds;
-            if (timeoutSeconds < 0) {
-                timeoutSeconds = 0;
-            }
-            try {
-                conn = pconn.getConnection();
-                valid = conn.isValid(timeoutSeconds);
-            } catch (final SQLException e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly(conn);
-                validatingSet.remove(pconn);
-            }
-        } else {
-            Statement stmt = null;
-            ResultSet rset = null;
-            // logical Connection from the PooledConnection must be closed
-            // before another one can be requested and closing it will
-            // generate an event. Keep track so we know not to return
-            // the PooledConnection
-            validatingSet.add(pconn);
-            try {
-                conn = pconn.getConnection();
-                stmt = conn.createStatement();
-                rset = stmt.executeQuery(validationQuery);
-                valid = rset.next();
-                if (rollbackAfterValidation) {
-                    conn.rollback();
-                }
-            } catch (final Exception e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly(rset);
-                Utils.closeQuietly(stmt);
-                Utils.closeQuietly(conn);
-                validatingSet.remove(pconn);
-            }
-        }
-        return valid;
-    }
-
-    @Override
-    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
-        validateLifetime(p);
-    }
-
     @Override
     public void activateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
         validateLifetime(p);
     }
 
-    // ***********************************************************************
-    // java.sql.ConnectionEventListener implementation
-    // ***********************************************************************
+    /**
+     * Verifies that the user name matches the user whose connections are being managed by this factory and closes the
+     * pool if this is the case; otherwise does nothing.
+     */
+    @Override
+    public void closePool(final String userName) throws SQLException {
+        synchronized (this) {
+            if (userName == null || !userName.equals(this.userPassKey.getUserName())) {
+                return;
+            }
+        }
+        try {
+            pool.close();
+        } catch (final Exception ex) {
+            throw new SQLException("Error closing connection pool", ex);
+        }
+    }
 
     /**
      * This will be called if the Connection returned by the getConnection method came from a PooledConnection, and the
@@ -308,9 +196,38 @@ class CPDSConnectionFactory
         }
     }
 
-    // ***********************************************************************
-    // PooledConnectionManager implementation
-    // ***********************************************************************
+    /**
+     * Closes the PooledConnection and stops listening for events from it.
+     */
+    @Override
+    public void destroyObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+        doDestroyObject(p.getObject());
+    }
+
+    private void doDestroyObject(final PooledConnectionAndInfo pci) throws Exception {
+        final PooledConnection pc = pci.getPooledConnection();
+        pc.removeConnectionEventListener(this);
+        pcMap.remove(pc);
+        pc.close();
+    }
+
+    /**
+     * (Testing API) Gets the value of password for the default user.
+     *
+     * @return value of password.
+     */
+    char[] getPasswordCharArray() {
+        return userPassKey.getPasswordCharArray();
+    }
+
+    /**
+     * Returns the object pool used to pool connections created by this factory.
+     *
+     * @return ObjectPool managing pooled connections
+     */
+    public ObjectPool<PooledConnectionAndInfo> getPool() {
+        return pool;
+    }
 
     /**
      * Invalidates the PooledConnection in the pool. The CPDSConnectionFactory closes the connection and pool counters
@@ -331,26 +248,44 @@ class CPDSConnectionFactory
         }
     }
 
-    /**
-     * Sets the database password used when creating new connections.
-     *
-     * @param userPassword
-     *            new password
-     */
-    public synchronized void setPassword(final char[] userPassword) {
-        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
+    // ***********************************************************************
+    // java.sql.ConnectionEventListener implementation
+    // ***********************************************************************
+
+    @Override
+    public synchronized PooledObject<PooledConnectionAndInfo> makeObject() {
+        final PooledConnectionAndInfo pci;
+        try {
+            PooledConnection pc = null;
+            if (userPassKey.getUserName() == null) {
+                pc = cpds.getPooledConnection();
+            } else {
+                pc = cpds.getPooledConnection(userPassKey.getUserName(), userPassKey.getPassword());
+            }
+
+            if (pc == null) {
+                throw new IllegalStateException("Connection pool data source returned null from getPooledConnection");
+            }
+
+            // should we add this object as a listener or the pool.
+            // consider the validateObject method in decision
+            pc.addConnectionEventListener(this);
+            pci = new PooledConnectionAndInfo(pc, userPassKey);
+            pcMap.put(pc, pci);
+        } catch (final SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return new DefaultPooledObject<>(pci);
     }
 
-    /**
-     * Sets the database password used when creating new connections.
-     *
-     * @param userPassword
-     *            new password
-     */
     @Override
-    public synchronized void setPassword(final String userPassword) {
-        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
+    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+        validateLifetime(p);
     }
+
+    // ***********************************************************************
+    // PooledConnectionManager implementation
+    // ***********************************************************************
 
     /**
      * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
@@ -378,31 +313,33 @@ class CPDSConnectionFactory
     }
 
     /**
-     * Verifies that the user name matches the user whose connections are being managed by this factory and closes the
-     * pool if this is the case; otherwise does nothing.
+     * Sets the database password used when creating new connections.
+     *
+     * @param userPassword
+     *            new password
      */
-    @Override
-    public void closePool(final String userName) throws SQLException {
-        synchronized (this) {
-            if (userName == null || !userName.equals(this.userPassKey.getUserName())) {
-                return;
-            }
-        }
-        try {
-            pool.close();
-        } catch (final Exception ex) {
-            throw new SQLException("Error closing connection pool", ex);
-        }
+    public synchronized void setPassword(final char[] userPassword) {
+        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws Exception {
-        if (maxConnLifetime.compareTo(Duration.ZERO) > 0) {
-            final long lifetimeMillis = System.currentTimeMillis() - pooledObject.getCreateTime();
-            if (lifetimeMillis > maxConnLifetime.toMillis()) {
-                throw new Exception(
-                    Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeMillis, maxConnLifetime));
-            }
-        }
+    /**
+     * Sets the database password used when creating new connections.
+     *
+     * @param userPassword
+     *            new password
+     */
+    @Override
+    public synchronized void setPassword(final String userPassword) {
+        this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
+    }
+
+    /**
+     *
+     * @param pool
+     *            the {@link ObjectPool} in which to pool those {@link Connection}s
+     */
+    public void setPool(final ObjectPool<PooledConnectionAndInfo> pool) {
+        this.pool = pool;
     }
 
     /**
@@ -429,5 +366,68 @@ class CPDSConnectionFactory
         builder.append(pcMap);
         builder.append("]");
         return builder.toString();
+    }
+
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws Exception {
+        if (maxConnLifetime.compareTo(Duration.ZERO) > 0) {
+            final long lifetimeMillis = System.currentTimeMillis() - pooledObject.getCreateTime();
+            if (lifetimeMillis > maxConnLifetime.toMillis()) {
+                throw new Exception(
+                    Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeMillis, maxConnLifetime));
+            }
+        }
+    }
+
+    @Override
+    public boolean validateObject(final PooledObject<PooledConnectionAndInfo> p) {
+        try {
+            validateLifetime(p);
+        } catch (final Exception e) {
+            return false;
+        }
+        boolean valid = false;
+        final PooledConnection pconn = p.getObject().getPooledConnection();
+        Connection conn = null;
+        validatingSet.add(pconn);
+        if (null == validationQuery) {
+            int timeoutSeconds = validationQueryTimeoutSeconds;
+            if (timeoutSeconds < 0) {
+                timeoutSeconds = 0;
+            }
+            try {
+                conn = pconn.getConnection();
+                valid = conn.isValid(timeoutSeconds);
+            } catch (final SQLException e) {
+                valid = false;
+            } finally {
+                Utils.closeQuietly(conn);
+                validatingSet.remove(pconn);
+            }
+        } else {
+            Statement stmt = null;
+            ResultSet rset = null;
+            // logical Connection from the PooledConnection must be closed
+            // before another one can be requested and closing it will
+            // generate an event. Keep track so we know not to return
+            // the PooledConnection
+            validatingSet.add(pconn);
+            try {
+                conn = pconn.getConnection();
+                stmt = conn.createStatement();
+                rset = stmt.executeQuery(validationQuery);
+                valid = rset.next();
+                if (rollbackAfterValidation) {
+                    conn.rollback();
+                }
+            } catch (final Exception e) {
+                valid = false;
+            } finally {
+                Utils.closeQuietly(rset);
+                Utils.closeQuietly(stmt);
+                Utils.closeQuietly(conn);
+                validatingSet.remove(pconn);
+            }
+        }
+        return valid;
     }
 }

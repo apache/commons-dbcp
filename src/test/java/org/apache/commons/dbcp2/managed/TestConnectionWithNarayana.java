@@ -92,35 +92,16 @@ public class TestConnectionWithNarayana {
         }
     }
 
-    @Test
-    public void testRepeatedGetConnectionInTimeout() throws Exception {
-        mds.getTransactionManager().setTransactionTimeout(1);
-        mds.getTransactionManager().begin();
-
-        try {
-            do {
-                Thread.sleep(1000);
-            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
-            // Let the reaper do it's thing
-            Thread.sleep(1000);
-            try (Connection conn = mds.getConnection()) {
-                fail("Should not get the connection 1");
-            } catch (final SQLException e) {
-                if (!e.getCause().getClass().equals(IllegalStateException.class)) {
-                    throw e;
-                }
-                try (Connection conn = mds.getConnection()) {
-                    fail("Should not get connection 2");
-                } catch (final SQLException e2) {
-                    if (!e2.getCause().getClass().equals(IllegalStateException.class)) {
-                        throw e2;
-                    }
-                }
+    @AfterEach
+    public void tearDown() throws Exception {
+        try (final Connection conn = mds.getConnection()) {
+            try (final PreparedStatement ps = conn.prepareStatement(DROP_STMT)) {
+                ps.execute();
             }
-        } finally {
-            mds.getTransactionManager().rollback();
         }
-        Assertions.assertEquals(0, mds.getNumActive());
+        if (mds != null) {
+            mds.close();
+        }
     }
 
     @Test
@@ -222,15 +203,34 @@ public class TestConnectionWithNarayana {
         }
     }
 
-    @AfterEach
-    public void tearDown() throws Exception {
-        try (final Connection conn = mds.getConnection()) {
-            try (final PreparedStatement ps = conn.prepareStatement(DROP_STMT)) {
-                ps.execute();
+    @Test
+    public void testRepeatedGetConnectionInTimeout() throws Exception {
+        mds.getTransactionManager().setTransactionTimeout(1);
+        mds.getTransactionManager().begin();
+
+        try {
+            do {
+                Thread.sleep(1000);
+            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
+            // Let the reaper do it's thing
+            Thread.sleep(1000);
+            try (Connection conn = mds.getConnection()) {
+                fail("Should not get the connection 1");
+            } catch (final SQLException e) {
+                if (!e.getCause().getClass().equals(IllegalStateException.class)) {
+                    throw e;
+                }
+                try (Connection conn = mds.getConnection()) {
+                    fail("Should not get connection 2");
+                } catch (final SQLException e2) {
+                    if (!e2.getCause().getClass().equals(IllegalStateException.class)) {
+                        throw e2;
+                    }
+                }
             }
+        } finally {
+            mds.getTransactionManager().rollback();
         }
-        if (mds != null) {
-            mds.close();
-        }
+        Assertions.assertEquals(0, mds.getNumActive());
     }
 }

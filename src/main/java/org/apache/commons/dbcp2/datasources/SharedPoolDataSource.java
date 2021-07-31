@@ -76,6 +76,11 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
+    @Override
+    protected PooledConnectionManager getConnectionManager(final UserPassKey userPassKey) {
+        return factory;
+    }
+
     /**
      * Gets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
      *
@@ -83,17 +88,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      */
     public int getMaxTotal() {
         return this.maxTotal;
-    }
-
-    /**
-     * Sets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
-     *
-     * @param maxTotal
-     *            {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
-     */
-    public void setMaxTotal(final int maxTotal) {
-        assertInitializationAllowed();
-        this.maxTotal = maxTotal;
     }
 
     // ----------------------------------------------------------------------
@@ -138,11 +132,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         }
     }
 
-    @Override
-    protected PooledConnectionManager getConnectionManager(final UserPassKey userPassKey) {
-        return factory;
-    }
-
     /**
      * Creates a new {@link Reference} to a {@link SharedPoolDataSource}.
      */
@@ -151,6 +140,27 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         final Reference ref = new Reference(getClass().getName(), SharedPoolDataSourceFactory.class.getName(), null);
         ref.add(new StringRefAddr("instanceKey", getInstanceKey()));
         return ref;
+    }
+
+    /**
+     * Supports Serialization interface.
+     *
+     * @param in
+     *            a <code>java.io.ObjectInputStream</code> value
+     * @throws IOException
+     *             if an error occurs
+     * @throws ClassNotFoundException
+     *             if an error occurs
+     */
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        try {
+            in.defaultReadObject();
+            final SharedPoolDataSource oldDS = (SharedPoolDataSource) new SharedPoolDataSourceFactory()
+                    .getObjectInstance(getReference(), null, null, null);
+            this.pool = oldDS.pool;
+        } catch (final NamingException e) {
+            throw new IOException("NamingException: " + e);
+        }
     }
 
     private void registerPool(final String userName, final String password) throws NamingException, SQLException {
@@ -186,6 +196,17 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         pool = tmpPool;
     }
 
+    /**
+     * Sets {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
+     *
+     * @param maxTotal
+     *            {@link GenericKeyedObjectPool#getMaxTotal()} for this pool.
+     */
+    public void setMaxTotal(final int maxTotal) {
+        assertInitializationAllowed();
+        this.maxTotal = maxTotal;
+    }
+
     @Override
     protected void setupDefaults(final Connection connection, final String userName) throws SQLException {
         final Boolean defaultAutoCommit = isDefaultAutoCommit();
@@ -201,27 +222,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         final Boolean defaultReadOnly = isDefaultReadOnly();
         if (defaultReadOnly != null && connection.isReadOnly() != defaultReadOnly) {
             connection.setReadOnly(defaultReadOnly);
-        }
-    }
-
-    /**
-     * Supports Serialization interface.
-     *
-     * @param in
-     *            a <code>java.io.ObjectInputStream</code> value
-     * @throws IOException
-     *             if an error occurs
-     * @throws ClassNotFoundException
-     *             if an error occurs
-     */
-    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
-        try {
-            in.defaultReadObject();
-            final SharedPoolDataSource oldDS = (SharedPoolDataSource) new SharedPoolDataSourceFactory()
-                    .getObjectInstance(getReference(), null, null, null);
-            this.pool = oldDS.pool;
-        } catch (final NamingException e) {
-            throw new IOException("NamingException: " + e);
         }
     }
 

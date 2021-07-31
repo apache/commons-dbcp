@@ -218,15 +218,15 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return warnings;
     }
 
+    public boolean isAborted() throws SQLException {
+        checkFailure();
+        return _aborted;
+    }
+
     @Override
     public boolean isClosed() throws SQLException {
         checkFailure();
         return !_open;
-    }
-
-    public boolean isAborted() throws SQLException {
-        checkFailure();
-        return _aborted;
     }
 
     @Override
@@ -300,12 +300,6 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes)
-        throws SQLException {
-        return new TesterPreparedStatement(this, sql, columnIndexes);
-    }
-
-    @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         checkOpen();
         return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
@@ -318,6 +312,12 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         throws SQLException {
         checkOpen();
         return new TesterPreparedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes)
+        throws SQLException {
+        return new TesterPreparedStatement(this, sql, columnIndexes);
     }
 
 

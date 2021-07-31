@@ -47,27 +47,6 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testExecuteQueryReturnsNull() throws Exception {
-        obj = new TesterPreparedStatement(testerConn,"null");
-        delegate = new DelegatingPreparedStatement(connection,obj);
-        assertNull(delegate.executeQuery());
-    }
-
-    @Test
-    public void testExecuteQueryReturnsNotNull() throws Exception {
-        obj = new TesterPreparedStatement(testerConn,"select * from foo");
-        delegate = new DelegatingPreparedStatement(connection,obj);
-        assertNotNull(delegate.executeQuery());
-    }
-
-    @Test
-    public void testGetDelegate() throws Exception {
-        obj = new TesterPreparedStatement(testerConn,"select * from foo");
-        delegate = new DelegatingPreparedStatement(connection,obj);
-        assertEquals(obj,delegate.getDelegate());
-    }
-
-    @Test
     public void testAddBatch() throws Exception {
         try {
             delegate.addBatch();
@@ -108,11 +87,32 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
+    public void testExecuteQueryReturnsNotNull() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"select * from foo");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertNotNull(delegate.executeQuery());
+    }
+
+    @Test
+    public void testExecuteQueryReturnsNull() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"null");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertNull(delegate.executeQuery());
+    }
+
+    @Test
     public void testExecuteUpdate() throws Exception {
         try {
             delegate.executeUpdate();
         } catch (final SQLException e) {}
         verify(obj, times(1)).executeUpdate();
+    }
+
+    @Test
+    public void testGetDelegate() throws Exception {
+        obj = new TesterPreparedStatement(testerConn,"select * from foo");
+        delegate = new DelegatingPreparedStatement(connection,obj);
+        assertEquals(obj,delegate.getDelegate());
     }
 
     @Test
@@ -140,11 +140,11 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetAsciiStreamIntegerInputStreamLong() throws Exception {
+    public void testSetAsciiStreamIntegerInputStream() throws Exception {
         try {
-            delegate.setAsciiStream(1,(java.io.InputStream) null,1L);
+            delegate.setAsciiStream(1,(java.io.InputStream) null);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null,1L);
+        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null);
     }
 
     @Test
@@ -156,11 +156,11 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetAsciiStreamIntegerInputStream() throws Exception {
+    public void testSetAsciiStreamIntegerInputStreamLong() throws Exception {
         try {
-            delegate.setAsciiStream(1,(java.io.InputStream) null);
+            delegate.setAsciiStream(1,(java.io.InputStream) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null);
+        verify(obj, times(1)).setAsciiStream(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -169,14 +169,6 @@ public class TestDelegatingPreparedStatement {
             delegate.setBigDecimal(1,java.math.BigDecimal.valueOf(1.0d));
         } catch (final SQLException e) {}
         verify(obj, times(1)).setBigDecimal(1,java.math.BigDecimal.valueOf(1.0d));
-    }
-
-    @Test
-    public void testSetBinaryStreamIntegerInputStreamLong() throws Exception {
-        try {
-            delegate.setBinaryStream(1,(java.io.InputStream) null,1L);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setBinaryStream(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -193,6 +185,14 @@ public class TestDelegatingPreparedStatement {
             delegate.setBinaryStream(1,(java.io.InputStream) null,1);
         } catch (final SQLException e) {}
         verify(obj, times(1)).setBinaryStream(1,(java.io.InputStream) null,1);
+    }
+
+    @Test
+    public void testSetBinaryStreamIntegerInputStreamLong() throws Exception {
+        try {
+            delegate.setBinaryStream(1,(java.io.InputStream) null,1L);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setBinaryStream(1,(java.io.InputStream) null,1L);
     }
 
     @Test
@@ -276,14 +276,6 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetClobIntegerReaderLong() throws Exception {
-        try {
-            delegate.setClob(1,(java.io.StringReader) null,1L);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setClob(1,(java.io.StringReader) null,1L);
-    }
-
-    @Test
     public void testSetClobIntegerReader() throws Exception {
         try {
             delegate.setClob(1,(java.io.StringReader) null);
@@ -292,11 +284,11 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetDateIntegerSqlDateCalendar() throws Exception {
+    public void testSetClobIntegerReaderLong() throws Exception {
         try {
-            delegate.setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
+            delegate.setClob(1,(java.io.StringReader) null,1L);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
+        verify(obj, times(1)).setClob(1,(java.io.StringReader) null,1L);
     }
 
     @Test
@@ -305,6 +297,14 @@ public class TestDelegatingPreparedStatement {
             delegate.setDate(1,new java.sql.Date(1529827548745L));
         } catch (final SQLException e) {}
         verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745L));
+    }
+
+    @Test
+    public void testSetDateIntegerSqlDateCalendar() throws Exception {
+        try {
+            delegate.setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setDate(1,new java.sql.Date(1529827548745L),(java.util.Calendar) null);
     }
 
     @Test
@@ -388,6 +388,14 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
+    public void testSetNullIntegerInteger() throws Exception {
+        try {
+            delegate.setNull(1,1);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setNull(1,1);
+    }
+
+    @Test
     public void testSetNullIntegerIntegerString() throws Exception {
         try {
             delegate.setNull(1,1,"foo");
@@ -396,11 +404,27 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetNullIntegerInteger() throws Exception {
+    public void testSetObjectIntegerObject() throws Exception {
         try {
-            delegate.setNull(1,1);
+            delegate.setObject(1,System.err);
         } catch (final SQLException e) {}
-        verify(obj, times(1)).setNull(1,1);
+        verify(obj, times(1)).setObject(1,System.err);
+    }
+
+    @Test
+    public void testSetObjectIntegerObjectInteger() throws Exception {
+        try {
+            delegate.setObject(1,System.err,1);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setObject(1,System.err,1);
+    }
+
+    @Test
+    public void testSetObjectIntegerObjectIntegerInteger() throws Exception {
+        try {
+            delegate.setObject(1,System.err,1,1);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setObject(1,System.err,1,1);
     }
 
     @Test
@@ -420,30 +444,6 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetObjectIntegerObjectIntegerInteger() throws Exception {
-        try {
-            delegate.setObject(1,System.err,1,1);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setObject(1,System.err,1,1);
-    }
-
-    @Test
-    public void testSetObjectIntegerObjectInteger() throws Exception {
-        try {
-            delegate.setObject(1,System.err,1);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setObject(1,System.err,1);
-    }
-
-    @Test
-    public void testSetObjectIntegerObject() throws Exception {
-        try {
-            delegate.setObject(1,System.err);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setObject(1,System.err);
-    }
-
-    @Test
     public void testSetRefIntegerRef() throws Exception {
         try {
             delegate.setRef(1,(java.sql.Ref) null);
@@ -460,19 +460,19 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetSQLXMLIntegerSQLXML() throws Exception {
-        try {
-            delegate.setSQLXML(1,(java.sql.SQLXML) null);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setSQLXML(1,(java.sql.SQLXML) null);
-    }
-
-    @Test
     public void testSetShortIntegerShort() throws Exception {
         try {
             delegate.setShort(1,(short) 1);
         } catch (final SQLException e) {}
         verify(obj, times(1)).setShort(1,(short) 1);
+    }
+
+    @Test
+    public void testSetSQLXMLIntegerSQLXML() throws Exception {
+        try {
+            delegate.setSQLXML(1,(java.sql.SQLXML) null);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setSQLXML(1,(java.sql.SQLXML) null);
     }
 
     @Test
@@ -516,19 +516,19 @@ public class TestDelegatingPreparedStatement {
     }
 
     @Test
-    public void testSetURLIntegerUrl() throws Exception {
-        try {
-            delegate.setURL(1,(java.net.URL) null);
-        } catch (final SQLException e) {}
-        verify(obj, times(1)).setURL(1,(java.net.URL) null);
-    }
-
-    @Test
     public void testSetUnicodeStreamIntegerInputStreamInteger() throws Exception {
         try {
             delegate.setUnicodeStream(1,(java.io.InputStream) null,1);
         } catch (final SQLException e) {}
         verify(obj, times(1)).setUnicodeStream(1,(java.io.InputStream) null,1);
+    }
+
+    @Test
+    public void testSetURLIntegerUrl() throws Exception {
+        try {
+            delegate.setURL(1,(java.net.URL) null);
+        } catch (final SQLException e) {}
+        verify(obj, times(1)).setURL(1,(java.net.URL) null);
     }
 
 }

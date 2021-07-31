@@ -53,33 +53,6 @@ public class TestKeyedCPDSConnectionFactory {
     /**
      * JIRA DBCP-216
      *
-     * Check PoolableConnection close triggered by destroy is handled
-     * properly. PooledConnectionProxy (dubiously) fires connectionClosed
-     * when PooledConnection itself is closed.
-     */
-    @Test
-    public void testSharedPoolDSDestroyOnReturn() throws Exception {
-       final SharedPoolDataSource ds = new SharedPoolDataSource();
-       ds.setConnectionPoolDataSource(cpds);
-       ds.setMaxTotal(10);
-       ds.setDefaultMaxWaitMillis(50);
-       ds.setDefaultMaxIdle(2);
-       final Connection conn1 = ds.getConnection("userName", "password");
-       final Connection conn2 = ds.getConnection("userName", "password");
-       final Connection conn3 = ds.getConnection("userName", "password");
-       assertEquals(3, ds.getNumActive());
-       conn1.close();
-       assertEquals(1, ds.getNumIdle());
-       conn2.close();
-       assertEquals(2, ds.getNumIdle());
-       conn3.close(); // Return to pool will trigger destroy -> close sequence
-       assertEquals(2, ds.getNumIdle());
-       ds.close();
-    }
-
-    /**
-     * JIRA DBCP-216
-     *
      * Verify that pool counters are maintained properly and listeners are
      * cleaned up when a PooledConnection throws a connectionError event.
      */
@@ -167,5 +140,32 @@ public class TestKeyedCPDSConnectionFactory {
         final PooledConnection pcon = pool.borrowObject(key).getPooledConnection();
         final Connection con = pcon.getConnection();
         con.close();
+    }
+
+    /**
+     * JIRA DBCP-216
+     *
+     * Check PoolableConnection close triggered by destroy is handled
+     * properly. PooledConnectionProxy (dubiously) fires connectionClosed
+     * when PooledConnection itself is closed.
+     */
+    @Test
+    public void testSharedPoolDSDestroyOnReturn() throws Exception {
+       final SharedPoolDataSource ds = new SharedPoolDataSource();
+       ds.setConnectionPoolDataSource(cpds);
+       ds.setMaxTotal(10);
+       ds.setDefaultMaxWaitMillis(50);
+       ds.setDefaultMaxIdle(2);
+       final Connection conn1 = ds.getConnection("userName", "password");
+       final Connection conn2 = ds.getConnection("userName", "password");
+       final Connection conn3 = ds.getConnection("userName", "password");
+       assertEquals(3, ds.getNumActive());
+       conn1.close();
+       assertEquals(1, ds.getNumIdle());
+       conn2.close();
+       assertEquals(2, ds.getNumIdle());
+       conn3.close(); // Return to pool will trigger destroy -> close sequence
+       assertEquals(2, ds.getNumIdle());
+       ds.close();
     }
 }

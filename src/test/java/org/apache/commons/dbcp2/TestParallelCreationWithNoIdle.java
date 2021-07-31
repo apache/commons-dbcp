@@ -37,80 +37,6 @@ import org.junit.jupiter.api.Test;
 public class TestParallelCreationWithNoIdle  {
 
 
-    protected BasicDataSource ds;
-    private static final String CATALOG = "test catalog";
-
-    @BeforeAll
-    public static void setUpClass() {
-        // register a custom logger which supports inspection of the log messages
-        LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        ds = new BasicDataSource();
-        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
-        ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:50");
-        ds.setMaxTotal(10);
-
-        // this one is actually very important.
-        // see DBCP-513
-        ds.setMaxIdle(0);
-
-        // wait a minute. Usually the test runs in ~ 1 second
-        // but often it's getting stuck ^^
-        // you have one second to get a thread dump ;)
-        ds.setMaxWaitMillis(60000);
-
-        ds.setDefaultAutoCommit(Boolean.TRUE);
-        ds.setDefaultReadOnly(Boolean.FALSE);
-        ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-        ds.setDefaultCatalog(CATALOG);
-        ds.setUsername("userName");
-        ds.setPassword("password");
-        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
-        ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "SELECT 2"));
-        ds.setDriverClassLoader(new TesterClassLoader());
-        ds.setJmxName("org.apache.commons.dbcp2:name=test");
-    }
-
-    /**
-     * Fire up 100 Threads but only have 10 maxActive and forcedBlock.
-     * See
-     * @throws Exception
-     */
-    @Test
-    public void testMassiveConcurrentInitBorrow() throws Exception {
-        final int numThreads = 200;
-        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
-        ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:20");
-        ds.setInitialSize(8);
-        final List<Throwable> errors = Collections.synchronizedList(new ArrayList<>());
-
-        final Thread[] threads = new Thread[numThreads];
-        for (int i = 0; i < numThreads; i++) {
-            threads[i] = new TestThread(2, 0, 50);
-            threads[i].setUncaughtExceptionHandler((t, e) -> errors.add(e));
-        }
-
-        for (int i = 0; i < numThreads; i++) {
-            threads[i].start();
-
-            if (i%4 == 0) {
-                Thread.sleep(20);
-            }
-        }
-
-        for (int i = 0; i < numThreads; i++) {
-            threads[i].join();
-        }
-
-        assertEquals(0, errors.size());
-        ds.close();
-    }
-
-
-
     class TestThread extends Thread {
         final java.util.Random _random = new java.util.Random();
         final int iter;
@@ -155,6 +81,80 @@ public class TestParallelCreationWithNoIdle  {
                 // ignored
             }
         }
+    }
+    private static final String CATALOG = "test catalog";
+
+    @BeforeAll
+    public static void setUpClass() {
+        // register a custom logger which supports inspection of the log messages
+        LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
+    }
+
+    protected BasicDataSource ds;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        ds = new BasicDataSource();
+        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
+        ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:50");
+        ds.setMaxTotal(10);
+
+        // this one is actually very important.
+        // see DBCP-513
+        ds.setMaxIdle(0);
+
+        // wait a minute. Usually the test runs in ~ 1 second
+        // but often it's getting stuck ^^
+        // you have one second to get a thread dump ;)
+        ds.setMaxWaitMillis(60000);
+
+        ds.setDefaultAutoCommit(Boolean.TRUE);
+        ds.setDefaultReadOnly(Boolean.FALSE);
+        ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ds.setDefaultCatalog(CATALOG);
+        ds.setUsername("userName");
+        ds.setPassword("password");
+        ds.setValidationQuery("SELECT DUMMY FROM DUAL");
+        ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "SELECT 2"));
+        ds.setDriverClassLoader(new TesterClassLoader());
+        ds.setJmxName("org.apache.commons.dbcp2:name=test");
+    }
+
+
+
+    /**
+     * Fire up 100 Threads but only have 10 maxActive and forcedBlock.
+     * See
+     * @throws Exception
+     */
+    @Test
+    public void testMassiveConcurrentInitBorrow() throws Exception {
+        final int numThreads = 200;
+        ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
+        ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:20");
+        ds.setInitialSize(8);
+        final List<Throwable> errors = Collections.synchronizedList(new ArrayList<>());
+
+        final Thread[] threads = new Thread[numThreads];
+        for (int i = 0; i < numThreads; i++) {
+            threads[i] = new TestThread(2, 0, 50);
+            threads[i].setUncaughtExceptionHandler((t, e) -> errors.add(e));
+        }
+
+        for (int i = 0; i < numThreads; i++) {
+            threads[i].start();
+
+            if (i%4 == 0) {
+                Thread.sleep(20);
+            }
+        }
+
+        for (int i = 0; i < numThreads; i++) {
+            threads[i].join();
+        }
+
+        assertEquals(0, errors.size());
+        ds.close();
     }
 
 }

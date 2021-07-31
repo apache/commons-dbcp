@@ -75,6 +75,15 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         removeThisTrace(getConnectionInternal());
     }
 
+    @Override
+    public void activate() throws SQLException {
+        setClosedInternal(false);
+        if (getConnectionInternal() != null) {
+            getConnectionInternal().addTrace(this);
+        }
+        super.activate();
+    }
+
     /**
      * Add batch.
      */
@@ -108,15 +117,6 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
                 throw new SQLException("Cannot close preparedstatement (return to pool failed)", e);
             }
         }
-    }
-
-    @Override
-    public void activate() throws SQLException {
-        setClosedInternal(false);
-        if (getConnectionInternal() != null) {
-            getConnectionInternal().addTrace(this);
-        }
-        super.activate();
     }
 
     @Override

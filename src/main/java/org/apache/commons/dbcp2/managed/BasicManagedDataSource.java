@@ -67,102 +67,6 @@ public class BasicManagedDataSource extends BasicDataSource {
     /** Transaction Synchronization Registry */
     private transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
-    /**
-     * Gets the XADataSource instance used by the XAConnectionFactory.
-     *
-     * @return the XADataSource
-     */
-    public synchronized XADataSource getXaDataSourceInstance() {
-        return xaDataSourceInstance;
-    }
-
-    /**
-     * <p>
-     * Sets the XADataSource instance used by the XAConnectionFactory.
-     * </p>
-     * <p>
-     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
-     * </p>
-     *
-     * @param xaDataSourceInstance
-     *            XADataSource instance
-     */
-    public synchronized void setXaDataSourceInstance(final XADataSource xaDataSourceInstance) {
-        this.xaDataSourceInstance = xaDataSourceInstance;
-        xaDataSource = xaDataSourceInstance == null ? null : xaDataSourceInstance.getClass().getName();
-    }
-
-    /**
-     * Gets the required transaction manager property.
-     *
-     * @return the transaction manager used to enlist connections
-     */
-    public TransactionManager getTransactionManager() {
-        return transactionManager;
-    }
-
-    /**
-     * Gets the optional TransactionSynchronizationRegistry.
-     *
-     * @return the TSR that can be used to register synchronizations.
-     * @since 2.6.0
-     */
-    public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
-        return transactionSynchronizationRegistry;
-    }
-
-    /**
-     * Gets the transaction registry.
-     *
-     * @return the transaction registry associating XAResources with managed connections
-     */
-    protected synchronized TransactionRegistry getTransactionRegistry() {
-        return transactionRegistry;
-    }
-
-    /**
-     * Sets the required transaction manager property.
-     *
-     * @param transactionManager
-     *            the transaction manager used to enlist connections
-     */
-    public void setTransactionManager(final TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
-
-    /**
-     * Sets the optional TransactionSynchronizationRegistry property.
-     *
-     * @param transactionSynchronizationRegistry
-     *            the TSR used to register synchronizations
-     * @since 2.6.0
-     */
-    public void setTransactionSynchronizationRegistry(
-            final TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
-        this.transactionSynchronizationRegistry = transactionSynchronizationRegistry;
-    }
-
-    /**
-     * Gets the optional XADataSource class name.
-     *
-     * @return the optional XADataSource class name
-     */
-    public synchronized String getXADataSource() {
-        return xaDataSource;
-    }
-
-    /**
-     * Sets the optional XADataSource class name.
-     *
-     * @param xaDataSource
-     *            the optional XADataSource class name
-     */
-    public synchronized void setXADataSource(final String xaDataSource) {
-        this.xaDataSource = xaDataSource;
-    }
-
     @Override
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         if (transactionManager == null) {
@@ -252,5 +156,101 @@ public class BasicManagedDataSource extends BasicDataSource {
             throw new SQLException("Cannot create PoolableConnectionFactory (" + e.getMessage() + ")", e);
         }
         return connectionFactory;
+    }
+
+    /**
+     * Gets the required transaction manager property.
+     *
+     * @return the transaction manager used to enlist connections
+     */
+    public TransactionManager getTransactionManager() {
+        return transactionManager;
+    }
+
+    /**
+     * Gets the transaction registry.
+     *
+     * @return the transaction registry associating XAResources with managed connections
+     */
+    protected synchronized TransactionRegistry getTransactionRegistry() {
+        return transactionRegistry;
+    }
+
+    /**
+     * Gets the optional TransactionSynchronizationRegistry.
+     *
+     * @return the TSR that can be used to register synchronizations.
+     * @since 2.6.0
+     */
+    public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
+        return transactionSynchronizationRegistry;
+    }
+
+    /**
+     * Gets the optional XADataSource class name.
+     *
+     * @return the optional XADataSource class name
+     */
+    public synchronized String getXADataSource() {
+        return xaDataSource;
+    }
+
+    /**
+     * Gets the XADataSource instance used by the XAConnectionFactory.
+     *
+     * @return the XADataSource
+     */
+    public synchronized XADataSource getXaDataSourceInstance() {
+        return xaDataSourceInstance;
+    }
+
+    /**
+     * Sets the required transaction manager property.
+     *
+     * @param transactionManager
+     *            the transaction manager used to enlist connections
+     */
+    public void setTransactionManager(final TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
+
+    /**
+     * Sets the optional TransactionSynchronizationRegistry property.
+     *
+     * @param transactionSynchronizationRegistry
+     *            the TSR used to register synchronizations
+     * @since 2.6.0
+     */
+    public void setTransactionSynchronizationRegistry(
+            final TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
+        this.transactionSynchronizationRegistry = transactionSynchronizationRegistry;
+    }
+
+    /**
+     * Sets the optional XADataSource class name.
+     *
+     * @param xaDataSource
+     *            the optional XADataSource class name
+     */
+    public synchronized void setXADataSource(final String xaDataSource) {
+        this.xaDataSource = xaDataSource;
+    }
+
+    /**
+     * <p>
+     * Sets the XADataSource instance used by the XAConnectionFactory.
+     * </p>
+     * <p>
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
+     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * </p>
+     *
+     * @param xaDataSourceInstance
+     *            XADataSource instance
+     */
+    public synchronized void setXaDataSourceInstance(final XADataSource xaDataSourceInstance) {
+        this.xaDataSourceInstance = xaDataSourceInstance;
+        xaDataSource = xaDataSourceInstance == null ? null : xaDataSourceInstance.getClass().getName();
     }
 }

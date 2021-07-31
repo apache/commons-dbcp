@@ -32,13 +32,6 @@ import org.junit.jupiter.api.Test;
 public class TestListException {
 
     @Test
-    public void testNulls() {
-        final ListException list = new ListException(null, null);
-        assertNull(list.getMessage());
-        assertNull(list.getExceptionList());
-    }
-
-    @Test
     public void testExceptionList() {
         @SuppressWarnings("unchecked")
         final
@@ -46,5 +39,12 @@ public class TestListException {
         final ListException list = new ListException("Internal Error", exceptions);
         assertEquals("Internal Error", list.getMessage());
         assertArrayEquals(exceptions.toArray(), list.getExceptionList().toArray());
+    }
+
+    @Test
+    public void testNulls() {
+        final ListException list = new ListException(null, null);
+        assertNull(list.getMessage());
+        assertNull(list.getExceptionList());
     }
 }

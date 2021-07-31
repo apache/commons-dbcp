@@ -40,6 +40,11 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
+    public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
+        return false;
+    }
+
+    @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
         return false;
     }
@@ -60,6 +65,11 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        return false;
+    }
+
+    @Override
     public ResultSet getAttributes(final String catalog, final String schemaPattern,
             final String typeNamePattern, final String attributeNamePattern)
             throws SQLException {
@@ -69,6 +79,11 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getBestRowIdentifier(final String catalog, final String schema,
             final String table, final int scope, final boolean nullable) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public ResultSet getCatalogs() throws SQLException {
         return null;
     }
 
@@ -83,7 +98,7 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getCatalogs() throws SQLException {
+    public ResultSet getClientInfoProperties() throws SQLException {
         return null;
     }
 
@@ -165,6 +180,19 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
+            final String functionNamePattern, final String columnNamePattern)
+            throws SQLException {
+        return null;
+    }
+
+    @Override
+    public ResultSet getFunctions(final String catalog, final String schemaPattern,
+            final String functionNamePattern) throws SQLException {
         return null;
     }
 
@@ -314,19 +342,52 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public String getProcedureTerm() throws SQLException {
-        return null;
-    }
-
-    @Override
     public ResultSet getProcedures(final String catalog, final String schemaPattern,
             final String procedureNamePattern) throws SQLException {
         return null;
     }
 
     @Override
+    public String getProcedureTerm() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public ResultSet getPseudoColumns(final String catalog, final String schemaPattern,
+            final String tableNamePattern, final String columnNamePattern)
+            throws SQLException {
+        return null;
+    }
+
+    @Override
     public int getResultSetHoldability() throws SQLException {
         return 0;
+    }
+
+    @Override
+    public RowIdLifetime getRowIdLifetime() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public ResultSet getSchemas() throws SQLException {
+        return new TesterResultSet(null);
+    }
+
+    @Override
+    public ResultSet getSchemas(final String catalog, final String schemaPattern)
+    throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getSchemaTerm() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getSearchStringEscape() throws SQLException {
+        return null;
     }
 
     @Override
@@ -337,21 +398,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     @Override
     public int getSQLStateType() throws SQLException {
         return 0;
-    }
-
-    @Override
-    public String getSchemaTerm() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public ResultSet getSchemas() throws SQLException {
-        return new TesterResultSet(null);
-    }
-
-    @Override
-    public String getSearchStringEscape() throws SQLException {
-        return null;
     }
 
     @Override
@@ -383,13 +429,13 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public ResultSet getTableTypes() throws SQLException {
+    public ResultSet getTables(final String catalog, final String schemaPattern,
+            final String tableNamePattern, final String[] types) throws SQLException {
         return null;
     }
 
     @Override
-    public ResultSet getTables(final String catalog, final String schemaPattern,
-            final String tableNamePattern, final String[] types) throws SQLException {
+    public ResultSet getTableTypes() throws SQLException {
         return null;
     }
 
@@ -437,6 +483,11 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean isReadOnly() throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return false;
     }
 
@@ -531,6 +582,16 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
+    public boolean supportsAlterTableWithAddColumn() throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean supportsAlterTableWithDropColumn() throws SQLException {
+        return false;
+    }
+
+    @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
         return false;
     }
@@ -542,16 +603,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean supportsAlterTableWithDropColumn() throws SQLException {
         return false;
     }
 
@@ -816,6 +867,11 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
+    public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
+        return false;
+    }
+
+    @Override
     public boolean supportsStoredProcedures() throws SQLException {
         return false;
     }
@@ -867,9 +923,16 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
+        return null;
+    }
+
+    @Override
     public boolean updatesAreDetected(final int type) throws SQLException {
         return false;
     }
+
+    /* JDBC_4_ANT_KEY_END */
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
@@ -878,69 +941,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> iface) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public RowIdLifetime getRowIdLifetime() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public ResultSet getSchemas(final String catalog, final String schemaPattern)
-    throws SQLException {
-        return null;
-    }
-
-    @Override
-    public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public ResultSet getClientInfoProperties() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public ResultSet getFunctionColumns(final String catalog, final String schemaPattern,
-            final String functionNamePattern, final String columnNamePattern)
-            throws SQLException {
-        return null;
-    }
-
-    @Override
-    public ResultSet getFunctions(final String catalog, final String schemaPattern,
-            final String functionNamePattern) throws SQLException {
-        return null;
-    }
-
-    /* JDBC_4_ANT_KEY_END */
-
-    @Override
-    public ResultSet getPseudoColumns(final String catalog, final String schemaPattern,
-            final String tableNamePattern, final String columnNamePattern)
-            throws SQLException {
-        return null;
-    }
-
-    @Override
-    public boolean generatedKeyAlwaysReturned() throws SQLException {
         return false;
     }
 }

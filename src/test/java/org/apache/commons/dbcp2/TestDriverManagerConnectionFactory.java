@@ -39,51 +39,54 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDriverManagerConnectionFactory {
 
-    private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
+    private static final class ConnectionThread implements Runnable {
+        private final DataSource ds;
+        private volatile boolean result = true;
 
-    @BeforeAll
-    public static void beforeClass() {
-        System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
+        private ConnectionThread(final DataSource ds) {
+            this.ds = ds;
+        }
+
+        public boolean getResult() {
+            return result;
+        }
+
+        @Override
+        public void run() {
+            Connection conn = null;
+            try {
+                conn = ds.getConnection();
+            } catch (final Exception e) {
+                e.printStackTrace();
+                result = false;
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (final Exception e) {
+                        e.printStackTrace();
+                        result = false;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "ConnectionThread [ds=" + ds + ", result=" + result + "]";
+        }
     }
+
+    private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
 
     @AfterAll
     public static void afterClass() {
         System.clearProperty(KEY_JDBC_DRIVERS);
     }
 
-    @Test
-    public void testDriverManagerInitWithEmptyProperties() throws Exception {
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-                "jdbc:apache:commons:testdriver;user=foo;password=bar");
-        connectionFactory.createConnection();
-    }
-
-    @Test
-    public void testDriverManagerInitWithProperties() throws Exception {
-        testDriverManagerInit(true);
-    }
-
-    @Test
-    public void testDriverManagerInitWithCredentials() throws Exception {
-        testDriverManagerInit(false);
-    }
-
-    @Test
-    public void testDriverManagerWithoutUser() {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null, "pass");
-        assertThrows(IndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
-    }
-
-    @Test
-    public void testDriverManagerWithoutPassword() {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", (char[]) null);
-        assertThrows(SQLException.class, cf::createConnection); // thrown by TestDriver due to invalid password
-    }
-
-    @Test
-    public void testDriverManagerWithoutCredentials() {
-        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null,  (char[]) null);
-        assertThrows(ArrayIndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
+    @BeforeAll
+    public static void beforeClass() {
+        System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
     }
 
     @Test
@@ -134,42 +137,39 @@ public class TestDriverManagerConnectionFactory {
         }
     }
 
-    private static final class ConnectionThread implements Runnable {
-        private final DataSource ds;
-        private volatile boolean result = true;
+    @Test
+    public void testDriverManagerInitWithCredentials() throws Exception {
+        testDriverManagerInit(false);
+    }
 
-        private ConnectionThread(final DataSource ds) {
-            this.ds = ds;
-        }
+    @Test
+    public void testDriverManagerInitWithEmptyProperties() throws Exception {
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+                "jdbc:apache:commons:testdriver;user=foo;password=bar");
+        connectionFactory.createConnection();
+    }
 
-        @Override
-        public void run() {
-            Connection conn = null;
-            try {
-                conn = ds.getConnection();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                result = false;
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (final Exception e) {
-                        e.printStackTrace();
-                        result = false;
-                    }
-                }
-            }
-        }
+    @Test
+    public void testDriverManagerInitWithProperties() throws Exception {
+        testDriverManagerInit(true);
+    }
 
-        public boolean getResult() {
-            return result;
-        }
+    @Test
+    public void testDriverManagerWithoutCredentials() {
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null,  (char[]) null);
+        assertThrows(ArrayIndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
+    }
 
-        @Override
-        public String toString() {
-            return "ConnectionThread [ds=" + ds + ", result=" + result + "]";
-        }
+    @Test
+    public void testDriverManagerWithoutPassword() {
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", (char[]) null);
+        assertThrows(SQLException.class, cf::createConnection); // thrown by TestDriver due to invalid password
+    }
+
+    @Test
+    public void testDriverManagerWithoutUser() {
+        final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null, "pass");
+        assertThrows(IndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
     }
 
 }

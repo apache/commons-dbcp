@@ -44,9 +44,13 @@ final class CharArray {
         this.chars = Utils.toCharArray(string);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(Arrays.hashCode(chars));
+    /**
+     * Converts the value of char array as a String.
+     *
+     * @return value as a string, may be null.
+     */
+    String asString() {
+        return Utils.toString(chars);
     }
 
     @Override
@@ -62,21 +66,17 @@ final class CharArray {
     }
 
     /**
-     * Converts the value of char array as a String.
-     *
-     * @return value as a string, may be null.
-     */
-    String asString() {
-        return Utils.toString(chars);
-    }
-
-    /**
      * Gets the value of char array.
      *
      * @return value, may be null.
      */
     char[] get() {
         return chars == null ? null : chars.clone();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(chars));
     }
 
     /**

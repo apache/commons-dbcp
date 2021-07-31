@@ -33,6 +33,19 @@ import org.junit.jupiter.api.Test;
 public class TestTransactionContext {
 
     /**
+     * Transaction that always fails enlistResource.
+     */
+    private static class UncooperativeTransaction extends TransactionImpl {
+        public UncooperativeTransaction() {
+            super(null, null);
+        }
+        @Override
+        public synchronized boolean enlistResource(final XAResource xaRes) {
+            return false;
+        }
+    }
+
+    /**
      * JIRA: DBCP-428
      */
     @Test
@@ -50,19 +63,6 @@ public class TestTransactionContext {
                         basicManagedDataSource.getTransactionRegistry(), transaction);
                 assertThrows(SQLException.class, () -> transactionContext.setSharedConnection(conn));
             }
-        }
-    }
-
-    /**
-     * Transaction that always fails enlistResource.
-     */
-    private static class UncooperativeTransaction extends TransactionImpl {
-        public UncooperativeTransaction() {
-            super(null, null);
-        }
-        @Override
-        public synchronized boolean enlistResource(final XAResource xaRes) {
-            return false;
         }
     }
 

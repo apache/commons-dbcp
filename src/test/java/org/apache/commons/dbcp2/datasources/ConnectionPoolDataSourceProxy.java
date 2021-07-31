@@ -52,6 +52,11 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
         return delegate.getLogWriter();
     }
 
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        return Jdbc41Bridge.getParentLogger(delegate);
+    }
+
     /**
      * Gets a TesterPooledConnection with notifyOnClose turned on
      */
@@ -77,11 +82,6 @@ public class ConnectionPoolDataSourceProxy implements ConnectionPoolDataSource {
     @Override
     public void setLogWriter(final PrintWriter out) throws SQLException {
         delegate.setLogWriter(out);
-    }
-
-    @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return Jdbc41Bridge.getParentLogger(delegate);
     }
 
     /**

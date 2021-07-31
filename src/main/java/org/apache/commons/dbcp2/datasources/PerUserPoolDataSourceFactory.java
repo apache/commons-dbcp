@@ -31,11 +31,6 @@ import javax.naming.Reference;
 public class PerUserPoolDataSourceFactory extends InstanceKeyDataSourceFactory {
     private static final String PER_USER_POOL_CLASSNAME = PerUserPoolDataSource.class.getName();
 
-    @Override
-    protected boolean isCorrectClass(final String className) {
-        return PER_USER_POOL_CLASSNAME.equals(className);
-    }
-
     @SuppressWarnings("unchecked") // Avoid warnings on deserialization
     @Override
     protected InstanceKeyDataSource getNewInstance(final Reference ref) throws IOException, ClassNotFoundException {
@@ -91,5 +86,10 @@ public class PerUserPoolDataSourceFactory extends InstanceKeyDataSourceFactory {
             pupds.setPerUserDefaultReadOnly((Map<String, Boolean>) deserialize(serialized));
         }
         return pupds;
+    }
+
+    @Override
+    protected boolean isCorrectClass(final String className) {
+        return PER_USER_POOL_CLASSNAME.equals(className);
     }
 }

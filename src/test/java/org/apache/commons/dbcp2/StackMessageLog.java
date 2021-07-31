@@ -37,6 +37,65 @@ public class StackMessageLog extends SimpleLog {
     private static final Stack<String> messageStack = new Stack<>();
     private static final Lock lock = new ReentrantLock();
 
+    public static void clear() {
+        lock.lock();
+        try {
+            messageStack.clear();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Note: iterator is fail-fast, lock the stack first.
+     */
+    public static List<String> getAll() {
+        final Iterator<String> iterator = messageStack.iterator();
+        final List<String> messages = new ArrayList<>();
+        while (iterator.hasNext()) {
+            messages.add(iterator.next());
+        }
+        return messages;
+    }
+
+    public static boolean isEmpty() {
+        return messageStack.isEmpty();
+    }
+
+    /**
+     * Obtains an exclusive lock on the log.
+     */
+    public static void lock() {
+        lock.lock();
+    }
+
+    /**
+     * @return the most recent log message, or null if the log is empty
+     */
+    public static String popMessage() {
+        String ret = null;
+        lock.lock();
+        try {
+            ret = messageStack.pop();
+        } catch (final EmptyStackException ex) {
+            // ignore, return null
+        } finally {
+            lock.unlock();
+        }
+        return ret;
+    }
+
+    /**
+     * Relinquishes exclusive lock on the log.
+     */
+    public static void unLock() {
+        try {
+            lock.unlock();
+        } catch (final IllegalMonitorStateException ex) {
+            // ignore
+        }
+    }
+
     public StackMessageLog(final String name) {
         super(name);
     }
@@ -63,65 +122,6 @@ public class StackMessageLog extends SimpleLog {
             messageStack.push(buf.toString());
         } finally {
             lock.unlock();
-        }
-    }
-
-    /**
-     * @return the most recent log message, or null if the log is empty
-     */
-    public static String popMessage() {
-        String ret = null;
-        lock.lock();
-        try {
-            ret = messageStack.pop();
-        } catch (final EmptyStackException ex) {
-            // ignore, return null
-        } finally {
-            lock.unlock();
-        }
-        return ret;
-    }
-
-    /**
-     * Note: iterator is fail-fast, lock the stack first.
-     */
-    public static List<String> getAll() {
-        final Iterator<String> iterator = messageStack.iterator();
-        final List<String> messages = new ArrayList<>();
-        while (iterator.hasNext()) {
-            messages.add(iterator.next());
-        }
-        return messages;
-    }
-
-    public static void clear() {
-        lock.lock();
-        try {
-            messageStack.clear();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public static boolean isEmpty() {
-        return messageStack.isEmpty();
-    }
-
-    /**
-     * Obtains an exclusive lock on the log.
-     */
-    public static void lock() {
-        lock.lock();
-    }
-
-    /**
-     * Relinquishes exclusive lock on the log.
-     */
-    public static void unLock() {
-        try {
-            lock.unlock();
-        } catch (final IllegalMonitorStateException ex) {
-            // ignore
         }
     }
 }

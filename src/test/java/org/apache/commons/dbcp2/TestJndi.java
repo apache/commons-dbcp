@@ -52,48 +52,12 @@ public class TestJndi {
     protected Context context;
 
     /**
-     * Test BasicDatasource bind and lookup
+     * Binds a DataSource into JNDI.
      *
-     * @throws Exception
+     * @throws Exception if creation or binding fails.
      */
-    @Test
-    public void testBasicDataSourceBind() throws Exception {
-        final BasicDataSource dataSource = new BasicDataSource();
-        checkBind(dataSource);
-    }
-
-    /**
-     * Test SharedPoolDataSource bind and lookup
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testSharedPoolDataSourceBind() throws Exception {
-        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
-        checkBind(dataSource);
-    }
-
-    /**
-     * Test PerUserPoolDataSource bind and lookup
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testPerUserPoolDataSourceBind() throws Exception {
-        final PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
-        checkBind(dataSource);
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        context = getInitialContext();
-        context.createSubcontext(JNDI_SUBCONTEXT);
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
-        context.unbind(JNDI_PATH);
-        context.destroySubcontext(JNDI_SUBCONTEXT);
+    protected void bindDataSource(final DataSource dataSource) throws Exception {
+        context.bind(JNDI_PATH, dataSource);
     }
 
     /**
@@ -108,12 +72,17 @@ public class TestJndi {
     }
 
     /**
-     * Binds a DataSource into JNDI.
+     * Retrieves (or creates if it does not exist) an InitialContext.
      *
-     * @throws Exception if creation or binding fails.
+     * @return the InitialContext.
+     * @throws NamingException if the InitialContext cannot be retrieved
+     *         or created.
      */
-    protected void bindDataSource(final DataSource dataSource) throws Exception {
-        context.bind(JNDI_PATH, dataSource);
+    protected InitialContext getInitialContext() throws NamingException {
+        final Hashtable<String, String> environment = new Hashtable<>();
+        environment.put(Context.INITIAL_CONTEXT_FACTORY,
+                org.apache.naming.java.javaURLContextFactory.class.getName());
+        return new InitialContext(environment);
     }
 
     /**
@@ -131,17 +100,48 @@ public class TestJndi {
         return dataSource;
     }
 
+    @BeforeEach
+    public void setUp() throws Exception {
+        context = getInitialContext();
+        context.createSubcontext(JNDI_SUBCONTEXT);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        context.unbind(JNDI_PATH);
+        context.destroySubcontext(JNDI_SUBCONTEXT);
+    }
+
     /**
-     * Retrieves (or creates if it does not exist) an InitialContext.
+     * Test BasicDatasource bind and lookup
      *
-     * @return the InitialContext.
-     * @throws NamingException if the InitialContext cannot be retrieved
-     *         or created.
+     * @throws Exception
      */
-    protected InitialContext getInitialContext() throws NamingException {
-        final Hashtable<String, String> environment = new Hashtable<>();
-        environment.put(Context.INITIAL_CONTEXT_FACTORY,
-                org.apache.naming.java.javaURLContextFactory.class.getName());
-        return new InitialContext(environment);
+    @Test
+    public void testBasicDataSourceBind() throws Exception {
+        final BasicDataSource dataSource = new BasicDataSource();
+        checkBind(dataSource);
+    }
+
+    /**
+     * Test PerUserPoolDataSource bind and lookup
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPerUserPoolDataSourceBind() throws Exception {
+        final PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
+        checkBind(dataSource);
+    }
+
+    /**
+     * Test SharedPoolDataSource bind and lookup
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSharedPoolDataSourceBind() throws Exception {
+        final SharedPoolDataSource dataSource = new SharedPoolDataSource();
+        checkBind(dataSource);
     }
 }

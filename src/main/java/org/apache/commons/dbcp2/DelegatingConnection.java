@@ -84,116 +84,60 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         this.connection = connection;
     }
 
-    /**
-     * Returns a string representation of the metadata associated with the innermost delegate connection.
-     */
-    @SuppressWarnings("resource")
     @Override
-    public synchronized String toString() {
-        String str = null;
+    public void abort(final Executor executor) throws SQLException {
+        try {
+            Jdbc41Bridge.abort(connection, executor);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
 
-        final Connection conn = this.getInnermostDelegateInternal();
-        if (conn != null) {
-            try {
-                if (conn.isClosed()) {
-                    str = "connection is closed";
-                } else {
-                    final StringBuilder sb = new StringBuilder();
-                    sb.append(hashCode());
-                    final DatabaseMetaData meta = conn.getMetaData();
-                    if (meta != null) {
-                        sb.append(", URL=");
-                        sb.append(meta.getURL());
-                        sb.append(", ");
-                        sb.append(meta.getDriverName());
-                        str = sb.toString();
-                    }
+    protected void activate() {
+        closed = false;
+        setLastUsed();
+        if (connection instanceof DelegatingConnection) {
+            ((DelegatingConnection<?>) connection).activate();
+        }
+    }
+
+    protected void checkOpen() throws SQLException {
+        if (closed) {
+            if (null != connection) {
+                String label = "";
+                try {
+                    label = connection.toString();
+                } catch (final Exception ex) {
+                    // ignore, leave label empty
                 }
-            } catch (final SQLException ex) {
-                // Ignore
+                throw new SQLException("Connection " + label + " is closed.");
             }
+            throw new SQLException("Connection is null.");
         }
-        return str != null ? str : super.toString();
     }
 
     /**
-     * Returns my underlying {@link Connection}.
-     *
-     * @return my underlying {@link Connection}.
+     * Can be used to clear cached state when it is known that the underlying connection may have been accessed
+     * directly.
      */
-    public C getDelegate() {
-        return getDelegateInternal();
-    }
-
-    /**
-     * Gets the delegate connection.
-     *
-     * @return the delegate connection.
-     */
-    protected final C getDelegateInternal() {
-        return connection;
-    }
-
-    /**
-     * Compares innermost delegate to the given connection.
-     *
-     * @param c
-     *            connection to compare innermost delegate with
-     * @return true if innermost delegate equals <code>c</code>
-     */
-    @SuppressWarnings("resource")
-    public boolean innermostDelegateEquals(final Connection c) {
-        final Connection innerCon = getInnermostDelegateInternal();
-        if (innerCon == null) {
-            return c == null;
+    public void clearCachedState() {
+        cachedAutoCommit = null;
+        cachedReadOnly = null;
+        cachedSchema = null;
+        cachedCatalog = null;
+        if (connection instanceof DelegatingConnection) {
+            ((DelegatingConnection<?>) connection).clearCachedState();
         }
-        return innerCon.equals(c);
     }
 
-    /**
-     * If my underlying {@link Connection} is not a {@code DelegatingConnection}, returns it, otherwise recursively
-     * invokes this method on my delegate.
-     * <p>
-     * Hence this method will return the first delegate that is not a {@code DelegatingConnection}, or {@code null} when
-     * no non-{@code DelegatingConnection} delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@code DelegatingConnection}s, and you want to make sure to obtain
-     * a "genuine" {@link Connection}.
-     * </p>
-     *
-     * @return innermost delegate.
-     */
-    public Connection getInnermostDelegate() {
-        return getInnermostDelegateInternal();
-    }
-
-    /**
-     * Although this method is public, it is part of the internal API and should not be used by clients. The signature
-     * of this method may change at any time including in ways that break backwards compatibility.
-     *
-     * @return innermost delegate.
-     */
-    @SuppressWarnings("resource")
-    public final Connection getInnermostDelegateInternal() {
-        Connection conn = connection;
-        while (conn instanceof DelegatingConnection) {
-            conn = ((DelegatingConnection<?>) conn).getDelegateInternal();
-            if (this == conn) {
-                return null;
-            }
+    @Override
+    public void clearWarnings() throws SQLException {
+        checkOpen();
+        try {
+            connection.clearWarnings();
+        } catch (final SQLException e) {
+            handleException(e);
         }
-        return conn;
-    }
-
-    /**
-     * Sets my delegate.
-     *
-     * @param connection
-     *            my delegate.
-     */
-    public void setDelegate(final C connection) {
-        this.connection = connection;
     }
 
     /**
@@ -210,14 +154,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         if (!closed) {
             closeInternal();
         }
-    }
-
-    protected boolean isClosedInternal() {
-        return closed;
-    }
-
-    protected void setClosedInternal(final boolean closed) {
-        this.closed = closed;
     }
 
     protected final void closeInternal() throws SQLException {
@@ -248,129 +184,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
-    /**
-     * Handles the given exception by throwing it.
-     *
-     * @param e the exception to throw.
-     * @throws SQLException the exception to throw.
-     */
-    protected void handleException(final SQLException e) throws SQLException {
-        throw e;
-    }
-
-    /**
-     * Handles the given {@code SQLException}.
-     *
-     * @param <T> The throwable type.
-     * @param e   The SQLException
-     * @return the given {@code SQLException}
-     * @since 2.7.0
-     */
-    protected <T extends Throwable> T handleExceptionNoThrow(final T e) {
-        return e;
-    }
-
-    /**
-     * Initializes the given statement with this connection's settings.
-     *
-     * @param <T> The DelegatingStatement type.
-     * @param delegatingStatement The DelegatingStatement to initialize.
-     * @return The given DelegatingStatement.
-     * @throws SQLException if a database access error occurs, this method is called on a closed Statement.
-     */
-    private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
-        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != delegatingStatement.getQueryTimeout()) {
-            delegatingStatement.setQueryTimeout(defaultQueryTimeoutSeconds);
-        }
-        return delegatingStatement;
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public Statement createStatement() throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingStatement(this, connection.createStatement()));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingStatement(this, connection.createStatement(resultSetType, resultSetConcurrency)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
-        throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this,
-                connection.prepareStatement(sql, resultSetType, resultSetConcurrency)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public CallableStatement prepareCall(final String sql) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingCallableStatement(this, connection.prepareCall(sql)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
-        throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingCallableStatement(this,
-                connection.prepareCall(sql, resultSetType, resultSetConcurrency)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        checkOpen();
-        try {
-            connection.clearWarnings();
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
     @Override
     public void commit() throws SQLException {
         checkOpen();
@@ -379,455 +192,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         } catch (final SQLException e) {
             handleException(e);
         }
-    }
-
-    /**
-     * Returns the state caching flag.
-     *
-     * @return the state caching flag
-     */
-    public boolean getCacheState() {
-        return cacheState;
-    }
-
-    @Override
-    public boolean getAutoCommit() throws SQLException {
-        checkOpen();
-        if (cacheState && cachedAutoCommit != null) {
-            return cachedAutoCommit;
-        }
-        try {
-            cachedAutoCommit = connection.getAutoCommit();
-            return cachedAutoCommit;
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public String getCatalog() throws SQLException {
-        checkOpen();
-        if (cacheState && cachedCatalog != null) {
-            return cachedCatalog;
-        }
-        try {
-            cachedCatalog = connection.getCatalog();
-            return cachedCatalog;
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
-        checkOpen();
-        try {
-            return new DelegatingDatabaseMetaData(this, connection.getMetaData());
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public int getTransactionIsolation() throws SQLException {
-        checkOpen();
-        try {
-            return connection.getTransactionIsolation();
-        } catch (final SQLException e) {
-            handleException(e);
-            return -1;
-        }
-    }
-
-    @Override
-    public Map<String, Class<?>> getTypeMap() throws SQLException {
-        checkOpen();
-        try {
-            return connection.getTypeMap();
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        checkOpen();
-        try {
-            return connection.getWarnings();
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public boolean isReadOnly() throws SQLException {
-        checkOpen();
-        if (cacheState && cachedReadOnly != null) {
-            return cachedReadOnly;
-        }
-        try {
-            cachedReadOnly = connection.isReadOnly();
-            return cachedReadOnly;
-        } catch (final SQLException e) {
-            handleException(e);
-            return false;
-        }
-    }
-
-    @Override
-    public String nativeSQL(final String sql) throws SQLException {
-        checkOpen();
-        try {
-            return connection.nativeSQL(sql);
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public void rollback() throws SQLException {
-        checkOpen();
-        try {
-            connection.rollback();
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    /**
-     * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
-     *
-     * @return query timeout limit in seconds; zero means there is no limit.
-     */
-    public Integer getDefaultQueryTimeout() {
-        return defaultQueryTimeoutSeconds;
-    }
-
-    /**
-     * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
-     *
-     * @param defaultQueryTimeoutSeconds
-     *            the new query timeout limit in seconds; zero means there is no limit
-     */
-    public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
-        this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
-    }
-
-    /**
-     * Sets the state caching flag.
-     *
-     * @param cacheState
-     *            The new value for the state caching flag
-     */
-    public void setCacheState(final boolean cacheState) {
-        this.cacheState = cacheState;
-    }
-
-    /**
-     * Can be used to clear cached state when it is known that the underlying connection may have been accessed
-     * directly.
-     */
-    public void clearCachedState() {
-        cachedAutoCommit = null;
-        cachedReadOnly = null;
-        cachedSchema = null;
-        cachedCatalog = null;
-        if (connection instanceof DelegatingConnection) {
-            ((DelegatingConnection<?>) connection).clearCachedState();
-        }
-    }
-
-    @Override
-    public void setAutoCommit(final boolean autoCommit) throws SQLException {
-        checkOpen();
-        try {
-            connection.setAutoCommit(autoCommit);
-            if (cacheState) {
-                cachedAutoCommit = connection.getAutoCommit();
-            }
-        } catch (final SQLException e) {
-            cachedAutoCommit = null;
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setCatalog(final String catalog) throws SQLException {
-        checkOpen();
-        try {
-            connection.setCatalog(catalog);
-            if (cacheState) {
-                cachedCatalog = connection.getCatalog();
-            }
-        } catch (final SQLException e) {
-            cachedCatalog = null;
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setReadOnly(final boolean readOnly) throws SQLException {
-        checkOpen();
-        try {
-            connection.setReadOnly(readOnly);
-            if (cacheState) {
-                cachedReadOnly = connection.isReadOnly();
-            }
-        } catch (final SQLException e) {
-            cachedReadOnly = null;
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setTransactionIsolation(final int level) throws SQLException {
-        checkOpen();
-        try {
-            connection.setTransactionIsolation(level);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void setTypeMap(final Map<String, Class<?>> map) throws SQLException {
-        checkOpen();
-        try {
-            connection.setTypeMap(map);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public boolean isClosed() throws SQLException {
-        return closed || connection == null || connection.isClosed();
-    }
-
-    protected void checkOpen() throws SQLException {
-        if (closed) {
-            if (null != connection) {
-                String label = "";
-                try {
-                    label = connection.toString();
-                } catch (final Exception ex) {
-                    // ignore, leave label empty
-                }
-                throw new SQLException("Connection " + label + " is closed.");
-            }
-            throw new SQLException("Connection is null.");
-        }
-    }
-
-    protected void activate() {
-        closed = false;
-        setLastUsed();
-        if (connection instanceof DelegatingConnection) {
-            ((DelegatingConnection<?>) connection).activate();
-        }
-    }
-
-    protected void passivate() throws SQLException {
-        // The JDBC specification requires that a Connection close any open
-        // Statement's when it is closed.
-        // DBCP-288. Not all the traced objects will be statements
-        final List<AbandonedTrace> traces = getTrace();
-        if (traces != null && !traces.isEmpty()) {
-            final List<Exception> thrownList = new ArrayList<>();
-            for (final Object trace : traces) {
-                if (trace instanceof Statement) {
-                    try {
-                        ((Statement) trace).close();
-                    } catch (final Exception e) {
-                        thrownList.add(e);
-                    }
-                } else if (trace instanceof ResultSet) {
-                    // DBCP-265: Need to close the result sets that are
-                    // generated via DatabaseMetaData
-                    try {
-                        ((ResultSet) trace).close();
-                    } catch (final Exception e) {
-                        thrownList.add(e);
-                    }
-                }
-            }
-            clearTrace();
-            if (!thrownList.isEmpty()) {
-                throw new SQLExceptionList(thrownList);
-            }
-        }
-        setLastUsed(0);
-    }
-
-    @Override
-    public int getHoldability() throws SQLException {
-        checkOpen();
-        try {
-            return connection.getHoldability();
-        } catch (final SQLException e) {
-            handleException(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public void setHoldability(final int holdability) throws SQLException {
-        checkOpen();
-        try {
-            connection.setHoldability(holdability);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public Savepoint setSavepoint() throws SQLException {
-        checkOpen();
-        try {
-            return connection.setSavepoint();
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public Savepoint setSavepoint(final String name) throws SQLException {
-        checkOpen();
-        try {
-            return connection.setSavepoint(name);
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public void rollback(final Savepoint savepoint) throws SQLException {
-        checkOpen();
-        try {
-            connection.rollback(savepoint);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void releaseSavepoint(final Savepoint savepoint) throws SQLException {
-        checkOpen();
-        try {
-            connection.releaseSavepoint(savepoint);
-        } catch (final SQLException e) {
-            handleException(e);
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public Statement createStatement(final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingStatement(this,
-                connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this,
-                connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingCallableStatement(this,
-                connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, autoGeneratedKeys)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnIndexes)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
-    @Override
-    public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
-        checkOpen();
-        try {
-            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnNames)));
-        } catch (final SQLException e) {
-            handleException(e);
-            return null;
-        }
-    }
-
-    @Override
-    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return true;
-        }
-        if (iface.isAssignableFrom(connection.getClass())) {
-            return true;
-        }
-        return connection.isWrapperFor(iface);
-    }
-
-    @Override
-    public <T> T unwrap(final Class<T> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return iface.cast(this);
-        }
-        if (iface.isAssignableFrom(connection.getClass())) {
-            return iface.cast(connection);
-        }
-        return connection.unwrap(iface);
     }
 
     @Override
@@ -885,6 +249,44 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public Statement createStatement() throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingStatement(this, connection.createStatement()));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingStatement(this, connection.createStatement(resultSetType, resultSetConcurrency)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency,
+        final int resultSetHoldability) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingStatement(this,
+                connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
     @Override
     public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         checkOpen();
@@ -897,39 +299,41 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public boolean isValid(final int timeoutSeconds) throws SQLException {
-        if (isClosed()) {
-            return false;
+    public boolean getAutoCommit() throws SQLException {
+        checkOpen();
+        if (cacheState && cachedAutoCommit != null) {
+            return cachedAutoCommit;
         }
         try {
-            return connection.isValid(timeoutSeconds);
+            cachedAutoCommit = connection.getAutoCommit();
+            return cachedAutoCommit;
         } catch (final SQLException e) {
             handleException(e);
             return false;
         }
     }
 
-    @Override
-    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
-        try {
-            checkOpen();
-            connection.setClientInfo(name, value);
-        } catch (final SQLClientInfoException e) {
-            throw e;
-        } catch (final SQLException e) {
-            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
-        }
+    /**
+     * Returns the state caching flag.
+     *
+     * @return the state caching flag
+     */
+    public boolean getCacheState() {
+        return cacheState;
     }
 
     @Override
-    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
+    public String getCatalog() throws SQLException {
+        checkOpen();
+        if (cacheState && cachedCatalog != null) {
+            return cachedCatalog;
+        }
         try {
-            checkOpen();
-            connection.setClientInfo(properties);
-        } catch (final SQLClientInfoException e) {
-            throw e;
+            cachedCatalog = connection.getCatalog();
+            return cachedCatalog;
         } catch (final SQLException e) {
-            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+            handleException(e);
+            return null;
         }
     }
 
@@ -955,17 +359,100 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
+    /**
+     * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     *
+     * @return query timeout limit in seconds; zero means there is no limit.
+     */
+    public Integer getDefaultQueryTimeout() {
+        return defaultQueryTimeoutSeconds;
+    }
+
+    /**
+     * Returns my underlying {@link Connection}.
+     *
+     * @return my underlying {@link Connection}.
+     */
+    public C getDelegate() {
+        return getDelegateInternal();
+    }
+
+    /**
+     * Gets the delegate connection.
+     *
+     * @return the delegate connection.
+     */
+    protected final C getDelegateInternal() {
+        return connection;
+    }
+
     @Override
-    public void setSchema(final String schema) throws SQLException {
+    public int getHoldability() throws SQLException {
         checkOpen();
         try {
-            Jdbc41Bridge.setSchema(connection, schema);
-            if (cacheState) {
-                cachedSchema = connection.getSchema();
-            }
+            return connection.getHoldability();
         } catch (final SQLException e) {
-            cachedSchema = null;
             handleException(e);
+            return 0;
+        }
+    }
+
+    /**
+     * If my underlying {@link Connection} is not a {@code DelegatingConnection}, returns it, otherwise recursively
+     * invokes this method on my delegate.
+     * <p>
+     * Hence this method will return the first delegate that is not a {@code DelegatingConnection}, or {@code null} when
+     * no non-{@code DelegatingConnection} delegate can be found by traversing this chain.
+     * </p>
+     * <p>
+     * This method is useful when you may have nested {@code DelegatingConnection}s, and you want to make sure to obtain
+     * a "genuine" {@link Connection}.
+     * </p>
+     *
+     * @return innermost delegate.
+     */
+    public Connection getInnermostDelegate() {
+        return getInnermostDelegateInternal();
+    }
+
+    /**
+     * Although this method is public, it is part of the internal API and should not be used by clients. The signature
+     * of this method may change at any time including in ways that break backwards compatibility.
+     *
+     * @return innermost delegate.
+     */
+    @SuppressWarnings("resource")
+    public final Connection getInnermostDelegateInternal() {
+        Connection conn = connection;
+        while (conn instanceof DelegatingConnection) {
+            conn = ((DelegatingConnection<?>) conn).getDelegateInternal();
+            if (this == conn) {
+                return null;
+            }
+        }
+        return conn;
+    }
+
+    @Override
+    public DatabaseMetaData getMetaData() throws SQLException {
+        checkOpen();
+        try {
+            return new DelegatingDatabaseMetaData(this, connection.getMetaData());
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        checkOpen();
+        try {
+            return Jdbc41Bridge.getNetworkTimeout(connection);
+        } catch (final SQLException e) {
+            handleException(e);
+            return 0;
         }
     }
 
@@ -985,9 +472,420 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public void abort(final Executor executor) throws SQLException {
+    public int getTransactionIsolation() throws SQLException {
+        checkOpen();
         try {
-            Jdbc41Bridge.abort(connection, executor);
+            return connection.getTransactionIsolation();
+        } catch (final SQLException e) {
+            handleException(e);
+            return -1;
+        }
+    }
+
+    @Override
+    public Map<String, Class<?>> getTypeMap() throws SQLException {
+        checkOpen();
+        try {
+            return connection.getTypeMap();
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        checkOpen();
+        try {
+            return connection.getWarnings();
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    /**
+     * Handles the given exception by throwing it.
+     *
+     * @param e the exception to throw.
+     * @throws SQLException the exception to throw.
+     */
+    protected void handleException(final SQLException e) throws SQLException {
+        throw e;
+    }
+
+    /**
+     * Handles the given {@code SQLException}.
+     *
+     * @param <T> The throwable type.
+     * @param e   The SQLException
+     * @return the given {@code SQLException}
+     * @since 2.7.0
+     */
+    protected <T extends Throwable> T handleExceptionNoThrow(final T e) {
+        return e;
+    }
+
+    /**
+     * Initializes the given statement with this connection's settings.
+     *
+     * @param <T> The DelegatingStatement type.
+     * @param delegatingStatement The DelegatingStatement to initialize.
+     * @return The given DelegatingStatement.
+     * @throws SQLException if a database access error occurs, this method is called on a closed Statement.
+     */
+    private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
+        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != delegatingStatement.getQueryTimeout()) {
+            delegatingStatement.setQueryTimeout(defaultQueryTimeoutSeconds);
+        }
+        return delegatingStatement;
+    }
+
+    /**
+     * Compares innermost delegate to the given connection.
+     *
+     * @param c
+     *            connection to compare innermost delegate with
+     * @return true if innermost delegate equals <code>c</code>
+     */
+    @SuppressWarnings("resource")
+    public boolean innermostDelegateEquals(final Connection c) {
+        final Connection innerCon = getInnermostDelegateInternal();
+        if (innerCon == null) {
+            return c == null;
+        }
+        return innerCon.equals(c);
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        return closed || connection == null || connection.isClosed();
+    }
+
+    protected boolean isClosedInternal() {
+        return closed;
+    }
+
+    @Override
+    public boolean isReadOnly() throws SQLException {
+        checkOpen();
+        if (cacheState && cachedReadOnly != null) {
+            return cachedReadOnly;
+        }
+        try {
+            cachedReadOnly = connection.isReadOnly();
+            return cachedReadOnly;
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isValid(final int timeoutSeconds) throws SQLException {
+        if (isClosed()) {
+            return false;
+        }
+        try {
+            return connection.isValid(timeoutSeconds);
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        }
+        if (iface.isAssignableFrom(connection.getClass())) {
+            return true;
+        }
+        return connection.isWrapperFor(iface);
+    }
+
+    @Override
+    public String nativeSQL(final String sql) throws SQLException {
+        checkOpen();
+        try {
+            return connection.nativeSQL(sql);
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    protected void passivate() throws SQLException {
+        // The JDBC specification requires that a Connection close any open
+        // Statement's when it is closed.
+        // DBCP-288. Not all the traced objects will be statements
+        final List<AbandonedTrace> traces = getTrace();
+        if (traces != null && !traces.isEmpty()) {
+            final List<Exception> thrownList = new ArrayList<>();
+            for (final Object trace : traces) {
+                if (trace instanceof Statement) {
+                    try {
+                        ((Statement) trace).close();
+                    } catch (final Exception e) {
+                        thrownList.add(e);
+                    }
+                } else if (trace instanceof ResultSet) {
+                    // DBCP-265: Need to close the result sets that are
+                    // generated via DatabaseMetaData
+                    try {
+                        ((ResultSet) trace).close();
+                    } catch (final Exception e) {
+                        thrownList.add(e);
+                    }
+                }
+            }
+            clearTrace();
+            if (!thrownList.isEmpty()) {
+                throw new SQLExceptionList(thrownList);
+            }
+        }
+        setLastUsed(0);
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public CallableStatement prepareCall(final String sql) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingCallableStatement(this, connection.prepareCall(sql)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
+        throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingCallableStatement(this,
+                connection.prepareCall(sql, resultSetType, resultSetConcurrency)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
+        final int resultSetHoldability) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingCallableStatement(this,
+                connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, autoGeneratedKeys)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
+        throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this,
+                connection.prepareStatement(sql, resultSetType, resultSetConcurrency)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
+        final int resultSetHoldability) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this,
+                connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnIndexes)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("resource") // Caller is responsible for closing the resource.
+    @Override
+    public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
+        checkOpen();
+        try {
+            return init(new DelegatingPreparedStatement(this, connection.prepareStatement(sql, columnNames)));
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public void releaseSavepoint(final Savepoint savepoint) throws SQLException {
+        checkOpen();
+        try {
+            connection.releaseSavepoint(savepoint);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void rollback() throws SQLException {
+        checkOpen();
+        try {
+            connection.rollback();
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void rollback(final Savepoint savepoint) throws SQLException {
+        checkOpen();
+        try {
+            connection.rollback(savepoint);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
+        checkOpen();
+        try {
+            connection.setAutoCommit(autoCommit);
+            if (cacheState) {
+                cachedAutoCommit = connection.getAutoCommit();
+            }
+        } catch (final SQLException e) {
+            cachedAutoCommit = null;
+            handleException(e);
+        }
+    }
+
+    /**
+     * Sets the state caching flag.
+     *
+     * @param cacheState
+     *            The new value for the state caching flag
+     */
+    public void setCacheState(final boolean cacheState) {
+        this.cacheState = cacheState;
+    }
+
+    @Override
+    public void setCatalog(final String catalog) throws SQLException {
+        checkOpen();
+        try {
+            connection.setCatalog(catalog);
+            if (cacheState) {
+                cachedCatalog = connection.getCatalog();
+            }
+        } catch (final SQLException e) {
+            cachedCatalog = null;
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
+        try {
+            checkOpen();
+            connection.setClientInfo(properties);
+        } catch (final SQLClientInfoException e) {
+            throw e;
+        } catch (final SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    @Override
+    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
+        try {
+            checkOpen();
+            connection.setClientInfo(name, value);
+        } catch (final SQLClientInfoException e) {
+            throw e;
+        } catch (final SQLException e) {
+            throw new SQLClientInfoException("Connection is closed.", EMPTY_FAILED_PROPERTIES, e);
+        }
+    }
+
+    protected void setClosedInternal(final boolean closed) {
+        this.closed = closed;
+    }
+
+    /**
+     * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     *
+     * @param defaultQueryTimeoutSeconds
+     *            the new query timeout limit in seconds; zero means there is no limit
+     */
+    public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
+        this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
+    }
+
+    /**
+     * Sets my delegate.
+     *
+     * @param connection
+     *            my delegate.
+     */
+    public void setDelegate(final C connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public void setHoldability(final int holdability) throws SQLException {
+        checkOpen();
+        try {
+            connection.setHoldability(holdability);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -1004,13 +902,115 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     @Override
-    public int getNetworkTimeout() throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
         checkOpen();
         try {
-            return Jdbc41Bridge.getNetworkTimeout(connection);
+            connection.setReadOnly(readOnly);
+            if (cacheState) {
+                cachedReadOnly = connection.isReadOnly();
+            }
+        } catch (final SQLException e) {
+            cachedReadOnly = null;
+            handleException(e);
+        }
+    }
+
+    @Override
+    public Savepoint setSavepoint() throws SQLException {
+        checkOpen();
+        try {
+            return connection.setSavepoint();
         } catch (final SQLException e) {
             handleException(e);
-            return 0;
+            return null;
         }
+    }
+
+    @Override
+    public Savepoint setSavepoint(final String name) throws SQLException {
+        checkOpen();
+        try {
+            return connection.setSavepoint(name);
+        } catch (final SQLException e) {
+            handleException(e);
+            return null;
+        }
+    }
+
+    @Override
+    public void setSchema(final String schema) throws SQLException {
+        checkOpen();
+        try {
+            Jdbc41Bridge.setSchema(connection, schema);
+            if (cacheState) {
+                cachedSchema = connection.getSchema();
+            }
+        } catch (final SQLException e) {
+            cachedSchema = null;
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setTransactionIsolation(final int level) throws SQLException {
+        checkOpen();
+        try {
+            connection.setTransactionIsolation(level);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void setTypeMap(final Map<String, Class<?>> map) throws SQLException {
+        checkOpen();
+        try {
+            connection.setTypeMap(map);
+        } catch (final SQLException e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * Returns a string representation of the metadata associated with the innermost delegate connection.
+     */
+    @SuppressWarnings("resource")
+    @Override
+    public synchronized String toString() {
+        String str = null;
+
+        final Connection conn = this.getInnermostDelegateInternal();
+        if (conn != null) {
+            try {
+                if (conn.isClosed()) {
+                    str = "connection is closed";
+                } else {
+                    final StringBuilder sb = new StringBuilder();
+                    sb.append(hashCode());
+                    final DatabaseMetaData meta = conn.getMetaData();
+                    if (meta != null) {
+                        sb.append(", URL=");
+                        sb.append(meta.getURL());
+                        sb.append(", ");
+                        sb.append(meta.getDriverName());
+                        str = sb.toString();
+                    }
+                }
+            } catch (final SQLException ex) {
+                // Ignore
+            }
+        }
+        return str != null ? str : super.toString();
+    }
+
+    @Override
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        }
+        if (iface.isAssignableFrom(connection.getClass())) {
+            return iface.cast(connection);
+        }
+        return connection.unwrap(iface);
     }
 }

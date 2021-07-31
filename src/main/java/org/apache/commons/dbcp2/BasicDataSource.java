@@ -1542,6 +1542,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return ObjectNameWrapper.unwrap(registeredJmxObjectName);
     }
 
+    private ObjectNameWrapper registerJmxObjectName(final String requestedName, final ObjectName objectName) {
+        ObjectNameWrapper objectNameWrapper = null;
+        if (requestedName != null) {
+            try {
+                objectNameWrapper = ObjectNameWrapper.wrap(requestedName);
+            } catch (final MalformedObjectNameException e) {
+                log.warn("The requested JMX name '" + requestedName + "' was not valid and will be ignored.");
+            }
+        }
+        if (objectNameWrapper == null) {
+            objectNameWrapper = ObjectNameWrapper.wrap(objectName);
+        }
+        return objectNameWrapper;
+    }
+
     /**
      * Removes a custom connection property.
      *
@@ -2121,6 +2136,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    // ------------------------------------------------------ Protected Methods
+
     /**
      * Sets the {@link #minEvictableIdleTimeMillis} property.
      *
@@ -2133,8 +2150,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         }
     }
-
-    // ------------------------------------------------------ Protected Methods
 
     /**
      * Sets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections are
@@ -2455,21 +2470,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNameBase(base.toString());
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
-    }
-
-    private ObjectNameWrapper registerJmxObjectName(final String requestedName, final ObjectName objectName) {
-        ObjectNameWrapper objectNameWrapper = null;
-        if (requestedName != null) {
-            try {
-                objectNameWrapper = ObjectNameWrapper.wrap(requestedName);
-            } catch (final MalformedObjectNameException e) {
-                log.warn("The requested JMX name '" + requestedName + "' was not valid and will be ignored.");
-            }
-        }
-        if (objectNameWrapper == null) {
-            objectNameWrapper = ObjectNameWrapper.wrap(objectName);
-        }
-        return objectNameWrapper;
     }
 
 }

@@ -52,33 +52,6 @@ public class TestCPDSConnectionFactory {
     /**
      * JIRA DBCP-216
      *
-     * Check PoolableConnection close triggered by destroy is handled
-     * properly. PooledConnectionProxy (dubiously) fires connectionClosed
-     * when PooledConnection itself is closed.
-     */
-    @Test
-    public void testSharedPoolDSDestroyOnReturn() throws Exception {
-       final PerUserPoolDataSource ds = new PerUserPoolDataSource();
-       ds.setConnectionPoolDataSource(cpds);
-       ds.setPerUserMaxTotal("userName", 10);
-       ds.setPerUserMaxWaitMillis("userName", 50L);
-       ds.setPerUserMaxIdle("userName", 2);
-       final Connection conn1 = ds.getConnection("userName", "password");
-       final Connection conn2 = ds.getConnection("userName", "password");
-       final Connection conn3 = ds.getConnection("userName", "password");
-       assertEquals(3, ds.getNumActive("userName"));
-       conn1.close();
-       assertEquals(1, ds.getNumIdle("userName"));
-       conn2.close();
-       assertEquals(2, ds.getNumIdle("userName"));
-       conn3.close(); // Return to pool will trigger destroy -> close sequence
-       assertEquals(2, ds.getNumIdle("userName"));
-       ds.close();
-    }
-
-    /**
-     * JIRA DBCP-216
-     *
      * Verify that pool counters are maintained properly and listeners are
      * cleaned up when a PooledConnection throws a connectionError event.
      */
@@ -145,16 +118,6 @@ public class TestCPDSConnectionFactory {
         assertEquals(0, pool.getNumIdle());
     }
 
-    @Test
-    public void testSetPasswordThenModCharArray() {
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
-        final char[] pwd = {'a' };
-        factory.setPassword(pwd);
-        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
-        pwd[0] = 'b';
-        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
-    }
-
     /**
      * JIRA: DBCP-442
      */
@@ -168,6 +131,43 @@ public class TestCPDSConnectionFactory {
         final PooledConnection pcon = pool.borrowObject().getPooledConnection();
         final Connection con = pcon.getConnection();
         con.close();
+    }
+
+    @Test
+    public void testSetPasswordThenModCharArray() {
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
+        final char[] pwd = {'a' };
+        factory.setPassword(pwd);
+        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
+        pwd[0] = 'b';
+        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
+    }
+
+    /**
+     * JIRA DBCP-216
+     *
+     * Check PoolableConnection close triggered by destroy is handled
+     * properly. PooledConnectionProxy (dubiously) fires connectionClosed
+     * when PooledConnection itself is closed.
+     */
+    @Test
+    public void testSharedPoolDSDestroyOnReturn() throws Exception {
+       final PerUserPoolDataSource ds = new PerUserPoolDataSource();
+       ds.setConnectionPoolDataSource(cpds);
+       ds.setPerUserMaxTotal("userName", 10);
+       ds.setPerUserMaxWaitMillis("userName", 50L);
+       ds.setPerUserMaxIdle("userName", 2);
+       final Connection conn1 = ds.getConnection("userName", "password");
+       final Connection conn2 = ds.getConnection("userName", "password");
+       final Connection conn3 = ds.getConnection("userName", "password");
+       assertEquals(3, ds.getNumActive("userName"));
+       conn1.close();
+       assertEquals(1, ds.getNumIdle("userName"));
+       conn2.close();
+       assertEquals(2, ds.getNumIdle("userName"));
+       conn3.close(); // Return to pool will trigger destroy -> close sequence
+       assertEquals(2, ds.getNumIdle("userName"));
+       ds.close();
     }
 
 }
