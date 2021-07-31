@@ -76,7 +76,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             // A number of classes are loaded when getConnection() is called
             // but the following classes are not loaded and therefore require
             // explicit loading.
-            if (Utils.IS_SECURITY_ENABLED) {
+            if (Utils.isSecurityEnabled()) {
                 final ClassLoader loader = BasicDataSource.class.getClassLoader();
                 final String dbcpPackageName = BasicDataSource.class.getPackage().getName();
                 loader.loadClass(dbcpPackageName + ".DelegatingCallableStatement");
@@ -432,13 +432,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private void closeConnectionPool() {
         final GenericObjectPool<?> oldPool = connectionPool;
         connectionPool = null;
-        try {
-            if (oldPool != null) {
-                oldPool.close();
-            }
-        } catch (final Exception e) {
-            /* Ignore */
-        }
+        Utils.closeQuietly(oldPool);
     }
 
     /**
@@ -722,7 +716,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public Connection getConnection() throws SQLException {
-        if (Utils.IS_SECURITY_ENABLED) {
+        if (Utils.isSecurityEnabled()) {
             final PrivilegedExceptionAction<Connection> action = () -> createDataSource().getConnection();
             try {
                 return AccessController.doPrivileged(action);

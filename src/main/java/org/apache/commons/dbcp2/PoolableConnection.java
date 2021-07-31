@@ -298,11 +298,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         if (validationPreparedStatement != null) {
-            try {
-                validationPreparedStatement.close();
-            } catch (final SQLException sqle) {
-                // Ignore
-            }
+            Utils.closeQuietly(validationPreparedStatement);
         }
 
         super.closeInternal();

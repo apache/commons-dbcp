@@ -379,11 +379,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             initializeConnection(conn);
         } catch (final SQLException sqle) {
             // Make sure the connection is closed
-            try {
-                conn.close();
-            } catch (final SQLException ignore) {
-                // ignore
-            }
+            Utils.closeQuietly(conn);
             // Rethrow original exception so it is visible to caller
             throw sqle;
         }
@@ -615,11 +611,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     public synchronized void setPool(final ObjectPool<PoolableConnection> pool) {
         if (null != this.pool && pool != this.pool) {
-            try {
-                this.pool.close();
-            } catch (final Exception e) {
-                // ignored !?!
-            }
+            Utils.closeQuietly(this.pool);
         }
         this.pool = pool;
     }

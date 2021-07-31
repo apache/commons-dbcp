@@ -155,6 +155,9 @@ The <action> type attribute can be add,update,fix,remove.
         DelegatingConnection should also cache connection schema string to avoid calling the Connection#getSchema() for each key creation.
         DelegatingConnection should also cache connection catalog string to avoid calling the Connection#getCatalog() for each key creation.
       </action>
+      <action dev="ggregory" type="fix" due-to="Gary Gregory">
+        BasicDataSource should test for the presence of a security manager dynamically, not once on initialization.
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump mockito-core from 3.5.11 to 3.11.2 #66, #72, #77, #85, #91, #105, #110, #116.

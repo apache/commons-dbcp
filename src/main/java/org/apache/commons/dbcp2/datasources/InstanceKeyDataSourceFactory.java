@@ -34,6 +34,7 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 import org.apache.commons.dbcp2.ListException;
+import org.apache.commons.dbcp2.Utils;
 
 /**
  * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s or <code>PerUserPoolDataSource</code>s
@@ -95,13 +96,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             in = new ObjectInputStream(new ByteArrayInputStream(data));
             return in.readObject();
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException ex) {
-                    // ignore
-                }
-            }
+            Utils.closeQuietly(in);
         }
     }
 

@@ -30,6 +30,7 @@ import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.dbcp2.SwallowedExceptionLogger;
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.ObjectPool;
@@ -115,14 +116,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *
      * @see org.apache.commons.pool2.ObjectPool#close()
      */
+    @SuppressWarnings("resource")
     @Override
     public void close() {
         for (final PooledConnectionManager manager : managers.values()) {
-            try {
-                getCPDSConnectionFactoryPool(manager).close();
-            } catch (final Exception closePoolException) {
-                // ignore and try to close others.
-            }
+            Utils.closeQuietly(getCPDSConnectionFactoryPool(manager));
         }
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }

@@ -39,8 +39,11 @@ public final class Utils {
 
     /**
      * Whether the security manager is enabled.
+     * 
+     * @deprecated No replacement.
      */
-    public static final boolean IS_SECURITY_ENABLED = System.getSecurityManager() != null;
+    @Deprecated
+    public static final boolean IS_SECURITY_ENABLED = isSecurityEnabled();
 
     /** Any SQL_STATE starting with this value is considered a fatal disconnect */
     public static final String DISCONNECTION_SQL_CODE_PREFIX = "08";
@@ -59,8 +62,8 @@ public final class Utils {
     public static final Set<String> DISCONNECTION_SQL_CODES;
 
     static final ResultSet[] EMPTY_RESULT_SET_ARRAY = {};
-    static final String[] EMPTY_STRING_ARRAY = {};
 
+    static final String[] EMPTY_STRING_ARRAY = {};
     static {
         DISCONNECTION_SQL_CODES = new HashSet<>();
         DISCONNECTION_SQL_CODES.add("57P01"); // Admin shutdown
@@ -189,6 +192,10 @@ public final class Utils {
         }
         final MessageFormat mf = new MessageFormat(msg);
         return mf.format(args, new StringBuffer(), null).toString();
+    }
+
+    static boolean isSecurityEnabled() {
+        return System.getSecurityManager() != null;
     }
 
     /**
