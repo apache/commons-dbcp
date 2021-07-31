@@ -159,7 +159,7 @@ public class TestManagedConnection {
     /**
      * Transaction that always fails enlistResource.
      */
-    private class UncooperativeTransaction
+    private static class UncooperativeTransaction
         implements Transaction {
 
         private final Transaction wrappedTransaction;

@@ -56,7 +56,7 @@ public class TestTransactionContext {
     /**
      * Transaction that always fails enlistResource.
      */
-    private class UncooperativeTransaction extends TransactionImpl {
+    private static class UncooperativeTransaction extends TransactionImpl {
         public UncooperativeTransaction() {
             super(null, null);
         }
