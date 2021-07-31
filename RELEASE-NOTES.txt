@@ -1,6 +1,87 @@
               Apache Apache Commons DBCP
-                 Version 2.8.0
-                 RELEASE NOTES
+              Version 2.9.0
+              RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.9.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o            Add and reuse Constants.KEY_USER and Constants.KEY_PASSWORD. Thanks to Gary Gregory.
+o            Add and reuse DataSourceMXBean. Thanks to Frank Gasdorf, Gary Gregory.
+o            Add and reuse DriverAdapterCPDS.{get|set}DurationBetweenEvictionRuns(), deprecate {get|set}TimeBetweenEvictionRunsMillis(long). Thanks to Gary Gregory.
+o            Add and reuse DriverAdapterCPDS.{get|set}MinEvictableIdleDuration(), deprecate {get|set}MinEvictableIdleTimeMillis(int). Thanks to Gary Gregory.
+o            Add and reuse CPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long). Thanks to Gary Gregory.
+o            Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long). Thanks to Gary Gregory.
+o            Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long). Thanks to Gary Gregory.
+o            Add and reuse InstanceKeyDataSource.{get|set}DefaultMaxWait(Duration), deprecate {get|set}DefaultMaxWaitMillis(long). Thanks to Gary Gregory.
+
+Fixed Bugs:
+o DBCP-569:  Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84. Thanks to Florent Guillaume.
+o DBCP-568:  ManagedConnection must clear its cached state after transaction completes, #75. Thanks to Florent Guillaume.
+o            Minor Improvements #78. Thanks to Arturo Bernal.
+o DBCP-567:  Use abort rather than close to clean up abandoned connections. Thanks to Phil Steitz, Gary Gregory, Phil Steitz, Romain Manni-Bucau.
+o            Performance Enhancement: Call toArray with Zero Array Size #20. Thanks to Gary Gregory, DaGeRe.
+o DBCP-562:  Avoid exposing password via JMX #38. Thanks to Frank Gasdorf, Gary Gregory.
+o DBCP-575:  Remove redundant initializers #98. Thanks to Arturo Bernal.
+o DBCP-577:  Simplify test assertions #100, #113. Thanks to Arturo Bernal.
+o DBCP-573:  DataSource implementations do not implement Wrapper interface correctly #93. Thanks to Réda Housni Alaoui, Gary Gregory.
+o            Replace FindBugs with SpotBugs.
+o            DataSourceConnectionFactory.getUserPassword() may expose internal representation by returning DataSourceConnectionFactory.userPassword.
+o            DataSourceXAConnectionFactory.getUserPassword() may expose internal representation by returning DataSourceXAConnectionFactory.userPassword.
+o            DriverAdapterCPDS.getPasswordCharArray() may expose internal representation by returning DriverAdapterCPDS.userPassword.
+o            new org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory(TransactionManager, XADataSource, String, char[], TransactionSynchronizationRegistry) may expose internal representation by storing an externally mutable object into DataSourceXAConnectionFactory.userPassword.
+o            org.apache.commons.dbcp2.managed.DataSourceXAConnectionFactory.setPassword(char[]) may expose internal representation by storing an externally mutable object into DataSourceXAConnectionFactory.userPassword.
+o            org.apache.commons.dbcp2.PStmtKey.getColumnIndexes() may expose internal representation by returning PStmtKey.columnIndexes.
+o            org.apache.commons.dbcp2.PStmtKey.getColumnNames() may expose internal representation by returning PStmtKey.columnNames.
+o DBCP-578:  Use Collections.synchronizedList() Instead Of Vector #101. Thanks to Arturo Bernal.
+o DBCP-576:  Simplify and inline variables #99. Thanks to Arturo Bernal.
+o            Update PoolKey#toString() to avoid revealing a user name is here. Thanks to Gary Gregory.
+o            Internal package private UserPassKey class stores its user name as a char[] as it already does the password. Thanks to Gary Gregory.
+o DBCP-579:  Performance of DelegatingConnection.prepareStatement(String) regressed enormously in 2.8.0 compared to 1.4.
+             DelegatingConnection should also cache connection schema string to avoid calling the Connection#getSchema() for each key creation.
+             DelegatingConnection should also cache connection catalog string to avoid calling the Connection#getCatalog() for each key creation. Thanks to Shaktisinh Jhala, Gary Gregory.
+o            BasicDataSource should test for the presence of a security manager dynamically, not once on initialization. Thanks to Gary Gregory.
+
+Changes:
+o            Bump mockito-core from 3.5.11 to 3.11.2 #66, #72, #77, #85, #91, #105, #110, #116. Thanks to Dependabot.
+o            Bump actions/checkout from v2.3.2 to v2.3.4 #65, #74. Thanks to Dependabot.
+o            Bump actions/cache from v2 to v2.1.6 #90, #108. Thanks to Dependabot.
+o            Bump commons-pool2 from 2.8.1 to 2.9.0. Thanks to Gary Gregory.
+o            Bump actions/setup-java from v1.4.2 to v2 #69. Thanks to Dependabot, Gary Gregory.
+o            Bump japicmp-maven-plugin from 0.14.3 to 0.15.2 #71, #82. Thanks to Dependabot, Gary Gregory.
+o            Bump maven-pmd-plugin from 3.13.0 to 3.14.0 #76. Thanks to Dependabot.
+o            Bump japicmp-maven-plugin from 0.14.4 to 0.15.3, #83. Thanks to Dependabot, Gary Gregory.
+o            Bump Hamcrest 1.3 -> 2.2 #70. Thanks to John Patrick.
+o            Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #88. Thanks to Gary Gregory.
+o            Bump junit-jupiter from 5.7.0 to 5.8.0-M1, #89, #106. Thanks to Gary Gregory.
+o            Bump narayana-jta from 5.10.6.Final to 5.12.0.Final #103, #111. Thanks to Dependabot.
+o            Bump maven-javadoc-plugin from 3.2.0 to 3.3.0 #107. Thanks to Dependabot.
+o            Bump commons.jacoco.version 0.8.6 -> 0.8.7. Thanks to Gary Gregory.
+o            Bump jboss-logging from 3.4.1.Final to 3.4.2.Final #109. Thanks to Dependabot.
+o            Bump org.jboss:jboss-transaction-spi from 7.6.0.Final to 7.6.1.Final. Thanks to Gary Gregory.
+o            Bump commons-pool2 from 2.9.0 to 2.10.0. Thanks to Gary Gregory.
+o            Bump checkstyle to 8.44. Thanks to Gary Gregory.
+o            Bump spotbugs from 4.2.3 to 4.3.0 #117. Thanks to Dependabot.
+o            Bump spotbugs-maven-plugin from 4.2.3 to 4.3.0 #118. Thanks to Dependabot.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+
+https://commons.apache.org/dbcp/
+
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+              Apache Apache Commons DBCP
+              Version 2.8.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.8.0.
 
@@ -50,9 +131,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                 Version 2.7.0
-                 RELEASE NOTES
-                 7 July 2019
+              Version 2.7.0
+              RELEASE NOTES
+              7 July 2019
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.7.0.
 
@@ -104,8 +185,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                 Version 2.6.0
-                 RELEASE NOTES
+              Version 2.6.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.6.0.
 
@@ -143,8 +224,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                 Version 2.5.0
-                 RELEASE NOTES
+              Version 2.5.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.5.0.
 
@@ -184,8 +265,8 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
               Apache Apache Commons DBCP
-                 Version 2.4.0
-                 RELEASE NOTES
+              Version 2.4.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.4.0.
 
@@ -224,8 +305,8 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                  Version 2.3.0
-                  RELEASE NOTES
+              Version 2.3.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.3.0.
 
@@ -257,8 +338,8 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                  Version 2.2.0
-                  RELEASE NOTES
+              Version 2.2.0
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.2.0.
 
@@ -321,8 +402,8 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 -----------------------------------------------------------------------------
 
               Apache Apache Commons DBCP
-                  Version 2.1.1
-                  RELEASE NOTES
+              Version 2.1.1
+              RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
 

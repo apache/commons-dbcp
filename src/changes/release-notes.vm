@@ -15,8 +15,8 @@
 ## specific language governing permissions and limitations
 ## under the License.
               Apache ${project.name}
-                 Version ${version}
-                 RELEASE NOTES
+              Version ${version}
+              RELEASE NOTES
 
 The ${developmentTeam} is pleased to announce the release of Apache ${project.name} ${version}.
 
@@ -107,3 +107,5 @@ patches, or suggestions for improvement, see the Apache ${project.name} website:
 ${project.url}
 
 Download page: ${project.url}download_dbcp.cgi
+
+-----------------------------------------------------------------------------
