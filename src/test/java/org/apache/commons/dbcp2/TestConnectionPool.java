@@ -565,7 +565,7 @@ public abstract class TestConnectionPool {
             t.start();
         }
         for(int i=0;i<threads.length;i++) {
-            while(!(threads[i]).complete()) {
+            while(!threads[i].complete()) {
                 try {
                     Thread.sleep(100L);
                 } catch(final Exception e) {
@@ -821,7 +821,7 @@ public abstract class TestConnectionPool {
                         + ". expectError: " + expectError
                         );
                 if (expectError) {
-                    if (DISPLAY_THREAD_DETAILS || (pts.length/2 != failed)){
+                    if (DISPLAY_THREAD_DETAILS || pts.length/2 != failed){
                         final long offset = pts[0].createdMillis - 1000; // To reduce size of output numbers, but ensure they have 4 digits
                         println("Offset: "+offset);
                         for (int i = 0; i < pts.length; i++) {
