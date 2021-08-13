@@ -34,6 +34,7 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -645,7 +646,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                 throw new SQLExceptionList(thrownList);
             }
         }
-        setLastUsed(0);
+        setLastUsed(Instant.EPOCH);
     }
 
     @SuppressWarnings("resource") // Caller is responsible for closing the resource.

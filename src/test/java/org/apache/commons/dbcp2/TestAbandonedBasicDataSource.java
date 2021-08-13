@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +48,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     private void assertAndReset(final DelegatingConnection<?> con) {
         assertTrue(con.getLastUsed() > 0);
-        con.setLastUsed(0);
+        con.setLastUsed(Instant.EPOCH);
     }
 
     // ---------- Abandoned Test -----------
