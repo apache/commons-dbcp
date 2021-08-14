@@ -20,10 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import java.util.List;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -186,5 +190,20 @@ public class TestPoolableConnection {
         }
 
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+    }
+
+    @Test
+    public void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
+        final int maxDeep = 100_000;
+        final SQLException rootException = new SQLException("Data truncated", "22001");
+        SQLException parentException = rootException;
+        for (int i = 0; i <= maxDeep; i++) {
+            final SQLException childException = new SQLException("Data truncated: " + i, "22001");
+            parentException.setNextException(childException);
+            parentException = childException;
+        }
+        final Connection conn = pool.borrowObject();
+        assertEquals(false, ((PoolableConnection) conn).isDisconnectionSqlException(rootException));
+        assertEquals(false, ((PoolableConnection) conn).isFatalException(rootException));
     }
 }

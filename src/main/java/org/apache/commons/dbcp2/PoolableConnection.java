@@ -212,7 +212,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     @Override
     protected void handleException(final SQLException e) throws SQLException {
-        fatalSqlExceptionThrown |= isDisconnectionSqlException(e);
+        fatalSqlExceptionThrown |= isFatalException(e);
         super.handleException(e);
     }
 
@@ -241,6 +241,29 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * Checks the SQLState of the input exception.
+     * <p>
+     * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the configured list of fatal
+     * exception codes. If this property is not set, codes are compared against the default codes in
+     * {@link Utils#DISCONNECTION_SQL_CODES} and in this case anything starting with #{link
+     * Utils.DISCONNECTION_SQL_CODE_PREFIX} is considered a disconnection.
+     * </p>
+     *
+     * @param e SQLException to be examined
+     * @return true if the exception signals a disconnection
+     */
+    boolean isDisconnectionSqlException(final SQLException e) {
+        boolean fatalException = false;
+        final String sqlState = e.getSQLState();
+        if (sqlState != null) {
+            fatalException = disconnectionSqlCodes == null
+                ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.DISCONNECTION_SQL_CODES.contains(sqlState)
+                : disconnectionSqlCodes.contains(sqlState);
+        }
+        return fatalException;
+    }
+
+    /**
      * Checks the SQLState of the input exception and any nested SQLExceptions it wraps.
      * <p>
      * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the
@@ -253,19 +276,15 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      *            SQLException to be examined
      * @return true if the exception signals a disconnection
      */
-    private boolean isDisconnectionSqlException(final SQLException e) {
-        boolean fatalException = false;
-        final String sqlState = e.getSQLState();
-        if (sqlState != null) {
-            fatalException = disconnectionSqlCodes == null
-                    ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX)
-                            || Utils.DISCONNECTION_SQL_CODES.contains(sqlState)
-                    : disconnectionSqlCodes.contains(sqlState);
-            if (!fatalException) {
-                final SQLException nextException = e.getNextException();
-                if (nextException != null && nextException != e) {
-                    fatalException = isDisconnectionSqlException(e.getNextException());
-                }
+    boolean isFatalException(final SQLException e) {
+        boolean fatalException = isDisconnectionSqlException(e);
+        if (!fatalException) {
+            SQLException parentException = e;
+            SQLException nextException = e.getNextException();
+            while(nextException != null && nextException != parentException && !fatalException) {
+                fatalException = isDisconnectionSqlException(nextException);
+                parentException = nextException;
+                nextException = parentException.getNextException();
             }
         }
         return fatalException;
