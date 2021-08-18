@@ -75,6 +75,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" due-to="Dependabot">
         Bump checkstyle from 8.44 to 8.45.1 #121.
       </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Bump commons-pool2 2.10.0 to 2.11.1.
+      </action>
       <!-- UPDATES -->
     </release>
     <release version="2.9.0" date="2021-07-30" description="This is a minor release, including bug fixes and enhancements.">

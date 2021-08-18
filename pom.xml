@@ -334,7 +334,7 @@
     <commons.checkstyle.version>8.45.1</commons.checkstyle.version>
     <commons.javadoc.version>3.3.0</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
-    <commons.pool.version>2.10.0</commons.pool.version>
+    <commons.pool.version>2.11.1-SNAPSHOT</commons.pool.version>
     <commons.japicmp.version>0.15.3</commons.japicmp.version>
     <commons.jacoco.version>0.8.7</commons.jacoco.version>
     <!-- See DBCP-445 and DBCP-454 -->
