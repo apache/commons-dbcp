@@ -109,14 +109,14 @@ public class StackMessageLog extends SimpleLog {
         try {
             final StringBuilder buf = new StringBuilder();
             buf.append(message.toString());
-            if(t != null) {
+            if (t != null) {
                 buf.append(" <");
                 buf.append(t.toString());
                 buf.append(">");
                 final java.io.StringWriter sw = new java.io.StringWriter(1024);
-                final java.io.PrintWriter pw = new java.io.PrintWriter(sw);
-                t.printStackTrace(pw);
-                pw.close();
+                try (final java.io.PrintWriter pw = new java.io.PrintWriter(sw)) {
+                    t.printStackTrace(pw);
+                }
                 buf.append(sw.toString());
             }
             messageStack.push(buf.toString());
