@@ -33,6 +33,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Stack;
@@ -50,6 +51,8 @@ import org.junit.jupiter.api.Test;
  * Base test suite for DBCP pools.
  */
 public abstract class TestConnectionPool {
+
+    private static final Duration MAX_WAIT_DURATION = Duration.ofMillis(100);
 
     protected class PoolTest implements Runnable {
         /**
@@ -275,8 +278,6 @@ public abstract class TestConnectionPool {
         }
     }
 
-    // ----------- tests ---------------------------------
-
     protected abstract Connection getConnection() throws Exception;
 
     protected int getMaxTotal() {
@@ -285,6 +286,10 @@ public abstract class TestConnectionPool {
 
     protected long getMaxWaitMillis() {
         return 100L;
+    }
+
+    protected Duration getMaxWaitDuration() {
+        return MAX_WAIT_DURATION;
     }
 
     protected String getUsername(final Connection conn) throws SQLException {

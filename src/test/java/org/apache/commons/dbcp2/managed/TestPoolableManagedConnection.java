@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Properties;
 
 import javax.transaction.TransactionManager;
@@ -79,7 +80,7 @@ public class TestPoolableManagedConnection {
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(10);
-        pool.setMaxWaitMillis(100);
+        pool.setMaxWait(Duration.ofMillis(100));
     }
 
     @AfterEach

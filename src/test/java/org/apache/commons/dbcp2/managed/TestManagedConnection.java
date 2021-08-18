@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Properties;
 
 import javax.transaction.HeuristicMixedException;
@@ -179,7 +180,7 @@ public class TestManagedConnection {
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(10);
-        pool.setMaxWaitMillis(100);
+        pool.setMaxWait(Duration.ofMillis(100));
 
         // finally create the datasource
         ds = new ManagedDataSource<>(pool, xaConnectionFactory.getTransactionRegistry());

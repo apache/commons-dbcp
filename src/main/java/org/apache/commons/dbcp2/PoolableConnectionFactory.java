@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -391,7 +392,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
             config.setMaxTotalPerKey(-1);
             config.setBlockWhenExhausted(false);
-            config.setMaxWaitMillis(0);
+            config.setMaxWait(Duration.ZERO);
             config.setMaxIdlePerKey(1);
             config.setMaxTotal(maxOpenPreparedStatements);
             if (dataSourceJmxObjectName != null) {

@@ -1253,7 +1253,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Override
     public int getRemoveAbandonedTimeout() {
-        return abandonedConfig == null ? 300 : abandonedConfig.getRemoveAbandonedTimeout();
+        return abandonedConfig == null ? 300 : (int) abandonedConfig.getRemoveAbandonedTimeoutDuration().getSeconds();
     }
 
     /**

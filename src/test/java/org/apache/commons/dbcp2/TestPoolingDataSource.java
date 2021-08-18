@@ -64,7 +64,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setMaxTotal(getMaxTotal());
-        pool.setMaxWaitMillis(getMaxWaitMillis());
+        pool.setMaxWait(getMaxWaitDuration());
         ds = new PoolingDataSource<>(pool);
         ds.setAccessToUnderlyingConnectionAllowed(true);
     }
@@ -92,7 +92,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         f.setDefaultAutoCommit(Boolean.TRUE);
         final GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
         p.setMaxTotal(getMaxTotal());
-        p.setMaxWaitMillis(getMaxWaitMillis());
+        p.setMaxWait(getMaxWaitDuration());
 
         try ( PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p) ) {
             final Connection connection = dataSource.getConnection();
@@ -125,7 +125,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         f.setDefaultAutoCommit(Boolean.TRUE);
         final GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
         p.setMaxTotal(getMaxTotal());
-        p.setMaxWaitMillis(getMaxWaitMillis());
+        p.setMaxWait(getMaxWaitDuration());
         ds = new PoolingDataSource<>(p);
         assertEquals(f.getPool(), p);
         ds.getConnection();

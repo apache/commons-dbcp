@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -175,7 +176,7 @@ public class TestSynchronizationOrder {
         try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
             pool.setMaxTotal(10);
-            pool.setMaxWaitMillis(1000);
+            pool.setMaxWait(Duration.ofSeconds(1));
 
             // finally create the datasource
             try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
@@ -207,7 +208,7 @@ public class TestSynchronizationOrder {
         try (final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
             pool.setMaxTotal(10);
-            pool.setMaxWaitMillis(1000);
+            pool.setMaxWait(Duration.ofSeconds(1));
 
             // finally create the datasource
             try (final ManagedDataSource<PoolableConnection> ds = new ManagedDataSource<>(pool,
