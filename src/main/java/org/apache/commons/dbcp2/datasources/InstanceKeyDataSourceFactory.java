@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.datasources;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -188,15 +189,15 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      */
     protected abstract boolean isCorrectClass(String className);
 
-    private boolean parseBoolean(final RefAddr refAddr) {
+    boolean parseBoolean(final RefAddr refAddr) {
         return Boolean.parseBoolean(toString(refAddr));
     }
 
-    private int parseInt(final RefAddr refAddr) {
+    int parseInt(final RefAddr refAddr) {
         return Integer.parseInt(toString(refAddr));
     }
 
-    private long parseLong(final RefAddr refAddr) {
+    long parseLong(final RefAddr refAddr) {
         return Long.parseLong(toString(refAddr));
     }
 
@@ -253,7 +254,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("maxWaitMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMaxWaitMillis(parseLong(refAddr));
+            ikds.setDefaultMaxWait(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("minEvictableIdleTimeMillis");
@@ -320,7 +321,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("maxConnLifetimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setMaxConnLifetimeMillis(parseLong(refAddr));
+            ikds.setMaxConnLifetime(Duration.ofMillis(parseLong(refAddr)));
         }
 
         // Connection properties
@@ -341,7 +342,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
-    private String toString(final RefAddr refAddr) {
+    String toString(final RefAddr refAddr) {
         return refAddr.getContent().toString();
     }
 }

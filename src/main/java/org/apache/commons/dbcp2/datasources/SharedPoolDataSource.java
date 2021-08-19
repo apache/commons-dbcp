@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -180,15 +181,15 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         config.setMaxTotal(getMaxTotal());
         config.setMaxTotalPerKey(getDefaultMaxTotal());
         config.setMaxWait(getDefaultMaxWait());
-        config.setMinEvictableIdleTimeMillis(getDefaultMinEvictableIdleTimeMillis());
+        config.setMinEvictableIdleTime(Duration.ofMillis(getDefaultMinEvictableIdleTimeMillis()));
         config.setMinIdlePerKey(getDefaultMinIdle());
         config.setNumTestsPerEvictionRun(getDefaultNumTestsPerEvictionRun());
-        config.setSoftMinEvictableIdleTimeMillis(getDefaultSoftMinEvictableIdleTimeMillis());
+        config.setSoftMinEvictableIdleTime(Duration.ofMillis(getDefaultSoftMinEvictableIdleTimeMillis()));
         config.setTestOnCreate(getDefaultTestOnCreate());
         config.setTestOnBorrow(getDefaultTestOnBorrow());
         config.setTestOnReturn(getDefaultTestOnReturn());
         config.setTestWhileIdle(getDefaultTestWhileIdle());
-        config.setTimeBetweenEvictionRunsMillis(getDefaultTimeBetweenEvictionRunsMillis());
+        config.setTimeBetweenEvictionRuns(Duration.ofMillis(getDefaultTimeBetweenEvictionRunsMillis()));
 
         final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> tmpPool = new GenericKeyedObjectPool<>(factory,
             config);

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -640,16 +641,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         pool.setLifo(getPerUserLifo(userName));
         pool.setMaxIdle(getPerUserMaxIdle(userName));
         pool.setMaxTotal(getPerUserMaxTotal(userName));
-        pool.setMaxWaitMillis(getPerUserMaxWaitMillis(userName));
-        pool.setMinEvictableIdleTimeMillis(getPerUserMinEvictableIdleTimeMillis(userName));
+        pool.setMaxWait(Duration.ofMillis(getPerUserMaxWaitMillis(userName)));
+        pool.setMinEvictableIdle(Duration.ofMillis(getPerUserMinEvictableIdleTimeMillis(userName)));
         pool.setMinIdle(getPerUserMinIdle(userName));
         pool.setNumTestsPerEvictionRun(getPerUserNumTestsPerEvictionRun(userName));
-        pool.setSoftMinEvictableIdleTimeMillis(getPerUserSoftMinEvictableIdleTimeMillis(userName));
+        pool.setSoftMinEvictableIdle(Duration.ofMillis(getPerUserSoftMinEvictableIdleTimeMillis(userName)));
         pool.setTestOnCreate(getPerUserTestOnCreate(userName));
         pool.setTestOnBorrow(getPerUserTestOnBorrow(userName));
         pool.setTestOnReturn(getPerUserTestOnReturn(userName));
         pool.setTestWhileIdle(getPerUserTestWhileIdle(userName));
-        pool.setTimeBetweenEvictionRunsMillis(getPerUserTimeBetweenEvictionRunsMillis(userName));
+        pool.setTimeBetweenEvictionRuns(Duration.ofMillis(getPerUserTimeBetweenEvictionRunsMillis(userName)));
 
         pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
 
