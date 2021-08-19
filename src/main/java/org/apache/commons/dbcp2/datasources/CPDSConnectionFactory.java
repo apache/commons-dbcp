@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +54,7 @@ class CPDSConnectionFactory
     private final boolean rollbackAfterValidation;
     private ObjectPool<PooledConnectionAndInfo> pool;
     private UserPassKey userPassKey;
-    private Duration maxConnLifetime = Duration.ofMillis(-1);
+    private Duration maxConnDuration = Duration.ofMillis(-1);
 
     /**
      * Map of PooledConnections for which close events are ignored. Connections are muted when they are being validated.
@@ -296,7 +297,7 @@ class CPDSConnectionFactory
      * @since 2.9.0
      */
     public void setMaxConnLifetime(final Duration maxConnLifetime) {
-        this.maxConnLifetime = maxConnLifetime;
+        this.maxConnDuration = maxConnLifetime;
     }
 
     /**
@@ -359,7 +360,7 @@ class CPDSConnectionFactory
         builder.append(", pool=");
         builder.append(pool);
         builder.append(", maxConnLifetimeMillis=");
-        builder.append(maxConnLifetime);
+        builder.append(maxConnDuration);
         builder.append(", validatingSet=");
         builder.append(validatingSet);
         builder.append(", pcMap=");
@@ -369,11 +370,10 @@ class CPDSConnectionFactory
     }
 
     private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws Exception {
-        if (maxConnLifetime.compareTo(Duration.ZERO) > 0) {
-            final long lifetimeMillis = System.currentTimeMillis() - pooledObject.getCreateTime();
-            if (lifetimeMillis > maxConnLifetime.toMillis()) {
-                throw new Exception(
-                    Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeMillis, maxConnLifetime));
+        if (maxConnDuration.compareTo(Duration.ZERO) > 0) {
+            final Duration lifetimeDuration = Duration.between(pooledObject.getCreateInstant(), Instant.now());
+            if (lifetimeDuration.compareTo(maxConnDuration) > 0) {
+                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxConnDuration));
             }
         }
     }
