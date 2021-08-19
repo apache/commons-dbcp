@@ -99,7 +99,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     @SuppressWarnings("resource")
     protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory)
-            throws Exception {
+        throws Exception {
         PoolableConnection conn = null;
         PooledObject<PoolableConnection> p = null;
         try {
@@ -780,6 +780,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return getConnectionInitSqls().toArray(Utils.EMPTY_STRING_ARRAY);
     }
 
+    /**
+     * Gets the underlying connection pool.
+     *
+     * @return the underlying connection pool.
+     */
     protected GenericObjectPool<PoolableConnection> getConnectionPool() {
         return connectionPool;
     }
@@ -1178,6 +1183,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return this.password;
     }
 
+    /**
+     * Gets the registered JMX ObjectName.
+     *
+     * @return the registered JMX ObjectName.
+     */
     protected ObjectName getRegisteredJmxName() {
         return ObjectNameWrapper.unwrap(registeredJmxObjectName);
     }
@@ -1495,6 +1505,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    /**
+     * Logs the given message.
+     *
+     * @param message the message to log.
+     */
     protected void log(final String message) {
         if (logWriter != null) {
             logWriter.println(message);
