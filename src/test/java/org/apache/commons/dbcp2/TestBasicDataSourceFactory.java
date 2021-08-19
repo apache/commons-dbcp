@@ -156,18 +156,18 @@ public class TestBasicDataSourceFactory {
         try {
             StackMessageLog.lock();
             StackMessageLog.clear();
-            final Reference ref = new Reference("javax.sql.DataSource",
-                                          BasicDataSourceFactory.class.getName(), null);
+            final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
             final Properties properties = getTestProperties();
             for (final Entry<Object, Object> entry : properties.entrySet()) {
                 ref.add(new StringRefAddr((String) entry.getKey(), (String) entry.getValue()));
             }
             final BasicDataSourceFactory basicDataSourceFactory = new BasicDataSourceFactory();
-            final BasicDataSource ds = (BasicDataSource) basicDataSourceFactory.getObjectInstance(ref, null, null, null);
-            checkDataSourceProperties(ds);
-            checkConnectionPoolProperties(ds.getConnectionPool());
-            final List<String> messages = StackMessageLog.getAll();
-            assertEquals(0,messages.size());
+            try (final BasicDataSource ds = (BasicDataSource) basicDataSourceFactory.getObjectInstance(ref, null, null, null)) {
+                checkDataSourceProperties(ds);
+                checkConnectionPoolProperties(ds.getConnectionPool());
+                final List<String> messages = StackMessageLog.getAll();
+                assertEquals(0, messages.size());
+            }
         } finally {
             StackMessageLog.clear();
             StackMessageLog.unLock();
@@ -177,15 +177,16 @@ public class TestBasicDataSourceFactory {
     @Test
     public void testNoProperties() throws Exception {
         final Properties properties = new Properties();
-        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
-
-        assertNotNull(ds);
+        try (final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
+            assertNotNull(ds);
+        }
     }
 
     @Test
     public void testProperties() throws Exception {
-        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties());
-        checkDataSourceProperties(ds);
+        try (final BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties())) {
+            checkDataSourceProperties(ds);
+        }
     }
 
     @Test
