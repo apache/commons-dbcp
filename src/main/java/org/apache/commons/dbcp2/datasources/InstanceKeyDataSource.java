@@ -117,15 +117,15 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private int defaultMaxIdle = GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
     private int defaultMaxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
     private Duration defaultMaxWaitDuration = BaseObjectPoolConfig.DEFAULT_MAX_WAIT;
-    private long defaultMinEvictableIdleTimeMillis = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+    private Duration defaultMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_DURATION;
     private int defaultMinIdle = GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
     private int defaultNumTestsPerEvictionRun = BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
-    private long defaultSoftMinEvictableIdleTimeMillis = BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+    private Duration defaultSoftMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_DURATION;
     private boolean defaultTestOnCreate = BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
     private boolean defaultTestOnBorrow = BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
     private boolean defaultTestOnReturn = BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
     private boolean defaultTestWhileIdle = BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
-    private long defaultTimeBetweenEvictionRunsMillis = BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+    private Duration defaultDurationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS;
 
     // Connection factory properties
     private String validationQuery;
@@ -169,8 +169,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                 // do not throw this exception because we are in the middle
                 // of handling another exception. But record it because
                 // it potentially leaks connections from the pool.
-                getLogWriter().println("[ERROR] Could not return connection to " + "pool during exception handling. "
-                        + e.getMessage());
+                getLogWriter().println("[ERROR] Could not return connection to pool during exception handling. " + e.getMessage());
             }
         }
     }
@@ -344,9 +343,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      *
-     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      * @since 2.9.0
      */
     public Duration getDefaultMaxWait() {
@@ -354,9 +353,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      *
-     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      * @deprecated Use {@link #getDefaultMaxWait()}.
      */
     @Deprecated
@@ -365,14 +364,14 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per user
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per user
      * pool.
      *
-     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per
      *         user pool.
      */
     public long getDefaultMinEvictableIdleTimeMillis() {
-        return this.defaultMinEvictableIdleTimeMillis;
+        return this.defaultMinEvictableIdleDuration.toMillis();
     }
 
     /**
@@ -403,7 +402,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      */
     public long getDefaultSoftMinEvictableIdleTimeMillis() {
-        return this.defaultSoftMinEvictableIdleTimeMillis;
+        return this.defaultSoftMinEvictableIdleDuration.toMillis();
     }
 
     /**
@@ -458,7 +457,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
      */
     public long getDefaultTimeBetweenEvictionRunsMillis() {
-        return this.defaultTimeBetweenEvictionRunsMillis;
+        return this.defaultDurationBetweenEvictionRuns.toMillis();
     }
 
     /**
@@ -735,10 +734,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      *
      * @param maxWaitMillis
-     *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitMillis()} for each per user pool.
+     *            The default value for {@link GenericKeyedObjectPoolConfig#getMaxWaitDuration()} for each per user pool.
      * @since 2.9.0
      */
     public void setDefaultMaxWait(final Duration maxWaitMillis) {
@@ -759,16 +758,16 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each per user
+     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per user
      * pool.
      *
      * @param minEvictableIdleTimeMillis
-     *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleTime()} for each
+     *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each
      *            per user pool.
      */
     public void setDefaultMinEvictableIdleTimeMillis(final long minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
-        this.defaultMinEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+        this.defaultMinEvictableIdleDuration = Duration.ofMillis(minEvictableIdleTimeMillis);
     }
 
     /**
@@ -818,7 +817,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     public void setDefaultSoftMinEvictableIdleTimeMillis(final long softMinEvictableIdleTimeMillis) {
         assertInitializationAllowed();
-        this.defaultSoftMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
+        this.defaultSoftMinEvictableIdleDuration = Duration.ofMillis(softMinEvictableIdleTimeMillis);
     }
 
     /**
@@ -883,7 +882,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     public void setDefaultTimeBetweenEvictionRunsMillis(final long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
-        this.defaultTimeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+        this.defaultDurationBetweenEvictionRuns = Duration.ofMillis(timeBetweenEvictionRunsMillis);
     }
 
     /**
@@ -1138,13 +1137,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(", defaultMaxWait=");
         builder.append(defaultMaxWaitDuration);
         builder.append(", defaultMinEvictableIdleTimeMillis=");
-        builder.append(defaultMinEvictableIdleTimeMillis);
+        builder.append(defaultMinEvictableIdleDuration);
         builder.append(", defaultMinIdle=");
         builder.append(defaultMinIdle);
         builder.append(", defaultNumTestsPerEvictionRun=");
         builder.append(defaultNumTestsPerEvictionRun);
         builder.append(", defaultSoftMinEvictableIdleTimeMillis=");
-        builder.append(defaultSoftMinEvictableIdleTimeMillis);
+        builder.append(defaultSoftMinEvictableIdleDuration);
         builder.append(", defaultTestOnCreate=");
         builder.append(defaultTestOnCreate);
         builder.append(", defaultTestOnBorrow=");
@@ -1154,7 +1153,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(", defaultTestWhileIdle=");
         builder.append(defaultTestWhileIdle);
         builder.append(", defaultTimeBetweenEvictionRunsMillis=");
-        builder.append(defaultTimeBetweenEvictionRunsMillis);
+        builder.append(defaultDurationBetweenEvictionRuns);
         builder.append(", validationQuery=");
         builder.append(validationQuery);
         builder.append(", validationQueryTimeoutSeconds=");
