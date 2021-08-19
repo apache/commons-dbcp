@@ -27,6 +27,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -481,13 +482,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
-        gop.setMaxWaitMillis(maxWaitMillis);
+        gop.setMaxWait(Duration.ofMillis(maxWaitMillis));
         gop.setTestOnCreate(testOnCreate);
         gop.setTestOnBorrow(testOnBorrow);
         gop.setTestOnReturn(testOnReturn);
         gop.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
-        gop.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        gop.setSoftMinEvictableIdleTimeMillis(softMinEvictableIdleTimeMillis);
+        gop.setMinEvictableIdle(Duration.ofMillis(minEvictableIdleTimeMillis));
+        gop.setSoftMinEvictableIdle(Duration.ofMillis(softMinEvictableIdleTimeMillis));
         gop.setTestWhileIdle(testWhileIdle);
         gop.setLifo(lifo);
         gop.setSwallowedExceptionListener(new SwallowedExceptionLogger(log, logExpiredConnections));
@@ -2141,7 +2142,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setMaxWaitMillis(final long maxWaitMillis) {
         this.maxWaitMillis = maxWaitMillis;
         if (connectionPool != null) {
-            connectionPool.setMaxWaitMillis(maxWaitMillis);
+            connectionPool.setMaxWait(Duration.ofMillis(maxWaitMillis));
         }
     }
 
@@ -2156,7 +2157,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setMinEvictableIdleTimeMillis(final long minEvictableIdleTimeMillis) {
         this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
         if (connectionPool != null) {
-            connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+            connectionPool.setMinEvictableIdle(Duration.ofMillis(minEvictableIdleTimeMillis));
         }
     }
 
@@ -2270,7 +2271,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
         }
-        abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+        abandonedConfig.setRemoveAbandonedTimeout(Duration.ofSeconds(removeAbandonedTimeout));
         final GenericObjectPool<?> gop = this.connectionPool;
         if (gop != null) {
             gop.setAbandonedConfig(abandonedConfig);
@@ -2299,7 +2300,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setSoftMinEvictableIdleTimeMillis(final long softMinEvictableIdleTimeMillis) {
         this.softMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
         if (connectionPool != null) {
-            connectionPool.setSoftMinEvictableIdleTimeMillis(softMinEvictableIdleTimeMillis);
+            connectionPool.setSoftMinEvictableIdle(Duration.ofMillis(softMinEvictableIdleTimeMillis));
         }
     }
 
@@ -2364,7 +2365,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setTimeBetweenEvictionRunsMillis(final long timeBetweenEvictionRunsMillis) {
         this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
         if (connectionPool != null) {
-            connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+            connectionPool.setTimeBetweenEvictionRuns(Duration.ofMillis(timeBetweenEvictionRunsMillis));
         }
     }
 
@@ -2459,7 +2460,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     protected void startPoolMaintenance() {
         if (connectionPool != null && timeBetweenEvictionRunsMillis > 0) {
-            connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+            connectionPool.setTimeBetweenEvictionRuns(Duration.ofMillis(timeBetweenEvictionRunsMillis));
         }
     }
 
