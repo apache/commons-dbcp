@@ -179,6 +179,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     }
 
     /**
+     * Tests if className is the value returned from getClass().getName().toString().
+     *
      * @param className
      *            The class name to test.
      *
@@ -186,17 +188,29 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      */
     protected abstract boolean isCorrectClass(String className);
 
+    private boolean parseBoolean(final RefAddr refAddr) {
+        return Boolean.parseBoolean(toString(refAddr));
+    }
+
+    private int parseInt(final RefAddr refAddr) {
+        return Integer.parseInt(toString(refAddr));
+    }
+
+    private long parseLong(final RefAddr refAddr) {
+        return Long.parseLong(toString(refAddr));
+    }
+
     private void setCommonProperties(final Reference ref, final InstanceKeyDataSource ikds)
             throws IOException, ClassNotFoundException {
 
         RefAddr refAddr = ref.get("dataSourceName");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDataSourceName(refAddr.getContent().toString());
+            ikds.setDataSourceName(toString(refAddr));
         }
 
         refAddr = ref.get("description");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDescription(refAddr.getContent().toString());
+            ikds.setDescription(toString(refAddr));
         }
 
         refAddr = ref.get("jndiEnvironment");
@@ -207,123 +221,127 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("loginTimeout");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setLoginTimeout(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setLoginTimeout(parseInt(refAddr));
         }
 
         // Pool properties
         refAddr = ref.get("blockWhenExhausted");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultBlockWhenExhausted(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultBlockWhenExhausted(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("evictionPolicyClassName");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultEvictionPolicyClassName(refAddr.getContent().toString());
+            ikds.setDefaultEvictionPolicyClassName(toString(refAddr));
         }
 
         // Pool properties
         refAddr = ref.get("lifo");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultLifo(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultLifo(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("maxIdlePerKey");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMaxIdle(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setDefaultMaxIdle(parseInt(refAddr));
         }
 
         refAddr = ref.get("maxTotalPerKey");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMaxTotal(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setDefaultMaxTotal(parseInt(refAddr));
         }
 
         refAddr = ref.get("maxWaitMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMaxWaitMillis(Long.parseLong(refAddr.getContent().toString()));
+            ikds.setDefaultMaxWaitMillis(parseLong(refAddr));
         }
 
         refAddr = ref.get("minEvictableIdleTimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMinEvictableIdleTimeMillis(Long.parseLong(refAddr.getContent().toString()));
+            ikds.setDefaultMinEvictableIdleTimeMillis(parseLong(refAddr));
         }
 
         refAddr = ref.get("minIdlePerKey");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMinIdle(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setDefaultMinIdle(parseInt(refAddr));
         }
 
         refAddr = ref.get("numTestsPerEvictionRun");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultNumTestsPerEvictionRun(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setDefaultNumTestsPerEvictionRun(parseInt(refAddr));
         }
 
         refAddr = ref.get("softMinEvictableIdleTimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultSoftMinEvictableIdleTimeMillis(Long.parseLong(refAddr.getContent().toString()));
+            ikds.setDefaultSoftMinEvictableIdleTimeMillis(parseLong(refAddr));
         }
 
         refAddr = ref.get("testOnCreate");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTestOnCreate(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultTestOnCreate(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testOnBorrow");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTestOnBorrow(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultTestOnBorrow(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testOnReturn");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTestOnReturn(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultTestOnReturn(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testWhileIdle");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTestWhileIdle(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setDefaultTestWhileIdle(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("timeBetweenEvictionRunsMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTimeBetweenEvictionRunsMillis(Long.parseLong(refAddr.getContent().toString()));
+            ikds.setDefaultTimeBetweenEvictionRunsMillis(parseLong(refAddr));
         }
 
         // Connection factory properties
 
         refAddr = ref.get("validationQuery");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setValidationQuery(refAddr.getContent().toString());
+            ikds.setValidationQuery(toString(refAddr));
         }
 
         refAddr = ref.get("validationQueryTimeout");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setValidationQueryTimeout(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setValidationQueryTimeout(parseInt(refAddr));
         }
 
         refAddr = ref.get("rollbackAfterValidation");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setRollbackAfterValidation(Boolean.parseBoolean(refAddr.getContent().toString()));
+            ikds.setRollbackAfterValidation(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("maxConnLifetimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setMaxConnLifetimeMillis(Long.parseLong(refAddr.getContent().toString()));
+            ikds.setMaxConnLifetimeMillis(parseLong(refAddr));
         }
 
         // Connection properties
 
         refAddr = ref.get("defaultAutoCommit");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultAutoCommit(Boolean.valueOf(refAddr.getContent().toString()));
+            ikds.setDefaultAutoCommit(Boolean.valueOf(toString(refAddr)));
         }
 
         refAddr = ref.get("defaultTransactionIsolation");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTransactionIsolation(Integer.parseInt(refAddr.getContent().toString()));
+            ikds.setDefaultTransactionIsolation(parseInt(refAddr));
         }
 
         refAddr = ref.get("defaultReadOnly");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultReadOnly(Boolean.valueOf(refAddr.getContent().toString()));
+            ikds.setDefaultReadOnly(Boolean.valueOf(toString(refAddr)));
         }
+    }
+
+    private String toString(final RefAddr refAddr) {
+        return refAddr.getContent().toString();
     }
 }
