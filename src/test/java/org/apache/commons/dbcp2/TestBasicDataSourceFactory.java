@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -44,18 +45,18 @@ public class TestBasicDataSourceFactory {
         assertEquals(10, cp.getMaxTotal());
         assertEquals(8, cp.getMaxIdle());
         assertEquals(0, cp.getMinIdle());
-        assertEquals(500, cp.getMaxWaitMillis());
+        assertEquals(Duration.ofMillis(500), cp.getMaxWaitDuration());
         assertEquals(5, cp.getNumIdle());
         assertTrue(cp.getTestOnBorrow());
         assertFalse(cp.getTestOnReturn());
-        assertEquals(1000, cp.getTimeBetweenEvictionRunsMillis());
-        assertEquals(2000, cp.getMinEvictableIdleTimeMillis());
-        assertEquals(3000, cp.getSoftMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofSeconds(1), cp.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofSeconds(2), cp.getMinEvictableIdleDuration());
+        assertEquals(Duration.ofSeconds(3), cp.getSoftMinEvictableIdleDuration());
         assertEquals(2, cp.getNumTestsPerEvictionRun());
         assertTrue(cp.getTestWhileIdle());
         assertTrue(cp.getRemoveAbandonedOnBorrow());
         assertTrue(cp.getRemoveAbandonedOnMaintenance());
-        assertEquals(3000, cp.getRemoveAbandonedTimeout());
+        assertEquals(Duration.ofSeconds(3000), cp.getRemoveAbandonedTimeoutDuration());
         assertTrue(cp.getLogAbandoned());
         assertTrue(cp.getLifo());
     }
