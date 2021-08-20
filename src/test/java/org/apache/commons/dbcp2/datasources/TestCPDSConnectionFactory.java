@@ -20,11 +20,12 @@ package org.apache.commons.dbcp2.datasources;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 
 import javax.sql.PooledConnection;
 
@@ -58,10 +59,8 @@ public class TestCPDSConnectionFactory {
     @Test
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(
-                cpds, null, -1, false, "userName", "password");
-        final GenericObjectPool<PooledConnectionAndInfo> pool =
-                new GenericObjectPool<>(factory);
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
+        final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
 
         // Checkout a pair of connections
@@ -101,12 +100,7 @@ public class TestCPDSConnectionFactory {
         assertEquals(0, pool.getNumActive());
 
         // Verify pc is closed
-        try {
-           pc.getConnection();
-           fail("Expecting SQLException using closed PooledConnection");
-        } catch (final SQLException ex) {
-            // expected
-        }
+        assertThrows(SQLException.class, () -> pc.getConnection(), "Expecting SQLException using closed PooledConnection");
 
         // Back from the dead - ignore the ghost!
         con1.close();
@@ -123,8 +117,7 @@ public class TestCPDSConnectionFactory {
      */
     @Test
     public void testNullValidationQuery() throws Exception {
-        final CPDSConnectionFactory factory =
-                new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
         final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setTestOnBorrow(true);
@@ -152,22 +145,22 @@ public class TestCPDSConnectionFactory {
      */
     @Test
     public void testSharedPoolDSDestroyOnReturn() throws Exception {
-       final PerUserPoolDataSource ds = new PerUserPoolDataSource();
-       ds.setConnectionPoolDataSource(cpds);
-       ds.setPerUserMaxTotal("userName", 10);
-       ds.setPerUserMaxWaitMillis("userName", 50L);
-       ds.setPerUserMaxIdle("userName", 2);
-       final Connection conn1 = ds.getConnection("userName", "password");
-       final Connection conn2 = ds.getConnection("userName", "password");
-       final Connection conn3 = ds.getConnection("userName", "password");
-       assertEquals(3, ds.getNumActive("userName"));
-       conn1.close();
-       assertEquals(1, ds.getNumIdle("userName"));
-       conn2.close();
-       assertEquals(2, ds.getNumIdle("userName"));
-       conn3.close(); // Return to pool will trigger destroy -> close sequence
-       assertEquals(2, ds.getNumIdle("userName"));
-       ds.close();
+        try (final PerUserPoolDataSource ds = new PerUserPoolDataSource()) {
+            ds.setConnectionPoolDataSource(cpds);
+            ds.setPerUserMaxTotal("userName", 10);
+            ds.setPerUserMaxWait("userName", Duration.ofMillis(50));
+            ds.setPerUserMaxIdle("userName", 2);
+            final Connection conn1 = ds.getConnection("userName", "password");
+            final Connection conn2 = ds.getConnection("userName", "password");
+            final Connection conn3 = ds.getConnection("userName", "password");
+            assertEquals(3, ds.getNumActive("userName"));
+            conn1.close();
+            assertEquals(1, ds.getNumIdle("userName"));
+            conn2.close();
+            assertEquals(2, ds.getNumIdle("userName"));
+            conn3.close(); // Return to pool will trigger destroy -> close sequence
+            assertEquals(2, ds.getNumIdle("userName"));
+        }
     }
 
 }
