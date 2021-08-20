@@ -24,10 +24,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Duration;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 
+import org.apache.commons.dbcp2.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,14 +76,14 @@ public class TestConnectionWithNarayana {
         mds.setMaxTotal(80);
         mds.setMinIdle(0);
         mds.setMaxIdle(80);
-        mds.setMinEvictableIdleTimeMillis(10000);
-        mds.setTimeBetweenEvictionRunsMillis(10000);
+        mds.setMinEvictableIdle(Duration.ofSeconds(10));
+        mds.setDurationBetweenEvictionRuns(Duration.ofSeconds(10));
         mds.setLogAbandoned(true);
-        mds.setMaxWaitMillis(2000);
+        mds.setMaxWait(Duration.ofSeconds(2));
         mds.setRemoveAbandonedOnMaintenance(true);
         mds.setRemoveAbandonedOnBorrow(true);
 
-        mds.setRemoveAbandonedTimeout(10);
+        mds.setRemoveAbandonedTimeout(Duration.ofSeconds(10));
         mds.setLogExpiredConnections(true);
         mds.setLifo(false);
 
@@ -99,9 +101,7 @@ public class TestConnectionWithNarayana {
                 ps.execute();
             }
         }
-        if (mds != null) {
-            mds.close();
-        }
+        Utils.closeQuietly(mds);
     }
 
     @Test
@@ -150,24 +150,8 @@ public class TestConnectionWithNarayana {
                     if (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ACTIVE) {
                         n++;
                     }
-
-                    Connection c = null;
-                    PreparedStatement ps2 = null;
-                    ResultSet rs = null;
-                    try {
-                        c = mds.getConnection();
-                        ps2 = c.prepareStatement(SELECT_STMT);
-                        rs = ps2.executeQuery();
-                    } finally {
-                        if (rs != null) {
-                            rs.close();
-                        }
-                        if (ps2 != null) {
-                            ps2.close();
-                        }
-                        if (c != null) {
-                            c.close();
-                        }
+                    try (Connection c = mds.getConnection(); PreparedStatement ps2 = c.prepareStatement(SELECT_STMT); ResultSet rs = ps2.executeQuery()) {
+                        // nothing here, all auto-close.
                     }
                 } while (n < 2);
 

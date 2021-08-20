@@ -33,6 +33,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,8 @@ import org.junit.jupiter.api.Test;
 /**
  */
 public class TestPerUserPoolDataSource extends TestConnectionPool {
+
+    private static final Duration DURATION_1_MILLISECOND = Duration.ofMillis(1);
 
     private String user;
 
@@ -71,11 +74,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource tds = new PerUserPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setDefaultMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
+        tds.setDefaultMaxWait(getMaxWaitDuration());
         tds.setPerUserMaxTotal(user, getMaxTotal());
-        tds.setPerUserMaxWaitMillis(user, getMaxWaitMillis());
-        tds.setDefaultTransactionIsolation(
-            Connection.TRANSACTION_READ_COMMITTED);
+        tds.setPerUserMaxWait(user, getMaxWaitDuration());
+        tds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
         ds = tds;
     }
@@ -221,6 +223,53 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testDepreactedAccessors() {
+        final PerUserPoolDataSource ds = new PerUserPoolDataSource();
+        int i = 0;
+        //
+        i++;
+        ds.setDefaultMaxWaitMillis(i);
+        assertEquals(i, ds.getDefaultMaxWaitMillis());
+        assertEquals(Duration.ofMillis(i), ds.getDefaultMaxWait());
+        //
+        i++;
+        ds.setDefaultMinEvictableIdleTimeMillis(i);
+        assertEquals(i, ds.getDefaultMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofMillis(i), ds.getDefaultMinEvictableIdleDuration());
+        //
+        i++;
+        ds.setDefaultSoftMinEvictableIdleTimeMillis(i);
+        assertEquals(i, ds.getDefaultSoftMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofMillis(i), ds.getDefaultSoftMinEvictableIdleDuration());
+        //
+        i++;
+        ds.setDefaultTimeBetweenEvictionRunsMillis(i);
+        assertEquals(i, ds.getDefaultTimeBetweenEvictionRunsMillis());
+        assertEquals(Duration.ofMillis(i), ds.getDefaultDurationBetweenEvictionRuns());
+        //
+        i++;
+        ds.setPerUserMaxWaitMillis(user, Long.valueOf(i));
+        assertEquals(i, ds.getPerUserMaxWaitMillis(user));
+        assertEquals(Duration.ofMillis(i), ds.getPerUserMaxWaitDuration(user));
+        //
+        i++;
+        ds.setPerUserMinEvictableIdleTimeMillis(user, Long.valueOf(i));
+        assertEquals(i, ds.getPerUserMinEvictableIdleTimeMillis(user));
+        assertEquals(Duration.ofMillis(i), ds.getPerUserMinEvictableIdleDuration(user));
+        //
+        i++;
+        ds.setPerUserSoftMinEvictableIdleTimeMillis(user, Long.valueOf(i));
+        assertEquals(i, ds.getPerUserSoftMinEvictableIdleTimeMillis(user));
+        assertEquals(Duration.ofMillis(i), ds.getPerUserSoftMinEvictableIdleDuration(user));
+        //
+        i++;
+        ds.setPerUserTimeBetweenEvictionRunsMillis(user, Long.valueOf(i));
+        assertEquals(i, ds.getPerUserTimeBetweenEvictionRunsMillis(user));
+        assertEquals(Duration.ofMillis(i), ds.getPerUserDurationBetweenEvictionRuns(user));
+    }
+
     /**
      * Switching 'u1 to 'u2' and 'p1' to 'p2' will
      * exhibit the bug detailed in
@@ -290,7 +339,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     public void testMaxWaitMillisZero() throws Exception {
         final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
-        tds.setDefaultMaxWaitMillis(0);
+        tds.setDefaultMaxWait(Duration.ZERO);
         tds.setPerUserMaxTotal("u1", 1);
         final Connection conn = tds.getConnection("u1", "p1");
         try (Connection c2 = tds.getConnection("u1", "p1")){
@@ -305,18 +354,18 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     public void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
-        final int defaultMaxWaitMillis = 430;
-        ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user, (long) defaultMaxWaitMillis);
-        multipleThreads(1, false, false, defaultMaxWaitMillis);
+        final Duration defaultMaxWaitDuration = Duration.ofMillis(430);
+        ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
+        ((PerUserPoolDataSource) ds).setPerUserMaxWait(user, defaultMaxWaitDuration);
+        multipleThreads(Duration.ofMillis(1), false, false, defaultMaxWaitDuration);
     }
 
     @Test
     public void testMultipleThreads2() throws Exception {
-        final int defaultMaxWaitMillis = 500;
-        ((PerUserPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        ((PerUserPoolDataSource) ds).setPerUserMaxWaitMillis(user, (long) defaultMaxWaitMillis);
-        multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
+        final Duration defaultMaxWaitDuration = Duration.ofMillis(500);
+        ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
+        ((PerUserPoolDataSource) ds).setPerUserMaxWait(user, defaultMaxWaitDuration);
+        multipleThreads(defaultMaxWaitDuration.multipliedBy(2), true, true, defaultMaxWaitDuration);
     }
 
     @Override
@@ -850,41 +899,40 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPerUserMaxWaitMillisMapInitialized() {
+    public void testPerUserMaxWaitDurationMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserMaxWaitMillis(values);
-        assertEquals(0L, ds.getPerUserMaxWaitMillis("key"));
+        Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserMaxWaitDuration(values);
+        assertEquals(Duration.ZERO, ds.getPerUserMaxWaitDuration("key"));
         values = new HashMap<>();
-        values.put("anonymous", 0L);
-        ds.setPerUserMaxWaitMillis(values);
-        assertEquals(ds.getDefaultMaxWaitMillis(), ds.getPerUserMaxWaitMillis("key"));
-        assertEquals(0L, ds.getPerUserMaxWaitMillis("anonymous"));
+        values.put("anonymous", Duration.ZERO);
+        ds.setPerUserMaxWaitDuration(values);
+        assertEquals(ds.getDefaultMaxWait(), ds.getPerUserMaxWaitDuration("key"));
+        assertEquals(Duration.ZERO, ds.getPerUserMaxWaitDuration("anonymous"));
     }
 
-    // -- per user max total
-
     @Test
-    public void testPerUserMaxWaitMillisMapNotInitialized() {
+    public void testPerUserMaxWaitDurationMapNotInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 1L);
-        ds.setPerUserMaxWaitMillis(values);
-        assertEquals(1L, ds.getPerUserMaxWaitMillis("key"));
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", DURATION_1_MILLISECOND);
+        ds.setPerUserMaxWaitDuration(values);
+        assertEquals(DURATION_1_MILLISECOND, ds.getPerUserMaxWaitDuration("key"));
     }
 
     @Test
-    public void testPerUserMaxWaitMillisMapNotInitializedMissingKey() {
+    public void testPerUserMaxWaitDurationMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserMaxWaitMillis(values);
-        assertEquals(ds.getDefaultMaxWaitMillis(), ds.getPerUserMaxWaitMillis("missingkey"));
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserMaxWaitDuration(values);
+        assertEquals(ds.getDefaultMaxWait(), ds.getPerUserMaxWaitDuration("missingkey"));
     }
 
     @Test
-    public void testPerUserMaxWaitMillisWithUserMapInitialized() {
+    @SuppressWarnings("deprecation")
+    public void testPerUserMaxWaitMillisWithUserMapInitialized_Deprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis(user, 0L);
         assertEquals(0L, ds.getPerUserMaxWaitMillis(user));
@@ -894,14 +942,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPerUserMaxWaitMillisWithUserMapNotInitialized() {
+    @SuppressWarnings("deprecation")
+    public void testPerUserMaxWaitMillisWithUserMapNotInitialized_Deprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis(user, 0L);
         assertEquals(0L, ds.getPerUserMaxWaitMillis(user));
     }
 
     @Test
-    public void testPerUserMaxWaitMillisWithUserMapNotInitializedMissingKey() {
+    @SuppressWarnings("deprecation")
+    public void testPerUserMaxWaitMillisWithUserMapNotInitializedMissingKey_Deprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis("whatismyuseragain?", 0L);
         assertEquals(ds.getDefaultMaxWaitMillis(), ds.getPerUserMaxWaitMillis("missingkey"));
@@ -960,35 +1010,40 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // -- per user max wait millis
 
     @Test
-    public void testPerUserMinEvictableIdleTimeMillisMapInitialized() {
+    public void testPerUserMinEvictableIdleDurationMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserMinEvictableIdleTimeMillis(values);
+        Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserMinEvictableIdle(values);
         assertEquals(0L, ds.getPerUserMinEvictableIdleTimeMillis("key"));
+        assertEquals(Duration.ZERO, ds.getPerUserMinEvictableIdleDuration("key"));
         values = new HashMap<>();
-        values.put("anonymous", 0L);
-        ds.setPerUserMinEvictableIdleTimeMillis(values);
+        values.put("anonymous", Duration.ZERO);
+        ds.setPerUserMinEvictableIdle(values);
         assertEquals(ds.getDefaultMinEvictableIdleTimeMillis(), ds.getPerUserMinEvictableIdleTimeMillis("key"));
+        assertEquals(ds.getDefaultMinEvictableIdleDuration(), ds.getPerUserMinEvictableIdleDuration("key"));
         assertEquals(0L, ds.getPerUserMinEvictableIdleTimeMillis("anonymous"));
+        assertEquals(Duration.ZERO, ds.getPerUserMinEvictableIdleDuration("anonymous"));
     }
 
     @Test
-    public void testPerUserMinEvictableIdleTimeMillisMapNotInitialized() {
+    public void testPerUserMinEvictableIdleDurationMapNotInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 1L);
-        ds.setPerUserMinEvictableIdleTimeMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", DURATION_1_MILLISECOND);
+        ds.setPerUserMinEvictableIdle(values);
         assertEquals(1L, ds.getPerUserMinEvictableIdleTimeMillis("key"));
+        assertEquals(DURATION_1_MILLISECOND, ds.getPerUserMinEvictableIdleDuration("key"));
     }
 
     @Test
-    public void testPerUserMinEvictableIdleTimeMillisMapNotInitializedMissingKey() {
+    public void testPerUserMinEvictableIdleDurationMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserMinEvictableIdleTimeMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserMinEvictableIdle(values);
         assertEquals(ds.getDefaultMinEvictableIdleTimeMillis(), ds.getPerUserMinEvictableIdleTimeMillis("missingkey"));
+        assertEquals(ds.getDefaultMinEvictableIdleDuration(), ds.getPerUserMinEvictableIdleDuration("missingkey"));
     }
 
     @Test
@@ -1134,35 +1189,40 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // -- per user num tests per eviction run
 
     @Test
-    public void testPerUserSoftMinEvictableIdleTimeMillisMapInitialized() {
+    public void testPerUserSoftMinEvictableIdleDurationMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserSoftMinEvictableIdleTimeMillis(values);
+        Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserSoftMinEvictableIdle(values);
         assertEquals(0L, ds.getPerUserSoftMinEvictableIdleTimeMillis("key"));
+        assertEquals(Duration.ZERO, ds.getPerUserSoftMinEvictableIdleDuration("key"));
         values = new HashMap<>();
-        values.put("anonymous", 0L);
-        ds.setPerUserSoftMinEvictableIdleTimeMillis(values);
+        values.put("anonymous", Duration.ZERO);
+        ds.setPerUserSoftMinEvictableIdle(values);
         assertEquals(ds.getDefaultSoftMinEvictableIdleTimeMillis(), ds.getPerUserSoftMinEvictableIdleTimeMillis("key"));
+        assertEquals(ds.getDefaultSoftMinEvictableIdleDuration(), ds.getPerUserSoftMinEvictableIdleDuration("key"));
         assertEquals(0L, ds.getPerUserSoftMinEvictableIdleTimeMillis("anonymous"));
+        assertEquals(Duration.ZERO, ds.getPerUserSoftMinEvictableIdleDuration("anonymous"));
     }
 
     @Test
-    public void testPerUserSoftMinEvictableIdleTimeMillisMapNotInitialized() {
+    public void testPerUserSoftMinEvictableIdleDurationMapNotInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 1L);
-        ds.setPerUserSoftMinEvictableIdleTimeMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", DURATION_1_MILLISECOND);
+        ds.setPerUserSoftMinEvictableIdle(values);
         assertEquals(1L, ds.getPerUserSoftMinEvictableIdleTimeMillis("key"));
+        assertEquals(DURATION_1_MILLISECOND, ds.getPerUserSoftMinEvictableIdleDuration("key"));
     }
 
     @Test
-    public void testPerUserSoftMinEvictableIdleTimeMillisMapNotInitializedMissingKey() {
+    public void testPerUserSoftMinEvictableIdleDurationMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserSoftMinEvictableIdleTimeMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserSoftMinEvictableIdle(values);
         assertEquals(ds.getDefaultSoftMinEvictableIdleTimeMillis(), ds.getPerUserSoftMinEvictableIdleTimeMillis("missingkey"));
+        assertEquals(ds.getDefaultSoftMinEvictableIdleDuration(), ds.getPerUserSoftMinEvictableIdleDuration("missingkey"));
     }
 
     @Test
@@ -1421,38 +1481,41 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultTestWhileIdle(), ds.getPerUserTestWhileIdle("missingkey"));
     }
 
-    // -- per user test while idle
-
     @Test
-    public void testPerUserTimeBetweenEvictionRunsMillisMapInitialized() {
+    public void testPerUserDurationBetweenEvictionRunsMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserTimeBetweenEvictionRunsMillis(values);
+        Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserDurationBetweenEvictionRuns(values);
         assertEquals(0L, ds.getPerUserTimeBetweenEvictionRunsMillis("key"));
+        assertEquals(Duration.ZERO, ds.getPerUserDurationBetweenEvictionRuns("key"));
         values = new HashMap<>();
-        values.put("anonymous", 0L);
-        ds.setPerUserTimeBetweenEvictionRunsMillis(values);
+        values.put("anonymous", Duration.ZERO);
+        ds.setPerUserDurationBetweenEvictionRuns(values);
         assertEquals(ds.getDefaultTimeBetweenEvictionRunsMillis(), ds.getPerUserTimeBetweenEvictionRunsMillis("key"));
+        assertEquals(ds.getDefaultDurationBetweenEvictionRuns(), ds.getPerUserDurationBetweenEvictionRuns("key"));
         assertEquals(0L, ds.getPerUserTimeBetweenEvictionRunsMillis("anonymous"));
+        assertEquals(Duration.ZERO, ds.getPerUserDurationBetweenEvictionRuns("anonymous"));
     }
 
     @Test
-    public void testPerUserTimeBetweenEvictionRunsMillisMapNotInitialized() {
+    public void testPerUserDurationBetweenEvictionRunsMapNotInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 1L);
-        ds.setPerUserTimeBetweenEvictionRunsMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", DURATION_1_MILLISECOND);
+        ds.setPerUserDurationBetweenEvictionRuns(values);
         assertEquals(1L, ds.getPerUserTimeBetweenEvictionRunsMillis("key"));
+        assertEquals(DURATION_1_MILLISECOND, ds.getPerUserDurationBetweenEvictionRuns("key"));
     }
 
     @Test
-    public void testPerUserTimeBetweenEvictionRunsMillisMapNotInitializedMissingKey() {
+    public void testPerUserDurationBetweenEvictionRunsMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
-        final Map<String, Long> values = new HashMap<>();
-        values.put("key", 0L);
-        ds.setPerUserTimeBetweenEvictionRunsMillis(values);
+        final Map<String, Duration> values = new HashMap<>();
+        values.put("key", Duration.ZERO);
+        ds.setPerUserDurationBetweenEvictionRuns(values);
         assertEquals(ds.getDefaultTimeBetweenEvictionRunsMillis(), ds.getPerUserTimeBetweenEvictionRunsMillis("missingkey"));
+        assertEquals(ds.getDefaultDurationBetweenEvictionRuns(), ds.getPerUserDurationBetweenEvictionRuns("missingkey"));
     }
 
     @Test

@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.Executor;
 
@@ -317,7 +318,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         if (validationPreparedStatement != null) {
-            Utils.closeQuietly(validationPreparedStatement);
+            Utils.closeQuietly((AutoCloseable) validationPreparedStatement);
         }
 
         super.closeInternal();
@@ -340,17 +341,42 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      *            The validation timeout in seconds.
      * @throws SQLException
      *             Thrown when validation fails or an SQLException occurs during validation
+     * @deprecated Use {@link #validate(String, Duration)}.
      */
-    public void validate(final String sql, int timeoutSeconds) throws SQLException {
+    @Deprecated
+    public void validate(final String sql, final int timeoutSeconds) throws SQLException {
+        validate(sql, Duration.ofSeconds(timeoutSeconds));
+    }
+
+    /**
+     * Validates the connection, using the following algorithm:
+     * <ol>
+     * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
+     * thrown a fatal disconnection exception, a {@code SQLException} is thrown.</li>
+     * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
+     * returns {@code false}, {@code SQLException} is thrown; otherwise, this method returns successfully.</li>
+     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
+     * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
+     * </ol>
+     *
+     * @param sql
+     *            The validation SQL query.
+     * @param timeoutDuration
+     *            The validation timeout in seconds.
+     * @throws SQLException
+     *             Thrown when validation fails or an SQLException occurs during validation
+     * @since 2.10.0
+     */
+    public void validate(final String sql, Duration timeoutDuration) throws SQLException {
         if (fastFailValidation && fatalSqlExceptionThrown) {
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
         if (sql == null || sql.isEmpty()) {
-            if (timeoutSeconds < 0) {
-                timeoutSeconds = 0;
+            if (timeoutDuration.isNegative()) {
+                timeoutDuration = Duration.ZERO;
             }
-            if (!isValid(timeoutSeconds)) {
+            if (!isValid(timeoutDuration)) {
                 throw new SQLException("isValid() returned false");
             }
             return;
@@ -363,8 +389,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             validationPreparedStatement = getInnermostDelegateInternal().prepareStatement(sql);
         }
 
-        if (timeoutSeconds > 0) {
-            validationPreparedStatement.setQueryTimeout(timeoutSeconds);
+        if (timeoutDuration.compareTo(Duration.ZERO) > 0) {
+            validationPreparedStatement.setQueryTimeout((int) timeoutDuration.getSeconds());
         }
 
         try (ResultSet rs = validationPreparedStatement.executeQuery()) {

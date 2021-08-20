@@ -34,6 +34,7 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     private Boolean cachedReadOnly;
     private String cachedCatalog;
     private String cachedSchema;
-    private Integer defaultQueryTimeoutSeconds;
+    private Duration defaultQueryTimeoutDuration;
 
     /**
      * Creates a wrapper for the Connection which traces this Connection in the AbandonedObjectPool.
@@ -365,9 +366,22 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * <code>null</code> means that the driver default will be used.
      *
      * @return query timeout limit in seconds; zero means there is no limit.
+     * @deprecated Use {@link #getDefaultQueryTimeoutDuration()}.
      */
+    @Deprecated
     public Integer getDefaultQueryTimeout() {
-        return defaultQueryTimeoutSeconds;
+        return defaultQueryTimeoutDuration == null ? null : (int) defaultQueryTimeoutDuration.getSeconds();
+    }
+
+    /**
+     * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     *
+     * @return query timeout limit; zero means there is no limit.
+     * @since 2.10.0
+     */
+    public Duration getDefaultQueryTimeoutDuration() {
+        return defaultQueryTimeoutDuration;
     }
 
     /**
@@ -536,8 +550,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * @throws SQLException if a database access error occurs, this method is called on a closed Statement.
      */
     private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
-        if (defaultQueryTimeoutSeconds != null && defaultQueryTimeoutSeconds != delegatingStatement.getQueryTimeout()) {
-            delegatingStatement.setQueryTimeout(defaultQueryTimeoutSeconds);
+        if (defaultQueryTimeoutDuration != null && defaultQueryTimeoutDuration.getSeconds() != delegatingStatement.getQueryTimeout()) {
+            delegatingStatement.setQueryTimeout((int) defaultQueryTimeoutDuration.getSeconds());
         }
         return delegatingStatement;
     }
@@ -582,17 +596,34 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
-    @Override
-    public boolean isValid(final int timeoutSeconds) throws SQLException {
+    /**
+     * Tests if the connection has not been closed and is still valid.
+     *
+     * @param timeout The duration to wait for the database operation used to validate the connection to complete.
+     * @return See {@link Connection#isValid(int)}.
+     * @throws SQLException See {@link Connection#isValid(int)}.
+     * @see Connection#isValid(int)
+     * @since 2.10.0
+     */
+    public boolean isValid(final Duration timeout) throws SQLException {
         if (isClosed()) {
             return false;
         }
         try {
-            return connection.isValid(timeoutSeconds);
+            return connection.isValid((int) timeout.getSeconds());
         } catch (final SQLException e) {
             handleException(e);
             return false;
         }
+    }
+
+    /**
+     * @deprecated Use {@link #isValid(Duration)}.
+     */
+    @Override
+    @Deprecated
+    public boolean isValid(final int timeoutSeconds) throws SQLException {
+        return isValid(Duration.ofSeconds(timeoutSeconds));
     }
 
     @Override
@@ -865,11 +896,25 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
      * <code>null</code> means that the driver default will be used.
      *
-     * @param defaultQueryTimeoutSeconds
-     *            the new query timeout limit in seconds; zero means there is no limit
+     * @param defaultQueryTimeoutDuration
+     *            the new query timeout limit Duration; zero means there is no limit.
+     * @since 2.10.0
      */
+    public void setDefaultQueryTimeout(final Duration defaultQueryTimeoutDuration) {
+        this.defaultQueryTimeoutDuration = defaultQueryTimeoutDuration;
+    }
+
+    /**
+     * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
+     * <code>null</code> means that the driver default will be used.
+     *
+     * @param defaultQueryTimeoutSeconds
+     *            the new query timeout limit in seconds; zero means there is no limit.
+     * @deprecated Use {@link #setDefaultQueryTimeout(Duration)}.
+     */
+    @Deprecated
     public void setDefaultQueryTimeout(final Integer defaultQueryTimeoutSeconds) {
-        this.defaultQueryTimeoutSeconds = defaultQueryTimeoutSeconds;
+        this.defaultQueryTimeoutDuration = defaultQueryTimeoutSeconds == null ? null : Duration.ofSeconds(defaultQueryTimeoutSeconds);
     }
 
     /**

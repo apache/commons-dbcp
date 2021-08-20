@@ -86,14 +86,15 @@ public class AbandonedTrace implements TrackedUse {
      * @return long time in milliseconds.
      */
     @Override
+    @Deprecated
     public long getLastUsed() {
         return lastUsedInstant.toEpochMilli();
     }
-    
-//    @Override
-//    public Instant getLastUsedInstant() {
-//        return lastUsedInstant;
-//    }
+
+    @Override
+    public Instant getLastUsedInstant() {
+        return lastUsedInstant;
+    }
 
     /**
      * Gets a list of objects being traced by this object.

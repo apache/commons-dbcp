@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -163,7 +164,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
                         + "Both have default value set to false.");
         NUPROP_WARNTEXT.put(NUPROP_MAXWAIT,
                 "Property " + NUPROP_MAXWAIT + " is not used in DBCP2" + " , use " + PROP_MAX_WAIT_MILLIS + " instead. "
-                        + PROP_MAX_WAIT_MILLIS + " default value is " + BaseObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS
+                        + PROP_MAX_WAIT_MILLIS + " default value is " + BaseObjectPoolConfig.DEFAULT_MAX_WAIT
                         + ".");
     }
 
@@ -277,7 +278,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_MAX_WAIT_MILLIS);
         if (value != null) {
-            dataSource.setMaxWaitMillis(Long.parseLong(value));
+            dataSource.setMaxWait(Duration.ofMillis(Long.parseLong(value)));
         }
 
         value = properties.getProperty(PROP_TEST_ON_CREATE);
@@ -297,7 +298,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
         if (value != null) {
-            dataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(value));
+            dataSource.setDurationBetweenEvictionRuns(Duration.ofMillis(Long.parseLong(value)));
         }
 
         value = properties.getProperty(PROP_NUM_TESTS_PER_EVICTION_RUN);
@@ -307,12 +308,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS);
         if (value != null) {
-            dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(value));
+            dataSource.setMinEvictableIdle(Duration.ofMillis(Long.parseLong(value)));
         }
 
         value = properties.getProperty(PROP_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
         if (value != null) {
-            dataSource.setSoftMinEvictableIdleTimeMillis(Long.parseLong(value));
+            dataSource.setSoftMinEvictableIdle(Duration.ofMillis(Long.parseLong(value)));
         }
 
         value = properties.getProperty(PROP_EVICTION_POLICY_CLASS_NAME);
@@ -347,7 +348,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_VALIDATION_QUERY_TIMEOUT);
         if (value != null) {
-            dataSource.setValidationQueryTimeout(Integer.parseInt(value));
+            dataSource.setValidationQueryTimeout(Duration.ofSeconds(Integer.parseInt(value)));
         }
 
         value = properties.getProperty(PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED);
@@ -367,7 +368,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_REMOVE_ABANDONED_TIMEOUT);
         if (value != null) {
-            dataSource.setRemoveAbandonedTimeout(Integer.parseInt(value));
+            dataSource.setRemoveAbandonedTimeout(Duration.ofSeconds(Integer.parseInt(value)));
         }
 
         value = properties.getProperty(PROP_LOG_ABANDONED);
@@ -412,7 +413,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_MAX_CONN_LIFETIME_MILLIS);
         if (value != null) {
-            dataSource.setMaxConnLifetimeMillis(Long.parseLong(value));
+            dataSource.setMaxConn(Duration.ofMillis(Long.parseLong(value)));
         }
 
         value = properties.getProperty(PROP_LOG_EXPIRED_CONNECTIONS);
@@ -437,7 +438,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         value = properties.getProperty(PROP_DEFAULT_QUERY_TIMEOUT);
         if (value != null) {
-            dataSource.setDefaultQueryTimeout(Integer.valueOf(value));
+            dataSource.setDefaultQueryTimeout(Duration.ofSeconds(Integer.valueOf(value)));
         }
 
         value = properties.getProperty(PROP_FAST_FAIL_VALIDATION);

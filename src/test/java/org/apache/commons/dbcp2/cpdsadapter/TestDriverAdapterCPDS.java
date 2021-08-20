@@ -130,12 +130,12 @@ public class TestDriverAdapterCPDS {
         try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
             spds.setConnectionPoolDataSource(pcds);
             spds.setMaxTotal(threads.length + 10);
-            spds.setDefaultMaxWaitMillis(-1);
+            spds.setDefaultMaxWait(Duration.ofMillis(-1));
             spds.setDefaultMaxIdle(10);
             spds.setDefaultAutoCommit(Boolean.FALSE);
 
             spds.setValidationQuery("SELECT 1");
-            spds.setDefaultTimeBetweenEvictionRunsMillis(10000);
+            spds.setDefaultDurationBetweenEvictionRuns(Duration.ofSeconds(10));
             spds.setDefaultNumTestsPerEvictionRun(-1);
             spds.setDefaultTestWhileIdle(true);
             spds.setDefaultTestOnBorrow(true);
@@ -151,6 +151,22 @@ public class TestDriverAdapterCPDS {
                 Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
             }
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testDeprecatedAccessors() {
+        int i = 0;
+        //
+        i++;
+        pcds.setMinEvictableIdleTimeMillis(i);
+        assertEquals(i, pcds.getMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofMillis(i), pcds.getMinEvictableIdleDuration());
+        //
+        i++;
+        pcds.setTimeBetweenEvictionRunsMillis(i);
+        assertEquals(i, pcds.getTimeBetweenEvictionRunsMillis());
+        assertEquals(Duration.ofMillis(i), pcds.getDurationBetweenEvictionRuns());
     }
 
     @Test
@@ -207,14 +223,10 @@ public class TestDriverAdapterCPDS {
         assertEquals(10, pcds.getLoginTimeout());
         pcds.setMaxIdle(100);
         assertEquals(100, pcds.getMaxIdle());
-        pcds.setTimeBetweenEvictionRunsMillis(100);
-        assertEquals(100, pcds.getTimeBetweenEvictionRunsMillis());
         pcds.setDurationBetweenEvictionRuns(Duration.ofMillis(100));
         assertEquals(100, pcds.getDurationBetweenEvictionRuns().toMillis());
         pcds.setNumTestsPerEvictionRun(1);
         assertEquals(1, pcds.getNumTestsPerEvictionRun());
-        pcds.setMinEvictableIdleTimeMillis(11);
-        assertEquals(11, pcds.getMinEvictableIdleTimeMillis());
         pcds.setMinEvictableIdleDuration(Duration.ofMillis(11));
         assertEquals(Duration.ofMillis(11), pcds.getMinEvictableIdleDuration());
         pcds.setDescription("jo");

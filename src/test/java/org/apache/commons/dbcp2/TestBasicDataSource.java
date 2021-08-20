@@ -32,6 +32,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -83,7 +84,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWaitMillis(getMaxWaitMillis());
+        ds.setMaxWait(getMaxWaitDuration());
         ds.setDefaultAutoCommit(Boolean.TRUE);
         ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -208,7 +209,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
         ds.setMaxTotal(8);
         ds.setLifo(true);
-        ds.setMaxWaitMillis(-1);
+        ds.setMaxWait(Duration.ofMillis(-1));
 
         // Threads just borrow and return - validation will trigger close check
         final TestThread testThread1 = new TestThread(1000,0);
@@ -287,7 +288,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         // Make password incorrect, so createDataSource will throw
         ds.setPassword("wrong");
         // Set timeBetweenEvictionRuns > 0, so evictor will be created
-        ds.setTimeBetweenEvictionRunsMillis(100);
+        ds.setDurationBetweenEvictionRuns(Duration.ofMillis(100));
         // Set min idle > 0, so evictor will try to make connection as many as idle count
         ds.setMinIdle(2);
 
@@ -296,11 +297,10 @@ public class TestBasicDataSource extends TestConnectionPool {
             TesterConnRequestCountDriver.initConnRequestCount();
 
             // user request 10 times
-            for (int i=0; i<10; i++) {
+            for (int i = 0; i < 10; i++) {
                 try {
                     @SuppressWarnings("unused")
-                    final
-                    DataSource ds2 = ds.createDataSource();
+                    final DataSource ds2 = ds.createDataSource();
                 } catch (final SQLException e) {
                     // Ignore
                 }
@@ -329,14 +329,14 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         ds.setUrl("jdbc:apache:commons:testdriver");
         ds.setMaxTotal(getMaxTotal());
-        ds.setMaxWaitMillis(getMaxWaitMillis());
+        ds.setMaxWait(getMaxWaitDuration());
         ds.setDefaultAutoCommit(Boolean.TRUE);
         ds.setDefaultReadOnly(Boolean.FALSE);
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         ds.setDefaultCatalog(CATALOG);
         ds.setUsername("userName");
         // Set timeBetweenEvictionRuns > 0, so evictor is created
-        ds.setTimeBetweenEvictionRunsMillis(100);
+        ds.setDurationBetweenEvictionRuns(Duration.ofMillis(100));
         // Make password incorrect, so createDataSource will throw
         ds.setPassword("wrong");
         ds.setValidationQuery("SELECT DUMMY FROM DUAL");
@@ -376,6 +376,52 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
+    public void testDeprecatedAccessors() throws SQLException {
+        BasicDataSource bds = new BasicDataSource();
+        int i = 0;
+        //
+        i++;
+        bds.setDefaultQueryTimeout(i);
+        assertEquals(i, bds.getDefaultQueryTimeout());
+        assertEquals(Duration.ofSeconds(i), bds.getDefaultQueryTimeoutDuration());
+        //
+        i++;
+        bds.setMaxConnLifetimeMillis(i);
+        assertEquals(i, bds.getMaxConnLifetimeMillis());
+        assertEquals(Duration.ofMillis(i), bds.getMaxConnDuration());
+        //
+        i++;
+        bds.setMaxWaitMillis(i);
+        assertEquals(i, bds.getMaxWaitMillis());
+        assertEquals(Duration.ofMillis(i), bds.getMaxWaitDuration());
+        //
+        i++;
+        bds.setMinEvictableIdleTimeMillis(i);
+        assertEquals(i, bds.getMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofMillis(i), bds.getMinEvictableIdleDuration());
+        //
+        i++;
+        bds.setRemoveAbandonedTimeout(i);
+        assertEquals(i, bds.getRemoveAbandonedTimeout());
+        assertEquals(Duration.ofSeconds(i), bds.getRemoveAbandonedTimeoutDuration());
+        //
+        i++;
+        bds.setSoftMinEvictableIdleTimeMillis(i);
+        assertEquals(i, bds.getSoftMinEvictableIdleTimeMillis());
+        assertEquals(Duration.ofMillis(i), bds.getSoftMinEvictableIdleDuration());
+        //
+        i++;
+        bds.setTimeBetweenEvictionRunsMillis(i);
+        assertEquals(i, bds.getTimeBetweenEvictionRunsMillis());
+        assertEquals(Duration.ofMillis(i), bds.getDurationBetweenEvictionRuns());
+        //
+        i++;
+        bds.setValidationQueryTimeout(1);
+        assertEquals(1, bds.getValidationQueryTimeout());
+        assertEquals(Duration.ofSeconds(1), bds.getValidationQueryTimeoutDuration());
+    }
+    
     /**
      * JIRA: DBCP-437
      * Verify that BasicDataSource sets disconnect codes properties.
@@ -441,24 +487,22 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMaxTotal(10);
         ds.setMinIdle(5);
         ds.setNumTestsPerEvictionRun(3);
-        ds.setMinEvictableIdleTimeMillis(100);
-        ds.setTimeBetweenEvictionRunsMillis(delay);
+        ds.setMinEvictableIdle(Duration.ofMillis(100));
+        ds.setDurationBetweenEvictionRuns(Duration.ofMillis(delay));
         ds.setPoolPreparedStatements(true);
 
         final Connection conn = ds.getConnection();
         conn.close();
 
         final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
-                .anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
+        while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds())).anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
             if (ds.getNumIdle() <= ds.getMinIdle()) {
                 break;
             }
             Thread.sleep(delay);
         }
         if (ds.getNumIdle() > ds.getMinIdle()) {
-            fail("EvictionTimer thread was destroyed with numIdle=" + ds.getNumIdle() + "(expected: less or equal than "
-                    + ds.getMinIdle() + ")");
+            fail("EvictionTimer thread was destroyed with numIdle=" + ds.getNumIdle() + "(expected: less or equal than " + ds.getMinIdle() + ")");
         }
     }
 
@@ -621,7 +665,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testManualConnectionEvict() throws Exception {
         ds.setMinIdle(0);
         ds.setMaxIdle(4);
-        ds.setMinEvictableIdleTimeMillis(10);
+        ds.setMinEvictableIdle(Duration.ofMillis(10));
         ds.setNumTestsPerEvictionRun(2);
 
         final Connection ds2 = ds.createDataSource().getConnection();
@@ -649,7 +693,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testMaxConnLifetimeExceeded() throws Exception {
         try {
             StackMessageLog.lock();
-            ds.setMaxConnLifetimeMillis(100);
+            ds.setMaxConn(Duration.ofMillis(100));
             final Connection conn = ds.getConnection();
             assertEquals(1, ds.getNumActive());
             Thread.sleep(500);
@@ -669,7 +713,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         try {
             StackMessageLog.lock();
             StackMessageLog.clear();
-            ds.setMaxConnLifetimeMillis(100);
+            ds.setMaxConn(Duration.ofMillis(100));
             ds.setLogExpiredConnections(false);
             try (final Connection conn = ds.getConnection()) {
                 assertEquals(1, ds.getNumActive());
@@ -824,9 +868,9 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testRestart() throws Exception {
         ds.setMaxTotal(2);
-        ds.setTimeBetweenEvictionRunsMillis(100);
+        ds.setDurationBetweenEvictionRuns(Duration.ofMillis(100));
         ds.setNumTestsPerEvictionRun(2);
-        ds.setMinEvictableIdleTimeMillis(60000);
+        ds.setMinEvictableIdle(Duration.ofMinutes(1));
         ds.setInitialSize(2);
         ds.setDefaultCatalog("foo");
         final Connection conn1 = ds.getConnection();
@@ -1028,7 +1072,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testValidationQueryTimeoutNegative() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
-        ds.setValidationQueryTimeout(-1);
+        ds.setValidationQueryTimeout(Duration.ofSeconds(-1));
         try (final Connection con = ds.getConnection()) {
             // close right away.
         }
@@ -1038,7 +1082,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testValidationQueryTimeoutSucceed() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
-        ds.setValidationQueryTimeout(100); // Works for TesterStatement
+        ds.setValidationQueryTimeout(Duration.ofMillis(100)); // Works for TesterStatement
         try (final Connection con = ds.getConnection()) {
             // close right away.
         }
@@ -1048,7 +1092,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testValidationQueryTimeoutZero() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
-        ds.setValidationQueryTimeout(0);
+        ds.setValidationQueryTimeout(Duration.ZERO);
         try (final Connection con = ds.getConnection()) {
             // close right away.
         }
@@ -1057,7 +1101,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testValidationQueryTimoutFail() {
         ds.setTestOnBorrow(true);
-        ds.setValidationQueryTimeout(3); // Too fast for TesterStatement
+        ds.setValidationQueryTimeout(Duration.ofSeconds(3)); // Too fast for TesterStatement
         try (Connection c = ds.getConnection()) {
             fail("expected SQLException");
         } catch (final SQLException ex) {

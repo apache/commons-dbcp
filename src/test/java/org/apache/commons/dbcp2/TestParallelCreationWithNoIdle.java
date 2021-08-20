@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -106,7 +107,7 @@ public class TestParallelCreationWithNoIdle  {
         // wait a minute. Usually the test runs in ~ 1 second
         // but often it's getting stuck ^^
         // you have one second to get a thread dump ;)
-        ds.setMaxWaitMillis(60000);
+        ds.setMaxWait(Duration.ofMinutes(1));
 
         ds.setDefaultAutoCommit(Boolean.TRUE);
         ds.setDefaultReadOnly(Boolean.FALSE);

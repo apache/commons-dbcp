@@ -155,9 +155,9 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         for (int i = 0; i <= n; i++) { // loop n+1 times
             transactionManager.begin();
             transactionManager.setRollbackOnly();
-            final Connection conn = getConnection();
-            assertNotNull(conn);
-            conn.close();
+            try (final Connection conn = getConnection()) {
+                assertNotNull(conn);
+            }
             transactionManager.rollback();
         }
 

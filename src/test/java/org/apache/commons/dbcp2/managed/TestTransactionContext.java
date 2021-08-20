@@ -59,8 +59,7 @@ public class TestTransactionContext {
             basicManagedDataSource.setMaxIdle(1);
             try (final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection()) {
                 final UncooperativeTransaction transaction = new UncooperativeTransaction();
-                final TransactionContext transactionContext = new TransactionContext(
-                        basicManagedDataSource.getTransactionRegistry(), transaction);
+                final TransactionContext transactionContext = new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
                 assertThrows(SQLException.class, () -> transactionContext.setSharedConnection(conn));
             }
         }

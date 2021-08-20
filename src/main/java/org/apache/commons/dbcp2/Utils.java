@@ -39,7 +39,7 @@ public final class Utils {
 
     /**
      * Whether the security manager is enabled.
-     * 
+     *
      * @deprecated No replacement.
      */
     @Deprecated
@@ -125,13 +125,7 @@ public final class Utils {
      */
     @Deprecated
     public static void closeQuietly(final Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (final Exception e) {
-                // ignored
-            }
-        }
+        closeQuietly((AutoCloseable) connection);
     }
 
     /**
@@ -142,13 +136,7 @@ public final class Utils {
      */
     @Deprecated
     public static void closeQuietly(final ResultSet resultSet) {
-        if (resultSet != null) {
-            try {
-                resultSet.close();
-            } catch (final Exception e) {
-                // ignored
-            }
-        }
+        closeQuietly((AutoCloseable) resultSet);
     }
 
     /**
@@ -159,13 +147,7 @@ public final class Utils {
      */
     @Deprecated
     public static void closeQuietly(final Statement statement) {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (final Exception e) {
-                // ignored
-            }
-        }
+        closeQuietly((AutoCloseable) statement);
     }
 
     /**

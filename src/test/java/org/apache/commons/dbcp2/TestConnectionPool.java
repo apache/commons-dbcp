@@ -58,7 +58,7 @@ public abstract class TestConnectionPool {
         /**
          * The number of milliseconds to hold onto a database connection
          */
-        private final int connHoldTime;
+        private final Duration connHoldDuration;
 
         private final int numStatements;
 
@@ -86,13 +86,13 @@ public abstract class TestConnectionPool {
 
         private final boolean loopOnce; // If true, don't repeat loop
 
-        public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException) {
-            this(threadGroup, connHoldTime, isStopOnException, false, 1);
+        public PoolTest(final ThreadGroup threadGroup, final Duration connHoldDuration, final boolean isStopOnException) {
+            this(threadGroup, connHoldDuration, isStopOnException, false, 1);
         }
 
-        private PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException, final boolean once, final int numStatements) {
+        private PoolTest(final ThreadGroup threadGroup, final Duration connHoldDuration, final boolean isStopOnException, final boolean once, final int numStatements) {
             this.loopOnce = once;
-            this.connHoldTime = connHoldTime;
+            this.connHoldDuration = connHoldDuration;
             stopOnException = isStopOnException;
             isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
             thrown = null;
@@ -103,8 +103,8 @@ public abstract class TestConnectionPool {
             this.numStatements = numStatements;
         }
 
-        public PoolTest(final ThreadGroup threadGroup, final int connHoldTime, final boolean isStopOnException, final int numStatements) {
-            this(threadGroup, connHoldTime, isStopOnException, false, numStatements);
+        public PoolTest(final ThreadGroup threadGroup, final Duration connHoldDuration, final boolean isStopOnException, final int numStatements) {
+            this(threadGroup, connHoldDuration, isStopOnException, false, numStatements);
         }
 
         public Thread getThread() {
@@ -132,7 +132,7 @@ public abstract class TestConnectionPool {
                     assertNotNull(rset);
                     assertTrue(rset.next());
                     state = "Holding Connection";
-                    Thread.sleep(connHoldTime);
+                    Thread.sleep(connHoldDuration.toMillis());
                     state = "Closing ResultSet";
                     rset.close();
                     state = "Closing Statement";
@@ -231,7 +231,7 @@ public abstract class TestConnectionPool {
     private static final String DONE = "Done";
 
     /** Connections opened during the course of a test */
-    protected final Stack<Connection> connections = new Stack<>();
+    protected final Stack<Connection> connectionStack = new Stack<>();
 
     // ----------- Utility Methods ---------------------------------
 
@@ -284,19 +284,15 @@ public abstract class TestConnectionPool {
         return 10;
     }
 
-    protected long getMaxWaitMillis() {
-        return 100L;
-    }
-
     protected Duration getMaxWaitDuration() {
         return MAX_WAIT_DURATION;
     }
 
     protected String getUsername(final Connection conn) throws SQLException {
-        final Statement stmt = conn.createStatement();
-        final ResultSet rs = stmt.executeQuery("select username");
-        if (rs.next()) {
-            return rs.getString(1);
+        try (final Statement stmt = conn.createStatement(); final ResultSet rs = stmt.executeQuery("select username")) {
+            if (rs.next()) {
+                return rs.getString(1);
+            }
         }
         return null;
     }
@@ -334,17 +330,17 @@ public abstract class TestConnectionPool {
      * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
      * all threads are expected to complete successfully.
      *
-     * @param holdTime time in ms that a thread holds a connection before returning it to the pool
+     * @param holdDuration Duration that a thread holds a connection before returning it to the pool
      * @param expectError whether or not an error is expected
      * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
-     * @param maxWaitMillis passed in by client - has no impact on the test itself, but does get reported
+     * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
      *
      * @throws Exception
      */
-    protected void multipleThreads(final int holdTime,
+    protected void multipleThreads(final Duration holdDuration,
         final boolean expectError, final boolean loopOnce,
-        final long maxWaitMillis) throws Exception {
-        multipleThreads(holdTime, expectError, loopOnce, maxWaitMillis, 1, 2 * getMaxTotal(), 300);
+        final Duration maxWaitDuration) throws Exception {
+        multipleThreads(holdDuration, expectError, loopOnce, maxWaitDuration, 1, 2 * getMaxTotal(), 300);
     }
 
     /**
@@ -354,123 +350,121 @@ public abstract class TestConnectionPool {
      * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
      * all threads are expected to complete successfully.  Threads are stopped after {@code duration} ms.
      *
-     * @param holdTime time in ms that a thread holds a connection before returning it to the pool
+     * @param holdDuration Duration that a thread holds a connection before returning it to the pool
      * @param expectError whether or not an error is expected
      * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
-     * @param maxWaitMillis passed in by client - has no impact on the test itself, but does get reported
+     * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
      * @param numThreads the number of threads
      * @param duration duration in ms of test
      *
      * @throws Exception
      */
-    protected void multipleThreads(final int holdTime,
+    protected void multipleThreads(final Duration holdDuration,
             final boolean expectError, final boolean loopOnce,
-            final long maxWaitMillis, final int numStatements, final int numThreads, final long duration) throws Exception {
-                final long startTimeMillis = timeStampMillis();
-                final PoolTest[] pts = new PoolTest[numThreads];
-                // Catch Exception so we can stop all threads if one fails
-                final ThreadGroup threadGroup = new ThreadGroup("foo") {
-                    @Override
-                    public void uncaughtException(final Thread t, final Throwable e) {
-                        for (final PoolTest pt : pts) {
-                            pt.stop();
-                        }
-                    }
-                };
-                // Create all the threads
-                for (int i = 0; i < pts.length; i++) {
-                    pts[i] = new PoolTest(threadGroup, holdTime, expectError, loopOnce, numStatements);
-                }
-                // Start all the threads
-                for (final PoolTest pt : pts) {
-                    pt.start();
-                }
-
-                // Give all threads a chance to start and succeed
-                Thread.sleep(duration);
-
-                // Stop threads
+        final Duration maxWaitDuration, final int numStatements, final int numThreads, final long duration) throws Exception {
+        final long startTimeMillis = timeStampMillis();
+        final PoolTest[] pts = new PoolTest[numThreads];
+        // Catch Exception so we can stop all threads if one fails
+        final ThreadGroup threadGroup = new ThreadGroup("foo") {
+            @Override
+            public void uncaughtException(final Thread t, final Throwable e) {
                 for (final PoolTest pt : pts) {
                     pt.stop();
                 }
+            }
+        };
+        // Create all the threads
+        for (int i = 0; i < pts.length; i++) {
+            pts[i] = new PoolTest(threadGroup, holdDuration, expectError, loopOnce, numStatements);
+        }
+        // Start all the threads
+        for (final PoolTest pt : pts) {
+            pt.start();
+        }
 
-                /*
-                 * Wait for all threads to terminate.
-                 * This is essential to ensure that all threads have a chance to update success[0]
-                 * and to ensure that the variable is published correctly.
-                 */
-                int done=0;
-                int failed=0;
-                int didNotRun = 0;
-                int loops=0;
-                for (final PoolTest poolTest : pts) {
-                    poolTest.thread.join();
-                    loops += poolTest.loops;
-                    final String state = poolTest.state;
-                    if (DONE.equals(state)){
-                        done++;
-                    }
-                    if (poolTest.loops == 0){
-                        didNotRun++;
-                    }
-                    final Throwable thrown = poolTest.thrown;
-                    if (thrown != null) {
-                        failed++;
-                        if (!expectError || !(thrown instanceof SQLException)){
-                            System.err.println("Unexpected error: " + thrown.getMessage());
-                        }
-                    }
-                }
+        // Give all threads a chance to start and succeed
+        Thread.sleep(duration);
 
-                final long timeMillis = timeStampMillis() - startTimeMillis;
-                println("Multithread test time = " + timeMillis
-                        + " ms. Threads: " + pts.length
-                        + ". Loops: " + loops
-                        + ". Hold time: " + holdTime
-                        + ". maxWaitMillis: " + maxWaitMillis
-                        + ". Done: " + done
-                        + ". Did not run: " + didNotRun
-                        + ". Failed: " + failed
-                        + ". expectError: " + expectError
-                        );
-                if (expectError) {
-                    if (DISPLAY_THREAD_DETAILS || pts.length/2 != failed){
-                        final long offset = pts[0].createdMillis - 1000; // To reduce size of output numbers, but ensure they have 4 digits
-                        println("Offset: "+offset);
-                        for (int i = 0; i < pts.length; i++) {
-                            final PoolTest pt = pts[i];
-                            println(
-                                    "Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
-                                    + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
-                                    + ". Hash: " + pt.connHash
-                                    + ". Startup: " + (pt.started-pt.createdMillis)
-                                    + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
-                                    + ". Runtime: " + (pt.ended-pt.started)
-                                    + ". IDX: " + i
-                                    + ". Loops: " + pt.loops
-                                    + ". State: " + pt.state
-                                    + ". thrown: "+ pt.thrown
-                                    + "."
-                                    );
-                        }
-                    }
-                    if (didNotRun > 0){
-                        println("NOTE: some threads did not run the code: "+didNotRun);
-                    }
-                    // Perform initial sanity check:
-                    assertTrue(failed > 0, "Expected some of the threads to fail");
-                    // Assume that threads that did not run would have timed out.
-                    assertEquals(pts.length / 2, failed + didNotRun, "WARNING: Expected half the threads to fail");
-                } else {
-                    assertEquals(0, failed, "Did not expect any threads to fail");
+        // Stop threads
+        for (final PoolTest pt : pts) {
+            pt.stop();
+        }
+
+        /*
+         * Wait for all threads to terminate. This is essential to ensure that all threads have a chance to update success[0]
+         * and to ensure that the variable is published correctly.
+         */
+        int done = 0;
+        int failed = 0;
+        int didNotRun = 0;
+        int loops = 0;
+        for (final PoolTest poolTest : pts) {
+            poolTest.thread.join();
+            loops += poolTest.loops;
+            final String state = poolTest.state;
+            if (DONE.equals(state)) {
+                done++;
+            }
+            if (poolTest.loops == 0) {
+                didNotRun++;
+            }
+            final Throwable thrown = poolTest.thrown;
+            if (thrown != null) {
+                failed++;
+                if (!expectError || !(thrown instanceof SQLException)) {
+                    System.err.println("Unexpected error: " + thrown.getMessage());
                 }
             }
+        }
+
+        final long timeMillis = timeStampMillis() - startTimeMillis;
+        // @formatter:off
+        println("Multithread test time = " + timeMillis
+            + " ms. Threads: " + pts.length
+            + ". Loops: " + loops
+            + ". Hold time: " + holdDuration
+            + ". maxWaitMillis: " + maxWaitDuration
+            + ". Done: " + done
+            + ". Did not run: " + didNotRun
+            + ". Failed: " + failed
+            + ". expectError: " + expectError);
+        // @formatter:on
+        if (expectError) {
+            if (DISPLAY_THREAD_DETAILS || pts.length / 2 != failed) {
+                final long offset = pts[0].createdMillis - 1000; // To reduce size of output numbers, but ensure they have 4 digits
+                println("Offset: " + offset);
+                for (int i = 0; i < pts.length; i++) {
+                    final PoolTest pt = pts[i];
+                    // @formatter:off
+                    println("Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
+                        + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
+                        + ". Hash: " + pt.connHash
+                        + ". Startup: " + (pt.started-pt.createdMillis)
+                        + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
+                        + ". Runtime: " + (pt.ended-pt.started)
+                        + ". IDX: " + i
+                        + ". Loops: " + pt.loops
+                        + ". State: " + pt.state
+                        + ". thrown: "+ pt.thrown
+                        + ".");
+                    // @formatter:on
+                }
+            }
+            if (didNotRun > 0) {
+                println("NOTE: some threads did not run the code: " + didNotRun);
+            }
+            // Perform initial sanity check:
+            assertTrue(failed > 0, "Expected some of the threads to fail");
+            // Assume that threads that did not run would have timed out.
+            assertEquals(pts.length / 2, failed + didNotRun, "WARNING: Expected half the threads to fail");
+        } else {
+            assertEquals(0, failed, "Did not expect any threads to fail");
+        }
+    }
 
     /** Acquire a connection and push it onto the connections stack */
     protected Connection newConnection() throws Exception {
-        final Connection connection = getConnection();
-        connections.push(connection);
-        return connection;
+        return connectionStack.push(getConnection());
     }
 
     void println(final String string) {
@@ -482,15 +476,8 @@ public abstract class TestConnectionPool {
     @AfterEach
     public void tearDown() throws Exception {
         // Close any connections opened by the test
-        while (!connections.isEmpty()) {
-            Connection conn = connections.pop();
-            try {
-                conn.close();
-            } catch (final Exception ex) {
-                // ignore
-            } finally {
-                conn = null;
-            }
+        while (!connectionStack.isEmpty()) {
+            Utils.closeQuietly((AutoCloseable) connectionStack.pop());
         }
     }
 
@@ -874,21 +861,21 @@ public abstract class TestConnectionPool {
         conn.close();
     }
 
-            @Test
-            public void testRepeatedBorrowAndReturn() throws Exception {
-                for(int i=0;i<100;i++) {
-                    final Connection conn = newConnection();
-                    assertNotNull(conn);
-                    final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-                    assertNotNull(stmt);
-                    final ResultSet rset = stmt.executeQuery();
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
-                    rset.close();
-                    stmt.close();
-                    conn.close();
-                }
-            }
+    @Test
+    public void testRepeatedBorrowAndReturn() throws Exception {
+        for (int i = 0; i < 100; i++) {
+            final Connection conn = newConnection();
+            assertNotNull(conn);
+            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
+            assertNotNull(stmt);
+            final ResultSet rset = stmt.executeQuery();
+            assertNotNull(rset);
+            assertTrue(rset.next());
+            rset.close();
+            stmt.close();
+            conn.close();
+        }
+    }
 
     @Test
     public void testSimple() throws Exception {

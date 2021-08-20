@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,10 +110,10 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testMultipleThreads1() throws Exception {
-        ds.setMaxWaitMillis(-1);
+        ds.setMaxWait(Duration.ofMillis(-1));
         ds.setMaxTotal(5);
         ds.setMaxOpenPreparedStatements(-1);
-        multipleThreads(5, false, false, -1, 3, 100, 10000);
+        multipleThreads(Duration.ofMillis(5), false, false, Duration.ofMillis(-1), 3, 100, 10000);
     }
 
     @Test

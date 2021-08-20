@@ -78,6 +78,40 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).
       </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        - Add and use Duration versions of now deprecated APIs that use ints and longs. 
+        - Internally track durations with Duration objects instead of ints and longs.
+        - See the JApiCmp report for the complete list.
+        - A non-exhaustive list:
+        
+        - Add BasicDataSource.getMaxConnDuration(), deprecate getMaxConnLifetimeMillis()
+        - Add BasicDataSource.getValidationQueryTimeoutDuration(), deprecate - Add BasicDataSource.getValidationQueryTimeout()
+        - Add BasicDataSource.setMaxConn(Duration), deprecate setMaxConnLifetimeMillis(long)
+        - Add BasicDataSource.setRemoveAbandonedTimeout(Duration), deprecate setRemoveAbandonedTimeout(int)
+        - Add BasicDataSource.setValidationQueryTimeout(Duration), deprecate setValidationQueryTimeout(int)
+
+        - Add InstanceKeyDataSource.getDefaultDurationBetweenEvictionRuns(), deprecate getDefaultTimeBetweenEvictionRunsMillis()
+        - Add InstanceKeyDataSource.getDefaultMinEvictableIdleDuration(), deprecate getDefaultMinEvictableIdleTimeMillis()
+        - Add InstanceKeyDataSource.getDefaultSoftMinEvictableIdleDuration(), deprecate getDefaultSoftMinEvictableIdleTimeMillis
+        - Add InstanceKeyDataSource.getLoginTimeoutDuration(), deprecate getLoginTimeout()
+        - Add InstanceKeyDataSource.getMaxConnDuration(), deprecate getMaxConnLifetime()
+        - Add InstanceKeyDataSource.getValidationQueryTimeoutDuration(), deprecate getValidationQueryTimeout()
+        - Add InstanceKeyDataSource.setDefaultDurationBetweenEvictionRuns(Duration), deprecate setDefaultTimeBetweenEvictionRunsMillis(long)
+        - Add InstanceKeyDataSource.setDefaultMinEvictableIdle(Duration), deprecate setDefaultMinEvictableIdleTimeMillis(long)
+        - Add InstanceKeyDataSource.setDefaultSoftMinEvictableIdle(Duration), deprecate setDefaultSoftMinEvictableIdleTimeMillis(long)
+        - Add InstanceKeyDataSource.setLoginTimeout(Duration), deprecate setLoginTimeout(int)
+        - Add InstanceKeyDataSource.setValidationQueryTimeout(Duration), deprecate setValidationQueryTimeout(int)
+        
+        - Add PerUserPoolDataSource.getPerUserDurationBetweenEvictionRuns(String), deprecate getPerUserTimeBetweenEvictionRunsMillis(String)
+        - Add PerUserPoolDataSource.getPerUserMaxWaitDuration(String), deprecate getPerUserMaxWaitMillis(String)
+        - Add PerUserPoolDataSource.getPerUserMinEvictableIdleDuration(String), deprecate getPerUserMinEvictableIdleTimeMillis(String)
+        - Add PerUserPoolDataSource.getPerUserSoftMinEvictableIdleDuration(String), deprecate getPerUserSoftMinEvictableIdleTimeMillis(String)
+        - Add PerUserPoolDataSource.setPerUserMaxWaitDuration(String,Duration), deprecate setPerUserMaxWaitMillis(String, Long)
+        - Add PerUserPoolDataSource.setPerUserMinEvictableIdle(Duration), deprecate setPerUserMinEvictableIdleTimeMillis(String, Long)
+        - Add PerUserPoolDataSource.setPerUserSoftMinEvictableIdle(Duration), deprecate setPerUserSoftMinEvictableIdleTimeMillis(String, Long)
+        - Add PerUserPoolDataSource.setPerUserSoftMinEvictableIdle(Duration), deprecate setPerUserSoftMinEvictableIdleTimeMillis(String, Long)
+        - Add PerUserPoolDataSource.setPerUserDurationBetweenEvictionRuns(Duration), deprecate setPerUserTimeBetweenEvictionRunsMillis(String, Long)
+      </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump checkstyle from 8.44 to 8.45.1 #121.
@@ -89,7 +123,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump junit-jupiter from 5.8.0-M1 to 5.8.0-RC1 #125.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump spotbugs from 4.3.0 to 4.4.0 #124. 
+        Bump spotbugs from 4.3.0 to 4.4.0 #124.
       </action>
     </release>
     <release version="2.9.0" date="2021-07-30" description="This is a minor release, including bug fixes and enhancements.">

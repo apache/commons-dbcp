@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
 
 import javax.sql.DataSource;
 
@@ -69,14 +70,14 @@ public class TestPoolingDriver extends TestConnectionPool {
 
         final GenericObjectPoolConfig<PoolableConnection> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxTotal(getMaxTotal());
-        poolConfig.setMaxWaitMillis(getMaxWaitMillis());
+        poolConfig.setMaxWait(getMaxWaitDuration());
         poolConfig.setMinIdle(10);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
-        poolConfig.setTimeBetweenEvictionRunsMillis(10000L);
+        poolConfig.setTimeBetweenEvictionRuns(Duration.ofMillis(10_000));
         poolConfig.setNumTestsPerEvictionRun(5);
-        poolConfig.setMinEvictableIdleTimeMillis(5000L);
+        poolConfig.setMinEvictableIdleTime(Duration.ofMillis(5_000));
 
         final GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<>(pcf, poolConfig);
         pcf.setPool(pool);
@@ -202,7 +203,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     public void testReportedBug12400() throws Exception {
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(70);
-        config.setMaxWaitMillis(60000);
+        config.setMaxWait(Duration.ofMinutes(1));
         config.setMaxIdle(10);
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
             "jdbc:apache:commons:testdriver",

@@ -222,7 +222,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("loginTimeout");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setLoginTimeout(parseInt(refAddr));
+            ikds.setLoginTimeout(Duration.ofSeconds(parseInt(refAddr)));
         }
 
         // Pool properties
@@ -259,7 +259,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("minEvictableIdleTimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultMinEvictableIdleTimeMillis(parseLong(refAddr));
+            ikds.setDefaultMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("minIdlePerKey");
@@ -274,7 +274,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("softMinEvictableIdleTimeMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultSoftMinEvictableIdleTimeMillis(parseLong(refAddr));
+            ikds.setDefaultSoftMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("testOnCreate");
@@ -299,7 +299,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("timeBetweenEvictionRunsMillis");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setDefaultTimeBetweenEvictionRunsMillis(parseLong(refAddr));
+            ikds.setDefaultDurationBetweenEvictionRuns(Duration.ofMillis(parseLong(refAddr)));
         }
 
         // Connection factory properties
@@ -311,7 +311,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("validationQueryTimeout");
         if (refAddr != null && refAddr.getContent() != null) {
-            ikds.setValidationQueryTimeout(parseInt(refAddr));
+            ikds.setValidationQueryTimeout(Duration.ofSeconds(parseInt(refAddr)));
         }
 
         refAddr = ref.get("rollbackAfterValidation");

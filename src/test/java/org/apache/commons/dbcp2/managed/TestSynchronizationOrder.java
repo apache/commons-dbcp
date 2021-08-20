@@ -111,7 +111,7 @@ public class TestSynchronizationOrder {
         bds.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
         bds.setUrl("jdbc:apache:commons:testdriver");
         bds.setMaxTotal(10);
-        bds.setMaxWaitMillis(100L);
+        bds.setMaxWait(Duration.ofMillis(100));
         bds.setDefaultAutoCommit(Boolean.TRUE);
         bds.setDefaultReadOnly(Boolean.FALSE);
         bds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);

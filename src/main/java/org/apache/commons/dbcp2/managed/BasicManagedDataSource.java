@@ -132,7 +132,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory = new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory,
                     getRegisteredJmxName());
             connectionFactory.setValidationQuery(getValidationQuery());
-            connectionFactory.setValidationQueryTimeout(getValidationQueryTimeout());
+            connectionFactory.setValidationQueryTimeout(getValidationQueryTimeoutDuration());
             connectionFactory.setConnectionInitSql(getConnectionInitSqls());
             connectionFactory.setDefaultReadOnly(getDefaultReadOnly());
             connectionFactory.setDefaultAutoCommit(getDefaultAutoCommit());
@@ -143,10 +143,10 @@ public class BasicManagedDataSource extends BasicDataSource {
             connectionFactory.setPoolStatements(isPoolPreparedStatements());
             connectionFactory.setClearStatementPoolOnReturn(isClearStatementPoolOnReturn());
             connectionFactory.setMaxOpenPreparedStatements(getMaxOpenPreparedStatements());
-            connectionFactory.setMaxConnLifetimeMillis(getMaxConnLifetimeMillis());
+            connectionFactory.setMaxConn(getMaxConnDuration());
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setAutoCommitOnReturn(getAutoCommitOnReturn());
-            connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeout());
+            connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeoutDuration());
             connectionFactory.setFastFailValidation(getFastFailValidation());
             connectionFactory.setDisconnectionSqlCodes(getDisconnectionSqlCodes());
             validateConnectionFactory(connectionFactory);

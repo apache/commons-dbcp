@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.time.Instant;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -47,7 +48,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * Verifies that con.lastUsed has been updated and then resets it to 0
      */
     private void assertAndReset(final DelegatingConnection<?> con) {
-        assertTrue(con.getLastUsed() > 0);
+        assertTrue(con.getLastUsedInstant().compareTo(Instant.EPOCH) > 0);
         con.setLastUsed(Instant.EPOCH);
     }
 
@@ -111,7 +112,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setLogAbandoned(true);
         ds.setRemoveAbandonedOnBorrow(true);
         ds.setRemoveAbandonedOnMaintenance(true);
-        ds.setRemoveAbandonedTimeout(10000);
+        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(10));
         sw = new StringWriter();
         ds.setAbandonedLogWriter(new PrintWriter(sw));
     }
@@ -119,7 +120,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     @Test
     public void testAbandoned() throws Exception {
         // force abandoned
-        ds.setRemoveAbandonedTimeout(0);
+        ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
 
         for (int i = 0; i < 3; i++) {
@@ -130,7 +131,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     @Test
     public void testAbandonedClose() throws Exception {
         // force abandoned
-        ds.setRemoveAbandonedTimeout(0);
+        ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
@@ -162,7 +163,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     @Test
     public void testAbandonedCloseWithExceptions() throws Exception {
         // force abandoned
-        ds.setRemoveAbandonedTimeout(0);
+        ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
@@ -248,7 +249,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsed() throws Exception {
-        ds.setRemoveAbandonedTimeout(1);
+        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
             Thread.sleep(500);
@@ -271,7 +272,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsedLargePreparedStatementUse() throws Exception {
-        ds.setRemoveAbandonedTimeout(1);
+        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection();
                 Statement st = conn1.createStatement()) {
@@ -297,7 +298,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsedPrepareCall() throws Exception {
-        ds.setRemoveAbandonedTimeout(1);
+        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
             Thread.sleep(500);
@@ -320,7 +321,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsedPreparedStatementUse() throws Exception {
-        ds.setRemoveAbandonedTimeout(1);
+        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection();
                 Statement st = conn1.createStatement()) {

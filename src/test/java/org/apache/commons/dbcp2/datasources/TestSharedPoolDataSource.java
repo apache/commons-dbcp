@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
@@ -145,7 +146,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final SharedPoolDataSource spDs = new SharedPoolDataSource();
         spDs.setConnectionPoolDataSource(myPcds);
         spDs.setMaxTotal(getMaxTotal());
-        spDs.setDefaultMaxWaitMillis((int) getMaxWaitMillis());
+        spDs.setDefaultMaxWait(getMaxWaitDuration());
         spDs.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -221,7 +222,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(mypcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
+        tds.setDefaultMaxWait(getMaxWaitDuration());
         tds.setDefaultTransactionIsolation(
             Connection.TRANSACTION_READ_COMMITTED);
 
@@ -303,9 +304,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final SharedPoolDataSource tds = new SharedPoolDataSource();
         tds.setConnectionPoolDataSource(pcds);
         tds.setMaxTotal(getMaxTotal());
-        tds.setDefaultMaxWaitMillis((int)getMaxWaitMillis());
-        tds.setDefaultTransactionIsolation(
-            Connection.TRANSACTION_READ_COMMITTED);
+        tds.setDefaultMaxWait(getMaxWaitDuration());
+        tds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         tds.setDefaultAutoCommit(Boolean.TRUE);
 
         ds = tds;
@@ -534,7 +534,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         // Should take ~maxWaitMillis for threads to stop
         for (int i = 0; i < pts.length; i++) {
-            (pts[i] = new PoolTest(threadGroup, 1, true)).start();
+            (pts[i] = new PoolTest(threadGroup, Duration.ofMillis(1), true)).start();
         }
 
         // Wait for all the threads to complete
@@ -560,16 +560,16 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
-        final int defaultMaxWaitMillis = 430;
-        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        multipleThreads(1, false, false, defaultMaxWaitMillis);
+        final Duration defaultMaxWaitDuration = Duration.ofMillis(430);
+        ((SharedPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
+        multipleThreads(Duration.ofMillis(1), false, false, defaultMaxWaitDuration);
     }
 
     @Test
     public void testMultipleThreads2() throws Exception {
-        final int defaultMaxWaitMillis = 500;
-        ((SharedPoolDataSource) ds).setDefaultMaxWaitMillis(defaultMaxWaitMillis);
-        multipleThreads(2 * defaultMaxWaitMillis, true, true, defaultMaxWaitMillis);
+        final Duration defaultMaxWaitDuration = Duration.ofMillis(500);
+        ((SharedPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
+        multipleThreads(defaultMaxWaitDuration.multipliedBy(2), true, true, defaultMaxWaitDuration);
     }
 
     @Override

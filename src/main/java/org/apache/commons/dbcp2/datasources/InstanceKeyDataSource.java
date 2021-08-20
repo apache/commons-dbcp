@@ -101,8 +101,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Environment that may be used to set up a JNDI initial context. */
     private Properties jndiEnvironment;
 
-    /** Login TimeOut in seconds */
-    private int loginTimeout;
+    /** Login Timeout */
+    private Duration loginTimeoutDuration = Duration.ZERO;
 
     /** Log stream */
     private PrintWriter logWriter;
@@ -129,9 +129,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     // Connection factory properties
     private String validationQuery;
-    private int validationQueryTimeoutSeconds = -1;
+    private Duration validationQueryTimeoutDuration = Duration.ofSeconds(-1);
     private boolean rollbackAfterValidation;
-    private Duration maxConnLifetimeMillis = Duration.ofMillis(-1);
+    private Duration maxConnDuration = Duration.ofMillis(-1);
 
     // Connection properties
     private Boolean defaultAutoCommit;
@@ -305,6 +305,18 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     *
+     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @since 2.10.0
+     */
+    public Duration getDefaultDurationBetweenEvictionRuns() {
+        return this.defaultDurationBetweenEvictionRuns;
+    }
+
+    /**
      * Gets the default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per user
      * pool.
      *
@@ -369,7 +381,21 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per
      *         user pool.
+     * @since 2.10.0
      */
+    public Duration getDefaultMinEvictableIdleDuration() {
+        return this.defaultMinEvictableIdleDuration;
+    }
+
+    /**
+     * Gets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per user
+     * pool.
+     *
+     * @return The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per
+     *         user pool.
+     * @deprecated Use {@link #getDefaultMinEvictableIdleDuration()}.
+     */
+    @Deprecated
     public long getDefaultMinEvictableIdleTimeMillis() {
         return this.defaultMinEvictableIdleDuration.toMillis();
     }
@@ -400,7 +426,21 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * @since 2.10.0
      */
+    public Duration getDefaultSoftMinEvictableIdleDuration() {
+        return this.defaultSoftMinEvictableIdleDuration;
+    }
+
+    /**
+     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     *
+     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * @deprecated Use {@link #getDefaultSoftMinEvictableIdleDuration()}.
+     */
+    @Deprecated
     public long getDefaultSoftMinEvictableIdleTimeMillis() {
         return this.defaultSoftMinEvictableIdleDuration.toMillis();
     }
@@ -455,7 +495,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @deprecated Use {@link #getDefaultDurationBetweenEvictionRuns()}.
      */
+    @Deprecated
     public long getDefaultTimeBetweenEvictionRunsMillis() {
         return this.defaultDurationBetweenEvictionRuns.toMillis();
     }
@@ -481,6 +523,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         return description;
     }
 
+    /**
+     * Gets the instance key.
+     *
+     * @return the instance key.
+     */
     protected String getInstanceKey() {
         return instanceKey;
     }
@@ -505,10 +552,22 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Gets the value of loginTimeout.
      *
      * @return value of loginTimeout.
+     * @deprecated Use {@link #getLoginTimeoutDuration()}.
      */
+    @Deprecated
     @Override
     public int getLoginTimeout() {
-        return loginTimeout;
+        return (int) loginTimeoutDuration.getSeconds();
+    }
+
+    /**
+     * Gets the value of loginTimeout.
+     *
+     * @return value of loginTimeout.
+     * @since 2.10.0
+     */
+    public Duration getLoginTimeoutDuration() {
+        return loginTimeoutDuration;
     }
 
     /**
@@ -530,9 +589,23 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @return The maximum permitted lifetime of a connection. A value of zero or less indicates an
      *         infinite lifetime.
+     * @since 2.10.0
      */
+    public Duration getMaxConnDuration() {
+        return maxConnDuration;
+    }
+
+    /**
+     * Gets the maximum permitted lifetime of a connection. A value of zero or less indicates an
+     * infinite lifetime.
+     *
+     * @return The maximum permitted lifetime of a connection. A value of zero or less indicates an
+     *         infinite lifetime.
+     * @deprecated Use {@link #getMaxConnDuration()}.
+     */
+    @Deprecated
     public Duration getMaxConnLifetime() {
-        return maxConnLifetimeMillis;
+        return maxConnDuration;
     }
 
     /**
@@ -545,7 +618,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     @Deprecated
     public long getMaxConnLifetimeMillis() {
-        return maxConnLifetimeMillis.toMillis();
+        return maxConnDuration.toMillis();
     }
 
     @Override
@@ -581,9 +654,20 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Returns the timeout in seconds before the validation query fails.
      *
      * @return The timeout in seconds before the validation query fails.
+     * @deprecated Use {@link #getValidationQueryTimeoutDuration()}.
      */
+    @Deprecated
     public int getValidationQueryTimeout() {
-        return validationQueryTimeoutSeconds;
+        return (int) validationQueryTimeoutDuration.getSeconds();
+    }
+
+    /**
+     * Returns the timeout Duration before the validation query fails.
+     *
+     * @return The timeout Duration before the validation query fails.
+     */
+    public Duration getValidationQueryTimeoutDuration() {
+        return validationQueryTimeoutDuration;
     }
 
     /**
@@ -688,6 +772,20 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     *
+     * @param defaultDurationBetweenEvictionRuns
+     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @since 2.10.0
+     */
+    public void setDefaultDurationBetweenEvictionRuns(final Duration defaultDurationBetweenEvictionRuns) {
+        assertInitializationAllowed();
+        this.defaultDurationBetweenEvictionRuns = defaultDurationBetweenEvictionRuns;
+    }
+
+    /**
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()} for each per user
      * pool.
      *
@@ -761,10 +859,26 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per user
      * pool.
      *
+     * @param defaultMinEvictableIdleDuration
+     *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each
+     *            per user pool.
+     * @since 2.10.0
+     */
+    public void setDefaultMinEvictableIdle(final Duration defaultMinEvictableIdleDuration) {
+        assertInitializationAllowed();
+        this.defaultMinEvictableIdleDuration = defaultMinEvictableIdleDuration;
+    }
+
+    /**
+     * Sets the default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each per user
+     * pool.
+     *
      * @param minEvictableIdleTimeMillis
      *            The default value for {@link GenericKeyedObjectPoolConfig#getMinEvictableIdleDuration()} for each
      *            per user pool.
+     * @deprecated Use {@link #setDefaultMinEvictableIdle(Duration)}.
      */
+    @Deprecated
     public void setDefaultMinEvictableIdleTimeMillis(final long minEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         this.defaultMinEvictableIdleDuration = Duration.ofMillis(minEvictableIdleTimeMillis);
@@ -811,10 +925,26 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      *
+     * @param defaultSoftMinEvictableIdleDuration
+     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * @since 2.10.0
+     */
+    public void setDefaultSoftMinEvictableIdle(final Duration defaultSoftMinEvictableIdleDuration) {
+        assertInitializationAllowed();
+        this.defaultSoftMinEvictableIdleDuration = defaultSoftMinEvictableIdleDuration;
+    }
+
+    /**
+     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     *
      * @param softMinEvictableIdleTimeMillis
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * @deprecated Use {@link #setDefaultSoftMinEvictableIdle(Duration)}.
      */
+    @Deprecated
     public void setDefaultSoftMinEvictableIdleTimeMillis(final long softMinEvictableIdleTimeMillis) {
         assertInitializationAllowed();
         this.defaultSoftMinEvictableIdleDuration = Duration.ofMillis(softMinEvictableIdleTimeMillis);
@@ -879,7 +1009,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @param timeBetweenEvictionRunsMillis
      *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
      *            GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @deprecated Use {@link #setDefaultDurationBetweenEvictionRuns(Duration)}.
      */
+    @Deprecated
     public void setDefaultTimeBetweenEvictionRunsMillis(final long timeBetweenEvictionRunsMillis) {
         assertInitializationAllowed();
         this.defaultDurationBetweenEvictionRuns = Duration.ofMillis(timeBetweenEvictionRunsMillis);
@@ -956,10 +1088,23 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @param loginTimeout
      *            Value to assign to loginTimeout.
+     * @since 2.10.0
      */
+    public void setLoginTimeout(final Duration loginTimeout) {
+        this.loginTimeoutDuration = loginTimeout;
+    }
+
+    /**
+     * Sets the value of loginTimeout.
+     *
+     * @param loginTimeout
+     *            Value to assign to loginTimeout.
+     * @deprecated Use {@link #setLoginTimeout(Duration)}.
+     */
+    @Deprecated
     @Override
     public void setLoginTimeout(final int loginTimeout) {
-        this.loginTimeout = loginTimeout;
+        this.loginTimeoutDuration = Duration.ofSeconds(loginTimeout);
     }
 
     /**
@@ -990,7 +1135,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @since 2.9.0
      */
     public void setMaxConnLifetime(final Duration maxConnLifetimeMillis) {
-        this.maxConnLifetimeMillis = maxConnLifetimeMillis;
+        this.maxConnDuration = maxConnLifetimeMillis;
     }
 
     /**
@@ -1044,13 +1189,25 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Sets the timeout duration before the validation query fails.
+     *
+     * @param validationQueryTimeoutDuration
+     *            The new timeout duration.
+     */
+    public void setValidationQueryTimeout(final Duration validationQueryTimeoutDuration) {
+        this.validationQueryTimeoutDuration = validationQueryTimeoutDuration;
+    }
+
+    /**
      * Sets the timeout in seconds before the validation query fails.
      *
      * @param validationQueryTimeoutSeconds
      *            The new timeout in seconds
+     * @deprecated Use {@link #setValidationQueryTimeout(Duration)}.
      */
+    @Deprecated
     public void setValidationQueryTimeout(final int validationQueryTimeoutSeconds) {
-        this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
+        this.validationQueryTimeoutDuration = Duration.ofSeconds(validationQueryTimeoutSeconds);
     }
 
     protected ConnectionPoolDataSource testCPDS(final String userName, final String userPassword)
@@ -1118,8 +1275,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(description);
         builder.append(", jndiEnvironment=");
         builder.append(jndiEnvironment);
-        builder.append(", loginTimeout=");
-        builder.append(loginTimeout);
+        builder.append(", loginTimeoutDuration=");
+        builder.append(loginTimeoutDuration);
         builder.append(", logWriter=");
         builder.append(logWriter);
         builder.append(", instanceKey=");
@@ -1134,15 +1291,15 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(defaultMaxIdle);
         builder.append(", defaultMaxTotal=");
         builder.append(defaultMaxTotal);
-        builder.append(", defaultMaxWait=");
+        builder.append(", defaultMaxWaitDuration=");
         builder.append(defaultMaxWaitDuration);
-        builder.append(", defaultMinEvictableIdleTimeMillis=");
+        builder.append(", defaultMinEvictableIdleDuration=");
         builder.append(defaultMinEvictableIdleDuration);
         builder.append(", defaultMinIdle=");
         builder.append(defaultMinIdle);
         builder.append(", defaultNumTestsPerEvictionRun=");
         builder.append(defaultNumTestsPerEvictionRun);
-        builder.append(", defaultSoftMinEvictableIdleTimeMillis=");
+        builder.append(", defaultSoftMinEvictableIdleDuration=");
         builder.append(defaultSoftMinEvictableIdleDuration);
         builder.append(", defaultTestOnCreate=");
         builder.append(defaultTestOnCreate);
@@ -1152,16 +1309,16 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(defaultTestOnReturn);
         builder.append(", defaultTestWhileIdle=");
         builder.append(defaultTestWhileIdle);
-        builder.append(", defaultTimeBetweenEvictionRunsMillis=");
+        builder.append(", defaultDurationBetweenEvictionRuns=");
         builder.append(defaultDurationBetweenEvictionRuns);
         builder.append(", validationQuery=");
         builder.append(validationQuery);
-        builder.append(", validationQueryTimeoutSeconds=");
-        builder.append(validationQueryTimeoutSeconds);
+        builder.append(", validationQueryTimeoutDuration=");
+        builder.append(validationQueryTimeoutDuration);
         builder.append(", rollbackAfterValidation=");
         builder.append(rollbackAfterValidation);
-        builder.append(", maxConnLifetimeMillis=");
-        builder.append(maxConnLifetimeMillis);
+        builder.append(", maxConnDuration=");
+        builder.append(maxConnDuration);
         builder.append(", defaultAutoCommit=");
         builder.append(defaultAutoCommit);
         builder.append(", defaultTransactionIsolation=");
