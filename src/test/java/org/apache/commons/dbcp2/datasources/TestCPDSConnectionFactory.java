@@ -60,56 +60,57 @@ public class TestCPDSConnectionFactory {
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
-        final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
-        factory.setPool(pool);
+        try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
 
-        // Checkout a pair of connections
-        final PooledConnection pcon1 = pool.borrowObject().getPooledConnection();
-        final Connection con1 = pcon1.getConnection();
-        final PooledConnection pcon2 = pool.borrowObject().getPooledConnection();
-        assertEquals(2, pool.getNumActive());
-        assertEquals(0, pool.getNumIdle());
+            // Checkout a pair of connections
+            final PooledConnection pcon1 = pool.borrowObject().getPooledConnection();
+            final Connection con1 = pcon1.getConnection();
+            final PooledConnection pcon2 = pool.borrowObject().getPooledConnection();
+            assertEquals(2, pool.getNumActive());
+            assertEquals(0, pool.getNumIdle());
 
-        // Verify listening
-        final PooledConnectionProxy pc = (PooledConnectionProxy) pcon1;
-        assertTrue(pc.getListeners().contains(factory));
+            // Verify listening
+            final PooledConnectionProxy pc = (PooledConnectionProxy) pcon1;
+            assertTrue(pc.getListeners().contains(factory));
 
-        // Throw connectionError event
-        pc.throwConnectionError();
+            // Throw connectionError event
+            pc.throwConnectionError();
 
-        // Active count should be reduced by 1 and no idle increase
-        assertEquals(1, pool.getNumActive());
-        assertEquals(0, pool.getNumIdle());
+            // Active count should be reduced by 1 and no idle increase
+            assertEquals(1, pool.getNumActive());
+            assertEquals(0, pool.getNumIdle());
 
-        // Throw another one - should be ignored
-        pc.throwConnectionError();
-        assertEquals(1, pool.getNumActive());
-        assertEquals(0, pool.getNumIdle());
+            // Throw another one - should be ignored
+            pc.throwConnectionError();
+            assertEquals(1, pool.getNumActive());
+            assertEquals(0, pool.getNumIdle());
 
-        // Ask for another connection
-        final PooledConnection pcon3 = pool.borrowObject().getPooledConnection();
-        assertNotEquals(pcon3, pcon1); // better not get baddie back
-        assertFalse(pc.getListeners().contains(factory)); // verify cleanup
-        assertEquals(2, pool.getNumActive());
-        assertEquals(0, pool.getNumIdle());
+            // Ask for another connection
+            final PooledConnection pcon3 = pool.borrowObject().getPooledConnection();
+            assertNotEquals(pcon3, pcon1); // better not get baddie back
+            assertFalse(pc.getListeners().contains(factory)); // verify cleanup
+            assertEquals(2, pool.getNumActive());
+            assertEquals(0, pool.getNumIdle());
 
-        // Return good connections back to pool
-        pcon2.getConnection().close();
-        pcon3.getConnection().close();
-        assertEquals(2, pool.getNumIdle());
-        assertEquals(0, pool.getNumActive());
+            // Return good connections back to pool
+            pcon2.getConnection().close();
+            pcon3.getConnection().close();
+            assertEquals(2, pool.getNumIdle());
+            assertEquals(0, pool.getNumActive());
 
-        // Verify pc is closed
-        assertThrows(SQLException.class, () -> pc.getConnection(), "Expecting SQLException using closed PooledConnection");
+            // Verify pc is closed
+            assertThrows(SQLException.class, () -> pc.getConnection(), "Expecting SQLException using closed PooledConnection");
 
-        // Back from the dead - ignore the ghost!
-        con1.close();
-        assertEquals(2, pool.getNumIdle());
-        assertEquals(0, pool.getNumActive());
+            // Back from the dead - ignore the ghost!
+            con1.close();
+            assertEquals(2, pool.getNumIdle());
+            assertEquals(0, pool.getNumActive());
 
-        // Clear pool
-        factory.getPool().clear();
-        assertEquals(0, pool.getNumIdle());
+            // Clear pool
+            factory.getPool().clear();
+            assertEquals(0, pool.getNumIdle());
+        }
     }
 
     /**
@@ -118,12 +119,13 @@ public class TestCPDSConnectionFactory {
     @Test
     public void testNullValidationQuery() throws Exception {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
-        final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
-        factory.setPool(pool);
-        pool.setTestOnBorrow(true);
-        final PooledConnection pcon = pool.borrowObject().getPooledConnection();
-        final Connection con = pcon.getConnection();
-        con.close();
+        try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.setTestOnBorrow(true);
+            final PooledConnection pcon = pool.borrowObject().getPooledConnection();
+            try (final Connection con = pcon.getConnection()) {
+            }
+        }
     }
 
     @Test
