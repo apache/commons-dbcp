@@ -59,7 +59,7 @@ public class TestCPDSConnectionFactory {
     @Test
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password");
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
 
@@ -117,7 +117,7 @@ public class TestCPDSConnectionFactory {
      * JIRA: DBCP-442
      */
     @Test
-    public void testNullValidationQuery() throws Exception {
+    public void testNullValidationQuery_Deprecated() throws Exception {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
@@ -128,10 +128,35 @@ public class TestCPDSConnectionFactory {
         }
     }
 
+    /**
+     * JIRA: DBCP-442
+     */
     @Test
-    public void testSetPasswordThenModCharArray() {
+    public void testNullValidationQuery() throws Exception {
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password");
+        try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.setTestOnBorrow(true);
+            final PooledConnection pcon = pool.borrowObject().getPooledConnection();
+            try (final Connection con = pcon.getConnection()) {
+            }
+        }
+    }
+
+    @Test
+    public void testSetPasswordThenModCharArray_Deprecated() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
         final char[] pwd = {'a' };
+        factory.setPassword(pwd);
+        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
+        pwd[0] = 'b';
+        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
+    }
+
+    @Test
+    public void testSetPasswordThenModCharArray() {
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password");
+        final char[] pwd = {'a'};
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
         pwd[0] = 'b';
