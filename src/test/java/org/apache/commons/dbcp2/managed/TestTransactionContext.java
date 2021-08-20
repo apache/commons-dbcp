@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.transaction.xa.XAResource;
@@ -57,7 +58,7 @@ public class TestTransactionContext {
             basicManagedDataSource.setUsername("userName");
             basicManagedDataSource.setPassword("password");
             basicManagedDataSource.setMaxIdle(1);
-            try (final ManagedConnection<?> conn = (ManagedConnection<?>) basicManagedDataSource.getConnection()) {
+            try (final ManagedConnection<?> conn = (ManagedConnection<Connection>) basicManagedDataSource.getConnection()) {
                 final UncooperativeTransaction transaction = new UncooperativeTransaction();
                 final TransactionContext transactionContext = new TransactionContext(basicManagedDataSource.getTransactionRegistry(), transaction);
                 assertThrows(SQLException.class, () -> transactionContext.setSharedConnection(conn));
