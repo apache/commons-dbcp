@@ -108,7 +108,7 @@ public class TestCPDSConnectionFactory {
                 assertEquals(0, pool.getNumActive());
 
                 // Clear pool
-                factory.getPool().clear();
+                pool.clear();
                 assertEquals(0, pool.getNumIdle());
             }
         }

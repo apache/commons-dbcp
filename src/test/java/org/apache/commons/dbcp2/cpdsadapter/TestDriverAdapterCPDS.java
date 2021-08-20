@@ -218,7 +218,9 @@ public class TestDriverAdapterCPDS {
         assertArrayEquals(new char[] {'a', 'b'}, pcds.getPasswordCharArray());
         final PrintWriter pw = new PrintWriter(System.err);
         pcds.setLogWriter(pw);
-        assertEquals(pw, pcds.getLogWriter());
+        @SuppressWarnings("resource")
+        final PrintWriter logWriter = pcds.getLogWriter();
+        assertEquals(pw, logWriter);
         pcds.setLoginTimeout(10);
         assertEquals(10, pcds.getLoginTimeout());
         pcds.setMaxIdle(100);

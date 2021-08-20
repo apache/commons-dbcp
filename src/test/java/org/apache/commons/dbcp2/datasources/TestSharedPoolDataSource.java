@@ -38,6 +38,7 @@ import org.apache.commons.dbcp2.DelegatingStatement;
 import org.apache.commons.dbcp2.TestConnectionPool;
 import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             return conn.prepareCall("{call home()}", 0, 0);
         }
     }
+
     private static class CscbStringIntIntInt extends PrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
@@ -69,23 +71,25 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     // complexity to reduce what would otherwise be lots of copy and paste
     private static abstract class PrepareCallCallback {
         protected Connection conn;
+
         abstract CallableStatement getCallableStatement() throws SQLException;
+
         void setConnection(final Connection conn) {
             this.conn = conn;
         }
     }
-
 
     // There are 6 different prepareStatement statement methods so add a little
     // complexity to reduce what would otherwise be lots of copy and paste
     private static abstract class PrepareStatementCallback {
         protected Connection conn;
+
         abstract PreparedStatement getPreparedStatement() throws SQLException;
+
         void setConnection(final Connection conn) {
             this.conn = conn;
         }
     }
-
 
     private static class PscbString extends PrepareStatementCallback {
         @Override
@@ -104,7 +108,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private static class PscbStringIntArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual", new int[0]);
+            return conn.prepareStatement("select * from dual", ArrayUtils.EMPTY_INT_ARRAY);
         }
     }
 
@@ -125,7 +129,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private static class PscbStringStringArray extends PrepareStatementCallback {
         @Override
         PreparedStatement getPreparedStatement() throws SQLException {
-            return conn.prepareStatement("select * from dual", new String[0]);
+            return conn.prepareStatement("select * from dual", ArrayUtils.EMPTY_STRING_ARRAY);
         }
     }
 
@@ -134,7 +138,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     private DataSource ds;
 
     private void doTestPoolCallableStatements(final PrepareCallCallback callBack)
-    throws Exception {
+        throws Exception {
         final DriverAdapterCPDS myPcds = new DriverAdapterCPDS();
         myPcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         myPcds.setUrl("jdbc:apache:commons:testdriver");
@@ -143,69 +147,69 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         myPcds.setPoolPreparedStatements(true);
         myPcds.setMaxPreparedStatements(10);
 
-        final SharedPoolDataSource spDs = new SharedPoolDataSource();
-        spDs.setConnectionPoolDataSource(myPcds);
-        spDs.setMaxTotal(getMaxTotal());
-        spDs.setDefaultMaxWait(getMaxWaitDuration());
-        spDs.setDefaultTransactionIsolation(
-            Connection.TRANSACTION_READ_COMMITTED);
+        try (final SharedPoolDataSource spDs = new SharedPoolDataSource()) {
+            spDs.setConnectionPoolDataSource(myPcds);
+            spDs.setMaxTotal(getMaxTotal());
+            spDs.setDefaultMaxWait(getMaxWaitDuration());
+            spDs.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
-        final DataSource myDs = spDs;
+            final DataSource myDs = spDs;
 
-        Connection conn = ds.getConnection();
-        callBack.setConnection(conn);
+            try (Connection conn = ds.getConnection()) {
+                callBack.setConnection(conn);
 
-        assertNotNull(conn);
+                assertNotNull(conn);
+                final long l1HashCode;
+                final long l2HashCode;
+                try (CallableStatement stmt = callBack.getCallableStatement()) {
+                    assertNotNull(stmt);
+                    l1HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
 
-        CallableStatement stmt = callBack.getCallableStatement();
-        assertNotNull(stmt);
-        final long l1HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
-        ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
+                try (CallableStatement stmt = callBack.getCallableStatement()) {
+                    assertNotNull(stmt);
+                    l2HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
 
-        stmt = callBack.getCallableStatement();
-        assertNotNull(stmt);
-        final long l2HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
+                // statement pooling is not enabled, we should get different statements
+                assertTrue(l1HashCode != l2HashCode);
+            }
 
-        // statement pooling is not enabled, we should get different statements
-        assertTrue(l1HashCode != l2HashCode);
-        conn.close();
-        conn = null;
+            try (Connection conn = myDs.getConnection()) {
+                callBack.setConnection(conn);
 
-        conn = myDs.getConnection();
-        callBack.setConnection(conn);
+                final long l3HashCode;
+                final long l4HashCode;
+                try (CallableStatement stmt = callBack.getCallableStatement()) {
+                    assertNotNull(stmt);
+                    l3HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
 
-        stmt = callBack.getCallableStatement();
-        assertNotNull(stmt);
-        final long l3HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
+                try (CallableStatement stmt = callBack.getCallableStatement()) {
+                    assertNotNull(stmt);
+                    l4HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
 
-        stmt = callBack.getCallableStatement();
-        assertNotNull(stmt);
-        final long l4HashCode = ((DelegatingStatement) stmt).getDelegate().hashCode();
-        rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-
-        // prepared statement pooling is working
-        assertEquals(l3HashCode, l4HashCode);
-        conn.close();
-        conn = null;
-        spDs.close();
+                // prepared statement pooling is working
+                assertEquals(l3HashCode, l4HashCode);
+            }
+        }
     }
 
     private void doTestPoolPreparedStatements(final PrepareStatementCallback callBack)
@@ -419,8 +423,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     public void testDbcp369() {
         final ArrayList<SharedPoolDataSource> dataSources = new ArrayList<>();
         for (int j = 0; j < 10000; j++) {
-            final SharedPoolDataSource dataSource = new SharedPoolDataSource();
-            dataSources.add(dataSource);
+            dataSources.add(new SharedPoolDataSource());
         }
 
         final Thread t1 = new Thread(() -> {
@@ -517,11 +520,11 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         final int maxWaitMillis = 1000;
         final int theadCount = 20;
 
-        ((SharedPoolDataSource)ds).setDefaultMaxWaitMillis(maxWaitMillis);
+        ((SharedPoolDataSource) ds).setDefaultMaxWait(Duration.ofMillis(maxWaitMillis));
         // Obtain all the connections from the pool
         final Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) {
-            c[i] = ds.getConnection("foo","bar");
+        for (int i = 0; i < c.length; i++) {
+            c[i] = ds.getConnection("foo", "bar");
             assertNotNull(c[i]);
         }
 
@@ -541,7 +544,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         for (final PoolTest poolTest : pts) {
             poolTest.getThread().join();
         }
-
 
         final long endMillis = System.currentTimeMillis();
 
@@ -663,14 +665,11 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testSimple2()
-        throws Exception
-    {
+    public void testSimple2() throws Exception {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
 
-        PreparedStatement stmt =
-            conn.prepareStatement("select * from dual");
+        PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
@@ -687,9 +686,9 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         conn.close();
-        try (Statement s = conn.createStatement()){
+        try (Statement s = conn.createStatement()) {
             fail("Can't use closed connections");
-        } catch(final SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -713,40 +712,35 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         conn.close();
-        conn = null;
     }
 
     @Test
-    public void testSimpleWithUsername() throws Exception
-    {
-        final Connection conn = ds.getConnection("u1", "p1");
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+    public void testSimpleWithUsername() throws Exception {
+        try (final Connection conn = ds.getConnection("u1", "p1")) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
     public void testTransactionIsolationBehavior() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn.getTransactionIsolation());
-        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        conn.close();
+        try (final Connection conn = getConnection()) {
+            assertNotNull(conn);
+            assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        }
 
         final Connection conn2 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn2.getTransactionIsolation());
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
 
         final Connection conn3 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn3.getTransactionIsolation());
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn3.getTransactionIsolation());
         conn2.close();
         conn3.close();
     }

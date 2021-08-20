@@ -108,11 +108,8 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      */
     @Deprecated
     public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation) {
-        this.cpds = cpds;
-        this.validationQuery = validationQuery;
-        this.validationQueryTimeoutDuration = Duration.ofSeconds(validationQueryTimeoutSeconds);
-        this.rollbackAfterValidation = rollbackAfterValidation;
+        final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation) {
+        this(cpds, validationQuery, Duration.ofSeconds(validationQueryTimeoutSeconds), rollbackAfterValidation);
     }
 
     @Override
@@ -347,22 +344,22 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
             return false;
         }
         boolean valid = false;
-        final PooledConnection pconn = pooledObject.getObject().getPooledConnection();
+        final PooledConnection pooledConn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
-        validatingSet.add(pconn);
+        validatingSet.add(pooledConn);
         if (null == validationQuery) {
             Duration timeoutDuration = validationQueryTimeoutDuration;
             if (timeoutDuration.isNegative()) {
                 timeoutDuration = Duration.ZERO;
             }
             try {
-                conn = pconn.getConnection();
+                conn = pooledConn.getConnection();
                 valid = conn.isValid((int) timeoutDuration.getSeconds());
             } catch (final SQLException e) {
                 valid = false;
             } finally {
                 Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pconn);
+                validatingSet.remove(pooledConn);
             }
         } else {
             Statement stmt = null;
@@ -371,9 +368,9 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
             // before another one can be requested and closing it will
             // generate an event. Keep track so we know not to return
             // the PooledConnection
-            validatingSet.add(pconn);
+            validatingSet.add(pooledConn);
             try {
-                conn = pconn.getConnection();
+                conn = pooledConn.getConnection();
                 stmt = conn.createStatement();
                 rset = stmt.executeQuery(validationQuery);
                 valid = rset.next();
@@ -386,7 +383,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
                 Utils.closeQuietly((AutoCloseable) rset);
                 Utils.closeQuietly((AutoCloseable) stmt);
                 Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pconn);
+                validatingSet.remove(pooledConn);
             }
         }
         return valid;
