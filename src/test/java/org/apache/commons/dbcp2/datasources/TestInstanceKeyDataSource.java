@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -40,25 +39,25 @@ import org.junit.jupiter.api.Test;
  */
 public class TestInstanceKeyDataSource {
 
-    private static class ThrowOnSetupDefaultsDataSource
-    extends SharedPoolDataSource {
+    private static class ThrowOnSetupDefaultsDataSource extends SharedPoolDataSource {
+
         private static final long serialVersionUID = -448025812063133259L;
 
         ThrowOnSetupDefaultsDataSource() {
         }
+
         @Override
-        protected void setupDefaults(final Connection connection, final String userName)
-        throws  SQLException {
+        protected void setupDefaults(final Connection connection, final String userName) throws SQLException {
             throw new SQLException("bang!");
         }
     }
-    private final static String DRIVER = "org.apache.commons.dbcp2.TesterDriver";
 
+    private final static String DRIVER = "org.apache.commons.dbcp2.TesterDriver";
     private final static String URL = "jdbc:apache:commons:testdriver";
     private final static String USER = "foo";
     private final static String PASS = "bar";
+    
     private DriverAdapterCPDS pcds;
-
     private SharedPoolDataSource spds;
 
     @BeforeEach
@@ -87,8 +86,9 @@ public class TestInstanceKeyDataSource {
         final PooledConnectionAndInfo info = spds.getPooledConnectionAndInfo(null, null);
         assertNull(info.getUserName());
         assertNull(info.getPassword());
-        final Connection conn = spds.getConnection();
-        assertNotNull(conn);
+        try (final Connection conn = spds.getConnection()) {
+            assertNotNull(conn);
+        }
     }
 
     @Test
@@ -205,16 +205,11 @@ public class TestInstanceKeyDataSource {
      */
     @Test
     public void testExceptionOnSetupDefaults() throws Exception {
-        final ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource();
-        final int numConnections = tds.getNumActive();
-        try {
-            tds.getConnection(USER, PASS);
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-           //Expected
+        try (final ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource()) {
+            final int numConnections = tds.getNumActive();
+            assertThrows(SQLException.class, () -> tds.getConnection(USER, PASS));
+            assertEquals(numConnections, tds.getNumActive());
         }
-        assertEquals(numConnections,tds.getNumActive());
-        tds.close();
     }
 
     @Test
@@ -262,12 +257,14 @@ public class TestInstanceKeyDataSource {
         assertEquals(10, spds.getLoginTimeout());
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testLogWriter() {
         spds.setLogWriter(new PrintWriter(System.out));
         assertNotNull(spds.getLogWriter());
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testLogWriterAutoInitialized() {
         assertNotNull(spds.getLogWriter());
@@ -289,11 +286,13 @@ public class TestInstanceKeyDataSource {
 
     @Test
     public void testRollbackAfterValidationWithConnectionCalled() throws SQLException {
-        spds.getConnection();
-        assertFalse(spds.isRollbackAfterValidation());
-        assertThrows(IllegalStateException.class, () -> spds.setRollbackAfterValidation(true));
+        try (Connection connection = spds.getConnection()) {
+            assertFalse(spds.isRollbackAfterValidation());
+            assertThrows(IllegalStateException.class, () -> spds.setRollbackAfterValidation(true));
+        }
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testUnwrap() throws Exception {
         assertSame(spds.unwrap(InstanceKeyDataSource.class), spds);
@@ -316,8 +315,9 @@ public class TestInstanceKeyDataSource {
 
     @Test
     public void testValidationQueryWithConnectionCalled() throws SQLException {
-        spds.getConnection();
-        assertNull(spds.getValidationQuery());
-        assertThrows(IllegalStateException.class, () -> spds.setValidationQuery("anything"));
+        try (Connection connection = spds.getConnection()) {
+            assertNull(spds.getValidationQuery());
+            assertThrows(IllegalStateException.class, () -> spds.setValidationQuery("anything"));
+        }
     }
 }
