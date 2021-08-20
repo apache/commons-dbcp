@@ -70,6 +70,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      * configured initialization SQL (if provided) and sets up a prepared statement pool associated with the
      * PoolableManagedConnection if statement pooling is enabled.
      */
+    @SuppressWarnings("resource") // Connection is released elsewhere.
     @Override
     public synchronized PooledObject<PoolableConnection> makeObject() throws Exception {
         Connection conn = getConnectionFactory().createConnection();
