@@ -100,7 +100,7 @@ public class TestCPDSConnectionFactory {
                 assertEquals(0, pool.getNumActive());
 
                 // Verify pc is closed
-                assertThrows(SQLException.class, () -> pc.getConnection(), "Expecting SQLException using closed PooledConnection");
+                assertThrows(SQLException.class, pc::getConnection, "Expecting SQLException using closed PooledConnection");
 
                 // Back from the dead - ignore the ghost!
                 con1.close();

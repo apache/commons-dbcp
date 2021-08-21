@@ -56,7 +56,7 @@ public class TestInstanceKeyDataSource {
     private final static String URL = "jdbc:apache:commons:testdriver";
     private final static String USER = "foo";
     private final static String PASS = "bar";
-    
+
     private DriverAdapterCPDS pcds;
     private SharedPoolDataSource spds;
 

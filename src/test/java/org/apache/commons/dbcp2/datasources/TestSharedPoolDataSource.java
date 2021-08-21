@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2.datasources;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -503,12 +504,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             assertNotNull(c[i]);
         }
 
-        try (Connection conn = ds.getConnection()){
-            fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch(final java.sql.SQLException e) {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        }
+        assertThrows(SQLException.class, ds::getConnection, "Allowed to open more than DefaultMaxTotal connections.");
 
         for (final Connection element : c) {
             element.close();

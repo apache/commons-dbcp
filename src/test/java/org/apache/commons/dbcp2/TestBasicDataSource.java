@@ -378,7 +378,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testDeprecatedAccessors() throws SQLException {
-        BasicDataSource bds = new BasicDataSource();
+        final BasicDataSource bds = new BasicDataSource();
         int i = 0;
         //
         i++;
@@ -421,7 +421,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(1, bds.getValidationQueryTimeout());
         assertEquals(Duration.ofSeconds(1), bds.getValidationQueryTimeoutDuration());
     }
-    
+
     /**
      * JIRA: DBCP-437
      * Verify that BasicDataSource sets disconnect codes properties.
