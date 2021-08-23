@@ -731,7 +731,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @param timeBetweenEvictionRunsMillis The number of milliseconds to sleep between runs of the idle object evictor
      *        thread. When non-positive, no idle object evictor thread will be run.
-     * @see #getTimeBetweenEvictionRunsMillis()
+     * @see #getDurationBetweenEvictionRuns()
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      * @deprecated Use {@link #setDurationBetweenEvictionRuns(Duration)}.
      */
