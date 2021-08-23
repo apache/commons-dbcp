@@ -100,7 +100,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Validates the given factory.
-     * 
+     *
      * @param connectionFactory the factory
      * @throws Exception Thrown by one of the factory methods while managing a temporary pooled object.
      */

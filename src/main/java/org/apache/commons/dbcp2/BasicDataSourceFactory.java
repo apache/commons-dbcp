@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -224,16 +225,17 @@ public class BasicDataSourceFactory implements ObjectFactory {
         acceptBoolean(properties, PROP_DEFAULT_READ_ONLY, dataSource::setDefaultReadOnly);
 
         getOptional(properties, PROP_DEFAULT_TRANSACTION_ISOLATION).ifPresent(value -> {
+            value = value.toUpperCase(Locale.ROOT);
             int level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
-            if ("NONE".equalsIgnoreCase(value)) {
+            if ("NONE".equals(value)) {
                 level = Connection.TRANSACTION_NONE;
-            } else if ("READ_COMMITTED".equalsIgnoreCase(value)) {
+            } else if ("READ_COMMITTED".equals(value)) {
                 level = Connection.TRANSACTION_READ_COMMITTED;
-            } else if ("READ_UNCOMMITTED".equalsIgnoreCase(value)) {
+            } else if ("READ_UNCOMMITTED".equals(value)) {
                 level = Connection.TRANSACTION_READ_UNCOMMITTED;
-            } else if ("REPEATABLE_READ".equalsIgnoreCase(value)) {
+            } else if ("REPEATABLE_READ".equals(value)) {
                 level = Connection.TRANSACTION_REPEATABLE_READ;
-            } else if ("SERIALIZABLE".equalsIgnoreCase(value)) {
+            } else if ("SERIALIZABLE".equals(value)) {
                 level = Connection.TRANSACTION_SERIALIZABLE;
             } else {
                 try {
