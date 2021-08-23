@@ -172,10 +172,6 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         return accessToUnderlyingConnectionAllowed;
     }
 
-    //
-    // Methods for accessing the delegate connection
-    //
-
     @Override
     public void rollback() throws SQLException {
         if (transactionContext != null) {

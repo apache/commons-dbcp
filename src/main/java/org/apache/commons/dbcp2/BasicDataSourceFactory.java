@@ -182,8 +182,6 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
     }
 
-    // -------------------------------------------------- ObjectFactory Methods
-
     /**
      * Creates and configures a {@link BasicDataSource} instance based on the given properties.
      *
