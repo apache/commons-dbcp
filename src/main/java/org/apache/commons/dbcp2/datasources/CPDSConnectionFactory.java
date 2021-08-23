@@ -371,7 +371,7 @@ class CPDSConnectionFactory
      *
      * @param maxConnLifetimeMillis
      *            A value of zero or less indicates an infinite lifetime. The default value is -1.
-     * @deprecated Use {@link #setMaxConnLifetime(Duration)}.
+     * @deprecated Use {@link #setMaxConn(Duration)}.
      */
     @Deprecated
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
