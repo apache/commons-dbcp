@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.time.Duration;
@@ -29,8 +30,12 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -44,11 +49,9 @@ import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * <p>
  * JNDI object factory that creates an instance of <code>BasicDataSource</code> that has been configured based on the
  * <code>RefAddr</code> values of the specified <code>Reference</code>, which must match the names and data types of the
  * <code>BasicDataSource</code> bean properties with the following exceptions:
- * </p>
  * <ul>
  * <li><code>connectionInitSqls</code> must be passed to this factory as a single String using semicolon to delimit the
  * statements whereas <code>BasicDataSource</code> requires a collection of Strings.</li>
@@ -182,6 +185,30 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
     }
 
+    private static <V> void accept(final Properties properties, final String name, final Function<String, V> parser, final Consumer<V> consumer) {
+        getOptional(properties, name).ifPresent(v -> consumer.accept(parser.apply(v)));
+    }
+
+    private static void acceptBoolean(final Properties properties, final String name, final Consumer<Boolean> consumer) {
+        accept(properties, name, Boolean::parseBoolean, consumer);
+    }
+
+    private static void acceptDurationOfMillis(final Properties properties, final String name, final Consumer<Duration> consumer) {
+        accept(properties, name, s -> Duration.ofMillis(Long.parseLong(s)), consumer);
+    }
+
+    private static void acceptDurationOfSeconds(final Properties properties, final String name, final Consumer<Duration> consumer) {
+        accept(properties, name, s -> Duration.ofSeconds(Long.parseLong(s)), consumer);
+    }
+
+    private static void acceptInt(final Properties properties, final String name, final Consumer<Integer> consumer) {
+        accept(properties, name, Integer::parseInt, consumer);
+    }
+
+    private static void acceptString(final Properties properties, final String name, final Consumer<String> consumer) {
+        accept(properties, name, Function.identity(), consumer);
+    }
+
     /**
      * Creates and configures a {@link BasicDataSource} instance based on the given properties.
      *
@@ -193,18 +220,10 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     public static BasicDataSource createDataSource(final Properties properties) throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
-        String value = properties.getProperty(PROP_DEFAULT_AUTO_COMMIT);
-        if (value != null) {
-            dataSource.setDefaultAutoCommit(Boolean.valueOf(value));
-        }
+        acceptBoolean(properties, PROP_DEFAULT_AUTO_COMMIT, dataSource::setDefaultAutoCommit);
+        acceptBoolean(properties, PROP_DEFAULT_READ_ONLY, dataSource::setDefaultReadOnly);
 
-        value = properties.getProperty(PROP_DEFAULT_READ_ONLY);
-        if (value != null) {
-            dataSource.setDefaultReadOnly(Boolean.valueOf(value));
-        }
-
-        value = properties.getProperty(PROP_DEFAULT_TRANSACTION_ISOLATION);
-        if (value != null) {
+        getOptional(properties, PROP_DEFAULT_TRANSACTION_ISOLATION).ifPresent(value -> {
             int level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
             if ("NONE".equalsIgnoreCase(value)) {
                 level = Connection.TRANSACTION_NONE;
@@ -227,232 +246,60 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 }
             }
             dataSource.setDefaultTransactionIsolation(level);
-        }
+        });
 
-        value = properties.getProperty(PROP_DEFAULT_CATALOG);
-        if (value != null) {
-            dataSource.setDefaultCatalog(value);
-        }
+        acceptString(properties, PROP_DEFAULT_SCHEMA, dataSource::setDefaultSchema);
+        acceptString(properties, PROP_DEFAULT_CATALOG, dataSource::setDefaultCatalog);
+        acceptBoolean(properties, PROP_CACHE_STATE, dataSource::setCacheState);
+        acceptString(properties, PROP_DRIVER_CLASS_NAME, dataSource::setDriverClassName);
+        acceptBoolean(properties, PROP_LIFO, dataSource::setLifo);
+        acceptInt(properties, PROP_MAX_TOTAL, dataSource::setMaxTotal);
+        acceptInt(properties, PROP_MAX_IDLE, dataSource::setMaxIdle);
+        acceptInt(properties, PROP_MIN_IDLE, dataSource::setMinIdle);
+        acceptInt(properties, PROP_INITIAL_SIZE, dataSource::setInitialSize);
+        acceptDurationOfMillis(properties, PROP_MAX_WAIT_MILLIS, dataSource::setMaxWait);
+        acceptBoolean(properties, PROP_TEST_ON_CREATE, dataSource::setTestOnCreate);
+        acceptBoolean(properties, PROP_TEST_ON_BORROW, dataSource::setTestOnBorrow);
+        acceptBoolean(properties, PROP_TEST_ON_RETURN, dataSource::setTestOnReturn);
+        acceptDurationOfMillis(properties, PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS, dataSource::setDurationBetweenEvictionRuns);
+        acceptInt(properties, PROP_NUM_TESTS_PER_EVICTION_RUN, dataSource::setNumTestsPerEvictionRun);
+        acceptDurationOfMillis(properties, PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS, dataSource::setMinEvictableIdle);
+        acceptDurationOfMillis(properties, PROP_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, dataSource::setSoftMinEvictableIdle);
+        acceptString(properties, PROP_EVICTION_POLICY_CLASS_NAME, dataSource::setEvictionPolicyClassName);
+        acceptBoolean(properties, PROP_TEST_WHILE_IDLE, dataSource::setTestWhileIdle);
+        acceptString(properties, PROP_PASSWORD, dataSource::setPassword);
+        acceptString(properties, PROP_URL, dataSource::setUrl);
+        acceptString(properties, PROP_USER_NAME, dataSource::setUsername);
+        acceptString(properties, PROP_VALIDATION_QUERY, dataSource::setValidationQuery);
+        acceptDurationOfSeconds(properties, PROP_VALIDATION_QUERY_TIMEOUT, dataSource::setValidationQueryTimeout);
+        acceptBoolean(properties, PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED, dataSource::setAccessToUnderlyingConnectionAllowed);
+        acceptBoolean(properties, PROP_REMOVE_ABANDONED_ON_BORROW, dataSource::setRemoveAbandonedOnBorrow);
+        acceptBoolean(properties, PROP_REMOVE_ABANDONED_ON_MAINTENANCE, dataSource::setRemoveAbandonedOnMaintenance);
+        acceptDurationOfSeconds(properties, PROP_REMOVE_ABANDONED_TIMEOUT, dataSource::setRemoveAbandonedTimeout);
+        acceptBoolean(properties, PROP_LOG_ABANDONED, dataSource::setLogAbandoned);
+        acceptBoolean(properties, PROP_ABANDONED_USAGE_TRACKING, dataSource::setAbandonedUsageTracking);
+        acceptBoolean(properties, PROP_POOL_PREPARED_STATEMENTS, dataSource::setPoolPreparedStatements);
+        acceptBoolean(properties, PROP_CLEAR_STATEMENT_POOL_ON_RETURN, dataSource::setClearStatementPoolOnReturn);
+        acceptInt(properties, PROP_MAX_OPEN_PREPARED_STATEMENTS, dataSource::setMaxOpenPreparedStatements);
+        getOptional(properties, PROP_CONNECTION_INIT_SQLS).ifPresent(v -> dataSource.setConnectionInitSqls(parseList(v, ';')));
 
-        value = properties.getProperty(PROP_DEFAULT_SCHEMA);
+        final String value = properties.getProperty(PROP_CONNECTION_PROPERTIES);
         if (value != null) {
-            dataSource.setDefaultSchema(value);
-        }
-
-        value = properties.getProperty(PROP_CACHE_STATE);
-        if (value != null) {
-            dataSource.setCacheState(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_DRIVER_CLASS_NAME);
-        if (value != null) {
-            dataSource.setDriverClassName(value);
-        }
-
-        value = properties.getProperty(PROP_LIFO);
-        if (value != null) {
-            dataSource.setLifo(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_MAX_TOTAL);
-        if (value != null) {
-            dataSource.setMaxTotal(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_MAX_IDLE);
-        if (value != null) {
-            dataSource.setMaxIdle(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_MIN_IDLE);
-        if (value != null) {
-            dataSource.setMinIdle(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_INITIAL_SIZE);
-        if (value != null) {
-            dataSource.setInitialSize(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_MAX_WAIT_MILLIS);
-        if (value != null) {
-            dataSource.setMaxWait(Duration.ofMillis(Long.parseLong(value)));
-        }
-
-        value = properties.getProperty(PROP_TEST_ON_CREATE);
-        if (value != null) {
-            dataSource.setTestOnCreate(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_TEST_ON_BORROW);
-        if (value != null) {
-            dataSource.setTestOnBorrow(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_TEST_ON_RETURN);
-        if (value != null) {
-            dataSource.setTestOnReturn(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
-        if (value != null) {
-            dataSource.setDurationBetweenEvictionRuns(Duration.ofMillis(Long.parseLong(value)));
-        }
-
-        value = properties.getProperty(PROP_NUM_TESTS_PER_EVICTION_RUN);
-        if (value != null) {
-            dataSource.setNumTestsPerEvictionRun(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-        if (value != null) {
-            dataSource.setMinEvictableIdle(Duration.ofMillis(Long.parseLong(value)));
-        }
-
-        value = properties.getProperty(PROP_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-        if (value != null) {
-            dataSource.setSoftMinEvictableIdle(Duration.ofMillis(Long.parseLong(value)));
-        }
-
-        value = properties.getProperty(PROP_EVICTION_POLICY_CLASS_NAME);
-        if (value != null) {
-            dataSource.setEvictionPolicyClassName(value);
-        }
-
-        value = properties.getProperty(PROP_TEST_WHILE_IDLE);
-        if (value != null) {
-            dataSource.setTestWhileIdle(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_PASSWORD);
-        if (value != null) {
-            dataSource.setPassword(value);
-        }
-
-        value = properties.getProperty(PROP_URL);
-        if (value != null) {
-            dataSource.setUrl(value);
-        }
-
-        value = properties.getProperty(PROP_USER_NAME);
-        if (value != null) {
-            dataSource.setUsername(value);
-        }
-
-        value = properties.getProperty(PROP_VALIDATION_QUERY);
-        if (value != null) {
-            dataSource.setValidationQuery(value);
-        }
-
-        value = properties.getProperty(PROP_VALIDATION_QUERY_TIMEOUT);
-        if (value != null) {
-            dataSource.setValidationQueryTimeout(Duration.ofSeconds(Integer.parseInt(value)));
-        }
-
-        value = properties.getProperty(PROP_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED);
-        if (value != null) {
-            dataSource.setAccessToUnderlyingConnectionAllowed(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_REMOVE_ABANDONED_ON_BORROW);
-        if (value != null) {
-            dataSource.setRemoveAbandonedOnBorrow(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_REMOVE_ABANDONED_ON_MAINTENANCE);
-        if (value != null) {
-            dataSource.setRemoveAbandonedOnMaintenance(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_REMOVE_ABANDONED_TIMEOUT);
-        if (value != null) {
-            dataSource.setRemoveAbandonedTimeout(Duration.ofSeconds(Integer.parseInt(value)));
-        }
-
-        value = properties.getProperty(PROP_LOG_ABANDONED);
-        if (value != null) {
-            dataSource.setLogAbandoned(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_ABANDONED_USAGE_TRACKING);
-        if (value != null) {
-            dataSource.setAbandonedUsageTracking(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_POOL_PREPARED_STATEMENTS);
-        if (value != null) {
-            dataSource.setPoolPreparedStatements(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_CLEAR_STATEMENT_POOL_ON_RETURN);
-        if (value != null) {
-            dataSource.setClearStatementPoolOnReturn(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_MAX_OPEN_PREPARED_STATEMENTS);
-        if (value != null) {
-            dataSource.setMaxOpenPreparedStatements(Integer.parseInt(value));
-        }
-
-        value = properties.getProperty(PROP_CONNECTION_INIT_SQLS);
-        if (value != null) {
-            dataSource.setConnectionInitSqls(parseList(value, ';'));
-        }
-
-        value = properties.getProperty(PROP_CONNECTION_PROPERTIES);
-        if (value != null) {
-            final Properties p = getProperties(value);
-            final Enumeration<?> e = p.propertyNames();
-            while (e.hasMoreElements()) {
-                final String propertyName = (String) e.nextElement();
-                dataSource.addConnectionProperty(propertyName, p.getProperty(propertyName));
+            for (final Object key : getProperties(value).keySet()) {
+                final String propertyName = Objects.toString(key, null);
+                dataSource.addConnectionProperty(propertyName, getProperties(value).getProperty(propertyName));
             }
         }
 
-        value = properties.getProperty(PROP_MAX_CONN_LIFETIME_MILLIS);
-        if (value != null) {
-            dataSource.setMaxConn(Duration.ofMillis(Long.parseLong(value)));
-        }
-
-        value = properties.getProperty(PROP_LOG_EXPIRED_CONNECTIONS);
-        if (value != null) {
-            dataSource.setLogExpiredConnections(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_JMX_NAME);
-        if (value != null) {
-            dataSource.setJmxName(value);
-        }
-
-        value = properties.getProperty(PROP_ENABLE_AUTO_COMMIT_ON_RETURN);
-        if (value != null) {
-            dataSource.setAutoCommitOnReturn(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_ROLLBACK_ON_RETURN);
-        if (value != null) {
-            dataSource.setRollbackOnReturn(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_DEFAULT_QUERY_TIMEOUT);
-        if (value != null) {
-            dataSource.setDefaultQueryTimeout(Duration.ofSeconds(Integer.valueOf(value)));
-        }
-
-        value = properties.getProperty(PROP_FAST_FAIL_VALIDATION);
-        if (value != null) {
-            dataSource.setFastFailValidation(Boolean.parseBoolean(value));
-        }
-
-        value = properties.getProperty(PROP_DISCONNECTION_SQL_CODES);
-        if (value != null) {
-            dataSource.setDisconnectionSqlCodes(parseList(value, ','));
-        }
-
-        value = properties.getProperty(PROP_CONNECTION_FACTORY_CLASS_NAME);
-        if (value != null) {
-            dataSource.setConnectionFactoryClassName(value);
-        }
+        acceptDurationOfMillis(properties, PROP_MAX_CONN_LIFETIME_MILLIS, dataSource::setMaxConn);
+        acceptBoolean(properties, PROP_LOG_EXPIRED_CONNECTIONS, dataSource::setLogExpiredConnections);
+        acceptString(properties, PROP_JMX_NAME, dataSource::setJmxName);
+        acceptBoolean(properties, PROP_ENABLE_AUTO_COMMIT_ON_RETURN, dataSource::setAutoCommitOnReturn);
+        acceptBoolean(properties, PROP_ROLLBACK_ON_RETURN, dataSource::setRollbackOnReturn);
+        acceptDurationOfSeconds(properties, PROP_DEFAULT_QUERY_TIMEOUT, dataSource::setDefaultQueryTimeout);
+        acceptBoolean(properties, PROP_FAST_FAIL_VALIDATION, dataSource::setFastFailValidation);
+        getOptional(properties, PROP_DISCONNECTION_SQL_CODES).ifPresent(v -> dataSource.setDisconnectionSqlCodes(parseList(v, ',')));
+        acceptString(properties, PROP_CONNECTION_FACTORY_CLASS_NAME, dataSource::setConnectionFactoryClassName);
 
         // DBCP-215
         // Trick to make sure that initialSize connections are created
@@ -464,16 +311,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
         return dataSource;
     }
 
+    private static Optional<String> getOptional(final Properties properties, final String name) {
+        return Optional.ofNullable(properties.getProperty(name));
+    }
+
     /**
-     * <p>
      * Parse properties from the string. Format of the string must be [propertyName=property;]*
-     * <p>
      *
      * @param propText
      * @return Properties
-     * @throws Exception
+     * @throws IOException
      */
-    private static Properties getProperties(final String propText) throws Exception {
+    private static Properties getProperties(final String propText) throws IOException {
         final Properties p = new Properties();
         if (propText != null) {
             p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
@@ -500,10 +349,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * <p>
-     * Create and return a new <code>BasicDataSource</code> instance. If no instance can be created, return
+     * Creates and return a new <code>BasicDataSource</code> instance. If no instance can be created, return
      * <code>null</code> instead.
-     * </p>
      *
      * @param obj
      *            The possibly null object containing location or reference information that can be used in creating an
