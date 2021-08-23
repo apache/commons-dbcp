@@ -82,35 +82,6 @@ The <action> type attribute can be add,update,fix,remove.
         - Add and use Duration versions of now deprecated APIs that use ints and longs. 
         - Internally track durations with Duration objects instead of ints and longs.
         - See the JApiCmp report for the complete list.
-        - A non-exhaustive list:
-        
-        - Add BasicDataSource.getMaxConnDuration(), deprecate getMaxConnLifetimeMillis()
-        - Add BasicDataSource.getValidationQueryTimeoutDuration(), deprecate - Add BasicDataSource.getValidationQueryTimeout()
-        - Add BasicDataSource.setMaxConn(Duration), deprecate setMaxConnLifetimeMillis(long)
-        - Add BasicDataSource.setRemoveAbandonedTimeout(Duration), deprecate setRemoveAbandonedTimeout(int)
-        - Add BasicDataSource.setValidationQueryTimeout(Duration), deprecate setValidationQueryTimeout(int)
-
-        - Add InstanceKeyDataSource.getDefaultDurationBetweenEvictionRuns(), deprecate getDefaultTimeBetweenEvictionRunsMillis()
-        - Add InstanceKeyDataSource.getDefaultMinEvictableIdleDuration(), deprecate getDefaultMinEvictableIdleTimeMillis()
-        - Add InstanceKeyDataSource.getDefaultSoftMinEvictableIdleDuration(), deprecate getDefaultSoftMinEvictableIdleTimeMillis
-        - Add InstanceKeyDataSource.getLoginTimeoutDuration(), deprecate getLoginTimeout()
-        - Add InstanceKeyDataSource.getMaxConnDuration(), deprecate getMaxConnLifetime()
-        - Add InstanceKeyDataSource.getValidationQueryTimeoutDuration(), deprecate getValidationQueryTimeout()
-        - Add InstanceKeyDataSource.setDefaultDurationBetweenEvictionRuns(Duration), deprecate setDefaultTimeBetweenEvictionRunsMillis(long)
-        - Add InstanceKeyDataSource.setDefaultMinEvictableIdle(Duration), deprecate setDefaultMinEvictableIdleTimeMillis(long)
-        - Add InstanceKeyDataSource.setDefaultSoftMinEvictableIdle(Duration), deprecate setDefaultSoftMinEvictableIdleTimeMillis(long)
-        - Add InstanceKeyDataSource.setLoginTimeout(Duration), deprecate setLoginTimeout(int)
-        - Add InstanceKeyDataSource.setValidationQueryTimeout(Duration), deprecate setValidationQueryTimeout(int)
-        
-        - Add PerUserPoolDataSource.getPerUserDurationBetweenEvictionRuns(String), deprecate getPerUserTimeBetweenEvictionRunsMillis(String)
-        - Add PerUserPoolDataSource.getPerUserMaxWaitDuration(String), deprecate getPerUserMaxWaitMillis(String)
-        - Add PerUserPoolDataSource.getPerUserMinEvictableIdleDuration(String), deprecate getPerUserMinEvictableIdleTimeMillis(String)
-        - Add PerUserPoolDataSource.getPerUserSoftMinEvictableIdleDuration(String), deprecate getPerUserSoftMinEvictableIdleTimeMillis(String)
-        - Add PerUserPoolDataSource.setPerUserMaxWaitDuration(String,Duration), deprecate setPerUserMaxWaitMillis(String, Long)
-        - Add PerUserPoolDataSource.setPerUserMinEvictableIdle(Duration), deprecate setPerUserMinEvictableIdleTimeMillis(String, Long)
-        - Add PerUserPoolDataSource.setPerUserSoftMinEvictableIdle(Duration), deprecate setPerUserSoftMinEvictableIdleTimeMillis(String, Long)
-        - Add PerUserPoolDataSource.setPerUserSoftMinEvictableIdle(Duration), deprecate setPerUserSoftMinEvictableIdleTimeMillis(String, Long)
-        - Add PerUserPoolDataSource.setPerUserDurationBetweenEvictionRuns(Duration), deprecate setPerUserTimeBetweenEvictionRunsMillis(String, Long)
       </action>
       <!-- UPDATES -->
       <action dev="ggregory" type="update" due-to="Dependabot">
