@@ -282,7 +282,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         if (!fatalException) {
             SQLException parentException = e;
             SQLException nextException = e.getNextException();
-            while(nextException != null && nextException != parentException && !fatalException) {
+            while (nextException != null && nextException != parentException && !fatalException) {
                 fatalException = isDisconnectionSqlException(nextException);
                 parentException = nextException;
                 nextException = parentException.getNextException();
