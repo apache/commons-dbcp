@@ -98,9 +98,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    /**
+     * Validates the given factory.
+     * 
+     * @param connectionFactory the factory
+     * @throws Exception Thrown by one of the factory methods while managing a temporary pooled object.
+     */
     @SuppressWarnings("resource")
-    protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory)
-        throws Exception {
+    protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory) throws Exception {
         PoolableConnection conn = null;
         PooledObject<PoolableConnection> p = null;
         try {
@@ -438,12 +443,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Creates a JDBC connection factory for this data source. The JDBC driver is loaded using the following algorithm:
      * <ol>
      * <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
-     * <li>If no Driver instance was specified and {@link #driverClassName} is specified that class is loaded using the
-     * {@link ClassLoader} of this class or, if {@link #driverClassLoader} is set, {@link #driverClassName} is loaded
+     * <li>If no Driver instance was specified and {code driverClassName} is specified that class is loaded using the
+     * {@link ClassLoader} of this class or, if {code driverClassLoader} is set, {code driverClassName} is loaded
      * with the specified {@link ClassLoader}.</li>
-     * <li>If {@link #driverClassName} is specified and the previous attempt fails, the class is loaded using the
+     * <li>If {code driverClassName} is specified and the previous attempt fails, the class is loaded using the
      * context class loader of the current thread.</li>
-     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {@link #url}.
+     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {code url}.
      * </ol>
      * <p>
      * This method exists so subclasses can replace the implementation class.
@@ -1136,10 +1141,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the {@link #minEvictableIdleDuration} property.
+     * Gets the {code minEvictableIdleDuration} property.
      *
-     * @return the value of the {@link #minEvictableIdleDuration} property
-     * @see #minEvictableIdleDuration
+     * @return the value of the {code minEvictableIdleDuration} property
+     * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
     public synchronized Duration getMinEvictableIdleDuration() {
@@ -1147,10 +1152,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the {@link #minEvictableIdleDuration} property.
+     * Gets the {code minEvictableIdleDuration} property.
      *
-     * @return the value of the {@link #minEvictableIdleDuration} property
-     * @see #minEvictableIdleDuration
+     * @return the value of the {code minEvictableIdleDuration} property
+     * @see #setMinEvictableIdle(Duration)
      * @deprecated Use {@link #getMinEvictableIdleDuration()}.
      */
     @Deprecated
@@ -1162,7 +1167,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections
      * are available when the idle object evictor runs. The value of this property has no effect unless
-     * {@link #durationBetweenEvictionRuns} has a positive value.
+     * {code durationBetweenEvictionRuns} has a positive value.
      *
      * @return the minimum number of idle connections
      * @see GenericObjectPool#getMinIdle()
@@ -1197,10 +1202,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the {@link #numTestsPerEvictionRun} property.
+     * Gets the value of the {code numTestsPerEvictionRun} property.
      *
      * @return the number of objects to examine during idle object evictor runs
-     * @see #numTestsPerEvictionRun
+     * @see #setNumTestsPerEvictionRun(int)
      */
     @Override
     public synchronized int getNumTestsPerEvictionRun() {
@@ -1374,11 +1379,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the {@link #testOnBorrow} property.
+     * Gets the {code testOnBorrow} property.
      *
      * @return true if objects are validated before being borrowed from the pool
      *
-     * @see #testOnBorrow
+     * @see #setTestOnBorrow(boolean)
      */
     @Override
     public synchronized boolean getTestOnBorrow() {
@@ -1386,10 +1391,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the {@link #testOnCreate} property.
+     * Gets the {code testOnCreate} property.
      *
      * @return true if objects are validated immediately after they are created by the pool
-     * @see #testOnCreate
+     * @see #setTestOnCreate(boolean)
      */
     @Override
     public synchronized boolean getTestOnCreate() {
@@ -1397,20 +1402,20 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the {@link #testOnReturn} property.
+     * Gets the value of the {code testOnReturn} property.
      *
      * @return true if objects are validated before being returned to the pool
-     * @see #testOnReturn
+     * @see #setTestOnReturn(boolean)
      */
     public synchronized boolean getTestOnReturn() {
         return this.testOnReturn;
     }
 
     /**
-     * Gets the value of the {@link #testWhileIdle} property.
+     * Gets the value of the {code testWhileIdle} property.
      *
      * @return true if objects examined by the idle object evictor are validated
-     * @see #testWhileIdle
+     * @see #setTestWhileIdle(boolean)
      */
     @Override
     public synchronized boolean getTestWhileIdle() {
@@ -1418,10 +1423,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the {@link #durationBetweenEvictionRuns} property.
+     * Gets the value of the {code durationBetweenEvictionRuns} property.
      *
      * @return the time (in milliseconds) between evictor runs
-     * @see #durationBetweenEvictionRuns
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.10.0
      */
     public synchronized Duration getDurationBetweenEvictionRuns() {
@@ -1429,10 +1434,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the {@link #durationBetweenEvictionRuns} property.
+     * Gets the value of the {code durationBetweenEvictionRuns} property.
      *
      * @return the time (in milliseconds) between evictor runs
-     * @see #durationBetweenEvictionRuns
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */
     @Deprecated
@@ -1442,9 +1447,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the JDBC connection {@link #url} property.
+     * Gets the JDBC connection {code url} property.
      *
-     * @return the {@link #url} passed to the JDBC driver to establish connections
+     * @return the {code url} passed to the JDBC driver to establish connections
      */
     @Override
     public synchronized String getUrl() {
@@ -1452,9 +1457,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the JDBC connection {@link #userName} property.
+     * Gets the JDBC connection {code userName} property.
      *
-     * @return the {@link #userName} passed to the JDBC driver to establish connections
+     * @return the {code userName} passed to the JDBC driver to establish connections
      */
     @Override
     public String getUsername() {
@@ -1465,7 +1470,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the validation query used to validate connections before returning them.
      *
      * @return the SQL validation query
-     * @see #validationQuery
+     * @see #setValidationQuery(String)
      */
     @Override
     public String getValidationQuery() {
@@ -2265,10 +2270,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #minEvictableIdleDuration} property.
+     * Sets the {code minEvictableIdleDuration} property.
      *
      * @param minEvictableIdleDuration the minimum amount of time an object may sit idle in the pool
-     * @see #minEvictableIdleDuration
+     * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
     public synchronized void setMinEvictableIdle(final Duration minEvictableIdleDuration) {
@@ -2279,10 +2284,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #minEvictableIdleDuration} property.
+     * Sets the {code minEvictableIdleDuration} property.
      *
      * @param minEvictableIdleTimeMillis the minimum amount of time an object may sit idle in the pool
-     * @see #minEvictableIdleDuration
+     * @see #setMinEvictableIdle(Duration)
      * @deprecated Use {@link #setMinEvictableIdle(Duration)}.
      */
     @Deprecated
@@ -2293,7 +2298,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections are
      * available when the idle object evictor runs. The value of this property has no effect unless
-     * {@link #durationBetweenEvictionRuns} has a positive value.
+     * {code durationBetweenEvictionRuns} has a positive value.
      *
      * @param minIdle the new value for minIdle
      * @see GenericObjectPool#setMinIdle(int)
@@ -2306,10 +2311,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the value of the {@link #numTestsPerEvictionRun} property.
+     * Sets the value of the {code numTestsPerEvictionRun} property.
      *
-     * @param numTestsPerEvictionRun the new {@link #numTestsPerEvictionRun} value
-     * @see #numTestsPerEvictionRun
+     * @param numTestsPerEvictionRun the new {code numTestsPerEvictionRun} value
+     * @see #setNumTestsPerEvictionRun(int)
      */
     public synchronized void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         this.numTestsPerEvictionRun = numTestsPerEvictionRun;
@@ -2319,7 +2324,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #password}.
+     * Sets the {code password}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
@@ -2381,7 +2386,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the timeout before an abandoned connection can be removed.
      * <p>
      * Setting this property has no effect if {@link #getRemoveAbandonedOnBorrow()} and
-     * {@link #getRemoveAbandonedOnMaintenance()} are false.
+     * {code getRemoveAbandonedOnMaintenance()} are false.
      * </p>
      *
      * @param removeAbandonedTimeout new abandoned timeout
@@ -2469,7 +2474,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #testOnBorrow} property. This property determines whether or not the pool will validate objects
+     * Sets the {code testOnBorrow} property. This property determines whether or not the pool will validate objects
      * before they are borrowed from the pool.
      *
      * @param testOnBorrow new value for testOnBorrow property
@@ -2482,7 +2487,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #testOnCreate} property. This property determines whether or not the pool will validate objects
+     * Sets the {code testOnCreate} property. This property determines whether or not the pool will validate objects
      * immediately after they are created by the pool
      *
      * @param testOnCreate new value for testOnCreate property
@@ -2521,10 +2526,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #durationBetweenEvictionRuns} property.
+     * Sets the {code durationBetweenEvictionRuns} property.
      *
      * @param timeBetweenEvictionRunsMillis the new time between evictor runs
-     * @see #durationBetweenEvictionRuns
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.10.0
      */
     public synchronized void setDurationBetweenEvictionRuns(final Duration timeBetweenEvictionRunsMillis) {
@@ -2535,10 +2540,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #durationBetweenEvictionRuns} property.
+     * Sets the {code durationBetweenEvictionRuns} property.
      *
      * @param timeBetweenEvictionRunsMillis the new time between evictor runs
-     * @see #durationBetweenEvictionRuns
+     * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #setDurationBetweenEvictionRuns(Duration)}.
      */
     @Deprecated
@@ -2547,7 +2552,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #url}.
+     * Sets the {code url}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
@@ -2561,7 +2566,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #userName}.
+     * Sets the {code userName}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
@@ -2575,7 +2580,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@link #validationQuery}.
+     * Sets the {code validationQuery}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,

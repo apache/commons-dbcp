@@ -583,7 +583,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Gets the user specific value for {@link GenericObjectPool#getTimeBetweenEvictionRuns()} for the specified
+     * Gets the user specific value for {@link GenericObjectPool#getDurationBetweenEvictionRuns()} for the specified
      * user's pool or the default if no user specific value is defined.
      *
      * @param userName

@@ -37,6 +37,7 @@ import javax.sql.PooledConnection;
 
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>
@@ -305,11 +306,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * Gets the default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @return The default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns()} for each per user pool.
      * @since 2.10.0
      */
     public Duration getDefaultDurationBetweenEvictionRuns() {
@@ -490,11 +489,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * Gets the default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns ()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     *         GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @return The default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns ()} for each per user pool.
      * @deprecated Use {@link #getDefaultDurationBetweenEvictionRuns()}.
      */
     @Deprecated
@@ -772,12 +769,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * Sets the default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns ()} for each per user pool.
      *
-     * @param defaultDurationBetweenEvictionRuns
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     *            GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @param defaultDurationBetweenEvictionRuns The default value for
+     *        {@link GenericObjectPool#getDurationBetweenEvictionRuns ()} for each per user pool.
      * @since 2.10.0
      */
     public void setDefaultDurationBetweenEvictionRuns(final Duration defaultDurationBetweenEvictionRuns) {
@@ -1003,12 +998,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     * GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * Sets the default value for {@link GenericObjectPool#getDurationBetweenEvictionRuns()} for each per user pool.
      *
-     * @param timeBetweenEvictionRunsMillis
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
-     *            GenericObjectPool#getTimeBetweenEvictionRunsMillis ()} for each per user pool.
+     * @param timeBetweenEvictionRunsMillis The default value for
+     *        {@link GenericObjectPool#getDurationBetweenEvictionRuns()} for each per user pool.
      * @deprecated Use {@link #setDefaultDurationBetweenEvictionRuns(Duration)}.
      */
     @Deprecated
