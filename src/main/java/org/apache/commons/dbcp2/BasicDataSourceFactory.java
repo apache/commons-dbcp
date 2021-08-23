@@ -381,22 +381,17 @@ public class BasicDataSourceFactory implements ObjectFactory {
         }
 
         // Check property names and log warnings about obsolete and / or unknown properties
-        final List<String> warnings = new ArrayList<>();
+        final List<String> warnMessages = new ArrayList<>();
         final List<String> infoMessages = new ArrayList<>();
-        validatePropertyNames(ref, name, warnings, infoMessages);
-        for (final String warning : warnings) {
-            log.warn(warning);
-        }
-        for (final String infoMessage : infoMessages) {
-            log.info(infoMessage);
-        }
+        validatePropertyNames(ref, name, warnMessages, infoMessages);
+        warnMessages.forEach(log::warn);
+        infoMessages.forEach(log::info);
 
         final Properties properties = new Properties();
         for (final String propertyName : ALL_PROPERTIES) {
             final RefAddr ra = ref.get(propertyName);
             if (ra != null) {
-                final String propertyValue = ra.getContent().toString();
-                properties.setProperty(propertyName, propertyValue);
+                properties.setProperty(propertyName, Objects.toString(ra.getContent(), null));
             }
         }
 
@@ -411,12 +406,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
      *            Reference to check properties of
      * @param name
      *            Name provided to getObject
-     * @param warnings
+     * @param warnMessages
      *            container for warning messages
      * @param infoMessages
      *            container for info messages
      */
-    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnings,
+    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
             final List<String> infoMessages) {
         final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
         final String nameString = name != null ? "Name = " + name.toString() + " " : "";
@@ -425,11 +420,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 final RefAddr ra = ref.get(propertyName);
                 if (ra != null && !allPropsAsList.contains(ra.getType())) {
                     final StringBuilder stringBuilder = new StringBuilder(nameString);
-                    final String propertyValue = ra.getContent().toString();
+                    final String propertyValue = Objects.toString(ra.getContent(), null);
                     stringBuilder.append(NUPROP_WARNTEXT.get(propertyName)).append(" You have set value of \"")
                             .append(propertyValue).append("\" for \"").append(propertyName)
                             .append("\" property, which is being ignored.");
-                    warnings.add(stringBuilder.toString());
+                    warnMessages.add(stringBuilder.toString());
                 }
             }
         }
@@ -442,7 +437,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             // and it is not in the "silent" list, tell user we are ignoring it.
             if (!(allPropsAsList.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName)
                     || SILENT_PROPERTIES.contains(propertyName))) {
-                final String propertyValue = ra.getContent().toString();
+                final String propertyValue = Objects.toString(ra.getContent(), null);
                 final StringBuilder stringBuilder = new StringBuilder(nameString);
                 stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue)
                         .append("\" for \"").append(propertyName).append("\" property");
