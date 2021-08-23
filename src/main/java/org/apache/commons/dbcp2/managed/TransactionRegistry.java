@@ -152,7 +152,6 @@ public class TransactionRegistry {
      *            A destroyed connection from {@link TransactionRegistry}.
      */
     public synchronized void unregisterConnection(final Connection connection) {
-        final Connection key = getConnectionKey(connection);
-        xaResources.remove(key);
+        xaResources.remove(getConnectionKey(connection));
     }
 }
