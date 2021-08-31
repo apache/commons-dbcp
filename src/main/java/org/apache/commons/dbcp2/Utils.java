@@ -98,7 +98,7 @@ public final class Utils {
             temp.remove(Constants.KEY_PASSWORD);
             return temp;
         }
-        return properties;
+        return null;
     }
 
     /**

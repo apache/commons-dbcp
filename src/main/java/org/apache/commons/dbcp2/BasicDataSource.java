@@ -527,23 +527,20 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final ConnectionFactory driverConnectionFactory = createConnectionFactory();
 
             // Set up the poolable connection factory
-            boolean success = false;
+            boolean success;
             final PoolableConnectionFactory poolableConnectionFactory;
             try {
                 poolableConnectionFactory = createPoolableConnectionFactory(driverConnectionFactory);
                 poolableConnectionFactory.setPoolStatements(poolPreparedStatements);
                 poolableConnectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
-                success = true;
             } catch (final SQLException | RuntimeException se) {
                 throw se;
             } catch (final Exception ex) {
                 throw new SQLException("Error creating connection factory", ex);
             }
 
-            if (success) {
-                // create a pool for our connections
-                createConnectionPool(poolableConnectionFactory);
-            }
+            // create a pool for our connections
+            createConnectionPool(poolableConnectionFactory);
 
             // Create the pooling data source to manage connections
             DataSource newDataSource;

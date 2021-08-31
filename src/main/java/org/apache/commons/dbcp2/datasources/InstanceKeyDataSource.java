@@ -205,7 +205,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         try {
             info = getPooledConnectionAndInfo(userName, userPassword);
         } catch (final RuntimeException | SQLException e) {
-            closeDueToException(info);
+            closeDueToException(null);
             throw e;
         } catch (final Exception e) {
             closeDueToException(info);
@@ -239,7 +239,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                 try {
                     info = getPooledConnectionAndInfo(userName, userPassword);
                 } catch (final RuntimeException | SQLException e) {
-                    closeDueToException(info);
+                    closeDueToException(null);
                     throw e;
                 } catch (final Exception e) {
                     closeDueToException(info);
