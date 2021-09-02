@@ -610,7 +610,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     @Override
     protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password)
-        throws SQLException {
+            throws SQLException {
 
         final PoolKey key = getPoolKey(userName);
         ObjectPool<PooledConnectionAndInfo> pool;

@@ -171,7 +171,7 @@ class CPDSConnectionFactory
      */
     @Deprecated
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final int validationQueryTimeoutSeconds,
-        final boolean rollbackAfterValidation, final String userName, final String userPassword) {
+            final boolean rollbackAfterValidation, final String userName, final String userPassword) {
         this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName, Utils.toCharArray(userPassword));
     }
 
