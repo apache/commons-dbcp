@@ -18,7 +18,6 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 import org.apache.commons.dbcp2.Utils;
 
@@ -76,7 +75,7 @@ final class CharArray {
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(chars));
+        return Arrays.hashCode(chars);
     }
 
     /**
