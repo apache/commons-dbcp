@@ -253,5 +253,4 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         }
         throw new SQLException(this + " is not a wrapper for " + iface);
     }
-    /* JDBC_4_ANT_KEY_END */
 }
