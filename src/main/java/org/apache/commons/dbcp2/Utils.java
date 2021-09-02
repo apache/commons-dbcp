@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.commons.dbcp2;
 
 import java.sql.Connection;
