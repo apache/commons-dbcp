@@ -480,7 +480,7 @@ class PooledConnectionImpl
      *            an SQL statement that may contain one or more '?' parameter placeholders. Typically this statement is
      *            specified using JDBC call escape syntax.
      * @return a default <code>CallableStatement</code> object containing the pre-compiled SQL statement.
-     * @exception SQLException
+     * @throws SQLException
      *                Thrown if a database access error occurs or this method is called on a closed connection.
      * @since 2.4.0
      */
