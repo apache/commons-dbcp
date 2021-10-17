@@ -56,7 +56,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * Basic implementation of <code>javax.sql.DataSource</code> that is configured via JavaBeans properties.
+ * Basic implementation of {@code javax.sql.DataSource} that is configured via JavaBeans properties.
  *
  * <p>
  * This is not the only way to combine the <em>commons-dbcp2</em> and <em>commons-pool2</em> packages, but provides a
@@ -213,7 +213,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private Duration maxWaitDuration = BaseObjectPoolConfig.DEFAULT_MAX_WAIT;
 
     /**
-     * Prepared statement pooling for this pool. When this property is set to <code>true</code> both PreparedStatements
+     * Prepared statement pooling for this pool. When this property is set to {@code true} both PreparedStatements
      * and CallableStatements are pooled.
      */
     private boolean poolPreparedStatements;
@@ -229,7 +229,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>
      * Note: As of version 1.3, CallableStatements (those produced by {@link Connection#prepareCall}) are pooled along
      * with PreparedStatements (produced by {@link Connection#prepareStatement}) and
-     * <code>maxOpenPreparedStatements</code> limits the total number of prepared or callable statements that may be in
+     * {@code maxOpenPreparedStatements} limits the total number of prepared or callable statements that may be in
      * use at a given time.
      * </p>
      */
@@ -359,7 +359,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * The data source we will use to manage connections. This object should be acquired <strong>ONLY</strong> by calls
-     * to the <code>createDataSource()</code> method.
+     * to the {@code createDataSource()} method.
      */
     private volatile DataSource dataSource;
 
@@ -681,7 +681,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * connection pool record a stack trace every time a method is called on a pooled connection and retain the most
      * recent stack trace to aid debugging of abandoned connections?
      *
-     * @return <code>true</code> if usage tracking is enabled
+     * @return {@code true} if usage tracking is enabled
      */
     @Override
     public boolean getAbandonedUsageTracking() {
@@ -691,7 +691,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
-     * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
+     * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
      * @return Whether or not connections being returned to the pool will be checked and configured with auto-commit.
      */
@@ -816,7 +816,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Gets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
-     * connection. <code>null</code> means that the driver default will be used.
+     * connection. {@code null} means that the driver default will be used.
      *
      * @return The default query timeout in seconds.
      * @deprecated Use {@link #getDefaultQueryTimeoutDuration()}.
@@ -828,7 +828,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Gets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
-     * connection. <code>null</code> means that the driver default will be used.
+     * connection. {@code null} means that the driver default will be used.
      *
      * @return The default query timeout Duration.
      * @since 2.10.0
@@ -905,7 +905,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the class loader specified for loading the JDBC driver. Returns <code>null</code> if no class loader has
+     * Gets the class loader specified for loading the JDBC driver. Returns {@code null} if no class loader has
      * been explicitly specified.
      * <p>
      * Note: This getter only returns the last value set by a call to {@link #setDriverClassLoader(ClassLoader)}. It
@@ -935,7 +935,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
-     * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
+     * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
      * @return Whether or not connections being returned to the pool will be checked and configured with auto-commit.
      * @deprecated Use {@link #getAutoCommitOnReturn()}.
@@ -1094,7 +1094,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the <code>maxOpenPreparedStatements</code> property.
+     * Gets the value of the {@code maxOpenPreparedStatements} property.
      *
      * @return the maximum number of open statements
      */
@@ -1726,7 +1726,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * the connection pool should record a stack trace every time a method is called on a pooled connection and retain
      * the most recent stack trace to aid debugging of abandoned connections.
      *
-     * @param usageTracking A value of <code>true</code> will enable the recording of a stack trace on every use of a
+     * @param usageTracking A value of {@code true} will enable the recording of a stack trace on every use of a
      *                      pooled connection
      */
     public void setAbandonedUsageTracking(final boolean usageTracking) {
@@ -1758,7 +1758,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
-     * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
+     * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
      * @param autoCommitOnReturn Whether or not connections being returned to the pool will be checked and configured
      *                           with auto-commit.
@@ -1887,7 +1887,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
-     * connection. <code>null</code> means that the driver default will be used.
+     * connection. {@code null} means that the driver default will be used.
      *
      * @param defaultQueryTimeoutDuration The default query timeout Duration.
      * @since 2.10.0
@@ -1898,7 +1898,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
-     * connection. <code>null</code> means that the driver default will be used.
+     * connection. {@code null} means that the driver default will be used.
      *
      * @param defaultQueryTimeoutSeconds The default query timeout in seconds.
      * @deprecated Use {@link #setDefaultQueryTimeout(Duration)}.
@@ -2035,7 +2035,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
-     * setting is {@code false} when the connection is returned. It is <code>true</code> by default.
+     * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
      * @param autoCommitOnReturn Whether or not connections being returned to the pool will be checked and configured
      *                           with auto-commit.
@@ -2216,7 +2216,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the value of the <code>maxOpenPreparedStatements</code> property.
+     * Sets the value of the {@code maxOpenPreparedStatements} property.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
@@ -2500,7 +2500,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the <code>testOnReturn</code> property. This property determines whether or not the pool will validate
+     * Sets the {@code testOnReturn} property. This property determines whether or not the pool will validate
      * objects before they are returned to the pool.
      *
      * @param testOnReturn new value for testOnReturn property
@@ -2513,7 +2513,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the <code>testWhileIdle</code> property. This property determines whether or not the idle object evictor
+     * Sets the {@code testWhileIdle} property. This property determines whether or not the idle object evictor
      * will validate connections.
      *
      * @param testWhileIdle new value for testWhileIdle property

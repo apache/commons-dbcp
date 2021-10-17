@@ -66,7 +66,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
 
     /**
      * Uses the configured XAConnectionFactory to create a {@link PoolableManagedConnection}. Throws
-     * <code>IllegalStateException</code> if the connection factory returns null. Also initializes the connection using
+     * {@code IllegalStateException} if the connection factory returns null. Also initializes the connection using
      * configured initialization SQL (if provided) and sets up a prepared statement pool associated with the
      * PoolableManagedConnection if statement pooling is enabled.
      */

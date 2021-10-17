@@ -39,7 +39,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>
- * A pooling <code>DataSource</code> appropriate for deployment within J2EE environment. There are many configuration
+ * A pooling {@code DataSource} appropriate for deployment within J2EE environment. There are many configuration
  * options, most of which are defined in the parent class. This datasource uses individual pools per user, and some
  * properties can be set specifically for a given user, if the deployment environment can support initialization of
  * mapped properties. So for example, a pool of admin or write-access Connections can be guaranteed a certain number of
@@ -48,8 +48,8 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  *
  * <p>
  * User passwords can be changed without re-initializing the datasource. When a
- * <code>getConnection(userName, password)</code> request is processed with a password that is different from those used
- * to create connections in the pool associated with <code>userName</code>, an attempt is made to create a new
+ * {@code getConnection(userName, password)} request is processed with a password that is different from those used
+ * to create connections in the pool associated with {@code userName}, an attempt is made to create a new
  * connection using the supplied password and if this succeeds, the existing pool is cleared and a new pool is created
  * for connections using the new password.
  * </p>
@@ -672,7 +672,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Returns a <code>PerUserPoolDataSource</code> {@link Reference}.
+     * Returns a {@code PerUserPoolDataSource} {@link Reference}.
      */
     @Override
     public Reference getReference() throws NamingException {
@@ -695,7 +695,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Supports Serialization interface.
      *
      * @param in
-     *            a <code>java.io.ObjectInputStream</code> value
+     *            a {@code java.io.ObjectInputStream} value
      * @throws IOException
      *             if an error occurs
      * @throws ClassNotFoundException

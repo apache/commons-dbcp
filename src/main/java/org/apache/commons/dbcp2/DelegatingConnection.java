@@ -147,7 +147,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * <ol>
      * <li>Call passivate()</li>
      * <li>Call close (or the equivalent appropriate action) on the wrapped connection</li>
-     * <li>Set _closed to <code>false</code></li>
+     * <li>Set _closed to {@code false}</li>
      * </ol>
      */
     @Override
@@ -362,7 +362,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
+     * {@code null} means that the driver default will be used.
      *
      * @return query timeout limit in seconds; zero means there is no limit.
      * @deprecated Use {@link #getDefaultQueryTimeoutDuration()}.
@@ -374,7 +374,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Gets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
+     * {@code null} means that the driver default will be used.
      *
      * @return query timeout limit; zero means there is no limit.
      * @since 2.10.0
@@ -560,7 +560,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      *
      * @param c
      *            connection to compare innermost delegate with
-     * @return true if innermost delegate equals <code>c</code>
+     * @return true if innermost delegate equals {@code c}
      */
     @SuppressWarnings("resource")
     public boolean innermostDelegateEquals(final Connection c) {
@@ -893,7 +893,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
+     * {@code null} means that the driver default will be used.
      *
      * @param defaultQueryTimeoutDuration
      *            the new query timeout limit Duration; zero means there is no limit.
@@ -905,7 +905,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
-     * <code>null</code> means that the driver default will be used.
+     * {@code null} means that the driver default will be used.
      *
      * @param defaultQueryTimeoutSeconds
      *            the new query timeout limit in seconds; zero means there is no limit.

@@ -101,7 +101,7 @@ public class PoolingDriver implements Driver {
     private final boolean accessToUnderlyingConnectionAllowed;
 
     /**
-     * Constructs a new driver with <code>accessToUnderlyingConnectionAllowed</code> enabled.
+     * Constructs a new driver with {@code accessToUnderlyingConnectionAllowed} enabled.
      */
     public PoolingDriver() {
         this(true);
@@ -216,7 +216,7 @@ public class PoolingDriver implements Driver {
      * @param conn
      *            connection to invalidate
      * @throws SQLException
-     *             if the connection is not a <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
+     *             if the connection is not a {@code PoolGuardConnectionWrapper} or an error occurs invalidating
      *             the connection
      */
     public void invalidateConnection(final Connection conn) throws SQLException {

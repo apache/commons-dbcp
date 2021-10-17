@@ -38,7 +38,7 @@ import org.apache.commons.dbcp2.ListException;
 import org.apache.commons.dbcp2.Utils;
 
 /**
- * A JNDI ObjectFactory which creates <code>SharedPoolDataSource</code>s or <code>PerUserPoolDataSource</code>s
+ * A JNDI ObjectFactory which creates {@code SharedPoolDataSource}s or {@code PerUserPoolDataSource}s
  *
  * @since 2.0
  */

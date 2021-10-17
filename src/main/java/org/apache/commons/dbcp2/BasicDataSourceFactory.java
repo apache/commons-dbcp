@@ -49,12 +49,12 @@ import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * JNDI object factory that creates an instance of <code>BasicDataSource</code> that has been configured based on the
- * <code>RefAddr</code> values of the specified <code>Reference</code>, which must match the names and data types of the
- * <code>BasicDataSource</code> bean properties with the following exceptions:
+ * JNDI object factory that creates an instance of {@code BasicDataSource} that has been configured based on the
+ * {@code RefAddr} values of the specified {@code Reference}, which must match the names and data types of the
+ * {@code BasicDataSource} bean properties with the following exceptions:
  * <ul>
- * <li><code>connectionInitSqls</code> must be passed to this factory as a single String using semicolon to delimit the
- * statements whereas <code>BasicDataSource</code> requires a collection of Strings.</li>
+ * <li>{@code connectionInitSqls} must be passed to this factory as a single String using semicolon to delimit the
+ * statements whereas {@code BasicDataSource} requires a collection of Strings.</li>
  * </ul>
  *
  * @since 2.0
@@ -350,17 +350,17 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Creates and return a new <code>BasicDataSource</code> instance. If no instance can be created, return
-     * <code>null</code> instead.
+     * Creates and return a new {@code BasicDataSource} instance. If no instance can be created, return
+     * {@code null} instead.
      *
      * @param obj
      *            The possibly null object containing location or reference information that can be used in creating an
      *            object
      * @param name
-     *            The name of this object relative to <code>nameCtx</code>
+     *            The name of this object relative to {@code nameCtx}
      * @param nameCtx
-     *            The context relative to which the <code>name</code> parameter is specified, or <code>null</code> if
-     *            <code>name</code> is relative to the default initial context
+     *            The context relative to which the {@code name} parameter is specified, or {@code null} if
+     *            {@code name} is relative to the default initial context
      * @param environment
      *            The possibly null environment that is used in creating this object
      *
@@ -371,7 +371,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx,
             final Hashtable<?, ?> environment) throws Exception {
 
-        // We only know how to deal with <code>javax.naming.Reference</code>s
+        // We only know how to deal with {@code javax.naming.Reference}s
         // that specify a class name of "javax.sql.DataSource"
         if (obj == null || !(obj instanceof Reference)) {
             return null;
