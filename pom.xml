@@ -191,7 +191,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.8.0-RC1</version>
+      <version>5.8.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -205,7 +205,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.12.4</version>
+      <version>4.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -342,7 +342,7 @@
     <commons.javadoc.version>3.3.1</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.11.1</commons.pool.version>
-    <commons.japicmp.version>0.15.3</commons.japicmp.version>
+    <commons.japicmp.version>0.15.4</commons.japicmp.version>
     <commons.jacoco.version>0.8.7</commons.jacoco.version>
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
