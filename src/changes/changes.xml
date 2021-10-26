@@ -100,7 +100,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump junit-jupiter from 5.8.0-M1 to 5.8.1 #125, #136.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump spotbugs from 4.3.0 to 4.4.0 #124.
+        Bump spotbugs from 4.3.0 to 4.4.1 #124, #133.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump org.mockito:mockito-core 3.11.2 -> 4.0.0, #128, #138.
@@ -112,9 +112,6 @@ The <action> type attribute can be add,update,fix,remove.
         Bump maven-pmd-plugin from 3.14.0 to 3.15.0 #132.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump spotbugs from 4.4.0 to 4.4.1 #133.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
         Bump narayana-jta from 5.12.0.Final to 5.12.1.Final #134.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
@@ -122,6 +119,9 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump actions/checkout from 2.3.4 to 2.3.5 #139.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump spotbugs-maven-plugin from 4.3.0 to 4.4.2.2 #140.
       </action>
     </release>
     <release version="2.9.0" date="2021-07-30" description="This is a minor release, including bug fixes and enhancements.">
