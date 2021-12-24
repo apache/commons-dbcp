@@ -42,9 +42,9 @@ import com.arjuna.ats.jta.common.jtaPropertyManager;
  * Requires Java 8.
  */
 public class TestConnectionWithNarayana {
-    private static final String CREATE_STMT = "CREATE TABLE TEST_DATA (KEY VARCHAR(100), ID BIGINT, VALUE DOUBLE PRECISION, INFO TEXT, TS TIMESTAMP)";
-    private static final String INSERT_STMT = "INSERT INTO TEST_DATA   (KEY, ID, VALUE, INFO, TS) VALUES (?,?,?,?,?)";
-    private static final String SELECT_STMT = "SELECT KEY, ID, VALUE, INFO, TS FROM TEST_DATA LIMIT 1";
+    private static final String CREATE_STMT = "CREATE TABLE TEST_DATA (KEY1 VARCHAR(100), ID BIGINT, VALUE1 DOUBLE PRECISION, INFO TEXT, TS TIMESTAMP)";
+    private static final String INSERT_STMT = "INSERT INTO TEST_DATA   (KEY1, ID, VALUE1, INFO, TS) VALUES (?,?,?,?,?)";
+    private static final String SELECT_STMT = "SELECT KEY1, ID, VALUE1, INFO, TS FROM TEST_DATA LIMIT 1";
     private static final String PAYLOAD;
     private static final String DROP_STMT = "DROP TABLE TEST_DATA";
 
