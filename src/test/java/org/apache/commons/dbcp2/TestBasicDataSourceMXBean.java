@@ -17,6 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
@@ -99,6 +101,11 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
+        public Duration getMaxConnDuration() {
+            return Duration.ZERO;
+        }
+
+        @Override
         public long getMaxConnLifetimeMillis() {
             return 0;
         }
@@ -119,8 +126,18 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
+        public Duration getMaxWaitDuration() {
+            return Duration.ZERO;
+        }
+
+        @Override
         public long getMaxWaitMillis() {
             return 0;
+        }
+
+        @Override
+        public Duration getMinEvictableIdleDuration() {
+            return Duration.ZERO;
         }
 
         @Override
@@ -164,8 +181,18 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
+        public Duration getRemoveAbandonedTimeoutDuration() {
+            return Duration.ZERO;
+        }
+
+        @Override
         public int getRemoveAbandonedTimeout() {
             return 0;
+        }
+
+        @Override
+        public Duration getSoftMinEvictableIdleDuration() {
+            return Duration.ZERO;
         }
 
         @Override
@@ -189,6 +216,11 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
+        public Duration getDurationBetweenEvictionRuns() {
+            return Duration.ZERO;
+        }
+
+        @Override
         public long getTimeBetweenEvictionRunsMillis() {
             return 0;
         }
@@ -206,6 +238,11 @@ public class TestBasicDataSourceMXBean {
         @Override
         public String getValidationQuery() {
             return null;
+        }
+
+        @Override
+        public Duration getValidationQueryTimeoutDuration() {
+            return Duration.ZERO;
         }
 
         @Override
