@@ -126,8 +126,8 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump actions/cache from 2.1.6 to 2.1.7 #147.
       </action>
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Bump h2 from 1.4.200 to 2.0.204 #153. Update SQL for migration from H2 1.4.200 to 2.0.204 where "KEY" and "VALUE" are now reserved keywords.
+      <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
+        Bump h2 from 1.4.200 to 2.0.206 #153. Update SQL for migration from H2 1.4.200 to 2.0.204 where "KEY" and "VALUE" are now reserved keywords.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump jboss-logging from 3.4.2.Final to 3.4.3.Final #162.
