@@ -112,7 +112,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump maven-pmd-plugin from 3.14.0 to 3.15.0 #132.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump narayana-jta from 5.12.0.Final to 5.12.4.Final #134, #156.
+        Bump narayana-jta from 5.12.0.Final to 5.12.5.Final #134, #156, #163.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump japicmp-maven-plugin from 0.15.3 to 0.15.4 #137.
@@ -131,9 +131,6 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump jboss-logging from 3.4.2.Final to 3.4.3.Final #162.
-      </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump narayana-jta from 5.12.4.Final to 5.12.5.Final #163.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump spotbugs-maven-plugin from 4.5.2.0 to 4.5.3.0 #161.
