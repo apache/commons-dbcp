@@ -145,9 +145,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * Closes the underlying connection, and close any Statements that were not explicitly closed. Sub-classes that
      * override this method must:
      * <ol>
-     * <li>Call passivate()</li>
+     * <li>Call {@link #passivate()}</li>
      * <li>Call close (or the equivalent appropriate action) on the wrapped connection</li>
-     * <li>Set _closed to {@code false}</li>
+     * <li>Set {@code closed} to {@code false}</li>
      * </ol>
      */
     @Override
