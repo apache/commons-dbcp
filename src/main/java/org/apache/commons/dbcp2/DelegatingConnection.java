@@ -118,7 +118,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Can be used to clear cached state when it is known that the underlying connection may have been accessed
+     * Clears the cached state. Call when you known that the underlying connection may have been accessed
      * directly.
      */
     public void clearCachedState() {
