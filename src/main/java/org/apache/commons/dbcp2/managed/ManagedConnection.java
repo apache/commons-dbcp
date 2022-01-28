@@ -58,12 +58,12 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             }
         }
     }
+
     private final ObjectPool<C> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
     private TransactionContext transactionContext;
     private boolean isSharedConnection;
-
     private final Lock lock;
 
     /**
