@@ -359,6 +359,7 @@
     <spotbugs.skip>false</spotbugs.skip>
     <clirr.skip>true</clirr.skip>
     <findbugs.skip>true</findbugs.skip>
+    <surefire.argline></surefire.argline>
   </properties>
 
   <build>
@@ -426,6 +427,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <argLine>${surefire.argline}</argLine>
           <systemPropertyVariables>
             <!-- Ensure that logging messages can be inspected -->
             <org.apache.commons.logging.Log>org.apache.commons.dbcp2.StackMessageLog</org.apache.commons.logging.Log>
@@ -551,5 +553,14 @@
     </plugins>
   </reporting>
   <profiles>
+    <profile>
+      <id>jdk9-plus</id>
+      <activation>
+        <jdk>[1.9,)</jdk>
+      </activation>
+      <properties>
+        <surefire.argline>--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED</surefire.argline>
+      </properties>
+    </profile>
   </profiles>
 </project>
