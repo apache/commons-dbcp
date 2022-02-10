@@ -17,11 +17,14 @@
 
 package org.apache.commons.dbcp2;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertNull;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import java.time.Duration;
+import javax.management.JMX;
+import javax.management.NotCompliantMBeanException;
 import org.junit.jupiter.api.Test;
+import com.sun.jmx.mbeanserver.Introspector;
 
 /**
  * Tests for BasicDataSourceMXBean.
@@ -101,11 +104,6 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public Duration getMaxConnDuration() {
-            return Duration.ZERO;
-        }
-
-        @Override
         public long getMaxConnLifetimeMillis() {
             return 0;
         }
@@ -126,18 +124,8 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public Duration getMaxWaitDuration() {
-            return Duration.ZERO;
-        }
-
-        @Override
         public long getMaxWaitMillis() {
             return 0;
-        }
-
-        @Override
-        public Duration getMinEvictableIdleDuration() {
-            return Duration.ZERO;
         }
 
         @Override
@@ -181,18 +169,8 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public Duration getRemoveAbandonedTimeoutDuration() {
-            return Duration.ZERO;
-        }
-
-        @Override
         public int getRemoveAbandonedTimeout() {
             return 0;
-        }
-
-        @Override
-        public Duration getSoftMinEvictableIdleDuration() {
-            return Duration.ZERO;
         }
 
         @Override
@@ -216,11 +194,6 @@ public class TestBasicDataSourceMXBean {
         }
 
         @Override
-        public Duration getDurationBetweenEvictionRuns() {
-            return Duration.ZERO;
-        }
-
-        @Override
         public long getTimeBetweenEvictionRunsMillis() {
             return 0;
         }
@@ -238,11 +211,6 @@ public class TestBasicDataSourceMXBean {
         @Override
         public String getValidationQuery() {
             return null;
-        }
-
-        @Override
-        public Duration getValidationQueryTimeoutDuration() {
-            return Duration.ZERO;
         }
 
         @Override
@@ -277,5 +245,19 @@ public class TestBasicDataSourceMXBean {
     @Test
     public void testDefaultSchema() {
         assertNull(bean.getDefaultSchema());
+    }
+
+    /**
+     * Tests if the {@link BasicDataSourceMXBean} interface is a valid MXBean
+     * interface.
+     */
+    @Test
+    public void testMXBeanCompliance() {
+       assertTrue(JMX.isMXBeanInterface(BasicDataSourceMXBean.class));
+       try {
+          Introspector.testComplianceMXBeanInterface(BasicDataSourceMXBean.class);
+       } catch (NotCompliantMBeanException e) {
+          fail(e);
+       }
     }
 }

@@ -1064,7 +1064,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return the maximum permitted duration of a connection.
      * @since 2.10.0
      */
-    @Override
     public Duration getMaxConnDuration() {
         return maxConnDuration;
     }
@@ -1124,7 +1123,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return the maxWaitDuration property value.
      * @since 2.10.0
      */
-    @Override
     public synchronized Duration getMaxWaitDuration() {
         return this.maxWaitDuration;
     }
@@ -1149,7 +1147,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
-    @Override
     public synchronized Duration getMinEvictableIdleDuration() {
         return this.minEvictableIdleDuration;
     }
@@ -1327,7 +1324,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return Timeout before an abandoned connection can be removed.
      * @since 2.10.0
      */
-    @Override
     public Duration getRemoveAbandonedTimeoutDuration() {
         return abandonedConfig == null ? Duration.ofSeconds(300) : abandonedConfig.getRemoveAbandonedTimeoutDuration();
     }
@@ -1357,7 +1353,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *         there are minIdle idle connections in the pool
      * @since 2.10.0
      */
-    @Override
     public synchronized Duration getSoftMinEvictableIdleDuration() {
         return softMinEvictableIdleDuration;
     }
@@ -1434,7 +1429,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.10.0
      */
-    @Override
     public synchronized Duration getDurationBetweenEvictionRuns() {
         return this.durationBetweenEvictionRuns;
     }
@@ -1488,7 +1482,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return the timeout in seconds before connection validation queries fail.
      */
-    @Override
     public Duration getValidationQueryTimeoutDuration() {
         return validationQueryTimeoutDuration;
     }
