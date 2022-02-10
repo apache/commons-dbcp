@@ -43,11 +43,11 @@
 Apache Commons DBCP
 ===================
 
-[![Travis-CI Status](https://travis-ci.org/apache/commons-dbcp.svg)](https://travis-ci.org/apache/commons-dbcp)
 [![GitHub Actions Status](https://github.com/apache/commons-dbcp/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-dbcp/actions)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp/badge.svg)](https://coveralls.io/r/apache/commons-dbcp)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.9.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.9.0)
+[![CodeQL](https://github.com/apache/commons-dbcp/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-dbcp/actions?query=workflow%3ACodeQL)
 
 Apache Commons DBCP software implements Database Connection Pooling
 
