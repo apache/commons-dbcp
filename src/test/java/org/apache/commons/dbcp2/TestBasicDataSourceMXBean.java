@@ -20,10 +20,12 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import java.time.Duration;
+
 import javax.management.JMX;
 import javax.management.NotCompliantMBeanException;
+
 import org.junit.jupiter.api.Test;
+
 import com.sun.jmx.mbeanserver.Introspector;
 
 /**
