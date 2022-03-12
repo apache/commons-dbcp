@@ -103,7 +103,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump spotbugs from 4.3.0 to 4.5.3 #124, #133, #151, #164.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
-        Bump org.mockito:mockito-core 3.11.2 -> 4.2.0, #128, #138, #152.
+        Bump org.mockito:mockito-core 3.11.2 -> 4.4.0, #128, #138, #152, #175.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump maven-javadoc-plugin from 3.3.0 to 3.3.1 #131.
