@@ -173,66 +173,6 @@ limitations under the License.
         </table>
       </subsection>
     </section>
-    <section name="Apache Commons DBCP 1.4 for JDBC 4 on Java 6">
-      <subsection name="Binaries">
-        <table>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz">commons-dbcp-1.4-bin.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.tar.gz.asc">pgp</a></td>
-          </tr>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip">commons-dbcp-1.4-bin.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.4-bin.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-      <subsection name="Source">
-        <table>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz">commons-dbcp-1.4-src.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.tar.gz.asc">pgp</a></td>
-          </tr>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.4-src.zip">commons-dbcp-1.4-src.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.zip.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.4-src.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-    </section>
-    <section name="Apache Commons DBCP 1.3 for JDBC 3 on Java 1.4 or 5">
-      <subsection name="Binaries">
-        <table>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz">commons-dbcp-1.3-bin.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.tar.gz.asc">pgp</a></td>
-          </tr>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip">commons-dbcp-1.3-bin.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/binaries/commons-dbcp-1.3-bin.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-      <subsection name="Source">
-        <table>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz">commons-dbcp-1.3-src.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.tar.gz.asc">pgp</a></td>
-          </tr>
-          <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp-1.3-src.zip">commons-dbcp-1.3-src.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.zip.sha256">sha256</a></td>
-              <td><a href="https://www.apache.org/dist/commons/dbcp/source/commons-dbcp-1.3-src.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-    </section>
     <section name="Archives">
         <p>
           Older releases can be obtained from the archives.
