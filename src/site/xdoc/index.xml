@@ -54,15 +54,11 @@ JDBC. Here is how it works:</p>
 <ul>
 <li>DBCP 2.5.0 and up compiles and runs under Java 8 (JDBC 4.2) and up.</li>
 <li>DBCP 2.4.0 compiles and runs under Java 7 (JDBC 4.1) and above.</li>
-<li>DBCP 1.4 compiles and runs under Java 6 (JDBC 4) and above.</li>
-<li>DBCP 1.3 compiles and runs under Java 1.4-5.0 (JDBC 3) and above.</li>
 </ul>
 <p>Running</p>
 <ul>
 <li>DBCP 2.5.0 and up binaries should be used by applications running on Java 8 and up.</li>
 <li>DBCP 2.4.0 binaries should be used by applications running under Java 7.</li>
-<li>DBCP 1.4 binaries should be used by applications running under Java 6.</li>
-<li>DBCP 1.3 should be used when running under Java 1.4 and 5.0.</li>
 </ul>
 <p>DBCP 2 is based on Commons Pool 2 and provides increased performance, JMX
 support as well as numerous other new features compared to DBCP 1.x. Users
@@ -71,10 +67,6 @@ as the Maven co-ordinates, since DBCP 2.x is not binary compatible with DBCP
 1.x. Users should also be aware that some configuration options (e.g. maxActive
 to maxTotal) have been renamed to align them with the new names used by Commons
 Pool 2.</p>
-
-<p>There is no difference in the codebase supporting DBCP 1.4.x and 1.3.x other
-than that the code implementing methods added to support JDBC 4 has been
-filtered out of the DBCP 1.3 sources.</p>
 
 </section>
 
