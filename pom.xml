@@ -334,7 +334,7 @@
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
     <spotbugs.plugin.version>4.5.3.0</spotbugs.plugin.version>
-    <spotbugs.impl.version>4.5.3</spotbugs.impl.version>
+    <spotbugs.impl.version>4.6.0</spotbugs.impl.version>
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.9.0</commons.bc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
