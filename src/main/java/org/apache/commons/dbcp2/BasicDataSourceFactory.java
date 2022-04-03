@@ -91,6 +91,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_VALIDATION_QUERY = "validationQuery";
     private static final String PROP_VALIDATION_QUERY_TIMEOUT = "validationQueryTimeout";
     private static final String PROP_JMX_NAME = "jmxName";
+    private static final String PROP_REGISTER_CONNECTION_MBEAN = "registerConnectionMBean";
     private static final String PROP_CONNECTION_FACTORY_CLASS_NAME = "connectionFactoryClassName";
 
     /**
@@ -149,7 +150,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             PROP_MAX_OPEN_PREPARED_STATEMENTS, PROP_CONNECTION_PROPERTIES, PROP_MAX_CONN_LIFETIME_MILLIS,
             PROP_LOG_EXPIRED_CONNECTIONS, PROP_ROLLBACK_ON_RETURN, PROP_ENABLE_AUTO_COMMIT_ON_RETURN,
             PROP_DEFAULT_QUERY_TIMEOUT, PROP_FAST_FAIL_VALIDATION, PROP_DISCONNECTION_SQL_CODES, PROP_JMX_NAME,
-            PROP_CONNECTION_FACTORY_CLASS_NAME };
+            PROP_REGISTER_CONNECTION_MBEAN, PROP_CONNECTION_FACTORY_CLASS_NAME };
 
     /**
      * Obsolete properties from DBCP 1.x. with warning strings suggesting new properties. LinkedHashMap will guarantee
@@ -295,6 +296,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         acceptDurationOfMillis(properties, PROP_MAX_CONN_LIFETIME_MILLIS, dataSource::setMaxConn);
         acceptBoolean(properties, PROP_LOG_EXPIRED_CONNECTIONS, dataSource::setLogExpiredConnections);
         acceptString(properties, PROP_JMX_NAME, dataSource::setJmxName);
+        acceptBoolean(properties, PROP_REGISTER_CONNECTION_MBEAN, dataSource::setRegisterConnectionMBean);
         acceptBoolean(properties, PROP_ENABLE_AUTO_COMMIT_ON_RETURN, dataSource::setAutoCommitOnReturn);
         acceptBoolean(properties, PROP_ROLLBACK_ON_RETURN, dataSource::setRollbackOnReturn);
         acceptDurationOfSeconds(properties, PROP_DEFAULT_QUERY_TIMEOUT, dataSource::setDefaultQueryTimeout);
