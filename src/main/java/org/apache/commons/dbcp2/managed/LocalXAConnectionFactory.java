@@ -79,7 +79,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void commit(final Xid xid, final boolean flag) throws XAException {
-            Objects.requireNonNull(xid, "xid is null");
+            Objects.requireNonNull(xid, "xid");
             if (this.currentXid == null) {
                 throw new XAException("There is no current transaction");
             }
@@ -121,7 +121,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void end(final Xid xid, final int flag) throws XAException {
-            Objects.requireNonNull(xid, "xid is null");
+            Objects.requireNonNull(xid, "xid");
             if (!this.currentXid.equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
@@ -229,7 +229,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          */
         @Override
         public synchronized void rollback(final Xid xid) throws XAException {
-            Objects.requireNonNull(xid, "xid is null");
+            Objects.requireNonNull(xid, "xid");
             if (!this.currentXid.equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
@@ -343,8 +343,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
     public LocalXAConnectionFactory(final TransactionManager transactionManager,
             final TransactionSynchronizationRegistry transactionSynchronizationRegistry,
             final ConnectionFactory connectionFactory) {
-        Objects.requireNonNull(transactionManager, "transactionManager is null");
-        Objects.requireNonNull(connectionFactory, "connectionFactory is null");
+        Objects.requireNonNull(transactionManager, "transactionManager");
+        Objects.requireNonNull(connectionFactory, "connectionFactory");
         this.transactionRegistry = new TransactionRegistry(transactionManager, transactionSynchronizationRegistry);
         this.connectionFactory = connectionFactory;
     }

@@ -1837,7 +1837,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param connectionProperties the connection properties used to create new connections
      */
     public void setConnectionProperties(final String connectionProperties) {
-        Objects.requireNonNull(connectionProperties, "connectionProperties is null");
+        Objects.requireNonNull(connectionProperties, "connectionProperties");
         final String[] entries = connectionProperties.split(";");
         final Properties properties = new Properties();
         for (final String entry : entries) {

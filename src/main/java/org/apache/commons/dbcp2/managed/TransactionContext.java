@@ -68,8 +68,8 @@ public class TransactionContext {
      */
     public TransactionContext(final TransactionRegistry transactionRegistry, final Transaction transaction,
                               final TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
-        Objects.requireNonNull(transactionRegistry, "transactionRegistry is null");
-        Objects.requireNonNull(transaction, "transaction is null");
+        Objects.requireNonNull(transactionRegistry, "transactionRegistry");
+        Objects.requireNonNull(transaction, "transaction");
         this.transactionRegistry = transactionRegistry;
         this.transactionRef = new WeakReference<>(transaction);
         this.transactionComplete = false;

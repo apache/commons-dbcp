@@ -92,8 +92,8 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
      */
     public DataSourceXAConnectionFactory(final TransactionManager transactionManager, final XADataSource xaDataSource,
             final String userName, final char[] userPassword, final TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
-        Objects.requireNonNull(transactionManager, "transactionManager is null");
-        Objects.requireNonNull(xaDataSource, "xaDataSource is null");
+        Objects.requireNonNull(transactionManager, "transactionManager");
+        Objects.requireNonNull(xaDataSource, "xaDataSource");
 
         // We do allow the transactionSynchronizationRegistry to be null for non-app server environments
 
