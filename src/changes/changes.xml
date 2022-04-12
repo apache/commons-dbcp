@@ -123,8 +123,8 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump spotbugs-maven-plugin from 4.3.0 to 4.6.0.0 #140, #154, #161, #178.
       </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump actions/cache from 2.1.6 to 3 #147, #176.
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+        Bump actions/cache from 2.1.6 to 3.0.2 #147, #176.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump h2 from 1.4.200 to 2.0.206 #153. Update SQL for migration from H2 1.4.200 to 2.0.204 where "KEY" and "VALUE" are now reserved keywords.
