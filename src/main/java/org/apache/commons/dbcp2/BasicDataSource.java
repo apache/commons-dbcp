@@ -337,6 +337,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     private String jmxName;
 
+    private boolean registerConnectionMBean = true;
+
     private boolean autoCommitOnReturn = true;
 
     private boolean rollbackOnReturn = true;
@@ -628,7 +630,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, ObjectNameWrapper.unwrap(registeredJmxObjectName));
+            if (registerConnectionMBean) {
+                connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, ObjectNameWrapper.unwrap(registeredJmxObjectName));
+            } else {
+                connectionFactory = new PoolableConnectionFactory(driverConnectionFactory, null);
+            }
             connectionFactory.setValidationQuery(validationQuery);
             connectionFactory.setValidationQueryTimeout(validationQueryTimeoutDuration);
             connectionFactory.setConnectionInitSql(connectionInitSqls);
@@ -2091,6 +2097,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setJmxName(final String jmxName) {
         this.jmxName = jmxName;
+    }
+
+    /**
+     * Sets if connection level JMX tracking is requested for this DataSource. If true, each connection will be
+     * registered for tracking with JMX.
+     *
+     * @param registerConnectionMBean connection tracking requested for this DataSource.
+     */
+    public void setRegisterConnectionMBean(final boolean registerConnectionMBean) {
+        this.registerConnectionMBean = registerConnectionMBean;
     }
 
     /**

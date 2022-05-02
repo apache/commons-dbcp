@@ -506,6 +506,13 @@ the parent connection.
        <a href="https://docs.oracle.com/javase/1.5.0/docs/api/javax/management/ObjectName.html">javadoc</a>).
     </td>
 </tr>
+<tr>
+    <td>registerConnectionMBean</td>
+    <td>true</td>
+    <td>
+        Registers Connection JMX MBeans. See <a href="https://issues.apache.org/jira/browse/DBCP-585">DBCP-585</a>).
+    </td>
+</tr>
 </table>
 
 </section>
