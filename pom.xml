@@ -324,7 +324,7 @@
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
     <commons.checkstyle-plugin.version>3.1.2</commons.checkstyle-plugin.version>
-    <commons.checkstyle.version>9.2.1</commons.checkstyle.version>
+    <commons.checkstyle.version>10.2</commons.checkstyle.version>
     <commons.javadoc.version>3.4.0</commons.javadoc.version>
     <!-- Constant for Commons Pool version (used in multiple places) -->
     <commons.pool.version>2.11.1</commons.pool.version>
