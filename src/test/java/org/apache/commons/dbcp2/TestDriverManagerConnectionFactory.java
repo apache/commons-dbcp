@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * This test *must* execute before all other tests to be effective as it tests
- * the initialisation of DriverManager.
+ * the initialization of DriverManager.
  * Based on the test case for DBCP-212 written by Marcos Sanz
  */
 public class TestDriverManagerConnectionFactory {
