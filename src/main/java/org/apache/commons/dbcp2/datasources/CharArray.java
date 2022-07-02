@@ -17,6 +17,7 @@
 
 package org.apache.commons.dbcp2.datasources;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.commons.dbcp2.Utils;
@@ -29,7 +30,9 @@ import org.apache.commons.dbcp2.Utils;
  *
  * @since 2.9.0
  */
-final class CharArray {
+final class CharArray implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     static final CharArray NULL = new CharArray((char[]) null);
 

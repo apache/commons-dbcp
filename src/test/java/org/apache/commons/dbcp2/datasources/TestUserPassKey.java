@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.apache.commons.dbcp2.Utils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Tests for UserPassKey.
- * @since 2.5.0
  */
 public class TestUserPassKey {
 
@@ -62,6 +62,12 @@ public class TestUserPassKey {
     public void testHashcode() {
         assertEquals(userPassKey.hashCode(), new UserPassKey("user", "pass").hashCode());
         assertNotEquals(userPassKey.hashCode(), anotherUserPassKey.hashCode());
+    }
+
+    @Test
+    public void testSerialization() {
+        assertEquals(userPassKey, SerializationUtils.roundtrip(userPassKey));
+        assertEquals(anotherUserPassKey, SerializationUtils.roundtrip(anotherUserPassKey));
     }
 
     @Test
