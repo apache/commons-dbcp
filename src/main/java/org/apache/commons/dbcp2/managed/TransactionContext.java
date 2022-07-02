@@ -88,8 +88,7 @@ public class TransactionContext {
         try {
             if (!isActive()) {
                 final Transaction transaction = this.transactionRef.get();
-                listener.afterCompletion(TransactionContext.this,
-                        transaction != null && transaction.getStatus() == Status.STATUS_COMMITTED);
+                listener.afterCompletion(this, transaction != null && transaction.getStatus() == Status.STATUS_COMMITTED);
                 return;
             }
             final Synchronization s = new Synchronization() {
