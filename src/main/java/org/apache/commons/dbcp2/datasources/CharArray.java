@@ -78,11 +78,4 @@ final class CharArray {
         return Arrays.hashCode(chars);
     }
 
-    /**
-     * Calls {@code super.toString()} and does not reveal its contents inadvertently.
-     */
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
