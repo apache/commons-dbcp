@@ -137,7 +137,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public void destroyObject(final PooledObject<PoolableConnection> p) throws Exception {
+    public void destroyObject(final PooledObject<PoolableConnection> p) throws SQLException {
         p.getObject().reallyClose();
     }
 
@@ -145,7 +145,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @since 2.9.0
      */
     @Override
-    public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws Exception {
+    public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws SQLException {
         if (mode == DestroyMode.ABANDONED) {
             p.getObject().getInnermostDelegate().abort(Runnable::run);
         } else {
@@ -744,7 +744,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         conn.validate(validationQuery, validationQueryTimeoutDuration);
     }
 
-    private void validateLifetime(final PooledObject<PoolableConnection> p) throws Exception {
+    private void validateLifetime(final PooledObject<PoolableConnection> p) throws LifetimeExceededException {
         if (maxConnDuration.compareTo(Duration.ZERO) > 0) {
             final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
             if (lifetimeDuration.compareTo(maxConnDuration) > 0) {

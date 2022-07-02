@@ -17,6 +17,7 @@
 package org.apache.commons.dbcp2.managed;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 
 import javax.management.ObjectName;
@@ -72,7 +73,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
      */
     @SuppressWarnings("resource") // Connection is released elsewhere.
     @Override
-    public synchronized PooledObject<PoolableConnection> makeObject() throws Exception {
+    public synchronized PooledObject<PoolableConnection> makeObject() throws SQLException {
         Connection conn = getConnectionFactory().createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");

@@ -272,7 +272,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      */
     @Override
     public Object getObjectInstance(final Object refObj, final Name name, final Context context,
-        final Hashtable<?, ?> env) throws Exception {
+        final Hashtable<?, ?> env) throws ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
         DriverAdapterCPDS cpds = null;

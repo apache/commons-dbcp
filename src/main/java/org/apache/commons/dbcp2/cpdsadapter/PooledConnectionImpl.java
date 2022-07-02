@@ -113,7 +113,7 @@ class PooledConnectionImpl
      */
     @Override
     public void activateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
-            throws Exception {
+            throws SQLException {
         pooledObject.getObject().activate();
     }
 
@@ -338,7 +338,7 @@ class PooledConnectionImpl
      */
     @Override
     public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
-            throws Exception {
+            throws SQLException {
         pooledObject.getObject().getInnermostDelegate().close();
     }
 
@@ -416,7 +416,7 @@ class PooledConnectionImpl
      */
     @SuppressWarnings("resource")
     @Override
-    public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws Exception {
+    public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws SQLException {
         if (null == key) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
@@ -466,7 +466,7 @@ class PooledConnectionImpl
      */
     @Override
     public void passivateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
-            throws Exception {
+            throws SQLException {
         @SuppressWarnings("resource")
         final DelegatingPreparedStatement dps = pooledObject.getObject();
         dps.clearParameters();

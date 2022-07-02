@@ -187,7 +187,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void destroyObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         final PooledConnection pooledConnection = p.getObject().getPooledConnection();
         pooledConnection.removeConnectionEventListener(this);
         pcMap.remove(pooledConnection);
@@ -238,7 +238,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
      * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(java.lang.Object)
      */
     @Override
-    public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey userPassKey) throws Exception {
+    public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey userPassKey) throws SQLException {
         PooledConnection pooledConnection = null;
         final String userName = userPassKey.getUserName();
         final String password = userPassKey.getPassword();

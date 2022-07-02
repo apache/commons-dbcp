@@ -256,11 +256,11 @@ class CPDSConnectionFactory
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void destroyObject(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         doDestroyObject(p.getObject());
     }
 
-    private void doDestroyObject(final PooledConnectionAndInfo pci) throws Exception {
+    private void doDestroyObject(final PooledConnectionAndInfo pci) throws SQLException {
         final PooledConnection pc = pci.getPooledConnection();
         pc.removeConnectionEventListener(this);
         pcMap.remove(pc);

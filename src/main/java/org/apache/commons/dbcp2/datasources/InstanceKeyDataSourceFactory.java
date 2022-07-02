@@ -49,14 +49,13 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     /**
      * Closes all pools associated with this class.
      *
-     * @throws Exception
+     * @throws ListException
      *             a {@link ListException} containing all exceptions thrown by {@link InstanceKeyDataSource#close()}
      * @see InstanceKeyDataSource#close()
-     * @see ListException
      * @since 2.4.0 throws a {@link ListException} instead of, in 2.3.0 and before, the first exception thrown by
      *        {@link InstanceKeyDataSource#close()}.
      */
-    public static void closeAll() throws Exception {
+    public static void closeAll() throws ListException {
         // Get iterator to loop over all instances of this data source.
         final List<Throwable> exceptionList = new ArrayList<>(INSTANCE_MAP.size());
         for (final Entry<String, InstanceKeyDataSource> next : INSTANCE_MAP.entrySet()) {
