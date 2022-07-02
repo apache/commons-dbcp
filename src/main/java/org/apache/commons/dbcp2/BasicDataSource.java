@@ -508,7 +508,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return The current internal DataSource or a newly created instance if it has not yet been created.
      * @throws SQLException if the object pool cannot be created.
      */
-    protected DataSource createDataSource() throws SQLException {
+    protected synchronized DataSource createDataSource() throws SQLException {
         if (closed) {
             throw new SQLException("Data source is closed");
         }
