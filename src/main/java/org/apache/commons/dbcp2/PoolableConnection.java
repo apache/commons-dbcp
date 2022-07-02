@@ -69,7 +69,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     /**
      * SQL_STATE codes considered to signal fatal conditions. Overrides the defaults in
-     * {@link Utils#DISCONNECTION_SQL_CODES} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
+     * {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
      */
     private final Collection<String> disconnectionSqlCodes;
 
@@ -246,7 +246,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * <p>
      * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the configured list of fatal
      * exception codes. If this property is not set, codes are compared against the default codes in
-     * {@link Utils#DISCONNECTION_SQL_CODES} and in this case anything starting with #{link
+     * {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with #{link
      * Utils.DISCONNECTION_SQL_CODE_PREFIX} is considered a disconnection.
      * </p>
      *
@@ -258,7 +258,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         final String sqlState = e.getSQLState();
         if (sqlState != null) {
             fatalException = disconnectionSqlCodes == null
-                ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.DISCONNECTION_SQL_CODES.contains(sqlState)
+                ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.getDisconnectionSqlCodes().contains(sqlState)
                 : disconnectionSqlCodes.contains(sqlState);
         }
         return fatalException;
@@ -269,7 +269,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * <p>
      * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the
      * configured list of fatal exception codes. If this property is not set, codes are compared against the default
-     * codes in {@link Utils#DISCONNECTION_SQL_CODES} and in this case anything starting with #{link
+     * codes in {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with #{link
      * Utils.DISCONNECTION_SQL_CODE_PREFIX} is considered a disconnection.
      * </p>
      *

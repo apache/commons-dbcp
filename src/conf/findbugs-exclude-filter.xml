@@ -70,4 +70,10 @@
     <Field name="pools" />
     <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT" />
   </Match>
+  <Match>
+    <!-- Depreacted -->
+    <Class name="org.apache.commons.dbcp2.Utils" />
+    <Field name="DISCONNECTION_SQL_CODES" />
+    <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT" />
+  </Match>
 </FindBugsFilter>

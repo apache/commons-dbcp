@@ -57,7 +57,9 @@ public final class Utils {
      * <li>JZ0C0 (Sybase disconnect error)</li>
      * <li>JZ0C1 (Sybase disconnect error)</li>
      * </ul>
+     * @deprecated Use {@link #getDisconnectionSqlCodes()}.
      */
+    @Deprecated
     public static final Set<String> DISCONNECTION_SQL_CODES;
 
     static final ResultSet[] EMPTY_RESULT_SET_ARRAY = {};
@@ -147,6 +149,24 @@ public final class Utils {
     @Deprecated
     public static void closeQuietly(final Statement statement) {
         closeQuietly((AutoCloseable) statement);
+    }
+
+    /**
+     * Gets a copy of SQL codes of fatal connection errors.
+     * <ul>
+     * <li>57P01 (Admin shutdown)</li>
+     * <li>57P02 (Crash shutdown)</li>
+     * <li>57P03 (Cannot connect now)</li>
+     * <li>01002 (SQL92 disconnect error)</li>
+     * <li>JZ0C0 (Sybase disconnect error)</li>
+     * <li>JZ0C1 (Sybase disconnect error)</li>
+     * </ul>
+     * @return SQL codes of fatal connection errors.
+     * @since 2.10.0
+     */
+    @SuppressWarnings("unchecked")
+    public static Set<String> getDisconnectionSqlCodes() {
+        return new HashSet<>(DISCONNECTION_SQL_CODES);
     }
 
     /**

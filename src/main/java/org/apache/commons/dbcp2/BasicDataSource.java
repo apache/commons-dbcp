@@ -1961,7 +1961,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the SQL_STATE codes considered to signal fatal conditions.
      * <p>
-     * Overrides the defaults in {@link Utils#DISCONNECTION_SQL_CODES} (plus anything starting with
+     * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
      * {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this property is non-null and {@link #getFastFailValidation()}
      * is {@code true}, whenever connections created by this datasource generate exceptions with SQL_STATE codes in this
      * list, they will be marked as "fatally disconnected" and subsequent validations will fail fast (no attempt at
