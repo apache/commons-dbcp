@@ -154,6 +154,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump commons-parent from 52 to 53 #180.
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Bump JaCoCo from 0.8.7 to 0.8.8.
+      </action>
     </release>
     <release version="2.9.0" date="2021-07-30" description="This is a minor release, including bug fixes and enhancements.">
       <!-- ADD -->
