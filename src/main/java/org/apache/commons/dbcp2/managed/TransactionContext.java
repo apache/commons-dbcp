@@ -91,15 +91,10 @@ public class TransactionContext {
                 listener.afterCompletion(this, transaction != null && transaction.getStatus() == Status.STATUS_COMMITTED);
                 return;
             }
-            final Synchronization s = new Synchronization() {
+            final Synchronization s = new SynchronizationAdapter() {
                 @Override
                 public void afterCompletion(final int status) {
                     listener.afterCompletion(TransactionContext.this, status == Status.STATUS_COMMITTED);
-                }
-
-                @Override
-                public void beforeCompletion() {
-                    // empty
                 }
             };
             if (transactionSynchronizationRegistry != null) {

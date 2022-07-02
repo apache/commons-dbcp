@@ -199,12 +199,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
 
             final TransactionManager tm = basicManagedDataSource.getTransactionManager();
             tm.begin();
-            tsr.registerInterposedSynchronization(new Synchronization() {
-                @Override
-                public void afterCompletion(final int i) {
-
-                }
-
+            tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
                 @Override
                 public void beforeCompletion() {
                     Connection connection = null;

@@ -264,7 +264,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
         final DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection();
         // Don't close so we can check it for warnings in afterCompletion
-        transactionManager.getTransaction().registerSynchronization(new Synchronization() {
+        transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
             @Override
             public void afterCompletion(final int i) {
                 try {
@@ -278,11 +278,6 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
                 } catch (final SQLException e) {
                     fail("Should have been able to get connection");
                 }
-            }
-
-            @Override
-            public void beforeCompletion() {
-                // empty
             }
         });
         connection.close();
