@@ -46,7 +46,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     static {
         try {
             MBEAN_SERVER = ManagementFactory.getPlatformMBeanServer();
-        } catch (final NoClassDefFoundError | Exception ex) {
+        } catch (final NoClassDefFoundError | Exception ignored) {
             // ignore - JMX not available
         }
     }
@@ -116,7 +116,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         if (jmxObjectName != null) {
             try {
                 MBEAN_SERVER.registerMBean(this, jmxObjectName);
-            } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e) {
+            } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ignored) {
                 // For now, simply skip registration
             }
         }
@@ -155,7 +155,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 // pool is closed, so close the connection
                 passivate();
                 getInnermostDelegate().close();
-            } catch (final Exception ie) {
+            } catch (final Exception ignored) {
                 // DO NOTHING the original exception will be rethrown
             }
             throw new SQLException("Cannot close connection (isClosed check failed)", e);

@@ -79,8 +79,8 @@ public class PoolingDriver implements Driver {
     static {
         try {
             DriverManager.registerDriver(new PoolingDriver());
-        } catch (final Exception e) {
-            // ignore
+        } catch (final Exception ignored) {
+            // Ignored
         }
     }
 
@@ -228,8 +228,8 @@ public class PoolingDriver implements Driver {
         final ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
         try {
             pool.invalidateObject(pgconn.getDelegateInternal());
-        } catch (final Exception e) {
-            // Ignore.
+        } catch (final Exception ignored) {
+            // Ignored.
         }
     }
 

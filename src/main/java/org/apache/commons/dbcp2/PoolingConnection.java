@@ -300,7 +300,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String catalog = null;
         try {
             catalog = getCatalog();
-        } catch (final SQLException e) {
+        } catch (final SQLException ignored) {
             // Ignored
         }
         return catalog;
@@ -310,7 +310,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         String schema = null;
         try {
             schema = getSchema();
-        } catch (final SQLException e) {
+        } catch (final SQLException ignored) {
             // Ignored
         }
         return schema;

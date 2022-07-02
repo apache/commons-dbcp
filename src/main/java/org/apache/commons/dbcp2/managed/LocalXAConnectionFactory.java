@@ -102,8 +102,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (final SQLException e) {
-                    // ignore
+                } catch (final SQLException ignored) {
+                    // ignored
                 }
                 this.currentXid = null;
             }
@@ -241,8 +241,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (final SQLException e) {
-                    // Ignore.
+                } catch (final SQLException ignored) {
+                    // Ignored.
                 }
                 this.currentXid = null;
             }

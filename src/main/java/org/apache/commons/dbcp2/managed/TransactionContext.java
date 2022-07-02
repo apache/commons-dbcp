@@ -108,7 +108,7 @@ public class TransactionContext {
             } else {
                 getTransaction().registerSynchronization(s);
             }
-        } catch (final RollbackException e) {
+        } catch (final RollbackException ignored) {
             // JTA spec doesn't let us register with a transaction marked rollback only
             // just ignore this and the tx state will be cleared another way.
         } catch (final Exception e) {
@@ -199,7 +199,7 @@ public class TransactionContext {
         } catch (final IllegalStateException e) {
             // This can happen if the transaction is already timed out
             throw new SQLException("Unable to enlist connection in the transaction", e);
-        } catch (final RollbackException e) {
+        } catch (final RollbackException ignored) {
             // transaction was rolled back... proceed as if there never was a transaction
         } catch (final SystemException e) {
             throw new SQLException("Unable to enlist connection the transaction", e);

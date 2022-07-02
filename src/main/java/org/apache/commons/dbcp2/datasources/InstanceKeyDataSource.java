@@ -1236,7 +1236,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             if (conn != null) {
                 try {
                     conn.close();
-                } catch (final SQLException e) {
+                } catch (final SQLException ignored) {
                     // at least we could connect
                 }
             }

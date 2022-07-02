@@ -265,11 +265,11 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             if (connection != null && transactionContext.getSharedConnection() != connection) {
                 try {
                     pool.returnObject(connection);
-                } catch (final Exception ignored) {
+                } catch (final Exception e) {
                     // whatever... try to invalidate the connection
                     try {
                         pool.invalidateObject(connection);
-                    } catch (final Exception ignore) {
+                    } catch (final Exception ignored) {
                         // no big deal
                     }
                 }
@@ -314,7 +314,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                     transactionContext = null;
                     try {
                         pool.invalidateObject(connection);
-                    } catch (final Exception e1) {
+                    } catch (final Exception ignored) {
                         // we are try but no luck
                     }
                     throw e;

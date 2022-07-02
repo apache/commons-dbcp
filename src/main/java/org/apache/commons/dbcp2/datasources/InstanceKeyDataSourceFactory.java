@@ -107,7 +107,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             if (s != null) {
                 try {
                     max = Math.max(max, Integer.parseInt(s));
-                } catch (final NumberFormatException e) {
+                } catch (final NumberFormatException ignored) {
                     // no sweat, ignore those keys
                 }
             }

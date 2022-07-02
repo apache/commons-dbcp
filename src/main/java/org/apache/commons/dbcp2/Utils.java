@@ -110,7 +110,7 @@ public final class Utils {
         if (autoCloseable != null) {
             try {
                 autoCloseable.close();
-            } catch (final Exception e) {
+            } catch (final Exception ignored) {
                 // ignored
             }
         }

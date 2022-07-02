@@ -108,7 +108,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                 String label = "";
                 try {
                     label = connection.toString();
-                } catch (final Exception ex) {
+                } catch (final Exception ignored) {
                     // ignore, leave label empty
                 }
                 throw new SQLException("Connection " + label + " is closed.");
@@ -1041,7 +1041,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
                         str = sb.toString();
                     }
                 }
-            } catch (final SQLException ex) {
+            } catch (final SQLException ignored) {
                 // Ignore
             }
         }
