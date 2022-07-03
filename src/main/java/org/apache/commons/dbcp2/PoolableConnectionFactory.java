@@ -109,7 +109,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public void activateObject(final PooledObject<PoolableConnection> p) throws Exception {
+    public void activateObject(final PooledObject<PoolableConnection> p) throws SQLException {
 
         validateLifetime(p);
 
@@ -468,7 +468,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public void passivateObject(final PooledObject<PoolableConnection> p) throws Exception {
+    public void passivateObject(final PooledObject<PoolableConnection> p) throws SQLException {
 
         validateLifetime(p);
 

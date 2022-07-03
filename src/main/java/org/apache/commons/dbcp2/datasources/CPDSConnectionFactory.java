@@ -329,12 +329,8 @@ class CPDSConnectionFactory
         return new DefaultPooledObject<>(pci);
     }
 
-    // ***********************************************************************
-    // java.sql.ConnectionEventListener implementation
-    // ***********************************************************************
-
     @Override
-    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
     }
 

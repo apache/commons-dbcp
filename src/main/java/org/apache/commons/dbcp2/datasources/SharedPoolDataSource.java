@@ -68,7 +68,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * Closes pool being maintained by this data source.
      */
     @Override
-    public void close() throws Exception {
+    public void close() throws SQLException {
         if (pool != null) {
             pool.close();
         }

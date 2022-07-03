@@ -159,7 +159,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Closes the connection pool being maintained by this datasource.
      */
     @Override
-    public abstract void close() throws Exception;
+    public abstract void close() throws SQLException;
 
     private void closeDueToException(final PooledConnectionAndInfo info) {
         if (info != null) {

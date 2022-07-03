@@ -257,7 +257,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     }
 
     @Override
-    public void passivateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void passivateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
     }
 
