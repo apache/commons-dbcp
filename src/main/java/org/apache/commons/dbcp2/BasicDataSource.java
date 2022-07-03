@@ -567,9 +567,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
             // If initialSize > 0, preload the pool
             try {
-                for (int i = 0; i < initialSize; i++) {
-                    connectionPool.addObject();
-                }
+                connectionPool.addObjects(initialSize);
             } catch (final Exception e) {
                 closeConnectionPool();
                 throw new SQLException("Error preloading the connection pool", e);
