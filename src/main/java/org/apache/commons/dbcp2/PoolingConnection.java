@@ -62,7 +62,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pstmtPool;
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pStmtPool;
 
     private boolean clearStatementPoolOnReturn;
 
@@ -97,11 +97,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public synchronized void close() throws SQLException {
         try {
-            if (null != pstmtPool) {
-                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldpool = pstmtPool;
-                pstmtPool = null;
+            if (null != pStmtPool) {
+                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldPool = pStmtPool;
+                pStmtPool = null;
                 try {
-                    oldpool.close();
+                    oldPool.close();
                 } catch (final RuntimeException e) {
                     throw e;
                 } catch (final Exception e) {
@@ -125,9 +125,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @since 2.8.0
      */
     public void connectionReturnedToPool() throws SQLException {
-        if (pstmtPool != null && clearStatementPoolOnReturn) {
+        if (pStmtPool != null && clearStatementPoolOnReturn) {
             try {
-                pstmtPool.clear();
+                pStmtPool.clear();
             } catch (final Exception e) {
                 throw new SQLException("Error clearing statement pool", e);
             }
@@ -323,7 +323,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @since 2.8.0
      */
     public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
-        return pstmtPool;
+        return pStmtPool;
     }
 
     /**
@@ -344,11 +344,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
             @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
-            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pstmtPool, this);
+            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pStmtPool, this);
             return new DefaultPooledObject<>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
-        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, pstmtPool, this);
+        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, pStmtPool, this);
         return new DefaultPooledObject<>(pcs);
     }
 
@@ -459,11 +459,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
-        if (null == pstmtPool) {
+        if (null == pStmtPool) {
             throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
-            return pstmtPool.borrowObject(key);
+            return pStmtPool.borrowObject(key);
         } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
         } catch (final RuntimeException e) {
@@ -596,13 +596,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            the prepared statement pool.
      */
     public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
-        pstmtPool = pool;
+        pStmtPool = pool;
     }
 
     @Override
     public synchronized String toString() {
-        if (pstmtPool != null) {
-            return "PoolingConnection: " + pstmtPool.toString();
+        if (pStmtPool != null) {
+            return "PoolingConnection: " + pStmtPool.toString();
         }
         return "PoolingConnection: null";
     }
