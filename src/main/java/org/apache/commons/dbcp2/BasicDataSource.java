@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
 import javax.management.MBeanRegistration;
@@ -1711,20 +1712,24 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         start();
     }
 
+    private <T> void setAbandoned(final T object, BiConsumer<AbandonedConfig, T> consumer) {
+        if (abandonedConfig == null) {
+            abandonedConfig = new AbandonedConfig();
+        }
+        consumer.accept(abandonedConfig, object);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
+    }
+
     /**
      * Sets the print writer to be used by this configuration to log information on abandoned objects.
      *
      * @param logWriter The new log writer
      */
     public void setAbandonedLogWriter(final PrintWriter logWriter) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setLogWriter(logWriter);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(logWriter, AbandonedConfig::setLogWriter);
     }
 
     /**
@@ -1736,14 +1741,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *                      pooled connection
      */
     public void setAbandonedUsageTracking(final boolean usageTracking) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setUseUsageTracking(usageTracking);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(usageTracking, AbandonedConfig::setUseUsageTracking);
     }
 
     /**
@@ -2125,14 +2123,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param logAbandoned new logAbandoned property value
      */
     public void setLogAbandoned(final boolean logAbandoned) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setLogAbandoned(logAbandoned);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(logAbandoned, AbandonedConfig::setLogAbandoned);
     }
 
     /**
@@ -2373,14 +2364,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #getRemoveAbandonedOnBorrow()
      */
     public void setRemoveAbandonedOnBorrow(final boolean removeAbandonedOnBorrow) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(removeAbandonedOnBorrow, AbandonedConfig::setRemoveAbandonedOnBorrow);
     }
 
     /**
@@ -2388,14 +2372,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #getRemoveAbandonedOnMaintenance()
      */
     public void setRemoveAbandonedOnMaintenance(final boolean removeAbandonedOnMaintenance) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setRemoveAbandonedOnMaintenance(removeAbandonedOnMaintenance);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(removeAbandonedOnMaintenance, AbandonedConfig::setRemoveAbandonedOnMaintenance);
     }
 
     /**
@@ -2412,14 +2389,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.10.0
      */
     public void setRemoveAbandonedTimeout(final Duration removeAbandonedTimeout) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(removeAbandonedTimeout, AbandonedConfig::setRemoveAbandonedTimeout);
     }
 
     /**
@@ -2437,14 +2407,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Deprecated
     public void setRemoveAbandonedTimeout(final int removeAbandonedTimeout) {
-        if (abandonedConfig == null) {
-            abandonedConfig = new AbandonedConfig();
-        }
-        abandonedConfig.setRemoveAbandonedTimeout(Duration.ofSeconds(removeAbandonedTimeout));
-        final GenericObjectPool<?> gop = this.connectionPool;
-        if (gop != null) {
-            gop.setAbandonedConfig(abandonedConfig);
-        }
+        setAbandoned(Duration.ofSeconds(removeAbandonedTimeout), AbandonedConfig::setRemoveAbandonedTimeout);
     }
 
     /**
