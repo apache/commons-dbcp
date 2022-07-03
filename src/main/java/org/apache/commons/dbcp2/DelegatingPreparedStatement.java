@@ -35,7 +35,9 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
@@ -690,5 +692,35 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     public synchronized String toString() {
         final Statement statement = getDelegate();
         return statement == null ? "NULL" : statement.toString();
+    }
+
+    protected void prepareToReturn() throws SQLException {
+        setClosedInternal(true);
+        removeThisTrace(getConnectionInternal());
+    
+        // The JDBC spec requires that a statement close any open
+        // ResultSet's when it is closed.
+        // FIXME The PreparedStatement we're wrapping should handle this for us.
+        // See DBCP-10 for what could happen when ResultSets are closed twice.
+        final List<AbandonedTrace> resultSetList = getTrace();
+        if (resultSetList != null) {
+            final List<Exception> thrownList = new ArrayList<>();
+            final ResultSet[] resultSets = resultSetList.toArray(Utils.EMPTY_RESULT_SET_ARRAY);
+            for (final ResultSet resultSet : resultSets) {
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (final Exception e) {
+                        thrownList.add(e);
+                    }
+                }
+            }
+            clearTrace();
+            if (!thrownList.isEmpty()) {
+                throw new SQLExceptionList(thrownList);
+            }
+        }
+    
+        super.passivate();
     }
 }
