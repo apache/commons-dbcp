@@ -32,7 +32,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.time.Instant;
 
-import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -223,9 +223,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
         final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
         @SuppressWarnings("unchecked")
-        final
-        GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
-                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pStmtPool");
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop = poolingConn.getStatementPool();
         Assertions.assertEquals(0, conn.getTrace().size());
         Assertions.assertEquals(0, gkop.getNumActive());
         createStatement(conn);
