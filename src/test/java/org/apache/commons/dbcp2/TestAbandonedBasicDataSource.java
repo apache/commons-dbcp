@@ -225,7 +225,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         @SuppressWarnings("unchecked")
         final
         GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop =
-                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pstmtPool");
+                (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>) TesterUtils.getField(poolingConn, "pStmtPool");
         Assertions.assertEquals(0, conn.getTrace().size());
         Assertions.assertEquals(0, gkop.getNumActive());
         createStatement(conn);

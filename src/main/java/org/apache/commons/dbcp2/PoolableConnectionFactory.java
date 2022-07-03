@@ -411,7 +411,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     @Override
-    public PooledObject<PoolableConnection> makeObject() throws Exception {
+    public PooledObject<PoolableConnection> makeObject() throws SQLException {
         Connection conn = connectionFactory.createConnection();
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");

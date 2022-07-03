@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,10 +217,10 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param properties
      *            The data source configuration properties.
      * @return A new a {@link BasicDataSource} instance based on the given properties.
-     * @throws Exception
+     * @throws SQLException
      *             Thrown when an error occurs creating the data source.
      */
-    public static BasicDataSource createDataSource(final Properties properties) throws Exception {
+    public static BasicDataSource createDataSource(final Properties properties) throws SQLException {
         final BasicDataSource dataSource = new BasicDataSource();
         acceptBoolean(properties, PROP_DEFAULT_AUTO_COMMIT, dataSource::setDefaultAutoCommit);
         acceptBoolean(properties, PROP_DEFAULT_READ_ONLY, dataSource::setDefaultReadOnly);
@@ -321,14 +322,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
     /**
      * Parse properties from the string. Format of the string must be [propertyName=property;]*
      *
-     * @param propText
-     * @return Properties
-     * @throws IOException
+     * @param propText The source text
+     * @return Properties A new Properties instance
+     * @throws SQLException When a paring exception occurs
      */
-    private static Properties getProperties(final String propText) throws IOException {
+    private static Properties getProperties(final String propText) throws SQLException {
         final Properties p = new Properties();
         if (propText != null) {
-            p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
+            try {
+                p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
+            } catch (IOException e) {
+                throw new SQLException(propText, e);
+            }
         }
         return p;
     }
@@ -366,12 +371,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param environment
      *            The possibly null environment that is used in creating this object
      *
-     * @throws Exception
+     * @throws SQLException
      *             if an exception occurs creating the instance
      */
     @Override
     public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx,
-            final Hashtable<?, ?> environment) throws Exception {
+            final Hashtable<?, ?> environment) throws SQLException {
 
         // We only know how to deal with {@code javax.naming.Reference}s
         // that specify a class name of "javax.sql.DataSource"

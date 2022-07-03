@@ -103,10 +103,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Validates the given factory.
      *
      * @param connectionFactory the factory
-     * @throws Exception Thrown by one of the factory methods while managing a temporary pooled object.
+     * @throws SQLException Thrown by one of the factory methods while managing a temporary pooled object.
      */
     @SuppressWarnings("resource")
-    protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory) throws Exception {
+    protected static void validateConnectionFactory(final PoolableConnectionFactory connectionFactory) throws SQLException {
         PoolableConnection conn = null;
         PooledObject<PoolableConnection> p = null;
         try {
