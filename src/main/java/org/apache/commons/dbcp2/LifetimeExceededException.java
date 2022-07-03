@@ -28,18 +28,17 @@ class LifetimeExceededException extends SQLException {
     private static final long serialVersionUID = -3783783104516492659L;
 
     /**
-     * Create a LifetimeExceededException.
+     * Constructs a new instance.
      */
     public LifetimeExceededException() {
     }
 
     /**
-     * Create a LifetimeExceededException with the given message.
+     * Constructs a new instance with the given message.
      *
-     * @param message
-     *            The message with which to create the exception
+     * @param reason a description of the exception
      */
-    public LifetimeExceededException(final String message) {
-        super(message);
+    public LifetimeExceededException(final String reason) {
+        super(reason);
     }
 }
