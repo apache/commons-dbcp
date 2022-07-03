@@ -327,7 +327,7 @@
     <commons.checkstyle-plugin.version>3.1.2</commons.checkstyle-plugin.version>
     <commons.checkstyle.version>9.3</commons.checkstyle.version>
     <commons.javadoc.version>3.4.0</commons.javadoc.version>
-    <!-- Constant for Commons Pool version (used in multiple places) -->
+    <!-- Constant for Commons Pool version -->
     <commons.pool.version>2.11.1</commons.pool.version>
     <commons.japicmp.version>0.15.7</commons.japicmp.version>
     <commons.jacoco.version>0.8.8</commons.jacoco.version>
