@@ -317,7 +317,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Returns the prepared statement pool we're using.
+     * Gets the prepared statement pool.
      *
      * @return statement pool
      * @since 2.8.0
