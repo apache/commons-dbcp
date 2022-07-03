@@ -984,11 +984,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         perUserMaxTotal.put(userName, value);
     }
 
-    void setPerUserMaxWaitDuration(final Map<String, Duration> newMap) {
-        assertInitializationAllowed();
-        perUserMaxWaitDuration = makeMap(perUserMaxWaitDuration, newMap);
-    }
-
     /**
      * Sets a user specific value for {@link GenericObjectPool#getMaxWaitDuration()} for the specified user's pool.
      *
@@ -1004,6 +999,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             perUserMaxWaitDuration = new HashMap<>();
         }
         perUserMaxWaitDuration.put(userName, value);
+    }
+
+    void setPerUserMaxWaitDuration(final Map<String, Duration> newMap) {
+        assertInitializationAllowed();
+        perUserMaxWaitDuration = makeMap(perUserMaxWaitDuration, newMap);
     }
 
     void setPerUserMaxWaitMillis(final Map<String, Long> newMap) {
