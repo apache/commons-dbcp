@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -112,7 +111,7 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
     }
 
     @Override
-    public void activateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void activateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
     }
 
@@ -224,10 +223,6 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         }
     }
 
-    // ***********************************************************************
-    // java.sql.ConnectionEventListener implementation
-    // ***********************************************************************
-
     /**
      * Creates a new {@code PooledConnectionAndInfo} from the given {@code UserPassKey}.
      *
@@ -317,13 +312,8 @@ class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey
         this.pool = pool;
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
-        if (maxConnLifetime.compareTo(Duration.ZERO) > 0) {
-            final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
-            if (lifetimeDuration.compareTo(maxConnLifetime) > 0) {
-                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxConnLifetime));
-            }
-        }
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
+        Utils.validateLifetime(pooledObject, maxConnLifetime);
     }
 
     /**

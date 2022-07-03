@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -745,19 +744,13 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     private void validateLifetime(final PooledObject<PoolableConnection> p) throws LifetimeExceededException {
-        if (maxConnDuration.compareTo(Duration.ZERO) > 0) {
-            final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
-            if (lifetimeDuration.compareTo(maxConnDuration) > 0) {
-                throw new LifetimeExceededException(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxConnDuration));
-            }
-        }
+        Utils.validateLifetime(p, maxConnDuration);
     }
 
     @Override
     public boolean validateObject(final PooledObject<PoolableConnection> p) {
         try {
             validateLifetime(p);
-
             validateConnection(p.getObject());
             return true;
         } catch (final Exception e) {

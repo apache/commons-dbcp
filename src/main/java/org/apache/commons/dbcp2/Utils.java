@@ -21,10 +21,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import org.apache.commons.pool2.PooledObject;
 
 /**
  * Utility methods.
@@ -217,6 +221,15 @@ public final class Utils {
      */
     public static String toString(final char[] value) {
         return value == null ? null : String.valueOf(value);
+    }
+
+    public static void validateLifetime(final PooledObject<?> p, final Duration maxDuration) throws LifetimeExceededException {
+        if (maxDuration.compareTo(Duration.ZERO) > 0) {
+            final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
+            if (lifetimeDuration.compareTo(maxDuration) > 0) {
+                throw new LifetimeExceededException(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxDuration));
+            }
+        }
     }
 
     private Utils() {

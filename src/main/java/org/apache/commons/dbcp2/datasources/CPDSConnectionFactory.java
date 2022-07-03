@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -176,7 +175,7 @@ class CPDSConnectionFactory
     }
 
     @Override
-    public void activateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
+    public void activateObject(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
     }
 
@@ -304,10 +303,6 @@ class CPDSConnectionFactory
         }
     }
 
-    // ***********************************************************************
-    // java.sql.ConnectionEventListener implementation
-    // ***********************************************************************
-
     @Override
     public synchronized PooledObject<PooledConnectionAndInfo> makeObject() {
         final PooledConnectionAndInfo pci;
@@ -333,6 +328,10 @@ class CPDSConnectionFactory
         }
         return new DefaultPooledObject<>(pci);
     }
+
+    // ***********************************************************************
+    // java.sql.ConnectionEventListener implementation
+    // ***********************************************************************
 
     @Override
     public void passivateObject(final PooledObject<PooledConnectionAndInfo> p) throws Exception {
@@ -434,13 +433,8 @@ class CPDSConnectionFactory
         return builder.toString();
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws Exception {
-        if (maxConnDuration.compareTo(Duration.ZERO) > 0) {
-            final Duration lifetimeDuration = Duration.between(pooledObject.getCreateInstant(), Instant.now());
-            if (lifetimeDuration.compareTo(maxConnDuration) > 0) {
-                throw new Exception(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxConnDuration));
-            }
-        }
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
+        Utils.validateLifetime(p, maxConnDuration);
     }
 
     @Override
