@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
@@ -417,11 +418,11 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         }
         try {
             initializeConnection(conn);
-        } catch (final SQLException sqle) {
+        } catch (final SQLException e) {
             // Make sure the connection is closed
             Utils.closeQuietly((AutoCloseable) conn);
             // Rethrow original exception so it is visible to caller
-            throw sqle;
+            throw e;
         }
 
         final long connIndex = connectionIndex.getAndIncrement();
@@ -444,8 +445,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
                 config.setJmxEnabled(false);
             }
             final PoolingConnection poolingConn = (PoolingConnection) conn;
-            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(
-                    poolingConn, config);
+            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(poolingConn, config);
             poolingConn.setStatementPool(stmtPool);
             poolingConn.setClearStatementPoolOnReturn(clearStatementPoolOnReturn);
             poolingConn.setCacheState(cacheState);
@@ -456,12 +456,16 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         if (dataSourceJmxObjectName == null) {
             connJmxName = null;
         } else {
-            connJmxName = new ObjectName(
-                    dataSourceJmxObjectName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex);
+            final String name = dataSourceJmxObjectName.toString() + Constants.JMX_CONNECTION_BASE_EXT + connIndex;
+            try {
+                connJmxName = new ObjectName(name);
+            } catch (MalformedObjectNameException e) {
+                Utils.closeQuietly((AutoCloseable) conn);
+                throw new SQLException(name, e);
+            }
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes,
-                fastFailValidation);
+        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes, fastFailValidation);
         pc.setCacheState(cacheState);
 
         return new DefaultPooledObject<>(pc);

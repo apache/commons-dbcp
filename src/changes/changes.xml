@@ -108,6 +108,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Replace Exception with SQLException in some method signatures (preserves binary compatibility, not source).
       </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Don't leak Connections when PoolableConnectionFactory.makeObject() fails to create a JMX ObjectName.
+      </action>
       <!-- UPDATE -->
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
         Bump actions/cache from 2.1.6 to 3.0.4 #147, #176.
