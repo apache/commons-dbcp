@@ -1712,7 +1712,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         start();
     }
 
-    private <T> void setAbandoned(final T object, BiConsumer<AbandonedConfig, T> consumer) {
+    private <T> void setAbandoned(BiConsumer<AbandonedConfig, T> consumer, final T object) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
         }
@@ -1723,13 +1723,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
+    private <T> void setConnectionPool(BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
+        if (connectionPool != null) {
+            consumer.accept(connectionPool, object);
+        }
+    }
+    
     /**
      * Sets the print writer to be used by this configuration to log information on abandoned objects.
      *
      * @param logWriter The new log writer
      */
     public void setAbandonedLogWriter(final PrintWriter logWriter) {
-        setAbandoned(logWriter, AbandonedConfig::setLogWriter);
+        setAbandoned(AbandonedConfig::setLogWriter, logWriter);
     }
 
     /**
@@ -1741,7 +1747,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *                      pooled connection
      */
     public void setAbandonedUsageTracking(final boolean usageTracking) {
-        setAbandoned(usageTracking, AbandonedConfig::setUseUsageTracking);
+        setAbandoned(AbandonedConfig::setUseUsageTracking, usageTracking);
     }
 
     /**
@@ -2056,9 +2062,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param evictionPolicyClassName The fully qualified class name of the EvictionPolicy implementation
      */
     public synchronized void setEvictionPolicyClassName(final String evictionPolicyClassName) {
-        if (connectionPool != null) {
-            connectionPool.setEvictionPolicyClassName(evictionPolicyClassName);
-        }
+        setConnectionPool(GenericObjectPool::setEvictionPolicyClassName, evictionPolicyClassName);
         this.evictionPolicyClassName = evictionPolicyClassName;
     }
 
@@ -2114,16 +2118,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setLifo(final boolean lifo) {
         this.lifo = lifo;
-        if (connectionPool != null) {
-            connectionPool.setLifo(lifo);
-        }
+        setConnectionPool(GenericObjectPool::setLifo, lifo);
     }
 
     /**
      * @param logAbandoned new logAbandoned property value
      */
     public void setLogAbandoned(final boolean logAbandoned) {
-        setAbandoned(logAbandoned, AbandonedConfig::setLogAbandoned);
+        setAbandoned(AbandonedConfig::setLogAbandoned, logAbandoned);
     }
 
     /**
@@ -2217,9 +2219,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setMaxIdle(final int maxIdle) {
         this.maxIdle = maxIdle;
-        if (connectionPool != null) {
-            connectionPool.setMaxIdle(maxIdle);
-        }
+        setConnectionPool(GenericObjectPool::setMaxIdle, maxIdle);
     }
 
     /**
@@ -2245,9 +2245,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setMaxTotal(final int maxTotal) {
         this.maxTotal = maxTotal;
-        if (connectionPool != null) {
-            connectionPool.setMaxTotal(maxTotal);
-        }
+        setConnectionPool(GenericObjectPool::setMaxTotal, maxTotal);
     }
 
     /**
@@ -2259,9 +2257,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setMaxWait(final Duration maxWaitDuration) {
         this.maxWaitDuration = maxWaitDuration;
-        if (connectionPool != null) {
-            connectionPool.setMaxWait(maxWaitDuration);
-        }
+        setConnectionPool(GenericObjectPool::setMaxWait, maxWaitDuration);
     }
 
     /**
@@ -2285,9 +2281,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setMinEvictableIdle(final Duration minEvictableIdleDuration) {
         this.minEvictableIdleDuration = minEvictableIdleDuration;
-        if (connectionPool != null) {
-            connectionPool.setMinEvictableIdle(minEvictableIdleDuration);
-        }
+        setConnectionPool(GenericObjectPool::setMinEvictableIdle, minEvictableIdleDuration);
     }
 
     /**
@@ -2312,9 +2306,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setMinIdle(final int minIdle) {
         this.minIdle = minIdle;
-        if (connectionPool != null) {
-            connectionPool.setMinIdle(minIdle);
-        }
+        setConnectionPool(GenericObjectPool::setMinIdle, minIdle);
     }
 
     /**
@@ -2325,9 +2317,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         this.numTestsPerEvictionRun = numTestsPerEvictionRun;
-        if (connectionPool != null) {
-            connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
-        }
+        setConnectionPool(GenericObjectPool::setNumTestsPerEvictionRun, numTestsPerEvictionRun);
     }
 
     /**
@@ -2364,7 +2354,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #getRemoveAbandonedOnBorrow()
      */
     public void setRemoveAbandonedOnBorrow(final boolean removeAbandonedOnBorrow) {
-        setAbandoned(removeAbandonedOnBorrow, AbandonedConfig::setRemoveAbandonedOnBorrow);
+        setAbandoned(AbandonedConfig::setRemoveAbandonedOnBorrow, removeAbandonedOnBorrow);
     }
 
     /**
@@ -2372,7 +2362,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @see #getRemoveAbandonedOnMaintenance()
      */
     public void setRemoveAbandonedOnMaintenance(final boolean removeAbandonedOnMaintenance) {
-        setAbandoned(removeAbandonedOnMaintenance, AbandonedConfig::setRemoveAbandonedOnMaintenance);
+        setAbandoned(AbandonedConfig::setRemoveAbandonedOnMaintenance, removeAbandonedOnMaintenance);
     }
 
     /**
@@ -2389,7 +2379,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.10.0
      */
     public void setRemoveAbandonedTimeout(final Duration removeAbandonedTimeout) {
-        setAbandoned(removeAbandonedTimeout, AbandonedConfig::setRemoveAbandonedTimeout);
+        setAbandoned(AbandonedConfig::setRemoveAbandonedTimeout, removeAbandonedTimeout);
     }
 
     /**
@@ -2407,7 +2397,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     @Deprecated
     public void setRemoveAbandonedTimeout(final int removeAbandonedTimeout) {
-        setAbandoned(Duration.ofSeconds(removeAbandonedTimeout), AbandonedConfig::setRemoveAbandonedTimeout);
+        setAbandoned(AbandonedConfig::setRemoveAbandonedTimeout, Duration.ofSeconds(removeAbandonedTimeout));
     }
 
     /**
@@ -2432,9 +2422,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setSoftMinEvictableIdle(final Duration softMinEvictableIdleTimeMillis) {
         this.softMinEvictableIdleDuration = softMinEvictableIdleTimeMillis;
-        if (connectionPool != null) {
-            connectionPool.setSoftMinEvictableIdle(softMinEvictableIdleTimeMillis);
-        }
+        setConnectionPool(GenericObjectPool::setSoftMinEvictableIdle, softMinEvictableIdleTimeMillis);
     }
 
     /**
@@ -2460,9 +2448,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setTestOnBorrow(final boolean testOnBorrow) {
         this.testOnBorrow = testOnBorrow;
-        if (connectionPool != null) {
-            connectionPool.setTestOnBorrow(testOnBorrow);
-        }
+        setConnectionPool(GenericObjectPool::setTestOnBorrow, testOnBorrow);
     }
 
     /**
@@ -2473,9 +2459,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setTestOnCreate(final boolean testOnCreate) {
         this.testOnCreate = testOnCreate;
-        if (connectionPool != null) {
-            connectionPool.setTestOnCreate(testOnCreate);
-        }
+        setConnectionPool(GenericObjectPool::setTestOnCreate, testOnCreate);
     }
 
     /**
@@ -2486,9 +2470,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setTestOnReturn(final boolean testOnReturn) {
         this.testOnReturn = testOnReturn;
-        if (connectionPool != null) {
-            connectionPool.setTestOnReturn(testOnReturn);
-        }
+        setConnectionPool(GenericObjectPool::setTestOnReturn, testOnReturn);
     }
 
     /**
@@ -2499,9 +2481,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setTestWhileIdle(final boolean testWhileIdle) {
         this.testWhileIdle = testWhileIdle;
-        if (connectionPool != null) {
-            connectionPool.setTestWhileIdle(testWhileIdle);
-        }
+        setConnectionPool(GenericObjectPool::setTestWhileIdle, testWhileIdle);
     }
 
     /**
@@ -2513,9 +2493,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setDurationBetweenEvictionRuns(final Duration timeBetweenEvictionRunsMillis) {
         this.durationBetweenEvictionRuns = timeBetweenEvictionRunsMillis;
-        if (connectionPool != null) {
-            connectionPool.setTimeBetweenEvictionRuns(timeBetweenEvictionRunsMillis);
-        }
+        setConnectionPool(GenericObjectPool::setTimeBetweenEvictionRuns, timeBetweenEvictionRunsMillis);
     }
 
     /**
