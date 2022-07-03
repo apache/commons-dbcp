@@ -16,12 +16,14 @@
  */
 package org.apache.commons.dbcp2;
 
+import java.sql.SQLException;
+
 /**
  * Exception thrown when a connection's maximum lifetime has been exceeded.
  *
  * @since 2.1
  */
-class LifetimeExceededException extends Exception {
+class LifetimeExceededException extends SQLException {
 
     private static final long serialVersionUID = -3783783104516492659L;
 
