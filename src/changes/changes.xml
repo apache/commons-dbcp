@@ -104,6 +104,12 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
         Reuse pattern of throwing XAException instead of NullPointerException in LocalXAConnectionFactory.LocalXAResource.
       </action>
+      <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
+        SpotBugs: An overridable method is called from constructors in PoolableCallableStatement.
+      </action>
+      <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
+        SpotBugs: An overridable method is called from constructors in PoolablePreparedStatement.
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).

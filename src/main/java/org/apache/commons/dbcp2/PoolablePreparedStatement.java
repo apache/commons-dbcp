@@ -68,7 +68,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
 
         // Remove from trace now because this statement will be
         // added by the activate method.
-        removeThisTrace(getConnectionInternal());
+        removeThisTrace(conn);
     }
 
     @Override

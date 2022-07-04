@@ -64,7 +64,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
 
         // Remove from trace now because this statement will be
         // added by the activate method.
-        removeThisTrace(getConnectionInternal());
+        removeThisTrace(connection);
     }
 
     /**
