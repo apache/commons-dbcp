@@ -76,4 +76,12 @@
     <Field name="DISCONNECTION_SQL_CODES" />
     <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT" />
   </Match>
+  <Match>
+    <!-- SpotBugs 4.7.0: These seem pointless unless all classes are specified to be immutable -->
+    <Bug pattern="EI_EXPOSE_REP" />
+  </Match>
+  <Match>
+    <!-- SpotBugs 4.7.0: These seem pointless unless all classes are specified to be immutable -->
+    <Bug pattern="EI_EXPOSE_REP2" />
+  </Match>
 </FindBugsFilter>
