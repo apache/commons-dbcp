@@ -67,6 +67,13 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
             this.connection = localTransaction;
         }
 
+        private Xid checkCurrentXid() throws XAException {
+            if (this.currentXid == null) {
+                throw new XAException("There is no current transaction");
+            }
+            return currentXid;
+        }
+
         /**
          * Commits the transaction and restores the original auto commit setting.
          *
@@ -80,10 +87,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         @Override
         public synchronized void commit(final Xid xid, final boolean flag) throws XAException {
             Objects.requireNonNull(xid, "xid");
-            if (this.currentXid == null) {
-                throw new XAException("There is no current transaction");
-            }
-            if (!this.currentXid.equals(xid)) {
+            if (!checkCurrentXid().equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
 
@@ -122,7 +126,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         @Override
         public synchronized void end(final Xid xid, final int flag) throws XAException {
             Objects.requireNonNull(xid, "xid");
-            if (!this.currentXid.equals(xid)) {
+            if (!checkCurrentXid().equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
 
@@ -230,7 +234,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         @Override
         public synchronized void rollback(final Xid xid) throws XAException {
             Objects.requireNonNull(xid, "xid");
-            if (!this.currentXid.equals(xid)) {
+            if (!checkCurrentXid().equals(xid)) {
                 throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
             }
 
