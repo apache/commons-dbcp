@@ -53,12 +53,6 @@
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
   <Match>
-    <!-- Code just executed at setup, clearer as is -->
-    <Class name="org.apache.commons.dbcp2.BasicDataSourceFactory" />
-    <Method name="validatePropertyNames" />
-    <Bug pattern="WMI_WRONG_MAP_ITERATOR" />
-  </Match>
-  <Match>
     <!-- False positive - method does not declare return as @Nonnull -->
     <Class name="org.apache.commons.dbcp2.DelegatingConnection" />
     <Method name="prepareStatement" />
