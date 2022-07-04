@@ -132,8 +132,8 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump junit-jupiter from 5.8.0-M1 to 5.8.2 #125, #136, #157.
       </action>
-      <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump spotbugs from 4.3.0 to 4.7.0 #124, #133, #151, #164, #177, #189.
+      <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
+        Bump spotbugs from 4.3.0 to 4.7.1 #124, #133, #151, #164, #177, #189.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump org.mockito:mockito-core 3.11.2 -> 4.6.1, #128, #138, #152, #175, #188. #193.
