@@ -81,7 +81,7 @@ The <action> type attribute can be add,update,fix,remove.
         Fix possible NullPointerException in BasicDataSourceFactory.getObjectInstance().
       </action>
       <action dev="ggregory" type="fix" due-to="Kurtcebe Eroglu, Gary Gregory, Phil Steitz" issue="DBCP-585">
-        Connection level JMX queries result in concurrent access to connection objects, causing errors #179
+        Connection level JMX queries result in concurrent access to connection objects, causing errors #179.
       </action>
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         UserPassKey should be Serializable.
