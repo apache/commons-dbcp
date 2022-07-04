@@ -98,6 +98,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
         Performance: No need for map lookups if we traverse map entries instead of keys.
       </action>
+      <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
+        Performance: Refactor to use a static inner class in DataSourceXAConnectionFactory.
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).

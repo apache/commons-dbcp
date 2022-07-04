@@ -37,6 +37,26 @@ import org.apache.commons.dbcp2.Utils;
  * @since 2.0
  */
 public class DataSourceXAConnectionFactory implements XAConnectionFactory {
+
+    private static final class XAConnectionEventListener implements ConnectionEventListener {
+        @Override
+        public void connectionClosed(final ConnectionEvent event) {
+            final PooledConnection pc = (PooledConnection) event.getSource();
+            pc.removeConnectionEventListener(this);
+            try {
+                pc.close();
+            } catch (final SQLException e) {
+                System.err.println("Failed to close XAConnection");
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void connectionErrorOccurred(final ConnectionEvent event) {
+            connectionClosed(event);
+        }
+    }
+
     private final TransactionRegistry transactionRegistry;
     private final XADataSource xaDataSource;
     private String userName;
@@ -156,25 +176,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         // The Connection we're returning is a handle on the XAConnection.
         // When the pool calling us closes the Connection, we need to
         // also close the XAConnection that holds the physical connection.
-        xaConnection.addConnectionEventListener(new ConnectionEventListener() {
-
-            @Override
-            public void connectionClosed(final ConnectionEvent event) {
-                final PooledConnection pc = (PooledConnection) event.getSource();
-                pc.removeConnectionEventListener(this);
-                try {
-                    pc.close();
-                } catch (final SQLException e) {
-                    System.err.println("Failed to close XAConnection");
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void connectionErrorOccurred(final ConnectionEvent event) {
-                connectionClosed(event);
-            }
-        });
+        xaConnection.addConnectionEventListener(new XAConnectionEventListener());
 
         return connection;
     }
