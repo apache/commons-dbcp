@@ -43,7 +43,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  *
  * @since 2.0
  */
-class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey, PooledConnectionAndInfo>,
+final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserPassKey, PooledConnectionAndInfo>,
         ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but "

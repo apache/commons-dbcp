@@ -25,7 +25,7 @@ import java.util.Properties;
  *
  * @since 2.7.0
  */
-class ConnectionFactoryFactory {
+final class ConnectionFactoryFactory {
 
     /**
      * Creates a new {@link DriverConnectionFactory} allowing for an override through

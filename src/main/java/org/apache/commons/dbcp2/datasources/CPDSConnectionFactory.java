@@ -42,7 +42,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  *
  * @since 2.0
  */
-class CPDSConnectionFactory
+final class CPDSConnectionFactory
         implements PooledObjectFactory<PooledConnectionAndInfo>, ConnectionEventListener, PooledConnectionManager {
 
     private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but I have no record of the underlying PooledConnection.";

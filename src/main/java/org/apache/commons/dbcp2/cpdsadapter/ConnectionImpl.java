@@ -37,7 +37,7 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
  *
  * @since 2.0
  */
-class ConnectionImpl extends DelegatingConnection<Connection> {
+final class ConnectionImpl extends DelegatingConnection<Connection> {
 
     private final boolean accessToUnderlyingConnectionAllowed;
 

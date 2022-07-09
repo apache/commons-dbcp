@@ -46,7 +46,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  *
  * @since 2.0
  */
-class PooledConnectionImpl
+final class PooledConnectionImpl
         implements PooledConnection, KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement> {
 
     private static final String CLOSED = "Attempted to use PooledConnection after closed() was called.";

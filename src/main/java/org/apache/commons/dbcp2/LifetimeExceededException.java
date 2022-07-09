@@ -23,7 +23,7 @@ import java.sql.SQLException;
  *
  * @since 2.1
  */
-class LifetimeExceededException extends SQLException {
+final class LifetimeExceededException extends SQLException {
 
     private static final long serialVersionUID = -3783783104516492659L;
 
