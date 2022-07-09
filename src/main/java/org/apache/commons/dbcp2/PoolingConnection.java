@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -597,10 +598,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     @Override
     public synchronized String toString() {
-        if (pStmtPool != null) {
-            return "PoolingConnection: " + pStmtPool.toString();
-        }
-        return "PoolingConnection: null";
+        return "PoolingConnection: " + Objects.toString(pStmtPool);
     }
 
     /**
