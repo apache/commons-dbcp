@@ -17,6 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Iterator;
@@ -34,15 +36,15 @@ import org.apache.commons.logging.impl.SimpleLog;
 public class StackMessageLog extends SimpleLog {
 
     private static final long serialVersionUID = 1L;
-    private static final Stack<String> messageStack = new Stack<>();
-    private static final Lock lock = new ReentrantLock();
+    private static final Stack<String> MESSAGE_STACK = new Stack<>();
+    private static final Lock LOCK = new ReentrantLock();
 
     public static void clear() {
-        lock.lock();
+        LOCK.lock();
         try {
-            messageStack.clear();
+            MESSAGE_STACK.clear();
         } finally {
-            lock.unlock();
+            LOCK.unlock();
         }
     }
 
@@ -50,7 +52,7 @@ public class StackMessageLog extends SimpleLog {
      * Note: iterator is fail-fast, lock the stack first.
      */
     public static List<String> getAll() {
-        final Iterator<String> iterator = messageStack.iterator();
+        final Iterator<String> iterator = MESSAGE_STACK.iterator();
         final List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
             messages.add(iterator.next());
@@ -59,30 +61,29 @@ public class StackMessageLog extends SimpleLog {
     }
 
     public static boolean isEmpty() {
-        return messageStack.isEmpty();
+        return MESSAGE_STACK.isEmpty();
     }
 
     /**
      * Obtains an exclusive lock on the log.
      */
     public static void lock() {
-        lock.lock();
+        LOCK.lock();
     }
 
     /**
      * @return the most recent log message, or null if the log is empty
      */
     public static String popMessage() {
-        String ret = null;
-        lock.lock();
+        LOCK.lock();
         try {
-            ret = messageStack.pop();
+            return MESSAGE_STACK.pop();
         } catch (final EmptyStackException ex) {
             // ignore, return null
+            return null;
         } finally {
-            lock.unlock();
+            LOCK.unlock();
         }
-        return ret;
     }
 
     /**
@@ -90,7 +91,7 @@ public class StackMessageLog extends SimpleLog {
      */
     public static void unLock() {
         try {
-            lock.unlock();
+            LOCK.unlock();
         } catch (final IllegalMonitorStateException ex) {
             // ignore
         }
@@ -105,7 +106,7 @@ public class StackMessageLog extends SimpleLog {
      */
     @Override
     protected void log(final int type, final Object message, final Throwable t) {
-        lock.lock();
+        LOCK.lock();
         try {
             final StringBuilder buf = new StringBuilder();
             buf.append(message.toString());
@@ -113,15 +114,15 @@ public class StackMessageLog extends SimpleLog {
                 buf.append(" <");
                 buf.append(t.toString());
                 buf.append(">");
-                final java.io.StringWriter sw = new java.io.StringWriter(1024);
-                try (final java.io.PrintWriter pw = new java.io.PrintWriter(sw)) {
+                final java.io.StringWriter sw = new StringWriter(1024);
+                try (final java.io.PrintWriter pw = new PrintWriter(sw)) {
                     t.printStackTrace(pw);
                 }
                 buf.append(sw.toString());
             }
-            messageStack.push(buf.toString());
+            MESSAGE_STACK.push(buf.toString());
         } finally {
-            lock.unlock();
+            LOCK.unlock();
         }
     }
 }
