@@ -297,23 +297,19 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     private String getCatalogOrNull() {
-        String catalog = null;
         try {
-            catalog = getCatalog();
+            return getCatalog();
         } catch (final SQLException ignored) {
-            // Ignored
+            return null;
         }
-        return catalog;
     }
 
     private String getSchemaOrNull() {
-        String schema = null;
         try {
-            schema = getSchema();
+            return getSchema();
         } catch (final SQLException ignored) {
-            // Ignored
+            return null;
         }
-        return schema;
     }
 
     /**
