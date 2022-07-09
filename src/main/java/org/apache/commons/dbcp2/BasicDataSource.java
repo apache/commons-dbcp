@@ -530,54 +530,28 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             final ConnectionFactory driverConnectionFactory = createConnectionFactory();
 
             // Set up the poolable connection factory
-            boolean success = false;
             final PoolableConnectionFactory poolableConnectionFactory;
             try {
                 poolableConnectionFactory = createPoolableConnectionFactory(driverConnectionFactory);
                 poolableConnectionFactory.setPoolStatements(poolPreparedStatements);
                 poolableConnectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
-                success = true;
+                // create a pool for our connections
+                createConnectionPool(poolableConnectionFactory);
+                final DataSource newDataSource = createDataSourceInstance();
+                newDataSource.setLogWriter(logWriter);
+                connectionPool.addObjects(initialSize);
+                // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor
+                // task
+                startPoolMaintenance();
+                dataSource = newDataSource;
             } catch (final SQLException | RuntimeException se) {
+                closeConnectionPool();
                 throw se;
             } catch (final Exception ex) {
+                closeConnectionPool();
                 throw new SQLException("Error creating connection factory", ex);
             }
 
-            if (success) {
-                // create a pool for our connections
-                createConnectionPool(poolableConnectionFactory);
-            }
-
-            // Create the pooling data source to manage connections
-            DataSource newDataSource;
-            success = false;
-            try {
-                newDataSource = createDataSourceInstance();
-                newDataSource.setLogWriter(logWriter);
-                success = true;
-            } catch (final SQLException | RuntimeException se) {
-                throw se;
-            } catch (final Exception ex) {
-                throw new SQLException("Error creating datasource", ex);
-            } finally {
-                if (!success) {
-                    closeConnectionPool();
-                }
-            }
-
-            // If initialSize > 0, preload the pool
-            try {
-                connectionPool.addObjects(initialSize);
-            } catch (final Exception e) {
-                closeConnectionPool();
-                throw new SQLException("Error preloading the connection pool", e);
-            }
-
-            // If timeBetweenEvictionRunsMillis > 0, start the pool's evictor
-            // task
-            startPoolMaintenance();
-
-            dataSource = newDataSource;
             return dataSource;
         }
     }
@@ -1710,7 +1684,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         start();
     }
 
-    private <T> void setAbandoned(BiConsumer<AbandonedConfig, T> consumer, final T object) {
+    private <T> void setAbandoned(final BiConsumer<AbandonedConfig, T> consumer, final T object) {
         if (abandonedConfig == null) {
             abandonedConfig = new AbandonedConfig();
         }
@@ -1721,12 +1695,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
-    private <T> void setConnectionPool(BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
+    private <T> void setConnectionPool(final BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
         if (connectionPool != null) {
             consumer.accept(connectionPool, object);
         }
     }
-    
+
     /**
      * Sets the print writer to be used by this configuration to log information on abandoned objects.
      *
