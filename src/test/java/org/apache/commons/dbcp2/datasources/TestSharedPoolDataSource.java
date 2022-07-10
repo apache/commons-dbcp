@@ -68,8 +68,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    // There are 3 different prepareCall statement methods so add a little
-    // complexity to reduce what would otherwise be lots of copy and paste
+    /**
+     * There are 3 different prepareCall statement methods so add a little complexity to reduce what would otherwise be lots
+     * of copy and paste.
+     */
     private static abstract class PrepareCallCallback {
         protected Connection conn;
 
@@ -80,8 +82,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    // There are 6 different prepareStatement statement methods so add a little
-    // complexity to reduce what would otherwise be lots of copy and paste
+    /**
+     * There are 6 different prepareStatement statement methods so add a little complexity to reduce what would otherwise be
+     * lots of copy and paste.
+     */
     private static abstract class PrepareStatementCallback {
         protected Connection conn;
 
@@ -353,7 +357,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test pool close.  Illustrates BZ 37359.
+     * Tests pool close. Illustrates BZ 37359.
      *
      * @throws Exception
      */
@@ -367,13 +371,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testClosing()
-        throws Exception
-    {
+    public void testClosing() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
         }
 
@@ -390,13 +391,10 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testClosingWithUserName()
-        throws Exception
-    {
+    public void testClosingWithUserName() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection("u1", "p1");
         }
 
@@ -411,8 +409,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
 
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection("u1", "p1");
         }
         for (final Connection element : c) {
@@ -461,7 +458,6 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      */
     @Test
     public void testIncorrectPassword() throws Exception {
-
         ds.getConnection("u2", "p2").close();
         try (Connection c = ds.getConnection("u1", "zlsafjk")){ // Use bad password
             fail("Able to retrieve connection with incorrect password");
@@ -572,17 +568,13 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testOpening()
-        throws Exception
-    {
+    public void testOpening() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
             assertNotNull(c[i]);
-            for (int j=0; j<=i; j++)
-            {
+            for (int j = 0; j <= i; j++) {
                 assertFalse(c[j].isClosed());
             }
         }
@@ -592,8 +584,9 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    // Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS
-    // when setPoolPreparedStatements(true)
+    /**
+     * Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS when setPoolPreparedStatements(true)
+     */
     @Test
     public void testPoolPrepareCall() throws Exception {
         pcds.setPoolPreparedStatements(true);
@@ -645,8 +638,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testSimple() throws Exception
-    {
+    public void testSimple() throws Exception {
         final Connection conn = ds.getConnection();
         assertNotNull(conn);
         final PreparedStatement stmt = conn.prepareStatement("select * from dual");
