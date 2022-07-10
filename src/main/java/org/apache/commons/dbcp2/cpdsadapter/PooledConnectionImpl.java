@@ -35,6 +35,7 @@ import org.apache.commons.dbcp2.Jdbc41Bridge;
 import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolableCallableStatement;
 import org.apache.commons.dbcp2.PoolablePreparedStatement;
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.dbcp2.PoolingConnection.StatementType;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -343,12 +344,7 @@ final class PooledConnectionImpl
     protected void finalize() throws Throwable {
         // Closing the Connection ensures that if anyone tries to use it,
         // an error will occur.
-        try {
-            connection.close();
-        } catch (final Exception ignored) {
-            // ignore
-        }
-
+        Utils.close(connection, null);
         // make sure the last connection is marked as closed
         if (logicalConnection != null && !logicalConnection.isClosed()) {
             throw new SQLException("PooledConnection was gc'ed, without its last Connection being closed.");

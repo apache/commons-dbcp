@@ -34,6 +34,7 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -263,11 +264,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             connection.clearWarnings();
             return connection;
         } catch (final SQLException ex) {
-            try {
-                connection.close();
-            } catch (final Exception exc) {
-                getLogWriter().println("ignoring exception during close: " + exc);
-            }
+            Utils.close(connection, e -> getLogWriter().println("ignoring exception during close: " + e));
             throw ex;
         }
     }

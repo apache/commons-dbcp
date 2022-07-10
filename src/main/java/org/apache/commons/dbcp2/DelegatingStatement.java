@@ -148,17 +148,13 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
                 }));
                 clearTrace();
             }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (final Exception e) {
-                    if (connection != null) {
-                        // Does not rethrow e.
-                        connection.handleExceptionNoThrow(e);
-                    }
-                    thrownList.add(e);
+            Utils.close(statement, e -> {
+                if (connection != null) {
+                    // Does not rethrow e.
+                    connection.handleExceptionNoThrow(e);
                 }
-            }
+                thrownList.add(e);
+            });
         } finally {
             closed = true;
             statement = null;

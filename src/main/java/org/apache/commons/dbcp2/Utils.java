@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.apache.commons.pool2.PooledObject;
 
@@ -107,19 +108,32 @@ public final class Utils {
     }
 
     /**
+     * Closes the given {@link AutoCloseable} and if an exception is caught, then calls {@code exceptionHandler}.
+     *
+     * @param autoCloseable The resource to close.
+     * @param exceptionHandler Consumes exception thrown closing this resource.
+     * @since 2.10.0
+     */
+    public static void close(AutoCloseable autoCloseable, final Consumer<Exception> exceptionHandler) {
+        if (autoCloseable != null) {
+            try {
+                autoCloseable.close();
+            } catch (final Exception e) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.accept(e);
+                }
+            }
+        }
+    }
+
+    /**
      * Closes the AutoCloseable (which may be null).
      *
      * @param autoCloseable an AutoCloseable, may be {@code null}
      * @since 2.6.0
      */
     public static void closeQuietly(final AutoCloseable autoCloseable) {
-        if (autoCloseable != null) {
-            try {
-                autoCloseable.close();
-            } catch (final Exception ignored) {
-                // ignored
-            }
-        }
+        close(autoCloseable, null);
     }
 
     /**

@@ -35,7 +35,7 @@ import org.apache.commons.pool2.TrackedUse;
  *
  * @since 2.0
  */
-public class AbandonedTrace implements TrackedUse {
+public class AbandonedTrace implements TrackedUse, AutoCloseable {
 
     /** A list of objects created by children of this object. */
     private final List<WeakReference<AbandonedTrace>> traceList = new ArrayList<>();
@@ -88,22 +88,19 @@ public class AbandonedTrace implements TrackedUse {
      * @throws SQLException Ignored here, for subclasses.
      * @since 2.10.0
      */
-    protected void close() throws SQLException {
+    @Override
+    public void close() throws SQLException {
         // nop
     }
 
     /**
-     * Calls {@link #close()} and if an exception is caught, then {@code exceptionHandler}.
-     * 
+     * Closes this resource and if an exception is caught, then calls {@code exceptionHandler}.
+     *
      * @param exceptionHandler Consumes exception thrown closing this resource.
      * @since 2.10.0
      */
     protected void close(final Consumer<Exception> exceptionHandler) {
-        try {
-            close();
-        } catch (final Exception e) {
-            exceptionHandler.accept(e);
-        }   
+        Utils.close(this, exceptionHandler);
     }
 
     /**

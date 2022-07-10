@@ -62,13 +62,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             if (entry != null) {
                 @SuppressWarnings("resource")
                 final InstanceKeyDataSource value = entry.getValue();
-                if (value != null) {
-                    try {
-                        value.close();
-                    } catch (final Exception e) {
-                        exceptionList.add(e);
-                    }
-                }
+                Utils.close(value, exceptionList::add);
             }
         });
         INSTANCE_MAP.clear();
