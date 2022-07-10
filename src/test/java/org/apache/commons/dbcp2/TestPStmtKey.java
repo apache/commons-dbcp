@@ -49,13 +49,13 @@ public class TestPStmtKey {
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
                 new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0));
         //
-        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
-                new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0, null));
+        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog2", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT));
         //
-        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
-                new PStmtKey("sql", "catalog2", "schema1", 0, 0, null));
+        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog2", "schema1", 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog2", "schema1", 0, 0, StatementType.PREPARED_STATEMENT));
         //
@@ -87,13 +87,13 @@ public class TestPStmtKey {
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
                 new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0));
         //
-        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
-                new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0, null));
+        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog1", "schema2", 0, 0, 0, StatementType.PREPARED_STATEMENT));
         //
-        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
-                new PStmtKey("sql", "catalog1", "schema2", 0, 0, null));
+        Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema2", 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog1", "schema2", 0, 0, StatementType.PREPARED_STATEMENT));
         //
@@ -125,13 +125,13 @@ public class TestPStmtKey {
         Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0),
                 new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0));
         //
-        Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null),
-                new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, null));
+        Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog1", "schema1", 0, 0, 0, StatementType.PREPARED_STATEMENT));
         //
-        Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, null),
-                new PStmtKey("sql", "catalog1", "schema1", 0, 0, null));
+        Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.CALLABLE_STATEMENT),
+                new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.CALLABLE_STATEMENT));
         Assertions.assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT),
                 new PStmtKey("sql", "catalog1", "schema1", 0, 0, StatementType.PREPARED_STATEMENT));
         //
