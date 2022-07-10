@@ -241,6 +241,7 @@ public class PoolingDriver implements Driver {
     protected boolean isAccessToUnderlyingConnectionAllowed() {
         return accessToUnderlyingConnectionAllowed;
     }
+
     @Override
     public boolean jdbcCompliant() {
         return true;
