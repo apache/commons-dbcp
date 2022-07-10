@@ -336,7 +336,7 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testSetPasswordThenModCharArray() {
-        final char[] pwd = {'a' };
+        final char[] pwd = {'a'};
         pcds.setPassword(pwd);
         assertEquals("a", pcds.getPassword());
         pwd[0] = 'b';

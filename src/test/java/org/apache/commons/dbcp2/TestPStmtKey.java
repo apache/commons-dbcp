@@ -157,7 +157,7 @@ public class TestPStmtKey {
      */
     @Test
     public void testCtorStringStringArrayOfInts() {
-        final int[] input = {0, 0 };
+        final int[] input = {0, 0};
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assertions.assertArrayEquals(input, pStmtKey.getColumnIndexes());
         input[0] = 1;
@@ -196,7 +196,7 @@ public class TestPStmtKey {
      */
     @Test
     public void testCtorStringStringArrayOfStrings() {
-        final String[] input = {"A", "B" };
+        final String[] input = {"A", "B"};
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         Assertions.assertArrayEquals(input, pStmtKey.getColumnNames());
         input[0] = "C";

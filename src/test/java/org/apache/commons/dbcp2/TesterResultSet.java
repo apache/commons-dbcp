@@ -235,7 +235,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public byte[] getBytes(final int columnIndex) throws SQLException {
         checkOpen();
-        return new byte[] { (byte)columnIndex };
+        return new byte[] {(byte) columnIndex};
     }
 
     @Override
