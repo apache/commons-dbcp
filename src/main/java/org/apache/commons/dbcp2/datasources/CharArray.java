@@ -73,7 +73,7 @@ final class CharArray implements Serializable {
      * @return value, may be null.
      */
     char[] get() {
-        return chars == null ? null : chars.clone();
+        return Utils.clone(chars);
     }
 
     @Override
