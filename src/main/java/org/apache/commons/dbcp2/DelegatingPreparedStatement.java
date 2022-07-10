@@ -702,18 +702,10 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
         // See DBCP-10 for what could happen when ResultSets are closed twice.
-        final List<AbandonedTrace> resultSetList = getTrace();
-        if (resultSetList != null) {
+        final List<AbandonedTrace> traceList = getTrace();
+        if (traceList != null) {
             final List<Exception> thrownList = new ArrayList<>();
-            resultSetList.forEach(trace -> {
-                if (trace instanceof AutoCloseable) {
-                    try {
-                        ((AutoCloseable) trace).close();
-                    } catch (final Exception e) {
-                        thrownList.add(e);
-                    }
-                }
-            });
+            traceList.forEach(trace -> trace.close(thrownList::add));
             clearTrace();
             if (!thrownList.isEmpty()) {
                 throw new SQLExceptionList(thrownList);

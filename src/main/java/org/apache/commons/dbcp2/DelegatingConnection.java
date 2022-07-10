@@ -653,13 +653,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         final List<AbandonedTrace> traceList = getTrace();
         if (traceList != null && !traceList.isEmpty()) {
             final List<Exception> thrownList = new ArrayList<>();
-            traceList.stream().filter(AutoCloseable.class::isInstance).forEach(trace -> {
-                try {
-                    ((AutoCloseable) trace).close();
-                } catch (final Exception e) {
-                    thrownList.add(e);
-                }
-            });
+            traceList.forEach(trace -> trace.close(thrownList::add));
             clearTrace();
             if (!thrownList.isEmpty()) {
                 throw new SQLExceptionList(thrownList);

@@ -17,11 +17,13 @@
 package org.apache.commons.dbcp2;
 
 import java.lang.ref.WeakReference;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.pool2.TrackedUse;
 
@@ -78,6 +80,30 @@ public class AbandonedTrace implements TrackedUse {
         synchronized (this.traceList) {
             this.traceList.clear();
         }
+    }
+
+    /**
+     * Subclasses can implement this nop.
+     *
+     * @throws SQLException Ignored here, for subclasses.
+     * @since 2.10.0
+     */
+    protected void close() throws SQLException {
+        // nop
+    }
+
+    /**
+     * Calls {@link #close()} and if an exception is caught, then {@code exceptionHandler}.
+     * 
+     * @param exceptionHandler Consumes exception thrown closing this resource.
+     * @since 2.10.0
+     */
+    protected void close(final Consumer<Exception> exceptionHandler) {
+        try {
+            close();
+        } catch (final Exception e) {
+            exceptionHandler.accept(e);
+        }   
     }
 
     /**

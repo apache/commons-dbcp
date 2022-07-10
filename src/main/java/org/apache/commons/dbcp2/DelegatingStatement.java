@@ -139,17 +139,13 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             // See bug 17301 for what could happen when ResultSets are closed twice.
             final List<AbandonedTrace> traceList = getTrace();
             if (traceList != null) {
-                traceList.stream().filter(AutoCloseable.class::isInstance).forEach(trace -> {
-                    try {
-                        ((AutoCloseable) trace).close();
-                    } catch (final Exception e) {
-                        if (connection != null) {
-                            // Does not rethrow e.
-                            connection.handleExceptionNoThrow(e);
-                        }
-                        thrownList.add(e);
+                traceList.forEach(trace -> trace.close(e -> {
+                    if (connection != null) {
+                        // Does not rethrow e.
+                        connection.handleExceptionNoThrow(e);
                     }
-                });
+                    thrownList.add(e);
+                }));
                 clearTrace();
             }
             if (statement != null) {
