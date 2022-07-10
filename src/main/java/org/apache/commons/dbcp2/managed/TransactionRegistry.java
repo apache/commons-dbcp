@@ -92,12 +92,7 @@ public class TransactionRegistry {
 
         // register the context (or create a new one)
         synchronized (this) {
-            TransactionContext cache = caches.get(transaction);
-            if (cache == null) {
-                cache = new TransactionContext(this, transaction, transactionSynchronizationRegistry);
-                caches.put(transaction, cache);
-            }
-            return cache;
+            return caches.computeIfAbsent(transaction, k -> new TransactionContext(this, k, transactionSynchronizationRegistry));
         }
     }
 
