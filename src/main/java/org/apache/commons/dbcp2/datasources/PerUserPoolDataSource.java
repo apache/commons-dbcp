@@ -102,13 +102,13 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.3.0
      */
     public void clear() {
-        for (final PooledConnectionManager manager : managers.values()) {
+        managers.values().forEach(manager -> {
             try {
                 getCPDSConnectionFactoryPool(manager).clear();
             } catch (final Exception ignored) {
                 // ignore and try to close others.
             }
-        }
+        });
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
@@ -117,12 +117,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *
      * @see org.apache.commons.pool2.ObjectPool#close()
      */
-    @SuppressWarnings("resource")
     @Override
     public void close() {
-        for (final PooledConnectionManager manager : managers.values()) {
-            Utils.closeQuietly(getCPDSConnectionFactoryPool(manager));
-        }
+        managers.values().forEach(manager -> Utils.closeQuietly(getCPDSConnectionFactoryPool(manager)));
         InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 

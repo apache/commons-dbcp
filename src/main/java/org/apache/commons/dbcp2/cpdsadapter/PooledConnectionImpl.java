@@ -433,10 +433,7 @@ final class PooledConnectionImpl
      */
     void notifyListeners() {
         final ConnectionEvent event = new ConnectionEvent(this);
-        final Object[] listeners = eventListeners.toArray();
-        for (final Object listener : listeners) {
-            ((ConnectionEventListener) listener).connectionClosed(event);
-        }
+        new ArrayList<>(eventListeners).forEach(listener -> listener.connectionClosed(event));
     }
 
     /**

@@ -38,6 +38,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
@@ -1822,20 +1823,18 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         Objects.requireNonNull(connectionProperties, "connectionProperties");
         final String[] entries = connectionProperties.split(";");
         final Properties properties = new Properties();
-        for (final String entry : entries) {
-            if (!entry.isEmpty()) {
-                final int index = entry.indexOf('=');
-                if (index > 0) {
-                    final String name = entry.substring(0, index);
-                    final String value = entry.substring(index + 1);
-                    properties.setProperty(name, value);
-                } else {
-                    // no value is empty string which is how
-                    // java.util.Properties works
-                    properties.setProperty(entry, "");
-                }
+        Stream.of(entries).filter(e -> !e.isEmpty()).forEach(entry -> {
+            final int index = entry.indexOf('=');
+            if (index > 0) {
+                final String name = entry.substring(0, index);
+                final String value = entry.substring(index + 1);
+                properties.setProperty(name, value);
+            } else {
+                // no value is empty string which is how
+                // java.util.Properties works
+                properties.setProperty(entry, "");
             }
-        }
+        });
         this.connectionProperties = properties;
     }
 

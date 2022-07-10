@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,10 +57,11 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     public static void closeAll() throws ListException {
         // Get iterator to loop over all instances of this data source.
         final List<Throwable> exceptionList = new ArrayList<>(INSTANCE_MAP.size());
-        for (final Entry<String, InstanceKeyDataSource> next : INSTANCE_MAP.entrySet()) {
+        INSTANCE_MAP.entrySet().forEach(entry -> {
             // Bullet-proof to avoid anything else but problems from InstanceKeyDataSource#close().
-            if (next != null) {
-                @SuppressWarnings("resource") final InstanceKeyDataSource value = next.getValue();
+            if (entry != null) {
+                @SuppressWarnings("resource")
+                final InstanceKeyDataSource value = entry.getValue();
                 if (value != null) {
                     try {
                         value.close();
@@ -70,7 +70,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                     }
                 }
             }
-        }
+        });
         INSTANCE_MAP.clear();
         if (!exceptionList.isEmpty()) {
             throw new ListException("Could not close all InstanceKeyDataSource instances.", exceptionList);

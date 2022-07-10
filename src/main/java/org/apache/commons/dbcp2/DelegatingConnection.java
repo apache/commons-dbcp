@@ -25,7 +25,6 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.NClob;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -651,26 +650,16 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         // The JDBC specification requires that a Connection close any open
         // Statement's when it is closed.
         // DBCP-288. Not all the traced objects will be statements
-        final List<AbandonedTrace> traces = getTrace();
-        if (traces != null && !traces.isEmpty()) {
+        final List<AbandonedTrace> traceList = getTrace();
+        if (traceList != null && !traceList.isEmpty()) {
             final List<Exception> thrownList = new ArrayList<>();
-            for (final Object trace : traces) {
-                if (trace instanceof Statement) {
-                    try {
-                        ((Statement) trace).close();
-                    } catch (final Exception e) {
-                        thrownList.add(e);
-                    }
-                } else if (trace instanceof ResultSet) {
-                    // DBCP-265: Need to close the result sets that are
-                    // generated via DatabaseMetaData
-                    try {
-                        ((ResultSet) trace).close();
-                    } catch (final Exception e) {
-                        thrownList.add(e);
-                    }
+            traceList.stream().filter(AutoCloseable.class::isInstance).forEach(trace -> {
+                try {
+                    ((AutoCloseable) trace).close();
+                } catch (final Exception e) {
+                    thrownList.add(e);
                 }
-            }
+            });
             clearTrace();
             if (!thrownList.isEmpty()) {
                 throw new SQLExceptionList(thrownList);

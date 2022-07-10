@@ -364,10 +364,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             throw new SQLException("initializeConnection: connection closed");
         }
         if (null != sqls) {
-            try (Statement stmt = conn.createStatement()) {
+            try (Statement statement = conn.createStatement()) {
                 for (final String sql : sqls) {
-                    Objects.requireNonNull(sql, "null connectionInitSqls element");
-                    stmt.execute(sql);
+                    statement.execute(Objects.requireNonNull(sql, "null connectionInitSqls element"));
                 }
             }
         }

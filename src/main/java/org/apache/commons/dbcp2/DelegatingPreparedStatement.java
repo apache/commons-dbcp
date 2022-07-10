@@ -697,7 +697,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     protected void prepareToReturn() throws SQLException {
         setClosedInternal(true);
         removeThisTrace(getConnectionInternal());
-    
+
         // The JDBC spec requires that a statement close any open
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
@@ -705,22 +705,21 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         final List<AbandonedTrace> resultSetList = getTrace();
         if (resultSetList != null) {
             final List<Exception> thrownList = new ArrayList<>();
-            final ResultSet[] resultSets = resultSetList.toArray(Utils.EMPTY_RESULT_SET_ARRAY);
-            for (final ResultSet resultSet : resultSets) {
-                if (resultSet != null) {
+            resultSetList.forEach(trace -> {
+                if (trace instanceof AutoCloseable) {
                     try {
-                        resultSet.close();
+                        ((AutoCloseable) trace).close();
                     } catch (final Exception e) {
                         thrownList.add(e);
                     }
                 }
-            }
+            });
             clearTrace();
             if (!thrownList.isEmpty()) {
                 throw new SQLExceptionList(thrownList);
             }
         }
-    
+
         super.passivate();
     }
 }

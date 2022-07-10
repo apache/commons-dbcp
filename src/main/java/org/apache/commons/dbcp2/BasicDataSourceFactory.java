@@ -31,7 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -139,7 +138,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String SILENT_PROP_SINGLETON = "singleton";
     private static final String SILENT_PROP_AUTH = "auth";
 
-    private static final String[] ALL_PROPERTIES = {PROP_DEFAULT_AUTO_COMMIT, PROP_DEFAULT_READ_ONLY,
+    private static final List<String> ALL_PROPERTY_NAMES = Arrays.asList(PROP_DEFAULT_AUTO_COMMIT, PROP_DEFAULT_READ_ONLY,
             PROP_DEFAULT_TRANSACTION_ISOLATION, PROP_DEFAULT_CATALOG, PROP_DEFAULT_SCHEMA, PROP_CACHE_STATE,
             PROP_DRIVER_CLASS_NAME, PROP_LIFO, PROP_MAX_TOTAL, PROP_MAX_IDLE, PROP_MIN_IDLE, PROP_INITIAL_SIZE,
             PROP_MAX_WAIT_MILLIS, PROP_TEST_ON_CREATE, PROP_TEST_ON_BORROW, PROP_TEST_ON_RETURN,
@@ -152,7 +151,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             PROP_MAX_OPEN_PREPARED_STATEMENTS, PROP_CONNECTION_PROPERTIES, PROP_MAX_CONN_LIFETIME_MILLIS,
             PROP_LOG_EXPIRED_CONNECTIONS, PROP_ROLLBACK_ON_RETURN, PROP_ENABLE_AUTO_COMMIT_ON_RETURN,
             PROP_DEFAULT_QUERY_TIMEOUT, PROP_FAST_FAIL_VALIDATION, PROP_DISCONNECTION_SQL_CODES, PROP_JMX_NAME,
-            PROP_REGISTER_CONNECTION_MBEAN, PROP_CONNECTION_FACTORY_CLASS_NAME};
+            PROP_REGISTER_CONNECTION_MBEAN, PROP_CONNECTION_FACTORY_CLASS_NAME);
 
     /**
      * Obsolete properties from DBCP 1.x. with warning strings suggesting new properties. LinkedHashMap will guarantee
@@ -397,12 +396,12 @@ public class BasicDataSourceFactory implements ObjectFactory {
         infoMessages.forEach(log::info);
 
         final Properties properties = new Properties();
-        for (final String propertyName : ALL_PROPERTIES) {
+        ALL_PROPERTY_NAMES.forEach(propertyName -> {
             final RefAddr ra = ref.get(propertyName);
             if (ra != null) {
                 properties.setProperty(propertyName, Objects.toString(ra.getContent(), null));
             }
-        }
+        });
 
         return createDataSource(properties);
     }
@@ -422,20 +421,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
         final List<String> infoMessages) {
-        final List<String> allPropsAsList = Arrays.asList(ALL_PROPERTIES);
         final String nameString = name != null ? "Name = " + name.toString() + " " : "";
         if (NUPROP_WARNTEXT != null && !NUPROP_WARNTEXT.isEmpty()) {
-            for (final Entry<String, String> entry : NUPROP_WARNTEXT.entrySet()) {
-                final String propertyName = entry.getKey();
+            NUPROP_WARNTEXT.forEach((propertyName, value) -> {
                 final RefAddr ra = ref.get(propertyName);
-                if (ra != null && !allPropsAsList.contains(ra.getType())) {
+                if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
                     final StringBuilder stringBuilder = new StringBuilder(nameString);
                     final String propertyValue = Objects.toString(ra.getContent(), null);
-                    stringBuilder.append(entry.getValue()).append(" You have set value of \"").append(propertyValue).append("\" for \"").append(propertyName)
+                    stringBuilder.append(value).append(" You have set value of \"").append(propertyValue).append("\" for \"").append(propertyName)
                         .append("\" property, which is being ignored.");
                     warnMessages.add(stringBuilder.toString());
                 }
-            }
+            });
         }
 
         final Enumeration<RefAddr> allRefAddrs = ref.getAll();
@@ -444,7 +441,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
             final String propertyName = ra.getType();
             // If property name is not in the properties list, we haven't warned on it
             // and it is not in the "silent" list, tell user we are ignoring it.
-            if (!(allPropsAsList.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName) || SILENT_PROPERTIES.contains(propertyName))) {
+            if (!(ALL_PROPERTY_NAMES.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName) || SILENT_PROPERTIES.contains(propertyName))) {
                 final String propertyValue = Objects.toString(ra.getContent(), null);
                 final StringBuilder stringBuilder = new StringBuilder(nameString);
                 stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue).append("\" for \"").append(propertyName)
