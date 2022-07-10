@@ -62,7 +62,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     private static final Log log = LogFactory.getLog(PerUserPoolDataSource.class);
 
-    // Per user pool properties
+    private static <K, V> HashMap<K, V> createMap() {
+        // Should there be a default size different than what this ctor provides?
+        return new HashMap<>();
+    }
+    
     private Map<String, Boolean> perUserBlockWhenExhausted;
     private Map<String, String> perUserEvictionPolicyClassName;
     private Map<String, Boolean> perUserLifo;
@@ -78,8 +82,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private Map<String, Boolean> perUserTestOnReturn;
     private Map<String, Boolean> perUserTestWhileIdle;
     private Map<String, Duration> perUserDurationBetweenEvictionRuns;
-
-    // Per user connection properties
     private Map<String, Boolean> perUserDefaultAutoCommit;
     private Map<String, Integer> perUserDefaultTransactionIsolation;
     private Map<String, Boolean> perUserDefaultReadOnly;
@@ -87,7 +89,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Map to keep track of Pools for a given user.
      */
-    private transient Map<PoolKey, PooledConnectionManager> managers = new HashMap<>();
+    private transient Map<PoolKey, PooledConnectionManager> managers = createMap();
 
     /**
      * Default no-arg constructor for Serialization.
@@ -127,7 +129,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Converts a map with Long milliseconds values to another map with Duration values.
      */
     private Map<String, Duration> convertMap(final Map<String, Duration> currentMap, final Map<String, Long> longMap) {
-        final Map<String, Duration> durationMap = new HashMap<>();
+        final Map<String, Duration> durationMap = createMap();
         longMap.forEach((k, v) -> durationMap.put(k, toDurationOrNull(v)));
         if (currentMap == null) {
             return durationMap;
@@ -136,11 +138,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         currentMap.putAll(durationMap);
         return currentMap;
 
-    }
-
-    private HashMap<String, Boolean> createMap() {
-        // Should there be a default size different than what this ctor provides?
-        return new HashMap<>();
     }
 
     @Override
@@ -829,7 +826,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserDefaultTransactionIsolation(final Map<String, Integer> userDefaultTransactionIsolation) {
         assertInitializationAllowed();
         if (perUserDefaultTransactionIsolation == null) {
-            perUserDefaultTransactionIsolation = new HashMap<>();
+            perUserDefaultTransactionIsolation = createMap();
         } else {
             perUserDefaultTransactionIsolation.clear();
         }
@@ -848,7 +845,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserDefaultTransactionIsolation(final String userName, final Integer value) {
         assertInitializationAllowed();
         if (perUserDefaultTransactionIsolation == null) {
-            perUserDefaultTransactionIsolation = new HashMap<>();
+            perUserDefaultTransactionIsolation = createMap();
         }
         perUserDefaultTransactionIsolation.put(userName, value);
     }
@@ -871,7 +868,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserDurationBetweenEvictionRuns(final String userName, final Duration value) {
         assertInitializationAllowed();
         if (perUserDurationBetweenEvictionRuns == null) {
-            perUserDurationBetweenEvictionRuns = new HashMap<>();
+            perUserDurationBetweenEvictionRuns = createMap();
         }
         perUserDurationBetweenEvictionRuns.put(userName, value);
     }
@@ -879,7 +876,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserEvictionPolicyClassName(final Map<String, String> userDefaultEvictionPolicyClassName) {
         assertInitializationAllowed();
         if (perUserEvictionPolicyClassName == null) {
-            perUserEvictionPolicyClassName = new HashMap<>();
+            perUserEvictionPolicyClassName = createMap();
         } else {
             perUserEvictionPolicyClassName.clear();
         }
@@ -898,7 +895,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserEvictionPolicyClassName(final String userName, final String value) {
         assertInitializationAllowed();
         if (perUserEvictionPolicyClassName == null) {
-            perUserEvictionPolicyClassName = new HashMap<>();
+            perUserEvictionPolicyClassName = createMap();
         }
         perUserEvictionPolicyClassName.put(userName, value);
     }
@@ -932,7 +929,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserMaxIdle(final Map<String, Integer> userDefaultMaxIdle) {
         assertInitializationAllowed();
         if (perUserMaxIdle == null) {
-            perUserMaxIdle = new HashMap<>();
+            perUserMaxIdle = createMap();
         } else {
             perUserMaxIdle.clear();
         }
@@ -950,7 +947,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserMaxIdle(final String userName, final Integer value) {
         assertInitializationAllowed();
         if (perUserMaxIdle == null) {
-            perUserMaxIdle = new HashMap<>();
+            perUserMaxIdle = createMap();
         }
         perUserMaxIdle.put(userName, value);
     }
@@ -958,7 +955,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserMaxTotal(final Map<String, Integer> userDefaultMaxTotal) {
         assertInitializationAllowed();
         if (perUserMaxTotal == null) {
-            perUserMaxTotal = new HashMap<>();
+            perUserMaxTotal = createMap();
         } else {
             perUserMaxTotal.clear();
         }
@@ -976,7 +973,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserMaxTotal(final String userName, final Integer value) {
         assertInitializationAllowed();
         if (perUserMaxTotal == null) {
-            perUserMaxTotal = new HashMap<>();
+            perUserMaxTotal = createMap();
         }
         perUserMaxTotal.put(userName, value);
     }
@@ -993,7 +990,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserMaxWait(final String userName, final Duration value) {
         assertInitializationAllowed();
         if (perUserMaxWaitDuration == null) {
-            perUserMaxWaitDuration = new HashMap<>();
+            perUserMaxWaitDuration = createMap();
         }
         perUserMaxWaitDuration.put(userName, value);
     }
@@ -1040,7 +1037,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserMinEvictableIdle(final String userName, final Duration value) {
         assertInitializationAllowed();
         if (perUserMinEvictableIdleDuration == null) {
-            perUserMinEvictableIdleDuration = new HashMap<>();
+            perUserMinEvictableIdleDuration = createMap();
         }
         perUserMinEvictableIdleDuration.put(userName, value);
     }
@@ -1063,7 +1060,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserMinIdle(final Map<String, Integer> userDefaultMinIdle) {
         assertInitializationAllowed();
         if (perUserMinIdle == null) {
-            perUserMinIdle = new HashMap<>();
+            perUserMinIdle = createMap();
         } else {
             perUserMinIdle.clear();
         }
@@ -1081,7 +1078,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserMinIdle(final String userName, final Integer value) {
         assertInitializationAllowed();
         if (perUserMinIdle == null) {
-            perUserMinIdle = new HashMap<>();
+            perUserMinIdle = createMap();
         }
         perUserMinIdle.put(userName, value);
     }
@@ -1089,7 +1086,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     void setPerUserNumTestsPerEvictionRun(final Map<String, Integer> userDefaultNumTestsPerEvictionRun) {
         assertInitializationAllowed();
         if (perUserNumTestsPerEvictionRun == null) {
-            perUserNumTestsPerEvictionRun = new HashMap<>();
+            perUserNumTestsPerEvictionRun = createMap();
         } else {
             perUserNumTestsPerEvictionRun.clear();
         }
@@ -1108,7 +1105,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserNumTestsPerEvictionRun(final String userName, final Integer value) {
         assertInitializationAllowed();
         if (perUserNumTestsPerEvictionRun == null) {
-            perUserNumTestsPerEvictionRun = new HashMap<>();
+            perUserNumTestsPerEvictionRun = createMap();
         }
         perUserNumTestsPerEvictionRun.put(userName, value);
     }
@@ -1131,7 +1128,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     public void setPerUserSoftMinEvictableIdle(final String userName, final Duration value) {
         assertInitializationAllowed();
         if (perUserSoftMinEvictableIdleDuration == null) {
-            perUserSoftMinEvictableIdleDuration = new HashMap<>();
+            perUserSoftMinEvictableIdleDuration = createMap();
         }
         perUserSoftMinEvictableIdleDuration.put(userName, value);
     }
