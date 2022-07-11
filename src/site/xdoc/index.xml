@@ -52,21 +52,25 @@ mechanisms.</p>
 JDBC. Here is how it works:</p>
 <p>Developing</p>
 <ul>
-<li>DBCP 2.5.0 and up compiles and runs under Java 8 (JDBC 4.2) and up.</li>
-<li>DBCP 2.4.0 compiles and runs under Java 7 (JDBC 4.1) and above.</li>
+<li>DBCP 2.5.0 and up compiles and runs under Java 8
+(<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc/jdbc_42.html">JDBC 4.2</a>) and up.</li>
+<li>DBCP 2.4.0 compiles and runs under Java 7
+(<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/jdbc/jdbc_41.html">JDBC 4.1</a>) and above.</li>
 </ul>
 <p>Running</p>
 <ul>
 <li>DBCP 2.5.0 and up binaries should be used by applications running on Java 8 and up.</li>
 <li>DBCP 2.4.0 binaries should be used by applications running under Java 7.</li>
 </ul>
-<p>DBCP 2 is based on Commons Pool 2 and provides increased performance, JMX
+<p>DBCP 2 is based on
+<a href="https://commons.apache.org/proper/commons-pool/">Apache Commons Pool</a>
+and provides increased performance, JMX
 support as well as numerous other new features compared to DBCP 1.x. Users
 upgrading to 2.x should be aware that the Java package name has changed, as well
 as the Maven co-ordinates, since DBCP 2.x is not binary compatible with DBCP
 1.x. Users should also be aware that some configuration options (e.g. maxActive
 to maxTotal) have been renamed to align them with the new names used by Commons
-Pool 2.</p>
+Pool.</p>
 
 </section>
 
