@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -211,6 +212,10 @@ public final class Utils {
         }
         final MessageFormat mf = new MessageFormat(msg);
         return mf.format(args, new StringBuffer(), null).toString();
+    }
+
+    static boolean isEmpty(final Collection<?> collection) {
+        return collection == null || collection.isEmpty();
     }
 
     static boolean isSecurityEnabled() {

@@ -28,16 +28,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.management.MBeanRegistration;
@@ -1792,20 +1791,23 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param connectionInitSqls Collection of SQL statements to execute on connection creation
      */
     public void setConnectionInitSqls(final Collection<String> connectionInitSqls) {
-        if (connectionInitSqls != null && !connectionInitSqls.isEmpty()) {
-            ArrayList<String> newVal = null;
-            for (final String s : connectionInitSqls) {
-                if (!isEmpty(s)) {
-                    if (newVal == null) {
-                        newVal = new ArrayList<>();
-                    }
-                    newVal.add(s);
-                }
-            }
-            this.connectionInitSqls = newVal;
-        } else {
-            this.connectionInitSqls = null;
-        }
+//        if (connectionInitSqls != null && !connectionInitSqls.isEmpty()) {
+//            ArrayList<String> newVal = null;
+//            for (final String s : connectionInitSqls) {
+//                if (!isEmpty(s)) {
+//                    if (newVal == null) {
+//                        newVal = new ArrayList<>();
+//                    }
+//                    newVal.add(s);
+//                }
+//            }
+//            this.connectionInitSqls = newVal;
+//        } else {
+//            this.connectionInitSqls = null;
+//        }
+        final List<String> collect = Utils.isEmpty(connectionInitSqls) ? null
+                : connectionInitSqls.stream().filter(s -> !isEmpty(s)).collect(Collectors.toList());
+        this.connectionInitSqls = Utils.isEmpty(collect) ? null : collect;
     }
 
     /**
@@ -1955,20 +1957,23 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-        if (disconnectionSqlCodes != null && !disconnectionSqlCodes.isEmpty()) {
-            HashSet<String> newVal = null;
-            for (final String s : disconnectionSqlCodes) {
-                if (!isEmpty(s)) {
-                    if (newVal == null) {
-                        newVal = new HashSet<>();
-                    }
-                    newVal.add(s);
-                }
-            }
-            this.disconnectionSqlCodes = newVal;
-        } else {
-            this.disconnectionSqlCodes = null;
-        }
+//        if (disconnectionSqlCodes != null && !disconnectionSqlCodes.isEmpty()) {
+//            HashSet<String> newVal = null;
+//            for (final String s : disconnectionSqlCodes) {
+//                if (!isEmpty(s)) {
+//                    if (newVal == null) {
+//                        newVal = new HashSet<>();
+//                    }
+//                    newVal.add(s);
+//                }
+//            }
+//            this.disconnectionSqlCodes = newVal;
+//        } else {
+//            this.disconnectionSqlCodes = null;
+//        }
+        final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
+                : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+        this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
     /**
