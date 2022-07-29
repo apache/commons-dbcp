@@ -145,7 +145,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump commons-pool2 2.10.0 to 2.11.1.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump junit-jupiter from 5.8.0-M1 to 5.8.2 #125, #136, #157.
+        Bump junit-jupiter from 5.8.0-M1 to 5.9.0 #125, #136, #157, #203.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
         Bump spotbugs from 4.3.0 to 4.7.1 #124, #133, #151, #164, #177, #189.
