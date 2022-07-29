@@ -334,7 +334,7 @@
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
-    <spotbugs.plugin.version>4.7.1.0</spotbugs.plugin.version>
+    <spotbugs.plugin.version>4.7.1.1</spotbugs.plugin.version>
     <spotbugs.impl.version>4.7.1</spotbugs.impl.version>
     <commons.pmd.version>3.17.0</commons.pmd.version>
     <commons.pmd-impl.version>6.47.0</commons.pmd-impl.version>
