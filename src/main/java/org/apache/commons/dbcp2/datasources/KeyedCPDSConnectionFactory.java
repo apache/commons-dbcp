@@ -230,7 +230,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
      *            {@code UserPassKey} containing user credentials
      * @throws SQLException
      *             if the connection could not be created.
-     * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(java.lang.Object)
+     * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(Object)
      */
     @Override
     public synchronized PooledObject<PooledConnectionAndInfo> makeObject(final UserPassKey userPassKey) throws SQLException {
