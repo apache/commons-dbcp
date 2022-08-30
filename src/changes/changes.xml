@@ -110,6 +110,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="SpotBugs, Gary Gregory">
         SpotBugs: An overridable method is called from constructors in PoolablePreparedStatement.
       </action>
+      <action dev="ggregory" type="fix" due-to="Gary Gregory">
+        Wrong property name logged in ConnectionFactoryFactory.createConnectionFactory(BasicDataSource, Driver).
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).

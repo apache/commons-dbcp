@@ -46,14 +46,14 @@ final class ConnectionFactoryFactory {
         if (user != null) {
             connectionProperties.put(Constants.KEY_USER, user);
         } else {
-            basicDataSource.log("DBCP DataSource configured without a 'username'");
+            basicDataSource.log(String.format("DBCP DataSource configured without a '%s'", Constants.KEY_USER));
         }
 
         final String pwd = basicDataSource.getPassword();
         if (pwd != null) {
             connectionProperties.put(Constants.KEY_PASSWORD, pwd);
         } else {
-            basicDataSource.log("DBCP DataSource configured without a 'password'");
+            basicDataSource.log(String.format("DBCP DataSource configured without a '%s'", Constants.KEY_PASSWORD));
         }
         final String connectionFactoryClassName = basicDataSource.getConnectionFactoryClassName();
         if (connectionFactoryClassName != null) {
