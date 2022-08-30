@@ -292,9 +292,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private volatile String password;
 
     /**
-     * The connection URL to be passed to our JDBC driver to establish a connection.
+     * The connection string to be passed to our JDBC driver to establish a connection.
      */
-    private String url;
+    private String connectionString;
 
     /**
      * The connection user name to be passed to our JDBC driver to establish a connection.
@@ -451,7 +451,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * with the specified {@link ClassLoader}.</li>
      * <li>If {code driverClassName} is specified and the previous attempt fails, the class is loaded using the
      * context class loader of the current thread.</li>
-     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {code url}.
+     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {code connectionString}.
      * </ol>
      * <p>
      * This method exists so subclasses can replace the implementation class.
@@ -1426,13 +1426,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the JDBC connection {code url} property.
+     * Gets the JDBC connection {code connectionString} property.
      *
-     * @return the {code url} passed to the JDBC driver to establish connections
+     * @return the {code connectionString} passed to the JDBC driver to establish connections
      */
     @Override
     public synchronized String getUrl() {
-        return this.url;
+        return this.connectionString;
     }
 
     /**
@@ -2485,17 +2485,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {code url}.
+     * Sets the {code connection string}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
      * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
      * </p>
      *
-     * @param url the new value for the JDBC connection url
+     * @param connectionString the new value for the JDBC connection connectionString
      */
-    public synchronized void setUrl(final String url) {
-        this.url = url;
+    public synchronized void setUrl(final String connectionString) {
+        this.connectionString = connectionString;
     }
 
     /**

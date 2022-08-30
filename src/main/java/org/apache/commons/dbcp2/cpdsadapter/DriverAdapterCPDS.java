@@ -91,8 +91,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /** Description */
     private String description;
 
-    /** Url name */
-    private String url;
+    /** Connection string */
+    private String connectionString;
 
     /** User name */
     private String userName;
@@ -288,7 +288,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                 if (isNotEmpty(ra)) {
                     setDriver(getStringContent(ra));
                 }
-                ra = ref.get("url");
+                ra = ref.get("connectionString");
                 if (isNotEmpty(ra)) {
                     setUrl(getStringContent(ra));
                 }
@@ -449,7 +449,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         ref.add(new StringRefAddr("loginTimeout", String.valueOf(getLoginTimeout())));
         ref.add(new StringRefAddr(Constants.KEY_PASSWORD, getPassword()));
         ref.add(new StringRefAddr(Constants.KEY_USER, getUser()));
-        ref.add(new StringRefAddr("url", getUrl()));
+        ref.add(new StringRefAddr("connectionString", getUrl()));
 
         ref.add(new StringRefAddr("poolPreparedStatements", String.valueOf(isPoolPreparedStatements())));
         ref.add(new StringRefAddr("maxIdle", String.valueOf(getMaxIdle())));
@@ -485,12 +485,12 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the value of url used to locate the database for this datasource.
+     * Gets the value of connection string used to locate the database for this data source.
      *
-     * @return value of url.
+     * @return value of connection string.
      */
     public String getUrl() {
-        return url;
+        return connectionString;
     }
 
     /**
@@ -740,14 +740,14 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Sets the value of URL string used to locate the database for this datasource.
+     * Sets the value of URL string used to locate the database for this data source.
      *
-     * @param url Value to assign to url.
+     * @param connectionString Value to assign to connection string.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
      */
-    public void setUrl(final String url) {
+    public void setUrl(final String connectionString) {
         assertInitializationAllowed();
-        this.url = url;
+        this.connectionString = connectionString;
     }
 
     /**
@@ -772,10 +772,10 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         final StringBuilder builder = new StringBuilder(super.toString());
         builder.append("[description=");
         builder.append(description);
-        builder.append(", url=");
+        builder.append(", connectionString=");
         // TODO What if the connection string contains a 'user' or 'password' query parameter but that connection string
         // is not in a legal URL format?
-        builder.append(url);
+        builder.append(connectionString);
         builder.append(", driver=");
         builder.append(driver);
         builder.append(", loginTimeout=");
