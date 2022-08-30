@@ -44,7 +44,7 @@ Apache Commons DBCP
 ===================
 
 [![GitHub Actions Status](https://github.com/apache/commons-dbcp/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-dbcp/actions)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-dbcp/badge.svg)](https://coveralls.io/r/apache/commons-dbcp)
+[![Coverage Status](https://codecov.io/gh/apache/commons-dbcp/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-dbcp/branch/master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.9.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.9.0)
 [![CodeQL](https://github.com/apache/commons-dbcp/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-dbcp/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
