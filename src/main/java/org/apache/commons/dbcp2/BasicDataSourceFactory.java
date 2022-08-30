@@ -86,7 +86,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS = "softMinEvictableIdleTimeMillis";
     private static final String PROP_EVICTION_POLICY_CLASS_NAME = "evictionPolicyClassName";
     private static final String PROP_TEST_WHILE_IDLE = "testWhileIdle";
-    private static final String PROP_PASSWORD = "password";
+    private static final String PROP_PASSWORD = Constants.KEY_PASSWORD;
     private static final String PROP_URL = "url";
     private static final String PROP_USER_NAME = "username";
     private static final String PROP_VALIDATION_QUERY = "validationQuery";

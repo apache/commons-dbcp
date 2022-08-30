@@ -51,7 +51,7 @@ final class ConnectionFactoryFactory {
 
         final String pwd = basicDataSource.getPassword();
         if (pwd != null) {
-            connectionProperties.put("password", pwd);
+            connectionProperties.put(Constants.KEY_PASSWORD, pwd);
         } else {
             basicDataSource.log("DBCP DataSource configured without a 'password'");
         }
