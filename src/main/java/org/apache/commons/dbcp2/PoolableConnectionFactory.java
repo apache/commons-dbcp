@@ -157,7 +157,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Gets the cache state.
      *
      * @return The cache state.
-     * @since Made public in 2.6.0.
+     * @since 2.6.0.
      */
     public boolean getCacheState() {
         return cacheState;
@@ -167,7 +167,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Gets the connection factory.
      *
      * @return The connection factory.
-     * @since Made public in 2.6.0.
+     * @since 2.6.0.
      */
     public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
@@ -187,7 +187,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * @return The data source JMX ObjectName
-     * @since Made public in 2.6.0.
+     * @since 2.6.0.
      */
     public ObjectName getDataSourceJmxName() {
         return dataSourceJmxObjectName;
@@ -323,7 +323,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
     /**
      * @return Whether to pool statements.
-     * @since Made public in 2.6.0.
+     * @since 2.6.0.
      */
     public boolean getPoolStatements() {
         return poolStatements;
