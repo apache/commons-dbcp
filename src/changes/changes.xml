@@ -175,7 +175,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump narayana-jta from 5.12.0.Final to 5.12.7.Final #134, #156, #163, #185, #197.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump japicmp-maven-plugin from 0.15.3 to 0.15.7 #137, #166, #174.
+        Bump japicmp-maven-plugin from 0.15.3 to 0.16.0 #137, #166, #174, #211.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump h2 from 1.4.200 to 2.0.214 #153, #183, #196.
