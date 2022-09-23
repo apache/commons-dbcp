@@ -347,7 +347,6 @@
 
     <japicmp.skip>false</japicmp.skip>
     <spotbugs.skip>false</spotbugs.skip>
-    <clirr.skip>true</clirr.skip>
     <findbugs.skip>true</findbugs.skip>
     <surefire.argline></surefire.argline>
   </properties>
