@@ -337,7 +337,7 @@
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
     <spotbugs.plugin.version>4.7.2.0</spotbugs.plugin.version>
     <spotbugs.impl.version>4.7.2</spotbugs.impl.version>
-    <commons.pmd.version>3.18.0</commons.pmd.version>
+    <commons.pmd.version>3.19.0</commons.pmd.version>
     <commons.pmd-impl.version>6.48.0</commons.pmd-impl.version>
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.9.0</commons.bc.version>
