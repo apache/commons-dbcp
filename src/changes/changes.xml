@@ -160,7 +160,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump spotbugs-maven-plugin from 4.3.0 to 4.7.2.0 #140, #154, #161, #178, #192, #200, #204, #213.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-        Bump spotbugs from 4.3.0 to 4.7.2 #124, #133, #151, #164, #177, #189, #214.
+        Bump spotbugs from 4.3.0 to 4.7.3 #124, #133, #151, #164, #177, #189, #214, #230.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump org.mockito:mockito-core from 3.11.2 to  4.8.0, #128, #138, #152, #175, #188. #193, #208, #215.
