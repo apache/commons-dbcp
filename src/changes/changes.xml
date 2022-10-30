@@ -145,6 +145,9 @@ The <action> type attribute can be add,update,fix,remove.
         Bump actions/setup-java from 2 to 3.6.0 #229.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
+        Bump actions/upload-artifact from 3.1.0 to 3.1.1 #231.
+      </action>
+      <action dev="ggregory" type="update" due-to="Dependabot">
         Bump checkstyle from 8.44 to 9.3 #121, #130, #149, #158, #190.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
