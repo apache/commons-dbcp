@@ -166,7 +166,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump spotbugs from 4.3.0 to 4.7.3 #124, #133, #151, #164, #177, #189, #214, #230.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
-        Bump org.mockito:mockito-core from 3.11.2 to  4.8.1, #128, #138, #152, #175, #188. #193, #208, #215, #232.
+        Bump org.mockito:mockito-core from 3.11.2 to 4.9.0, #128, #138, #152, #175, #188. #193, #208, #215, #232, #235.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
         Bump maven-javadoc-plugin from 3.3.0 to 3.4.1 #131, #184.
@@ -181,7 +181,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump narayana-jta from 5.12.0.Final to 5.12.7.Final #134, #156, #163, #185, #197.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
-        Bump japicmp-maven-plugin from 0.15.3 to 0.16.0 #137, #166, #174, #211.
+        Bump japicmp-maven-plugin from 0.15.3 to 0.17.1 #137, #166, #174, #211, #238.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
         Bump h2 from 1.4.200 to 2.0.214 #153, #183, #196.
