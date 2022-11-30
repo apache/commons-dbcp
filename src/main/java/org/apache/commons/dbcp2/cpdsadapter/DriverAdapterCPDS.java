@@ -552,11 +552,13 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         assertInitializationAllowed();
         connectionProperties = props;
         if (connectionProperties != null) {
-            if (connectionProperties.containsKey(Constants.KEY_USER)) {
-                setUser(connectionProperties.getProperty(Constants.KEY_USER));
+            final String user = connectionProperties.getProperty(Constants.KEY_USER);
+            if (user != null) {
+                setUser(user);
             }
-            if (connectionProperties.containsKey(Constants.KEY_PASSWORD)) {
-                setPassword(connectionProperties.getProperty(Constants.KEY_PASSWORD));
+            final String password = connectionProperties.getProperty(Constants.KEY_PASSWORD);
+            if (password != null) {
+                setPassword(password);
             }
         }
     }
