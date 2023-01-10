@@ -323,7 +323,6 @@
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
-    <commons.checkstyle-plugin.version>3.2.0</commons.checkstyle-plugin.version>
     <commons.checkstyle.version>9.3</commons.checkstyle.version>
     <commons.pool.version>2.11.1</commons.pool.version>
     <!-- See DBCP-445 and DBCP-454 -->
