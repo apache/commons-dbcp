@@ -323,7 +323,7 @@
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
     <!-- Override CP version until that is updated -->
-    <commons.checkstyle.version>9.3</commons.checkstyle.version>
+    <commons.checkstyle.version>10.6.0</commons.checkstyle.version>
     <commons.pool.version>2.11.1</commons.pool.version>
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
