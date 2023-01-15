@@ -1,8 +1,8 @@
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.9.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.9.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.9.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -71,7 +71,7 @@ o            Bump spotbugs-maven-plugin from 4.2.3 to 4.3.0 #118. Thanks to Depe
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -79,11 +79,11 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.8.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.8.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.8.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -122,7 +122,7 @@ o            Update actions/setup-java from v1.4.0 to v1.4.2 #58. Thanks to Depe
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -130,12 +130,12 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.7.0
               RELEASE NOTES
               7 July 2019
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.7.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.7.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -176,7 +176,7 @@ o            Update tests from org.mockito:mockito-core 2.28.2 to 3.0.0. Thanks 
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -184,11 +184,11 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.6.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.6.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.6.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -215,7 +215,7 @@ o DBCP-537:  Update Apache Commons Pool from 2.6.0 to 2.6.1. Thanks to Gary Greg
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -223,11 +223,11 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.5.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.5.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.5.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -254,7 +254,7 @@ Note that Clirr incorrectly reports one binary incompatible change because it is
 [ERROR] 7012: org.apache.commons.dbcp2.BasicDataSourceMXBean: Method 'public java.lang.String getDefaultSchema()' has been added to an interface
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -264,11 +264,11 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.4.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.4.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.4.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -296,7 +296,7 @@ o DBCP-503:  org.apache.commons.dbcp2.datasources.InstanceKeyDataSourceFactory.c
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -304,11 +304,11 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.3.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.3.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.3.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -329,7 +329,7 @@ o DBCP-490:  The method org.apache.commons.dbcp2.PoolingDriver.getConnectionPool
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -337,11 +337,11 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.2.0
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.2.0.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.2.0.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -393,7 +393,7 @@ o DBCP-457:  When using a BasicDataSource, pass changes related to the handling 
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
@@ -401,11 +401,11 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Apache Commons DBCP
+              Apache Commons DBCP
               Version 2.1.1
               RELEASE NOTES
 
-The Apache Commons DBCP team is pleased to announce the release of Apache Apache Commons DBCP 2.1.1.
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.1.1.
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
@@ -428,7 +428,7 @@ o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
 
 
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons DBCP website:
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
 https://commons.apache.org/dbcp/
 
