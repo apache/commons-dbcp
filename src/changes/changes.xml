@@ -1277,7 +1277,7 @@ The <action> type attribute can be add,update,fix,remove.
         assure that all returned Statements, PreparedStatements,
         CallableStatements and ResultSets are wrapped with a delegating object,
         which already properly handle the back pointers for Connection and
-        Statement.  Also added tests to to assure that the *same* object used
+        Statement.  Also added tests to assure that the *same* object used
         to create the statement or result set is returned  from either
         getConnection() or getStatement().
       </action>
