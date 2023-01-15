@@ -14,11 +14,11 @@
 ## KIND, either express or implied.  See the License for the
 ## specific language governing permissions and limitations
 ## under the License.
-              Apache ${project.name}
+              ${project.name}
               Version ${version}
               RELEASE NOTES
 
-The ${developmentTeam} is pleased to announce the release of Apache ${project.name} ${version}.
+The ${developmentTeam} is pleased to announce the release of ${project.name} ${version}.
 
 $introduction.replaceAll("(?<!\015)\012", "
 ").replaceAll("(?m)^ +","").
@@ -102,7 +102,7 @@ Removed:
 #end
 
 For complete information on ${project.name}, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache ${project.name} website:
+patches, or suggestions for improvement, see the ${project.name} website:
 
 ${project.url}
 
