@@ -140,7 +140,7 @@ final class PooledConnectionImpl
      * Throws an SQLException, if isClosed is true
      */
     private void assertOpen() throws SQLException {
-        if (closed) {
+        if (closed || connection == null) {
             throw new SQLException(CLOSED);
         }
     }
