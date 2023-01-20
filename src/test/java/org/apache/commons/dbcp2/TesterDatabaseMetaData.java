@@ -932,7 +932,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-    /* JDBC_4_ANT_KEY_END */
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {

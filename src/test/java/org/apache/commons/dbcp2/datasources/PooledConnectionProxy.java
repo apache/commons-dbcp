@@ -73,7 +73,6 @@ public class PooledConnectionProxy implements PooledConnection,
             eventListeners.add(listener);
         }
     }
-    /* JDBC_4_ANT_KEY_END */
 
     /**
      * If notifyOnClose is on, notify listeners
@@ -144,7 +143,6 @@ public class PooledConnectionProxy implements PooledConnection,
     public void removeStatementEventListener(final StatementEventListener listener) {
         eventListeners.remove(listener);
     }
-    /* JDBC_4_ANT_KEY_END */
 
     public void setNotifyOnClose(final boolean notifyOnClose) {
         this.notifyOnClose = notifyOnClose;

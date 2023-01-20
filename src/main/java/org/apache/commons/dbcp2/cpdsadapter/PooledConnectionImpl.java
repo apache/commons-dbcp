@@ -134,7 +134,6 @@ final class PooledConnectionImpl
             statementEventListeners.add(listener);
         }
     }
-    /* JDBC_4_ANT_KEY_END */
 
     /**
      * Throws an SQLException, if isClosed is true
@@ -676,7 +675,6 @@ final class PooledConnectionImpl
     public void removeStatementEventListener(final StatementEventListener listener) {
         statementEventListeners.remove(listener);
     }
-    /* JDBC_4_ANT_KEY_END */
 
     /**
      * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to

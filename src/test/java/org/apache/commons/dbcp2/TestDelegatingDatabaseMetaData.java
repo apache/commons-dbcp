@@ -82,7 +82,6 @@ public class TestDelegatingDatabaseMetaData {
         conn.close();
         assertTrue(rst.isClosed());
     }
-    /* JDBC_4_ANT_KEY_END */
 
     @Test
     public void testDataDefinitionCausesTransactionCommit() throws Exception {
