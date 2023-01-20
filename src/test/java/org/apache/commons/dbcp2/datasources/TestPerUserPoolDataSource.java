@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -226,48 +227,49 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @SuppressWarnings("deprecation")
     @Test
     public void testDepreactedAccessors() {
-        final PerUserPoolDataSource ds = new PerUserPoolDataSource();
-        int i = 0;
-        //
-        i++;
-        ds.setDefaultMaxWaitMillis(i);
-        assertEquals(i, ds.getDefaultMaxWaitMillis());
-        assertEquals(Duration.ofMillis(i), ds.getDefaultMaxWait());
-        //
-        i++;
-        ds.setDefaultMinEvictableIdleTimeMillis(i);
-        assertEquals(i, ds.getDefaultMinEvictableIdleTimeMillis());
-        assertEquals(Duration.ofMillis(i), ds.getDefaultMinEvictableIdleDuration());
-        //
-        i++;
-        ds.setDefaultSoftMinEvictableIdleTimeMillis(i);
-        assertEquals(i, ds.getDefaultSoftMinEvictableIdleTimeMillis());
-        assertEquals(Duration.ofMillis(i), ds.getDefaultSoftMinEvictableIdleDuration());
-        //
-        i++;
-        ds.setDefaultTimeBetweenEvictionRunsMillis(i);
-        assertEquals(i, ds.getDefaultTimeBetweenEvictionRunsMillis());
-        assertEquals(Duration.ofMillis(i), ds.getDefaultDurationBetweenEvictionRuns());
-        //
-        i++;
-        ds.setPerUserMaxWaitMillis(user, Long.valueOf(i));
-        assertEquals(i, ds.getPerUserMaxWaitMillis(user));
-        assertEquals(Duration.ofMillis(i), ds.getPerUserMaxWaitDuration(user));
-        //
-        i++;
-        ds.setPerUserMinEvictableIdleTimeMillis(user, Long.valueOf(i));
-        assertEquals(i, ds.getPerUserMinEvictableIdleTimeMillis(user));
-        assertEquals(Duration.ofMillis(i), ds.getPerUserMinEvictableIdleDuration(user));
-        //
-        i++;
-        ds.setPerUserSoftMinEvictableIdleTimeMillis(user, Long.valueOf(i));
-        assertEquals(i, ds.getPerUserSoftMinEvictableIdleTimeMillis(user));
-        assertEquals(Duration.ofMillis(i), ds.getPerUserSoftMinEvictableIdleDuration(user));
-        //
-        i++;
-        ds.setPerUserTimeBetweenEvictionRunsMillis(user, Long.valueOf(i));
-        assertEquals(i, ds.getPerUserTimeBetweenEvictionRunsMillis(user));
-        assertEquals(Duration.ofMillis(i), ds.getPerUserDurationBetweenEvictionRuns(user));
+        try (final PerUserPoolDataSource ds = new PerUserPoolDataSource()) {
+            int i = 0;
+            //
+            i++;
+            ds.setDefaultMaxWaitMillis(i);
+            assertEquals(i, ds.getDefaultMaxWaitMillis());
+            assertEquals(Duration.ofMillis(i), ds.getDefaultMaxWait());
+            //
+            i++;
+            ds.setDefaultMinEvictableIdleTimeMillis(i);
+            assertEquals(i, ds.getDefaultMinEvictableIdleTimeMillis());
+            assertEquals(Duration.ofMillis(i), ds.getDefaultMinEvictableIdleDuration());
+            //
+            i++;
+            ds.setDefaultSoftMinEvictableIdleTimeMillis(i);
+            assertEquals(i, ds.getDefaultSoftMinEvictableIdleTimeMillis());
+            assertEquals(Duration.ofMillis(i), ds.getDefaultSoftMinEvictableIdleDuration());
+            //
+            i++;
+            ds.setDefaultTimeBetweenEvictionRunsMillis(i);
+            assertEquals(i, ds.getDefaultTimeBetweenEvictionRunsMillis());
+            assertEquals(Duration.ofMillis(i), ds.getDefaultDurationBetweenEvictionRuns());
+            //
+            i++;
+            ds.setPerUserMaxWaitMillis(user, Long.valueOf(i));
+            assertEquals(i, ds.getPerUserMaxWaitMillis(user));
+            assertEquals(Duration.ofMillis(i), ds.getPerUserMaxWaitDuration(user));
+            //
+            i++;
+            ds.setPerUserMinEvictableIdleTimeMillis(user, Long.valueOf(i));
+            assertEquals(i, ds.getPerUserMinEvictableIdleTimeMillis(user));
+            assertEquals(Duration.ofMillis(i), ds.getPerUserMinEvictableIdleDuration(user));
+            //
+            i++;
+            ds.setPerUserSoftMinEvictableIdleTimeMillis(user, Long.valueOf(i));
+            assertEquals(i, ds.getPerUserSoftMinEvictableIdleTimeMillis(user));
+            assertEquals(Duration.ofMillis(i), ds.getPerUserSoftMinEvictableIdleDuration(user));
+            //
+            i++;
+            ds.setPerUserTimeBetweenEvictionRunsMillis(user, Long.valueOf(i));
+            assertEquals(i, ds.getPerUserTimeBetweenEvictionRunsMillis(user));
+            assertEquals(Duration.ofMillis(i), ds.getPerUserDurationBetweenEvictionRuns(user));
+        }
     }
 
     /**
@@ -276,14 +278,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      * https://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     @Test
-    public void testIncorrectPassword() throws Exception {
+    public void testIncorrectPassword() throws SQLException {
         // Use bad password
-        try (Connection c = ds.getConnection("u1", "zlsafjk")){
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e1) {
-            // should fail
-
-        }
+        assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"));
 
         // Use good password
         ds.getConnection("u1", "p1").close();
@@ -301,28 +298,22 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         // Try related users and passwords
         ds.getConnection(user, "bar").close();
-        try (Connection c = ds.getConnection("foob", "ar")) {
-            fail("Should have caused an SQLException");
-        } catch (final SQLException expected) {
-        }
-        try (Connection c = ds.getConnection(user, "baz")){
-            fail("Should have generated SQLException");
-        } catch (final SQLException expected) {
-        }
+        assertThrows(SQLException.class, () -> ds.getConnection("foob", "ar"));
+        assertThrows(SQLException.class, () -> ds.getConnection(user, "baz"));
     }
 
     @Override
     @Test
     public void testMaxTotal() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
             assertNotNull(c[i]);
         }
 
-        try (Connection conn = ds.getConnection()){
+        try (Connection conn = ds.getConnection()) {
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch(final java.sql.SQLException e) {
+        } catch (final java.sql.SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }
@@ -341,13 +332,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultMaxWait(Duration.ZERO);
         tds.setPerUserMaxTotal("u1", 1);
-        final Connection conn = tds.getConnection("u1", "p1");
-        try (Connection c2 = tds.getConnection("u1", "p1")){
-            fail("Expecting Pool Exhausted exception");
-        } catch (final SQLException ex) {
-            // expected
+        try (final Connection conn = tds.getConnection("u1", "p1")) {
+            assertThrows(SQLException.class, () -> tds.getConnection("u1", "p1"));
         }
-        conn.close();
     }
 
     @Test
@@ -972,16 +959,15 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumIdle("u1"));
         assertEquals(0, tds.getNumIdle("u2"));
 
-        Connection conn = tds.getConnection();
-        assertNotNull(conn);
-        assertEquals(1, tds.getNumActive());
-        assertEquals(0, tds.getNumActive("u1"));
-        assertEquals(0, tds.getNumActive("u2"));
-        assertEquals(0, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1"));
-        assertEquals(0, tds.getNumIdle("u2"));
-
-        conn.close();
+        try (Connection conn = tds.getConnection()) {
+            assertNotNull(conn);
+            assertEquals(1, tds.getNumActive());
+            assertEquals(0, tds.getNumActive("u1"));
+            assertEquals(0, tds.getNumActive("u2"));
+            assertEquals(0, tds.getNumIdle());
+            assertEquals(0, tds.getNumIdle("u1"));
+            assertEquals(0, tds.getNumIdle("u2"));
+        }
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumActive("u1"));
         assertEquals(0, tds.getNumActive("u2"));
@@ -989,16 +975,16 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumIdle("u1"));
         assertEquals(0, tds.getNumIdle("u2"));
 
-        conn = tds.getConnection("u1", "p1");
-        assertNotNull(conn);
-        assertEquals(0, tds.getNumActive());
-        assertEquals(1, tds.getNumActive("u1"));
-        assertEquals(0, tds.getNumActive("u2"));
-        assertEquals(1, tds.getNumIdle());
-        assertEquals(0, tds.getNumIdle("u1"));
-        assertEquals(0, tds.getNumIdle("u2"));
+        try (Connection conn = tds.getConnection("u1", "p1")) {
+            assertNotNull(conn);
+            assertEquals(0, tds.getNumActive());
+            assertEquals(1, tds.getNumActive("u1"));
+            assertEquals(0, tds.getNumActive("u2"));
+            assertEquals(1, tds.getNumIdle());
+            assertEquals(0, tds.getNumIdle("u1"));
+            assertEquals(0, tds.getNumIdle("u2"));
+        }
 
-        conn.close();
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumActive("u1"));
         assertEquals(0, tds.getNumActive("u2"));
@@ -1567,30 +1553,26 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testSimple() throws Exception
-    {
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+    public void testSimple() throws Exception {
+        try (final Connection conn = ds.getConnection()) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Override
     @Test
-    public void testSimple2()
-        throws Exception
-    {
+    public void testSimple2() throws Exception {
         Connection conn = ds.getConnection();
         assertNotNull(conn);
 
-        PreparedStatement stmt =
-            conn.prepareStatement("select * from dual");
+        PreparedStatement stmt = conn.prepareStatement("select * from dual");
         assertNotNull(stmt);
         ResultSet rset = stmt.executeQuery();
         assertNotNull(rset);
@@ -1607,9 +1589,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         conn.close();
-        try (Statement s = conn.createStatement()){
+        try (Statement s = conn.createStatement()) {
             fail("Can't use closed connections");
-        } catch(final SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -1637,18 +1619,17 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testSimpleWithUsername() throws Exception
-    {
-        final Connection conn = ds.getConnection("u1", "p1");
-        assertNotNull(conn);
-        final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-        assertNotNull(stmt);
-        final ResultSet rset = stmt.executeQuery();
-        assertNotNull(rset);
-        assertTrue(rset.next());
-        rset.close();
-        stmt.close();
-        conn.close();
+    public void testSimpleWithUsername() throws Exception {
+        try (final Connection conn = ds.getConnection("u1", "p1")) {
+            assertNotNull(conn);
+            try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (final ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        }
     }
 
     @Test
