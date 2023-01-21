@@ -159,12 +159,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertTrue(rawActiveConnection.isClosed());
 
         // Verify SQLException on getConnection after close
-        try {
-            getConnection();
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            // Expected
-        }
+        assertThrows(SQLException.class, () -> getConnection());
 
         // Redundant close is OK
         ds.close();
@@ -178,22 +173,22 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setInitialSize(8);
 
         // Launch a request to trigger pool initialization
-        final TestThread testThread = new TestThread(1,0);
+        final TestThread testThread = new TestThread(1, 0);
         final Thread t = new Thread(testThread);
         t.start();
 
         // Get another connection (should wait for pool init)
         Thread.sleep(100); // Make sure t gets into init first
-        ds.getConnection();
+        try (Connection conn = ds.getConnection()) {
 
-        // Pool should have at least 6 idle connections now
-        // Use underlying pool getNumIdle to avoid waiting for ds lock
-        assertTrue(ds.getConnectionPool().getNumIdle() > 5);
+            // Pool should have at least 6 idle connections now
+            // Use underlying pool getNumIdle to avoid waiting for ds lock
+            assertTrue(ds.getConnectionPool().getNumIdle() > 5);
 
-        // Make sure t completes successfully
-        t.join();
-        assertFalse(testThread.failed());
-
+            // Make sure t completes successfully
+            t.join();
+            assertFalse(testThread.failed());
+        }
         ds.close();
     }
 
@@ -239,22 +234,9 @@ public class TestBasicDataSource extends TestConnectionPool {
      * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
      */
     @Test
-    public void testCreateConnectionFactory() throws Exception {
-
-        /* not set ConnectionFactoryClassName */
-    	Properties properties = new Properties();
-        properties.put("initialSize", "1");
-        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
-        properties.put("url", "jdbc:apache:commons:testdriver");
-        properties.put("username", "foo");
-        properties.put("password", "bar");
-        BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
-        Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        conn.close();
-        ds.close();
-
-        /* set ConnectionFactoryClassName */
+    public void testCreateConnectionFactoryWithConnectionFactoryClassName() throws Exception {
+        Properties properties = new Properties();
+        // set ConnectionFactoryClassName
         properties = new Properties();
         properties.put("initialSize", "1");
         properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
@@ -262,12 +244,31 @@ public class TestBasicDataSource extends TestConnectionPool {
         properties.put("username", "foo");
         properties.put("password", "bar");
         properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TesterConnectionFactory");
-        ds = BasicDataSourceFactory.createDataSource(properties);
-        conn = ds.getConnection();
-        assertNotNull(conn);
+        try (BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
+            try (Connection conn = ds.getConnection()) {
+                assertNotNull(conn);
+            }
+        }
+    }
 
-        conn.close();
-        ds.close();
+    /**
+     * JIRA: DBCP-547
+     * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
+     */
+    @Test
+    public void testCreateConnectionFactoryWithoutConnectionFactoryClassName() throws Exception {
+        // not set ConnectionFactoryClassName
+        final Properties properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        try (BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
+            try (Connection conn = ds.getConnection()) {
+                assertNotNull(conn);
+            }
+        }
     }
 
     /**
@@ -378,48 +379,49 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testDeprecatedAccessors() throws SQLException {
-        final BasicDataSource bds = new BasicDataSource();
-        int i = 0;
-        //
-        i++;
-        bds.setDefaultQueryTimeout(i);
-        assertEquals(i, bds.getDefaultQueryTimeout());
-        assertEquals(Duration.ofSeconds(i), bds.getDefaultQueryTimeoutDuration());
-        //
-        i++;
-        bds.setMaxConnLifetimeMillis(i);
-        assertEquals(i, bds.getMaxConnLifetimeMillis());
-        assertEquals(Duration.ofMillis(i), bds.getMaxConnDuration());
-        //
-        i++;
-        bds.setMaxWaitMillis(i);
-        assertEquals(i, bds.getMaxWaitMillis());
-        assertEquals(Duration.ofMillis(i), bds.getMaxWaitDuration());
-        //
-        i++;
-        bds.setMinEvictableIdleTimeMillis(i);
-        assertEquals(i, bds.getMinEvictableIdleTimeMillis());
-        assertEquals(Duration.ofMillis(i), bds.getMinEvictableIdleDuration());
-        //
-        i++;
-        bds.setRemoveAbandonedTimeout(i);
-        assertEquals(i, bds.getRemoveAbandonedTimeout());
-        assertEquals(Duration.ofSeconds(i), bds.getRemoveAbandonedTimeoutDuration());
-        //
-        i++;
-        bds.setSoftMinEvictableIdleTimeMillis(i);
-        assertEquals(i, bds.getSoftMinEvictableIdleTimeMillis());
-        assertEquals(Duration.ofMillis(i), bds.getSoftMinEvictableIdleDuration());
-        //
-        i++;
-        bds.setTimeBetweenEvictionRunsMillis(i);
-        assertEquals(i, bds.getTimeBetweenEvictionRunsMillis());
-        assertEquals(Duration.ofMillis(i), bds.getDurationBetweenEvictionRuns());
-        //
-        i++;
-        bds.setValidationQueryTimeout(1);
-        assertEquals(1, bds.getValidationQueryTimeout());
-        assertEquals(Duration.ofSeconds(1), bds.getValidationQueryTimeoutDuration());
+        try (BasicDataSource bds = new BasicDataSource()) {
+            int i = 0;
+            //
+            i++;
+            bds.setDefaultQueryTimeout(i);
+            assertEquals(i, bds.getDefaultQueryTimeout());
+            assertEquals(Duration.ofSeconds(i), bds.getDefaultQueryTimeoutDuration());
+            //
+            i++;
+            bds.setMaxConnLifetimeMillis(i);
+            assertEquals(i, bds.getMaxConnLifetimeMillis());
+            assertEquals(Duration.ofMillis(i), bds.getMaxConnDuration());
+            //
+            i++;
+            bds.setMaxWaitMillis(i);
+            assertEquals(i, bds.getMaxWaitMillis());
+            assertEquals(Duration.ofMillis(i), bds.getMaxWaitDuration());
+            //
+            i++;
+            bds.setMinEvictableIdleTimeMillis(i);
+            assertEquals(i, bds.getMinEvictableIdleTimeMillis());
+            assertEquals(Duration.ofMillis(i), bds.getMinEvictableIdleDuration());
+            //
+            i++;
+            bds.setRemoveAbandonedTimeout(i);
+            assertEquals(i, bds.getRemoveAbandonedTimeout());
+            assertEquals(Duration.ofSeconds(i), bds.getRemoveAbandonedTimeoutDuration());
+            //
+            i++;
+            bds.setSoftMinEvictableIdleTimeMillis(i);
+            assertEquals(i, bds.getSoftMinEvictableIdleTimeMillis());
+            assertEquals(Duration.ofMillis(i), bds.getSoftMinEvictableIdleDuration());
+            //
+            i++;
+            bds.setTimeBetweenEvictionRunsMillis(i);
+            assertEquals(i, bds.getTimeBetweenEvictionRunsMillis());
+            assertEquals(Duration.ofMillis(i), bds.getDurationBetweenEvictionRuns());
+            //
+            i++;
+            bds.setValidationQueryTimeout(1);
+            assertEquals(1, bds.getValidationQueryTimeout());
+            assertEquals(Duration.ofSeconds(1), bds.getValidationQueryTimeoutDuration());
+        }
     }
 
     /**
@@ -433,13 +435,13 @@ public class TestBasicDataSource extends TestConnectionPool {
         disconnectionSqlCodes.add("XXX");
         ds.setDisconnectionSqlCodes(disconnectionSqlCodes);
         ds.setFastFailValidation(true);
-        ds.getConnection();  // Triggers initialization - pcf creation
-        // Make sure factory got the properties
-        final PoolableConnectionFactory pcf =
-                (PoolableConnectionFactory) ds.getConnectionPool().getFactory();
-        assertTrue(pcf.isFastFailValidation());
-        assertTrue(pcf.getDisconnectionSqlCodes().contains("XXX"));
-        assertEquals(1, pcf.getDisconnectionSqlCodes().size());
+        try (Connection conn = ds.getConnection()) { // Triggers initialization - pcf creation
+            // Make sure factory got the properties
+            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ds.getConnectionPool().getFactory();
+            assertTrue(pcf.isFastFailValidation());
+            assertTrue(pcf.getDisconnectionSqlCodes().contains("XXX"));
+            assertEquals(1, pcf.getDisconnectionSqlCodes().size());
+        }
     }
 
     /**
@@ -448,11 +450,12 @@ public class TestBasicDataSource extends TestConnectionPool {
      */
     @Test
     public void testDriverClassLoader() throws Exception {
-        getConnection();
-        final ClassLoader cl = ds.getDriverClassLoader();
-        assertNotNull(cl);
-        assertTrue(cl instanceof TesterClassLoader);
-        assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
+        try (Connection conn = getConnection()) {
+            final ClassLoader cl = ds.getDriverClassLoader();
+            assertNotNull(cl);
+            assertTrue(cl instanceof TesterClassLoader);
+            assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
+        }
     }
 
     @Test
@@ -491,8 +494,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDurationBetweenEvictionRuns(Duration.ofMillis(delay));
         ds.setPoolPreparedStatements(true);
 
-        final Connection conn = ds.getConnection();
-        conn.close();
+        try (Connection conn = ds.getConnection()) {
+            // empty
+        }
 
         final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds())).anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
@@ -512,9 +516,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMaxIdle(20);
         ds.setInitialSize(10);
 
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        conn.close();
+        try (Connection conn = getConnection()) {
+            assertNotNull(conn);
+        }
 
         assertEquals(0, ds.getNumActive());
         assertEquals(10, ds.getNumIdle());
@@ -593,14 +597,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals(1, ds.getNumActive());
 
         // set an IO failure causing the isClosed method to fail
-        final TesterConnection tconn = (TesterConnection) ((DelegatingConnection<?>)conn).getInnermostDelegate();
+        final TesterConnection tconn = (TesterConnection) ((DelegatingConnection<?>) conn).getInnermostDelegate();
         tconn.setFailure(new IOException("network error"));
 
-        try {
-            conn.close();
-            fail("Expected SQLException");
-        }
-        catch(final SQLException ex) { }
+        assertThrows(SQLException.class, () -> conn.close());
 
         assertEquals(0, ds.getNumActive());
     }
@@ -626,11 +626,12 @@ public class TestBasicDataSource extends TestConnectionPool {
         for (final ObjectName result : results) {
             mbs.unregisterMBean(result);
         }
-        ds.setJmxName(null);  // Should disable JMX for both connection and statement pools
+        ds.setJmxName(null); // Should disable JMX for both connection and statement pools
         ds.setPoolPreparedStatements(true);
-        ds.getConnection();  // Trigger initialization
-        // Nothing should be registered
-        assertEquals(0, mbs.queryNames(commons, null).size());
+        try (Connection conn = ds.getConnection()) { // Trigger initialization
+            // Nothing should be registered
+            assertEquals(0, mbs.queryNames(commons, null).size());
+        }
     }
 
     /**
@@ -647,10 +648,11 @@ public class TestBasicDataSource extends TestConnectionPool {
             mbs.unregisterMBean(result);
         }
         ds.setRegisterConnectionMBean(false); // Should disable Connection MBean registration
-        ds.getConnection();  // Trigger initialization
-        // No Connection MBeans shall be registered
-        final ObjectName connections = new ObjectName("org.apache.commons.*:connection=*,*");
-        assertEquals(0, mbs.queryNames(connections, null).size());
+        try (Connection conn = ds.getConnection()) { // Trigger initialization
+            // No Connection MBeans shall be registered
+            final ObjectName connections = new ObjectName("org.apache.commons.*:connection=*,*");
+            assertEquals(0, mbs.queryNames(connections, null).size());
+        }
     }
 
     /**
@@ -688,13 +690,9 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMinEvictableIdle(Duration.ofMillis(10));
         ds.setNumTestsPerEvictionRun(2);
 
-        final Connection ds2 = ds.createDataSource().getConnection();
-        final Connection ds3 = ds.createDataSource().getConnection();
-
-        assertEquals(0, ds.getNumIdle());
-
-        ds2.close();
-        ds3.close();
+        try (Connection ds2 = ds.createDataSource().getConnection(); Connection ds3 = ds.createDataSource().getConnection()) {
+            assertEquals(0, ds.getNumIdle());
+        }
 
         // Make sure MinEvictableIdleTimeMillis has elapsed
         Thread.sleep(100);
@@ -714,10 +712,10 @@ public class TestBasicDataSource extends TestConnectionPool {
         try {
             StackMessageLog.lock();
             ds.setMaxConn(Duration.ofMillis(100));
-            final Connection conn = ds.getConnection();
-            assertEquals(1, ds.getNumActive());
-            Thread.sleep(500);
-            conn.close();
+            try (Connection conn = ds.getConnection()) {
+                assertEquals(1, ds.getNumActive());
+                Thread.sleep(500);
+            }
             assertEquals(0, ds.getNumIdle());
             final String message = StackMessageLog.popMessage();
             Assertions.assertNotNull(message);
@@ -779,10 +777,11 @@ public class TestBasicDataSource extends TestConnectionPool {
         properties.put("url", "jdbc:apache:commons:testdriver");
         properties.put("username", "foo");
         properties.put("password", "bar");
-        final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties);
-        final boolean original = ds.getConnectionPool().getLogAbandoned();
-        ds.setLogAbandoned(!original);
-        Assertions.assertNotEquals(original, ds.getConnectionPool().getLogAbandoned());
+        try (BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
+            final boolean original = ds.getConnectionPool().getLogAbandoned();
+            ds.setLogAbandoned(!original);
+            Assertions.assertNotEquals(original, ds.getConnectionPool().getLogAbandoned());
+        }
     }
 
     @Test
@@ -790,12 +789,13 @@ public class TestBasicDataSource extends TestConnectionPool {
         // default: false
         assertFalse(ds.isAccessToUnderlyingConnectionAllowed());
 
-        final Connection conn = getConnection();
-        Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
-        assertNull(dconn);
+        try (Connection conn = getConnection()) {
+            Connection dconn = ((DelegatingConnection<?>) conn).getDelegate();
+            assertNull(dconn);
 
-        dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        assertNull(dconn);
+            dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
+            assertNull(dconn);
+        }
     }
 
     /**
@@ -807,10 +807,11 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testPoolCloseCheckedException() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);  // Allow dirty tricks
 
+        final TesterConnection tc;
         // Get an idle connection into the pool
-        final Connection conn = ds.getConnection();
-        final TesterConnection tc = (TesterConnection) ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        conn.close();
+        try (Connection conn = ds.getConnection()) {
+            tc = (TesterConnection) ((DelegatingConnection<?>) conn).getInnermostDelegate();
+        }
 
         // After returning the connection to the pool, bork it.
         // Don't try this at home - bad violation of pool contract!
@@ -839,9 +840,10 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testPoolCloseRTE() throws Exception {
         // RTE version of testPoolCloseCheckedException - see comments there.
         ds.setAccessToUnderlyingConnectionAllowed(true);
-        final Connection conn = ds.getConnection();
-        final TesterConnection tc = (TesterConnection) ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        conn.close();
+        final TesterConnection tc;
+        try (Connection conn = ds.getConnection()) {
+            tc = (TesterConnection) ((DelegatingConnection<?>) conn).getInnermostDelegate();
+        }
         tc.setFailure(new IllegalStateException("boom"));
         try {
             StackMessageLog.lock();
@@ -877,12 +879,13 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setTestWhileIdle(false);
         ds.setTestOnReturn(true);
 
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
+        try (Connection conn = ds.getConnection()) {
+            assertNotNull(conn);
 
-        assertFalse(ds.getConnectionPool().getTestOnBorrow());
-        assertFalse(ds.getConnectionPool().getTestWhileIdle());
-        assertTrue(ds.getConnectionPool().getTestOnReturn());
+            assertFalse(ds.getConnectionPool().getTestOnBorrow());
+            assertFalse(ds.getConnectionPool().getTestWhileIdle());
+            assertTrue(ds.getConnectionPool().getTestOnReturn());
+        }
     }
 
     @Test
@@ -893,19 +896,19 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setMinEvictableIdle(Duration.ofMinutes(1));
         ds.setInitialSize(2);
         ds.setDefaultCatalog("foo");
-        final Connection conn1 = ds.getConnection();
-        Thread.sleep(200);
-        // Now set some property that will not have effect until restart
-        ds.setDefaultCatalog("bar");
-        ds.setInitialSize(1);
-        // restart will load new properties
-        ds.restart();
-        assertEquals("bar", ds.getDefaultCatalog());
-        assertEquals(1, ds.getInitialSize());
-        ds.getLogWriter();  // side effect is to init
-        assertEquals(0, ds.getNumActive());
-        assertEquals(1, ds.getNumIdle());
-        conn1.close();
+        try (Connection conn1 = ds.getConnection()) {
+            Thread.sleep(200);
+            // Now set some property that will not have effect until restart
+            ds.setDefaultCatalog("bar");
+            ds.setInitialSize(1);
+            // restart will load new properties
+            ds.restart();
+            assertEquals("bar", ds.getDefaultCatalog());
+            assertEquals(1, ds.getInitialSize());
+            ds.getLogWriter(); // side effect is to init
+            assertEquals(0, ds.getNumActive());
+            assertEquals(1, ds.getNumIdle());
+        }
         // verify old pool connection is not returned to pool
         assertEquals(1, ds.getNumIdle());
         ds.close();
@@ -921,25 +924,25 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.setDefaultReadOnly(Boolean.TRUE);
         ds.setDefaultAutoCommit(Boolean.FALSE);
 
-        final Connection conn = ds.getConnection();
-        assertNotNull(conn);
-        conn.close();
+        try (Connection conn = ds.getConnection()) {
+            assertNotNull(conn);
+        }
     }
 
     @Test
     public void testSetAutoCommitTrueOnClose() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         ds.setDefaultAutoCommit(Boolean.FALSE);
+        final Connection dconn;
+        try (Connection conn = getConnection()) {
+            assertNotNull(conn);
+            assertFalse(conn.getAutoCommit());
 
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertFalse(conn.getAutoCommit());
+            dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
+            assertNotNull(dconn);
+            assertFalse(dconn.getAutoCommit());
 
-        final Connection dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
-        assertNotNull(dconn);
-        assertFalse(dconn.getAutoCommit());
-
-        conn.close();
+        }
 
         assertTrue(dconn.getAutoCommit());
     }
