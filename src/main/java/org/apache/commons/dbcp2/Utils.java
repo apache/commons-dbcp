@@ -183,7 +183,6 @@ public final class Utils {
      * @return SQL codes of fatal connection errors.
      * @since 2.10.0
      */
-    @SuppressWarnings("unchecked")
     public static Set<String> getDisconnectionSqlCodes() {
         return new HashSet<>(DISCONNECTION_SQL_CODES);
     }
