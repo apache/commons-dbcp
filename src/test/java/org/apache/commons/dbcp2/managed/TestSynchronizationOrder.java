@@ -184,8 +184,9 @@ public class TestSynchronizationOrder {
                 ds.setAccessToUnderlyingConnectionAllowed(true);
 
                 transactionManager.begin();
-                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
-                    // Close right away.
+                try (final Connection connectionA = ds.getConnection()) {
+                    // Check and close right away.
+                    assertTrue(connectionA instanceof DelegatingConnection);
                 }
                 transactionManager.commit();
                 assertFalse(transactionManagerRegistered);
@@ -216,8 +217,9 @@ public class TestSynchronizationOrder {
                 ds.setAccessToUnderlyingConnectionAllowed(true);
 
                 transactionManager.begin();
-                try (final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) ds.getConnection()) {
-                    // close right away.
+                try (final Connection connectionA = ds.getConnection()) {
+                    // Check and close right away.
+                    assertTrue(connectionA instanceof DelegatingConnection);
                 }
                 transactionManager.commit();
                 assertTrue(transactionManagerRegistered);

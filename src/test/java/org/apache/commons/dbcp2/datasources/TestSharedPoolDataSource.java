@@ -669,11 +669,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             }
 
             conn.close();
-            try (Statement s = conn.createStatement()) {
-                fail("Can't use closed connections");
-            } catch (final SQLException e) {
-                // expected
-            }
+            assertThrows(SQLException.class, () -> conn.createStatement(), "Can't use closed connections");
         }
         try (Connection conn = ds.getConnection()) {
             assertNotNull(conn);

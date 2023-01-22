@@ -1548,7 +1548,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final Object obj = in.readObject();
         in.close();
 
-        assertEquals( 1, ((PerUserPoolDataSource)obj).getNumIdle() );
+        assertEquals(1, ((PerUserPoolDataSource) obj).getNumIdle());
     }
 
     @Override

@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -36,7 +37,6 @@ import javax.transaction.xa.XAResource;
 
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.Constants;
-import org.apache.commons.dbcp2.DelegatingConnection;
 import org.apache.commons.dbcp2.DriverConnectionFactory;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
@@ -156,8 +156,7 @@ public class TestManagedConnection {
     }
 
     @BeforeEach
-    public void setUp()
-        throws Exception {
+    public void setUp() throws Exception {
         // create a GeronimoTransactionManager for testing
         transactionManager = new TransactionManagerImpl();
 
@@ -194,17 +193,10 @@ public class TestManagedConnection {
     }
 
     @Test
-    public void testConnectionReturnOnErrorWhenEnlistingXAResource()
-        throws Exception {
+    public void testConnectionReturnOnErrorWhenEnlistingXAResource() throws Exception {
         // see DBCP-433
-
         transactionManager.begin();
-        try {
-            final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) getConnection();
-            connectionA.close();
-        } catch (final SQLException e) {
-            // expected
-        }
+        assertThrows(SQLException.class, () -> getConnection());
         transactionManager.commit();
         assertEquals(1, pool.getBorrowedCount());
         // assertEquals(1, pool.getReturnedCount());
