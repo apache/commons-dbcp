@@ -27,7 +27,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.XADataSource;
-import javax.transaction.Synchronization;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAException;
