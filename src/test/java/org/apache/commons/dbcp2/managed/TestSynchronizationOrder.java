@@ -124,6 +124,7 @@ public class TestSynchronizationOrder {
         bds.setJmxName("org.apache.commons.dbcp2:name=test");
         final AtomicInteger closeCounter = new AtomicInteger();
         final InvocationHandler handle = new InvocationHandler() {
+            @SuppressWarnings("resource") // caller closes
             protected XAConnection getXAConnection() throws SQLException {
                 return new TesterBasicXAConnection(bds.getConnection(), closeCounter);
             }
