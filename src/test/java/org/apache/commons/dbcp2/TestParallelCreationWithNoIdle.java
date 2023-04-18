@@ -78,7 +78,7 @@ public class TestParallelCreationWithNoIdle  {
             }
             try {
                 Thread.sleep(_random.nextInt(timeMax));
-            } catch(final Exception e) {
+            } catch (final Exception e) {
                 // ignored
             }
         }

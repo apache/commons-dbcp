@@ -121,12 +121,24 @@ public class PoolingDriverExample {
                 }
                 System.out.println("");
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try { if (rset != null) rset.close(); } catch(Exception e) { }
-            try { if (stmt != null) stmt.close(); } catch(Exception e) { }
-            try { if (conn != null) conn.close(); } catch(Exception e) { }
+            try {
+                if (rset != null)
+                    rset.close();
+            } catch (Exception e) {
+            }
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (Exception e) {
+            }
         }
 
         // Display some pool statistics

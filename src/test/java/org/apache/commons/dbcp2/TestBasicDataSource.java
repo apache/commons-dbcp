@@ -1159,7 +1159,7 @@ class TesterConnectionDelayDriver extends TesterDriver {
         final int delay = Integer.parseInt(parsedUrl[parsedUrl.length - 1]);
         try {
             Thread.sleep(delay);
-        } catch(final InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
         return super.connect(url, info);

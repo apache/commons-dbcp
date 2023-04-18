@@ -197,7 +197,7 @@ public abstract class TestConnectionPool {
             for(int i=0;i<_iter;i++) {
                 try {
                     Thread.sleep(_random.nextInt(_delay));
-                } catch(final Exception e) {
+                } catch (final Exception e) {
                     // ignored
                 }
                 try (Connection conn = newConnection();
@@ -206,10 +206,10 @@ public abstract class TestConnectionPool {
                         ResultSet rset = stmt.executeQuery()) {
                     try {
                         Thread.sleep(_random.nextInt(_delay));
-                    } catch(final Exception e) {
+                    } catch (final Exception e) {
                         // ignored
                     }
-                } catch(final Exception e) {
+                } catch (final Exception e) {
                     e.printStackTrace();
                     _failed = true;
                     _complete = true;
@@ -916,7 +916,7 @@ public abstract class TestConnectionPool {
         conn.close();
         try (Statement s = conn.createStatement()){
             fail("Can't use closed connections");
-        } catch(final SQLException e) {
+        } catch (final SQLException e) {
             // expected
         }
 
@@ -956,7 +956,7 @@ public abstract class TestConnectionPool {
             while(!threads[i].complete()) {
                 try {
                     Thread.sleep(100L);
-                } catch(final Exception e) {
+                } catch (final Exception e) {
                     // ignored
                 }
             }
