@@ -18,23 +18,19 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.management.JMX;
-import javax.management.NotCompliantMBeanException;
+import javax.management.OperationsException;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.sun.jmx.mbeanserver.Introspector;
 
 /**
  */
@@ -214,12 +210,7 @@ public class TestPoolableConnection {
      * interface.
      */
     @Test
-    public void testMXBeanCompliance() {
-       assertTrue(JMX.isMXBeanInterface(PoolableConnectionMXBean.class));
-       try {
-          Introspector.testComplianceMXBeanInterface(PoolableConnectionMXBean.class);
-       } catch (NotCompliantMBeanException e) {
-          fail(e);
-       }
+    public void testMXBeanCompliance() throws OperationsException {
+       TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
     }
 }

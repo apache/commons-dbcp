@@ -19,14 +19,15 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+
+import java.lang.management.ManagementFactory;
 
 import javax.management.JMX;
-import javax.management.NotCompliantMBeanException;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.OperationsException;
 
 import org.junit.jupiter.api.Test;
-
-import com.sun.jmx.mbeanserver.Introspector;
 
 /**
  * Tests for BasicDataSourceMXBean.
@@ -250,16 +251,17 @@ public class TestBasicDataSourceMXBean {
     }
 
     /**
-     * Tests if the {@link BasicDataSourceMXBean} interface is a valid MXBean
-     * interface.
+     * Tests if the {@link BasicDataSourceMXBean} interface is a valid MXBean interface.
      */
     @Test
-    public void testMXBeanCompliance() {
-       assertTrue(JMX.isMXBeanInterface(BasicDataSourceMXBean.class));
-       try {
-          Introspector.testComplianceMXBeanInterface(BasicDataSourceMXBean.class);
-       } catch (NotCompliantMBeanException e) {
-          fail(e);
-       }
+    public void testMXBeanCompliance() throws OperationsException {
+        testMXBeanCompliance(BasicDataSourceMXBean.class);
+    }
+
+    public static void testMXBeanCompliance(Class<?> clazz) throws OperationsException {
+        assertTrue(JMX.isMXBeanInterface(clazz));
+        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        final ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
+        JMX.newMBeanProxy(server, objectName, clazz, true);
     }
 }
