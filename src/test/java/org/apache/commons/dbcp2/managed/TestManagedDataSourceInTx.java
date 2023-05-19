@@ -289,7 +289,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         final Connection conn2 = newConnection();
         assertNotNull(conn2);
 
-        // shared connections should not have the same hashcode
+        // shared connections should not have the same hash code
         Assertions.assertNotEquals(conn1.hashCode(), conn2.hashCode());
     }
 
