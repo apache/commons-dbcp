@@ -118,6 +118,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         Throw SQLException instead of NullPointerException when the connection is already closed.
       </action>
+      <action dev="ggregory" type="fix" due-to="Gary Gregory">
+        CPDSConnectionFactory.makeObject() does not need to wrap and rethrow SQLException.
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).
