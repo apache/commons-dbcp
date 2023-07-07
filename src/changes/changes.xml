@@ -198,7 +198,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump japicmp-maven-plugin from 0.15.3 to 0.17.1 #137, #166, #174, #211, #238.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory, Dependabot">
-        Bump h2 from 1.4.200 to 2.0.214 #153, #183, #196.
+        Bump h2 from 1.4.200 to 2.2.220 #153, #183, #196, #287.
         Update SQL for migration from H2 1.4.200 to 2.0.204 where "KEY" and "VALUE" are now reserved keywords.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot">
