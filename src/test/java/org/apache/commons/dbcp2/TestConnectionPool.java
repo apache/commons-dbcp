@@ -239,7 +239,7 @@ public abstract class TestConnectionPool {
         assertFalse(conn.isClosed());
         assertFalse(isClosed(statement));
 
-        assertSame(conn,statement.getConnection(),
+        assertSame(conn, statement.getConnection(),
                 "statement.getConnection() should return the exact same connection instance that was used to create the statement");
 
         final ResultSet resultSet = statement.getResultSet();

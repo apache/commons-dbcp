@@ -178,7 +178,7 @@ public class TestDelegatingConnection {
 
     @Test
     public void testGetDelegate() throws Exception {
-        assertEquals(connection,delegatingConnection.getDelegate());
+        assertEquals(connection, delegatingConnection.getDelegate());
     }
 
     @Test

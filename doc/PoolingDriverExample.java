@@ -165,7 +165,7 @@ public class PoolingDriverExample {
         // arguments.
         //
         ConnectionFactory connectionFactory =
-            new DriverManagerConnectionFactory(connectURI,null);
+            new DriverManagerConnectionFactory(connectURI, null);
 
         //
         // Next, we'll create the PoolableConnectionFactory, which wraps
@@ -197,7 +197,7 @@ public class PoolingDriverExample {
         //
         // ...and register our pool with it.
         //
-        driver.registerPool("example",connectionPool);
+        driver.registerPool("example", connectionPool);
 
         //
         // Now we can just use the connect string "jdbc:apache:commons:dbcp:example"

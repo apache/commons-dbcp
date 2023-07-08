@@ -150,7 +150,7 @@ public class PoolingDataSourceExample {
         // arguments.
         //
         ConnectionFactory connectionFactory =
-            new DriverManagerConnectionFactory(connectURI,null);
+            new DriverManagerConnectionFactory(connectURI, null);
 
         //
         // Next we'll create the PoolableConnectionFactory, which wraps

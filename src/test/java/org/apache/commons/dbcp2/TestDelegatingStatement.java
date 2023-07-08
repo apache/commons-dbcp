@@ -319,7 +319,7 @@ public class TestDelegatingStatement {
 
     @Test
     public void testGetDelegate() throws Exception {
-        assertEquals(mockedStatement,delegatingStatement.getDelegate());
+        assertEquals(mockedStatement, delegatingStatement.getDelegate());
     }
 
     @Test

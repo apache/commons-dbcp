@@ -59,7 +59,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @BeforeEach
     public void setUp() throws Exception {
-        final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver",null);
+        final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver", null);
 
         final PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
         pcf.setPoolStatements(true);
@@ -117,7 +117,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         pcf.setDefaultAutoCommit(Boolean.TRUE);
         final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         final PoolingDriver driver2 = new PoolingDriver();
-        driver2.registerPool("example",connectionPool);
+        driver2.registerPool("example", connectionPool);
     }
 
     @Test
@@ -218,7 +218,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
         final PoolingDriver driver2 = new PoolingDriver();
-        driver2.registerPool("neusoftim",connectionPool);
+        driver2.registerPool("neusoftim", connectionPool);
         final Connection[] conn = new Connection[25];
         for(int i=0;i<25;i++) {
             conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");

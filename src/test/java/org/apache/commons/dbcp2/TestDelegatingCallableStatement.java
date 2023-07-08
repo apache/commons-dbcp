@@ -49,14 +49,14 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testExecuteQueryReturnsNotNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
-        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn), delegateStmt);
         assertNotNull(obj.executeQuery());
     }
 
     @Test
     public void testExecuteQueryReturnsNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"null");
-        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn), delegateStmt);
         assertNull(obj.executeQuery());
     }
 
@@ -252,7 +252,7 @@ public class TestDelegatingCallableStatement {
     @Test
     public void testGetDelegate() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
-        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn),delegateStmt);
+        obj = new DelegatingCallableStatement(new DelegatingConnection<Connection>(conn), delegateStmt);
         assertEquals(delegateStmt,((DelegatingCallableStatement)obj).getDelegate());
     }
 
