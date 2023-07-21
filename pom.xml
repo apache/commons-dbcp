@@ -271,7 +271,7 @@
       <groupId>org.jboss.narayana.jta</groupId>
       <artifactId>narayana-jta</artifactId>
       <!-- Versions >= 5.13.0 require Java 11 -->
-      <version>5.12.7.Final</version>
+      <version>7.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
