@@ -219,6 +219,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Bump apache-rat-plugin 0.13 to 0.14.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons-lang3 from 3.12 to 3.13.0.
+      </action>
     </release>
     <release version="2.9.0" date="2021-07-30" description="This is a minor release, including bug fixes and enhancements.">
       <!-- ADD -->
