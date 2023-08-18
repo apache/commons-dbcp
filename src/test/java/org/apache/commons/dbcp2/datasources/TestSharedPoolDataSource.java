@@ -47,21 +47,21 @@ import org.junit.jupiter.api.Test;
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
 
-    private static class CscbString extends PrepareCallCallback {
+    private static class CscbString extends AbstractPrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
             return conn.prepareCall("{call home()}");
         }
     }
 
-    private static class CscbStringIntInt extends PrepareCallCallback {
+    private static class CscbStringIntInt extends AbstractPrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
             return conn.prepareCall("{call home()}", 0, 0);
         }
     }
 
-    private static class CscbStringIntIntInt extends PrepareCallCallback {
+    private static class CscbStringIntIntInt extends AbstractPrepareCallCallback {
         @Override
         CallableStatement getCallableStatement() throws SQLException {
             return conn.prepareCall("{call home()}", 0, 0, 0);
@@ -72,7 +72,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * There are 3 different prepareCall statement methods so add a little complexity to reduce what would otherwise be lots
      * of copy and paste.
      */
-    private static abstract class PrepareCallCallback {
+    private static abstract class AbstractPrepareCallCallback {
         protected Connection conn;
 
         abstract CallableStatement getCallableStatement() throws SQLException;
@@ -86,7 +86,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * There are 6 different prepareStatement statement methods so add a little complexity to reduce what would otherwise be
      * lots of copy and paste.
      */
-    private static abstract class PrepareStatementCallback {
+    private static abstract class AbstractPrepareStatementCallback {
         protected Connection conn;
 
         abstract PreparedStatement prepareStatement() throws SQLException;
@@ -96,42 +96,42 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    private static class PscbString extends PrepareStatementCallback {
+    private static class PscbString extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual");
         }
     }
 
-    private static class PscbStringInt extends PrepareStatementCallback {
+    private static class PscbStringInt extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0);
         }
     }
 
-    private static class PscbStringIntArray extends PrepareStatementCallback {
+    private static class PscbStringIntArray extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", ArrayUtils.EMPTY_INT_ARRAY);
         }
     }
 
-    private static class PscbStringIntInt extends PrepareStatementCallback {
+    private static class PscbStringIntInt extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0, 0);
         }
     }
 
-    private static class PscbStringIntIntInt extends PrepareStatementCallback {
+    private static class PscbStringIntIntInt extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", 0, 0, 0);
         }
     }
 
-    private static class PscbStringStringArray extends PrepareStatementCallback {
+    private static class PscbStringStringArray extends AbstractPrepareStatementCallback {
         @Override
         PreparedStatement prepareStatement() throws SQLException {
             return conn.prepareStatement("select * from dual", ArrayUtils.EMPTY_STRING_ARRAY);
@@ -142,7 +142,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     private DataSource ds;
 
-    private void doTestPoolCallableStatements(final PrepareCallCallback callBack)
+    private void doTestPoolCallableStatements(final AbstractPrepareCallCallback callBack)
         throws Exception {
         final DriverAdapterCPDS myPcds = new DriverAdapterCPDS();
         myPcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
@@ -218,7 +218,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         }
     }
 
-    private void doTestPoolPreparedStatements(final PrepareStatementCallback psCallBack) throws Exception {
+    private void doTestPoolPreparedStatements(final AbstractPrepareStatementCallback psCallBack) throws Exception {
         final DriverAdapterCPDS mypcds = new DriverAdapterCPDS();
         mypcds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         mypcds.setUrl("jdbc:apache:commons:testdriver");
