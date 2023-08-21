@@ -74,7 +74,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     }
 
     protected void checkOpen() throws SQLException {
-        if(!_open) {
+        if (!_open) {
             throw new SQLException("Connection is closed.");
         }
     }
@@ -115,7 +115,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public boolean execute(final String sql) throws SQLException {
         checkOpen();
-        if("invalid".equals(sql)) {
+        if ("invalid".equals(sql)) {
             throw new SQLException("invalid query");
         }
         return _executeResponse;
@@ -175,18 +175,18 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public ResultSet executeQuery(final String sql) throws SQLException {
         checkOpen();
-        if("null".equals(sql)) {
+        if ("null".equals(sql)) {
             return null;
         }
-        if("invalid".equals(sql)) {
+        if ("invalid".equals(sql)) {
             throw new SQLException("invalid query");
         }
         if ("broken".equals(sql)) {
             throw new SQLException("broken connection");
         }
-        if("select username".equals(sql)) {
+        if ("select username".equals(sql)) {
             final String userName = ((TesterConnection) _connection).getUserName();
-            final Object[][] data = {{userName}};
+            final Object[][] data = { { userName } };
             return new TesterResultSet(this, data);
         }
         // Simulate timeout if queryTimout is set to less than 5 seconds

@@ -68,15 +68,15 @@ public class TesterConnection extends AbandonedTrace implements Connection {
 
     protected void checkFailure() throws SQLException {
         if (failure != null) {
-            if(failure instanceof SQLException) {
-                throw (SQLException)failure;
+            if (failure instanceof SQLException) {
+                throw (SQLException) failure;
             }
             throw new SQLException("TesterConnection failure", failure);
         }
     }
 
     protected void checkOpen() throws SQLException {
-        if(!_open) {
+        if (!_open) {
             throw new SQLException("Connection is closed.");
         }
         checkFailure();
@@ -282,11 +282,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkOpen();
-        if("null".equals(sql)) {
+        if ("null".equals(sql)) {
             return null;
-        } if("invalid".equals(sql)) {
+        }
+        if ("invalid".equals(sql)) {
             throw new SQLException("invalid query");
-        } if ("broken".equals(sql)) {
+        }
+        if ("broken".equals(sql)) {
             throw new SQLException("broken connection");
         }
         return new TesterPreparedStatement(this, sql);

@@ -186,7 +186,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     @Override
     public ResultSet executeQuery() throws SQLException {
         checkOpen();
-        if("null".equals(_sql)) {
+        if ("null".equals(_sql)) {
             return null;
         }
         if (_queryTimeout > 0 && _queryTimeout < 5) {
@@ -199,7 +199,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     @Override
     public ResultSet executeQuery(final String sql) throws SQLException {
         checkOpen();
-        if("null".equals(sql)) {
+        if ("null".equals(sql)) {
             return null;
         }
         return new TesterResultSet(this, _resultSetType, _resultSetConcurrency);

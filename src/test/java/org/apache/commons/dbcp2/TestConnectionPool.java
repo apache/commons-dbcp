@@ -947,20 +947,20 @@ public abstract class TestConnectionPool {
     @Test
     public void testThreaded() {
         final TestThread[] threads = new TestThread[getMaxTotal()];
-        for(int i=0;i<threads.length;i++) {
-            threads[i] = new TestThread(50,50);
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new TestThread(50, 50);
             final Thread t = new Thread(threads[i]);
             t.start();
         }
-        for(int i=0;i<threads.length;i++) {
-            while(!threads[i].complete()) {
+        for (int i = 0; i < threads.length; i++) {
+            while (!threads[i].complete()) {
                 try {
                     Thread.sleep(100L);
                 } catch (final Exception e) {
                     // ignored
                 }
             }
-            if(threads[i] != null && threads[i].failed()) {
+            if (threads[i] != null && threads[i].failed()) {
                 fail("Thread failed: " + i);
             }
         }
