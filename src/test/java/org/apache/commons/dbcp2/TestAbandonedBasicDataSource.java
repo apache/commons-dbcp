@@ -222,7 +222,6 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
         final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
         final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
-        @SuppressWarnings("unchecked")
         final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop = poolingConn.getStatementPool();
         Assertions.assertEquals(0, conn.getTrace().size());
         Assertions.assertEquals(0, gkop.getNumActive());
