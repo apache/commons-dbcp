@@ -63,7 +63,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private static final Log log = LogFactory.getLog(PerUserPoolDataSource.class);
 
     private static <K, V> HashMap<K, V> createMap() {
-        // Should there be a default size different than what this ctor provides?
+        // Should there be a default size different from what this ctor provides?
         return new HashMap<>();
     }
     
