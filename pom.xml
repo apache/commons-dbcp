@@ -331,6 +331,7 @@
     <!-- spdx 0.6.0 can require Java 11 depending on undocumented behavior which kicks in for us here. -->
     <commons.spdx.version>0.5.5</commons.spdx.version>
     <surefire.argline></surefire.argline>
+    <version.maven-source-plugin>3.2.1</version.maven-source-plugin>
   </properties>
 
   <build>
