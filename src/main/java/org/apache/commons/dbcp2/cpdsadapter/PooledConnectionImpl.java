@@ -437,7 +437,7 @@ final class PooledConnectionImpl
     }
 
     /**
-     * My {@link KeyedPooledObjectFactory} method for passivating {@link PreparedStatement}s. Currently invokes
+     * My {@link KeyedPooledObjectFactory} method for passivating {@link PreparedStatement}s. Currently, invokes
      * {@link PreparedStatement#clearParameters}.
      *
      * @param key
@@ -458,7 +458,7 @@ final class PooledConnectionImpl
      * Creates or obtains a {@link CallableStatement} from my pool.
      *
      * @param sql
-     *            an SQL statement that may contain one or more '?' parameter placeholders. Typically this statement is
+     *            an SQL statement that may contain one or more '?' parameter placeholders. Typically, this statement is
      *            specified using JDBC call escape syntax.
      * @return a default {@code CallableStatement} object containing the pre-compiled SQL statement.
      * @throws SQLException
