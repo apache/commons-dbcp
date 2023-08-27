@@ -20,7 +20,6 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -43,7 +42,6 @@ public class TestDelegatingConnection {
      * setAutoCommit and discard it, to keep false.
      */
     static class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
-
         private final boolean readOnly = false;
         private final boolean autoCommit = false;
 
@@ -106,12 +104,13 @@ public class TestDelegatingConnection {
 
     @Test
     public void testAutoCommitCaching() throws SQLException {
-        try (Connection con = new NoReadOnlyOrAutoCommitConnection(); 
-                DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con)) {
-            delCon.setAutoCommit(true);
-            assertFalse(con.getAutoCommit());
-            assertFalse(delCon.getAutoCommit());
-        }
+        final Connection con = new NoReadOnlyOrAutoCommitConnection();
+        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+
+        delCon.setAutoCommit(true);
+
+        assertFalse(con.getAutoCommit());
+        assertFalse(delCon.getAutoCommit());
     }
 
     @Test
@@ -148,19 +147,26 @@ public class TestDelegatingConnection {
             assertTrue(ex.getMessage().endsWith("is null."));
         }
 
-        try (PoolingConnection pc = new PoolingConnection(connection2)) {
+        try {
+            final PoolingConnection pc = new PoolingConnection(connection2);
             pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
             delegatingConnection = new DelegatingConnection<>(pc);
+            pc.close();
+            delegatingConnection.close();
+            try (PreparedStatement ps = delegatingConnection.prepareStatement("")){}
+            fail("Expecting SQLException");
+        } catch (final SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("is closed."));
         }
-        delegatingConnection.close();
 
-        SQLException e = assertThrows(SQLException.class, () -> delegatingConnection.prepareStatement(""));
-        assertTrue(e.getMessage().endsWith("is closed."));
-        
-        delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
-        delegatingConnection.close();
-        SQLException ex = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-        assertTrue(ex.getMessage().endsWith("is closed."));
+        try {
+            delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
+            delegatingConnection.close();
+            delegatingConnection.checkOpen();
+            fail("Expecting SQLException");
+        } catch (final SQLException ex) {
+            assertTrue(ex.getMessage().endsWith("is closed."));
+        }
     }
 
     @Test
@@ -220,7 +226,7 @@ public class TestDelegatingConnection {
             Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
         } finally {
             testerStatement.setSqlExceptionOnClose(false);
-            testerResultSet.setSqlExceptionOnClose(false);
+        testerResultSet.setSqlExceptionOnClose(false);
         }
     }
 
@@ -241,12 +247,13 @@ public class TestDelegatingConnection {
 
     @Test
     public void testReadOnlyCaching() throws SQLException {
-        try (Connection con = new NoReadOnlyOrAutoCommitConnection();
-                DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con)) {
-            delCon.setReadOnly(true);
-            assertFalse(con.isReadOnly());
-            assertFalse(delCon.isReadOnly());
-        }
+        final Connection con = new NoReadOnlyOrAutoCommitConnection();
+        final DelegatingConnection<Connection> delCon = new DelegatingConnection<>(con);
+
+        delCon.setReadOnly(true);
+
+        assertFalse(con.isReadOnly());
+        assertFalse(delCon.isReadOnly());
     }
 
 }
