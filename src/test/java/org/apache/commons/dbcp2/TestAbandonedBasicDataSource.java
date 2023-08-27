@@ -258,16 +258,26 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
             Thread.sleep(500);
-            try (Statement s = conn1.createStatement()) {} // Should reset lastUsed
+            try (Statement s = conn1.createStatement()) {
+                // Should reset lastUsed
+            }
             Thread.sleep(800);
             final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
-            try (Statement s = conn1.createStatement()) {} // Should still be OK
+            try (Statement s = conn1.createStatement()) {
+                // Should still be OK
+            }
             conn2.close();
             Thread.sleep(500);
-            try (PreparedStatement ps = conn1.prepareStatement("SELECT 1 FROM DUAL")) {} // reset
+            try (PreparedStatement ps = conn1.prepareStatement("SELECT 1 FROM DUAL")) {
+                // reset
+            }
             Thread.sleep(800);
-            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
-            try (Statement s = conn1.createStatement()) {}
+            try (Connection c = ds.getConnection()) {
+                // trigger abandoned cleanup again
+            }
+            try (Statement s = conn1.createStatement()) {
+                // empty
+            }
         }
     }
 
@@ -279,8 +289,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     public void testLastUsedLargePreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
-        try (Connection conn1 = ds.getConnection();
-                Statement st = conn1.createStatement()) {
+        try (Connection conn1 = ds.getConnection(); Statement st = conn1.createStatement()) {
             final String querySQL = "SELECT 1 FROM DUAL";
             Thread.sleep(500);
             Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
@@ -291,8 +300,12 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             Thread.sleep(500);
             st.executeLargeUpdate(""); // Should also reset
             Thread.sleep(800);
-            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
-            try (Statement s = conn1.createStatement()) {}  // Connection should still be good
+            try (Connection c = ds.getConnection()) {
+                // trigger abandoned cleanup again
+            }
+            try (Statement s = conn1.createStatement()) {
+                // Connection should still be good
+            }
         }
     }
 
