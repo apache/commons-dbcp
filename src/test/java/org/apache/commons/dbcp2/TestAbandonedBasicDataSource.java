@@ -307,16 +307,26 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
             Thread.sleep(500);
-            try (CallableStatement cs = conn1.prepareCall("{call home}")) {} // Should reset lastUsed
+            try (CallableStatement cs = conn1.prepareCall("{call home}")) {
+                // Should reset lastUsed
+            }
             Thread.sleep(800);
             final Connection conn2 = ds.getConnection(); // triggers abandoned cleanup
-            try (CallableStatement cs = conn1.prepareCall("{call home}")) {} // Should still be OK
+            try (CallableStatement cs = conn1.prepareCall("{call home}")) {
+                // Should still be OK
+            }
             conn2.close();
             Thread.sleep(500);
-            try (CallableStatement cs = conn1.prepareCall("{call home}")) {} // reset
+            try (CallableStatement cs = conn1.prepareCall("{call home}")) {
+                // reset
+            }
             Thread.sleep(800);
-            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
-            try (Statement s = conn1.createStatement()) {}
+            try (Connection c = ds.getConnection()) {
+                // empty
+            }
+            try (Statement s = conn1.createStatement()) {
+                // trigger abandoned cleanup again
+            }
         }
     }
 
