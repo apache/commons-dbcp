@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -42,22 +43,25 @@ public class TestDelegatingCallableStatement {
     public void setUp() throws Exception {
         conn = new TesterConnection("test", "test");
         obj = mock(CallableStatement.class);
-        final DelegatingConnection<Connection> delegatingConnection = new DelegatingConnection<>(conn);
-        delegate = new DelegatingCallableStatement(delegatingConnection, obj);
+        delegate = new DelegatingCallableStatement(new DelegatingConnection<>(conn), obj);
     }
 
     @Test
     public void testExecuteQueryReturnsNotNull() throws Exception {
-        final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"select * from foo");
+        final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn, "select * from foo");
         obj = new DelegatingCallableStatement(new DelegatingConnection<>(conn), delegateStmt);
-        assertNotNull(obj.executeQuery());
+        try (ResultSet rs = obj.executeQuery()) {
+            assertNotNull(rs);
+        }
     }
 
     @Test
     public void testExecuteQueryReturnsNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn,"null");
         obj = new DelegatingCallableStatement(new DelegatingConnection<>(conn), delegateStmt);
-        assertNull(obj.executeQuery());
+        try (ResultSet rs = obj.executeQuery()) {
+            assertNotNull(rs);
+        }
     }
 
     @Test
