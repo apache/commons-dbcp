@@ -126,7 +126,10 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">
         [StepSecurity] ci: Harden GitHub Actions #282.
-      </action>      
+      </action>
+      <action dev="ggregory" type="fix" due-to="Martin Wiesner">
+        Fixes typos, missing or misplaced characters, and grammar issues #299.
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).

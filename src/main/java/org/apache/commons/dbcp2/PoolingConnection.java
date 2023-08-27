@@ -602,7 +602,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * {@link KeyedPooledObjectFactory} method for validating pooled statements. Currently always returns true.
+     * {@link KeyedPooledObjectFactory} method for validating pooled statements. Currently, always returns true.
      *
      * @param key
      *            ignored
