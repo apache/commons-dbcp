@@ -258,26 +258,25 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testGetConnectionInAfterCompletion() throws Exception {
-
-        final DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection();
-        // Don't close so we can check it for warnings in afterCompletion
-        transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
-            @Override
-            public void afterCompletion(final int i) {
-                try {
-                    final Connection connection1 = ds.getConnection();
+        try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
+            // Don't close so we can check it for warnings in afterCompletion
+            transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
+                @Override
+                public void afterCompletion(final int i) {
                     try {
-                        connection1.getWarnings();
-                        fail("Could operate on closed connection");
+                        final Connection connection1 = ds.getConnection();
+                        try {
+                            connection1.getWarnings();
+                            fail("Could operate on closed connection");
+                        } catch (final SQLException e) {
+                            // This is expected
+                        }
                     } catch (final SQLException e) {
-                        // This is expected
+                        fail("Should have been able to get connection");
                     }
-                } catch (final SQLException e) {
-                    fail("Should have been able to get connection");
                 }
-            }
-        });
-        connection.close();
+            });
+        }
         transactionManager.commit();
     }
 
@@ -344,90 +343,84 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Test
     public void testReadOnly() throws Exception {
-        final Connection connection = newConnection();
+        try (Connection connection = newConnection()) {
 
-        // NOTE: This test class uses connections that are read-only by default
+            // NOTE: This test class uses connections that are read-only by default
 
-        // connection should be read only
-        assertTrue(connection.isReadOnly(), "Connection be read-only");
+            // connection should be read only
+            assertTrue(connection.isReadOnly(), "Connection be read-only");
 
-        // attempt to setReadOnly
-        try {
-            connection.setReadOnly(true);
-            fail("setReadOnly method should be disabled while enlisted in a transaction");
-        } catch (final SQLException e) {
-            // expected
+            // attempt to setReadOnly
+            try {
+                connection.setReadOnly(true);
+                fail("setReadOnly method should be disabled while enlisted in a transaction");
+            } catch (final SQLException e) {
+                // expected
+            }
+
+            // make sure it is still read-only
+            assertTrue(connection.isReadOnly(), "Connection be read-only");
+
+            // attempt to setReadonly
+            try {
+                connection.setReadOnly(false);
+                fail("setReadOnly method should be disabled while enlisted in a transaction");
+            } catch (final SQLException e) {
+                // expected
+            }
+
+            // make sure it is still read-only
+            assertTrue(connection.isReadOnly(), "Connection be read-only");
+
+            // TwR closes the connection
         }
-
-        // make sure it is still read-only
-        assertTrue(connection.isReadOnly(), "Connection be read-only");
-
-        // attempt to setReadonly
-        try {
-            connection.setReadOnly(false);
-            fail("setReadOnly method should be disabled while enlisted in a transaction");
-        } catch (final SQLException e) {
-            // expected
-        }
-
-        // make sure it is still read-only
-        assertTrue(connection.isReadOnly(), "Connection be read-only");
-
-        // close connection
-        connection.close();
     }
 
     @Override
     @Test
     public void testSharedConnection() throws Exception {
-        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
-        final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
-
-        assertNotEquals(connectionA, connectionB);
-        assertNotEquals(connectionB, connectionA);
-        assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
-        assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
-
-        connectionA.close();
-        connectionB.close();
+        try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+                DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection()) {
+            assertNotEquals(connectionA, connectionB);
+            assertNotEquals(connectionB, connectionA);
+            assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
+            assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
+        }
     }
 
     @Test
     public void testSharedTransactionConversion() throws Exception {
-        final DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
-        final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection();
+        try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
+                DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection()) {
+            // in a transaction the inner connections should be equal
+            assertNotEquals(connectionA, connectionB);
+            assertNotEquals(connectionB, connectionA);
+            assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
+            assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
-        // in a transaction the inner connections should be equal
-        assertNotEquals(connectionA, connectionB);
-        assertNotEquals(connectionB, connectionA);
-        assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
-        assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
+            transactionManager.commit();
 
-        transactionManager.commit();
+            // use the connection so it adjusts to the completed transaction
+            connectionA.getAutoCommit();
+            connectionB.getAutoCommit();
 
-        // use the connection so it adjusts to the completed transaction
-        connectionA.getAutoCommit();
-        connectionB.getAutoCommit();
+            // no there is no transaction so inner connections should not be equal
+            assertNotEquals(connectionA, connectionB);
+            assertNotEquals(connectionB, connectionA);
+            assertFalse(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
+            assertFalse(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
 
-        // no there is no transaction so inner connections should not be equal
-        assertNotEquals(connectionA, connectionB);
-        assertNotEquals(connectionB, connectionA);
-        assertFalse(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
-        assertFalse(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
+            transactionManager.begin();
 
-        transactionManager.begin();
+            // use the connection so it adjusts to the new transaction
+            connectionA.getAutoCommit();
+            connectionB.getAutoCommit();
 
-        // use the connection so it adjusts to the new transaction
-        connectionA.getAutoCommit();
-        connectionB.getAutoCommit();
-
-        // back in a transaction so inner connections should be equal again
-        assertNotEquals(connectionA, connectionB);
-        assertNotEquals(connectionB, connectionA);
-        assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
-        assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
-
-        connectionA.close();
-        connectionB.close();
+            // back in a transaction so inner connections should be equal again
+            assertNotEquals(connectionA, connectionB);
+            assertNotEquals(connectionB, connectionA);
+            assertTrue(connectionA.innermostDelegateEquals(connectionB.getInnermostDelegate()));
+            assertTrue(connectionB.innermostDelegateEquals(connectionA.getInnermostDelegate()));
+        }
     }
 }
