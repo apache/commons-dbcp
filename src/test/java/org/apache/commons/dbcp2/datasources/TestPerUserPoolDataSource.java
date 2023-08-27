@@ -93,10 +93,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // See DBCP-8
     @Test
     public void testChangePassword() throws Exception {
-        try (Connection c = ds.getConnection(user, "bay")){
-            fail("Should have generated SQLException");
-        } catch (final SQLException expected) {
-        }
+        assertThrows(SQLException.class, () -> ds.getConnection(user, "bay"));
         final Connection con1 = ds.getConnection(user, "bar");
         final Connection con2 = ds.getConnection(user, "bar");
         final Connection con3 = ds.getConnection(user, "bar");

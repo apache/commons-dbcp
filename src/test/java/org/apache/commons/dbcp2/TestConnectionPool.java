@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -758,13 +759,9 @@ public abstract class TestConnectionPool {
             assertNotNull(c[i]);
         }
 
-        try {
-            newConnection();
-            fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (final java.sql.SQLException e) {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        }
+        // should only be able to open 10 connections, so this test should
+        // throw an exception
+        assertThrows(SQLException.class, this::newConnection);
 
         for (final Connection element : c) {
             element.close();

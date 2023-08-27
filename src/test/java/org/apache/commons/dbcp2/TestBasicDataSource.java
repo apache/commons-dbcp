@@ -563,28 +563,16 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testInvalidConnectionInitSql() {
-        try {
-            ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "invalid"));
-            try (Connection c = ds.getConnection()) {}
-            fail("expected SQLException");
-        }
-        catch (final SQLException e) {
-            if (!e.toString().contains("invalid")) {
-                fail("expected detailed error message");
-            }
-        }
+        ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "invalid"));
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("invalid"));
     }
 
     @Test
     public void testInvalidValidationQuery() {
         ds.setValidationQuery("invalid");
-        try (Connection c = ds.getConnection()) {
-            fail("expected SQLException");
-        } catch (final SQLException e) {
-            if (!e.toString().contains("invalid")) {
-                fail("expected detailed error message");
-            }
-        }
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("invalid"));
     }
 
     // Bugzilla Bug 28251:  Returning dead database connections to BasicDataSource
@@ -753,15 +741,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     @Test
     public void testMaxTotalZero() throws Exception {
         ds.setMaxTotal(0);
-
-        try {
-            final Connection conn = ds.getConnection();
-            assertNotNull(conn);
-            fail("SQLException expected");
-
-        } catch (final SQLException e) {
-            // test OK
-        }
+        assertThrows(SQLException.class, ds::getConnection);
     }
 
     /**
@@ -991,12 +971,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertEquals("", ds.getConnectionProperties().getProperty("name1"));
 
         // null should throw a NullPointerException
-        try {
-            ds.setConnectionProperties(null);
-            fail("Expected NullPointerException");
-        } catch (final NullPointerException e) {
-            // expected
-        }
+        assertThrows(NullPointerException.class, () -> ds.setConnectionProperties(null));
     }
 
     @Test
@@ -1125,13 +1100,8 @@ public class TestBasicDataSource extends TestConnectionPool {
     public void testValidationQueryTimoutFail() {
         ds.setTestOnBorrow(true);
         ds.setValidationQueryTimeout(Duration.ofSeconds(3)); // Too fast for TesterStatement
-        try (Connection c = ds.getConnection()) {
-            fail("expected SQLException");
-        } catch (final SQLException ex) {
-            if (!ex.toString().contains("timeout")) {
-                fail("expected timeout error message");
-            }
-        }
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("timeout"));
     }
 }
 
