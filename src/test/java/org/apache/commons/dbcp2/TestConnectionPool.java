@@ -890,55 +890,50 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testSimple2() throws Exception {
-        Connection conn = newConnection();
+        @SuppressWarnings("resource")
+        final Connection conn = newConnection();
         assertNotNull(conn);
-        {
-            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertNotNull(stmt);
-            final ResultSet rset = stmt.executeQuery();
-            assertNotNull(rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
+                assertNotNull(stmt);
+                try (ResultSet rset = stmt.executeQuery()) {
+                    assertNotNull(rset);
+                    assertTrue(rset.next());
+                }
+            }
+        } finally {
+            conn.close();
         }
-        {
-            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertNotNull(stmt);
-            final ResultSet rset = stmt.executeQuery();
-            assertNotNull(rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        try (Statement s = conn.createStatement()){
-            fail("Can't use closed connections");
-        } catch (final SQLException e) {
-            // expected
-        }
+        assertThrows(SQLException.class, conn::createStatement, "Can't use closed connections");
 
-        conn = newConnection();
-        assertNotNull(conn);
-        {
-            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertNotNull(stmt);
-            final ResultSet rset = stmt.executeQuery();
-            assertNotNull(rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
+        try (Connection conn2 = newConnection()) {
+            assertNotNull(conn2);
+            {
+                final PreparedStatement stmt = conn2.prepareStatement("select * from dual");
+                assertNotNull(stmt);
+                final ResultSet rset = stmt.executeQuery();
+                assertNotNull(rset);
+                assertTrue(rset.next());
+                rset.close();
+                stmt.close();
+            }
+            {
+                final PreparedStatement stmt = conn2.prepareStatement("select * from dual");
+                assertNotNull(stmt);
+                final ResultSet rset = stmt.executeQuery();
+                assertNotNull(rset);
+                assertTrue(rset.next());
+                rset.close();
+                stmt.close();
+            }
         }
-        {
-            final PreparedStatement stmt = conn.prepareStatement("select * from dual");
-            assertNotNull(stmt);
-            final ResultSet rset = stmt.executeQuery();
-            assertNotNull(rset);
-            assertTrue(rset.next());
-            rset.close();
-            stmt.close();
-        }
-        conn.close();
-        conn = null;
     }
 
     @Test
