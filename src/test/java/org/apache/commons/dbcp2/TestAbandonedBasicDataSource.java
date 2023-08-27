@@ -351,14 +351,15 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testLastUsedUpdate() throws Exception {
-        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        final PreparedStatement ps = conn.prepareStatement("");
-        final CallableStatement cs = conn.prepareCall("");
-        final Statement st = conn.prepareStatement("");
-        checkLastUsedStatement(ps, conn);
-        checkLastUsedPreparedStatement(ps, conn);
-        checkLastUsedStatement(cs, conn);
-        checkLastUsedPreparedStatement(cs, conn);
-        checkLastUsedStatement(st, conn);
+        try (DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
+                final PreparedStatement ps = conn.prepareStatement("");
+                final CallableStatement cs = conn.prepareCall("");
+                final Statement st = conn.prepareStatement("")) {
+            checkLastUsedStatement(ps, conn);
+            checkLastUsedPreparedStatement(ps, conn);
+            checkLastUsedStatement(cs, conn);
+            checkLastUsedPreparedStatement(cs, conn);
+            checkLastUsedStatement(st, conn);
+        }
     }
 }
