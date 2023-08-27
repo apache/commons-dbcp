@@ -283,13 +283,15 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Override
     @Test
     public void testHashCode() throws Exception {
-        final Connection conn1 = newConnection();
-        assertNotNull(conn1);
-        final Connection conn2 = newConnection();
-        assertNotNull(conn2);
+        try (Connection conn1 = newConnection()) {
+            assertNotNull(conn1);
+            try (Connection conn2 = newConnection()) {
+                assertNotNull(conn2);
 
-        // shared connections should not have the same hash code
-        Assertions.assertNotEquals(conn1.hashCode(), conn2.hashCode());
+                // shared connections should not have the same hash code
+                Assertions.assertNotEquals(conn1.hashCode(), conn2.hashCode());
+            }
+        }
     }
 
     /**
