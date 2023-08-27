@@ -916,22 +916,22 @@ public abstract class TestConnectionPool {
         try (Connection conn2 = newConnection()) {
             assertNotNull(conn2);
             {
-                final PreparedStatement stmt = conn2.prepareStatement("select * from dual");
-                assertNotNull(stmt);
-                final ResultSet rset = stmt.executeQuery();
-                assertNotNull(rset);
-                assertTrue(rset.next());
-                rset.close();
-                stmt.close();
+                try (PreparedStatement stmt = conn2.prepareStatement("select * from dual")) {
+                    assertNotNull(stmt);
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
             }
             {
-                final PreparedStatement stmt = conn2.prepareStatement("select * from dual");
-                assertNotNull(stmt);
-                final ResultSet rset = stmt.executeQuery();
-                assertNotNull(rset);
-                assertTrue(rset.next());
-                rset.close();
-                stmt.close();
+                try (PreparedStatement stmt = conn2.prepareStatement("select * from dual")) {
+                    assertNotNull(stmt);
+                    try (ResultSet rset = stmt.executeQuery()) {
+                        assertNotNull(rset);
+                        assertTrue(rset.next());
+                    }
+                }
             }
         }
     }
