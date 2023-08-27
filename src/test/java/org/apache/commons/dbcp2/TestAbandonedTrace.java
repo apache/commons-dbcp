@@ -19,6 +19,8 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.SQLException;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -27,8 +29,9 @@ import org.junit.jupiter.api.Test;
 public class TestAbandonedTrace {
 
     @Test
-    public void testDeprecated() {
-        final AbandonedTrace trace = new AbandonedTrace();
-        assertEquals(trace.getLastUsedInstant().toEpochMilli(), trace.getLastUsed());
+    public void testDeprecated() throws SQLException {
+        try (AbandonedTrace trace = new AbandonedTrace()) {
+            assertEquals(trace.getLastUsedInstant().toEpochMilli(), trace.getLastUsed());
+        }
     }
 }

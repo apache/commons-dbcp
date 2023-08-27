@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
@@ -57,10 +58,13 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     /**
      * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
      */
-    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
+    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn)
+            throws Exception {
         ps.execute();
         assertAndReset(conn);
-        Assertions.assertNotNull(ps.executeQuery());
+        try (ResultSet rs = ps.executeQuery()) {
+            Assertions.assertNotNull(rs);
+        }
         assertAndReset(conn);
         ps.executeUpdate();
         assertAndReset(conn);
@@ -80,7 +84,9 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertAndReset(conn);
         st.executeLargeBatch();
         assertAndReset(conn);
-        Assertions.assertNotNull(st.executeQuery(""));
+        try (ResultSet rs = st.executeQuery("")) {
+            Assertions.assertNotNull(rs);
+        }
         assertAndReset(conn);
         st.executeUpdate("");
         assertAndReset(conn);
@@ -135,26 +141,27 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         ds.setMaxTotal(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
 
-        final Connection conn1 = getConnection();
-        assertNotNull(conn1);
-        assertEquals(1, ds.getNumActive());
+        try (Connection conn1 = getConnection()) {
+            assertNotNull(conn1);
+            assertEquals(1, ds.getNumActive());
 
-        final Connection conn2 = getConnection();
-        // Attempt to borrow object triggers abandoned cleanup
-        // conn1 should be closed by the pool to make room
-        assertNotNull(conn2);
-        assertEquals(1, ds.getNumActive());
-        // Verify that conn1 is closed
-        assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
-        // Verify that conn1 is aborted
-        final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1).getInnermostDelegate();
-        assertTrue(tCon.isAborted());
+            try (Connection conn2 = getConnection()) {
+                // Attempt to borrow object triggers abandoned cleanup
+                // conn1 should be closed by the pool to make room
+                assertNotNull(conn2);
+                assertEquals(1, ds.getNumActive());
+                // Verify that conn1 is closed
+                assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
+                // Verify that conn1 is aborted
+                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1)
+                        .getInnermostDelegate();
+                assertTrue(tCon.isAborted());
 
-        conn2.close();
-        assertEquals(0, ds.getNumActive());
+            }
+            assertEquals(0, ds.getNumActive());
 
-        // Second close on conn1 is OK as of dbcp 1.3
-        conn1.close();
+            // Second close on conn1 is OK as of dbcp 1.3
+        }
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
         assertTrue(string.contains("testAbandonedClose"), string);
@@ -204,12 +211,13 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      */
     @Test
     public void testGarbageCollectorCleanUp01() throws Exception {
-        final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
-        Assertions.assertEquals(0, conn.getTrace().size());
-        createStatement(conn);
-        Assertions.assertEquals(1, conn.getTrace().size());
-        System.gc();
-        Assertions.assertEquals(0, conn.getTrace().size());
+        try (DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection()) {
+            Assertions.assertEquals(0, conn.getTrace().size());
+            createStatement(conn);
+            Assertions.assertEquals(1, conn.getTrace().size());
+            System.gc();
+            Assertions.assertEquals(0, conn.getTrace().size());
+        }
     }
 
     /**
