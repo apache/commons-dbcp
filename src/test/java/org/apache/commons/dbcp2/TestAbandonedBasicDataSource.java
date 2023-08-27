@@ -198,6 +198,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         try {
             conn1.close();
         } catch (final SQLException ex) {
+            // ignore
         }
         assertEquals(0, ds.getNumActive());
         final String string = sw.toString();
