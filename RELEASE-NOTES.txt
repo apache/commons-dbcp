@@ -1,4 +1,87 @@
               Apache Commons DBCP
+              Version 2.10.0
+              RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.10.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes in this version include:
+
+New features:
+o            Add and use AbandonedTrace#setLastUsed(Instant). Thanks to Gary Gregory.
+o            - Add and use Duration versions of now deprecated APIs that use ints and longs. 
+             - Internally track durations with Duration objects instead of ints and longs.
+             - See the JApiCmp report for the complete list. Thanks to Gary Gregory.
+o            Add PMD check to default Maven goal. Thanks to Gary Gregory.
+o            Add Utils.getDisconnectionSqlCodes() and Utils.DISCONNECTION_SQL_CODES. Thanks to Gary Gregory.
+o            Make BasicDataSource.getConnectionPool() public. Thanks to Gary Gregory.
+o            Add github/codeql-action. Thanks to Gary Gregory.
+
+Fixed Bugs:
+o            Fix StackOverflowError in PoolableConnection.isDisconnectionSqlException #123. Thanks to newnewcoder, Gary Gregory.
+o            PerUserPoolDataSourceFactory.getNewInstance(Reference) parsed defaultMaxWaitMillis as an int instead of a long. Thanks to Gary Gregory.
+o            Reimplement time tracking in AbandonedTrace with an Instant instead of a long. Thanks to Gary Gregory.
+o            Migrate away from deprecated APIs in Apache Commons Pool. Thanks to Gary Gregory.
+o            Fix possible NullPointerException in BasicDataSourceFactory.validatePropertyNames(). Thanks to Gary Gregory.
+o            Fix possible NullPointerException in BasicDataSourceFactory.getObjectInstance(). Thanks to Gary Gregory.
+o DBCP-585:  Connection level JMX queries result in concurrent access to connection objects, causing errors #179. Thanks to Kurtcebe Eroglu, Gary Gregory, Phil Steitz.
+o            UserPassKey should be Serializable. Thanks to Gary Gregory.
+o            LifetimeExceededException should extend SQLException. Thanks to Gary Gregory.
+o            Replace Exception with SQLException in some method signatures (preserves binary compatibility, not source). Thanks to Gary Gregory.
+o            Don't leak Connections when PoolableConnectionFactory.makeObject() fails to create a JMX ObjectName. Thanks to Gary Gregory.
+o            Performance: No need for map lookups if we traverse map entries instead of keys. Thanks to SpotBugs, Gary Gregory.
+o            Performance: Refactor to use a static inner class in DataSourceXAConnectionFactory. Thanks to SpotBugs, Gary Gregory.
+o            Reuse pattern of throwing XAException instead of NullPointerException in LocalXAConnectionFactory.LocalXAResource. Thanks to SpotBugs, Gary Gregory.
+o            SpotBugs: An overridable method is called from constructors in PoolableCallableStatement. Thanks to SpotBugs, Gary Gregory.
+o            SpotBugs: An overridable method is called from constructors in PoolablePreparedStatement. Thanks to SpotBugs, Gary Gregory.
+o            Wrong property name logged in ConnectionFactoryFactory.createConnectionFactory(BasicDataSource, Driver). Thanks to Gary Gregory.
+o            Throw SQLException instead of NullPointerException when the connection is already closed. Thanks to Gary Gregory.
+o            CPDSConnectionFactory.makeObject() does not need to wrap and rethrow SQLException. Thanks to Gary Gregory.
+o            PoolingDataSource.close() now always throws SQLException. Thanks to Gary Gregory.
+o            [StepSecurity] ci: Harden GitHub Actions #282. Thanks to step-security-bot, Gary Gregory.
+o            Fixes typos, missing or misplaced characters, and grammar issues #299. Thanks to Martin Wiesner.
+
+Changes:
+o            Bump actions/cache from 2.1.6 to 3.0.8 #147, #176. Thanks to Dependabot, Gary Gregory.
+o            Bump actions/checkout from 2.3.4 to 3.0.2 #139, #143, #173. Thanks to Dependabot, Gary Gregory.
+o            Bump actions/setup-java from 2 to 3.6.0 #229. Thanks to Gary Gregory, Dependabot.
+o            Bump actions/upload-artifact from 3.1.0 to 3.1.1 #231. Thanks to Dependabot.
+o            Bump checkstyle from 8.44 to 9.3 #121, #130, #149, #158, #190. Thanks to Dependabot.
+o            Bump maven-checkstyle-plugin from 3.1.2 to 3.2.0 #210. Thanks to Dependabot.
+o            Bump commons-pool2 2.10.0 to 2.11.1. Thanks to Gary Gregory, Dependabot.
+o            Bump junit-jupiter from 5.8.0-M1 to 5.9.1 #125, #136, #157, #203, #218. Thanks to Dependabot.
+o            Bump spotbugs-maven-plugin from 4.3.0 to 4.7.3.0 #140, #154, #161, #178, #192, #200, #204, #213, #234. Thanks to Dependabot.
+o            Bump spotbugs from 4.3.0 to 4.7.3 #124, #133, #151, #164, #177, #189, #214, #230. Thanks to Dependabot, Gary Gregory.
+o            Bump org.mockito:mockito-core from 3.11.2 to 4.11.0, #128, #138, #152, #175, #188. #193, #208, #215, #232, #235, #246, #252. Thanks to Gary Gregory, Dependabot.
+o            Bump maven-javadoc-plugin from 3.3.0 to 3.4.1 #131, #184. Thanks to Dependabot.
+o            Bump maven-pmd-plugin from 3.14.0 to 3.19.0 #132, #172, #195. Thanks to Dependabot, Gary Gregory.
+o            Bump pmd from 6.44.0 to 6.52.0. Thanks to Dependabot, Gary Gregory.
+o            Bump narayana-jta from 5.12.0.Final to 5.12.7.Final #134, #156, #163, #185, #197. Thanks to Dependabot.
+o            Bump japicmp-maven-plugin from 0.15.3 to 0.17.1 #137, #166, #174, #211, #238. Thanks to Dependabot.
+o            Bump h2 from 1.4.200 to 2.2.220 #153, #183, #196, #287.
+             Update SQL for migration from H2 1.4.200 to 2.0.204 where "KEY" and "VALUE" are now reserved keywords. Thanks to Gary Gregory, Dependabot.
+o            Bump jboss-logging from 3.4.2.Final to 3.4.3.Final #162. Thanks to Dependabot.
+o            Bump slf4j-simple from 1.7.30 to 1.7.36 #169. Thanks to Dependabot.
+o            Bump commons-parent from 52 to 60 #180, #219, #254, #278. Thanks to Dependabot, Gary Gregory.
+o            Bump JaCoCo from 0.8.7 to 0.8.8. Thanks to Gary Gregory.
+o            Bump maven-surefire-plugin 2.22.2 to 3.0.0-M7. Thanks to Gary Gregory.
+o            Bump apache-rat-plugin 0.13 to 0.14. Thanks to Gary Gregory.
+o            Bump commons-lang3 from 3.12 to 3.13.0. Thanks to Gary Gregory.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
+
+https://commons.apache.org/dbcp/
+
+Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+              Apache Commons DBCP
               Version 2.9.0
               RELEASE NOTES
 
