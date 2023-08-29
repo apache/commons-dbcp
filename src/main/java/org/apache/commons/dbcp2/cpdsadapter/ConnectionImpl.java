@@ -126,7 +126,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * be returned, otherwise delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
      *
      * @param sql
-     *            an SQL statement that may contain one or more '?' parameter placeholders. Typically this statement is
+     *            an SQL statement that may contain one or more '?' parameter placeholders. Typically, this statement is
      *            specified using JDBC call escape syntax.
      * @return a default {@code CallableStatement} object containing the pre-compiled SQL statement.
      * @throws SQLException

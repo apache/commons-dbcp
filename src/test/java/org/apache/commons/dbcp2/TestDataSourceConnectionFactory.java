@@ -70,10 +70,12 @@ public class TestDataSourceConnectionFactory {
 
         @Override
         public void setLoginTimeout(final int seconds) throws SQLException {
+            // noop
         }
 
         @Override
         public void setLogWriter(final PrintWriter out) throws SQLException {
+            // noop
         }
 
         @Override
@@ -94,27 +96,31 @@ public class TestDataSourceConnectionFactory {
     @Test
     public void testCredentials() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", "bar");
-        final Connection conn = factory.createConnection();
-        assertEquals("foo", ((TesterConnection) conn).getUserName());
+        try (Connection conn = factory.createConnection()) {
+            assertEquals("foo", ((TesterConnection) conn).getUserName());
+        }
     }
 
     @Test
     public void testDefaultValues() throws SQLException {
-        final Connection conn = factory.createConnection();
-        assertNull(((TesterConnection) conn).getUserName());
+        try (Connection conn = factory.createConnection()) {
+            assertNull(((TesterConnection) conn).getUserName());
+        }
     }
 
     @Test
     public void testEmptyPassword() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", (char[]) null);
-        final Connection conn = factory.createConnection();
-        assertEquals("foo", ((TesterConnection) conn).getUserName());
+        try (Connection conn = factory.createConnection()) {
+            assertEquals("foo", ((TesterConnection) conn).getUserName());
+        }
     }
 
     @Test
     public void testEmptyUser() throws SQLException {
-        final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] {'a'});
-        final Connection conn = factory.createConnection();
-        assertNull(((TesterConnection) conn).getUserName());
+        final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] { 'a' });
+        try (Connection conn = factory.createConnection()) {
+            assertNull(((TesterConnection) conn).getUserName());
+        }
     }
 }

@@ -93,10 +93,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     // See DBCP-8
     @Test
     public void testChangePassword() throws Exception {
-        try (Connection c = ds.getConnection(user, "bay")){
-            fail("Should have generated SQLException");
-        } catch (final SQLException expected) {
-        }
+        assertThrows(SQLException.class, () -> ds.getConnection(user, "bay"));
         final Connection con1 = ds.getConnection(user, "bar");
         final Connection con2 = ds.getConnection(user, "bar");
         final Connection con3 = ds.getConnection(user, "bar");
@@ -1634,20 +1631,17 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     public void testTransactionIsolationBehavior() throws Exception {
-        final Connection conn = getConnection();
-        assertNotNull(conn);
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn.getTransactionIsolation());
-        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        conn.close();
+        try (Connection conn = getConnection()) {
+            assertNotNull(conn);
+            assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+        }
 
         final Connection conn2 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn2.getTransactionIsolation());
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn2.getTransactionIsolation());
 
         final Connection conn3 = getConnection();
-        assertEquals(Connection.TRANSACTION_READ_COMMITTED,
-                     conn3.getTransactionIsolation());
+        assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn3.getTransactionIsolation());
         conn2.close();
         conn3.close();
     }
@@ -1661,23 +1655,21 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0, tds.getNumActive());
         assertEquals(0, tds.getNumIdle());
 
-        Connection conn = tds.getConnection();
-        assertNotNull(conn);
-        assertEquals(1, tds.getNumActive());
-        assertEquals(0, tds.getNumIdle());
-
-        conn.close();
+        try (Connection conn = tds.getConnection()) {
+            assertNotNull(conn);
+            assertEquals(1, tds.getNumActive());
+            assertEquals(0, tds.getNumIdle());
+        }
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
 
-        conn = tds.getConnection("u1", "p1");
-        assertNotNull(conn);
-        assertEquals(0, tds.getNumActive());
-        assertEquals(1, tds.getNumIdle());
-        assertEquals(1, tds.getNumActive("u1"));
-        assertEquals(0, tds.getNumIdle("u1"));
-
-        conn.close();
+        try (Connection conn = tds.getConnection("u1", "p1")) {
+            assertNotNull(conn);
+            assertEquals(0, tds.getNumActive());
+            assertEquals(1, tds.getNumIdle());
+            assertEquals(1, tds.getNumActive("u1"));
+            assertEquals(0, tds.getNumIdle("u1"));
+        }
         assertEquals(0, tds.getNumActive());
         assertEquals(1, tds.getNumIdle());
         assertEquals(0, tds.getNumActive("u1"));

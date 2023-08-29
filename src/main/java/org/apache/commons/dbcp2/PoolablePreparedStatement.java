@@ -54,7 +54,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
      * @param stmt
      *            my underlying {@link PreparedStatement}
      * @param key
-     *            my key" as used by {@link KeyedObjectPool}
+     *            my key as used by {@link KeyedObjectPool}
      * @param pool
      *            the {@link KeyedObjectPool} from which I was obtained.
      * @param conn

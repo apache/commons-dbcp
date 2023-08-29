@@ -62,7 +62,7 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
-    <release version="2.10.0" date="2021-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.10.0" date="2023-08-28" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <action dev="ggregory" type="fix" due-to="newnewcoder, Gary Gregory">
         Fix StackOverflowError in PoolableConnection.isDisconnectionSqlException #123.
@@ -126,7 +126,10 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">
         [StepSecurity] ci: Harden GitHub Actions #282.
-      </action>      
+      </action>
+      <action dev="ggregory" type="fix" due-to="Martin Wiesner">
+        Fixes typos, missing or misplaced characters, and grammar issues #299.
+      </action>
       <!-- ADD -->
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add and use AbandonedTrace#setLastUsed(Instant).
@@ -137,9 +140,6 @@ The <action> type attribute can be add,update,fix,remove.
         - See the JApiCmp report for the complete list.
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
-        Add github/codeql-action.
-      </action>
-      <action dev="ggregory" type="add" due-to="Gary Gregory">
         Add PMD check to default Maven goal.
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
@@ -147,6 +147,9 @@ The <action> type attribute can be add,update,fix,remove.
       </action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">
         Make BasicDataSource.getConnectionPool() public.
+      </action>
+      <action dev="ggregory" type="add" due-to="Gary Gregory">
+        Add github/codeql-action.
       </action>
       <!-- UPDATE -->
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
@@ -208,7 +211,7 @@ The <action> type attribute can be add,update,fix,remove.
         Bump slf4j-simple from 1.7.30 to 1.7.36 #169.
       </action>
       <action dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">
-        Bump commons-parent from 52 to 59 #180, #219, #254, #278.
+        Bump commons-parent from 52 to 60 #180, #219, #254, #278.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Bump JaCoCo from 0.8.7 to 0.8.8.
