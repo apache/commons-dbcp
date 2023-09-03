@@ -23,16 +23,15 @@
     <fileSets>
         <fileSet>
             <includes>
-                <include>build.properties.sample</include>
-                <include>build.xml</include>
-                <include>checkstyle.xml</include>
-                <include>findbugs-exclude-filter.xml</include>
+                <include>CODE_OF_CONDUCT.md</include>
                 <include>LICENSE.txt</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
-                <include>README.txt</include>
+                <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
-                <include>test-jar.xml</include>
+                <include>SECURITY.md</include>
+                <include>src/conf/checkstyle.xml</include>
+                <include>src/conf/findbugs-exclude-filter.xml</include>
             </includes>
             <lineEnding>crlf</lineEnding>
         </fileSet>
