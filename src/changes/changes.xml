@@ -66,9 +66,8 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- FIX -->
       <!-- ADD -->
       <!-- UDPATE -->
-      <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Bump h2 from 2.2.220 to 2.2.222.
-      </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump h2 from 2.2.220 to 2.2.222.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 60 to 62.</action>
     </release>
     <release version="2.10.0" date="2023-08-28" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
