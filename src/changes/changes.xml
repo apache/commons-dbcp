@@ -68,6 +68,7 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- UDPATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump h2 from 2.2.220 to 2.2.222.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 60 to 62.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump org.slf4j:slf4j-simple from 2.0.7 to 2.0.9 #301.</action>
     </release>
     <release version="2.10.0" date="2023-08-28" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
