@@ -913,6 +913,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Gets the value of the {code durationBetweenEvictionRuns} property.
+     *
+     * @return the time (in milliseconds) between evictor runs
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @since 2.10.0
+     */
+    public synchronized Duration getDurationBetweenEvictionRuns() {
+        return this.durationBetweenEvictionRuns;
+    }
+
+    /**
      * Gets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
@@ -1407,17 +1418,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return the time (in milliseconds) between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
-     * @since 2.10.0
-     */
-    public synchronized Duration getDurationBetweenEvictionRuns() {
-        return this.durationBetweenEvictionRuns;
-    }
-
-    /**
-     * Gets the value of the {code durationBetweenEvictionRuns} property.
-     *
-     * @return the time (in milliseconds) between evictor runs
-     * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */
     @Deprecated
@@ -1461,21 +1461,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the validation query timeout.
      *
      * @return the timeout in seconds before connection validation queries fail.
-     */
-    public Duration getValidationQueryTimeoutDuration() {
-        return validationQueryTimeoutDuration;
-    }
-
-    /**
-     * Gets the validation query timeout.
-     *
-     * @return the timeout in seconds before connection validation queries fail.
      * @deprecated Use {@link #getValidationQueryTimeoutDuration()}.
      */
     @Deprecated
     @Override
     public int getValidationQueryTimeout() {
         return (int) validationQueryTimeoutDuration.getSeconds();
+    }
+
+    /**
+     * Gets the validation query timeout.
+     *
+     * @return the timeout in seconds before connection validation queries fail.
+     */
+    public Duration getValidationQueryTimeoutDuration() {
+        return validationQueryTimeoutDuration;
     }
 
     /**
@@ -1696,12 +1696,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
     }
 
-    private <T> void setConnectionPool(final BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
-        if (connectionPool != null) {
-            consumer.accept(connectionPool, object);
-        }
-    }
-
     /**
      * Sets the print writer to be used by this configuration to log information on abandoned objects.
      *
@@ -1809,6 +1803,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final List<String> collect = Utils.isEmpty(connectionInitSqls) ? null
                 : connectionInitSqls.stream().filter(s -> !isEmpty(s)).collect(Collectors.toList());
         this.connectionInitSqls = Utils.isEmpty(collect) ? null : collect;
+    }
+
+    private <T> void setConnectionPool(final BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
+        if (connectionPool != null) {
+            consumer.accept(connectionPool, object);
+        }
     }
 
     /**
@@ -2020,6 +2020,18 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets the {code durationBetweenEvictionRuns} property.
+     *
+     * @param timeBetweenEvictionRunsMillis the new time between evictor runs
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @since 2.10.0
+     */
+    public synchronized void setDurationBetweenEvictionRuns(final Duration timeBetweenEvictionRunsMillis) {
+        this.durationBetweenEvictionRuns = timeBetweenEvictionRunsMillis;
+        setConnectionPool(GenericObjectPool::setTimeBetweenEvictionRuns, timeBetweenEvictionRunsMillis);
+    }
+
+    /**
      * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
@@ -2076,16 +2088,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setJmxName(final String jmxName) {
         this.jmxName = jmxName;
-    }
-
-    /**
-     * Sets if connection level JMX tracking is requested for this DataSource. If true, each connection will be
-     * registered for tracking with JMX.
-     *
-     * @param registerConnectionMBean connection tracking requested for this DataSource.
-     */
-    public void setRegisterConnectionMBean(final boolean registerConnectionMBean) {
-        this.registerConnectionMBean = registerConnectionMBean;
     }
 
     /**
@@ -2326,6 +2328,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets if connection level JMX tracking is requested for this DataSource. If true, each connection will be
+     * registered for tracking with JMX.
+     *
+     * @param registerConnectionMBean connection tracking requested for this DataSource.
+     */
+    public void setRegisterConnectionMBean(final boolean registerConnectionMBean) {
+        this.registerConnectionMBean = registerConnectionMBean;
+    }
+
+    /**
      * @param removeAbandonedOnBorrow true means abandoned connections may be removed when connections are borrowed from
      *                                the pool.
      * @see #getRemoveAbandonedOnBorrow()
@@ -2459,18 +2471,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public synchronized void setTestWhileIdle(final boolean testWhileIdle) {
         this.testWhileIdle = testWhileIdle;
         setConnectionPool(GenericObjectPool::setTestWhileIdle, testWhileIdle);
-    }
-
-    /**
-     * Sets the {code durationBetweenEvictionRuns} property.
-     *
-     * @param timeBetweenEvictionRunsMillis the new time between evictor runs
-     * @see #setDurationBetweenEvictionRuns(Duration)
-     * @since 2.10.0
-     */
-    public synchronized void setDurationBetweenEvictionRuns(final Duration timeBetweenEvictionRunsMillis) {
-        this.durationBetweenEvictionRuns = timeBetweenEvictionRunsMillis;
-        setConnectionPool(GenericObjectPool::setTimeBetweenEvictionRuns, timeBetweenEvictionRunsMillis);
     }
 
     /**

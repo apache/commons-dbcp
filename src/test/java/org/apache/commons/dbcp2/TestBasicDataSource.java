@@ -230,6 +230,27 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     /**
+     * Test disabling MBean registration for Connection objects.
+     * JIRA: DBCP-585
+     */
+    @Test
+    public void testConnectionMBeansDisabled() throws Exception {
+        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        // Unregister leftovers from other tests (TODO: worry about concurrent test execution)
+        final ObjectName commons = new ObjectName("org.apache.commons.*:*");
+        final Set<ObjectName> results = mbs.queryNames(commons, null);
+        for (final ObjectName result : results) {
+            mbs.unregisterMBean(result);
+        }
+        ds.setRegisterConnectionMBean(false); // Should disable Connection MBean registration
+        try (Connection conn = ds.getConnection()) { // Trigger initialization
+            // No Connection MBeans shall be registered
+            final ObjectName connections = new ObjectName("org.apache.commons.*:connection=*,*");
+            assertEquals(0, mbs.queryNames(connections, null).size());
+        }
+    }
+
+    /**
      * JIRA: DBCP-547
      * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
      */
@@ -619,27 +640,6 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (Connection conn = ds.getConnection()) { // Trigger initialization
             // Nothing should be registered
             assertEquals(0, mbs.queryNames(commons, null).size());
-        }
-    }
-
-    /**
-     * Test disabling MBean registration for Connection objects.
-     * JIRA: DBCP-585
-     */
-    @Test
-    public void testConnectionMBeansDisabled() throws Exception {
-        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        // Unregister leftovers from other tests (TODO: worry about concurrent test execution)
-        final ObjectName commons = new ObjectName("org.apache.commons.*:*");
-        final Set<ObjectName> results = mbs.queryNames(commons, null);
-        for (final ObjectName result : results) {
-            mbs.unregisterMBean(result);
-        }
-        ds.setRegisterConnectionMBean(false); // Should disable Connection MBean registration
-        try (Connection conn = ds.getConnection()) { // Trigger initialization
-            // No Connection MBeans shall be registered
-            final ObjectName connections = new ObjectName("org.apache.commons.*:connection=*,*");
-            assertEquals(0, mbs.queryNames(connections, null).size());
         }
     }
 

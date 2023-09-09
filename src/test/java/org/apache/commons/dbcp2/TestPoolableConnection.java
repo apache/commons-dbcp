@@ -164,6 +164,30 @@ public class TestPoolableConnection {
         assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
     }
 
+    @Test
+    public void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
+        final int maxDeep = 100_000;
+        final SQLException rootException = new SQLException("Data truncated", "22001");
+        SQLException parentException = rootException;
+        for (int i = 0; i <= maxDeep; i++) {
+            final SQLException childException = new SQLException("Data truncated: " + i, "22001");
+            parentException.setNextException(childException);
+            parentException = childException;
+        }
+        final Connection conn = pool.borrowObject();
+        assertEquals(false, ((PoolableConnection) conn).isDisconnectionSqlException(rootException));
+        assertEquals(false, ((PoolableConnection) conn).isFatalException(rootException));
+    }
+
+    /**
+     * Tests if the {@link PoolableConnectionMXBean} interface is a valid MXBean
+     * interface.
+     */
+    @Test
+    public void testMXBeanCompliance() throws OperationsException {
+       TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
+    }
+
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the
     // delegated connection closes itself.
     @Test
@@ -188,29 +212,5 @@ public class TestPoolableConnection {
         }
 
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
-    }
-
-    @Test
-    public void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
-        final int maxDeep = 100_000;
-        final SQLException rootException = new SQLException("Data truncated", "22001");
-        SQLException parentException = rootException;
-        for (int i = 0; i <= maxDeep; i++) {
-            final SQLException childException = new SQLException("Data truncated: " + i, "22001");
-            parentException.setNextException(childException);
-            parentException = childException;
-        }
-        final Connection conn = pool.borrowObject();
-        assertEquals(false, ((PoolableConnection) conn).isDisconnectionSqlException(rootException));
-        assertEquals(false, ((PoolableConnection) conn).isFatalException(rootException));
-    }
-
-    /**
-     * Tests if the {@link PoolableConnectionMXBean} interface is a valid MXBean
-     * interface.
-     */
-    @Test
-    public void testMXBeanCompliance() throws OperationsException {
-       TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
     }
 }

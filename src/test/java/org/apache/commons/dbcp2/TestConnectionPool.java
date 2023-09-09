@@ -53,8 +53,6 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class TestConnectionPool {
 
-    private static final Duration MAX_WAIT_DURATION = Duration.ofMillis(100);
-
     protected class PoolTest implements Runnable {
         /**
          * The number of milliseconds to hold onto a database connection
@@ -218,6 +216,8 @@ public abstract class TestConnectionPool {
             _complete = true;
         }
     }
+
+    private static final Duration MAX_WAIT_DURATION = Duration.ofMillis(100);
 
     private static final boolean DISPLAY_THREAD_DETAILS=
             Boolean.parseBoolean(System.getProperty("TestConnectionPool.display.thread.details", "false"));

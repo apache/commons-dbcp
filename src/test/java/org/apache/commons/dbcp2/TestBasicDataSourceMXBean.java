@@ -34,6 +34,13 @@ import org.junit.jupiter.api.Test;
  */
 public class TestBasicDataSourceMXBean {
 
+    public static void testMXBeanCompliance(Class<?> clazz) throws OperationsException {
+        assertTrue(JMX.isMXBeanInterface(clazz));
+        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        final ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
+        JMX.newMBeanProxy(server, objectName, clazz, true);
+    }
+
     private final BasicDataSourceMXBean bean = new BasicDataSourceMXBean() {
 
         @Override
@@ -256,12 +263,5 @@ public class TestBasicDataSourceMXBean {
     @Test
     public void testMXBeanCompliance() throws OperationsException {
         testMXBeanCompliance(BasicDataSourceMXBean.class);
-    }
-
-    public static void testMXBeanCompliance(Class<?> clazz) throws OperationsException {
-        assertTrue(JMX.isMXBeanInterface(clazz));
-        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        final ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
-        JMX.newMBeanProxy(server, objectName, clazz, true);
     }
 }

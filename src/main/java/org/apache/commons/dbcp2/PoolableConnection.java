@@ -265,6 +265,14 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * @return Whether to fail-fast.
+     * @since 2.6.0
+     */
+    public boolean isFastFailValidation() {
+        return fastFailValidation;
+    }
+
+    /**
      * Checks the SQLState of the input exception and any nested SQLExceptions it wraps.
      * <p>
      * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the
@@ -291,14 +299,6 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         return fatalException;
     }
 
-    /**
-     * @return Whether to fail-fast.
-     * @since 2.6.0
-     */
-    public boolean isFastFailValidation() {
-        return fastFailValidation;
-    }
-
     @Override
     protected void passivate() throws SQLException {
         super.passivate();
@@ -322,30 +322,6 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         super.closeInternal();
-    }
-
-    /**
-     * Validates the connection, using the following algorithm:
-     * <ol>
-     * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
-     * thrown a fatal disconnection exception, a {@code SQLException} is thrown.</li>
-     * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
-     * returns {@code false}, {@code SQLException} is thrown; otherwise, this method returns successfully.</li>
-     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
-     * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
-     * </ol>
-     *
-     * @param sql
-     *            The validation SQL query.
-     * @param timeoutSeconds
-     *            The validation timeout in seconds.
-     * @throws SQLException
-     *             Thrown when validation fails or an SQLException occurs during validation
-     * @deprecated Use {@link #validate(String, Duration)}.
-     */
-    @Deprecated
-    public void validate(final String sql, final int timeoutSeconds) throws SQLException {
-        validate(sql, Duration.ofSeconds(timeoutSeconds));
     }
 
     /**
@@ -400,5 +376,29 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         } catch (final SQLException sqle) {
             throw sqle;
         }
+    }
+
+    /**
+     * Validates the connection, using the following algorithm:
+     * <ol>
+     * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
+     * thrown a fatal disconnection exception, a {@code SQLException} is thrown.</li>
+     * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
+     * returns {@code false}, {@code SQLException} is thrown; otherwise, this method returns successfully.</li>
+     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
+     * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
+     * </ol>
+     *
+     * @param sql
+     *            The validation SQL query.
+     * @param timeoutSeconds
+     *            The validation timeout in seconds.
+     * @throws SQLException
+     *             Thrown when validation fails or an SQLException occurs during validation
+     * @deprecated Use {@link #validate(String, Duration)}.
+     */
+    @Deprecated
+    public void validate(final String sql, final int timeoutSeconds) throws SQLException {
+        validate(sql, Duration.ofSeconds(timeoutSeconds));
     }
 }

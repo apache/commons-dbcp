@@ -47,27 +47,6 @@ import org.junit.jupiter.api.Test;
  */
 public class TestSharedPoolDataSource extends TestConnectionPool {
 
-    private static class CscbString extends AbstractPrepareCallCallback {
-        @Override
-        CallableStatement getCallableStatement() throws SQLException {
-            return conn.prepareCall("{call home()}");
-        }
-    }
-
-    private static class CscbStringIntInt extends AbstractPrepareCallCallback {
-        @Override
-        CallableStatement getCallableStatement() throws SQLException {
-            return conn.prepareCall("{call home()}", 0, 0);
-        }
-    }
-
-    private static class CscbStringIntIntInt extends AbstractPrepareCallCallback {
-        @Override
-        CallableStatement getCallableStatement() throws SQLException {
-            return conn.prepareCall("{call home()}", 0, 0, 0);
-        }
-    }
-
     /**
      * There are 3 different prepareCall statement methods so add a little complexity to reduce what would otherwise be lots
      * of copy and paste.
@@ -93,6 +72,27 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         void setConnection(final Connection conn) {
             this.conn = conn;
+        }
+    }
+
+    private static class CscbString extends AbstractPrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}");
+        }
+    }
+
+    private static class CscbStringIntInt extends AbstractPrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}", 0, 0);
+        }
+    }
+
+    private static class CscbStringIntIntInt extends AbstractPrepareCallCallback {
+        @Override
+        CallableStatement getCallableStatement() throws SQLException {
+            return conn.prepareCall("{call home()}", 0, 0, 0);
         }
     }
 
