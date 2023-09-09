@@ -234,6 +234,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             tds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
             @SuppressWarnings("resource")
+            final
             DataSource myDs = tds;
 
             try (Connection conn = ds.getConnection()) {
@@ -649,7 +650,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     @Test
     public void testSimple2() throws SQLException {
         {
-            Connection conn = ds.getConnection();
+            final Connection conn = ds.getConnection();
             assertNotNull(conn);
 
             try (PreparedStatement stmt = conn.prepareStatement("select * from dual")) {

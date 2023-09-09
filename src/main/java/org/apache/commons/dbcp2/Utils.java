@@ -114,7 +114,7 @@ public final class Utils {
      * @param exceptionHandler Consumes exception thrown closing this resource.
      * @since 2.10.0
      */
-    public static void close(AutoCloseable autoCloseable, final Consumer<Exception> exceptionHandler) {
+    public static void close(final AutoCloseable autoCloseable, final Consumer<Exception> exceptionHandler) {
         if (autoCloseable != null) {
             try {
                 autoCloseable.close();

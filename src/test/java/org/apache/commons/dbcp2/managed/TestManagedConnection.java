@@ -196,7 +196,7 @@ public class TestManagedConnection {
     public void testConnectionReturnOnErrorWhenEnlistingXAResource() throws Exception {
         // see DBCP-433
         transactionManager.begin();
-        assertThrows(SQLException.class, () -> getConnection());
+        assertThrows(SQLException.class, this::getConnection);
         transactionManager.commit();
         assertEquals(1, pool.getBorrowedCount());
         // assertEquals(1, pool.getReturnedCount());

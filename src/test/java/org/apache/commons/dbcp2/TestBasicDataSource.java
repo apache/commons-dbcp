@@ -159,7 +159,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         assertTrue(rawActiveConnection.isClosed());
 
         // Verify SQLException on getConnection after close
-        assertThrows(SQLException.class, () -> getConnection());
+        assertThrows(SQLException.class, this::getConnection);
 
         // Redundant close is OK
         ds.close();

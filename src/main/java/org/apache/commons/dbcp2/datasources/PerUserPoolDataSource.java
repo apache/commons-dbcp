@@ -66,7 +66,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         // Should there be a default size different from what this ctor provides?
         return new HashMap<>();
     }
-    
+
     private Map<String, Boolean> perUserBlockWhenExhausted;
     private Map<String, String> perUserEvictionPolicyClassName;
     private Map<String, Boolean> perUserLifo;
@@ -933,7 +933,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     public void setPerUserMaxWait(final String userName, final Duration value) {
         assertInitializationAllowed();
-        perUserMaxWaitDuration = put(perUserMaxWaitDuration, userName, value);        
+        perUserMaxWaitDuration = put(perUserMaxWaitDuration, userName, value);
     }
 
     void setPerUserMaxWaitDuration(final Map<String, Duration> newMap) {
@@ -977,7 +977,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     public void setPerUserMinEvictableIdle(final String userName, final Duration value) {
         assertInitializationAllowed();
-        perUserMinEvictableIdleDuration = put(perUserMinEvictableIdleDuration, userName, value);        
+        perUserMinEvictableIdleDuration = put(perUserMinEvictableIdleDuration, userName, value);
     }
 
     /**
@@ -1010,7 +1010,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     public void setPerUserMinIdle(final String userName, final Integer value) {
         assertInitializationAllowed();
-        perUserMinIdle = put(perUserMinIdle, userName, value);        
+        perUserMinIdle = put(perUserMinIdle, userName, value);
     }
 
     void setPerUserNumTestsPerEvictionRun(final Map<String, Integer> newMap) {
@@ -1029,7 +1029,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     public void setPerUserNumTestsPerEvictionRun(final String userName, final Integer value) {
         assertInitializationAllowed();
-        perUserNumTestsPerEvictionRun = put(perUserNumTestsPerEvictionRun, userName, value);        
+        perUserNumTestsPerEvictionRun = put(perUserNumTestsPerEvictionRun, userName, value);
     }
 
     void setPerUserSoftMinEvictableIdle(final Map<String, Duration> newMap) {

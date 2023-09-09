@@ -220,7 +220,7 @@ public abstract class TestConnectionPool {
     private static final Duration MAX_WAIT_DURATION = Duration.ofMillis(100);
 
     private static final boolean DISPLAY_THREAD_DETAILS=
-            Boolean.parseBoolean(System.getProperty("TestConnectionPool.display.thread.details", "false"));
+    Boolean.getBoolean("TestConnectionPool.display.thread.details");
     // To pass this to a Maven test, use:
     // mvn test -DargLine="-DTestConnectionPool.display.thread.details=true"
     // @see https://issues.apache.org/jira/browse/SUREFIRE-121
@@ -461,9 +461,9 @@ public abstract class TestConnectionPool {
         }
     }
 
-    /** 
+    /**
      * Acquires a new connection and push it onto the connections stack.
-     * 
+     *
      * @return a new connection.
      * @throws Exception Defined in subclasses.
      */

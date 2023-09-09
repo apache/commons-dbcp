@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.locks.Lock;
@@ -52,10 +51,9 @@ public class StackMessageLog extends SimpleLog {
      * Note: iterator is fail-fast, lock the stack first.
      */
     public static List<String> getAll() {
-        final Iterator<String> iterator = MESSAGE_STACK.iterator();
         final List<String> messages = new ArrayList<>();
-        while (iterator.hasNext()) {
-            messages.add(iterator.next());
+        for (String element : MESSAGE_STACK) {
+            messages.add(element);
         }
         return messages;
     }

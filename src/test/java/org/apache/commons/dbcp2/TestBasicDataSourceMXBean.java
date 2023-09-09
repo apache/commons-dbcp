@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestBasicDataSourceMXBean {
 
-    public static void testMXBeanCompliance(Class<?> clazz) throws OperationsException {
+    public static void testMXBeanCompliance(final Class<?> clazz) throws OperationsException {
         assertTrue(JMX.isMXBeanInterface(clazz));
         final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         final ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
