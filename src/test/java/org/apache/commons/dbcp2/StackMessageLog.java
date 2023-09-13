@@ -48,14 +48,15 @@ public class StackMessageLog extends SimpleLog {
     }
 
     /**
-     * Note: iterator is fail-fast, lock the stack first.
+     * Gets a copy of the message stack.
+     * <p>
+     * Note: lock the stack first.
+     * </p>
+     *
+     * @return a new list.
      */
     public static List<String> getAll() {
-        final List<String> messages = new ArrayList<>();
-        for (String element : MESSAGE_STACK) {
-            messages.add(element);
-        }
-        return messages;
+        return new ArrayList<>(MESSAGE_STACK);
     }
 
     public static boolean isEmpty() {
