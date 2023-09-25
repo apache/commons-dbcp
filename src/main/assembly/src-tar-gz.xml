@@ -25,14 +25,11 @@
             <includes>
                 <include>build.properties.sample</include>
                 <include>build.xml</include>
-                <include>checkstyle.xml</include>
-                <include>findbugs-exclude-filter.xml</include>
                 <include>LICENSE.txt</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
-                <include>README.txt</include>
+                <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
-                <include>test-jar.xml</include>
             </includes>
             <lineEnding>lf</lineEnding>
         </fileSet>
@@ -46,6 +43,9 @@
         </fileSet>
         <fileSet>
             <directory>src/site/resources</directory>
+        </fileSet>
+         <fileSet>
+            <directory>src/conf</directory>
         </fileSet>
         <fileSet>
             <directory>src/site/xdoc</directory>

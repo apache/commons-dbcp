@@ -30,8 +30,6 @@
                 <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
                 <include>SECURITY.md</include>
-                <include>src/conf/checkstyle.xml</include>
-                <include>src/conf/findbugs-exclude-filter.xml</include>
             </includes>
             <lineEnding>crlf</lineEnding>
         </fileSet>
@@ -42,6 +40,9 @@
                <exclude>static_structure_dia.gif</exclude>
             </excludes>
             <lineEnding>crlf</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/conf</directory>
         </fileSet>
         <fileSet>
             <directory>src/site/resources</directory>
