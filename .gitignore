@@ -19,5 +19,6 @@ site-content
 .classpath
 .settings
 .idea
+.vscode
 *.iml
 .nbproject
