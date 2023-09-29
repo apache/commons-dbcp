@@ -167,8 +167,8 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
         }
 
         // get the real connection and XAResource from the connection
-        final Connection connection = xaConnection.getConnection();
         final XAResource xaResource = xaConnection.getXAResource();
+        final Connection connection = xaConnection.getConnection();
 
         // register the xa resource for the connection
         transactionRegistry.registerConnection(connection, xaResource);
