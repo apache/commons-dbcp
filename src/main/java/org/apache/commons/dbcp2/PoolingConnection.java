@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -294,7 +295,10 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws SQLException {
-        pooledObject.getObject().getInnermostDelegate().close();
+        Statement s = pooledObject.getObject().getInnermostDelegate();
+        if (s != null) {
+            s.close();
+        }
     }
 
     private String getCatalogOrNull() {

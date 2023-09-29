@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -333,7 +334,10 @@ final class PooledConnectionImpl
     @Override
     public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws SQLException {
-        pooledObject.getObject().getInnermostDelegate().close();
+        Statement s = pooledObject.getObject().getInnermostDelegate();
+        if (s != null) {
+            s.close();
+        }
     }
 
     /**
