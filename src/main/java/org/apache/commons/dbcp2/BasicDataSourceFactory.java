@@ -289,7 +289,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         final String value = properties.getProperty(PROP_CONNECTION_PROPERTIES);
         if (value != null) {
             for (final Object key : getProperties(value).keySet()) {
-                final String propertyName = Objects.toString(key, null);
+                final String propertyName = Objects.toString(key);
                 dataSource.addConnectionProperty(propertyName, getProperties(value).getProperty(propertyName));
             }
         }
@@ -422,7 +422,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
         final List<String> infoMessages) {
         final String nameString = name != null ? "Name = " + name.toString() + " " : "";
-        if (NUPROP_WARNTEXT != null && !NUPROP_WARNTEXT.isEmpty()) {
+        if (!NUPROP_WARNTEXT.isEmpty()) {
             NUPROP_WARNTEXT.forEach((propertyName, value) -> {
                 final RefAddr ra = ref.get(propertyName);
                 if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
