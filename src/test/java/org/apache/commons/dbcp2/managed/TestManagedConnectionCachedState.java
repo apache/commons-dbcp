@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestManagedConnectionCachedState {
 
-    private static class SwallowedExceptionRecorder implements SwallowedExceptionListener {
+    private static final class SwallowedExceptionRecorder implements SwallowedExceptionListener {
 
         private final List<Exception> exceptions = new ArrayList<>();
 

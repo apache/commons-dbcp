@@ -54,7 +54,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestLocalXaResource {
 
-    private static class TestConnection implements Connection {
+    private static final class TestConnection implements Connection {
 
         public boolean throwWhenGetAutoCommit;
         public boolean throwWhenSetAutoCommit;
@@ -333,7 +333,7 @@ public class TestLocalXaResource {
             return null;
         }
     }
-    private static class TestXid implements Xid {
+    private static final class TestXid implements Xid {
 
         @Override
         public byte[] getBranchQualifier() {

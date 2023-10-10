@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestDelegatingStatement {
 
-    private static class TesterStatementNonWrapping extends TesterStatement {
+    private static final class TesterStatementNonWrapping extends TesterStatement {
 
         public TesterStatementNonWrapping(final Connection conn) {
             super(conn);

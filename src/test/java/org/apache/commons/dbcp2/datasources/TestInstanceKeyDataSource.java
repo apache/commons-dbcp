@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestInstanceKeyDataSource {
 
-    private static class ThrowOnSetupDefaultsDataSource extends SharedPoolDataSource {
+    private static final class ThrowOnSetupDefaultsDataSource extends SharedPoolDataSource {
 
         private static final long serialVersionUID = -448025812063133259L;
 

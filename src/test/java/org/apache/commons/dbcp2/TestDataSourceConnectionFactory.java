@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDataSourceConnectionFactory {
 
-    private static class TestDataSource implements DataSource {
+    private static final class TestDataSource implements DataSource {
 
         @Override
         public Connection getConnection() throws SQLException {

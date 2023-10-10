@@ -50,7 +50,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestDriverAdapterCPDS {
 
-    private static class ThreadDbcp367 extends Thread {
+    private static final class ThreadDbcp367 extends Thread {
 
         private final DataSource ds;
 
