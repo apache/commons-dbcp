@@ -161,7 +161,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      *             always thrown
      */
     @Override
-    public Connection getConnection(final String uname, final String passwd) throws SQLException {
+    public Connection getConnection(final String userName, final String password) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
