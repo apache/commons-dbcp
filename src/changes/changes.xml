@@ -71,6 +71,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 60 to 64.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump org.slf4j:slf4j-simple from 2.0.7 to 2.0.9 #301.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-pool2 from 2.11.1 to 2.12.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump jakarta.transaction:jakarta.transaction-api from 1.3.1 to 1.3.3.</action>
     </release>
     <release version="2.10.0" date="2023-08-28" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
