@@ -420,20 +420,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
      *            container for info messages
      */
     private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
-        final List<String> infoMessages) {
+            final List<String> infoMessages) {
         final String nameString = name != null ? "Name = " + name.toString() + " " : "";
-        if (NUPROP_WARNTEXT != null && !NUPROP_WARNTEXT.isEmpty()) {
-            NUPROP_WARNTEXT.forEach((propertyName, value) -> {
-                final RefAddr ra = ref.get(propertyName);
-                if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
-                    final StringBuilder stringBuilder = new StringBuilder(nameString);
-                    final String propertyValue = Objects.toString(ra.getContent(), null);
-                    stringBuilder.append(value).append(" You have set value of \"").append(propertyValue).append("\" for \"").append(propertyName)
+        NUPROP_WARNTEXT.forEach((propertyName, value) -> {
+            final RefAddr ra = ref.get(propertyName);
+            if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
+                final StringBuilder stringBuilder = new StringBuilder(nameString);
+                final String propertyValue = Objects.toString(ra.getContent(), null);
+                stringBuilder.append(value).append(" You have set value of \"").append(propertyValue).append("\" for \"").append(propertyName)
                         .append("\" property, which is being ignored.");
-                    warnMessages.add(stringBuilder.toString());
-                }
-            });
-        }
+                warnMessages.add(stringBuilder.toString());
+            }
+        });
 
         final Enumeration<RefAddr> allRefAddrs = ref.getAll();
         while (allRefAddrs.hasMoreElements()) {
@@ -445,7 +443,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 final String propertyValue = Objects.toString(ra.getContent(), null);
                 final StringBuilder stringBuilder = new StringBuilder(nameString);
                 stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue).append("\" for \"").append(propertyName)
-                    .append("\" property");
+                        .append("\" property");
                 infoMessages.add(stringBuilder.toString());
             }
         }
