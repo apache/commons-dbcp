@@ -64,6 +64,7 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.11.0" date="20YY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Update call sites of deprecated APIs from Apache Commons Pool.</action>
       <!-- ADD -->
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Add DataSourceMXBean.getUserName() and deprecate getUsername().</action>
       <!-- UDPATE -->
