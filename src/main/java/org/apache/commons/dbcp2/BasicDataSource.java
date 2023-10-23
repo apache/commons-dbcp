@@ -1212,7 +1212,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the password passed to the JDBC driver to establish connections.
      *
      * @return the connection password
+     * @deprecated Exposing passwords via JMX is an Information Exposure issue.
      */
+    @Deprecated
     @Override
     public String getPassword() {
         return this.password;
