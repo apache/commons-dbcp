@@ -274,8 +274,20 @@ public interface DataSourceMXBean {
      * See {@link BasicDataSource#getUsername()}.
      *
      * @return {@link BasicDataSource#getUsername()}.
+     * @deprecated Use {@link #getUserName()}.
      */
+    @Deprecated
     String getUsername();
+
+    /**
+     * See {@link BasicDataSource#getUsername()}.
+     *
+     * @return {@link BasicDataSource#getUsername()}.
+     * @since 2.11.0
+     */
+    default String getUserName() {
+        return getUsername();
+    }
 
     /**
      * See {@link BasicDataSource#getValidationQuery()}.

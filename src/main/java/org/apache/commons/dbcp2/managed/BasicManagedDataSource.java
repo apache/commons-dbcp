@@ -102,7 +102,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
         // finally, create the XAConnectionFactory using the XA data source
         final XAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(getTransactionManager(),
-                xaDataSourceInstance, getUsername(), Utils.toCharArray(getPassword()), getTransactionSynchronizationRegistry());
+                xaDataSourceInstance, getUserName(), Utils.toCharArray(getPassword()), getTransactionSynchronizationRegistry());
         transactionRegistry = xaConnectionFactory.getTransactionRegistry();
         return xaConnectionFactory;
     }

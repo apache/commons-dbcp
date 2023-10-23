@@ -62,9 +62,10 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
-    <release version="2.10.1" date="20YY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.11.0" date="20YY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <!-- ADD -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Add DataSourceMXBean.getUserName() and deprecate getUsername().</action>
       <!-- UDPATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump h2 from 2.2.220 to 2.2.224, #308.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 60 to 64.</action>

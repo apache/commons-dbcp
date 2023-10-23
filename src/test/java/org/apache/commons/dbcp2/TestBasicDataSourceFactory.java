@@ -78,6 +78,7 @@ public class TestBasicDataSourceFactory {
         assertTrue(ds.getTestOnBorrow());
         assertFalse(ds.getTestOnReturn());
         assertEquals("userName", ds.getUsername());
+        assertEquals("userName", ds.getUserName());
         assertEquals("password", ds.getPassword());
         assertEquals("SELECT DUMMY FROM DUAL", ds.getValidationQuery());
         assertEquals(Duration.ofSeconds(100), ds.getValidationQueryTimeoutDuration());
