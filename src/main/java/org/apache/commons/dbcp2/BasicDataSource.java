@@ -2127,7 +2127,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <strong>BasicDataSource does NOT support this method. </strong>
      *
      * <p>
-     * Set the login timeout (in seconds) for connecting to the database.
+     * Sets the login timeout (in seconds) for connecting to the database.
      * </p>
      * <p>
      * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
