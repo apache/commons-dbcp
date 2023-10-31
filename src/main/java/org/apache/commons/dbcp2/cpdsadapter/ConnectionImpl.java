@@ -84,7 +84,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * Get the delegated connection, if allowed.
+     * Gets the delegated connection, if allowed.
      *
      * @return the internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
@@ -98,7 +98,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * Get the innermost connection, if allowed.
+     * Gets the innermost connection, if allowed.
      *
      * @return the innermost internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
