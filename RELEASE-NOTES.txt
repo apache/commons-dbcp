@@ -345,7 +345,7 @@ The Apache Commons DBCP team is pleased to announce the release of Apache Common
 
 Apache Commons DBCP software implements Database Connection Pooling.
 
-This is a minor release, including bug fixes and enhancements and requires Java 8 to support JDBC 4.2.
+This is a minor release, including bug fixes and enhancements and requires Java 8 or above to support JDBC 4.2.
 
 Changes in this version include:
 

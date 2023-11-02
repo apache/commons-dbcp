@@ -39,7 +39,7 @@ import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImpl
 import com.arjuna.ats.jta.common.jtaPropertyManager;
 
 /**
- * Requires Java 8.
+ * Requires Java 8 or above.
  */
 public class TestConnectionWithNarayana {
     private static final String CREATE_STMT = "CREATE TABLE TEST_DATA (KEY1 VARCHAR(100), ID BIGINT, VALUE1 DOUBLE PRECISION, INFO TEXT, TS TIMESTAMP)";
