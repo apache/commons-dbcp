@@ -46,7 +46,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      *
      * @since 2.0
      */
-    private class PoolGuardConnectionWrapper<D extends Connection> extends DelegatingConnection<D> {
+    private final class PoolGuardConnectionWrapper<D extends Connection> extends DelegatingConnection<D> {
 
         PoolGuardConnectionWrapper(final D delegate) {
             super(delegate);

@@ -53,7 +53,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestManagedConnection {
 
-    private class UncooperativeLocalXAConnectionFactory
+    private final class UncooperativeLocalXAConnectionFactory
         extends LocalXAConnectionFactory {
 
         public UncooperativeLocalXAConnectionFactory(final TransactionManager transactionManager, final ConnectionFactory connectionFactory) {
@@ -125,7 +125,7 @@ public class TestManagedConnection {
         }
     }
 
-    private class UncooperativeTransactionRegistry
+    private final class UncooperativeTransactionRegistry
         extends TransactionRegistry {
 
         public UncooperativeTransactionRegistry(final TransactionManager transactionManager) {
