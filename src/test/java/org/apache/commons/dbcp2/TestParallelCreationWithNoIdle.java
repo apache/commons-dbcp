@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 public class TestParallelCreationWithNoIdle  {
 
 
-    class TestThread extends Thread {
+    final class TestThread extends Thread {
         final java.util.Random _random = new java.util.Random();
         final int iter;
         final int delay;

@@ -1111,7 +1111,7 @@ public class TestBasicDataSource extends TestConnectionPool {
  * TesterDriver that adds latency to connection requests. Latency (in ms) is the
  * last component of the URL.
  */
-class TesterConnectionDelayDriver extends TesterDriver {
+final class TesterConnectionDelayDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnectionDelayDriver";
 
     public TesterConnectionDelayDriver() {
@@ -1140,7 +1140,7 @@ class TesterConnectionDelayDriver extends TesterDriver {
 /**
  * TesterDriver that keeps a static count of connection requests.
  */
-class TesterConnRequestCountDriver extends TesterDriver {
+final class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
     private static final AtomicInteger connectionRequestCount = new AtomicInteger(0);
 
