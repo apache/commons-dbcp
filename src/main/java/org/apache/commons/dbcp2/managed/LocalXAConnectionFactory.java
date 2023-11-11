@@ -59,7 +59,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         private boolean originalAutoCommit; // @GuardedBy("this")
 
         /**
-         * Construct a new instance for a given connection.
+         * Constructs a new instance for a given connection.
          *
          * @param localTransaction A connection.
          */
