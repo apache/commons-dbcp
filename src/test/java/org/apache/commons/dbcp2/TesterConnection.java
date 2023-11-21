@@ -34,6 +34,7 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A dummy {@link Connection}, for testing purposes.
@@ -53,6 +54,8 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     protected final String userName;
     protected Exception failure;
     protected boolean sqlExceptionOnClose;
+    public AtomicInteger beginRequestCount = new AtomicInteger(0);
+    public AtomicInteger endRequestCount = new AtomicInteger(0);
 
     TesterConnection(final String userName, @SuppressWarnings("unused") final String password) {
         this.userName = userName;
@@ -420,5 +423,15 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
+    }
+
+    @Override
+    public void beginRequest() {
+        beginRequestCount.incrementAndGet();
+    }
+
+    @Override
+    public void endRequest() {
+        endRequestCount.incrementAndGet();
     }
 }
