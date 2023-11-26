@@ -74,7 +74,6 @@ public class TestPStmtPooling {
         return null;
     }
 
-
     @Test
     public void testBatchUpdate() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
@@ -101,7 +100,6 @@ public class TestPStmtPooling {
         Assertions.assertFalse(inner.isClosed());
         ds.close();
     }
-
 
     @Test
     public void testCallableStatementPooling() throws Exception {

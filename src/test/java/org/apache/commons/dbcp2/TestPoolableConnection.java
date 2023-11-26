@@ -47,7 +47,6 @@ public class TestPoolableConnection {
         factory.setDefaultAutoCommit(Boolean.TRUE);
         factory.setDefaultReadOnly(Boolean.TRUE);
 
-
         pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
     }

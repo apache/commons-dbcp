@@ -37,20 +37,17 @@ import org.junit.jupiter.api.Test;
  */
 public class TestParallelCreationWithNoIdle  {
 
-
     final class TestThread extends Thread {
         final java.util.Random _random = new java.util.Random();
         final int iter;
         final int delay;
         final int delayAfter;
 
-
         public TestThread(final int iter, final int delay, final int delayAfter) {
             this.iter = iter;
             this.delay = delay;
             this.delayAfter = delayAfter;
         }
-
 
         @Override
         public void run() {
@@ -120,8 +117,6 @@ public class TestParallelCreationWithNoIdle  {
         ds.setDriverClassLoader(new TesterClassLoader());
         ds.setJmxName("org.apache.commons.dbcp2:name=test");
     }
-
-
 
     /**
      * Fire up 100 Threads but only have 10 maxActive and forcedBlock.

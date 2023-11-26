@@ -322,7 +322,6 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return new TesterPreparedStatement(this, sql, columnIndexes);
     }
 
-
     @Override
     public PreparedStatement prepareStatement(final String sql, final String[] columnNames)
         throws SQLException {

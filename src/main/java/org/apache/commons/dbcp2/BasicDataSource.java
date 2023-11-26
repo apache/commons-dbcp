@@ -466,7 +466,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return ConnectionFactoryFactory.createConnectionFactory(this, DriverFactory.createDriver(this));
     }
 
-
     /**
      * Creates a connection pool for this datasource. This method only exists so subclasses can replace the
      * implementation class.

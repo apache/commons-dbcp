@@ -314,7 +314,6 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         }
     }
 
-
     /**
      * Verify that lastUsed property is updated when a connection
      * prepares a callable statement.

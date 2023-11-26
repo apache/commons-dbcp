@@ -314,7 +314,6 @@ public class TesterStatement extends AbandonedTrace implements Statement {
         return (int) _rowsUpdated;
     }
 
-
     @Override
     public SQLWarning getWarnings() throws SQLException {
         checkOpen();

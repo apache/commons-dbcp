@@ -1894,7 +1894,6 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
-
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {

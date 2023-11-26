@@ -265,7 +265,6 @@ public abstract class TestConnectionPool {
                     "resultSet.getStatement() should return the exact same statement instance that was used to create the result set");
         }
 
-
         resultSet.getStatement().getConnection().close();
         assertTrue(conn.isClosed());
         assertTrue(isClosed(statement));

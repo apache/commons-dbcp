@@ -932,7 +932,6 @@ public class TesterDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
         return false;

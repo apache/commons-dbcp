@@ -317,7 +317,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
-
     @Override
     public void setBlob (final int i, final Blob x) throws SQLException {
         checkOpen();
@@ -427,7 +426,6 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
     public void setNClob(final int parameterIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
-
 
     @Override
     public void setNClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {

@@ -1105,8 +1105,6 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 }
 
-
-
 /**
  * TesterDriver that adds latency to connection requests. Latency (in ms) is the
  * last component of the URL.
