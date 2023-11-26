@@ -20,7 +20,7 @@
  * This package contains two DataSources: {@code PerUserPoolDataSource} and
  * {@code SharedPoolDataSource} which provide a database connection pool.
  * Below are a couple of usage examples.  One shows deployment into a JNDI system.
- * The other is a simple example initializing the pool using standard java code.
+ * The other is a simple example initializing the pool using standard Java code.
  * </p>
  *
  * <h2>JNDI</h2>
