@@ -31,7 +31,7 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
-  <url>https://commons.apache.org/dbcp/</url>
+  <url>https://commons.apache.org/proper/commons-dbcp/</url>
 
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
