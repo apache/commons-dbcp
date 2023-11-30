@@ -82,12 +82,6 @@ public class TestParallelCreationWithNoIdle  {
     }
     private static final String CATALOG = "test catalog";
 
-    @BeforeAll
-    public static void setUpClass() {
-        // register a custom logger which supports inspection of the log messages
-        LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.dbcp2.StackMessageLog");
-    }
-
     protected BasicDataSource ds;
 
     @BeforeEach
