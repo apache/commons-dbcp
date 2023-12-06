@@ -131,15 +131,17 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     protected void activate() {
         closed = false;
         setLastUsed();
-        if (beginRequest != null && connection != null) {
-            try {
-                beginRequest.invoke(connection);
-            } catch (InvocationTargetException | IllegalAccessException ex) {
-                log.warn("Error calling beginRequest on connection", ex);
-            }
-        }
+
         if (connection instanceof DelegatingConnection) {
             ((DelegatingConnection<?>) connection).activate();
+        } else {
+            if (beginRequest != null && connection != null) {
+                try {
+                    beginRequest.invoke(connection);
+                } catch (InvocationTargetException | IllegalAccessException ex) {
+                    log.warn("Error calling beginRequest on connection", ex);
+                }
+            }
         }
     }
 

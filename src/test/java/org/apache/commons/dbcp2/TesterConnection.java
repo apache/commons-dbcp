@@ -425,12 +425,10 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         throw new SQLException("Not implemented.");
     }
 
-    @Override
     public void beginRequest() {
         beginRequestCount.incrementAndGet();
     }
 
-    @Override
     public void endRequest() {
         endRequestCount.incrementAndGet();
     }
