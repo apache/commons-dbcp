@@ -156,9 +156,9 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void testLogWriter() throws Exception {
-        final PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, "UTF-8");
+        final PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, StandardCharsets.UTF_8.name());
         final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), StandardCharsets.UTF_8));
-        System.setErr(new PrintStream(new ByteArrayOutputStream(), false, "UTF-8"));
+        System.setErr(new PrintStream(new ByteArrayOutputStream(), false, StandardCharsets.UTF_8.name()));
         SQLException ex;
 
         DriverManager.setLogWriter(pw);
