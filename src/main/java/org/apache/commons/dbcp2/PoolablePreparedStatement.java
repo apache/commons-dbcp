@@ -49,7 +49,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     private volatile boolean batchAdded;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param stmt
      *            my underlying {@link PreparedStatement}

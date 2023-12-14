@@ -68,7 +68,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     private boolean clearStatementPoolOnReturn;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param connection
      *            the underlying {@link Connection}.
