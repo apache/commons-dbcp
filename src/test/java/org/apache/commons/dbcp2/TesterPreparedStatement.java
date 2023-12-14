@@ -272,7 +272,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         throw new SQLException("Not implemented.");
     }
 
-    /** for junit test only */
+    /** For junit test only */
     public String getSql() {
         return _sql;
     }
