@@ -687,7 +687,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Supports Serialization interface.
      *
      * @param in
-     *            a {@code java.io.ObjectInputStream} value
+     *            a {@link java.io.ObjectInputStream} value
      * @throws IOException
      *             if an error occurs
      * @throws ClassNotFoundException
