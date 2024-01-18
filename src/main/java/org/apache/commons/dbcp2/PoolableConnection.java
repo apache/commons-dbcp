@@ -25,6 +25,8 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.Executor;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -75,6 +77,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     /** Whether or not to fast fail validation after fatal connection errors */
     private final boolean fastFailValidation;
+
+    private final Lock lock = new ReentrantLock();
 
     /**
      *
@@ -139,59 +143,64 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Returns me to my pool.
      */
     @Override
-    public synchronized void close() throws SQLException {
-        if (isClosedInternal()) {
-            // already closed
-            return;
-        }
-
-        boolean isUnderlyingConnectionClosed;
+    public void close() throws SQLException {
+        lock.lock();
         try {
-            isUnderlyingConnectionClosed = getDelegateInternal().isClosed();
-        } catch (final SQLException e) {
-            try {
-                pool.invalidateObject(this);
-            } catch (final IllegalStateException ise) {
-                // pool is closed, so close the connection
-                passivate();
-                getInnermostDelegate().close();
-            } catch (final Exception ignored) {
-                // DO NOTHING the original exception will be rethrown
+            if (isClosedInternal()) {
+                // already closed
+                return;
             }
-            throw new SQLException("Cannot close connection (isClosed check failed)", e);
-        }
 
-        /*
-         * Can't set close before this code block since the connection needs to be open when validation runs. Can't set
-         * close after this code block since by then the connection will have been returned to the pool and may have
-         * been borrowed by another thread. Therefore, the close flag is set in passivate().
-         */
-        if (isUnderlyingConnectionClosed) {
-            // Abnormal close: underlying connection closed unexpectedly, so we
-            // must destroy this proxy
+            boolean isUnderlyingConnectionClosed;
             try {
-                pool.invalidateObject(this);
-            } catch (final IllegalStateException e) {
-                // pool is closed, so close the connection
-                passivate();
-                getInnermostDelegate().close();
-            } catch (final Exception e) {
-                throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
+                isUnderlyingConnectionClosed = getDelegateInternal().isClosed();
+            } catch (final SQLException e) {
+                try {
+                    pool.invalidateObject(this);
+                } catch (final IllegalStateException ise) {
+                    // pool is closed, so close the connection
+                    passivate();
+                    getInnermostDelegate().close();
+                } catch (final Exception ignored) {
+                    // DO NOTHING the original exception will be rethrown
+                }
+                throw new SQLException("Cannot close connection (isClosed check failed)", e);
             }
-        } else {
-            // Normal close: underlying connection is still open, so we
-            // simply need to return this proxy to the pool
-            try {
-                pool.returnObject(this);
-            } catch (final IllegalStateException e) {
-                // pool is closed, so close the connection
-                passivate();
-                getInnermostDelegate().close();
-            } catch (final SQLException | RuntimeException e) {
-                throw e;
-            } catch (final Exception e) {
-                throw new SQLException("Cannot close connection (return to pool failed)", e);
+
+            /*
+             * Can't set close before this code block since the connection needs to be open when validation runs. Can't set
+             * close after this code block since by then the connection will have been returned to the pool and may have
+             * been borrowed by another thread. Therefore, the close flag is set in passivate().
+             */
+            if (isUnderlyingConnectionClosed) {
+                // Abnormal close: underlying connection closed unexpectedly, so we
+                // must destroy this proxy
+                try {
+                    pool.invalidateObject(this);
+                } catch (final IllegalStateException e) {
+                    // pool is closed, so close the connection
+                    passivate();
+                    getInnermostDelegate().close();
+                } catch (final Exception e) {
+                    throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
+                }
+            } else {
+                // Normal close: underlying connection is still open, so we
+                // simply need to return this proxy to the pool
+                try {
+                    pool.returnObject(this);
+                } catch (final IllegalStateException e) {
+                    // pool is closed, so close the connection
+                    passivate();
+                    getInnermostDelegate().close();
+                } catch (final SQLException | RuntimeException e) {
+                    throw e;
+                } catch (final Exception e) {
+                    throw new SQLException("Cannot close connection (return to pool failed)", e);
+                }
             }
+        } finally {
+            lock.unlock();
         }
     }
 
