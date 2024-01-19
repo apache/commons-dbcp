@@ -24,9 +24,9 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.Executor;
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
