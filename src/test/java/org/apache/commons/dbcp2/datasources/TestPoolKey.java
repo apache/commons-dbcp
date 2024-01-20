@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for PoolKey.
- * @since 2.5.0
  */
 public class TestPoolKey {
 

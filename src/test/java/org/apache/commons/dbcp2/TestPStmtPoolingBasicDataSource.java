@@ -219,7 +219,6 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * When turned on, the statement pool must be empty after the connection is closed.
      *
      * @throws Exception
-     * @since 2.8.0
      */
     @Test
     public void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
