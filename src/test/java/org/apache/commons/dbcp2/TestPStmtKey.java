@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link PStmtKey}.
- *
  */
 public class TestPStmtKey {
 

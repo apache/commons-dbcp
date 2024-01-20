@@ -552,7 +552,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @return a {@link PoolablePreparedStatement}
      * @throws SQLException
      *             Wraps an underlying exception.
-     *
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
