@@ -1135,7 +1135,7 @@ final class TesterConnectionDelayDriver extends TesterDriver {
  */
 final class TesterConnRequestCountDriver extends TesterDriver {
     private static final String CONNECT_STRING = "jdbc:apache:commons:testerConnRequestCountDriver";
-    private static final AtomicInteger connectionRequestCount = new AtomicInteger(0);
+    private static final AtomicInteger connectionRequestCount = new AtomicInteger();
 
     public static int getConnectionRequestCount() {
         return connectionRequestCount.get();
