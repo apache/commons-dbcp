@@ -223,6 +223,10 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     @Override
     protected void handleException(final SQLException e) throws SQLException {
         fatalSqlExceptionThrown |= isFatalException(e);
+        if (fatalSqlExceptionThrown && getDelegate() != null) {
+            getDelegate().close();
+            this.close();
+        }
         super.handleException(e);
     }
 
