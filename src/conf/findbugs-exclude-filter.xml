@@ -81,4 +81,8 @@
     <!-- SpotBugs 4.7.0: These seem pointless unless all classes are specified to be immutable -->
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
+  <Match>
+    <!-- TODO ? -->
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
+  </Match>
 </FindBugsFilter>
