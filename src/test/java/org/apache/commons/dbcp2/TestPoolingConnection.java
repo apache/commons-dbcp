@@ -168,4 +168,16 @@ public class TestPoolingConnection {
             assertEquals(resultSetHoldability, testStatement.getResultSetHoldability());
         }
     }
+
+    /**
+     * Tests DBCP-596 PoolingConnection.toString() causes StackOverflowError.
+     */
+    @Test
+    public void testToStringStackOverflow() {
+        final PoolingConnection conn = new PoolingConnection(null);
+        final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
+        final GenericKeyedObjectPool stmtPool = new GenericKeyedObjectPool<>(conn, config);
+        conn.setStatementPool(stmtPool);
+        conn.toString();
+    }
 }

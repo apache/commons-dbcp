@@ -27,6 +27,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
@@ -597,6 +598,13 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     @Override
     public synchronized String toString() {
+        if (pStmtPool instanceof GenericKeyedObjectPool) {
+            // DBCP-596 PoolingConnection.toString() causes StackOverflowError
+            final GenericKeyedObjectPool<?, ?> gkop = (GenericKeyedObjectPool<?, ?>) pStmtPool;
+            if (gkop.getFactory() == this) {
+                return "PoolingConnection: " + pStmtPool.getClass() + "@" + System.identityHashCode(pStmtPool);
+            }
+        }
         return "PoolingConnection: " + Objects.toString(pStmtPool);
     }
 
