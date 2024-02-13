@@ -66,6 +66,7 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- FIX -->
       <action type="fix" issue="DBCP-596" dev="ggregory" due-to="Aapo Haapanen, Gary Gregory">PoolingConnection.toString() causes StackOverflowError.</action>
       <!-- ADD -->
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add property project.build.outputTimestamp for build reproducibility.</action>
       <!-- UPDATE -->
       <action type="update" dev="psteitz" due-to="cortlepp-intershop">Use ReentrantLock in PoolableConnection.close, #591</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-lang3 from 3.13.0 to 3.14.0.</action>
