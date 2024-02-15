@@ -483,6 +483,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         updateJmxName(config);
         // Disable JMX on the underlying pool if the DS is not registered:
         config.setJmxEnabled(registeredJmxObjectName != null);
+        // Set up usage tracking if enabled
+        if (getAbandonedUsageTracking() && abandonedConfig != null) {
+            abandonedConfig.setUseUsageTracking(true);
+        }
         final GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);

@@ -467,7 +467,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes, fastFailValidation);
         pc.setCacheState(cacheState);
 
-        return new DefaultPooledObject<>(pc);
+        final DefaultPooledObject<PoolableConnection> pooledObject = new DefaultPooledObject<>(pc);
+        pooledObject.setRequireFullStackTrace(true); 
+        return pooledObject;
     }
 
     @Override

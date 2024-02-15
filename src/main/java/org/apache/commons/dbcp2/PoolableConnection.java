@@ -34,6 +34,7 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * A delegating connection that, rather than closing the underlying connection, returns itself to an {@link ObjectPool}
@@ -331,6 +332,17 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         super.closeInternal();
+    }
+
+    @Override
+    public void setLastUsed() {
+        super.setLastUsed();
+        if (pool instanceof GenericObjectPool<?>) {
+            final GenericObjectPool<PoolableConnection> gop = (GenericObjectPool<PoolableConnection>) pool;
+            if (gop.isAbandonedConfig()) {
+                gop.use(this);
+            }
+        }
     }
 
     /**

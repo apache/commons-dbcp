@@ -389,4 +389,43 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             checkLastUsedStatement(st, conn);
         }
     }
+
+    @Test
+    public void testAbandonedStackTraces() throws Exception {
+        // force abandoned
+        ds.setRemoveAbandonedTimeout(Duration.ZERO);
+        ds.setMaxTotal(1);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        ds.setAbandonedUsageTracking(true);
+
+        try (Connection conn1 = getConnection()) {
+            assertNotNull(conn1);
+            assertEquals(1, ds.getNumActive());
+            // Use the connection
+            try (Statement stmt = conn1.createStatement()) {
+                assertNotNull(stmt);
+                stmt.execute("SELECT 1 FROM DUAL");
+            }
+
+            try (Connection conn2 = getConnection()) {
+                // Attempt to borrow object triggers abandoned cleanup
+                // conn1 should be closed by the pool to make room
+                assertNotNull(conn2);
+                assertEquals(1, ds.getNumActive());
+                // Verify that conn1 is closed
+                assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
+                // Verify that conn1 is aborted
+                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1)
+                        .getInnermostDelegate();
+                assertTrue(tCon.isAborted());
+
+            }
+            assertEquals(0, ds.getNumActive());
+        }
+        assertEquals(0, ds.getNumActive());
+        final String stackTrace = sw.toString();
+        assertTrue(stackTrace.contains("testAbandonedStackTraces"), stackTrace);
+        assertTrue(stackTrace.contains("Pooled object created"), stackTrace);
+        assertTrue(stackTrace.contains("The last code to use this object was:"), stackTrace);
+    }
 }
