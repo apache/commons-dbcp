@@ -468,7 +468,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         pc.setCacheState(cacheState);
 
         final DefaultPooledObject<PoolableConnection> pooledObject = new DefaultPooledObject<>(pc);
-        pooledObject.setRequireFullStackTrace(true); 
         return pooledObject;
     }
 
