@@ -331,7 +331,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         if (propText != null) {
             try {
                 p.load(new ByteArrayInputStream(propText.replace(';', '\n').getBytes(StandardCharsets.ISO_8859_1)));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new SQLException(propText, e);
             }
         }
