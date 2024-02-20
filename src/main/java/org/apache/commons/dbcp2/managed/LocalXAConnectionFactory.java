@@ -19,13 +19,12 @@ package org.apache.commons.dbcp2.managed;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
-
-import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 import org.apache.commons.dbcp2.ConnectionFactory;
 
 /**

@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Properties;
 
-import javax.transaction.TransactionManager;
+import jakarta.transaction.TransactionManager;
 
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.Constants;
