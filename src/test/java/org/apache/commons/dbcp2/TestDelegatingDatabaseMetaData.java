@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -767,6 +768,16 @@ public class TestDelegatingDatabaseMetaData {
             delegate.locatorsUpdateCopy();
         } catch (final SQLException e) {}
         verify(obj, times(1)).locatorsUpdateCopy();
+    }
+
+    @Test
+    public void testNullArguments() throws Exception {
+        assertThrows(NullPointerException.class, () -> {
+            new DelegatingDatabaseMetaData(null, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new DelegatingDatabaseMetaData(new DelegatingConnection(null), null);
+        });
     }
 
     @Test
