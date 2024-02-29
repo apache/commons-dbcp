@@ -62,7 +62,7 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
-    <release version="2.11.1" date="2024-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.12.0" date="2024-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <action type="fix" issue="DBCP-590" dev="psteitz" due-to=" Réda Housni Alaoui">BasicDataSource#setAbandonedUsageTracking has no effect.</action>
       <action type="fix" issue="DBCP-596" dev="ggregory" due-to="Aapo Haapanen, Gary Gregory">PoolingConnection.toString() causes StackOverflowError.</action>

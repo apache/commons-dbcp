@@ -1,6 +1,47 @@
-              Apache Commons DBCP
-              Version 2.11.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.12.0
+RELEASE NOTES
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.12.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+New features
+------------
+*            Add property project.build.outputTimestamp for build reproducibility. Thanks to Gary Gregory.
+*            Add null guards in DelegatingDatabaseMetaData constructor #352. Thanks to Heewon Lee.
+* DBCP-473:  Data source bean creation failed due to mismatched return type of setter and getter for connectionInitSqls in BasicDataSource: Add BasicDataSource.setConnectionInitSqls(List). Thanks to Steve Cohen, Gary Gregory.
+
+Fixed Bugs
+----------
+* DBCP-590:  BasicDataSource#setAbandonedUsageTracking has no effect. Thanks to Réda Housni Alaoui.
+* DBCP-596:  PoolingConnection.toString() causes StackOverflowError. Thanks to Aapo Haapanen, Gary Gregory.
+*            PooledConnectionImpl.destroyObject(PStmtKey, PooledObject) can throw NullPointerException #312. Thanks to Gary Gregory, Rémy Maucherat.
+*            PoolingConnection.destroyObject(PStmtKey, PooledObject) can throw NullPointerException #312. Thanks to Gary Gregory, Rémy Maucherat.
+* DBCP-477:  Fix examples in src/main/java/org/apache/commons/dbcp2/package-info.java. Thanks to Mubasher Usman, Gary Gregory.
+
+Changes
+-------
+*            Use ReentrantLock in PoolableConnection.close, #591 Thanks to cortlepp-intershop.
+*            Bump commons-lang3 from 3.13.0 to 3.14.0. Thanks to Gary Gregory.
+*            Bump commons-parent from 64 to 66. Thanks to Gary Gregory.
+*            Bump org.slf4j:slf4j-simple from 2.0.9 to 2.0.12 #349. Thanks to Dependabot.
+
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
+
+https://commons.apache.org/proper/commons-dbcp/
+
+Download page: https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
+
+Apache Commons DBCP
+Version 2.11.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.11.0.
 
@@ -10,7 +51,8 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-Changes:
+Changes
+-------
 o            Update call sites of deprecated APIs from Apache Commons Pool. Thanks to Gary Gregory.
 o            Add DataSourceMXBean.getUserName() and deprecate getUsername(). Thanks to Gary Gregory, Dependabot.
 o            Bump h2 from 2.2.220 to 2.2.224, #308. Thanks to Gary Gregory, Dependabot.
@@ -29,9 +71,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.10.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.10.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.10.0.
 
@@ -41,7 +83,8 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o            Add and use AbandonedTrace#setLastUsed(Instant). Thanks to Gary Gregory.
 o            - Add and use Duration versions of now deprecated APIs that use ints and longs. 
              - Internally track durations with Duration objects instead of ints and longs.
@@ -51,7 +94,8 @@ o            Add Utils.getDisconnectionSqlCodes() and Utils.DISCONNECTION_SQL_CO
 o            Make BasicDataSource.getConnectionPool() public. Thanks to Gary Gregory.
 o            Add github/codeql-action. Thanks to Gary Gregory.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o            Fix StackOverflowError in PoolableConnection.isDisconnectionSqlException #123. Thanks to newnewcoder, Gary Gregory.
 o            PerUserPoolDataSourceFactory.getNewInstance(Reference) parsed defaultMaxWaitMillis as an int instead of a long. Thanks to Gary Gregory.
 o            Reimplement time tracking in AbandonedTrace with an Instant instead of a long. Thanks to Gary Gregory.
@@ -75,7 +119,8 @@ o            PoolingDataSource.close() now always throws SQLException. Thanks to
 o            [StepSecurity] ci: Harden GitHub Actions #282. Thanks to step-security-bot, Gary Gregory.
 o            Fixes typos, missing or misplaced characters, and grammar issues #299. Thanks to Martin Wiesner.
 
-Changes:
+Changes
+-------
 o            Bump actions/cache from 2.1.6 to 3.0.8 #147, #176. Thanks to Dependabot, Gary Gregory.
 o            Bump actions/checkout from 2.3.4 to 3.0.2 #139, #143, #173. Thanks to Dependabot, Gary Gregory.
 o            Bump actions/setup-java from 2 to 3.6.0 #229. Thanks to Gary Gregory, Dependabot.
@@ -112,9 +157,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.9.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.9.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.9.0.
 
@@ -124,7 +169,8 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o            Add and reuse Constants.KEY_USER and Constants.KEY_PASSWORD. Thanks to Gary Gregory.
 o            Add and reuse DataSourceMXBean. Thanks to Frank Gasdorf, Gary Gregory.
 o            Add and reuse DriverAdapterCPDS.{get|set}DurationBetweenEvictionRuns(), deprecate {get|set}TimeBetweenEvictionRunsMillis(long). Thanks to Gary Gregory.
@@ -134,7 +180,8 @@ o            Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duratio
 o            Add and reuse KeyedCPDSConnectionFactory.setMaxConnLifetime(Duration), deprecate setMaxConnLifetimeMillis(long). Thanks to Gary Gregory.
 o            Add and reuse InstanceKeyDataSource.{get|set}DefaultMaxWait(Duration), deprecate {get|set}DefaultMaxWaitMillis(long). Thanks to Gary Gregory.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-569:  Fix test random failure on TestSynchronizationOrder.testInterposedSynchronization, #84. Thanks to Florent Guillaume.
 o DBCP-568:  ManagedConnection must clear its cached state after transaction completes, #75. Thanks to Florent Guillaume.
 o            Minor Improvements #78. Thanks to Arturo Bernal.
@@ -161,7 +208,8 @@ o DBCP-579:  Performance of DelegatingConnection.prepareStatement(String) regres
              DelegatingConnection should also cache connection catalog string to avoid calling the Connection#getCatalog() for each key creation. Thanks to Shaktisinh Jhala, Gary Gregory.
 o            BasicDataSource should test for the presence of a security manager dynamically, not once on initialization. Thanks to Gary Gregory.
 
-Changes:
+Changes
+-------
 o            Bump mockito-core from 3.5.11 to 3.11.2 #66, #72, #77, #85, #91, #105, #110, #116. Thanks to Dependabot.
 o            Bump actions/checkout from v2.3.2 to v2.3.4 #65, #74. Thanks to Dependabot.
 o            Bump actions/cache from v2 to v2.1.6 #90, #108. Thanks to Dependabot.
@@ -193,9 +241,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.8.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.8.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.8.0.
 
@@ -205,17 +253,20 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o DBCP-564:  Fix BasicManagedDataSource leak of connections opened after transaction is rollback-only #39. Thanks to Florent Guillaume.
 o DBCP-566:  Add clearStatementPoolOnReturn #42. Thanks to Robert Paschek, Gary Gregory, Phil Steitz.
 o DBCP-559:  Add start, restart methods to BasicDataSource. #50. Thanks to Phil Steitz.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-555:  NPE when creating a SQLExceptionList with a null list. Thanks to Gary Gregory.
 o DBCP-558:  Fix DelegatingConnection readOnly and autoCommit caching mechanism #35. Thanks to louislatreille.
 o            Fix regression introduced by unreleased code clean-up #63. Thanks to Sebastian Haas.
 
-Changes:
+Changes
+-------
 o            Update to PR#36 - PrepareStatement and prepareCall methods are extracted #37. Thanks to DoiMasayuki, Alexander Norz, Gary Gregory.
 o            Mask out user name and password from DriverAdapterCPDS.toString(). Thanks to Gary Gregory.
 o DBCP-650:  Update Apache Commons Pool from 2.7.0 to 2.8.1, #48. Thanks to Gary Gregory, Dependabot.
@@ -244,10 +295,10 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.7.0
-              RELEASE NOTES
-              7 July 2019
+Apache Commons DBCP
+Version 2.7.0
+RELEASE NOTES
+7 July 2019
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.7.0.
 
@@ -257,18 +308,21 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o DBCP-539:  ManagedDataSource#close() should declare used exceptions. Thanks to Jacques Le Roux.
 o DBCP-547:  Add a ConnectionFactory class name setting for BasicDataSource.createConnectionFactory() #33. Thanks to leechoongyon, Gary Gregory.
 o            Add missing Javadocs. Thanks to Gary Gregory.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-538:  Wrong JMX base name derived in BasicDataSource#updateJmxName. Thanks to Ragnar Haugan, Gary Gregory.
 o DBCP-546:  Avoid NPE when calling DriverAdapterCPDS.toString(). Thanks to Sergey Chupov.
 o DBCP-550:  java.util.IllegalFormatException while building a message for a SQLFeatureNotSupportedException in Jdbc41Bridge.getObject(ResultSet,String,Class). Thanks to Gary Gregory.
 o            Fix Javadoc link in README.md #21. Thanks to LichKing-lee.
 
-Changes:
+Changes
+-------
 o DBCP-540:  Close ObjectOutputStream before calling toByteArray() on underlying ByteArrayOutputStream #28. Thanks to emopers.
 o DBCP-541:  Upgrade to JUnit Jupiter #19. Thanks to Allon Murienik.
 o DBCP-542:  Fix tests on Java 11. Thanks to Zheng Feng, Gary Gregory.
@@ -298,9 +352,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.6.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.6.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.6.0.
 
@@ -310,17 +364,20 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o DBCP-534:  Allow for manual connection eviction. Thanks to Peter Wicks.
 o DBCP-514:  Allow DBCP to register with a TransactionSynchronizationRegistry for XA cases. Thanks to Tom Jenkinson, Gary Gregory.
 o DBCP-519:  Add some toString() methods for debugging (never printing passwords.) Thanks to Gary Gregory.
 o DBCP-527:  Add getters to some classes. Thanks to Gary Gregory.
 o DBCP-528:  org.apache.commons.dbcp2.DriverManagerConnectionFactory should use a char[] instead of a String to store passwords. Thanks to Gary Gregory.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-518:  Allow DBCP to work with old Java 6/JDBC drivers without throwing AbstractMethodError. Thanks to Gary Gregory.
 
-Changes:
+Changes
+-------
 o DBCP-517:  Make defensive copies of char[] passwords. Thanks to Gary Gregory.
 o DBCP-515:  Do not try to register synchronization when the transaction is no longer active. Thanks to Tom Jenkinson, Gary Gregory.
 o DBCP-516:  Do not double returnObject back to the pool if there is a transaction context with a shared connection. Thanks to Tom Jenkinson, Gary Gregory.
@@ -337,9 +394,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.5.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.5.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.5.0.
 
@@ -349,15 +406,18 @@ This is a minor release, including bug fixes and enhancements and requires Java 
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o DBCP-506:  Support JDBC 4.2. Thanks to Gary Gregory.
 o DBCP-479:  Support default schema in configuration. Thanks to Guillaume Husta, Gary Gregory.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-508:  Prepared statement keys should take a Connection's schema into account. Thanks to Gary Gregory.
 o DBCP-512:  Avoid exceptions when closing a connection in mutli-threaded use case. Thanks to Gary Gregory.
 
-Changes:
+Changes
+-------
 o DBCP-505:  Update Java requirement from version 7 to 8. Thanks to Gary Gregory.
 o DBCP-427:  Examines 'SQLException's thrown by underlying connections or statements for fatal (disconnection) errors. Thanks to Vladimir Konkov, Phil Steitz, Gary Gregory.
 o DBCP-507:  Change default for fail-fast connections from false to true. Thanks to Vladimir Konkov, Phil Steitz, Gary Gregory.
@@ -378,9 +438,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
-              Apache Commons DBCP
-              Version 2.4.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.4.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.4.0.
 
@@ -391,11 +451,13 @@ This is a minor release, including bug fixes and enhancements, which you can dow
 Changes in this version include:
 
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-484:  Connection leak during XATransaction in high load. Thanks to Emanuel Freitas.
 o DBCP-496:  Add support for pooling CallableStatements to the org.apache.commons.dbcp2.cpdsadapter package. Thanks to Gary Gregory.
 
-Changes:
+Changes
+-------
 o DBCP-492:  Drop Ant build. Thanks to Gary Gregory.
 o DBCP-491:  Ensure DBCP ConnectionListener can deal with transaction managers which invoke rollback in a separate thread. Thanks to Zheng Feng, Gary Gregory.
 o DBCP-494:  org.apache.commons.dbcp2.PStmtKey should make copies of given arrays in constructors. Thanks to Gary Gregory.
@@ -418,9 +480,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.3.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.3.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.3.0.
 
@@ -430,11 +492,13 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-476:  AbandonedTrace.getTrace() contains race condition Thanks to Gary Evesson, Richard Cordova.
 o DBCP-482:  Avoid javax.management.InstanceNotFoundException on shutdown when a bean is not registered. Thanks to Dennis Lloyd, Gary Gregory.
 
-Changes:
+Changes
+-------
 o DBCP-483:  Make constant public: org.apache.commons.dbcp2.PoolingDriver.URL_PREFIX. Thanks to Gary Gregory.
 o DBCP-486:  DriverAdapterCPDS.setUser(), setPassword(), and getPooledConnection() with null arguments throw NullPointerExceptions when connection properties are set. Thanks to Gary Gregory.
 o DBCP-487:  Add API org.apache.commons.dbcp2.datasources.PerUserPoolDataSource.clear(). Thanks to Gary Gregory.
@@ -451,9 +515,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.2.0
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.2.0
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.2.0.
 
@@ -463,7 +527,8 @@ This is a minor release, including bug fixes and enhancements.
 
 Changes in this version include:
 
-New features:
+New features
+------------
 o DBCP-451:  Add constructor DriverManagerConnectionFactory(String).
 o DBCP-462:  Refactoring to prepare for a future patch to enable pooling of all
              prepared and callable statements in PoolingConnection. Thanks to Keiichi Fujino.
@@ -472,7 +537,8 @@ o DBCP-458:  Make it simpler to extend BasicDataSource to allow sub-classes to
 o DBCP-474:  Enable pooling of all prepared and callable statements
              inPoolingConnection. Thanks to Keiichi Fujino.
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-481:  Update Apache Commons Pool from 2.4.2 to 2.5.0. Thanks to Gary Gregory.
 o DBCP-454:  OSGi declarations contain multiple import headers for javax.transaction. Thanks to Philipp Marx, Matt Sicker.
 o DBCP-478:  Wrong parameter name in site documentation for BasicDataSource Configuration Parameters. Thanks to nicola mele.
@@ -505,7 +571,6 @@ o DBCP-457:  When using a BasicDataSource, pass changes related to the handling 
              configuration may be updated dynamically.
 
 
-
 For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons DBCP website:
 
@@ -515,9 +580,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-              Apache Commons DBCP
-              Version 2.1.1
-              RELEASE NOTES
+Apache Commons DBCP
+Version 2.1.1
+RELEASE NOTES
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.1.1.
 
@@ -527,14 +592,16 @@ This is a patch release, including bug fixes only.
 
 Changes in this version include:
 
-Fixed Bugs:
+Fixed Bugs
+----------
 o DBCP-441:  Added BasicDataSource abandonedUsageTracking property missing from BasicDataSourceFactory.
 o DBCP-442:  SharedPoolDataSource getConnection fails when testOnBorrow is set with
              a null validation query.
 o DBCP-438:  Nested connections in a transaction (local) throws null pointer. Thanks to Raihan Kibria.
 o DBCP-437:  BasicDataSource does not set disconnectionSql properties on its PoolableConnectionFactory.
 
-Changes:
+Changes
+-------
 o            Updated pool version to 2.4.2.  The fix for POOL-300 may cause DBCP
              users to see more reports of abandoned connections (if removal and logging
              are configured).  Prior to the fix for POOL-300, the PrintWriter used to log
