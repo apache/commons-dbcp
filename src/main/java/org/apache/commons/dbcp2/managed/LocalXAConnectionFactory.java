@@ -361,7 +361,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         // create a XAResource to manage the connection during XA transactions
         final XAResource xaResource = new LocalXAResource(connection);
 
-        // register the xa resource for the connection
+        // register the XA resource for the connection
         transactionRegistry.registerConnection(connection, xaResource);
 
         return connection;
