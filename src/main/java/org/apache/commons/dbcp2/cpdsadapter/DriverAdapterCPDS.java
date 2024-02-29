@@ -404,33 +404,19 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param pooledUserPassword password to be used fur the connection
      */
     @Override
-    public PooledConnection getPooledConnection(final String pooledUserName, final String pooledUserPassword)
-        throws SQLException {
+    public PooledConnection getPooledConnection(final String pooledUserName, final String pooledUserPassword) throws SQLException {
         getConnectionCalled = true;
-        PooledConnectionImpl pooledConnection = null;
-        // Workaround for buggy WebLogic 5.1 class loader - ignore the exception upon first invocation.
-        try {
-            if (connectionProperties != null) {
-                update(connectionProperties, Constants.KEY_USER, pooledUserName);
-                update(connectionProperties, Constants.KEY_PASSWORD, pooledUserPassword);
-                pooledConnection = new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), connectionProperties));
-            } else {
-                pooledConnection = new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
-            }
-            pooledConnection.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
-        } catch (final ClassCircularityError e) {
-            if (connectionProperties != null) {
-                pooledConnection = new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), connectionProperties));
-            } else {
-                pooledConnection = new PooledConnectionImpl(
-                    DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
-            }
-            pooledConnection.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
+        if (connectionProperties != null) {
+            update(connectionProperties, Constants.KEY_USER, pooledUserName);
+            update(connectionProperties, Constants.KEY_PASSWORD, pooledUserPassword);
         }
-        KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = null;
+        // Workaround for buggy WebLogic 5.1 class loader - ignore ClassCircularityError upon first invocation.
+        PooledConnectionImpl pooledConnection = null;
+        try {
+            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword);
+        } catch (final ClassCircularityError e) {
+            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword);
+        }
         if (isPoolPreparedStatements()) {
             final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
             config.setMaxTotalPerKey(Integer.MAX_VALUE);
@@ -452,9 +438,22 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                 config.setNumTestsPerEvictionRun(0);
                 config.setMinEvictableIdleDuration(Duration.ZERO);
             }
-            stmtPool = new GenericKeyedObjectPool<>(pooledConnection, config);
+            @SuppressWarnings("resource") // PooledConnectionImpl closes
+            final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(pooledConnection, config);
             pooledConnection.setStatementPool(stmtPool);
         }
+        return pooledConnection;
+    }
+
+    @SuppressWarnings("resource") // Caller closes
+    private PooledConnectionImpl getPooledConnectionImpl(final String pooledUserName, final String pooledUserPassword) throws SQLException {
+        PooledConnectionImpl pooledConnection;
+        if (connectionProperties != null) {
+            pooledConnection = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), connectionProperties));
+        } else {
+            pooledConnection = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
+        }
+        pooledConnection.setAccessToUnderlyingConnectionAllowed(isAccessToUnderlyingConnectionAllowed());
         return pooledConnection;
     }
 
