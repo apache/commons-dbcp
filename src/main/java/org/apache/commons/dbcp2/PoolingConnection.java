@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -47,18 +48,27 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /**
      * Statement types.
      *
+     * See subclasses of {@link Statement}.
+     * 
      * @since 2.0 protected enum.
      * @since 2.4.0 public enum.
+     * @see Statement
+     * @see CallableStatement
+     * @see PreparedStatement
      */
     public enum StatementType {
 
         /**
          * Callable statement.
+         *
+         * @see CallableStatement
          */
         CALLABLE_STATEMENT,
 
         /**
          * Prepared statement.
+         *
+         * @see PreparedStatement
          */
         PREPARED_STATEMENT
     }
