@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -339,7 +338,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Parse list of property values from a delimited string
+     * Parses list of property values from a delimited string
      *
      * @param value
      *            delimited list of values
@@ -347,9 +346,9 @@ public class BasicDataSourceFactory implements ObjectFactory {
      *            character used to separate values in the list
      * @return String Collection of values
      */
-    private static Collection<String> parseList(final String value, final char delimiter) {
+    private static List<String> parseList(final String value, final char delimiter) {
         final StringTokenizer tokenizer = new StringTokenizer(value, Character.toString(delimiter));
-        final Collection<String> tokens = new ArrayList<>(tokenizer.countTokens());
+        final List<String> tokens = new ArrayList<>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
             tokens.add(tokenizer.nextToken());
         }

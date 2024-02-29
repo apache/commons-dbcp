@@ -1783,7 +1783,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the list of SQL statements to be executed when a physical connection is first created.
+     * Sets the collection of SQL statements to be executed when a physical connection is first created.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: <code>getConnection, setLogwriter,
@@ -1793,23 +1793,24 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param connectionInitSqls Collection of SQL statements to execute on connection creation
      */
     public void setConnectionInitSqls(final Collection<String> connectionInitSqls) {
-//        if (connectionInitSqls != null && !connectionInitSqls.isEmpty()) {
-//            ArrayList<String> newVal = null;
-//            for (final String s : connectionInitSqls) {
-//                if (!isEmpty(s)) {
-//                    if (newVal == null) {
-//                        newVal = new ArrayList<>();
-//                    }
-//                    newVal.add(s);
-//                }
-//            }
-//            this.connectionInitSqls = newVal;
-//        } else {
-//            this.connectionInitSqls = null;
-//        }
         final List<String> collect = Utils.isEmpty(connectionInitSqls) ? null
                 : connectionInitSqls.stream().filter(s -> !isEmpty(s)).collect(Collectors.toList());
         this.connectionInitSqls = Utils.isEmpty(collect) ? null : collect;
+    }
+
+    /**
+     * Sets the list of SQL statements to be executed when a physical connection is first created.
+     * <p>
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
+     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
+     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * </p>
+     *
+     * @param connectionInitSqls List of SQL statements to execute on connection creation
+     * @since 2.12.0
+     */
+    public void setConnectionInitSqls(final List<String> connectionInitSqls) {
+        setConnectionInitSqls((Collection<String>) connectionInitSqls);
     }
 
     private <T> void setConnectionPool(final BiConsumer<GenericObjectPool<PoolableConnection>, T> consumer, final T object) {
@@ -1965,20 +1966,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-//        if (disconnectionSqlCodes != null && !disconnectionSqlCodes.isEmpty()) {
-//            HashSet<String> newVal = null;
-//            for (final String s : disconnectionSqlCodes) {
-//                if (!isEmpty(s)) {
-//                    if (newVal == null) {
-//                        newVal = new HashSet<>();
-//                    }
-//                    newVal.add(s);
-//                }
-//            }
-//            this.disconnectionSqlCodes = newVal;
-//        } else {
-//            this.disconnectionSqlCodes = null;
-//        }
         final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
                 : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
         this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;

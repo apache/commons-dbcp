@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -474,11 +475,16 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     public void testEmptyInitConnectionSql() throws Exception {
+        // List
         ds.setConnectionInitSqls(Arrays.asList("", "   "));
         assertNotNull(ds.getConnectionInitSqls());
         assertEquals(0, ds.getConnectionInitSqls().size());
-
+        // null
         ds.setConnectionInitSqls(null);
+        assertNotNull(ds.getConnectionInitSqls());
+        assertEquals(0, ds.getConnectionInitSqls().size());
+        // Collection
+        ds.setConnectionInitSqls((Collection<String>) Arrays.asList("", "   "));
         assertNotNull(ds.getConnectionInitSqls());
         assertEquals(0, ds.getConnectionInitSqls().size());
     }
@@ -576,8 +582,15 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testInvalidConnectionInitSql() {
+    public void testInvalidConnectionInitSqlList() {
         ds.setConnectionInitSqls(Arrays.asList("SELECT 1", "invalid"));
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("invalid"));
+    }
+
+    @Test
+    public void testInvalidConnectionInitSqlCollection() {
+        ds.setConnectionInitSqls((Collection<String>) Arrays.asList("SELECT 1", "invalid"));
         final SQLException e = assertThrows(SQLException.class, ds::getConnection);
         assertTrue(e.toString().contains("invalid"));
     }
