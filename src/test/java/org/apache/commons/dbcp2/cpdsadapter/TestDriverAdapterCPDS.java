@@ -93,9 +93,9 @@ public class TestDriverAdapterCPDS {
 
     @Test
     public void testClosingWithUserName()
-        throws Exception {
+            throws Exception {
         final Connection[] c = new Connection[10];
-        for (int i=0; i<c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
 
@@ -110,7 +110,7 @@ public class TestDriverAdapterCPDS {
         }
 
         // open all the connections
-        for (int i=0; i<c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             c[i] = pcds.getPooledConnection("u1", "p1").getConnection();
         }
         for (final Connection element : c) {
