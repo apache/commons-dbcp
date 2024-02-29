@@ -91,7 +91,7 @@ final class PooledConnectionImpl
     private boolean accessToUnderlyingConnectionAllowed;
 
     /**
-     * Wraps the real connection.
+     * Wraps a real connection.
      *
      * @param connection
      *            the connection to be wrapped.
