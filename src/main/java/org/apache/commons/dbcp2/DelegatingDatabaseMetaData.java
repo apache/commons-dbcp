@@ -43,7 +43,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     private final DelegatingConnection<?> connection;
 
     /**
-     * Constructs a new instance for the given delegating connection and database meta data.
+     * Constructs a new instance for the given delegating connection and database metadata.
      *
      * @param connection
      *            the delegating connection
@@ -300,7 +300,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
-     * Gets the underlying database meta data.
+     * Gets the underlying database metadata.
      *
      * @return The underlying database meta data.
      */
@@ -985,9 +985,6 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     protected void handleException(final SQLException e) throws SQLException {
-        if (connection == null) {
-            throw e;
-        }
         connection.handleException(e);
     }
 
