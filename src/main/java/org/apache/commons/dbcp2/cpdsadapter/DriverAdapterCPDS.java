@@ -63,13 +63,13 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * </p>
  * <p>
  * The DriverAdapterCPDS also provides {@code PreparedStatement} pooling which is not generally available in jdbc2
- * {@code ConnectionPoolDataSource} implementation, but is addressed within the jdbc3 specification. The
- * {@code PreparedStatement} pool in DriverAdapterCPDS has been in the dbcp package for some time, but it has not
+ * {@code ConnectionPoolDataSource} implementation, but is addressed within the JDBC 3 specification. The
+ * {@code PreparedStatement} pool in DriverAdapterCPDS has been in the DBCP package for some time, but it has not
  * undergone extensive testing in the configuration used here. It should be considered experimental and can be toggled
  * with the poolPreparedStatements attribute.
  * </p>
  * <p>
- * The <a href="package-summary.html">package documentation</a> contains an example using catalina and JNDI. The
+ * The <a href="package-summary.html">package documentation</a> contains an example using Apache Catalina and JNDI. The
  * <a href="../datasources/package-summary.html">datasources package documentation</a> shows how to use
  * {@code DriverAdapterCPDS} as a source for {@code Jdbc2PoolDataSource} without the use of JNDI.
  * </p>
@@ -109,7 +109,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     private static final String GET_CONNECTION_CALLED = "A PooledConnection was already requested from this source, further initialization is not allowed.";
 
     static {
-        // Attempt to prevent deadlocks - see DBCP - 272
+        // Attempt to prevent deadlocks - see DBCP-272
         DriverManager.getDrivers();
     }
 
