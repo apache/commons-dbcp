@@ -78,10 +78,35 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceable, Serializable, ObjectFactory {
 
+    private static final String KEY_MIN_EVICTABLE_IDLE_DURATION = "minEvictableIdleDuration";
+
+    private static final String KEY_DURATION_BETWEEN_EVICTION_RUNS = "durationBetweenEvictionRuns";
+
+    private static final String KEY_LOGIN_TIMEOUT = "loginTimeout";
+
+    private static final String KEY_URL = "url";
+
+    private static final String KEY_DRIVER = "driver";
+
+    private static final String KEY_DESCRIPTION = "description";
+
+    private static final String KEY_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED = "accessToUnderlyingConnectionAllowed";
+
+    private static final String KEY_MAX_PREPARED_STATEMENTS = "maxPreparedStatements";
+
+    private static final String KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
+
+    private static final String KEY_NUM_TESTS_PER_EVICTION_RUN = "numTestsPerEvictionRun";
+
+    private static final String KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+
+    private static final String KEY_MAX_IDLE = "maxIdle";
+
+    private static final String KEY_POOL_PREPARED_STATEMENTS = "poolPreparedStatements";
+
     private static final long serialVersionUID = -4820523787212147844L;
 
-    private static final String GET_CONNECTION_CALLED = "A PooledConnection was already requested from this source, "
-        + "further initialization is not allowed.";
+    private static final String GET_CONNECTION_CALLED = "A PooledConnection was already requested from this source, further initialization is not allowed.";
 
     static {
         // Attempt to prevent deadlocks - see DBCP - 272
@@ -271,24 +296,23 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Implements {@link ObjectFactory} to create an instance of this class
      */
     @Override
-    public Object getObjectInstance(final Object refObj, final Name name, final Context context,
-        final Hashtable<?, ?> env) throws ClassNotFoundException {
+    public Object getObjectInstance(final Object refObj, final Name name, final Context context, final Hashtable<?, ?> env) throws ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
         DriverAdapterCPDS cpds = null;
         if (refObj instanceof Reference) {
             final Reference ref = (Reference) refObj;
             if (ref.getClassName().equals(getClass().getName())) {
-                RefAddr ra = ref.get("description");
+                RefAddr ra = ref.get(KEY_DESCRIPTION);
                 if (isNotEmpty(ra)) {
                     setDescription(getStringContent(ra));
                 }
 
-                ra = ref.get("driver");
+                ra = ref.get(KEY_DRIVER);
                 if (isNotEmpty(ra)) {
                     setDriver(getStringContent(ra));
                 }
-                ra = ref.get("url");
+                ra = ref.get(KEY_URL);
                 if (isNotEmpty(ra)) {
                     setUrl(getStringContent(ra));
                 }
@@ -301,36 +325,36 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                     setPassword(getStringContent(ra));
                 }
 
-                ra = ref.get("poolPreparedStatements");
+                ra = ref.get(KEY_POOL_PREPARED_STATEMENTS);
                 if (isNotEmpty(ra)) {
                     setPoolPreparedStatements(getBooleanContentString(ra));
                 }
-                ra = ref.get("maxIdle");
+                ra = ref.get(KEY_MAX_IDLE);
                 if (isNotEmpty(ra)) {
                     setMaxIdle(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get("timeBetweenEvictionRunsMillis");
+                ra = ref.get(KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
                 if (isNotEmpty(ra)) {
                     setTimeBetweenEvictionRunsMillis(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get("numTestsPerEvictionRun");
+                ra = ref.get(KEY_NUM_TESTS_PER_EVICTION_RUN);
                 if (isNotEmpty(ra)) {
                     setNumTestsPerEvictionRun(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get("minEvictableIdleTimeMillis");
+                ra = ref.get(KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS);
                 if (isNotEmpty(ra)) {
                     setMinEvictableIdleTimeMillis(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get("maxPreparedStatements");
+                ra = ref.get(KEY_MAX_PREPARED_STATEMENTS);
                 if (isNotEmpty(ra)) {
                     setMaxPreparedStatements(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get("accessToUnderlyingConnectionAllowed");
+                ra = ref.get(KEY_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED);
                 if (isNotEmpty(ra)) {
                     setAccessToUnderlyingConnectionAllowed(getBooleanContentString(ra));
                 }
@@ -444,25 +468,25 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
         final Reference ref = new Reference(getClass().getName(), factory, null);
 
-        ref.add(new StringRefAddr("description", getDescription()));
-        ref.add(new StringRefAddr("driver", getDriver()));
-        ref.add(new StringRefAddr("loginTimeout", String.valueOf(getLoginTimeout())));
+        ref.add(new StringRefAddr(KEY_DESCRIPTION, getDescription()));
+        ref.add(new StringRefAddr(KEY_DRIVER, getDriver()));
+        ref.add(new StringRefAddr(KEY_LOGIN_TIMEOUT, String.valueOf(getLoginTimeout())));
         ref.add(new StringRefAddr(Constants.KEY_PASSWORD, getPassword()));
         ref.add(new StringRefAddr(Constants.KEY_USER, getUser()));
-        ref.add(new StringRefAddr("url", getUrl()));
+        ref.add(new StringRefAddr(KEY_URL, getUrl()));
 
-        ref.add(new StringRefAddr("poolPreparedStatements", String.valueOf(isPoolPreparedStatements())));
-        ref.add(new StringRefAddr("maxIdle", String.valueOf(getMaxIdle())));
-        ref.add(new StringRefAddr("numTestsPerEvictionRun", String.valueOf(getNumTestsPerEvictionRun())));
-        ref.add(new StringRefAddr("maxPreparedStatements", String.valueOf(getMaxPreparedStatements())));
+        ref.add(new StringRefAddr(KEY_POOL_PREPARED_STATEMENTS, String.valueOf(isPoolPreparedStatements())));
+        ref.add(new StringRefAddr(KEY_MAX_IDLE, String.valueOf(getMaxIdle())));
+        ref.add(new StringRefAddr(KEY_NUM_TESTS_PER_EVICTION_RUN, String.valueOf(getNumTestsPerEvictionRun())));
+        ref.add(new StringRefAddr(KEY_MAX_PREPARED_STATEMENTS, String.valueOf(getMaxPreparedStatements())));
         //
         // Pair of current and deprecated.
-        ref.add(new StringRefAddr("durationBetweenEvictionRuns", String.valueOf(getDurationBetweenEvictionRuns())));
-        ref.add(new StringRefAddr("timeBetweenEvictionRunsMillis", String.valueOf(getTimeBetweenEvictionRunsMillis())));
+        ref.add(new StringRefAddr(KEY_DURATION_BETWEEN_EVICTION_RUNS, String.valueOf(getDurationBetweenEvictionRuns())));
+        ref.add(new StringRefAddr(KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS, String.valueOf(getTimeBetweenEvictionRunsMillis())));
         //
         // Pair of current and deprecated.
-        ref.add(new StringRefAddr("minEvictableIdleDuration", String.valueOf(getMinEvictableIdleDuration())));
-        ref.add(new StringRefAddr("minEvictableIdleTimeMillis", String.valueOf(getMinEvictableIdleTimeMillis())));
+        ref.add(new StringRefAddr(KEY_MIN_EVICTABLE_IDLE_DURATION, String.valueOf(getMinEvictableIdleDuration())));
+        ref.add(new StringRefAddr(KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS, String.valueOf(getMinEvictableIdleTimeMillis())));
 
         return ref;
     }
