@@ -112,6 +112,15 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
+     * Package-private for tests.
+     *
+     * @return the PooledConnectionImpl.
+     */
+    PooledConnectionImpl getPooledConnectionImpl() {
+        return pooledConnection;
+    }
+
+    /**
      * If false, getDelegate() and getInnermostDelegate() will return null.
      *
      * @return true if access is allowed to the underlying connection
@@ -245,6 +254,10 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
         }
     }
 
+    //
+    // Methods for accessing the delegate connection
+    //
+
     /**
      * If pooling of {@code PreparedStatement}s is turned on in the {@link DriverAdapterCPDS}, a pooled object may
      * be returned, otherwise delegate to the wrapped JDBC 1.x {@link java.sql.Connection}.
@@ -264,10 +277,6 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
             return null;
         }
     }
-
-    //
-    // Methods for accessing the delegate connection
-    //
 
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,

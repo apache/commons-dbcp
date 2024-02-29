@@ -31,6 +31,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
 import java.time.Duration;
 import java.util.Properties;
 
@@ -40,7 +41,13 @@ import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.Constants;
+import org.apache.commons.dbcp2.DelegatingPreparedStatement;
+import org.apache.commons.dbcp2.DelegatingStatement;
+import org.apache.commons.dbcp2.PStmtKey;
+import org.apache.commons.dbcp2.PoolablePreparedStatement;
+import org.apache.commons.dbcp2.TestUtils;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,12 +59,12 @@ public class TestDriverAdapterCPDS {
 
     private static final class ThreadDbcp367 extends Thread {
 
-        private final DataSource ds;
+        private final DataSource dataSource;
 
         private volatile boolean failed;
 
-        public ThreadDbcp367(final DataSource ds) {
-            this.ds = ds;
+        public ThreadDbcp367(final DataSource dataSource) {
+            this.dataSource = dataSource;
         }
 
         public boolean isFailed() {
@@ -66,17 +73,30 @@ public class TestDriverAdapterCPDS {
 
         @Override
         public void run() {
-            Connection c = null;
+            Connection conn = null;
             try {
-                for (int j=0; j < 5000; j++) {
-                    c = ds.getConnection();
-                    c.close();
+                for (int j = 0; j < 5000; j++) {
+                    conn = dataSource.getConnection();
+                    conn.close();
                 }
             } catch (final SQLException sqle) {
                 failed = true;
                 sqle.printStackTrace();
             }
         }
+    }
+
+    @SuppressWarnings("resource")
+    private static void checkAfterClose(final Connection element, final PStmtKey pStmtKey) throws SQLException {
+        final ConnectionImpl connectionImpl = (ConnectionImpl) element;
+        assertNull(connectionImpl.getInnermostDelegate());
+        assertNotNull(connectionImpl.getInnermostDelegateInternal());
+        final PooledConnectionImpl pooledConnectionImpl = connectionImpl.getPooledConnectionImpl();
+        assertNotNull(pooledConnectionImpl);
+        // Simulate released resources, should not throw NPEs
+        pooledConnectionImpl.destroyObject(pStmtKey, null);
+        pooledConnectionImpl.destroyObject(pStmtKey, new DefaultPooledObject<>(null));
+        pooledConnectionImpl.destroyObject(pStmtKey, new DefaultPooledObject<>(new DelegatingPreparedStatement(null, null)));
     }
 
     private DriverAdapterCPDS pcds;
@@ -88,11 +108,40 @@ public class TestDriverAdapterCPDS {
         pcds.setUrl("jdbc:apache:commons:testdriver");
         pcds.setUser("foo");
         pcds.setPassword("bar");
-        pcds.setPoolPreparedStatements(false);
+        pcds.setPoolPreparedStatements(true);
     }
 
     @Test
-    public void testClosingWithUserName()
+    public void testClose()
+            throws Exception {
+        final Connection[] c = new Connection[10];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = pcds.getPooledConnection().getConnection();
+        }
+
+        // close one of the connections
+        c[0].close();
+        assertTrue(c[0].isClosed());
+        // get a new connection
+        c[0] = pcds.getPooledConnection().getConnection();
+
+        for (final Connection element : c) {
+            element.close();
+            checkAfterClose(element, null);
+        }
+
+        // open all the connections
+        for (int i = 0; i < c.length; i++) {
+            c[i] = pcds.getPooledConnection().getConnection();
+        }
+        for (final Connection element : c) {
+            element.close();
+            checkAfterClose(element, null);
+        }
+    }
+
+    @Test
+    public void testCloseWithUserName()
             throws Exception {
         final Connection[] c = new Connection[10];
         for (int i = 0; i < c.length; i++) {
@@ -107,6 +156,7 @@ public class TestDriverAdapterCPDS {
 
         for (final Connection element : c) {
             element.close();
+            checkAfterClose(element, null);
         }
 
         // open all the connections
@@ -115,6 +165,7 @@ public class TestDriverAdapterCPDS {
         }
         for (final Connection element : c) {
             element.close();
+            checkAfterClose(element, null);
         }
     }
 
@@ -366,37 +417,44 @@ public class TestDriverAdapterCPDS {
             assertNotNull(conn);
             try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
                 assertNotNull(stmt);
-                try (final ResultSet rset = stmt.executeQuery()) {
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
+                try (final ResultSet resultSet = stmt.executeQuery()) {
+                    assertNotNull(resultSet);
+                    assertTrue(resultSet.next());
                 }
             }
         }
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testSimpleWithUsername() throws Exception {
+        final Connection connCheck;
+        PStmtKey pStmtKey;
         try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
             assertNotNull(conn);
+            connCheck = conn;
             try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
                 assertNotNull(stmt);
-                try (final ResultSet rset = stmt.executeQuery()) {
-                    assertNotNull(rset);
-                    assertTrue(rset.next());
+                final DelegatingStatement delegatingStatement = (DelegatingStatement) stmt;
+                final Statement delegateStatement = delegatingStatement.getDelegate();
+                pStmtKey = TestUtils.getPStmtKey((PoolablePreparedStatement) delegateStatement);
+                assertNotNull(pStmtKey);
+                try (final ResultSet resultSet = stmt.executeQuery()) {
+                    assertNotNull(resultSet);
+                    assertTrue(resultSet.next());
                 }
             }
         }
+        checkAfterClose(connCheck, pStmtKey);
     }
 
     @Test
-    public void testToStringWithoutConnectionProperties() throws ClassNotFoundException
-    {
+    public void testToStringWithoutConnectionProperties() throws ClassNotFoundException {
         final DriverAdapterCPDS cleanCpds = new DriverAdapterCPDS();
-        cleanCpds.setDriver( "org.apache.commons.dbcp2.TesterDriver" );
-        cleanCpds.setUrl( "jdbc:apache:commons:testdriver" );
-        cleanCpds.setUser( "foo" );
-        cleanCpds.setPassword( "bar" );
-
+        cleanCpds.setDriver("org.apache.commons.dbcp2.TesterDriver");
+        cleanCpds.setUrl("jdbc:apache:commons:testdriver");
+        cleanCpds.setUser("foo");
+        cleanCpds.setPassword("bar");
         cleanCpds.toString();
     }
 }

@@ -21,6 +21,10 @@ import org.junit.jupiter.api.Test;
 
 public class TestUtils {
 
+    public static PStmtKey getPStmtKey(final PoolablePreparedStatement<PStmtKey> poolablePreparedStatement) {
+        return poolablePreparedStatement.getKey();
+    }
+
     @Test
     public void testClassLoads() {
         Utils.closeQuietly((AutoCloseable) null);

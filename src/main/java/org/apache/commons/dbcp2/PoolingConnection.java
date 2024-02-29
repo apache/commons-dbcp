@@ -303,9 +303,18 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            the wrapped pooled statement to be destroyed.
      */
     @Override
-    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
-            throws SQLException {
-        pooledObject.getObject().getInnermostDelegate().close();
+    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) throws SQLException {
+        if (pooledObject != null) {
+            @SuppressWarnings("resource")
+            final DelegatingPreparedStatement object = pooledObject.getObject();
+            if (object != null) {
+                @SuppressWarnings("resource")
+                final Statement innermostDelegate = object.getInnermostDelegate();
+                if (innermostDelegate != null) {
+                    innermostDelegate.close();
+                }
+            }
+        }
     }
 
     private String getCatalogOrNull() {

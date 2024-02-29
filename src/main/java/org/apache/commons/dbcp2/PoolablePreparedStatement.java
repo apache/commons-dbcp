@@ -113,6 +113,15 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         }
     }
 
+    /**
+     * Package-protected for tests.
+     *
+     * @return The key.
+     */
+    K getKey() {
+        return key;
+    }
+
     @Override
     public void passivate() throws SQLException {
         // DBCP-372. clearBatch with throw an exception if called when the

@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -331,9 +332,18 @@ final class PooledConnectionImpl
      *            the wrapped {@link PreparedStatement} to be destroyed.
      */
     @Override
-    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
-            throws SQLException {
-        pooledObject.getObject().getInnermostDelegate().close();
+    public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) throws SQLException {
+        if (pooledObject != null) {
+            @SuppressWarnings("resource")
+            final DelegatingPreparedStatement object = pooledObject.getObject();
+            if (object != null) {
+                @SuppressWarnings("resource")
+                final Statement innermostDelegate = object.getInnermostDelegate();
+                if (innermostDelegate != null) {
+                    innermostDelegate.close();
+                }
+            }
+        }
     }
 
     /**

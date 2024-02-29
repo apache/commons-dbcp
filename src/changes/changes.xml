@@ -66,6 +66,8 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- FIX -->
       <action type="fix" issue="DBCP-590" dev="psteitz" due-to=" Réda Housni Alaoui">BasicDataSource#setAbandonedUsageTracking has no effect.</action>
       <action type="fix" issue="DBCP-596" dev="ggregory" due-to="Aapo Haapanen, Gary Gregory">PoolingConnection.toString() causes StackOverflowError.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory, Rémy Maucherat">PooledConnectionImpl.destroyObject(PStmtKey, PooledObject) can throw NullPointerException #312.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory, Rémy Maucherat">PoolingConnection.destroyObject(PStmtKey, PooledObject) can throw NullPointerException #312.</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add property project.build.outputTimestamp for build reproducibility.</action>
       <action type="add" dev="ggregory" due-to="Heewon Lee">Add null guards in DelegatingDatabaseMetaData constructor #352.</action>
