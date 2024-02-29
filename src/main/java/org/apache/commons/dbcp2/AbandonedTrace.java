@@ -169,7 +169,7 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
      */
     protected void removeThisTrace(final Object source) {
         if (source instanceof AbandonedTrace) {
-            AbandonedTrace.class.cast(source).removeTrace(this);
+            ((AbandonedTrace) source).removeTrace(this);
         }
     }
 

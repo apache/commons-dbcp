@@ -226,26 +226,34 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         getOptional(properties, PROP_DEFAULT_TRANSACTION_ISOLATION).ifPresent(value -> {
             value = value.toUpperCase(Locale.ROOT);
-            int level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
-            if ("NONE".equals(value)) {
+            int level;
+            switch (value) {
+            case "NONE":
                 level = Connection.TRANSACTION_NONE;
-            } else if ("READ_COMMITTED".equals(value)) {
+                break;
+            case "READ_COMMITTED":
                 level = Connection.TRANSACTION_READ_COMMITTED;
-            } else if ("READ_UNCOMMITTED".equals(value)) {
+                break;
+            case "READ_UNCOMMITTED":
                 level = Connection.TRANSACTION_READ_UNCOMMITTED;
-            } else if ("REPEATABLE_READ".equals(value)) {
+                break;
+            case "REPEATABLE_READ":
                 level = Connection.TRANSACTION_REPEATABLE_READ;
-            } else if ("SERIALIZABLE".equals(value)) {
+                break;
+            case "SERIALIZABLE":
                 level = Connection.TRANSACTION_SERIALIZABLE;
-            } else {
+                break;
+            default:
                 try {
                     level = Integer.parseInt(value);
-                } catch (final NumberFormatException e) {
+                }
+                catch (final NumberFormatException e) {
                     System.err.println("Could not parse defaultTransactionIsolation: " + value);
                     System.err.println("WARNING: defaultTransactionIsolation not set");
                     System.err.println("using default value of database driver");
                     level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
                 }
+                break;
             }
             dataSource.setDefaultTransactionIsolation(level);
         });
@@ -420,7 +428,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
             final List<String> infoMessages) {
-        final String nameString = name != null ? "Name = " + name.toString() + " " : "";
+        final String nameString = name != null ? "Name = " + name + " " : "";
         NUPROP_WARNTEXT.forEach((propertyName, value) -> {
             final RefAddr ra = ref.get(propertyName);
             if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
@@ -440,10 +448,10 @@ public class BasicDataSourceFactory implements ObjectFactory {
             // and it is not in the "silent" list, tell user we are ignoring it.
             if (!(ALL_PROPERTY_NAMES.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName) || SILENT_PROPERTIES.contains(propertyName))) {
                 final String propertyValue = Objects.toString(ra.getContent(), null);
-                final StringBuilder stringBuilder = new StringBuilder(nameString);
-                stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue).append("\" for \"").append(propertyName)
-                        .append("\" property");
-                infoMessages.add(stringBuilder.toString());
+                final String stringBuilder =
+                    nameString + "Ignoring unknown property: " + "value of \"" + propertyValue + "\" for \"" + propertyName
+                        + "\" property";
+                infoMessages.add(stringBuilder);
             }
         }
     }
