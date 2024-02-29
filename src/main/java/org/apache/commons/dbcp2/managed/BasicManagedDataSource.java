@@ -87,16 +87,14 @@ public class BasicManagedDataSource extends BasicDataSource {
             Class<?> xaDataSourceClass = null;
             try {
                 xaDataSourceClass = Class.forName(xaDataSource);
-            } catch (final Exception t) {
-                final String message = "Cannot load XA data source class '" + xaDataSource + "'";
-                throw new SQLException(message, t);
+            } catch (final Exception e) {
+                throw new SQLException("Cannot load XA data source class '" + xaDataSource + "'", e);
             }
 
             try {
                 xaDataSourceInstance = (XADataSource) xaDataSourceClass.getConstructor().newInstance();
-            } catch (final Exception t) {
-                final String message = "Cannot create XA data source of class '" + xaDataSource + "'";
-                throw new SQLException(message, t);
+            } catch (final Exception e) {
+                throw new SQLException("Cannot create XA data source of class '" + xaDataSource + "'", e);
             }
         }
 
