@@ -17,11 +17,13 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 
 import javax.management.OperationsException;
@@ -108,7 +110,7 @@ public class TestPoolableConnection {
         }
 
         // validate should not fail - error was not fatal and condition was cleaned up
-        conn.validate("SELECT 1", 1000);
+        conn.validate("SELECT 1", Duration.ofSeconds(1000));
 
         // now set up fatal failure
         nativeConnection.setFailure(new SQLException("Fatal connection error.", "01002"));
@@ -123,7 +125,7 @@ public class TestPoolableConnection {
 
         // validate should now fail because of previous fatal error, despite cleanup
         try {
-            conn.validate("SELECT 1", 1000);
+            conn.validate("SELECT 1", Duration.ofSeconds(1000));
             fail("Should throw SQL exception on validation.");
         } catch (final SQLException notValid){
             // expected - fatal error && fastFailValidation
@@ -173,9 +175,9 @@ public class TestPoolableConnection {
             parentException.setNextException(childException);
             parentException = childException;
         }
-        final Connection conn = pool.borrowObject();
-        assertEquals(false, ((PoolableConnection) conn).isDisconnectionSqlException(rootException));
-        assertEquals(false, ((PoolableConnection) conn).isFatalException(rootException));
+        final PoolableConnection conn = pool.borrowObject();
+        assertFalse(conn.isDisconnectionSqlException(rootException));
+        assertFalse(conn.isFatalException(rootException));
     }
 
     /**
