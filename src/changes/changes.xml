@@ -62,6 +62,11 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
+    <release version="2.12.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <!-- FIX -->
+      <!-- ADD -->
+      <!-- UPDATE -->
+    </release>
     <release version="2.12.0" date="2024-02-29" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <action type="fix" issue="DBCP-590" dev="psteitz" due-to=" Réda Housni Alaoui">BasicDataSource#setAbandonedUsageTracking has no effect.</action>
