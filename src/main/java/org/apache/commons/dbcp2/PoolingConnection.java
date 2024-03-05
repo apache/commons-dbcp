@@ -49,7 +49,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * Statement types.
      *
      * See subclasses of {@link Statement}.
-     * 
+     *
      * @since 2.0 protected enum.
      * @since 2.4.0 public enum.
      * @see Statement
