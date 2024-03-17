@@ -94,8 +94,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                 loader.loadClass(poolPackageName + ".impl.LinkedBlockingDeque$Node");
                 loader.loadClass(poolPackageName + ".impl.GenericKeyedObjectPool$ObjectDeque");
             }
-        } catch (final ClassNotFoundException cnfe) {
-            throw new IllegalStateException("Unable to pre-load classes", cnfe);
+        } catch (final ClassNotFoundException ex) {
+            throw new IllegalStateException("Unable to pre-load classes", ex);
         }
     }
 
@@ -297,7 +297,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private String connectionString;
 
     /**
-     * The connection user name to be passed to our JDBC driver to establish a connection.
+     * The connection username to be passed to our JDBC driver to establish a connection.
      */
     private String userName;
 
@@ -671,11 +671,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the flag that controls whether or not connections being returned to the pool will be checked
+     * Gets the value of the flag that controls whether connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
-     * @return Whether or not connections being returned to the pool will be checked and configured with auto-commit.
+     * @return A boolean value indicating whether connections being returned to the pool will be checked and configured with auto-commit.
      */
     public boolean getAutoCommitOnReturn() {
         return autoCommitOnReturn;
@@ -756,7 +756,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Provides the same data as {@link #getConnectionInitSqls()} but in an array so it is accessible via JMX.
+     * Provides the same data as {@link #getConnectionInitSqls()} but as an array, so it is accessible via JMX.
      */
     @Override
     public String[] getConnectionInitSqlsAsArray() {
@@ -865,7 +865,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
+     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array, so it is accessible via JMX.
      *
      * @since 2.1
      */
@@ -927,11 +927,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the value of the flag that controls whether or not connections being returned to the pool will be checked
+     * Gets the value of the flag that controls whether connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
-     * @return Whether or not connections being returned to the pool will be checked and configured with auto-commit.
+     * @return A boolean value indicating whether connections being returned to the pool will be checked and configured with auto-commit.
      * @deprecated Use {@link #getAutoCommitOnReturn()}.
      */
     @Deprecated
@@ -1007,8 +1007,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether or
-     * not log messages are generated when the pool closes connections due to maximum lifetime exceeded.
+     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether
+     * log messages are generated when the pool closes connections due to maximum lifetime exceeded.
      *
      * @since 2.1
      */
@@ -1494,7 +1494,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @throws IllegalStateException if invalidating the connection failed.
      * @since 2.1
      */
-    @SuppressWarnings("resource")
+    @SuppressWarnings({"resource", "RedundantSuppression"})
     public void invalidateConnection(final Connection connection) throws IllegalStateException {
         if (connection == null) {
             return;
@@ -1508,7 +1508,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             poolableConnection = connection.unwrap(PoolableConnection.class);
             if (poolableConnection == null) {
                 throw new IllegalStateException(
-                        "Cannot invalidate connection: Connection is not a poolable connection.");
+                    "Cannot invalidate connection: Connection is not a poolable connection.");
             }
         } catch (final SQLException e) {
             throw new IllegalStateException("Cannot invalidate connection: Unwrapping poolable connection failed.", e);
@@ -1740,11 +1740,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
+     * Sets the value of the flag that controls whether connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
-     * @param autoCommitOnReturn Whether or not connections being returned to the pool will be checked and configured
+     * @param autoCommitOnReturn A boolean value indicating whether connections being returned to the pool will be checked and configured
      *                           with auto-commit.
      * @since 2.6.0
      */
@@ -1794,7 +1794,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setConnectionInitSqls(final Collection<String> connectionInitSqls) {
         final List<String> collect = Utils.isEmpty(connectionInitSqls) ? null
-                : connectionInitSqls.stream().filter(s -> !isEmpty(s)).collect(Collectors.toList());
+            : connectionInitSqls.stream().filter(s -> !isEmpty(s)).collect(Collectors.toList());
         this.connectionInitSqls = Utils.isEmpty(collect) ? null : collect;
     }
 
@@ -1967,7 +1967,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
-                : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+            : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
         this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
@@ -2026,11 +2026,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the value of the flag that controls whether or not connections being returned to the pool will be checked
+     * Sets the value of the flag that controls whether connections being returned to the pool will be checked
      * and configured with {@link Connection#setAutoCommit(boolean) Connection.setAutoCommit(true)} if the auto commit
      * setting is {@code false} when the connection is returned. It is {@code true} by default.
      *
-     * @param autoCommitOnReturn Whether or not connections being returned to the pool will be checked and configured
+     * @param autoCommitOnReturn A boolean value indicating whether connections being returned to the pool will be checked and configured
      *                           with auto-commit.
      * @deprecated Use {@link #setAutoCommitOnReturn(boolean)}.
      */
@@ -2102,11 +2102,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether or
-     * not log messages are generated when the pool closes connections due to maximum lifetime exceeded. Set this
+     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether
+     * log messages are generated when the pool closes connections due to maximum lifetime exceeded. Set this
      * property to false to suppress log messages when connections expire.
      *
-     * @param logExpiredConnections Whether or not log messages are generated when the pool closes connections due to
+     * @param logExpiredConnections A boolean value indicating whether log messages are generated when the pool closes connections due to
      *                              maximum lifetime exceeded.
      */
     public void setLogExpiredConnections(final boolean logExpiredConnections) {
@@ -2424,7 +2424,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {code testOnBorrow} property. This property determines whether or not the pool will validate objects
+     * Sets the {code testOnBorrow} property. This property determines whether  the pool will validate objects
      * before they are borrowed from the pool.
      *
      * @param testOnBorrow new value for testOnBorrow property
@@ -2435,7 +2435,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {code testOnCreate} property. This property determines whether or not the pool will validate objects
+     * Sets the {code testOnCreate} property. This property determines whether  the pool will validate objects
      * immediately after they are created by the pool
      *
      * @param testOnCreate new value for testOnCreate property
@@ -2446,7 +2446,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@code testOnReturn} property. This property determines whether or not the pool will validate
+     * Sets the {@code testOnReturn} property. This property determines whether the pool will validate
      * objects before they are returned to the pool.
      *
      * @param testOnReturn new value for testOnReturn property
@@ -2457,7 +2457,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the {@code testWhileIdle} property. This property determines whether or not the idle object evictor
+     * Sets the {@code testWhileIdle} property. This property determines whether the idle object evictor
      * will validate connections.
      *
      * @param testWhileIdle new value for testWhileIdle property
@@ -2598,9 +2598,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (registeredJmxObjectName == null) {
             return;
         }
-        final StringBuilder base = new StringBuilder(registeredJmxObjectName.toString());
-        base.append(Constants.JMX_CONNECTION_POOL_BASE_EXT);
-        config.setJmxNameBase(base.toString());
+        config.setJmxNameBase(registeredJmxObjectName + Constants.JMX_CONNECTION_POOL_BASE_EXT);
         config.setJmxNamePrefix(Constants.JMX_CONNECTION_POOL_PREFIX);
     }
 

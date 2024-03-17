@@ -176,7 +176,7 @@ public class TestPoolingConnection {
     public void testToStringStackOverflow() {
         final PoolingConnection conn = new PoolingConnection(null);
         final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
-        final GenericKeyedObjectPool stmtPool = new GenericKeyedObjectPool<>(conn, config);
+        final GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(conn, config);
         conn.setStatementPool(stmtPool);
         conn.toString();
     }

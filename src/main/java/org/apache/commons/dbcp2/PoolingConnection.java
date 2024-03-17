@@ -624,7 +624,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
                 return "PoolingConnection: " + pStmtPool.getClass() + "@" + System.identityHashCode(pStmtPool);
             }
         }
-        return "PoolingConnection: " + Objects.toString(pStmtPool);
+        return "PoolingConnection: " + pStmtPool;
     }
 
     /**

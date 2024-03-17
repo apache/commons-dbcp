@@ -394,8 +394,6 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             if (!rs.next()) {
                 throw new SQLException("validationQuery didn't return a row");
             }
-        } catch (final SQLException sqle) {
-            throw sqle;
         }
     }
 
