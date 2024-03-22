@@ -17,6 +17,7 @@
 package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -174,8 +175,8 @@ public class TestPoolableConnection {
             parentException = childException;
         }
         final Connection conn = pool.borrowObject();
-        assertEquals(false, ((PoolableConnection) conn).isDisconnectionSqlException(rootException));
-        assertEquals(false, ((PoolableConnection) conn).isFatalException(rootException));
+        assertFalse(((PoolableConnection) conn).isDisconnectionSqlException(rootException));
+        assertFalse(((PoolableConnection) conn).isFatalException(rootException));
     }
 
     /**
