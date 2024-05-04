@@ -964,6 +964,6 @@ public abstract class TestConnectionPool {
     }
 
     long timeStampMillis() {
-        return System.currentTimeMillis();// JVM 1.5+ System.nanoTime() / 1000000;
+        return System.currentTimeMillis(); // JVM 1.5+ System.nanoTime() / 1000000;
     }
 }
