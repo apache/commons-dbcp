@@ -208,6 +208,7 @@
     <findbugs.skip>true</findbugs.skip>
     <!-- spdx 0.6.0 can require Java 11 depending on undocumented behavior which kicks in for us here. -->
     <commons.spdx.version>0.5.5</commons.spdx.version>
+    <surefire.argline></surefire.argline>
     <!-- JaCoCo: Don't make code coverage worse than: -->
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
     <commons.jacoco.classRatio>0.98</commons.jacoco.classRatio>
