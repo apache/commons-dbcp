@@ -53,128 +53,6 @@
     <url>https://gitbox.apache.org/repos/asf?p=commons-dbcp.git</url>
   </scm>
 
-  <developers>
-    <developer>
-      <name>Morgan Delagrange</name>
-      <id>morgand</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>Geir Magnusson</name>
-      <id>geirm</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>Craig McClanahan</name>
-      <id>craigmcc</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>John McNally</name>
-      <id>jmcnally</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>Martin Poeschl</name>
-      <id>mpoeschl</id>
-      <email>mpoeschl@marmot.at</email>
-      <organization>tucana.at</organization>
-    </developer>
-    <developer>
-      <name>Rodney Waldhoff</name>
-      <id>rwaldhoff</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>David Weinrich</name>
-      <id>dweinr1</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>Dirk Verbeeck</name>
-      <id>dirkv</id>
-      <email></email>
-      <organization></organization>
-    </developer>
-    <developer>
-      <name>Yoav Shapira</name>
-      <id>yoavs</id>
-      <email>yoavs@apache.org</email>
-      <organization>The Apache Software Foundation</organization>
-    </developer>
-    <developer>
-      <name>J&#x00f6;rg Schaible</name>
-      <id>joehni</id>
-      <email>joerg.schaible@gmx.de</email>
-      <organization></organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Mark Thomas</name>
-      <id>markt</id>
-      <email>markt@apache.org</email>
-      <organization>The Apache Software Foundation</organization>
-    </developer>
-    <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory at apache.org</email>
-      <url>https://www.garygregory.com</url>
-      <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/New_York</timezone>
-      <properties>
-        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <name>Ignacio J. Ortega</name>
-      <id>nacho</id>
-    </developer>
-    <developer>
-      <name>Sean C. Sullivan</name>
-      <id>sullis</id>
-    </developer>
-  </developers>
-  <contributors>
-    <contributor>
-      <name>Todd Carmichael</name>
-      <email>toddc@concur.com</email>
-    </contributor>
-    <contributor>
-      <name>Wayne Woodfield</name>
-    </contributor>
-    <contributor>
-      <name>Dain Sundstrom</name>
-      <email>dain@apache.org</email>
-    </contributor>
-    <contributor>
-      <name>Philippe Mouawad</name>
-    </contributor>
-    <contributor>
-      <name>Glenn L. Nielsen</name>
-    </contributor>
-    <contributor>
-      <name>James House</name>
-    </contributor>
-    <contributor>
-      <name>James Ring</name>
-    </contributor>
-    <contributor>
-      <name>Peter Wicks</name>
-       <email>pwicks@apache.org</email>
-    </contributor>
-  </contributors>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -505,4 +383,125 @@
       </properties>
     </profile>
   </profiles>
+  <developers>
+    <developer>
+      <name>Morgan Delagrange</name>
+      <id>morgand</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>Geir Magnusson</name>
+      <id>geirm</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>Craig McClanahan</name>
+      <id>craigmcc</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>John McNally</name>
+      <id>jmcnally</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>Martin Poeschl</name>
+      <id>mpoeschl</id>
+      <email>mpoeschl@marmot.at</email>
+      <organization>tucana.at</organization>
+    </developer>
+    <developer>
+      <name>Rodney Waldhoff</name>
+      <id>rwaldhoff</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>David Weinrich</name>
+      <id>dweinr1</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>Dirk Verbeeck</name>
+      <id>dirkv</id>
+      <email></email>
+      <organization></organization>
+    </developer>
+    <developer>
+      <name>Yoav Shapira</name>
+      <id>yoavs</id>
+      <email>yoavs@apache.org</email>
+      <organization>The Apache Software Foundation</organization>
+    </developer>
+    <developer>
+      <name>J&#x00f6;rg Schaible</name>
+      <id>joehni</id>
+      <email>joerg.schaible@gmx.de</email>
+      <organization></organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Mark Thomas</name>
+      <id>markt</id>
+      <email>markt@apache.org</email>
+      <organization>The Apache Software Foundation</organization>
+    </developer>
+    <developer>
+      <id>ggregory</id>
+      <name>Gary Gregory</name>
+      <email>ggregory at apache.org</email>
+      <url>https://www.garygregory.com</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+      <properties>
+        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
+      </properties>
+    </developer>
+    <developer>
+      <name>Ignacio J. Ortega</name>
+      <id>nacho</id>
+    </developer>
+    <developer>
+      <name>Sean C. Sullivan</name>
+      <id>sullis</id>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Todd Carmichael</name>
+      <email>toddc@concur.com</email>
+    </contributor>
+    <contributor>
+      <name>Wayne Woodfield</name>
+    </contributor>
+    <contributor>
+      <name>Dain Sundstrom</name>
+      <email>dain@apache.org</email>
+    </contributor>
+    <contributor>
+      <name>Philippe Mouawad</name>
+    </contributor>
+    <contributor>
+      <name>Glenn L. Nielsen</name>
+    </contributor>
+    <contributor>
+      <name>James House</name>
+    </contributor>
+    <contributor>
+      <name>James Ring</name>
+    </contributor>
+    <contributor>
+      <name>Peter Wicks</name>
+       <email>pwicks@apache.org</email>
+    </contributor>
+  </contributors>
 </project>
