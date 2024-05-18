@@ -44,7 +44,7 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * Implementation of {@link PooledConnection} that is returned by {@link DriverAdapterCPDS}.
+ * Implements {@link PooledConnection} that is returned by {@link DriverAdapterCPDS}.
  *
  * @since 2.0
  */
