@@ -244,7 +244,7 @@ public final class Utils {
         if (maxDuration.compareTo(Duration.ZERO) > 0) {
             final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
             if (lifetimeDuration.compareTo(maxDuration) > 0) {
-                throw new LifetimeExceededException(Utils.getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxDuration));
+                throw new LifetimeExceededException(getMessage("connectionFactory.lifetimeExceeded", lifetimeDuration, maxDuration));
             }
         }
     }
