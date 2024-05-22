@@ -64,6 +64,7 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.12.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in AbandonedTrace.</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 66 to 69 #360, #371.</action>
