@@ -68,6 +68,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in PoolableCallableStatement.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in PoolablePreparedStatement.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in Utils.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in LocalXAConnectionFactory.</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 66 to 69 #360, #371.</action>
