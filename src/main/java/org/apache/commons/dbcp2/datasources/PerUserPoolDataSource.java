@@ -693,12 +693,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @throws ClassNotFoundException
      *             if an error occurs
      */
+    @SuppressWarnings("resource")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.managers = readObjectImpl().managers;
+    }
+
+    private PerUserPoolDataSource readObjectImpl() throws IOException, ClassNotFoundException {
         try {
-            in.defaultReadObject();
-            final PerUserPoolDataSource oldDS = (PerUserPoolDataSource) new PerUserPoolDataSourceFactory()
-                    .getObjectInstance(getReference(), null, null, null);
-            this.managers = oldDS.managers;
+            return (PerUserPoolDataSource) new PerUserPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null);
         } catch (final NamingException e) {
             throw new IOException("NamingException: " + e);
         }
