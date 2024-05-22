@@ -152,11 +152,14 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      *             if an error occurs
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.pool = readObjectImpl();
+    }
+
+    private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> readObjectImpl() throws IOException, ClassNotFoundException {
         try {
-            in.defaultReadObject();
-            final SharedPoolDataSource oldDS = (SharedPoolDataSource) new SharedPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null);
-            this.pool = oldDS.pool;
-        } catch (final NamingException e) {
+            return ((SharedPoolDataSource) new SharedPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null)).pool;
+        } catch (NamingException e) {
             throw new IOException("NamingException: " + e);
         }
     }

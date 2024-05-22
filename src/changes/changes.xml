@@ -70,6 +70,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in Utils.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in LocalXAConnectionFactory.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs MC_OVERRIDABLE_METHOD_CALL_IN_READ_OBJECT in PerUserPoolDataSource.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs MC_OVERRIDABLE_METHOD_CALL_IN_READ_OBJECT in SharedPoolDataSource.</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 66 to 69 #360, #371.</action>
