@@ -23,6 +23,7 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A base delegating implementation of {@link Statement}.
@@ -799,7 +800,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      */
     @Override
     public synchronized String toString() {
-        return statement == null ? "NULL" : statement.toString();
+        return Objects.toString(statement, "NULL");
     }
 
     @Override
