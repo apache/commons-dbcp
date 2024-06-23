@@ -684,14 +684,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Supports Serialization interface.
+     * Deserializes an instance from an ObjectInputStream.
      *
-     * @param in
-     *            a {@link ObjectInputStream} value
-     * @throws IOException
-     *             if an error occurs
-     * @throws ClassNotFoundException
-     *             if an error occurs
+     * @param in The source ObjectInputStream.
+     * @throws IOException            Any of the usual Input/Output related exceptions.
+     * @throws ClassNotFoundException A class of a serialized object cannot be found.
      */
     @SuppressWarnings("resource")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
