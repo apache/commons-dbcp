@@ -47,7 +47,6 @@ Apache Commons DBCP
 [![Coverage Status](https://codecov.io/gh/apache/commons-dbcp/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-dbcp)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-dbcp2/?gav=true)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-dbcp2/2.12.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-dbcp2/2.12.0)
-[![CodeQL](https://github.com/apache/commons-dbcp/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-dbcp/actions/workflows/codeql-analysis.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-dbcp/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-dbcp)
 
 Apache Commons DBCP software implements Database Connection Pooling
