@@ -156,7 +156,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> readObjectImpl() throws IOException, ClassNotFoundException {
         try {
             return ((SharedPoolDataSource) new SharedPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null)).pool;
-        } catch (NamingException e) {
+        } catch (final NamingException e) {
             throw new IOException("NamingException: " + e);
         }
     }
