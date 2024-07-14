@@ -164,7 +164,7 @@ public abstract class TestConnectionPool {
     }
 
     final class TestThread implements Runnable {
-        final java.util.Random random = new java.util.Random();
+        final Random random = new Random();
         boolean complete;
         boolean failed;
         int iter = 100;

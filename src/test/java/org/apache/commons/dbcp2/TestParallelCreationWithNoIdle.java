@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ import org.junit.jupiter.api.Test;
 public class TestParallelCreationWithNoIdle  {
 
     final class TestThread extends Thread {
-        final java.util.Random random = new java.util.Random();
+        final Random random = new Random();
         final int iter;
         final int delay;
         final int delayAfter;
