@@ -40,15 +40,15 @@ import java.util.concurrent.Executor;
  */
 public class TesterConnection extends AbandonedTrace implements Connection {
 
-    protected boolean _open = true;
-    protected boolean _aborted;
-    protected boolean _autoCommit = true;
-    protected int _transactionIsolation = 1;
-    protected final DatabaseMetaData _metaData = new TesterDatabaseMetaData();
-    protected String _catalog;
+    protected boolean open = true;
+    protected boolean aborted;
+    protected boolean autoCommit = true;
+    protected int transactionIsolation = 1;
+    protected final DatabaseMetaData metaData = new TesterDatabaseMetaData();
+    protected String catalog;
     protected String schema;
-    protected Map<String,Class<?>> _typeMap;
-    protected boolean _readOnly;
+    protected Map<String,Class<?>> typeMap;
+    protected boolean readOnly;
     protected SQLWarning warnings;
     protected final String userName;
     protected Exception failure;
@@ -62,8 +62,8 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public void abort(final Executor executor) throws SQLException {
         checkFailure();
-        _aborted = true;
-        _open = false;
+        aborted = true;
+        open = false;
     }
 
     protected void checkFailure() throws SQLException {
@@ -76,7 +76,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     }
 
     protected void checkOpen() throws SQLException {
-        if (!_open) {
+        if (!open) {
             throw new SQLException("Connection is closed.");
         }
         checkFailure();
@@ -91,7 +91,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public void close() throws SQLException {
         checkFailure();
-        _open = false;
+        open = false;
     }
 
     @Override
@@ -155,13 +155,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public boolean getAutoCommit() throws SQLException {
         checkOpen();
-        return _autoCommit;
+        return autoCommit;
     }
 
     @Override
     public String getCatalog() throws SQLException {
         checkOpen();
-        return _catalog;
+        return catalog;
     }
 
     @Override
@@ -182,7 +182,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
         checkOpen();
-        return _metaData;
+        return metaData;
     }
 
     @Override
@@ -199,13 +199,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public int getTransactionIsolation() throws SQLException {
         checkOpen();
-        return _transactionIsolation;
+        return transactionIsolation;
     }
 
     @Override
     public Map<String,Class<?>> getTypeMap() throws SQLException {
         checkOpen();
-        return _typeMap;
+        return typeMap;
     }
 
     public String getUserName() {
@@ -220,19 +220,19 @@ public class TesterConnection extends AbandonedTrace implements Connection {
 
     public boolean isAborted() throws SQLException {
         checkFailure();
-        return _aborted;
+        return aborted;
     }
 
     @Override
     public boolean isClosed() throws SQLException {
         checkFailure();
-        return !_open;
+        return !open;
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
         checkOpen();
-        return _readOnly;
+        return readOnly;
     }
 
     public boolean isSqlExceptionOnClose() {
@@ -241,7 +241,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
 
     @Override
     public boolean isValid(final int timeout) throws SQLException {
-        return _open;
+        return open;
     }
 
     @Override
@@ -352,13 +352,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public void setAutoCommit(final boolean autoCommit) throws SQLException {
         checkOpen();
-        _autoCommit = autoCommit;
+        this.autoCommit = autoCommit;
     }
 
     @Override
     public void setCatalog(final String catalog) throws SQLException {
         checkOpen();
-        _catalog = catalog;
+        this.catalog = catalog;
     }
 
     @Override
@@ -389,7 +389,7 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public void setReadOnly(final boolean readOnly) throws SQLException {
         checkOpen();
-        _readOnly = readOnly;
+        this.readOnly = readOnly;
     }
 
     @Override
@@ -415,13 +415,13 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public void setTransactionIsolation(final int level) throws SQLException {
         checkOpen();
-        _transactionIsolation = level;
+        this.transactionIsolation = level;
     }
 
     @Override
     public void setTypeMap(final Map<String,Class<?>> map) throws SQLException {
         checkOpen();
-        _typeMap = map;
+        this.typeMap = map;
     }
 
     public void setWarnings(final SQLWarning warning) {

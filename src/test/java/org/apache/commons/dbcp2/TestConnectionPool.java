@@ -164,37 +164,37 @@ public abstract class TestConnectionPool {
     }
 
     final class TestThread implements Runnable {
-        final java.util.Random _random = new java.util.Random();
-        boolean _complete;
-        boolean _failed;
-        int _iter = 100;
-        int _delay = 50;
+        final java.util.Random random = new java.util.Random();
+        boolean complete;
+        boolean failed;
+        int iter = 100;
+        int delay = 50;
 
         public TestThread() {
         }
 
         public TestThread(final int iter) {
-            _iter = iter;
+            this.iter = iter;
         }
 
         public TestThread(final int iter, final int delay) {
-            _iter = iter;
-            _delay = delay;
+            this.iter = iter;
+            this.delay = delay;
         }
 
         public boolean complete() {
-            return _complete;
+            return complete;
         }
 
         public boolean failed() {
-            return _failed;
+            return failed;
         }
 
         @Override
         public void run() {
-            for (int i = 0; i < _iter; i++) {
+            for (int i = 0; i < iter; i++) {
                 try {
-                    Thread.sleep(_random.nextInt(_delay));
+                    Thread.sleep(random.nextInt(delay));
                 } catch (final Exception e) {
                     // ignored
                 }
@@ -202,18 +202,18 @@ public abstract class TestConnectionPool {
                         PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual");
                         ResultSet rset = stmt.executeQuery()) {
                     try {
-                        Thread.sleep(_random.nextInt(_delay));
+                        Thread.sleep(random.nextInt(delay));
                     } catch (final Exception ignore) {
                         // ignored
                     }
                 } catch (final Exception e) {
                     e.printStackTrace();
-                    _failed = true;
-                    _complete = true;
+                    failed = true;
+                    complete = true;
                     break;
                 }
             }
-            _complete = true;
+            complete = true;
         }
     }
 

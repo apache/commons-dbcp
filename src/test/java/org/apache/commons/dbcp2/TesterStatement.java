@@ -28,39 +28,39 @@ import java.sql.Statement;
  */
 public class TesterStatement extends AbandonedTrace implements Statement {
 
-    protected final Connection _connection;
-    protected boolean _open = true;
-    protected final long _rowsUpdated = 1;
-    protected final boolean _executeResponse = true;
-    protected int _maxFieldSize = 1024;
-    protected long _maxRows = 1024;
-    protected boolean _escapeProcessing;
-    protected int _queryTimeout = 1000;
-    protected String _cursorName;
-    protected int _fetchDirection = 1;
-    protected int _fetchSize = 1;
-    protected int _resultSetConcurrency = 1;
-    protected int _resultSetType = 1;
-    private int _resultSetHoldability = 1;
-    protected ResultSet _resultSet;
-    protected boolean _sqlExceptionOnClose;
+    protected final Connection connection;
+    protected boolean open = true;
+    protected final long rowsUpdated = 1;
+    protected final boolean executeResponse = true;
+    protected int maxFieldSize = 1024;
+    protected long maxRows = 1024;
+    protected boolean escapeProcessing;
+    protected int queryTimeout = 1000;
+    protected String cursorName;
+    protected int fetchDirection = 1;
+    protected int fetchSize = 1;
+    protected int resultSetConcurrency = 1;
+    protected int resultSetType = 1;
+    private int resultSetHoldability = 1;
+    protected ResultSet resultSet;
+    protected boolean sqlExceptionOnClose;
 
-    public TesterStatement(final Connection conn) {
-        _connection = conn;
+    public TesterStatement(final Connection connection) {
+        this.connection = connection;
     }
 
-    public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency) {
-        _connection = conn;
-        _resultSetType = resultSetType;
-        _resultSetConcurrency = resultSetConcurrency;
+    public TesterStatement(final Connection connection, final int resultSetType, final int resultSetConcurrency) {
+        this.connection = connection;
+        this.resultSetType = resultSetType;
+        this.resultSetConcurrency = resultSetConcurrency;
     }
 
-    public TesterStatement(final Connection conn, final int resultSetType, final int resultSetConcurrency,
+    public TesterStatement(final Connection connection, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) {
-        _connection = conn;
-        _resultSetType = resultSetType;
-        _resultSetConcurrency = resultSetConcurrency;
-        _resultSetHoldability = resultSetHoldability;
+        this.connection = connection;
+        this.resultSetType = resultSetType;
+        this.resultSetConcurrency = resultSetConcurrency;
+        this.resultSetHoldability = resultSetHoldability;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     }
 
     protected void checkOpen() throws SQLException {
-        if (!_open) {
+        if (!open) {
             throw new SQLException("Connection is closed.");
         }
     }
@@ -91,19 +91,19 @@ public class TesterStatement extends AbandonedTrace implements Statement {
 
     @Override
     public void close() throws SQLException {
-        if (_sqlExceptionOnClose) {
+        if (sqlExceptionOnClose) {
             throw new SQLException("TestSQLExceptionOnClose");
         }
 
         // calling close twice has no effect
-        if (!_open) {
+        if (!open) {
             return;
         }
 
-        _open = false;
-        if (_resultSet != null) {
-            _resultSet.close();
-            _resultSet = null;
+        open = false;
+        if (resultSet != null) {
+            resultSet.close();
+            resultSet = null;
         }
     }
 
@@ -118,7 +118,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
         if ("invalid".equals(sql)) {
             throw new SQLException("invalid query");
         }
-        return _executeResponse;
+        return executeResponse;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public long executeLargeUpdate(final String sql) throws SQLException {
         checkOpen();
-        return _rowsUpdated;
+        return rowsUpdated;
     }
 
     @Override
@@ -185,12 +185,12 @@ public class TesterStatement extends AbandonedTrace implements Statement {
             throw new SQLException("broken connection");
         }
         if ("select username".equals(sql)) {
-            final String userName = ((TesterConnection) _connection).getUserName();
+            final String userName = ((TesterConnection) connection).getUserName();
             final Object[][] data = { { userName } };
             return new TesterResultSet(this, data);
         }
         // Simulate timeout if queryTimout is set to less than 5 seconds
-        if (_queryTimeout > 0 && _queryTimeout < 5) {
+        if (queryTimeout > 0 && queryTimeout < 5) {
             throw new SQLException("query timeout");
         }
         return new TesterResultSet(this);
@@ -199,7 +199,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public int executeUpdate(final String sql) throws SQLException {
         checkOpen();
-        return (int) _rowsUpdated;
+        return (int) rowsUpdated;
     }
 
     @Override
@@ -220,19 +220,19 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public Connection getConnection() throws SQLException {
         checkOpen();
-        return _connection;
+        return connection;
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
         checkOpen();
-        return _fetchDirection;
+        return fetchDirection;
     }
 
     @Override
     public int getFetchSize() throws SQLException {
         checkOpen();
-        return _fetchSize;
+        return fetchSize;
     }
 
     @Override
@@ -243,25 +243,25 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public long getLargeMaxRows() throws SQLException {
         checkOpen();
-        return _maxRows;
+        return maxRows;
     }
 
     @Override
     public long getLargeUpdateCount() throws SQLException {
         checkOpen();
-        return _rowsUpdated;
+        return rowsUpdated;
     }
 
     @Override
     public int getMaxFieldSize() throws SQLException {
         checkOpen();
-        return _maxFieldSize;
+        return maxFieldSize;
     }
 
     @Override
     public int getMaxRows() throws SQLException {
         checkOpen();
-        return (int) _maxRows;
+        return (int) maxRows;
     }
 
     @Override
@@ -278,40 +278,40 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public int getQueryTimeout() throws SQLException {
         checkOpen();
-        return _queryTimeout;
+        return queryTimeout;
     }
 
     @Override
     public ResultSet getResultSet() throws SQLException {
         checkOpen();
-        if (_resultSet == null) {
-            _resultSet = new TesterResultSet(this);
+        if (resultSet == null) {
+            resultSet = new TesterResultSet(this);
         }
-        return _resultSet;
+        return resultSet;
     }
 
     @Override
     public int getResultSetConcurrency() throws SQLException {
         checkOpen();
-        return _resultSetConcurrency;
+        return resultSetConcurrency;
     }
 
     @Override
     public int getResultSetHoldability() throws SQLException {
         checkOpen();
-        return _resultSetHoldability;
+        return resultSetHoldability;
     }
 
     @Override
     public int getResultSetType() throws SQLException {
         checkOpen();
-        return _resultSetType;
+        return resultSetType;
     }
 
     @Override
     public int getUpdateCount() throws SQLException {
         checkOpen();
-        return (int) _rowsUpdated;
+        return (int) rowsUpdated;
     }
 
     @Override
@@ -322,7 +322,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
 
     @Override
     public boolean isClosed() throws SQLException {
-        return !_open;
+        return !open;
     }
 
     @Override
@@ -336,7 +336,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     }
 
     public boolean isSqlExceptionOnClose() {
-        return _sqlExceptionOnClose;
+        return sqlExceptionOnClose;
     }
 
     @Override
@@ -347,43 +347,43 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public void setCursorName(final String name) throws SQLException {
         checkOpen();
-        _cursorName = name;
+        this.cursorName = name;
     }
 
     @Override
     public void setEscapeProcessing(final boolean enable) throws SQLException {
         checkOpen();
-        _escapeProcessing = enable;
+        this.escapeProcessing = enable;
     }
 
     @Override
     public void setFetchDirection(final int direction) throws SQLException {
         checkOpen();
-        _fetchDirection = direction;
+        this.fetchDirection = direction;
     }
 
     @Override
     public void setFetchSize(final int rows) throws SQLException {
         checkOpen();
-        _fetchSize = rows;
+        this.fetchSize = rows;
     }
 
     @Override
     public void setLargeMaxRows(final long max) throws SQLException {
         checkOpen();
-        _maxRows = max;
+        this.maxRows = max;
     }
 
     @Override
     public void setMaxFieldSize(final int max) throws SQLException {
         checkOpen();
-        _maxFieldSize = max;
+        this.maxFieldSize = max;
     }
 
     @Override
     public void setMaxRows(final int max) throws SQLException {
         checkOpen();
-        _maxRows = max;
+        this.maxRows = max;
     }
 
     @Override
@@ -394,11 +394,11 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public void setQueryTimeout(final int seconds) throws SQLException {
         checkOpen();
-        _queryTimeout = seconds;
+        this.queryTimeout = seconds;
     }
 
     public void setSqlExceptionOnClose(final boolean _sqlExceptionOnClose) {
-        this._sqlExceptionOnClose = _sqlExceptionOnClose;
+        this.sqlExceptionOnClose = _sqlExceptionOnClose;
     }
 
     @Override

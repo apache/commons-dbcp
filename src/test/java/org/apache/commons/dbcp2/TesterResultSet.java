@@ -111,7 +111,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
         // Not all result sets are generated from statements eg DatabaseMetaData
         if (_statement != null) {
-            ((TesterStatement) _statement)._resultSet = null;
+            ((TesterStatement) _statement).resultSet = null;
         }
 
         _open = false;
