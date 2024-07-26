@@ -164,7 +164,6 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         throw new UnsupportedOperationException();
     }
 
-    // --- DataSource methods -----------------------------------------
 
     /**
      * Throws {@link UnsupportedOperationException}.

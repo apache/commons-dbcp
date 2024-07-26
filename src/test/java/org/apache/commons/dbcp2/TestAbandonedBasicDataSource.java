@@ -53,7 +53,6 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         con.setLastUsed(Instant.EPOCH);
     }
 
-    // ---------- Abandoned Test -----------
 
     /**
      * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection

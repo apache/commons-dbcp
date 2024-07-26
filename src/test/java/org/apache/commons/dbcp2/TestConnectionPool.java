@@ -232,7 +232,6 @@ public abstract class TestConnectionPool {
     /** Connections opened during the course of a test */
     protected final Stack<Connection> connectionStack = new Stack<>();
 
-    // ----------- Utility Methods ---------------------------------
 
     protected void assertBackPointers(final Connection conn, final Statement statement) throws SQLException {
         assertFalse(conn.isClosed());
