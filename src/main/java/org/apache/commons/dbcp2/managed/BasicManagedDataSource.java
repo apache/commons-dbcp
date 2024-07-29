@@ -234,17 +234,14 @@ public class BasicManagedDataSource extends BasicDataSource {
     }
 
     /**
-     * <p>
      * Sets the XADataSource instance used by the XAConnectionFactory.
-     * </p>
      * <p>
-     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
+     * invoked: {@link #getConnection()}, {@link #setLogWriter(java.io.PrintWriter)}, {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()},
+     * {@link #getLogWriter()}.</code>
      * </p>
      *
-     * @param xaDataSourceInstance
-     *            XADataSource instance
+     * @param xaDataSourceInstance XADataSource instance
      */
     public synchronized void setXaDataSourceInstance(final XADataSource xaDataSourceInstance) {
         this.xaDataSourceInstance = xaDataSourceInstance;
