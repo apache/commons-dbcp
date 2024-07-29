@@ -238,7 +238,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
      * invoked: {@link #getConnection()}, {@link #setLogWriter(java.io.PrintWriter)}, {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()},
-     * {@link #getLogWriter()}.</code>
+     * {@link #getLogWriter()}.
      * </p>
      *
      * @param xaDataSourceInstance XADataSource instance

@@ -1729,8 +1729,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * the underlying connection. (Default: false)
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param allow Access to the underlying connection is granted when true.
@@ -1786,8 +1786,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the collection of SQL statements to be executed when a physical connection is first created.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param connectionInitSqls Collection of SQL statements to execute on connection creation
@@ -1802,8 +1802,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the list of SQL statements to be executed when a physical connection is first created.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param connectionInitSqls List of SQL statements to execute on connection creation
@@ -1853,8 +1853,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets default auto-commit state of connections returned by this datasource.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param defaultAutoCommit default auto-commit value
@@ -1867,8 +1867,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the default catalog.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param defaultCatalog the default catalog
@@ -1904,8 +1904,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets defaultReadonly property.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param defaultReadOnly default read-only value
@@ -1918,8 +1918,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the default schema.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param defaultSchema the default catalog
@@ -1933,8 +1933,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the default transaction isolation state for returned connections.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param defaultTransactionIsolation the default transaction isolation state
@@ -1975,8 +1975,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the JDBC Driver instance to use for this pool.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param driver The JDBC Driver instance to use for this pool.
@@ -1989,8 +1989,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the class loader to be used to load the JDBC driver.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param driverClassLoader the class loader with which to load the JDBC driver
@@ -2003,8 +2003,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the JDBC driver class name.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param driverClassName the class name of the JDBC driver
@@ -2062,8 +2062,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the initial size of the connection pool.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param initialSize the number of connections created when the pool is initialized
@@ -2155,8 +2155,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * infinite lifetime.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param maxConnDuration The maximum permitted lifetime of a connection.
@@ -2171,8 +2171,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * infinite lifetime.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param maxConnLifetimeMillis The maximum permitted lifetime of a connection in milliseconds.
@@ -2199,8 +2199,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the value of the {@code maxOpenPreparedStatements} property.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param maxOpenStatements the new maximum number of prepared statements
@@ -2297,8 +2297,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the {code password}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param password new value for the password
@@ -2311,8 +2311,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets whether to pool statements or not.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param poolingStatements pooling on or off
@@ -2483,8 +2483,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the {code connection string}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param connectionString the new value for the JDBC connection connectionString
@@ -2497,8 +2497,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the {code userName}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param userName the new value for the JDBC connection user name
@@ -2511,8 +2511,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the {code validationQuery}.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param validationQuery the new value for the validation query
@@ -2526,8 +2526,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * response from the database when executing a validation query. Use a value less than or equal to 0 for no timeout.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param validationQueryTimeoutDuration new validation query timeout value in seconds
@@ -2542,8 +2542,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * response from the database when executing a validation query. Use a value less than or equal to 0 for no timeout.
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: <code>getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter.</code>
+     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
+     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
      * @param validationQueryTimeoutSeconds new validation query timeout value in seconds
