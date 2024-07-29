@@ -27,8 +27,8 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * Mock object implementing the <code>java.sql.Driver</code> interface.
- * Returns <code>TestConnection</code>'s from getConnection methods.
+ * Mock object implementing the {@link Driver} interface.
+ * Returns {@code TestConnection}'s from getConnection methods.
  * Valid user name, password combinations are:
  *
  * <table summary="valid credentials">
