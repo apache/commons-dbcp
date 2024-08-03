@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
@@ -42,9 +43,7 @@ public class TestPoolableConnection {
     @BeforeEach
     public void setUp() throws Exception {
         final PoolableConnectionFactory factory = new PoolableConnectionFactory(
-                new DriverConnectionFactory(
-                        new TesterDriver(),"jdbc:apache:commons:testdriver", null),
-                null);
+                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", null), null);
         factory.setDefaultAutoCommit(Boolean.TRUE);
         factory.setDefaultReadOnly(Boolean.TRUE);
 
@@ -149,14 +148,9 @@ public class TestPoolableConnection {
 
         // Set up fatal exception
         nativeConnection.setFailure(new SQLException("Fatal connection error.", "XXX"));
-
-        try {
-            conn.createStatement();
-            fail("Should throw SQL exception.");
-        } catch (final SQLException ignored) {
-            // cleanup failure
-            nativeConnection.setFailure(null);
-        }
+        assertThrows(SQLException.class, conn::createStatement);
+        // cleanup failure
+        nativeConnection.setFailure(null);
 
         // verify that bad connection does not get returned to the pool
         conn.close();  // testOnReturn triggers validate, which should fail
