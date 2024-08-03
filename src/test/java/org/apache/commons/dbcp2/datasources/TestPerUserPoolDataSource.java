@@ -111,11 +111,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
             assertEquals(1, ((PerUserPoolDataSource) ds).getNumIdle(user), "Should be one idle connection in the pool");
             // old password
             assertThrows(SQLException.class, () -> ds.getConnection(user, "bar"), "Should have generated SQLException");
-            final Connection con5 = ds.getConnection(user, "bay"); // take the idle one
-            con3.close(); // Return a connection with the old password
-            ds.getConnection(user, "bay").close(); // will try bad returned connection and destroy it
-            assertEquals(1, ((PerUserPoolDataSource) ds).getNumIdle(user), "Should be one idle connection in the pool");
-            con5.close();
+            try (Connection con5 = ds.getConnection(user, "bay")) { // take the idle one
+                con3.close(); // Return a connection with the old password
+                ds.getConnection(user, "bay").close(); // will try bad returned connection and destroy it
+                assertEquals(1, ((PerUserPoolDataSource) ds).getNumIdle(user), "Should be one idle connection in the pool");
+            }
         } finally {
             TesterDriver.addUser(user, "bar");
         }
