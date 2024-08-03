@@ -290,30 +290,15 @@ public class TestDriverAdapterCPDS {
      * JIRA: DBCP-245
      */
     @Test
-    public void testIncorrectPassword() throws Exception
-    {
+    public void testIncorrectPassword() throws Exception {
         pcds.getPooledConnection("u2", "p2").close();
-        try {
-            // Use bad password
-            pcds.getPooledConnection("u1", "zlsafjk");
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e1) {
-            // should fail
-
-        }
+        // Use bad password
+        assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "zlsafjk"), "Able to retrieve connection with incorrect password");
 
         // Use good password
-        pcds.getPooledConnection("u1", "p1").close();
-        try {
-            pcds.getPooledConnection("u1", "x");
-            fail("Able to retrieve connection with incorrect password");
-        }
-        catch (final SQLException e) {
-            if (!e.getMessage().startsWith("x is not the correct password")) {
-                throw e;
-            }
-            // else the exception was expected
-        }
+        SQLException e = assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "x"), "Able to retrieve connection with incorrect password");
+        assertTrue(e.getMessage().startsWith("x is not the correct password"));
+        // else the exception was expected
 
         // Make sure we can still use our good password.
         pcds.getPooledConnection("u1", "p1").close();
