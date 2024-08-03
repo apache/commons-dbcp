@@ -28,8 +28,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,7 +35,7 @@ import org.junit.jupiter.api.Test;
  * the initialization of DriverManager.
  * Based on the test case for DBCP-212 written by Marcos Sanz
  */
-public class TestDriverManagerConnectionFactory {
+public class TestDriverManagerConnectionFactory extends AbstractDriverTest {
 
     private static final class ConnectionThread implements Runnable {
         private final DataSource ds;
@@ -75,18 +73,6 @@ public class TestDriverManagerConnectionFactory {
         public String toString() {
             return "ConnectionThread [ds=" + ds + ", result=" + result + "]";
         }
-    }
-
-    private static final String KEY_JDBC_DRIVERS = "jdbc.drivers";
-
-    @AfterAll
-    public static void afterClass() {
-        System.clearProperty(KEY_JDBC_DRIVERS);
-    }
-
-    @BeforeAll
-    public static void beforeClass() {
-        System.setProperty(KEY_JDBC_DRIVERS, "org.apache.commons.dbcp2.TesterDriver");
     }
 
     @Test

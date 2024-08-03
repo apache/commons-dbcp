@@ -40,7 +40,11 @@ import java.util.logging.Logger;
  * </table>
  */
 public class TesterDriver implements Driver {
+    
+    static TesterDriver INSTANCE = new TesterDriver();
+
     private static final Properties validUserPasswords = new Properties();
+
     static {
         try {
             DriverManager.registerDriver(new TesterDriver());
