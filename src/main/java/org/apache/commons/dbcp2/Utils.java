@@ -179,7 +179,7 @@ public final class Utils {
      * <li>JZ0C0 (Sybase disconnect error)</li>
      * <li>JZ0C1 (Sybase disconnect error)</li>
      * </ul>
-     * @return SQL codes of fatal connection errors.
+     * @return A copy SQL codes of fatal connection errors.
      * @since 2.10.0
      */
     public static Set<String> getDisconnectionSqlCodes() {
