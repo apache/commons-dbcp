@@ -106,6 +106,7 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
         final PoolableManagedConnection pmc = new PoolableManagedConnection(transactionRegistry, conn, getPool(),
                 getDisconnectionSqlCodes(), isFastFailValidation());
         pmc.setCacheState(getCacheState());
+        pmc.setSqlExceptionOverride(getSqlExceptionOverride());
         return new DefaultPooledObject<>(pmc);
     }
 }

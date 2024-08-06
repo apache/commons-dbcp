@@ -84,6 +84,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private boolean cacheState;
 
+    private SQLExceptionOverride sqlExceptionOverride;
+
     private boolean poolStatements;
 
     private boolean clearStatementPoolOnReturn;
@@ -161,6 +163,16 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     public boolean getCacheState() {
         return cacheState;
+    }
+
+    /**
+     * Gets the SQL exception override instance.
+     *
+     * @return The SQL exception override instance.
+     * @since 2.12.1
+     */
+    public SQLExceptionOverride getSqlExceptionOverride() {
+        return sqlExceptionOverride;
     }
 
     /**
@@ -466,6 +478,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
         final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes, fastFailValidation);
         pc.setCacheState(cacheState);
+        pc.setSqlExceptionOverride(sqlExceptionOverride);
 
         return new DefaultPooledObject<>(pc);
     }
@@ -506,6 +519,18 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
+    }
+
+    /**
+     * Sets the {@link SQLExceptionOverride} to allow custom handling of SQL exceptions.
+     * This can be used to determine whether a connection should be disconnected and evicted
+     * from the pool based on specific SQL exception conditions.
+     *
+     * @param sqlExceptionOverride The new {@link SQLExceptionOverride} implementation
+     * @since 2.12.1
+     */
+    public void setSqlExceptionOverride(SQLExceptionOverride sqlExceptionOverride) {
+        this.sqlExceptionOverride = sqlExceptionOverride;
     }
 
     /**

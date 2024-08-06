@@ -69,6 +69,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_DEFAULT_CATALOG = "defaultCatalog";
     private static final String PROP_DEFAULT_SCHEMA = "defaultSchema";
     private static final String PROP_CACHE_STATE = "cacheState";
+    private static final String PROP_SQL_EXCEPTION_OVERRIDE_CLASS_NAME = "sqlExceptionOverrideClassName";
     private static final String PROP_DRIVER_CLASS_NAME = "driverClassName";
     private static final String PROP_LIFO = "lifo";
     private static final String PROP_MAX_TOTAL = "maxTotal";
@@ -206,6 +207,28 @@ public class BasicDataSourceFactory implements ObjectFactory {
         accept(properties, name, Integer::parseInt, consumer);
     }
 
+    private static <T> void acceptClass(final Properties properties, final String name, final Class<T> type, final Consumer<Class<? extends T>> consumer) {
+        getOptional(properties, name).ifPresent(className -> {
+            try {
+                Class<?> clazz;
+                try {
+                    clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+                } catch (ClassNotFoundException e) {
+                    clazz = BasicDataSourceFactory.class.getClassLoader().loadClass(className);
+                }
+                if (type.isAssignableFrom(clazz)) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends T> typedClass = (Class<? extends T>) clazz;
+                    consumer.accept(typedClass);
+                } else {
+                    throw new RuntimeException("Class " + className + " does not implement " + type.getName());
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Failed to load class " + className, e);
+            }
+        });
+    }
+
     private static void acceptString(final Properties properties, final String name, final Consumer<String> consumer) {
         accept(properties, name, Function.identity(), consumer);
     }
@@ -253,6 +276,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         acceptString(properties, PROP_DEFAULT_SCHEMA, dataSource::setDefaultSchema);
         acceptString(properties, PROP_DEFAULT_CATALOG, dataSource::setDefaultCatalog);
         acceptBoolean(properties, PROP_CACHE_STATE, dataSource::setCacheState);
+        acceptClass(properties, PROP_SQL_EXCEPTION_OVERRIDE_CLASS_NAME, SQLExceptionOverride.class, clazz -> dataSource.setSqlExceptionOverrideClass(clazz));
         acceptString(properties, PROP_DRIVER_CLASS_NAME, dataSource::setDriverClassName);
         acceptBoolean(properties, PROP_LIFO, dataSource::setLifo);
         acceptInt(properties, PROP_MAX_TOTAL, dataSource::setMaxTotal);
