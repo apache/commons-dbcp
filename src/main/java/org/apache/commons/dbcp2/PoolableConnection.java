@@ -70,6 +70,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      */
     private boolean fatalSqlExceptionThrown;
 
+    private SQLExceptionOverride sqlExceptionOverride;
+
     /**
      * SQL_STATE codes considered to signal fatal conditions. Overrides the defaults in
      * {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
@@ -125,6 +127,18 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 // For now, simply skip registration
             }
         }
+    }
+
+    /**
+     * Sets the {@link SQLExceptionOverride} to allow custom handling of SQL exceptions.
+     * This can be used to determine whether a connection should be disconnected and evicted
+     * from the pool based on specific SQL exception conditions.
+     *
+     * @param sqlExceptionOverride The new {@link SQLExceptionOverride} implementation
+     * @since 2.12.1
+     */
+    public void setSqlExceptionOverride(SQLExceptionOverride sqlExceptionOverride) {
+        this.sqlExceptionOverride = sqlExceptionOverride;
     }
 
     /**
@@ -270,6 +284,11 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             fatalException = disconnectionSqlCodes == null
                 ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.getDisconnectionSqlCodes().contains(sqlState)
                 : disconnectionSqlCodes.contains(sqlState);
+            if (fatalException &&
+                    sqlExceptionOverride != null &&
+                    !sqlExceptionOverride.shouldDisconnectConnection(e)) {
+                return false;
+            }
         }
         return fatalException;
     }

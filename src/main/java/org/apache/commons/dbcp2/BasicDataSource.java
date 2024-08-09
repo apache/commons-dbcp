@@ -155,6 +155,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     private boolean cacheState = true;
 
+
+    /**
+     * The property that allows custom handling of SQL exceptions to determine whether a connection should be
+     * disconnected and evicted from the pool. Implementations of the {@link SQLExceptionOverride} interface can
+     * provide specific logic to decide if a connection should remain in the pool or be removed.
+     */
+    private SQLExceptionOverride sqlExceptionOverride;
+
     /**
      * The instance of the JDBC Driver to use.
      */
@@ -620,6 +628,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setDefaultSchema(defaultSchema);
             connectionFactory.setCacheState(cacheState);
+            connectionFactory.setSqlExceptionOverride(sqlExceptionOverride);
             connectionFactory.setPoolStatements(poolPreparedStatements);
             connectionFactory.setClearStatementPoolOnReturn(clearStatementPoolOnReturn);
             connectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
@@ -689,6 +698,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public boolean getCacheState() {
         return cacheState;
+    }
+
+    /**
+     * Gets the SQL exception override instance.
+     *
+     * @return The SQL exception override instance.
+     * @since 2.12.1
+     */
+    public SQLExceptionOverride getSqlExceptionOverride() {
+        return sqlExceptionOverride;
     }
 
     /**
@@ -1759,6 +1778,22 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
+    }
+
+    /**
+     * Sets the {@link SQLExceptionOverride} to allow custom handling of SQL exceptions.
+     * This can be used to determine whether a connection should be disconnected and evicted
+     * from the pool based on specific SQL exception conditions.
+     *
+     * @param sqlExceptionOverrideClass The new {@link SQLExceptionOverride} implementation
+     * @since 2.12.1
+     */
+    public void setSqlExceptionOverrideClass(Class<? extends SQLExceptionOverride> sqlExceptionOverrideClass) {
+        try {
+            this.sqlExceptionOverride = sqlExceptionOverrideClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate class " + sqlExceptionOverrideClass.getName(), e);
+        }
     }
 
     /**

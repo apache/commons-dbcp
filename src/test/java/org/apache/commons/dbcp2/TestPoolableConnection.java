@@ -159,6 +159,38 @@ public class TestPoolableConnection {
     }
 
     @Test
+    public void testSqlExceptionOverride() throws Exception {
+        pool.setTestOnReturn(true);
+        final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        factory.setFastFailValidation(true);
+        factory.setSqlExceptionOverride(new SQLExceptionOverride() {
+            @Override
+            public boolean shouldDisconnectConnection(SQLException sqlException) {
+                String sqlState = sqlException.getSQLState();
+                if (sqlState.equalsIgnoreCase("08S02") ||
+                        sqlState.equalsIgnoreCase("08007")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        });
+
+        final PoolableConnection conn = pool.borrowObject();
+        final TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+
+        // set up non-fatal exception
+        nativeConnection.setFailure(new SQLException("Non-fatal connection error.", "08S02"));
+        assertThrows(SQLException.class, conn::createStatement);
+        nativeConnection.setFailure(null);
+
+        // verify that non-fatal connection is returned to the pool
+        conn.close();
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+        assertEquals(1, pool.getNumIdle(), "The pool should have one idle connection");
+    }
+
+    @Test
     public void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
         final int maxDeep = 100_000;
         final SQLException rootException = new SQLException("Data truncated", "22001");

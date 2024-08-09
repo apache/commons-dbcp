@@ -266,6 +266,26 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
+    public void testCreateConnectionFactoryWithSQLExceptionOverride() throws Exception {
+        Properties properties = new Properties();
+        // set ConnectionFactoryClassName
+        properties = new Properties();
+        properties.put("initialSize", "1");
+        properties.put("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
+        properties.put("url", "jdbc:apache:commons:testdriver");
+        properties.put("username", "foo");
+        properties.put("password", "bar");
+        properties.put("connectionFactoryClassName", "org.apache.commons.dbcp2.TesterConnectionFactory");
+        properties.put("sqlExceptionOverrideClassName", "org.apache.commons.dbcp2.TestSQLExceptionOverride");
+        try (BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
+            assertNotNull(ds.getSqlExceptionOverride());
+            try (Connection conn = ds.getConnection()) {
+                assertNotNull(conn);
+            }
+        }
+    }
+
     /**
      * JIRA: DBCP-547
      * Verify that ConnectionFactory interface in BasicDataSource.createConnectionFactory().
