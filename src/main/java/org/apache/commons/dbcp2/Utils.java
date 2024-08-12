@@ -49,7 +49,9 @@ public final class Utils {
     @Deprecated
     public static final boolean IS_SECURITY_ENABLED = isSecurityEnabled();
 
-    /** Any SQL_STATE starting with this value is considered a fatal disconnect */
+    /**
+     * Any SQL State starting with this value is considered a fatal disconnect.
+     */
     public static final String DISCONNECTION_SQL_CODE_PREFIX = "08";
 
     /**
