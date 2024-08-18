@@ -64,6 +64,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private Collection<String> disconnectionSqlCodes;
 
+    private Collection<String> disconnectionIgnoreSqlCodes;
+
     private boolean fastFailValidation = true;
 
     private volatile ObjectPool<PoolableConnection> pool;
@@ -291,6 +293,21 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Retrieves the collection of SQL_STATE codes that are not considered fatal disconnection codes.
+     * <p>
+     * This method returns the collection of SQL_STATE codes that have been set to be ignored when
+     * determining if a {@link SQLException} signals a disconnection. These codes are excluded from
+     * being treated as fatal even if they match the typical disconnection criteria.
+     * </p>
+     *
+     * @return a {@link Collection} of SQL_STATE codes that should be ignored for disconnection checks.
+     * @since 2.12.1
+     */
+    public Collection<String> getDisconnectionIgnoreSqlCodes() {
+        return disconnectionIgnoreSqlCodes;
+    }
+
+    /**
      * Gets the Maximum connection duration.
      *
      * @return Maximum connection duration.
@@ -464,7 +481,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             }
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes, fastFailValidation);
+        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName,
+                disconnectionSqlCodes, disconnectionIgnoreSqlCodes, fastFailValidation);
         pc.setCacheState(cacheState);
 
         return new DefaultPooledObject<>(pc);
@@ -609,6 +627,16 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         this.disconnectionSqlCodes = disconnectionSqlCodes;
+    }
+
+    /**
+     * @param disconnectionIgnoreSqlCodes
+     *            The collection of SQL_STATE codes to be ignored.
+     * @see #getDisconnectionIgnoreSqlCodes()
+     * @since 2.12.1
+     */
+    public void setDisconnectionIgnoreSqlCodes(Collection<String> disconnectionIgnoreSqlCodes) {
+        this.disconnectionIgnoreSqlCodes = disconnectionIgnoreSqlCodes;
     }
 
     /**

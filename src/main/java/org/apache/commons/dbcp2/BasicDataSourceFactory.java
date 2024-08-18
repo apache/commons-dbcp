@@ -120,6 +120,18 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private static final String PROP_DISCONNECTION_SQL_CODES = "disconnectionSqlCodes";
 
+    /**
+     * Property key for specifying the SQL_STATE codes that should be ignored during disconnection checks.
+     * <p>
+     * The value for this property must be a comma-separated string of SQL_STATE codes, where each code represents
+     * a state that will be excluded from being treated as a fatal disconnection. The expected format is a series
+     * of SQL_STATE codes separated by commas, with no spaces between them (e.g., "08003,08004").
+     * </p>
+     * @since 2.12.1
+     */
+    private static final String PROP_DISCONNECTION_IGNORE_SQL_CODES = "disconnectionIgnoreSqlCodes";
+
+
     /*
      * Block with obsolete properties from DBCP 1.x. Warn users that these are ignored and they should use the 2.x
      * properties.
@@ -149,8 +161,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
             PROP_CLEAR_STATEMENT_POOL_ON_RETURN,
             PROP_MAX_OPEN_PREPARED_STATEMENTS, PROP_CONNECTION_PROPERTIES, PROP_MAX_CONN_LIFETIME_MILLIS,
             PROP_LOG_EXPIRED_CONNECTIONS, PROP_ROLLBACK_ON_RETURN, PROP_ENABLE_AUTO_COMMIT_ON_RETURN,
-            PROP_DEFAULT_QUERY_TIMEOUT, PROP_FAST_FAIL_VALIDATION, PROP_DISCONNECTION_SQL_CODES, PROP_JMX_NAME,
-            PROP_REGISTER_CONNECTION_MBEAN, PROP_CONNECTION_FACTORY_CLASS_NAME);
+            PROP_DEFAULT_QUERY_TIMEOUT, PROP_FAST_FAIL_VALIDATION, PROP_DISCONNECTION_SQL_CODES, PROP_DISCONNECTION_IGNORE_SQL_CODES,
+            PROP_JMX_NAME, PROP_REGISTER_CONNECTION_MBEAN, PROP_CONNECTION_FACTORY_CLASS_NAME);
 
     /**
      * Obsolete properties from DBCP 1.x. with warning strings suggesting new properties. LinkedHashMap will guarantee
@@ -302,6 +314,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
         acceptDurationOfSeconds(properties, PROP_DEFAULT_QUERY_TIMEOUT, dataSource::setDefaultQueryTimeout);
         acceptBoolean(properties, PROP_FAST_FAIL_VALIDATION, dataSource::setFastFailValidation);
         getOptional(properties, PROP_DISCONNECTION_SQL_CODES).ifPresent(v -> dataSource.setDisconnectionSqlCodes(parseList(v, ',')));
+        getOptional(properties, PROP_DISCONNECTION_IGNORE_SQL_CODES).ifPresent(v -> dataSource.setDisconnectionIgnoreSqlCodes(parseList(v, ',')));
         acceptString(properties, PROP_CONNECTION_FACTORY_CLASS_NAME, dataSource::setConnectionFactoryClassName);
 
         // DBCP-215

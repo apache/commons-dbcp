@@ -459,6 +459,21 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
+    public void testDisconnectionIgnoreSqlCodes() throws Exception {
+        final ArrayList<String> disconnectionIgnoreSqlCodes = new ArrayList<>();
+        disconnectionIgnoreSqlCodes.add("XXXX");
+        ds.setDisconnectionIgnoreSqlCodes(disconnectionIgnoreSqlCodes);
+        ds.setFastFailValidation(true);
+        try (Connection conn = ds.getConnection()) { // Triggers initialization - pcf creation
+            // Make sure factory got the properties
+            final PoolableConnectionFactory pcf = (PoolableConnectionFactory) ds.getConnectionPool().getFactory();
+            assertTrue(pcf.isFastFailValidation());
+            assertTrue(pcf.getDisconnectionIgnoreSqlCodes().contains("XXXX"));
+            assertEquals(1, pcf.getDisconnectionIgnoreSqlCodes().size());
+        }
+    }
+
     /**
      * JIRA DBCP-333: Check that a custom class loader is used.
      * @throws Exception

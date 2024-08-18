@@ -346,6 +346,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     private volatile Set<String> disconnectionSqlCodes;
 
+    /**
+     * A collection of SQL_STATE codes that are not considered fatal disconnection codes.
+     * @since 2.12.1
+     */
+    private volatile Set<String> disconnectionIgnoreSqlCodes;
+
     private boolean fastFailValidation;
 
     /**
@@ -629,6 +635,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultQueryTimeout(getDefaultQueryTimeoutDuration());
             connectionFactory.setFastFailValidation(fastFailValidation);
             connectionFactory.setDisconnectionSqlCodes(disconnectionSqlCodes);
+            connectionFactory.setDisconnectionIgnoreSqlCodes(disconnectionIgnoreSqlCodes);
             validateConnectionFactory(connectionFactory);
         } catch (final RuntimeException e) {
             throw e;
@@ -865,6 +872,22 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Gets the set of SQL_STATE codes that are not considered fatal disconnection codes.
+     * <p>
+     * This method returns the set of SQL_STATE codes that have been specified to be ignored
+     * when determining if a {@link SQLException} signals a disconnection. These codes will not
+     * trigger a disconnection even if they match other disconnection criteria.
+     * </p>
+     *
+     * @return a set of SQL_STATE codes that should be ignored for disconnection checks, or an empty set if none have been specified.
+     * @since 2.12.1
+     */
+    public Set<String> getDisconnectionIgnoreSqlCodes() {
+        final Set<String> result = disconnectionIgnoreSqlCodes;
+        return result == null ? Collections.emptySet() : result;
+    }
+
+    /**
      * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
      *
      * @since 2.1
@@ -872,6 +895,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public String[] getDisconnectionSqlCodesAsArray() {
         return getDisconnectionSqlCodes().toArray(Utils.EMPTY_STRING_ARRAY);
+    }
+
+    /**
+     * Provides the same data as {@link #getDisconnectionIgnoreSqlCodes()} but in an array, so it is accessible via JMX.
+     *
+     * @since 2.12.1
+     */
+    @Override
+    public String[] getDisconnectionIgnoreSqlCodesAsArray() {
+        return getDisconnectionIgnoreSqlCodes().toArray(Utils.EMPTY_STRING_ARRAY);
     }
 
     /**
@@ -954,6 +987,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @return true if connections created by this datasource will fast fail validation.
      * @see #setDisconnectionSqlCodes(Collection)
+     * @see #setDisconnectionIgnoreSqlCodes(Collection)
      * @since 2.1
      */
     @Override
@@ -1969,6 +2003,34 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
                 : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
         this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;
+    }
+
+    /**
+     * Sets the SQL_STATE codes that should be ignored when determining fatal disconnection conditions.
+     * <p>
+     * This method allows you to specify a collection of SQL_STATE codes that will be excluded from
+     * disconnection checks. These codes will not trigger the "fatally disconnected" status even if they
+     * match the typical disconnection criteria. This can be useful in scenarios where certain SQL_STATE
+     * codes (e.g., specific codes starting with "08") are known to be non-fatal in your environment.
+     * </p>
+     * <p>
+     * The effect of this method is similar to the one described in {@link #setDisconnectionSqlCodes(Collection)},
+     * but instead of setting codes that signal fatal disconnections, it defines codes that should be ignored
+     * during such checks.
+     * </p>
+     * <p>
+     * Note: This method currently has no effect once the pool has been initialized. The pool is initialized the first
+     * time one of the following methods is invoked: {@code getConnection, setLogwriter, setLoginTimeout,
+     * getLoginTimeout, getLogWriter}.
+     * </p>
+     *
+     * @param disconnectionIgnoreSqlCodes SQL_STATE codes that should be ignored in disconnection checks
+     * @since 2.12.1
+     */
+    public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
+        final Set<String> collect = Utils.isEmpty(disconnectionIgnoreSqlCodes) ? null
+                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+        this.disconnectionIgnoreSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
     /**
