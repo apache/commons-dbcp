@@ -36,6 +36,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -457,6 +458,36 @@ public class TestBasicDataSource extends TestConnectionPool {
             assertTrue(pcf.getDisconnectionSqlCodes().contains("XXX"));
             assertEquals(1, pcf.getDisconnectionSqlCodes().size());
         }
+    }
+
+    @Test
+    public void testOverlapBetweenDisconnectionAndIgnoreSqlCodes() {
+        // Set initial disconnection SQL codes
+        final HashSet<String> disconnectionSqlCodes = new HashSet<>(Arrays.asList("XXX", "ZZZ"));
+        ds.setDisconnectionSqlCodes(disconnectionSqlCodes);
+
+        // Try setting ignore SQL codes with overlap
+        final HashSet<String> disconnectionIgnoreSqlCodes = new HashSet<>(Arrays.asList("YYY", "XXX"));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            ds.setDisconnectionIgnoreSqlCodes(disconnectionIgnoreSqlCodes);
+        });
+
+        assertEquals("XXX cannot be in both disconnectionIgnoreSqlCodes and disconnectionSqlCodes.", exception.getMessage());
+    }
+
+    @Test
+    public void testNoOverlapBetweenDisconnectionAndIgnoreSqlCodes() {
+        // Set disconnection SQL codes without overlap
+        final HashSet<String> disconnectionSqlCodes = new HashSet<>(Arrays.asList("XXX", "ZZZ"));
+        ds.setDisconnectionSqlCodes(disconnectionSqlCodes);
+
+        // Set ignore SQL codes without overlap
+        final HashSet<String> disconnectionIgnoreSqlCodes = new HashSet<>(Arrays.asList("YYY", "AAA"));
+        ds.setDisconnectionIgnoreSqlCodes(disconnectionIgnoreSqlCodes);
+
+        assertEquals(disconnectionSqlCodes, ds.getDisconnectionSqlCodes(), "Disconnection SQL codes should match the set values.");
+        assertEquals(disconnectionIgnoreSqlCodes, ds.getDisconnectionIgnoreSqlCodes(), "Disconnection Ignore SQL codes should match the set values.");
     }
 
     @Test
