@@ -33,7 +33,7 @@ public class PoolableManagedConnection extends PoolableConnection {
     private final TransactionRegistry transactionRegistry;
 
     /**
-     * Create a PoolableManagedConnection.
+     * Creates a PoolableManagedConnection.
      *
      * @param transactionRegistry
      *            transaction registry
@@ -42,13 +42,12 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param pool
      *            connection pool
      */
-    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
-            final ObjectPool<PoolableConnection> pool) {
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn, final ObjectPool<PoolableConnection> pool) {
         this(transactionRegistry, conn, pool, null, true);
     }
 
     /**
-     * Create a PoolableManagedConnection.
+     * Creates a PoolableManagedConnection.
      *
      * @param transactionRegistry
      *            transaction registry
@@ -62,14 +61,13 @@ public class PoolableManagedConnection extends PoolableConnection {
      *            true means fatal disconnection errors cause subsequent validations to fail immediately (no attempt to
      *            run query or isValid)
      */
-    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
-            final ObjectPool<PoolableConnection> pool, final Collection<String> disconnectSqlCodes,
-            final boolean fastFailValidation) {
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn, final ObjectPool<PoolableConnection> pool,
+            final Collection<String> disconnectSqlCodes, final boolean fastFailValidation) {
         this(transactionRegistry, conn, pool, disconnectSqlCodes, null, fastFailValidation);
     }
 
     /**
-     * Create a PoolableManagedConnection.
+     * Creates a PoolableManagedConnection.
      *
      * @param transactionRegistry
      *            transaction registry
@@ -86,14 +84,15 @@ public class PoolableManagedConnection extends PoolableConnection {
      *            run query or isValid)
      * @since 2.13.0
      */
-    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
-                                     final ObjectPool<PoolableConnection> pool, final Collection<String> disconnectSqlCodes,
-                                     final Collection<String> disconnectionIgnoreSqlCodes, final boolean fastFailValidation) {
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn, final ObjectPool<PoolableConnection> pool,
+            final Collection<String> disconnectSqlCodes, final Collection<String> disconnectionIgnoreSqlCodes, final boolean fastFailValidation) {
         super(conn, pool, null, disconnectSqlCodes, disconnectionIgnoreSqlCodes, fastFailValidation);
         this.transactionRegistry = transactionRegistry;
     }
 
     /**
+     * Gets the transaction registry.
+     *
      * @return The transaction registry.
      * @since 2.6.0
      */

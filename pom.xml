@@ -26,7 +26,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-dbcp2</artifactId>
-  <version>2.12.1-SNAPSHOT</version>
+  <version>2.13.0-SNAPSHOT</version>
   <name>Apache Commons DBCP</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -181,8 +181,8 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
     
-    <commons.release.version>2.12.0</commons.release.version>
-    <commons.release.next>2.12.1</commons.release.next>
+    <commons.release.version>2.13.0</commons.release.version>
+    <commons.release.next>2.13.1</commons.release.next>
     <commons.release.desc>for JDBC 4.2 on Java 8</commons.release.desc>
     <commons.release.hash>sha512</commons.release.hash>
     
@@ -200,7 +200,7 @@
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
     <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
     <!-- Commons Release Plugin -->
-    <commons.bc.version>2.11.0</commons.bc.version>
+    <commons.bc.version>2.12.0</commons.bc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <japicmp.skip>false</japicmp.skip>
     <spotbugs.skip>false</spotbugs.skip>

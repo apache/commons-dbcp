@@ -16,8 +16,6 @@
  */
 package org.apache.commons.dbcp2;
 
-import static org.apache.commons.dbcp2.Utils.checkForConflicts;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -275,7 +273,22 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * SQL State codes considered to signal fatal conditions.
+     * Gets the collection of SQL State codes that are not considered fatal disconnection codes.
+     * <p>
+     * This method returns the collection of SQL State codes that have been set to be ignored when
+     * determining if a {@link SQLException} signals a disconnection. These codes are excluded from
+     * being treated as fatal even if they match the typical disconnection criteria.
+     * </p>
+     *
+     * @return a {@link Collection} of SQL State codes that should be ignored for disconnection checks.
+     * @since 2.13.0
+     */
+    public Collection<String> getDisconnectionIgnoreSqlCodes() {
+        return disconnectionIgnoreSqlCodes;
+    }
+
+    /**
+     * Gets SQL State codes considered to signal fatal conditions.
      * <p>
      * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
      * {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this property is non-null and {@link #isFastFailValidation()} is
@@ -292,21 +305,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      */
     public Collection<String> getDisconnectionSqlCodes() {
         return disconnectionSqlCodes;
-    }
-
-    /**
-     * Retrieves the collection of SQL State codes that are not considered fatal disconnection codes.
-     * <p>
-     * This method returns the collection of SQL State codes that have been set to be ignored when
-     * determining if a {@link SQLException} signals a disconnection. These codes are excluded from
-     * being treated as fatal even if they match the typical disconnection criteria.
-     * </p>
-     *
-     * @return a {@link Collection} of SQL State codes that should be ignored for disconnection checks.
-     * @since 2.13.0
-     */
-    public Collection<String> getDisconnectionIgnoreSqlCodes() {
-        return disconnectionIgnoreSqlCodes;
     }
 
     /**
@@ -622,6 +620,22 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Sets the disconnection SQL codes to ignore.
+     *
+     * @param disconnectionIgnoreSqlCodes
+     *            The collection of SQL State codes to be ignored.
+     * @see #getDisconnectionIgnoreSqlCodes()
+     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
+     * @since 2.13.0
+     */
+    public void setDisconnectionIgnoreSqlCodes(Collection<String> disconnectionIgnoreSqlCodes) {
+        Utils.checkSqlCodes(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes);
+        this.disconnectionIgnoreSqlCodes = disconnectionIgnoreSqlCodes;
+    }
+
+    /**
+     * Sets the disconnection SQL codes.
+     *
      * @param disconnectionSqlCodes
      *            The disconnection SQL codes.
      * @see #getDisconnectionSqlCodes()
@@ -629,22 +643,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-        checkForConflicts(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes,
-            "disconnectionSqlCodes", "disconnectionIgnoreSqlCodes");
+        Utils.checkSqlCodes(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes);
         this.disconnectionSqlCodes = disconnectionSqlCodes;
-    }
-
-    /**
-     * @param disconnectionIgnoreSqlCodes
-     *            The collection of SQL State codes to be ignored.
-     * @see #getDisconnectionIgnoreSqlCodes()
-     * @since 2.13.0
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
-     */
-    public void setDisconnectionIgnoreSqlCodes(Collection<String> disconnectionIgnoreSqlCodes) {
-        checkForConflicts(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes,
-                "disconnectionIgnoreSqlCodes", "disconnectionSqlCodes");
-        this.disconnectionIgnoreSqlCodes = disconnectionIgnoreSqlCodes;
     }
 
     /**

@@ -126,8 +126,7 @@ public class BasicManagedDataSource extends BasicDataSource {
             throws SQLException {
         PoolableConnectionFactory connectionFactory = null;
         try {
-            connectionFactory = new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory,
-                    getRegisteredJmxName());
+            connectionFactory = new PoolableManagedConnectionFactory((XAConnectionFactory) driverConnectionFactory, getRegisteredJmxName());
             connectionFactory.setValidationQuery(getValidationQuery());
             connectionFactory.setValidationQueryTimeout(getValidationQueryTimeoutDuration());
             connectionFactory.setConnectionInitSql(getConnectionInitSqls());
