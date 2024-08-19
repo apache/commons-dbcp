@@ -860,7 +860,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the set of SQL_STATE codes considered to signal fatal conditions.
+     * Gets the set of SQL State codes considered to signal fatal conditions.
      *
      * @return fatal disconnection state codes
      * @see #setDisconnectionSqlCodes(Collection)
@@ -983,7 +983,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * True means that validation will fail immediately for connections that have previously thrown SQLExceptions with
-     * SQL_STATE indicating fatal disconnection errors.
+     * SQL State indicating fatal disconnection errors.
      *
      * @return true if connections created by this datasource will fast fail validation.
      * @see #setDisconnectionSqlCodes(Collection)
@@ -1979,11 +1979,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Sets the SQL_STATE codes considered to signal fatal conditions.
+     * Sets the SQL State codes considered to signal fatal conditions.
      * <p>
      * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
      * {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this property is non-null and {@link #getFastFailValidation()}
-     * is {@code true}, whenever connections created by this datasource generate exceptions with SQL_STATE codes in this
+     * is {@code true}, whenever connections created by this datasource generate exceptions with SQL State codes in this
      * list, they will be marked as "fatally disconnected" and subsequent validations will fail fast (no attempt at
      * isValid or validation query).
      * </p>
@@ -1996,7 +1996,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * setLoginTimeout, getLoginTimeout, getLogWriter}.
      * </p>
      *
-     * @param disconnectionSqlCodes SQL_STATE codes considered to signal fatal conditions
+     * @param disconnectionSqlCodes SQL State codes considered to signal fatal conditions
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
