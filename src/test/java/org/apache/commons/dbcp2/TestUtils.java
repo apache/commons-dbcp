@@ -17,15 +17,72 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class TestUtils {
 
     public static PStmtKey getPStmtKey(final PoolablePreparedStatement<PStmtKey> poolablePreparedStatement) {
         return poolablePreparedStatement.getKey();
+    }
+
+    @Test
+    public void testCheckForConflictsWithOverlap() {
+        Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
+        Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08006"));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Utils.checkForConflicts(codes1, codes2, "codes1", "codes2");
+        });
+
+        assertEquals("08006 cannot be in both codes1 and codes2.", exception.getMessage());
+    }
+
+    @Test
+    public void testCheckForConflictsNoOverlap() {
+        Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
+        Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08007"));
+
+        assertDoesNotThrow(() -> Utils.checkForConflicts(codes1, codes2, "codes1", "codes2"));
+    }
+
+    @Test
+    public void testCheckForConflictsFirstCollectionNull() {
+        Collection<String> codes1 = null;
+        Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08007"));
+
+        assertDoesNotThrow(() -> Utils.checkForConflicts(codes1, codes2, "codes1", "codes2"));
+    }
+
+    @Test
+    public void testCheckForConflictsSecondCollectionNull() {
+        Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
+        Collection<String> codes2 = null;
+
+        assertDoesNotThrow(() -> Utils.checkForConflicts(codes1, codes2, "codes1", "codes2"));
+    }
+
+    @Test
+    public void testCheckForConflictsBothCollectionsNull() {
+        assertDoesNotThrow(() -> Utils.checkForConflicts(null, null, "codes1", "codes2"));
+    }
+
+    @Test
+    public void testCheckForConflictsEmptyCollections() {
+        Collection<String> codes1 = Collections.emptySet();
+        Collection<String> codes2 = Collections.emptySet();
+
+        assertDoesNotThrow(() -> Utils.checkForConflicts(codes1, codes2, "codes1", "codes2"));
     }
 
     @Test

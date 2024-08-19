@@ -16,6 +16,8 @@
  */
 package org.apache.commons.dbcp2;
 
+import static org.apache.commons.dbcp2.Utils.checkForConflicts;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -63,6 +65,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private Collection<String> connectionInitSqls;
 
     private Collection<String> disconnectionSqlCodes;
+
+    private Collection<String> disconnectionIgnoreSqlCodes;
 
     private boolean fastFailValidation = true;
 
@@ -291,6 +295,21 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Retrieves the collection of SQL State codes that are not considered fatal disconnection codes.
+     * <p>
+     * This method returns the collection of SQL State codes that have been set to be ignored when
+     * determining if a {@link SQLException} signals a disconnection. These codes are excluded from
+     * being treated as fatal even if they match the typical disconnection criteria.
+     * </p>
+     *
+     * @return a {@link Collection} of SQL State codes that should be ignored for disconnection checks.
+     * @since 2.13.0
+     */
+    public Collection<String> getDisconnectionIgnoreSqlCodes() {
+        return disconnectionIgnoreSqlCodes;
+    }
+
+    /**
      * Gets the Maximum connection duration.
      *
      * @return Maximum connection duration.
@@ -464,7 +483,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
             }
         }
 
-        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName, disconnectionSqlCodes, fastFailValidation);
+        final PoolableConnection pc = new PoolableConnection(conn, pool, connJmxName,
+                disconnectionSqlCodes, disconnectionIgnoreSqlCodes, fastFailValidation);
         pc.setCacheState(cacheState);
 
         return new DefaultPooledObject<>(pc);
@@ -606,9 +626,25 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      *            The disconnection SQL codes.
      * @see #getDisconnectionSqlCodes()
      * @since 2.1
+     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
+        checkForConflicts(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes,
+            "disconnectionSqlCodes", "disconnectionIgnoreSqlCodes");
         this.disconnectionSqlCodes = disconnectionSqlCodes;
+    }
+
+    /**
+     * @param disconnectionIgnoreSqlCodes
+     *            The collection of SQL State codes to be ignored.
+     * @see #getDisconnectionIgnoreSqlCodes()
+     * @since 2.13.0
+     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
+     */
+    public void setDisconnectionIgnoreSqlCodes(Collection<String> disconnectionIgnoreSqlCodes) {
+        checkForConflicts(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes,
+                "disconnectionIgnoreSqlCodes", "disconnectionSqlCodes");
+        this.disconnectionIgnoreSqlCodes = disconnectionIgnoreSqlCodes;
     }
 
     /**
