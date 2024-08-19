@@ -71,7 +71,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     private boolean fatalSqlExceptionThrown;
 
     /**
-     * SQL_STATE codes considered to signal fatal conditions. Overrides the defaults in
+     * SQL State codes considered to signal fatal conditions. Overrides the defaults in
      * {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}).
      */
     private final Collection<String> disconnectionSqlCodes;
@@ -104,7 +104,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * @param jmxObjectName
      *            JMX name
      * @param disconnectSqlCodes
-     *            SQL_STATE codes considered fatal disconnection errors
+     *            SQL State codes considered fatal disconnection errors
      * @param fastFailValidation
      *            true means fatal disconnection errors cause subsequent validations to fail immediately (no attempt to
      *            run query or isValid)

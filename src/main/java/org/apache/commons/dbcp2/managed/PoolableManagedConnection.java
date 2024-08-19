@@ -57,7 +57,7 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param pool
      *            connection pool
      * @param disconnectSqlCodes
-     *            SQL_STATE codes considered fatal disconnection errors
+     *            SQL State codes considered fatal disconnection errors
      * @param fastFailValidation
      *            true means fatal disconnection errors cause subsequent validations to fail immediately (no attempt to
      *            run query or isValid)
