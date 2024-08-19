@@ -16,8 +16,6 @@
  */
 package org.apache.commons.dbcp2;
 
-import static org.apache.commons.dbcp2.Utils.checkForConflicts;
-
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -60,7 +58,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * Basic implementation of {@code javax.sql.DataSource} that is configured via JavaBeans properties.
- *
  * <p>
  * This is not the only way to combine the <em>commons-dbcp2</em> and <em>commons-pool2</em> packages, but provides a
  * one-stop solution for basic requirements.
@@ -350,6 +347,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * A collection of SQL State codes that are not considered fatal disconnection codes.
+     *
      * @since 2.13.0
      */
     private volatile Set<String> disconnectionIgnoreSqlCodes;
@@ -862,18 +860,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Gets the set of SQL State codes considered to signal fatal conditions.
-     *
-     * @return fatal disconnection state codes
-     * @see #setDisconnectionSqlCodes(Collection)
-     * @since 2.1
-     */
-    public Set<String> getDisconnectionSqlCodes() {
-        final Set<String> result = disconnectionSqlCodes;
-        return result == null ? Collections.emptySet() : result;
-    }
-
-    /**
      * Gets the set of SQL State codes that are not considered fatal disconnection codes.
      * <p>
      * This method returns the set of SQL State codes that have been specified to be ignored
@@ -890,16 +876,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
-     *
-     * @since 2.1
-     */
-    @Override
-    public String[] getDisconnectionSqlCodesAsArray() {
-        return getDisconnectionSqlCodes().toArray(Utils.EMPTY_STRING_ARRAY);
-    }
-
-    /**
      * Provides the same data as {@link #getDisconnectionIgnoreSqlCodes()} but in an array, so it is accessible via JMX.
      *
      * @since 2.13.0
@@ -907,6 +883,28 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public String[] getDisconnectionIgnoreSqlCodesAsArray() {
         return getDisconnectionIgnoreSqlCodes().toArray(Utils.EMPTY_STRING_ARRAY);
+    }
+
+    /**
+     * Gets the set of SQL State codes considered to signal fatal conditions.
+     *
+     * @return fatal disconnection state codes
+     * @see #setDisconnectionSqlCodes(Collection)
+     * @since 2.1
+     */
+    public Set<String> getDisconnectionSqlCodes() {
+        final Set<String> result = disconnectionSqlCodes;
+        return result == null ? Collections.emptySet() : result;
+    }
+
+    /**
+     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
+     *
+     * @since 2.1
+     */
+    @Override
+    public String[] getDisconnectionSqlCodesAsArray() {
+        return getDisconnectionSqlCodes().toArray(Utils.EMPTY_STRING_ARRAY);
     }
 
     /**
@@ -1981,6 +1979,36 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets the SQL State codes that should be ignored when determining fatal disconnection conditions.
+     * <p>
+     * This method allows you to specify a collection of SQL State codes that will be excluded from
+     * disconnection checks. These codes will not trigger the "fatally disconnected" status even if they
+     * match the typical disconnection criteria. This can be useful in scenarios where certain SQL State
+     * codes (e.g., specific codes starting with "08") are known to be non-fatal in your environment.
+     * </p>
+     * <p>
+     * The effect of this method is similar to the one described in {@link #setDisconnectionSqlCodes(Collection)},
+     * but instead of setting codes that signal fatal disconnections, it defines codes that should be ignored
+     * during such checks.
+     * </p>
+     * <p>
+     * Note: This method currently has no effect once the pool has been initialized. The pool is initialized the first
+     * time one of the following methods is invoked: {@code getConnection, setLogwriter, setLoginTimeout,
+     * getLoginTimeout, getLogWriter}.
+     * </p>
+     *
+     * @param disconnectionIgnoreSqlCodes SQL State codes that should be ignored in disconnection checks
+     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
+     * @since 2.13.0
+     */
+    public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
+        Utils.checkSqlCodes(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes);
+        final Set<String> collect = Utils.isEmpty(disconnectionIgnoreSqlCodes) ? null
+                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+        this.disconnectionIgnoreSqlCodes = Utils.isEmpty(collect) ? null : collect;
+    }
+
+    /**
      * Sets the SQL State codes considered to signal fatal conditions.
      * <p>
      * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
@@ -2003,42 +2031,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
-        checkForConflicts(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes,
-            "disconnectionSqlCodes", "disconnectionIgnoreSqlCodes");
+        Utils.checkSqlCodes(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes);
         final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
                 : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
         this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;
-    }
-
-    /**
-     * Sets the SQL State codes that should be ignored when determining fatal disconnection conditions.
-     * <p>
-     * This method allows you to specify a collection of SQL State codes that will be excluded from
-     * disconnection checks. These codes will not trigger the "fatally disconnected" status even if they
-     * match the typical disconnection criteria. This can be useful in scenarios where certain SQL State
-     * codes (e.g., specific codes starting with "08") are known to be non-fatal in your environment.
-     * </p>
-     * <p>
-     * The effect of this method is similar to the one described in {@link #setDisconnectionSqlCodes(Collection)},
-     * but instead of setting codes that signal fatal disconnections, it defines codes that should be ignored
-     * during such checks.
-     * </p>
-     * <p>
-     * Note: This method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: {@code getConnection, setLogwriter, setLoginTimeout,
-     * getLoginTimeout, getLogWriter}.
-     * </p>
-     *
-     * @param disconnectionIgnoreSqlCodes SQL State codes that should be ignored in disconnection checks
-     * @since 2.13.0
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
-     */
-    public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
-        checkForConflicts(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes,
-            "disconnectionIgnoreSqlCodes", "disconnectionSqlCodes");
-        final Set<String> collect = Utils.isEmpty(disconnectionIgnoreSqlCodes) ? null
-                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
-        this.disconnectionIgnoreSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
     /**

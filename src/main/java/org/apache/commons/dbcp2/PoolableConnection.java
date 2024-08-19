@@ -78,6 +78,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     /**
      * A collection of SQL State codes that are not considered fatal disconnection codes.
+     *
      * @since 2.13.0
      */
     private final Collection<String> disconnectionIgnoreSqlCodes;

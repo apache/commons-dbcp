@@ -91,6 +91,27 @@ public class TestPoolableConnection {
     }
 
     @Test
+    public void testDisconnectionIgnoreSqlCodes() throws Exception {
+        pool.setTestOnReturn(true);
+        final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
+        factory.setFastFailValidation(true);
+        factory.setDisconnectionIgnoreSqlCodes(Arrays.asList("08S02", "08007"));
+
+        final PoolableConnection conn = pool.borrowObject();
+        final TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
+
+        // set up non-fatal exception
+        nativeConnection.setFailure(new SQLException("Non-fatal connection error.", "08S02"));
+        assertThrows(SQLException.class, conn::createStatement);
+        nativeConnection.setFailure(null);
+
+        // verify that non-fatal connection is returned to the pool
+        conn.close();
+        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+        assertEquals(1, pool.getNumIdle(), "The pool should have one idle connection");
+    }
+
+    @Test
     public void testFastFailValidation() throws Exception {
         pool.setTestOnReturn(true);
         final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
@@ -181,27 +202,6 @@ public class TestPoolableConnection {
     @Test
     public void testMXBeanCompliance() throws OperationsException {
        TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
-    }
-
-    @Test
-    public void testDisconnectionIgnoreSqlCodes() throws Exception {
-        pool.setTestOnReturn(true);
-        final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
-        factory.setFastFailValidation(true);
-        factory.setDisconnectionIgnoreSqlCodes(Arrays.asList("08S02", "08007"));
-
-        final PoolableConnection conn = pool.borrowObject();
-        final TesterConnection nativeConnection = (TesterConnection) conn.getInnermostDelegate();
-
-        // set up non-fatal exception
-        nativeConnection.setFailure(new SQLException("Non-fatal connection error.", "08S02"));
-        assertThrows(SQLException.class, conn::createStatement);
-        nativeConnection.setFailure(null);
-
-        // verify that non-fatal connection is returned to the pool
-        conn.close();
-        assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
-        assertEquals(1, pool.getNumIdle(), "The pool should have one idle connection");
     }
 
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the

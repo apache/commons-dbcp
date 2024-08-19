@@ -86,14 +86,6 @@ public interface DataSourceMXBean {
     int getDefaultTransactionIsolation();
 
     /**
-     * See {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}.
-     *
-     * @return {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}.
-     * @since 2.1
-     */
-    String[] getDisconnectionSqlCodesAsArray();
-
-    /**
      * See {@link BasicDataSource#getDisconnectionIgnoreSqlCodesAsArray()}.
      *
      * @return {@link BasicDataSource#getDisconnectionIgnoreSqlCodesAsArray()}.
@@ -102,6 +94,14 @@ public interface DataSourceMXBean {
     default String[] getDisconnectionIgnoreSqlCodesAsArray() {
         return Utils.EMPTY_STRING_ARRAY;
     }
+
+    /**
+     * See {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}.
+     *
+     * @return {@link BasicDataSource#getDisconnectionSqlCodesAsArray()}.
+     * @since 2.1
+     */
+    String[] getDisconnectionSqlCodesAsArray();
 
     /**
      * See {@link BasicDataSource#getDriverClassName()}.

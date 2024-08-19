@@ -772,12 +772,8 @@ public class TestDelegatingDatabaseMetaData {
 
     @Test
     public void testNullArguments() throws Exception {
-        assertThrows(NullPointerException.class, () -> {
-            new DelegatingDatabaseMetaData(null, null);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            new DelegatingDatabaseMetaData(new DelegatingConnection(null), null);
-        });
+        assertThrows(NullPointerException.class, () -> new DelegatingDatabaseMetaData(null, null));
+        assertThrows(NullPointerException.class, () -> new DelegatingDatabaseMetaData(new DelegatingConnection(null), null));
     }
 
     @Test
