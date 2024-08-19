@@ -16,6 +16,8 @@
  */
 package org.apache.commons.dbcp2;
 
+import static org.apache.commons.dbcp2.Utils.checkForConflicts;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,8 +39,6 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-
-import static org.apache.commons.dbcp2.Utils.checkForConflicts;
 
 /**
  * A {@link PooledObjectFactory} that creates {@link PoolableConnection}s.

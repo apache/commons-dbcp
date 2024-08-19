@@ -16,6 +16,8 @@
  */
 package org.apache.commons.dbcp2;
 
+import static org.apache.commons.dbcp2.Utils.checkForConflicts;
+
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -55,8 +57,6 @@ import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import static org.apache.commons.dbcp2.Utils.checkForConflicts;
 
 /**
  * Basic implementation of {@code javax.sql.DataSource} that is configured via JavaBeans properties.
