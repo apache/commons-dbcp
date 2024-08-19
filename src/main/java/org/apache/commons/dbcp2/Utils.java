@@ -217,6 +217,17 @@ public final class Utils {
     }
 
     /**
+     * Checks if the given SQL state corresponds to a fatal connection error.
+     *
+     * @param sqlState the SQL state to check.
+     * @return true if the SQL state is a fatal connection error, false otherwise.
+     * @since 2.13.0
+     */
+    static boolean isDisconnectionSqlCode(String sqlState) {
+        return DISCONNECTION_SQL_CODES.contains(sqlState);
+    }
+
+    /**
      * Gets the correct i18n message for the given key.
      *
      * @param key The key to look up an i18n message.
