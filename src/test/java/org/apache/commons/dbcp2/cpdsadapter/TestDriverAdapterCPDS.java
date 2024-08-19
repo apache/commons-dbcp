@@ -295,7 +295,7 @@ public class TestDriverAdapterCPDS {
         assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "zlsafjk"), "Able to retrieve connection with incorrect password");
 
         // Use good password
-        SQLException e = assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "x"), "Able to retrieve connection with incorrect password");
+        final SQLException e = assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "x"), "Able to retrieve connection with incorrect password");
         assertTrue(e.getMessage().startsWith("x is not the correct password"));
         // else the exception was expected
 

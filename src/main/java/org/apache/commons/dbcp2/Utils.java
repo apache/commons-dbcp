@@ -249,7 +249,7 @@ public final class Utils {
      * @return true if the SQL state is a fatal connection error, false otherwise.
      * @since 2.13.0
      */
-    static boolean isDisconnectionSqlCode(String sqlState) {
+    static boolean isDisconnectionSqlCode(final String sqlState) {
         return DISCONNECTION_SQL_CODES.contains(sqlState);
     }
 

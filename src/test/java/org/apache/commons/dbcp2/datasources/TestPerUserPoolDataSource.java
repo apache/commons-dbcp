@@ -90,7 +90,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ((PerUserPoolDataSource) ds).close();
     }
 
-    /** 
+    /**
      * See DBCP-8
      */
     @Test
