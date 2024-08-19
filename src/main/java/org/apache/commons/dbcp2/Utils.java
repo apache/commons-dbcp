@@ -193,7 +193,7 @@ public final class Utils {
      *
      * @param sqlState the SQL state to check.
      * @return true if the SQL state is a fatal connection error, false otherwise.
-     * @since 2.12.1
+     * @since 2.13.0
      */
     static boolean isDisconnectionSqlCode(String sqlState) {
         return DISCONNECTION_SQL_CODES.contains(sqlState);
