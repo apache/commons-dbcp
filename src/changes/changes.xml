@@ -71,8 +71,9 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix PMD UnnecessaryFullyQualifiedName in LocalXAConnectionFactory.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs MC_OVERRIDABLE_METHOD_CALL_IN_READ_OBJECT in PerUserPoolDataSource.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs MC_OVERRIDABLE_METHOD_CALL_IN_READ_OBJECT in SharedPoolDataSource.</action>
+      <action type="update" dev="ggregory" due-to="Johno Crawford">Avoid object creation when invoking isDisconnectionSqlException #422.</action> 
       <!-- ADD -->
-      <action type="update" dev="ggregory" due-to="Johno Crawford, Gary Gregory">Add support for ignoring non-fatal SQL state codes #421.</action> 
+      <action type="update" dev="ggregory" due-to="Johno Crawford, Gary Gregory">Add support for ignoring non-fatal SQL state codes #421.</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 66 to 73 #360, #371, #395, #420.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-logging:commons-logging from 1.3.0 to 1.3.4 #368, #399, #423.</action>
