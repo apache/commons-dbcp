@@ -19,6 +19,9 @@ package org.apache.commons.dbcp2;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TestUtils {
 
     public static PStmtKey getPStmtKey(final PoolablePreparedStatement<PStmtKey> poolablePreparedStatement) {
@@ -28,5 +31,15 @@ public class TestUtils {
     @Test
     public void testClassLoads() {
         Utils.closeQuietly((AutoCloseable) null);
+    }
+
+    @Test
+    public void testIsDisconnectionSqlCode() {
+        assertTrue(Utils.isDisconnectionSqlCode("57P01"), "57P01 should be recognised as a disconnection SQL code.");
+        assertTrue(Utils.isDisconnectionSqlCode("01002"), "01002 should be recognised as a disconnection SQL code.");
+        assertTrue(Utils.isDisconnectionSqlCode("JZ0C0"), "JZ0C0 should be recognised as a disconnection SQL code.");
+
+        assertFalse(Utils.isDisconnectionSqlCode("INVALID"), "INVALID should not be recognised as a disconnection SQL code.");
+        assertFalse(Utils.isDisconnectionSqlCode("00000"), "00000 should not be recognised as a disconnection SQL code.");
     }
 }

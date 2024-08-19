@@ -268,7 +268,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         final String sqlState = e.getSQLState();
         if (sqlState != null) {
             fatalException = disconnectionSqlCodes == null
-                ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.getDisconnectionSqlCodes().contains(sqlState)
+                ? sqlState.startsWith(Utils.DISCONNECTION_SQL_CODE_PREFIX) || Utils.isDisconnectionSqlCode(sqlState)
                 : disconnectionSqlCodes.contains(sqlState);
         }
         return fatalException;
