@@ -65,7 +65,31 @@ public class PoolableManagedConnection extends PoolableConnection {
     public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
             final ObjectPool<PoolableConnection> pool, final Collection<String> disconnectSqlCodes,
             final boolean fastFailValidation) {
-        super(conn, pool, null, disconnectSqlCodes, fastFailValidation);
+        this(transactionRegistry, conn, pool, disconnectSqlCodes, null, fastFailValidation);
+    }
+
+    /**
+     * Create a PoolableManagedConnection.
+     *
+     * @param transactionRegistry
+     *            transaction registry
+     * @param conn
+     *            underlying connection
+     * @param pool
+     *            connection pool
+     * @param disconnectSqlCodes
+     *            SQL State codes considered fatal disconnection errors
+     * @param disconnectionIgnoreSqlCodes
+     *            SQL State codes considered fatal disconnection errors
+     * @param fastFailValidation
+     *            true means fatal disconnection errors cause subsequent validations to fail immediately (no attempt to
+     *            run query or isValid)
+     * @since 2.13.0
+     */
+    public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
+                                     final ObjectPool<PoolableConnection> pool, final Collection<String> disconnectSqlCodes,
+                                     final Collection<String> disconnectionIgnoreSqlCodes, final boolean fastFailValidation) {
+        super(conn, pool, null, disconnectSqlCodes, disconnectionIgnoreSqlCodes, fastFailValidation);
         this.transactionRegistry = transactionRegistry;
     }
 
