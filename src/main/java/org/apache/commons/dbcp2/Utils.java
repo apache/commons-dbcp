@@ -139,6 +139,29 @@ public final class Utils {
     }
 
     /**
+     * Checks for conflicts between two collections.
+     * <p>
+     * If any overlap is found between the two provided collections, an {@link IllegalArgumentException} is thrown.
+     * </p>
+     *
+     * @param codes1 The first collection of SQL state codes.
+     * @param codes2 The second collection of SQL state codes.
+     * @param name1 The name of the first collection (for exception message).
+     * @param name2 The name of the second collection (for exception message).
+     * @since 2.13.0
+     * @throws IllegalArgumentException if any codes overlap between the two collections.
+     */
+    static void checkForConflicts(Collection<String> codes1, Collection<String> codes2, String name1, String name2) {
+        if (codes1 != null && codes2 != null) {
+            for (String code : codes1) {
+                if (codes2.contains(code)) {
+                    throw new IllegalArgumentException(code + " cannot be in both " + name1 + " and " + name2 + ".");
+                }
+            }
+        }
+    }
+
+    /**
      * Closes the Connection (which may be null).
      *
      * @param connection a Connection, may be {@code null}

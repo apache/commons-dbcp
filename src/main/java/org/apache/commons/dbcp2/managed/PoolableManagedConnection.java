@@ -78,13 +78,13 @@ public class PoolableManagedConnection extends PoolableConnection {
      * @param pool
      *            connection pool
      * @param disconnectSqlCodes
-     *            SQL_STATE codes considered fatal disconnection errors
+     *            SQL State codes considered fatal disconnection errors
      * @param disconnectionIgnoreSqlCodes
-     *            SQL_STATE codes considered fatal disconnection errors
+     *            SQL State codes considered fatal disconnection errors
      * @param fastFailValidation
      *            true means fatal disconnection errors cause subsequent validations to fail immediately (no attempt to
      *            run query or isValid)
-     * @since 2.12.1
+     * @since 2.13.0
      */
     public PoolableManagedConnection(final TransactionRegistry transactionRegistry, final Connection conn,
                                      final ObjectPool<PoolableConnection> pool, final Collection<String> disconnectSqlCodes,

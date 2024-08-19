@@ -97,7 +97,7 @@ public interface DataSourceMXBean {
      * See {@link BasicDataSource#getDisconnectionIgnoreSqlCodesAsArray()}.
      *
      * @return {@link BasicDataSource#getDisconnectionIgnoreSqlCodesAsArray()}.
-     * @since 2.12.1
+     * @since 2.13.0
      */
     default String[] getDisconnectionIgnoreSqlCodesAsArray() {
         return Utils.EMPTY_STRING_ARRAY;

@@ -121,13 +121,13 @@ public class BasicDataSourceFactory implements ObjectFactory {
     private static final String PROP_DISCONNECTION_SQL_CODES = "disconnectionSqlCodes";
 
     /**
-     * Property key for specifying the SQL_STATE codes that should be ignored during disconnection checks.
+     * Property key for specifying the SQL State codes that should be ignored during disconnection checks.
      * <p>
-     * The value for this property must be a comma-separated string of SQL_STATE codes, where each code represents
+     * The value for this property must be a comma-separated string of SQL State codes, where each code represents
      * a state that will be excluded from being treated as a fatal disconnection. The expected format is a series
-     * of SQL_STATE codes separated by commas, with no spaces between them (e.g., "08003,08004").
+     * of SQL State codes separated by commas, with no spaces between them (e.g., "08003,08004").
      * </p>
-     * @since 2.12.1
+     * @since 2.13.0
      */
     private static final String PROP_DISCONNECTION_IGNORE_SQL_CODES = "disconnectionIgnoreSqlCodes";
 
