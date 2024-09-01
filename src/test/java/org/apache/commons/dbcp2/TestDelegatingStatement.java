@@ -142,7 +142,7 @@ public class TestDelegatingStatement {
             delegatingStatement.close();
             Assertions.fail("Excpected a SQLExceptionList");
         } catch (final SQLException e) {
-            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertInstanceOf(SQLExceptionList.class, e);
         } finally {
             testerResultSet.setSqlExceptionOnClose(false);
         }
@@ -156,7 +156,7 @@ public class TestDelegatingStatement {
             delegatingTesterStatement.close();
             Assertions.fail("Excpected a SQLExceptionList");
         } catch (final SQLException e) {
-            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertInstanceOf(SQLExceptionList.class, e);
         } finally {
             testerStatement.setSqlExceptionOnClose(false);
         }

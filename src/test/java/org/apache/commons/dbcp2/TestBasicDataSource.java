@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -112,7 +113,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
             assertNotNull(dconn);
 
-            assertTrue(dconn instanceof TesterConnection);
+            assertInstanceOf(TesterConnection.class, dconn);
         }
     }
 
@@ -484,7 +485,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (Connection conn = getConnection()) {
             final ClassLoader cl = ds.getDriverClassLoader();
             assertNotNull(cl);
-            assertTrue(cl instanceof TesterClassLoader);
+            assertInstanceOf(TesterClassLoader.class, cl);
             assertTrue(((TesterClassLoader) cl).didLoad(ds.getDriverClassName()));
         }
     }

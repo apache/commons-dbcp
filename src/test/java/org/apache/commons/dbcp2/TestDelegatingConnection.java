@@ -205,7 +205,7 @@ public class TestDelegatingConnection {
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
         } catch (final SQLException e) {
-            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertInstanceOf(SQLExceptionList.class, e);
             Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
         } finally {
             testerResultSet.setSqlExceptionOnClose(false);
@@ -222,7 +222,7 @@ public class TestDelegatingConnection {
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
         } catch (final SQLException e) {
-            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertInstanceOf(SQLExceptionList.class, e);
             Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
         } finally {
             testerStatement.setSqlExceptionOnClose(false);
@@ -238,7 +238,7 @@ public class TestDelegatingConnection {
             delegatingConnection.passivate();
             Assertions.fail("Expected SQLExceptionList");
         } catch (final SQLException e) {
-            Assertions.assertTrue(e instanceof SQLExceptionList);
+            Assertions.assertInstanceOf(SQLExceptionList.class, e);
             Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
         } finally {
             testerStatement.setSqlExceptionOnClose(false);

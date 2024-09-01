@@ -18,6 +18,7 @@
 package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationHandler;
@@ -187,7 +188,7 @@ public class TestSynchronizationOrder {
                 transactionManager.begin();
                 try (final Connection connectionA = ds.getConnection()) {
                     // Check and close right away.
-                    assertTrue(connectionA instanceof DelegatingConnection);
+                    assertInstanceOf(DelegatingConnection.class, connectionA);
                 }
                 transactionManager.commit();
                 assertFalse(transactionManagerRegistered);
@@ -220,7 +221,7 @@ public class TestSynchronizationOrder {
                 transactionManager.begin();
                 try (final Connection connectionA = ds.getConnection()) {
                     // Check and close right away.
-                    assertTrue(connectionA instanceof DelegatingConnection);
+                    assertInstanceOf(DelegatingConnection.class, connectionA);
                 }
                 transactionManager.commit();
                 assertTrue(transactionManagerRegistered);
