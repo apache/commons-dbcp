@@ -175,19 +175,20 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public ResultSet executeQuery(final String sql) throws SQLException {
         checkOpen();
-        if ("null".equals(sql)) {
+        switch (sql) {
+        case "null":
             return null;
-        }
-        if ("invalid".equals(sql)) {
+        case "invalid":
             throw new SQLException("invalid query");
-        }
-        if ("broken".equals(sql)) {
+        case "broken":
             throw new SQLException("broken connection");
-        }
-        if ("select username".equals(sql)) {
+        case "select username": {
             final String userName = ((TesterConnection) connection).getUserName();
             final Object[][] data = { { userName } };
             return new TesterResultSet(this, data);
+        }
+        default:
+            break;
         }
         // Simulate timeout if queryTimout is set to less than 5 seconds
         if (queryTimeout > 0 && queryTimeout < 5) {
