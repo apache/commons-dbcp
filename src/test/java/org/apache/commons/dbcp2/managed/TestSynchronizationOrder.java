@@ -134,15 +134,16 @@ public class TestSynchronizationOrder {
             public Object invoke(final Object proxy, final Method method, final Object[] args)
                     throws Throwable {
                 final String methodName = method.getName();
-                if (methodName.equals("hashCode")) {
+                switch (methodName) {
+                case "hashCode":
                     return System.identityHashCode(proxy);
-                }
-                if (methodName.equals("equals")) {
+                case "equals":
                     return proxy == args[0];
-                }
-                if (methodName.equals("getXAConnection")) {
+                case "getXAConnection":
                     // both zero and 2-arg signatures
                     return getXAConnection();
+                default:
+                    break;
                 }
                 try {
                     return method.invoke(bds, args);
