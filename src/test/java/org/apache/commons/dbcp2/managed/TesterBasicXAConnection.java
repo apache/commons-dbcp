@@ -75,17 +75,17 @@ public class TesterBasicXAConnection implements XAConnection {
         public Object invoke(final Object proxy, final Method method, final Object[] args)
                 throws Throwable {
             final String methodName = method.getName();
-            if (methodName.equals("hashCode")) {
+            switch (methodName) {
+            case "hashCode":
                 return System.identityHashCode(proxy);
-            }
-            if (methodName.equals("equals")) {
+            case "equals":
                 return proxy == args[0];
-            }
-            if (methodName.equals("isClosed")) {
+            case "isClosed":
                 return conn == null;
-            }
-            if (methodName.equals("close")) {
+            case "close":
                 return close();
+            default:
+                break;
             }
             if (conn == null) {
                 throw new SQLException("Connection closed");
