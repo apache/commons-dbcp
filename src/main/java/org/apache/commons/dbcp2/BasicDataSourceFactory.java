@@ -239,17 +239,23 @@ public class BasicDataSourceFactory implements ObjectFactory {
         getOptional(properties, PROP_DEFAULT_TRANSACTION_ISOLATION).ifPresent(value -> {
             value = value.toUpperCase(Locale.ROOT);
             int level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
-            if ("NONE".equals(value)) {
+            switch (value) {
+            case "NONE":
                 level = Connection.TRANSACTION_NONE;
-            } else if ("READ_COMMITTED".equals(value)) {
+                break;
+            case "READ_COMMITTED":
                 level = Connection.TRANSACTION_READ_COMMITTED;
-            } else if ("READ_UNCOMMITTED".equals(value)) {
+                break;
+            case "READ_UNCOMMITTED":
                 level = Connection.TRANSACTION_READ_UNCOMMITTED;
-            } else if ("REPEATABLE_READ".equals(value)) {
+                break;
+            case "REPEATABLE_READ":
                 level = Connection.TRANSACTION_REPEATABLE_READ;
-            } else if ("SERIALIZABLE".equals(value)) {
+                break;
+            case "SERIALIZABLE":
                 level = Connection.TRANSACTION_SERIALIZABLE;
-            } else {
+                break;
+            default:
                 try {
                     level = Integer.parseInt(value);
                 } catch (final NumberFormatException e) {
@@ -258,6 +264,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
                     System.err.println("using default value of database driver");
                     level = PoolableConnectionFactory.UNKNOWN_TRANSACTION_ISOLATION;
                 }
+                break;
             }
             dataSource.setDefaultTransactionIsolation(level);
         });
