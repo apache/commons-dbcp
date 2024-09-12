@@ -282,14 +282,15 @@ public class TesterConnection extends AbandonedTrace implements Connection {
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkOpen();
-        if ("null".equals(sql)) {
+        switch (sql) {
+        case "null":
             return null;
-        }
-        if ("invalid".equals(sql)) {
+        case "invalid":
             throw new SQLException("invalid query");
-        }
-        if ("broken".equals(sql)) {
+        case "broken":
             throw new SQLException("broken connection");
+        default:
+            break;
         }
         return new TesterPreparedStatement(this, sql);
     }
