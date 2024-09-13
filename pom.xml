@@ -160,7 +160,7 @@
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
       <!-- Versions >= 3.5.0 require Java 11 -->
-      <version>3.4.3.Final</version>
+      <version>3.6.1.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
