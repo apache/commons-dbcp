@@ -17,7 +17,6 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -49,7 +48,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -577,8 +575,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         }
         StackMessageLog.clear();
         ds.close();
-        assertThat(StackMessageLog.popMessage(),
-                CoreMatchers.not(CoreMatchers.containsString("InstanceNotFoundException")));
+        assertNull(StackMessageLog.popMessage());
         assertNull(ds.getRegisteredJmxName());
     }
 

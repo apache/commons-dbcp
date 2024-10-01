@@ -59,40 +59,34 @@
       <artifactId>commons-pool2</artifactId>
       <version>${commons.pool.version}</version>
     </dependency>
-
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.3.4</version>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>4.11.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.17.0</version>
       <scope>test</scope>
     </dependency>
-
     <!-- For managed connections -->
     <dependency>
       <groupId>jakarta.transaction</groupId>
       <artifactId>jakarta.transaction-api</artifactId>
       <version>1.3.3</version>
     </dependency>
-
     <!-- tomcat naming jars for jndi reference tests -->
     <dependency>
       <groupId>tomcat</groupId>
@@ -100,14 +94,12 @@
       <version>5.0.28</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>tomcat</groupId>
       <artifactId>naming-java</artifactId>
       <version>5.0.28</version>
       <scope>test</scope>
     </dependency>
-
     <!-- for testing of managed connections -->
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
@@ -161,12 +153,6 @@
       <artifactId>jboss-logging</artifactId>
       <!-- Versions >= 3.5.0 require Java 11 -->
       <version>3.4.3.Final</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>3.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
