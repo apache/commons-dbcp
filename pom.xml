@@ -240,9 +240,8 @@
           <version>${commons.javadoc.version}</version>
           <configuration>
             <links>
-              <link>http://docs.oracle.com/javase/8/docs/api</link>
               <link>https://commons.apache.org/proper/commons-pool/apidocs</link>
-              <link>http://docs.oracle.com/javaee/7/api/</link>
+              <link>${commons.javadoc.javaee.link}</link>
             </links>
           </configuration>
         </plugin>
