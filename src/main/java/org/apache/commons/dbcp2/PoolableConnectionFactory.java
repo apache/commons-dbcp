@@ -149,7 +149,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     @Override
     public void destroyObject(final PooledObject<PoolableConnection> p, final DestroyMode mode) throws SQLException {
         if (mode == DestroyMode.ABANDONED) {
-            p.getObject().getInnermostDelegate().abort(Runnable::run);
+            Jdbc41Bridge.abort(p.getObject().getInnermostDelegate(), Runnable::run);
         } else {
             p.getObject().reallyClose();
         }
