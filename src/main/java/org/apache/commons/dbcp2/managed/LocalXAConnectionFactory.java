@@ -368,6 +368,8 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
     }
 
     /**
+     * Gets the connection factory.
+     *
      * @return The connection factory.
      * @since 2.6.0
      */
@@ -375,6 +377,11 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         return connectionFactory;
     }
 
+    /**
+     * Gets the transaction registry.
+     *
+     * @return The transaction registry.
+     */
     @Override
     public TransactionRegistry getTransactionRegistry() {
         return transactionRegistry;

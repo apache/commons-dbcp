@@ -148,6 +148,8 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     /**
+     * Gets the transaction context.
+     *
      * @return The transaction context.
      * @since 2.6.0
      */
@@ -156,6 +158,8 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     /**
+     * Gets the transaction registry.
+     *
      * @return The transaction registry.
      * @since 2.6.0
      */
