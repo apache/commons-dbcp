@@ -94,13 +94,6 @@ public final class Utils {
      * @since 2.13.0
      */
     static void checkSqlCodes(final Collection<String> codes1, final Collection<String> codes2) {
-//        if (codes1 != null && codes2 != null) {
-//            for (String code : codes1) {
-//                if (codes2.contains(code)) {
-//                    throw new IllegalArgumentException(code + " cannot be in both disconnectionSqlCodes and disconnectionIgnoreSqlCodes.");
-//                }
-//            }
-//        }
         if (codes1 != null && codes2 != null) {
             final Set<String> test = new HashSet<>(codes1);
             test.retainAll(codes2);
