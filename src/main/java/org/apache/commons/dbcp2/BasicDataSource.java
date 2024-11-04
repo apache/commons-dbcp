@@ -1479,7 +1479,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the JDBC connection {code userName} property.
      *
      * @return the {code userName} passed to the JDBC driver to establish connections
-     * @deprecated
+     * @deprecated Use {@link #getUserName()}.
      */
     @Deprecated
     @Override
