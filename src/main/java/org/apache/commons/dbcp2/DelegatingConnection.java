@@ -974,7 +974,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         try {
             Jdbc41Bridge.setSchema(connection, schema);
             if (cacheState) {
-                cachedSchema = connection.getSchema();
+                cachedSchema = Jdbc41Bridge.getSchema(connection);
             }
         } catch (final SQLException e) {
             cachedSchema = null;
