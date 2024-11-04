@@ -1642,10 +1642,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Logs the given throwable.
-     * @param message TODO
-     * @param throwable the throwable.
+     * Logs the given message and throwable.
      *
+     * @param message value to be log.
+     * @param throwable the throwable.
      * @since 2.7.0
      */
     protected void log(final String message, final Throwable throwable) {
