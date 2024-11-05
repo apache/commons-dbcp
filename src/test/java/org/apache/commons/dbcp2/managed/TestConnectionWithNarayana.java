@@ -119,7 +119,7 @@ public class TestConnectionWithNarayana {
                 fail("Should not work after timeout");
             } catch (final SQLException e) {
                 // Expected
-                Assertions.assertEquals("Commit can not be set while enrolled in a transaction", e.getMessage());
+                Assertions.assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage());
             }
             mds.getTransactionManager().rollback();
         }

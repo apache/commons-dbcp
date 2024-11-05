@@ -211,7 +211,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * Always returns a zero length Xid array. The LocalXAConnectionFactory can not support recovery, so no xids
+         * Always returns a zero length Xid array. The LocalXAConnectionFactory cannot support recovery, so no xids
          * will ever be found.
          *
          * @param flag
