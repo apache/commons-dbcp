@@ -30,6 +30,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -2004,7 +2005,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
         Utils.checkSqlCodes(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes);
         final Set<String> collect = Utils.isEmpty(disconnectionIgnoreSqlCodes) ? null
-                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toCollection(LinkedHashSet::new));
         this.disconnectionIgnoreSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
