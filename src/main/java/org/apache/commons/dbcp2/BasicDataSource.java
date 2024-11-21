@@ -37,6 +37,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -2005,7 +2006,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
         Utils.checkSqlCodes(disconnectionIgnoreSqlCodes, this.disconnectionSqlCodes);
         final Set<String> collect = Utils.isEmpty(disconnectionIgnoreSqlCodes) ? null
-                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toCollection(LinkedHashSet::new));
+                : disconnectionIgnoreSqlCodes.stream().filter(s -> !isEmpty(s)).collect(toLinkedHashSet());
         this.disconnectionIgnoreSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
@@ -2034,7 +2035,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         Utils.checkSqlCodes(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes);
         final Set<String> collect = Utils.isEmpty(disconnectionSqlCodes) ? null
-                : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(Collectors.toSet());
+                : disconnectionSqlCodes.stream().filter(s -> !isEmpty(s)).collect(toLinkedHashSet());
         this.disconnectionSqlCodes = Utils.isEmpty(collect) ? null : collect;
     }
 
@@ -2651,6 +2652,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         if (connectionPool != null && durationBetweenEvictionRuns.compareTo(Duration.ZERO) > 0) {
             connectionPool.setDurationBetweenEvictionRuns(durationBetweenEvictionRuns);
         }
+    }
+
+    private Collector<String, ?, LinkedHashSet<String>> toLinkedHashSet() {
+        return Collectors.toCollection(LinkedHashSet::new);
     }
 
     @Override
