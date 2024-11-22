@@ -175,6 +175,7 @@ public class TestPoolingConnection {
      */
     @Test
     public void testToStringStackOverflow() throws SQLException {
+        // Also tests a possible NullPointerException in PoolingConnection.close()
         try (PoolingConnection conn = new PoolingConnection(null)) {
             final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
             try (GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool = new GenericKeyedObjectPool<>(conn, config)) {
