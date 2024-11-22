@@ -140,6 +140,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
 
     }
 
+    /**
+     * Gets the user specific default value in a map for the specified user's pool.
+     *
+     * @param userName The user name key.
+     * @return The user specific value.
+     */
+    private <V> V get(final Map<String, V> map, final String userName) {
+        return map != null ? map.get(userName) : null;
+    }
+
     @Override
     protected PooledConnectionManager getConnectionManager(final UserPassKey upKey) {
         return managers.get(getPoolKey(upKey.getUserName()));
@@ -208,10 +218,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserBlockWhenExhausted(final String userName) {
-        Boolean value = null;
-        if (perUserBlockWhenExhausted != null) {
-            value = perUserBlockWhenExhausted.get(userName);
-        }
+        final Boolean value = get(perUserBlockWhenExhausted, userName);
         if (value == null) {
             return getDefaultBlockWhenExhausted();
         }
@@ -226,11 +233,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public Boolean getPerUserDefaultAutoCommit(final String userName) {
-        Boolean value = null;
-        if (perUserDefaultAutoCommit != null) {
-            value = perUserDefaultAutoCommit.get(userName);
-        }
-        return value;
+        return get(perUserDefaultAutoCommit, userName);
     }
 
     /**
@@ -241,11 +244,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public Boolean getPerUserDefaultReadOnly(final String userName) {
-        Boolean value = null;
-        if (perUserDefaultReadOnly != null) {
-            value = perUserDefaultReadOnly.get(userName);
-        }
-        return value;
+        return get(perUserDefaultReadOnly, userName);
     }
 
     /**
@@ -257,11 +256,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public Integer getPerUserDefaultTransactionIsolation(final String userName) {
-        Integer value = null;
-        if (perUserDefaultTransactionIsolation != null) {
-            value = perUserDefaultTransactionIsolation.get(userName);
-        }
-        return value;
+        return get(perUserDefaultTransactionIsolation, userName);
     }
 
     /**
@@ -274,10 +269,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserDurationBetweenEvictionRuns(final String userName) {
-        Duration value = null;
-        if (perUserDurationBetweenEvictionRuns != null) {
-            value = perUserDurationBetweenEvictionRuns.get(userName);
-        }
+        final Duration value = get(perUserDurationBetweenEvictionRuns, userName);
         if (value == null) {
             return getDefaultDurationBetweenEvictionRuns();
         }
@@ -293,10 +285,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public String getPerUserEvictionPolicyClassName(final String userName) {
-        String value = null;
-        if (perUserEvictionPolicyClassName != null) {
-            value = perUserEvictionPolicyClassName.get(userName);
-        }
+        final String value = get(perUserEvictionPolicyClassName, userName);
         if (value == null) {
             return getDefaultEvictionPolicyClassName();
         }
@@ -312,10 +301,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserLifo(final String userName) {
-        Boolean value = null;
-        if (perUserLifo != null) {
-            value = perUserLifo.get(userName);
-        }
+        final Boolean value = get(perUserLifo, userName);
         if (value == null) {
             return getDefaultLifo();
         }
@@ -331,10 +317,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMaxIdle(final String userName) {
-        Integer value = null;
-        if (perUserMaxIdle != null) {
-            value = perUserMaxIdle.get(userName);
-        }
+        final Integer value = get(perUserMaxIdle, userName);
         if (value == null) {
             return getDefaultMaxIdle();
         }
@@ -350,10 +333,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMaxTotal(final String userName) {
-        Integer value = null;
-        if (perUserMaxTotal != null) {
-            value = perUserMaxTotal.get(userName);
-        }
+        final Integer value = get(perUserMaxTotal, userName);
         if (value == null) {
             return getDefaultMaxTotal();
         }
@@ -370,10 +350,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserMaxWaitDuration(final String userName) {
-        Duration value = null;
-        if (perUserMaxWaitDuration != null) {
-            value = perUserMaxWaitDuration.get(userName);
-        }
+        final Duration value = get(perUserMaxWaitDuration, userName);
         if (value == null) {
             return getDefaultMaxWait();
         }
@@ -404,10 +381,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserMinEvictableIdleDuration(final String userName) {
-        Duration value = null;
-        if (perUserMinEvictableIdleDuration != null) {
-            value = perUserMinEvictableIdleDuration.get(userName);
-        }
+        final Duration value = get(perUserMinEvictableIdleDuration, userName);
         if (value == null) {
             return getDefaultMinEvictableIdleDuration();
         }
@@ -437,10 +411,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMinIdle(final String userName) {
-        Integer value = null;
-        if (perUserMinIdle != null) {
-            value = perUserMinIdle.get(userName);
-        }
+        final Integer value = get(perUserMinIdle, userName);
         if (value == null) {
             return getDefaultMinIdle();
         }
@@ -456,10 +427,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserNumTestsPerEvictionRun(final String userName) {
-        Integer value = null;
-        if (perUserNumTestsPerEvictionRun != null) {
-            value = perUserNumTestsPerEvictionRun.get(userName);
-        }
+        final Integer value = get(perUserNumTestsPerEvictionRun, userName);
         if (value == null) {
             return getDefaultNumTestsPerEvictionRun();
         }
@@ -476,10 +444,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserSoftMinEvictableIdleDuration(final String userName) {
-        Duration value = null;
-        if (perUserSoftMinEvictableIdleDuration != null) {
-            value = perUserSoftMinEvictableIdleDuration.get(userName);
-        }
+        final Duration value = get(perUserSoftMinEvictableIdleDuration, userName);
         if (value == null) {
             return getDefaultSoftMinEvictableIdleDuration();
         }
@@ -509,10 +474,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnBorrow(final String userName) {
-        Boolean value = null;
-        if (perUserTestOnBorrow != null) {
-            value = perUserTestOnBorrow.get(userName);
-        }
+        final Boolean value = get(perUserTestOnBorrow, userName);
         if (value == null) {
             return getDefaultTestOnBorrow();
         }
@@ -528,10 +490,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnCreate(final String userName) {
-        Boolean value = null;
-        if (perUserTestOnCreate != null) {
-            value = perUserTestOnCreate.get(userName);
-        }
+        final Boolean value = get(perUserTestOnCreate, userName);
         if (value == null) {
             return getDefaultTestOnCreate();
         }
@@ -547,10 +506,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnReturn(final String userName) {
-        Boolean value = null;
-        if (perUserTestOnReturn != null) {
-            value = perUserTestOnReturn.get(userName);
-        }
+        final Boolean value = get(perUserTestOnReturn, userName);
         if (value == null) {
             return getDefaultTestOnReturn();
         }
@@ -566,10 +522,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestWhileIdle(final String userName) {
-        Boolean value = null;
-        if (perUserTestWhileIdle != null) {
-            value = perUserTestWhileIdle.get(userName);
-        }
+        final Boolean value = get(perUserTestWhileIdle, userName);
         if (value == null) {
             return getDefaultTestWhileIdle();
         }
@@ -605,7 +558,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     @Override
     protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password)
             throws SQLException {
-
         final PoolKey key = getPoolKey(userName);
         ObjectPool<PooledConnectionAndInfo> pool;
         PooledConnectionManager manager;
