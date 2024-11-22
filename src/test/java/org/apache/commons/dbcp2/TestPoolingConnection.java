@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.SQLException;
 import java.time.Duration;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -173,11 +174,13 @@ public class TestPoolingConnection {
      * Tests DBCP-596 PoolingConnection.toString() causes StackOverflowError.
      */
     @Test
-    public void testToStringStackOverflow() {
-        final PoolingConnection conn = new PoolingConnection(null);
-        final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
-        final GenericKeyedObjectPool stmtPool = new GenericKeyedObjectPool<>(conn, config);
-        conn.setStatementPool(stmtPool);
-        conn.toString();
+    public void testToStringStackOverflow() throws SQLException {
+        try (PoolingConnection conn = new PoolingConnection(null)) {
+            final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
+            try (GenericKeyedObjectPool stmtPool = new GenericKeyedObjectPool<>(conn, config)) {
+                conn.setStatementPool(stmtPool);
+            }
+            conn.toString();
+        }
     }
 }
