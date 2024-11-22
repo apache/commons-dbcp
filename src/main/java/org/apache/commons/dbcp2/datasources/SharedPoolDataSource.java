@@ -27,6 +27,7 @@ import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
 
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
@@ -51,10 +52,19 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
     private static final long serialVersionUID = -1458539734480586454L;
 
-    // Pool properties
+    /**
+     * Max total defaults to {@value}.
+     */
     private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
+    /**
+     * Maps user credentials to pooled connection with credentials.
+     */
     private transient KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
+
+    /**
+     * A {@link KeyedPooledObjectFactory} that creates {@link PoolableConnection}s.
+     */
     private transient KeyedCPDSConnectionFactory factory;
 
     /**

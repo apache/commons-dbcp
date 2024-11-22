@@ -38,8 +38,7 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * A {@link KeyedPooledObjectFactory} that creates {@link org.apache.commons.dbcp2.PoolableConnection
- * PoolableConnection}s.
+ * A {@link KeyedPooledObjectFactory} that creates {@link PoolableConnection}s.
  *
  * @since 2.0
  */
