@@ -274,6 +274,13 @@ public final class Utils {
         return value == null ? null : String.valueOf(value);
     }
 
+    /**
+     * Throws a LifetimeExceededException if the given pooled object's lifetime has exceeded a maximum duration.
+     *
+     * @param p           The pooled object to test.
+     * @param maxDuration The maximum lifetime.
+     * @throws LifetimeExceededException Thrown if the given pooled object's lifetime has exceeded a maximum duration.
+     */
     public static void validateLifetime(final PooledObject<?> p, final Duration maxDuration) throws LifetimeExceededException {
         if (maxDuration.compareTo(Duration.ZERO) > 0) {
             final Duration lifetimeDuration = Duration.between(p.getCreateInstant(), Instant.now());
