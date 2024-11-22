@@ -53,7 +53,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     private static final long serialVersionUID = -1458539734480586454L;
 
     /**
-     * Max total defaults to {@value}.
+     * Max total defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_TOTAL}.
      */
     private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
