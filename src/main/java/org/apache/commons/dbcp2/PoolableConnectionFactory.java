@@ -156,7 +156,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Gets the cache state.
+     * Gets the cache state to propagate in {@link #makeObject()}.
      *
      * @return The cache state.
      * @since 2.6.0.
@@ -338,14 +338,20 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public synchronized ObjectPool<PoolableConnection> getPool() {
         return pool;
     }
+
     /**
+     * Tests whether to pool statements.
+     *
      * @return Whether to pool statements.
      * @since 2.6.0.
      */
     public boolean getPoolStatements() {
         return poolStatements;
     }
+
     /**
+     * Gets the validation query.
+     *
      * @return Validation query.
      * @since 2.6.0
      */
@@ -390,7 +396,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Whether to auto-commit on return.
+     * Tests whether to set auto-commit on {@link #passivateObject(PooledObject)}.
+     *
+     * @return Whether to set auto-commit on {@link #passivateObject(PooledObject)}.
      * @since 2.6.0
      */
     public boolean isAutoCommitOnReturn() {
@@ -398,7 +406,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Whether to auto-commit on return.
+     * Tests whether to set auto-commit on {@link #passivateObject(PooledObject)}.
+     *
+     * @return Whether to set auto-commit on {@link #passivateObject(PooledObject)}.
      * @deprecated Use {@link #isAutoCommitOnReturn()}.
      */
     @Deprecated
@@ -420,6 +430,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Tests whether to rollback on return.
+     *
      * @return Whether to rollback on return.
      */
     public boolean isRollbackOnReturn() {
@@ -518,10 +530,20 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         conn.passivate();
     }
 
+    /**
+     * Sets whether to set auto-commit on {@link #passivateObject(PooledObject)}.
+     *
+     * @param autoCommitOnReturn whether to set auto-commit.
+     */
     public void setAutoCommitOnReturn(final boolean autoCommitOnReturn) {
         this.autoCommitOnReturn = autoCommitOnReturn;
     }
 
+    /**
+     * Sets the cache state to propagate in {@link #makeObject()}.
+     *
+     * @param cacheState the cache state to propagate.
+     */
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
     }
@@ -648,8 +670,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @param autoCommitOnReturn Whether to auto-commit on return.
-     * @deprecated Use {@link #setAutoCommitOnReturn(boolean)}.
+     * Sets whether to set auto-commit on {@link #passivateObject(PooledObject)}.
+     *
+     * @param autoCommitOnReturn whether to set auto-commit.
      */
     @Deprecated
     public void setEnableAutoCommitOnReturn(final boolean autoCommitOnReturn) {
@@ -726,10 +749,20 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         this.pool = pool;
     }
 
+    /**
+     * Sets whether to pool statements.
+     *
+     * @param poolStatements whether to pool statements.
+     */
     public void setPoolStatements(final boolean poolStatements) {
         this.poolStatements = poolStatements;
     }
 
+    /**
+     * Sets whether to rollback on return.
+     *
+     * @param rollbackOnReturn whether to rollback on return.
+     */
     public void setRollbackOnReturn(final boolean rollbackOnReturn) {
         this.rollbackOnReturn = rollbackOnReturn;
     }

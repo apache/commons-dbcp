@@ -984,6 +984,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
+    /**
+     * Delegates to the connection's {@link DelegatingConnection#handleException(SQLException)}.
+     *
+     * @param e the exception to throw or delegate.
+     * @throws SQLException the exception to throw.
+     */
     protected void handleException(final SQLException e) throws SQLException {
         if (connection == null) {
             throw e;

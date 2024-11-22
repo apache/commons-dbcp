@@ -89,9 +89,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         return this.maxTotal;
     }
 
-    // ----------------------------------------------------------------------
-    // Instrumentation Methods
-
     /**
      * Gets the number of active connections in the pool.
      *
