@@ -174,7 +174,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Returns me to my pool.
+     * Returns this instance to my containing pool.
      */
     @Override
     public void close() throws SQLException {
@@ -247,7 +247,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Expose the {@link #toString()} method via a bean getter, so it can be read as a property via JMX.
+     * Gets the value of the {@link #toString()} method via a bean getter, so it can be read as a property via JMX.
      */
     @Override
     public String getToString() {
@@ -356,7 +356,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Actually close my underlying {@link Connection}.
+     * Closes the underlying {@link Connection}.
      */
     @Override
     public void reallyClose() throws SQLException {

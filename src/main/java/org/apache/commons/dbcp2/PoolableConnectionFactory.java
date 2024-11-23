@@ -175,11 +175,18 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         return connectionFactory;
     }
 
+    /**
+     * Gets how many connections were created in {@link #makeObject()}.
+     *
+     * @return the connection count.
+     */
     protected AtomicLong getConnectionIndex() {
         return connectionIndex;
     }
 
     /**
+     * Gets the collection of initialization SQL statements.
+     *
      * @return The collection of initialization SQL statements.
      * @since 2.6.0
      */
@@ -188,7 +195,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return The data source JMX ObjectName
+     * Gets data source JMX ObjectName.
+     *
+     * @return The data source JMX ObjectName.
      * @since 2.6.0.
      */
     public ObjectName getDataSourceJmxName() {
@@ -196,7 +205,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return The data source JMS ObjectName.
+     * Gets the data source JMX ObjectName.
+     *
+     * @return The data source JMX ObjectName.
      * @since 2.6.0
      */
     public ObjectName getDataSourceJmxObjectName() {
@@ -204,7 +215,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default auto-commit value.
+     * Gets the Default auto-commit value.
+     *
+     * @return The default auto-commit value.
      * @since 2.6.0
      */
     public Boolean getDefaultAutoCommit() {
@@ -212,7 +225,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default catalog.
+     * Gets the default catalog.
+     *
+     * @return The default catalog.
      * @since 2.6.0
      */
     public String getDefaultCatalog() {
@@ -220,7 +235,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default query timeout in seconds.
+     * Gets the default query timeout in seconds.
+     *
+     * @return The default query timeout in seconds.
      * @deprecated Use {@link #getDefaultQueryTimeoutDuration()}.
      */
     @Deprecated
@@ -231,7 +248,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Gets the default query timeout Duration.
      *
-     * @return Default query timeout Duration.
+     * @return The default query timeout Duration.
      * @since 2.10.0
      */
     public Duration getDefaultQueryTimeoutDuration() {
@@ -239,7 +256,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default query timeout in seconds.
+     * Gets the default query timeout in seconds.
+     *
+     * @return The default query timeout in seconds.
      * @since 2.6.0
      * @deprecated Use {@link #getDefaultQueryTimeoutDuration()}.
      */
@@ -249,7 +268,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default read-only-value.
+     * Gets the default read-only-value.
+     *
+     * @return The default read-only-value.
      * @since 2.6.0
      */
     public Boolean getDefaultReadOnly() {
@@ -257,7 +278,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default schema.
+     * Gets the default schema.
+     *
+     * @return The default schema.
      * @since 2.6.0
      */
     public String getDefaultSchema() {
@@ -265,7 +288,9 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * @return Default transaction isolation.
+     * Gets the default transaction isolation.
+     *
+     * @return The default transaction isolation.
      * @since 2.6.0
      */
     public int getDefaultTransactionIsolation() {
@@ -327,9 +352,15 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         return maxConnDuration.toMillis();
     }
 
+    /**
+     * Gets the maximum number of open prepared statements.
+     *
+     * @return The maximum number of open prepared statements.
+     */
     protected int getMaxOpenPreparedStatements() {
         return maxOpenPreparedStatements;
     }
+
     /**
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      *
@@ -381,6 +412,13 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
         return (int) validationQueryTimeoutDuration.getSeconds();
     }
 
+    /**
+     * Initializes the given connection with the collection of SQL statements set in {@link #setConnectionInitSql(Collection)}.
+     *
+     * @param conn the connection to initialize.
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection.
+     * @see #setConnectionInitSql(Collection)
+     */
     protected void initializeConnection(final Connection conn) throws SQLException {
         final Collection<String> sqls = connectionInitSqls;
         if (conn.isClosed()) {

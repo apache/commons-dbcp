@@ -325,7 +325,13 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Returns the state caching flag.
+     * Gets whether to cache properties. The cached properties are:
+     * <ul>
+     * <li>auto-commit</li>
+     * <li>catalog</li>
+     * <li>schema</li>
+     * <li>read-only</li>
+     * </ul>
      *
      * @return the state caching flag
      */
@@ -844,10 +850,15 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Sets the state caching flag.
+     * Sets whether to cache properties. The cached properties are:
+     * <ul>
+     * <li>auto-commit</li>
+     * <li>catalog</li>
+     * <li>schema</li>
+     * <li>read-only</li>
+     * </ul>
      *
-     * @param cacheState
-     *            The new value for the state caching flag
+     * @param cacheState The new value for the state caching flag
      */
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;

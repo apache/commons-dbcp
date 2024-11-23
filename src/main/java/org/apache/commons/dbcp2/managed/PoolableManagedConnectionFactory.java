@@ -58,6 +58,8 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
     }
 
     /**
+     * Gets the transaction registry.
+     *
      * @return The transaction registry.
      * @since 2.6.0
      */

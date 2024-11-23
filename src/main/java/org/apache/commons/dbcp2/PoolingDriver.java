@@ -87,13 +87,13 @@ public class PoolingDriver implements Driver {
     /** The map of registered pools. */
     protected static final HashMap<String, ObjectPool<? extends Connection>> pools = new HashMap<>();
 
-    /** 
+    /**
      * The Apache Commons connection string prefix {@value}.
      */
     public static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
 
     /**
-     * The length of {@Link #URL_PREFIX}.
+     * The String length of {@link #URL_PREFIX}.
      */
     protected static final int URL_PREFIX_LEN = URL_PREFIX.length();
 
