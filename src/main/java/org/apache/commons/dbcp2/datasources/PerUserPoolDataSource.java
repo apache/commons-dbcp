@@ -176,6 +176,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @see org.apache.commons.pool2.ObjectPool#clear()
      * @since 2.3.0
      */
+    @SuppressWarnings("resource") // does not allocate a pool
     public void clear() {
         managers.values().forEach(manager -> {
             try {
@@ -582,6 +583,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return mgr == null ? null : mgr.getPool();
     }
 
+    @SuppressWarnings("resource") // does not allocate a pool
     @Override
     protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password) throws SQLException {
         final PoolKey key = getPoolKey(userName);
