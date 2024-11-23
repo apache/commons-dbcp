@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -67,23 +68,94 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         return new HashMap<>();
     }
 
+    /**
+     * Maps user names to a data source property: BlockWhenExhausted.
+     */
     private Map<String, Boolean> perUserBlockWhenExhausted;
+
+    /**
+     * Maps user names to a data source property: EvictionPolicyClassName.
+     */
     private Map<String, String> perUserEvictionPolicyClassName;
+
+    /**
+     * Maps user names to a data source property: Lifo.
+     */
     private Map<String, Boolean> perUserLifo;
+
+    /**
+     * Maps user names to a data source property: MaxIdle.
+     */
     private Map<String, Integer> perUserMaxIdle;
+
+    /**
+     * Maps user names to a data source property: MaxTotal.
+     */
     private Map<String, Integer> perUserMaxTotal;
+
+    /**
+     * Maps user names to a data source property: MaxWaitDuration.
+     */
     private Map<String, Duration> perUserMaxWaitDuration;
+
+    /**
+     * Maps user names to a data source property: MinEvictableIdleDuration.
+     */
     private Map<String, Duration> perUserMinEvictableIdleDuration;
+
+    /**
+     * Maps user names to a data source property: MinIdle.
+     */
     private Map<String, Integer> perUserMinIdle;
+
+    /**
+     * Maps user names to a data source property: NumTestsPerEvictionRun.
+     */
     private Map<String, Integer> perUserNumTestsPerEvictionRun;
+
+    /**
+     * Maps user names to a data source property: SoftMinEvictableIdleDuration.
+     */
     private Map<String, Duration> perUserSoftMinEvictableIdleDuration;
+
+    /**
+     * Maps user names to a data source property: TestOnCreate.
+     */
     private Map<String, Boolean> perUserTestOnCreate;
+
+    /**
+     * Maps user names to a data source property: TestOnBorrow.
+     */
     private Map<String, Boolean> perUserTestOnBorrow;
+
+    /**
+     * Maps user names to a data source property: TestOnReturn.
+     */
     private Map<String, Boolean> perUserTestOnReturn;
+
+    /**
+     * Maps user names to a data source property: TestWhileIdle.
+     */
     private Map<String, Boolean> perUserTestWhileIdle;
+
+    /**
+     * Maps user names to a data source property: DurationBetweenEvictionRuns.
+     */
     private Map<String, Duration> perUserDurationBetweenEvictionRuns;
+
+    /**
+     * Maps user names to a data source property: DefaultAutoCommit.
+     */
     private Map<String, Boolean> perUserDefaultAutoCommit;
+
+    /**
+     * Maps user names to a data source property: DefaultTransactionIsolation.
+     */
     private Map<String, Integer> perUserDefaultTransactionIsolation;
+
+    /**
+     * Maps user names to a data source property: DefaultReadOnly.
+     */
     private Map<String, Boolean> perUserDefaultReadOnly;
 
     /**
@@ -92,7 +164,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     private transient Map<PoolKey, PooledConnectionManager> managers = createMap();
 
     /**
-     * Default no-arg constructor for Serialization.
+     * Constructs a new instance.
      */
     public PerUserPoolDataSource() {
     }
@@ -148,6 +220,17 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      */
     private <V> V get(final Map<String, V> map, final String userName) {
         return map != null ? map.get(userName) : null;
+    }
+
+    /**
+     * Gets the user specific default value in a map for the specified user's pool.
+     *
+     * @param userName The user name key.
+     * @return The user specific value.
+     */
+    private <V> V get(final Map<String, V> map, final String userName, final Supplier<V> defaultSupplier) {
+        final V v = get(map, userName);
+        return v != null ? v : defaultSupplier.get();
     }
 
     @Override
@@ -218,11 +301,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserBlockWhenExhausted(final String userName) {
-        final Boolean value = get(perUserBlockWhenExhausted, userName);
-        if (value == null) {
-            return getDefaultBlockWhenExhausted();
-        }
-        return value;
+        return get(perUserBlockWhenExhausted, userName, this::getDefaultBlockWhenExhausted);
     }
 
     /**
@@ -269,11 +348,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserDurationBetweenEvictionRuns(final String userName) {
-        final Duration value = get(perUserDurationBetweenEvictionRuns, userName);
-        if (value == null) {
-            return getDefaultDurationBetweenEvictionRuns();
-        }
-        return value;
+        return get(perUserDurationBetweenEvictionRuns, userName, this::getDefaultDurationBetweenEvictionRuns);
     }
 
     /**
@@ -285,11 +360,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public String getPerUserEvictionPolicyClassName(final String userName) {
-        final String value = get(perUserEvictionPolicyClassName, userName);
-        if (value == null) {
-            return getDefaultEvictionPolicyClassName();
-        }
-        return value;
+        return get(perUserEvictionPolicyClassName, userName, this::getDefaultEvictionPolicyClassName);
     }
 
     /**
@@ -301,11 +372,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserLifo(final String userName) {
-        final Boolean value = get(perUserLifo, userName);
-        if (value == null) {
-            return getDefaultLifo();
-        }
-        return value;
+        return get(perUserLifo, userName, this::getDefaultLifo);
     }
 
     /**
@@ -317,11 +384,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMaxIdle(final String userName) {
-        final Integer value = get(perUserMaxIdle, userName);
-        if (value == null) {
-            return getDefaultMaxIdle();
-        }
-        return value;
+        return get(perUserMaxIdle, userName, this::getDefaultMaxIdle);
     }
 
     /**
@@ -333,11 +396,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMaxTotal(final String userName) {
-        final Integer value = get(perUserMaxTotal, userName);
-        if (value == null) {
-            return getDefaultMaxTotal();
-        }
-        return value;
+        return get(perUserMaxTotal, userName, this::getDefaultMaxTotal);
     }
 
     /**
@@ -350,11 +409,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserMaxWaitDuration(final String userName) {
-        final Duration value = get(perUserMaxWaitDuration, userName);
-        if (value == null) {
-            return getDefaultMaxWait();
-        }
-        return value;
+        return get(perUserMaxWaitDuration, userName, this::getDefaultMaxWait);
     }
 
     /**
@@ -381,11 +436,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserMinEvictableIdleDuration(final String userName) {
-        final Duration value = get(perUserMinEvictableIdleDuration, userName);
-        if (value == null) {
-            return getDefaultMinEvictableIdleDuration();
-        }
-        return value;
+        return get(perUserMinEvictableIdleDuration, userName, this::getDefaultMinEvictableIdleDuration);
     }
 
     /**
@@ -411,11 +462,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserMinIdle(final String userName) {
-        final Integer value = get(perUserMinIdle, userName);
-        if (value == null) {
-            return getDefaultMinIdle();
-        }
-        return value;
+        return get(perUserMinIdle, userName, this::getDefaultMinIdle);
     }
 
     /**
@@ -427,11 +474,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public int getPerUserNumTestsPerEvictionRun(final String userName) {
-        final Integer value = get(perUserNumTestsPerEvictionRun, userName);
-        if (value == null) {
-            return getDefaultNumTestsPerEvictionRun();
-        }
-        return value;
+        return get(perUserNumTestsPerEvictionRun, userName, this::getDefaultNumTestsPerEvictionRun);
     }
 
     /**
@@ -444,11 +487,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @since 2.10.0
      */
     public Duration getPerUserSoftMinEvictableIdleDuration(final String userName) {
-        final Duration value = get(perUserSoftMinEvictableIdleDuration, userName);
-        if (value == null) {
-            return getDefaultSoftMinEvictableIdleDuration();
-        }
-        return value;
+        return get(perUserSoftMinEvictableIdleDuration, userName, this::getDefaultSoftMinEvictableIdleDuration);
     }
 
     /**
@@ -474,11 +513,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnBorrow(final String userName) {
-        final Boolean value = get(perUserTestOnBorrow, userName);
-        if (value == null) {
-            return getDefaultTestOnBorrow();
-        }
-        return value;
+        return get(perUserTestOnBorrow, userName, this::getDefaultTestOnBorrow);
     }
 
     /**
@@ -490,11 +525,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnCreate(final String userName) {
-        final Boolean value = get(perUserTestOnCreate, userName);
-        if (value == null) {
-            return getDefaultTestOnCreate();
-        }
-        return value;
+        return get(perUserTestOnCreate, userName, this::getDefaultTestOnCreate);
     }
 
     /**
@@ -506,11 +537,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestOnReturn(final String userName) {
-        final Boolean value = get(perUserTestOnReturn, userName);
-        if (value == null) {
-            return getDefaultTestOnReturn();
-        }
-        return value;
+        return get(perUserTestOnReturn, userName, this::getDefaultTestOnReturn);
     }
 
     /**
@@ -522,11 +549,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * @return The user specific value.
      */
     public boolean getPerUserTestWhileIdle(final String userName) {
-        final Boolean value = get(perUserTestWhileIdle, userName);
-        if (value == null) {
-            return getDefaultTestWhileIdle();
-        }
-        return value;
+        return get(perUserTestWhileIdle, userName, this::getDefaultTestWhileIdle);
     }
 
     /**
