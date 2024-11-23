@@ -23,12 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -36,6 +38,10 @@ import org.mockito.Mockito;
  * Tests {@link Jdbc41Bridge}.
  */
 public class Jdbc41BridgeTest {
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:h2:mem:test");
+    }
 
     @SuppressWarnings("resource")
     @Test
@@ -109,6 +115,16 @@ public class Jdbc41BridgeTest {
                 ResultSet rs = conn.getMetaData().getTypeInfo()) {
             rs.next();
             assertNotNull(Jdbc41Bridge.getObject(rs, 1, String.class));
+            //
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Integer.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Long.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Double.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Float.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Byte.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 2, BigDecimal.class));
+            //
+            assertNotNull(Jdbc41Bridge.getObject(rs, 7, Short.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, 8, Boolean.class));
         }
     }
 
@@ -119,6 +135,26 @@ public class Jdbc41BridgeTest {
                 ResultSet rs = conn.getMetaData().getTypeInfo()) {
             rs.next();
             assertNotNull(Jdbc41Bridge.getObject(rs, "TYPE_NAME", String.class));
+            //
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Integer.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Long.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Double.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Byte.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", BigDecimal.class));
+            //
+            assertNotNull(Jdbc41Bridge.getObject(rs, "NULLABLE", Short.class));
+            assertNotNull(Jdbc41Bridge.getObject(rs, "CASE_SENSITIVE", Boolean.class));
+        }
+    }
+
+    @Test
+    public void testGetParentLogger() throws SQLException {
+        // Normal
+        try (Connection conn = getConnection();
+                Statement stmt = conn.createStatement()) {
+            // returns null for H2 (not supported).
+            Jdbc41Bridge.getParentLogger(new JdbcDataSource());
         }
     }
 
@@ -166,9 +202,5 @@ public class Jdbc41BridgeTest {
             Jdbc41Bridge.setSchema(conn, expected);
             assertEquals(expected, Jdbc41Bridge.getSchema(conn));
         }
-    }
-
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:h2:mem:test");
     }
 }
