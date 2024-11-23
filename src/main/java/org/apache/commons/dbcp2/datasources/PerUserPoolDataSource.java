@@ -240,7 +240,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Gets the underlying pool but does NOT allocate it.
+     * Gets the underlying pre-allocated pool (does NOT allocate).
      *
      * @param manager A CPDSConnectionFactory.
      * @return the underlying pool.
@@ -583,8 +583,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     @Override
-    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password)
-            throws SQLException {
+    protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String password) throws SQLException {
         final PoolKey key = getPoolKey(userName);
         ObjectPool<PooledConnectionAndInfo> pool;
         PooledConnectionManager manager;
@@ -600,7 +599,6 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             }
             pool = getCPDSConnectionFactoryPool(manager);
         }
-
         PooledConnectionAndInfo info = null;
         try {
             info = pool.borrowObject();
