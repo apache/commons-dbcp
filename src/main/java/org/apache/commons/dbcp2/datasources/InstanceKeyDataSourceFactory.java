@@ -146,7 +146,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             final Reference ref = (Reference) refObj;
             if (isCorrectClass(ref.getClassName())) {
                 final RefAddr refAddr = ref.get("instanceKey");
-                if (refAddr != null && refAddr.getContent() != null) {
+                if (hasContent(refAddr)) {
                     // object was bound to JNDI via Referenceable API.
                     obj = INSTANCE_MAP.get(refAddr.getContent());
                 } else {
@@ -170,6 +170,10 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             }
         }
         return obj;
+    }
+
+    private boolean hasContent(final RefAddr refAddr) {
+        return refAddr != null && refAddr.getContent() != null;
     }
 
     /**
@@ -198,139 +202,139 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             throws IOException, ClassNotFoundException {
 
         RefAddr refAddr = ref.get("dataSourceName");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDataSourceName(toString(refAddr));
         }
 
         refAddr = ref.get("description");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDescription(toString(refAddr));
         }
 
         refAddr = ref.get("jndiEnvironment");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             final byte[] serialized = (byte[]) refAddr.getContent();
             ikds.setJndiEnvironment((Properties) deserialize(serialized));
         }
 
         refAddr = ref.get("loginTimeout");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setLoginTimeout(Duration.ofSeconds(parseInt(refAddr)));
         }
 
         // Pool properties
         refAddr = ref.get("blockWhenExhausted");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultBlockWhenExhausted(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("evictionPolicyClassName");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultEvictionPolicyClassName(toString(refAddr));
         }
 
         // Pool properties
         refAddr = ref.get("lifo");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultLifo(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("maxIdlePerKey");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultMaxIdle(parseInt(refAddr));
         }
 
         refAddr = ref.get("maxTotalPerKey");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultMaxTotal(parseInt(refAddr));
         }
 
         refAddr = ref.get("maxWaitMillis");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultMaxWait(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("minEvictableIdleTimeMillis");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("minIdlePerKey");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultMinIdle(parseInt(refAddr));
         }
 
         refAddr = ref.get("numTestsPerEvictionRun");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultNumTestsPerEvictionRun(parseInt(refAddr));
         }
 
         refAddr = ref.get("softMinEvictableIdleTimeMillis");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultSoftMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
         }
 
         refAddr = ref.get("testOnCreate");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultTestOnCreate(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testOnBorrow");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultTestOnBorrow(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testOnReturn");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultTestOnReturn(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("testWhileIdle");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultTestWhileIdle(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("timeBetweenEvictionRunsMillis");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultDurationBetweenEvictionRuns(Duration.ofMillis(parseLong(refAddr)));
         }
 
         // Connection factory properties
 
         refAddr = ref.get("validationQuery");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setValidationQuery(toString(refAddr));
         }
 
         refAddr = ref.get("validationQueryTimeout");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setValidationQueryTimeout(Duration.ofSeconds(parseInt(refAddr)));
         }
 
         refAddr = ref.get("rollbackAfterValidation");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setRollbackAfterValidation(parseBoolean(refAddr));
         }
 
         refAddr = ref.get("maxConnLifetimeMillis");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setMaxConnLifetime(Duration.ofMillis(parseLong(refAddr)));
         }
 
         // Connection properties
 
         refAddr = ref.get("defaultAutoCommit");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultAutoCommit(Boolean.valueOf(toString(refAddr)));
         }
 
         refAddr = ref.get("defaultTransactionIsolation");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultTransactionIsolation(parseInt(refAddr));
         }
 
         refAddr = ref.get("defaultReadOnly");
-        if (refAddr != null && refAddr.getContent() != null) {
+        if (hasContent(refAddr)) {
             ikds.setDefaultReadOnly(Boolean.valueOf(toString(refAddr)));
         }
     }
