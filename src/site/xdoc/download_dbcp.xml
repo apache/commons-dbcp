@@ -113,32 +113,32 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons DBCP 2.12.0 for JDBC 4.2 on Java 8">
+    <section name="Apache Commons DBCP 2.13.0 for JDBC 4.2 on Java 8">
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.tar.gz">commons-dbcp2-2.12.0-bin.tar.gz</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.tar.gz.sha512">sha512</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.tar.gz">commons-dbcp2-2.13.0-bin.tar.gz</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.zip">commons-dbcp2-2.12.0-bin.zip</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.zip.sha512">sha512</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.12.0-bin.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.zip">commons-dbcp2-2.13.0-bin.zip</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.zip.sha512">sha512</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/binaries/commons-dbcp2-2.13.0-bin.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.12.0-src.tar.gz">commons-dbcp2-2.12.0-src.tar.gz</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.12.0-src.tar.gz.sha512">sha512</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.12.0-src.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.13.0-src.tar.gz">commons-dbcp2-2.13.0-src.tar.gz</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.13.0-src.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.13.0-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.12.0-src.zip">commons-dbcp2-2.12.0-src.zip</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.12.0-src.zip.sha512">sha512</a></td>
-              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.12.0-src.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/dbcp/source/commons-dbcp2-2.13.0-src.zip">commons-dbcp2-2.13.0-src.zip</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.13.0-src.zip.sha512">sha512</a></td>
+              <td><a href="https://downloads.apache.org/commons/dbcp/source/commons-dbcp2-2.13.0-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>

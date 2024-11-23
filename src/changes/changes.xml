@@ -62,7 +62,7 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
-    <release version="2.13.0" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+    <release version="2.13.0" date="2024-11-23" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Johno Crawford">Avoid object creation when invoking isDisconnectionSqlException #422.</action> 
       <action type="fix" issue="DBCP-599" dev="ggregory" due-to="denixx baykin, Phil Steitz, Gary Gregory">PoolableConnectionFactory.destroyObject() method behaves incorrectly on ABANDONED connection, issue with unhandled AbstractMethodError. DelegatingConnection.abort(Executor) should delegate to Jdbc41Bridge</action>
