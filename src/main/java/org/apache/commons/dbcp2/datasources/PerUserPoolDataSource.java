@@ -683,19 +683,16 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
     }
 
-    private synchronized void registerPool(final String userName, final String password)
-        throws NamingException, SQLException {
-
+    private synchronized void registerPool(final String userName, final String password) throws NamingException, SQLException {
         final ConnectionPoolDataSource cpds = testCPDS(userName, password);
-
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
         // explicitly)
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(),
-            isRollbackAfterValidation(), userName, password);
+                isRollbackAfterValidation(), userName, password);
         factory.setMaxConn(getMaxConnDuration());
-
         // Create an object pool to contain our PooledConnections
+        @SuppressWarnings("resource")
         final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory);
         factory.setPool(pool);
         pool.setBlockWhenExhausted(getPerUserBlockWhenExhausted(userName));
@@ -713,13 +710,13 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         pool.setTestOnReturn(getPerUserTestOnReturn(userName));
         pool.setTestWhileIdle(getPerUserTestWhileIdle(userName));
         pool.setDurationBetweenEvictionRuns(getPerUserDurationBetweenEvictionRuns(userName));
-
         pool.setSwallowedExceptionListener(new SwallowedExceptionLogger(log));
-
-        final PooledConnectionManager old = managers.put(getPoolKey(userName), factory);
-        if (old != null) {
+        final PoolKey poolKey = getPoolKey(userName);
+        if (managers.containsKey(poolKey)) {
+            pool.close();
             throw new IllegalStateException("Pool already contains an entry for this user/password: " + userName);
         }
+        managers.put(poolKey, factory);
     }
 
     private <K, V> Map<K, V> replaceAll(final Map<K, V> currentMap, final Map<K, V> newMap) {
