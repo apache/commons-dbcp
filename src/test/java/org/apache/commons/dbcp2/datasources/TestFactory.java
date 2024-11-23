@@ -29,20 +29,29 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
+ * Tests SharedPoolDataSourceFactory.
  */
 public class TestFactory {
 
-    // Bugzilla Bug 24082: bug in InstanceKeyDataSourceFactory
-    // There's a fatal bug in InstanceKeyDataSourceFactory that means you can't
-    // instantiate more than one factory.
-    // https://issues.apache.org/bugzilla/show_bug.cgi?id=24082
-    @Test
-    public void testJNDI2Pools() throws Exception {
+    /**
+     * Tests Bugzilla Bug 24082: bug in InstanceKeyDataSourceFactory.
+     *
+     * There's a fatal bug in InstanceKeyDataSourceFactory that means you can't instantiate more than one factory.
+     * https://issues.apache.org/bugzilla/show_bug.cgi?id=24082
+     */
+    @ParameterizedTest
+    @ValueSource(strings = { "dataSourceName", "description", "jndiEnvironment", "loginTimeout", "blockWhenExhausted", "evictionPolicyClassName", "lifo",
+            "maxIdlePerKey", "maxTotalPerKey", "maxWaitMillis", "minEvictableIdleTimeMillis", "minIdlePerKey", "numTestsPerEvictionRun",
+            "softMinEvictableIdleTimeMillis", "testOnCreate", "testOnBorrow", "testOnReturn", "testWhileIdle", "timeBetweenEvictionRunsMillis",
+            "validationQuery", "validationQueryTimeout", "rollbackAfterValidation", "maxConnLifetimeMillis", "defaultAutoCommit", "defaultTransactionIsolation",
+            "defaultReadOnly" })
+    public void testJNDI2Pools(final String string) throws Exception {
         final Reference refObj = new Reference(SharedPoolDataSource.class.getName());
-        refObj.add(new StringRefAddr("dataSourceName","java:comp/env/jdbc/bookstoreCPDS"));
+        refObj.add(new StringRefAddr(string, "TestValue"));
         final Context context = new InitialContext();
         final Hashtable<?, ?> env = new Hashtable<>();
 
