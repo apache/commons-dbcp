@@ -36,6 +36,7 @@ import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.EvictionPolicy;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
@@ -354,6 +355,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool or the default if no user specific value is defined.
+     * <p>
+     * The class must implement {@link EvictionPolicy}.
+     * </p>
      *
      * @param userName
      *            The user name key.
@@ -832,7 +836,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool.
-     *
+     * <p>
+     * The class must implement {@link EvictionPolicy}.
+     * </p>
      * @param userName
      *            The user name key.
      * @param value
