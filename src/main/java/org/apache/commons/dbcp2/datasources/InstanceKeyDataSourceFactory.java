@@ -118,6 +118,10 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
+    private Boolean booleanValueOf(RefAddr refAddr) {
+        return Boolean.valueOf(toString(refAddr));
+    }
+
     /**
      * Creates an instance of the subclass and sets any properties contained in the Reference.
      *
@@ -219,7 +223,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("loginTimeout");
         if (hasContent(refAddr)) {
-            ikds.setLoginTimeout(Duration.ofSeconds(parseInt(refAddr)));
+            ikds.setLoginTimeout(toDurationFromSeconds(refAddr));
         }
 
         // Pool properties
@@ -251,12 +255,12 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("maxWaitMillis");
         if (hasContent(refAddr)) {
-            ikds.setDefaultMaxWait(Duration.ofMillis(parseLong(refAddr)));
+            ikds.setDefaultMaxWait(toDurationFromMillis(refAddr));
         }
 
         refAddr = ref.get("minEvictableIdleTimeMillis");
         if (hasContent(refAddr)) {
-            ikds.setDefaultMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
+            ikds.setDefaultMinEvictableIdle(toDurationFromMillis(refAddr));
         }
 
         refAddr = ref.get("minIdlePerKey");
@@ -271,7 +275,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("softMinEvictableIdleTimeMillis");
         if (hasContent(refAddr)) {
-            ikds.setDefaultSoftMinEvictableIdle(Duration.ofMillis(parseLong(refAddr)));
+            ikds.setDefaultSoftMinEvictableIdle(toDurationFromMillis(refAddr));
         }
 
         refAddr = ref.get("testOnCreate");
@@ -296,7 +300,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("timeBetweenEvictionRunsMillis");
         if (hasContent(refAddr)) {
-            ikds.setDefaultDurationBetweenEvictionRuns(Duration.ofMillis(parseLong(refAddr)));
+            ikds.setDefaultDurationBetweenEvictionRuns(toDurationFromMillis(refAddr));
         }
 
         // Connection factory properties
@@ -308,7 +312,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("validationQueryTimeout");
         if (hasContent(refAddr)) {
-            ikds.setValidationQueryTimeout(Duration.ofSeconds(parseInt(refAddr)));
+            ikds.setValidationQueryTimeout(toDurationFromSeconds(refAddr));
         }
 
         refAddr = ref.get("rollbackAfterValidation");
@@ -318,14 +322,14 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("maxConnLifetimeMillis");
         if (hasContent(refAddr)) {
-            ikds.setMaxConnLifetime(Duration.ofMillis(parseLong(refAddr)));
+            ikds.setMaxConnLifetime(toDurationFromMillis(refAddr));
         }
 
         // Connection properties
 
         refAddr = ref.get("defaultAutoCommit");
         if (hasContent(refAddr)) {
-            ikds.setDefaultAutoCommit(Boolean.valueOf(toString(refAddr)));
+            ikds.setDefaultAutoCommit(booleanValueOf(refAddr));
         }
 
         refAddr = ref.get("defaultTransactionIsolation");
@@ -335,8 +339,16 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         refAddr = ref.get("defaultReadOnly");
         if (hasContent(refAddr)) {
-            ikds.setDefaultReadOnly(Boolean.valueOf(toString(refAddr)));
+            ikds.setDefaultReadOnly(booleanValueOf(refAddr));
         }
+    }
+
+    private Duration toDurationFromMillis(RefAddr refAddr) {
+        return Duration.ofMillis(parseLong(refAddr));
+    }
+
+    private Duration toDurationFromSeconds(RefAddr refAddr) {
+        return Duration.ofSeconds(parseInt(refAddr));
     }
 
     String toString(final RefAddr refAddr) {
