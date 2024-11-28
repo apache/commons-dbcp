@@ -78,7 +78,6 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      *            Data to deserialize to create the configuration parameter.
      *
      * @return The Object created by deserializing the data.
-     *
      * @throws ClassNotFoundException
      *            If a class cannot be found during the deserialization of a configuration parameter.
      * @throws IOException
@@ -129,7 +128,6 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      *            The properties to be set on the created DataSource
      *
      * @return A configured DataSource of the appropriate type.
-     *
      * @throws ClassNotFoundException
      *            If a class cannot be found during the deserialization of a configuration parameter.
      * @throws IOException
