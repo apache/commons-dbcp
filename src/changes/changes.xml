@@ -62,6 +62,11 @@ The <action> type attribute can be add,update,fix,remove.
     EvictionTimer
      -->
   <body>
+    <release version="2.13.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
+      <!-- FIX -->
+      <!-- ADD -->
+      <!-- UPDATE -->
+    </release>
     <release version="2.13.0" date="2024-11-23" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Johno Crawford">Avoid object creation when invoking isDisconnectionSqlException #422.</action> 
