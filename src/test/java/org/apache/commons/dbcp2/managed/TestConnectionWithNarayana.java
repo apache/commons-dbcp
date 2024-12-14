@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
@@ -185,34 +186,22 @@ public class TestConnectionWithNarayana {
 	}
 
     @Test
-    public void testRepeatedGetConnectionInTimeout() throws Exception {
-        mds.getTransactionManager().setTransactionTimeout(1);
-        mds.getTransactionManager().begin();
-
-        try {
-            do {
-                Thread.sleep(1000);
-            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
-            // Let the reaper do it's thing
-            Thread.sleep(1000);
-            
-            try (Connection conn = mds.getConnection()) {
-                fail("Should not get the connection 1");
-            } catch (final SQLException e) {
-                if (!e.getCause().getClass().equals(IllegalStateException.class)) {
-                    throw e;
-                }
-                try (Connection conn = mds.getConnection()) {
-                    fail("Should not get connection 2");
-                } catch (final SQLException e2) {
-                    if (!e2.getCause().getClass().equals(IllegalStateException.class)) {
-                        throw e2;
-                    }
-                }
-            }
-        } finally {
-            mds.getTransactionManager().rollback();
-        }
-        Assertions.assertEquals(0, mds.getNumActive());
-    }
+	public void testRepeatedGetConnectionInTimeout() throws Exception {
+		mds.getTransactionManager().setTransactionTimeout(1);
+		mds.getTransactionManager().begin();
+		try {
+			do {
+				Thread.sleep(1000);
+			} while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
+			// Let the reaper do it's thing
+			Thread.sleep(1000);
+			final SQLException e = assertThrows(SQLException.class, mds::getConnection);
+			assertTrue(e.getCause().getClass().equals(IllegalStateException.class));
+			final SQLException e2 = assertThrows(SQLException.class, mds::getConnection);
+			assertTrue(e2.getCause().getClass().equals(IllegalStateException.class));
+		} finally {
+			mds.getTransactionManager().rollback();
+		}
+		Assertions.assertEquals(0, mds.getNumActive());
+	}
 }
