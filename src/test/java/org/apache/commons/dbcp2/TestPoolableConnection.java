@@ -121,13 +121,9 @@ public class TestPoolableConnection {
 
         // Set up non-fatal exception
         nativeConnection.setFailure(new SQLException("Not fatal error.", "Invalid syntax."));
-        try {
-            conn.createStatement();
-            fail("Should throw SQL exception.");
-        } catch (final SQLException ignored) {
-            // cleanup failure
-            nativeConnection.setFailure(null);
-        }
+        assertThrows(SQLException.class, conn::createStatement);
+        // cleanup failure
+        nativeConnection.setFailure(null);
 
         // validate should not fail - error was not fatal and condition was cleaned up
         conn.validate("SELECT 1", 1000);
