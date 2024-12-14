@@ -336,34 +336,19 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     @Test
     public void testReadOnly() throws Exception {
         try (Connection connection = newConnection()) {
-
             // NOTE: This test class uses connections that are read-only by default
-
             // connection should be read only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
-
             // attempt to setReadOnly
-            try {
-                connection.setReadOnly(true);
-                fail("setReadOnly method should be disabled while enlisted in a transaction");
-            } catch (final SQLException e) {
-                // expected
-            }
-
+			assertThrows(SQLException.class, () -> connection.setReadOnly(true),
+					"setReadOnly method should be disabled while enlisted in a transaction");
             // make sure it is still read-only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
-
             // attempt to setReadonly
-            try {
-                connection.setReadOnly(false);
-                fail("setReadOnly method should be disabled while enlisted in a transaction");
-            } catch (final SQLException e) {
-                // expected
-            }
-
+			assertThrows(SQLException.class, () -> connection.setReadOnly(false),
+					"setReadOnly method should be disabled while enlisted in a transaction");
             // make sure it is still read-only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
-
             // TwR closes the connection
         }
     }
