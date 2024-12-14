@@ -282,35 +282,34 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Override
     @Test
-    public void testMaxTotal() throws Exception {
-        final Transaction[] transactions = new Transaction[getMaxTotal()];
-        final Connection[] c = new Connection[getMaxTotal()];
-        for (int i = 0; i < c.length; i++) {
-            // create a new connection in the current transaction
-            c[i] = newConnection();
-            assertNotNull(c[i]);
+	public void testMaxTotal() throws Exception {
+		final Transaction[] transactions = new Transaction[getMaxTotal()];
+		final Connection[] c = new Connection[getMaxTotal()];
+		for (int i = 0; i < c.length; i++) {
+			// create a new connection in the current transaction
+			c[i] = newConnection();
+			assertNotNull(c[i]);
 
-            // suspend the current transaction and start a new one
-            transactions[i] = transactionManager.suspend();
-            assertNotNull(transactions[i]);
-            transactionManager.begin();
-        }
+			// suspend the current transaction and start a new one
+			transactions[i] = transactionManager.suspend();
+			assertNotNull(transactions[i]);
+			transactionManager.begin();
+		}
 
-        try {
-            newConnection();
-            fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (final SQLException e) {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        } finally {
-            transactionManager.commit();
-            for (int i = 0; i < c.length; i++) {
-                transactionManager.resume(transactions[i]);
-                c[i].close();
-                transactionManager.commit();
-            }
-        }
-    }
+		try {
+			assertThrows(SQLException.class, this::newConnection,
+					"Allowed to open more than DefaultMaxTotal connections.");
+			// should only be able to open 10 connections, so this test should
+			// throw an exception
+		} finally {
+			transactionManager.commit();
+			for (int i = 0; i < c.length; i++) {
+				transactionManager.resume(transactions[i]);
+				c[i].close();
+				transactionManager.commit();
+			}
+		}
+	}
 
     @Override
     @Test
