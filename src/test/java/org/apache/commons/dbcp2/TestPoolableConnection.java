@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -130,14 +129,9 @@ public class TestPoolableConnection {
 
         // now set up fatal failure
         nativeConnection.setFailure(new SQLException("Fatal connection error.", "01002"));
-
-        try {
-            conn.createStatement();
-            fail("Should throw SQL exception.");
-        } catch (final SQLException ignored) {
-            // cleanup failure
-            nativeConnection.setFailure(null);
-        }
+        assertThrows(SQLException.class, conn::createStatement);
+        // cleanup failure
+        nativeConnection.setFailure(null);
 
         // validate should now fail because of previous fatal error, despite cleanup
 		assertThrows(SQLException.class, () -> conn.validate("SELECT 1", 1000),
