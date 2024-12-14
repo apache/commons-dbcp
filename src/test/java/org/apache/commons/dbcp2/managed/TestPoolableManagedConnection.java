@@ -20,8 +20,7 @@ package org.apache.commons.dbcp2.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -125,7 +124,8 @@ public class TestPoolableManagedConnection {
     public void testReallyClose() throws Exception {
         assertEquals(0, pool.getNumActive());
         // create a connection
-        // pool uses LocalXAConnectionFactory, which register the connection with the TransactionRegistry
+        // pool uses LocalXAConnectionFactory, which register the connection with the
+        // TransactionRegistry
         conn = pool.borrowObject();
         assertEquals(1, pool.getNumActive());
         assertNotNull(transactionRegistry.getXAResource(conn));
@@ -134,14 +134,10 @@ public class TestPoolableManagedConnection {
         poolableManagedConnection.close();
         assertNotNull(transactionRegistry.getXAResource(conn));
         assertEquals(1, pool.getNumActive());
-        // this must close the managed connection, removing it from the transaction registry
+        // this must close the managed connection, removing it from the transaction
+        // registry
         poolableManagedConnection.reallyClose();
-        try {
-            assertNull(transactionRegistry.getXAResource(conn));
-            fail("Transaction registry was supposed to be empty now");
-        } catch (final SQLException ignore) {
-            // ignore
-        }
+        assertThrows(SQLException.class, () -> transactionRegistry.getXAResource(conn), "Transaction registry was supposed to be empty now");
         assertEquals(0, pool.getNumActive());
     }
 }
