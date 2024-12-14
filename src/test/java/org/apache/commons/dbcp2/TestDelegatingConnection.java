@@ -23,11 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
@@ -100,6 +98,8 @@ public class TestDelegatingConnection {
 
     @AfterEach
     public void afterEach() throws SQLException {
+        testerStatement.setSqlExceptionOnClose(false);
+        testerResultSet.setSqlExceptionOnClose(false);
         h2DConnection.close();
     }
 
@@ -141,34 +141,29 @@ public class TestDelegatingConnection {
      * Verify fix for DBCP-241
      */
     @Test
-    public void testCheckOpenNull() throws Exception {
-        delegatingConnection.close();
-        SQLException e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-        assertTrue(e.getMessage().endsWith("is closed."));
+	public void testCheckOpenNull() throws Exception {
+		delegatingConnection.close();
+		SQLException e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+		assertTrue(e.getMessage().endsWith("is closed."));
 
-        delegatingConnection = new DelegatingConnection<>(null);
-        delegatingConnection.setClosedInternal(true);
-        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-        assertTrue(e.getMessage().endsWith("is null."));
+		delegatingConnection = new DelegatingConnection<>(null);
+		delegatingConnection.setClosedInternal(true);
+		e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+		assertTrue(e.getMessage().endsWith("is null."));
 
-        final PoolingConnection pc = new PoolingConnection(connection2);
-        pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
-        delegatingConnection = new DelegatingConnection<>(pc);
-        pc.close();
-        delegatingConnection.close();
-        try {
-            try (PreparedStatement ps = delegatingConnection.prepareStatement("")) {
-            }
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("is closed."));
-        }
+		final PoolingConnection pc = new PoolingConnection(connection2);
+		pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
+		delegatingConnection = new DelegatingConnection<>(pc);
+		pc.close();
+		delegatingConnection.close();
+		e = assertThrows(SQLException.class, () -> delegatingConnection.prepareStatement(""));
+		assertTrue(e.getMessage().endsWith("is closed."));
 
-        delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
-        delegatingConnection.close();
-        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-        assertTrue(e.getMessage().endsWith("is closed."));
-    }
+		delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
+		delegatingConnection.close();
+		e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+		assertTrue(e.getMessage().endsWith("is closed."));
+	}
 
     @Test
     public void testCommit() throws Exception {
@@ -289,50 +284,31 @@ public class TestDelegatingConnection {
 
     @Test
     public void testPassivateWithResultSetCloseException() {
-        try {
-            testerResultSet.setSqlExceptionOnClose(true);
-            delegatingConnection.addTrace(testerResultSet);
-            delegatingConnection.passivate();
-            Assertions.fail("Expected SQLExceptionList");
-        } catch (final SQLException e) {
-            Assertions.assertInstanceOf(SQLExceptionList.class, e);
-            Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
-        } finally {
-            testerResultSet.setSqlExceptionOnClose(false);
-        }
+        testerResultSet.setSqlExceptionOnClose(true);
+        delegatingConnection.addTrace(testerResultSet);
+        final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
+        Assertions.assertInstanceOf(SQLExceptionList.class, e);
+        Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test
     public void testPassivateWithResultSetCloseExceptionAndStatementCloseException() {
-        try {
-            testerStatement.setSqlExceptionOnClose(true);
-            testerResultSet.setSqlExceptionOnClose(true);
-            delegatingConnection.addTrace(testerStatement);
-            delegatingConnection.addTrace(testerResultSet);
-            delegatingConnection.passivate();
-            Assertions.fail("Expected SQLExceptionList");
-        } catch (final SQLException e) {
-            Assertions.assertInstanceOf(SQLExceptionList.class, e);
-            Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
-        } finally {
-            testerStatement.setSqlExceptionOnClose(false);
-            testerResultSet.setSqlExceptionOnClose(false);
-        }
+        testerStatement.setSqlExceptionOnClose(true);
+        testerResultSet.setSqlExceptionOnClose(true);
+        delegatingConnection.addTrace(testerStatement);
+        delegatingConnection.addTrace(testerResultSet);
+        final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
+        Assertions.assertInstanceOf(SQLExceptionList.class, e);
+        Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test
     public void testPassivateWithStatementCloseException() {
-        try {
-            testerStatement.setSqlExceptionOnClose(true);
-            delegatingConnection.addTrace(testerStatement);
-            delegatingConnection.passivate();
-            Assertions.fail("Expected SQLExceptionList");
-        } catch (final SQLException e) {
-            Assertions.assertInstanceOf(SQLExceptionList.class, e);
-            Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
-        } finally {
-            testerStatement.setSqlExceptionOnClose(false);
-        }
+        testerStatement.setSqlExceptionOnClose(true);
+        delegatingConnection.addTrace(testerStatement);
+        final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
+        Assertions.assertInstanceOf(SQLExceptionList.class, e);
+        Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test
