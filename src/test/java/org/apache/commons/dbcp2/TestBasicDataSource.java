@@ -517,33 +517,33 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     @Test
     @Disabled
-    public void testEvict() throws Exception {
-        final long delay = 1000;
+	public void testEvict() throws Exception {
+		final long delay = 1000;
 
-        ds.setInitialSize(10);
-        ds.setMaxIdle(10);
-        ds.setMaxTotal(10);
-        ds.setMinIdle(5);
-        ds.setNumTestsPerEvictionRun(3);
-        ds.setMinEvictableIdle(Duration.ofMillis(100));
-        ds.setDurationBetweenEvictionRuns(Duration.ofMillis(delay));
-        ds.setPoolPreparedStatements(true);
+		ds.setInitialSize(10);
+		ds.setMaxIdle(10);
+		ds.setMaxTotal(10);
+		ds.setMinIdle(5);
+		ds.setNumTestsPerEvictionRun(3);
+		ds.setMinEvictableIdle(Duration.ofMillis(100));
+		ds.setDurationBetweenEvictionRuns(Duration.ofMillis(delay));
+		ds.setPoolPreparedStatements(true);
 
-        try (Connection conn = ds.getConnection()) {
-            // empty
-        }
+		try (Connection conn = ds.getConnection()) {
+			// empty
+		}
 
-        final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds())).anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
-            if (ds.getNumIdle() <= ds.getMinIdle()) {
-                break;
-            }
-            Thread.sleep(delay);
-        }
-        if (ds.getNumIdle() > ds.getMinIdle()) {
-            fail("EvictionTimer thread was destroyed with numIdle=" + ds.getNumIdle() + "(expected: less or equal than " + ds.getMinIdle() + ")");
-        }
-    }
+		final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+		while (Stream.of(threadBean.getThreadInfo(threadBean.getAllThreadIds()))
+				.anyMatch(t -> t.getThreadName().equals("commons-pool-evictor-thread"))) {
+			if (ds.getNumIdle() <= ds.getMinIdle()) {
+				break;
+			}
+			Thread.sleep(delay);
+		}
+		assertFalse(ds.getNumIdle() > ds.getMinIdle(), () -> "EvictionTimer thread was destroyed with numIdle="
+				+ ds.getNumIdle() + "(expected: less or equal than " + ds.getMinIdle() + ")");
+	}
 
     @Test
     public void testInitialSize() throws Exception {
