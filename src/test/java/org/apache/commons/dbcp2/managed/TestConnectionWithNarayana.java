@@ -17,6 +17,8 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
@@ -105,27 +107,22 @@ public class TestConnectionWithNarayana {
     }
 
     @Test
-    public void testConnectionCommitAfterTimeout() throws Exception {
-        mds.getTransactionManager().setTransactionTimeout(1);
-        mds.getTransactionManager().begin();
-        try (Connection conn = mds.getConnection()) {
-            do {
-                Thread.sleep(1000);
-            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
-            // Let the reaper do it's thing
-            Thread.sleep(1000);
-            try {
-                conn.commit();
-                fail("Should not work after timeout");
-            } catch (final SQLException e) {
-                // Expected
-                Assertions.assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage());
-            }
-            mds.getTransactionManager().rollback();
-        }
-
-        Assertions.assertEquals(0, mds.getNumActive());
-    }
+	public void testConnectionCommitAfterTimeout() throws Exception {
+		mds.getTransactionManager().setTransactionTimeout(1);
+		mds.getTransactionManager().begin();
+		try (Connection conn = mds.getConnection()) {
+			do {
+				Thread.sleep(1000);
+			} while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
+			// Let the reaper do it's thing
+			Thread.sleep(1000);
+			final SQLException e = assertThrows(SQLException.class, conn::commit);
+			assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage(),
+					"Should not work after timeout");
+			mds.getTransactionManager().rollback();
+		}
+		assertEquals(0, mds.getNumActive());
+	}
 
     @Test
     public void testConnectionInTimeout() throws Exception {
