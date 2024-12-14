@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -129,12 +129,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         final PoolingDriver driver2 = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
         driver2.closePool("test");
 
-        try (Connection c = DriverManager.getConnection("jdbc:apache:commons:dbcp:test")) {
-            fail("expected SQLException");
-        }
-        catch (final SQLException e) {
-            // OK
-        }
+        assertThrows(SQLException.class, () -> DriverManager.getConnection("jdbc:apache:commons:dbcp:test"));
     }
 
     @Test
