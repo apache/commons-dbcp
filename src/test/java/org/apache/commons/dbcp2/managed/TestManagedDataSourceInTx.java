@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -109,12 +110,8 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
 
         // attempt to set auto commit
-        try {
-            connection.setAutoCommit(true);
-            fail("setAutoCommit method should be disabled while enlisted in a transaction");
-        } catch (final SQLException e) {
-            // expected
-        }
+		assertThrows(SQLException.class, () -> connection.setAutoCommit(true),
+				"setAutoCommit method should be disabled while enlisted in a transaction");
 
         // make sure it is still disabled
         assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
@@ -173,25 +170,18 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testCommit() throws Exception {
-        try (Connection connection = newConnection()) {
+	public void testCommit() throws Exception {
+		try (Connection connection = newConnection()) {
+			// connection should be open
+			assertFalse(connection.isClosed(), "Connection should be open");
+			// attempt commit directly
+			assertThrows(SQLException.class, connection::commit,
+					"commit method should be disabled while enlisted in a transaction");
+			// make sure it is still open
+			assertFalse(connection.isClosed(), "Connection should be open");
 
-            // connection should be open
-            assertFalse(connection.isClosed(), "Connection should be open");
-
-            // attempt commit directly
-            try {
-                connection.commit();
-                fail("commit method should be disabled while enlisted in a transaction");
-            } catch (final SQLException e) {
-                // expected
-            }
-
-            // make sure it is still open
-            assertFalse(connection.isClosed(), "Connection should be open");
-
-        }
-    }
+		}
+	}
 
     @Override
     @Test
