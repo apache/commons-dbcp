@@ -17,6 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -41,6 +42,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 
 /**
  * Tests ManagedDataSource with an active transaction in progress.
@@ -225,50 +227,33 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
                     // Ignore
                 }
                 assertEquals(numActive, pool.getNumActive());
-                try {
-                    conn.close();
-                } catch (final Exception e) {
-                    fail("Should have been able to close the connection");
-                }
+                assertDoesNotThrow(conn::close, "Should have been able to close the connection");
                 // TODO Requires DBCP-515 assertTrue(numActive -1 == pool.getNumActive());
             }
 
             @Override
-            public void beforeCompletion() {
-                try {
-                    conn = (ManagedConnection<?>) ds.getConnection();
-                    assertNotNull(conn);
-                } catch (final SQLException e) {
-                    fail("Could not get connection");
-                }
-            }
+			public void beforeCompletion() {
+				assertDoesNotThrow(() -> conn = (ManagedConnection<?>) ds.getConnection(), "Could not get connection");
+			}
         });
         transactionManager.commit();
     }
 
     @Test
-    public void testGetConnectionInAfterCompletion() throws Exception {
-        try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
-            // Don't close so we can check it for warnings in afterCompletion
-            transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
-                @Override
-                public void afterCompletion(final int i) {
-                    try {
-                        final Connection connection1 = ds.getConnection();
-                        try {
-                            connection1.getWarnings();
-                            fail("Could operate on closed connection");
-                        } catch (final SQLException e) {
-                            // This is expected
-                        }
-                    } catch (final SQLException e) {
-                        fail("Should have been able to get connection");
-                    }
-                }
-            });
-        }
-        transactionManager.commit();
-    }
+	public void testGetConnectionInAfterCompletion() throws Exception {
+		try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
+			// Don't close so we can check it for warnings in afterCompletion
+			transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
+				@Override
+				public void afterCompletion(final int i) {
+					final Connection connection1 = assertDoesNotThrow((ThrowingSupplier<Connection>) ds::getConnection);
+					assertThrows(SQLException.class, () -> connection1.getWarnings(),
+							"Could operate on closed connection");
+				}
+			});
+		}
+		transactionManager.commit();
+	}
 
     @Override
     @Test
