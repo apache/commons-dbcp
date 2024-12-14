@@ -1583,11 +1583,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         stmt.close();
 
         conn.close();
-        try (Statement s = conn.createStatement()) {
-            fail("Can't use closed connections");
-        } catch (final SQLException e) {
-            // expected
-        }
+        assertThrows(SQLException.class, conn::createStatement, "Can't use closed connections");
 
         conn = ds.getConnection();
         assertNotNull(conn);
