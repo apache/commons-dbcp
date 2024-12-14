@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -271,50 +270,40 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      * https://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     @Test
-    public void testIncorrectPassword() throws SQLException {
-        // Use bad password
-        assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"));
+	public void testIncorrectPassword() throws SQLException {
+		// Use bad password
+		assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"));
 
-        // Use good password
-        ds.getConnection("u1", "p1").close();
-        try (Connection c = ds.getConnection("u1", "x")){
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e) {
-            if (!e.getMessage().startsWith("Given password did not match")) {
-                throw e;
-            }
-            // else the exception was expected
-        }
+		// Use good password
+		ds.getConnection("u1", "p1").close();
+		final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"),
+				"Able to retrieve connection with incorrect password");
+		assertTrue(e.getMessage().startsWith("Given password did not match"));
 
-        // Make sure we can still use our good password.
-        ds.getConnection("u1", "p1").close();
+		// Make sure we can still use our good password.
+		ds.getConnection("u1", "p1").close();
 
-        // Try related users and passwords
-        ds.getConnection(user, "bar").close();
-        assertThrows(SQLException.class, () -> ds.getConnection("foob", "ar"));
-        assertThrows(SQLException.class, () -> ds.getConnection(user, "baz"));
-    }
+		// Try related users and passwords
+		ds.getConnection(user, "bar").close();
+		assertThrows(SQLException.class, () -> ds.getConnection("foob", "ar"));
+		assertThrows(SQLException.class, () -> ds.getConnection(user, "baz"));
+	}
 
     @Override
     @Test
-    public void testMaxTotal() throws Exception {
-        final Connection[] c = new Connection[getMaxTotal()];
-        for (int i = 0; i < c.length; i++) {
-            c[i] = ds.getConnection();
-            assertNotNull(c[i]);
-        }
-
-        try (Connection conn = ds.getConnection()) {
-            fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (final SQLException e) {
-            // should only be able to open 10 connections, so this test should
-            // throw an exception
-        }
-
-        for (final Connection element : c) {
-            element.close();
-        }
-    }
+	public void testMaxTotal() throws Exception {
+		final Connection[] c = new Connection[getMaxTotal()];
+		for (int i = 0; i < c.length; i++) {
+			c[i] = ds.getConnection();
+			assertNotNull(c[i]);
+		}
+		// should only be able to open 10 connections, so this test should throw an
+		// exception
+		assertThrows(SQLException.class, ds::getConnection, "Allowed to open more than DefaultMaxTotal connections.");
+		for (final Connection element : c) {
+			element.close();
+		}
+	}
 
     /**
      * Verify that defaultMaxWaitMillis = 0 means immediate failure when
