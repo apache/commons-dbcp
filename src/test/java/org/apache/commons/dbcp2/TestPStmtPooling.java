@@ -20,8 +20,8 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -172,11 +172,8 @@ public class TestPStmtPooling {
         final Connection poolingConnection =
             ((DelegatingConnection<?>) poolableConnection).getDelegate();
         poolingConnection.close();
-        try (PreparedStatement ps = conn.prepareStatement("select 1 from dual")) {
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
-        }
+        final SQLException ex = assertThrows(SQLException.class, () -> conn.prepareStatement("select 1 from dual"));
+        assertTrue(ex.getMessage().endsWith("invalid PoolingConnection."));
         ds.close();
     }
 
