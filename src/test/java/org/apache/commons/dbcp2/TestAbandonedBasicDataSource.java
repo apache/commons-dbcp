@@ -53,12 +53,10 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         con.setLastUsed(Instant.EPOCH);
     }
 
-
     /**
      * Verifies that PreparedStatement executeXxx methods update lastUsed on the parent connection
      */
-    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn)
-            throws Exception {
+    private void checkLastUsedPreparedStatement(final PreparedStatement ps, final DelegatingConnection<?> conn) throws Exception {
         ps.execute();
         assertAndReset(conn);
         try (ResultSet rs = ps.executeQuery()) {
@@ -103,7 +101,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         assertAndReset(conn);
     }
 
-    private void createStatement(final Connection conn) throws Exception{
+    private void createStatement(final Connection conn) throws Exception {
         final PreparedStatement ps = conn.prepareStatement("");
         Assertions.assertNotNull(ps);
     }
@@ -152,8 +150,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
                 // Verify that conn1 is closed
                 assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
                 // Verify that conn1 is aborted
-                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1)
-                        .getInnermostDelegate();
+                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1).getInnermostDelegate();
                 assertTrue(tCon.isAborted());
 
             }
@@ -229,8 +226,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
                 // Verify that conn1 is closed
                 assertTrue(((DelegatingConnection<?>) conn1).getInnermostDelegate().isClosed());
                 // Verify that conn1 is aborted
-                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1)
-                        .getInnermostDelegate();
+                final TesterConnection tCon = (TesterConnection) ((DelegatingConnection<?>) conn1).getInnermostDelegate();
                 assertTrue(tCon.isAborted());
 
             }
@@ -244,9 +240,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * DBCP-180 - verify that a GC can clean up an unused Statement when it is
-     * no longer referenced even when it is tracked via the AbandonedTrace
-     * mechanism.
+     * DBCP-180 - verify that a GC can clean up an unused Statement when it is no longer referenced even when it is tracked via the AbandonedTrace mechanism.
      */
     @Test
     public void testGarbageCollectorCleanUp01() throws Exception {
@@ -269,7 +263,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
         final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
         final PoolableConnection poolableConn = (PoolableConnection) conn.getDelegate();
         final PoolingConnection poolingConn = (PoolingConnection) poolableConn.getDelegate();
-        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement>  gkop = poolingConn.getStatementPool();
+        final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> gkop = poolingConn.getStatementPool();
         Assertions.assertEquals(0, conn.getTrace().size());
         Assertions.assertEquals(0, gkop.getNumActive());
         createStatement(conn);
@@ -288,8 +282,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * Verify that lastUsed property is updated when a connection
-     * creates or prepares a statement
+     * Verify that lastUsed property is updated when a connection creates or prepares a statement
      */
     @Test
     public void testLastUsed() throws Exception {
@@ -321,8 +314,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * DBCP-343 - verify that using a DelegatingStatement updates
-     * the lastUsed on the parent connection
+     * DBCP-343 - verify that using a DelegatingStatement updates the lastUsed on the parent connection
      */
     @Test
     public void testLastUsedLargePreparedStatementUse() throws Exception {
@@ -353,8 +345,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * Verify that lastUsed property is updated when a connection
-     * prepares a callable statement.
+     * Verify that lastUsed property is updated when a connection prepares a callable statement.
      */
     @Test
     public void testLastUsedPrepareCall() throws Exception {
@@ -386,15 +377,13 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     /**
-     * DBCP-343 - verify that using a DelegatingStatement updates
-     * the lastUsed on the parent connection
+     * DBCP-343 - verify that using a DelegatingStatement updates the lastUsed on the parent connection
      */
     @Test
     public void testLastUsedPreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
-        try (Connection conn1 = ds.getConnection();
-                Statement st = conn1.createStatement()) {
+        try (Connection conn1 = ds.getConnection(); Statement st = conn1.createStatement()) {
             final String querySQL = "SELECT 1 FROM DUAL";
             Thread.sleep(500);
             Assertions.assertNotNull(st.executeQuery(querySQL)); // Should reset lastUsed
@@ -405,14 +394,15 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
             Thread.sleep(500);
             st.executeUpdate(""); // Should also reset
             Thread.sleep(800);
-            try (Connection c = ds.getConnection()) {} // trigger abandoned cleanup again
-            try (Statement s = conn1.createStatement()) {}  // Connection should still be good
+            try (Connection c = ds.getConnection()) {
+            } // trigger abandoned cleanup again
+            try (Statement s = conn1.createStatement()) {
+            } // Connection should still be good
         }
     }
 
     /**
-     * DBCP-343 - verify additional operations reset lastUsed on
-     * the parent connection
+     * DBCP-343 - verify additional operations reset lastUsed on the parent connection
      */
     @Test
     public void testLastUsedUpdate() throws Exception {

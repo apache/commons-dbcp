@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test if the pooling if no idle objects are used
  */
-public class TestParallelCreationWithNoIdle  {
+public class TestParallelCreationWithNoIdle {
 
     final class TestThread extends Thread {
         final Random random = new Random();
@@ -53,8 +53,7 @@ public class TestParallelCreationWithNoIdle  {
             // System.out.println("Thread started " + Thread.currentThread().toString());
             for (int i = 0; i < iter; i++) {
                 sleepMax(delay);
-                try (Connection conn = ds.getConnection();
-                        PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual")) {
+                try (Connection conn = ds.getConnection(); PreparedStatement stmt = conn.prepareStatement("select 'literal', SYSDATE from dual")) {
                     // System.out.println("Got Connection " + Thread.currentThread().toString());
                     final ResultSet rset = stmt.executeQuery();
                     rset.next();
@@ -79,6 +78,7 @@ public class TestParallelCreationWithNoIdle  {
             }
         }
     }
+
     private static final String CATALOG = "test catalog";
 
     protected BasicDataSource ds;
@@ -112,8 +112,8 @@ public class TestParallelCreationWithNoIdle  {
     }
 
     /**
-     * Fire up 100 Threads but only have 10 maxActive and forcedBlock.
-     * See
+     * Fire up 100 Threads but only have 10 maxActive and forcedBlock. See
+     *
      * @throws Exception
      */
     @Test
@@ -133,7 +133,7 @@ public class TestParallelCreationWithNoIdle  {
         for (int i = 0; i < numThreads; i++) {
             threads[i].start();
 
-            if (i%4 == 0) {
+            if (i % 4 == 0) {
                 Thread.sleep(20);
             }
         }

@@ -46,7 +46,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for a  {@link GenericObjectPool} based {@link PoolingDriver}.
+ * Tests for a {@link GenericObjectPool} based {@link PoolingDriver}.
  */
 public class TestPoolingDriver extends TestConnectionPool {
 
@@ -59,7 +59,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @BeforeEach
     public void setUp() throws Exception {
-        final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(),"jdbc:apache:commons:testdriver", null);
+        final DriverConnectionFactory cf = new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", null);
 
         final PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, null);
         pcf.setPoolStatements(true);
@@ -84,7 +84,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
         assertNotNull(pcf);
         driver = new PoolingDriver(true);
-        driver.registerPool("test",pool);
+        driver.registerPool("test", pool);
     }
 
     @Override
@@ -96,13 +96,11 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void test1() {
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","userName","password");
-        final PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connectionFactory, null);
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
+        final PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
-        final GenericObjectPool<PoolableConnection> connectionPool =
-                new GenericObjectPool<>(pcf);
+        final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connectionPool);
         final DataSource ds = new PoolingDataSource<>(connectionPool);
         Assertions.assertNotNull(ds);
@@ -110,9 +108,8 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     @Test
     public void test2() {
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string","userName","password");
-        final PoolableConnectionFactory pcf =
-            new PoolableConnectionFactory(connectionFactory, null);
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
+        final PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
         pcf.setDefaultAutoCommit(Boolean.TRUE);
         final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
@@ -169,7 +166,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         ex.printStackTrace();
         ex.printStackTrace(ps);
         ex.printStackTrace(pw);
-        ex = new SQLException((String)null);
+        ex = new SQLException((String) null);
         ex.printStackTrace();
         ex.printStackTrace(ps);
         ex.printStackTrace(pw);
@@ -187,7 +184,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         ex.printStackTrace();
         ex.printStackTrace(ps);
         ex.printStackTrace(pw);
-        ex = new SQLException((String)null);
+        ex = new SQLException((String) null);
         ex.printStackTrace();
         ex.printStackTrace(ps);
         ex.printStackTrace(pw);
@@ -200,29 +197,24 @@ public class TestPoolingDriver extends TestConnectionPool {
         config.setMaxTotal(70);
         config.setMaxWait(Duration.ofMinutes(1));
         config.setMaxIdle(10);
-        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-            "jdbc:apache:commons:testdriver",
-            "userName",
-            "password");
-        final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory, null);
+        final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "userName", "password");
+        final PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
         poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
         poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
-        final ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory,
-                config);
+        final ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory, config);
         poolableConnectionFactory.setPool(connectionPool);
         assertNotNull(poolableConnectionFactory);
         final PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("neusoftim", connectionPool);
         final Connection[] conn = new Connection[25];
-        for(int i=0;i<25;i++) {
+        for (int i = 0; i < 25; i++) {
             conn[i] = DriverManager.getConnection("jdbc:apache:commons:dbcp:neusoftim");
-            for(int j=0;j<i;j++) {
+            for (int j = 0; j < i; j++) {
                 assertNotSame(conn[j], conn[i]);
                 assertNotEquals(conn[j], conn[i]);
             }
         }
-        for(int i=0;i<25;i++) {
+        for (int i = 0; i < 25; i++) {
             conn[i].close();
         }
     }

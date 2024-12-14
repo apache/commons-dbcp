@@ -134,11 +134,10 @@ public class TestPoolableConnection {
         nativeConnection.setFailure(null);
 
         // validate should now fail because of previous fatal error, despite cleanup
-		assertThrows(SQLException.class, () -> conn.validate("SELECT 1", 1000),
-				"Should throw SQL exception on validation.");
+        assertThrows(SQLException.class, () -> conn.validate("SELECT 1", 1000), "Should throw SQL exception on validation.");
 
         // verify that bad connection does not get returned to the pool
-        conn.close();  // testOnReturn triggers validate, which should fail
+        conn.close(); // testOnReturn triggers validate, which should fail
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
         assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
     }
@@ -161,7 +160,7 @@ public class TestPoolableConnection {
         nativeConnection.setFailure(null);
 
         // verify that bad connection does not get returned to the pool
-        conn.close();  // testOnReturn triggers validate, which should fail
+        conn.close(); // testOnReturn triggers validate, which should fail
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
         assertEquals(0, pool.getNumIdle(), "The pool should have no idle connections");
     }
@@ -182,12 +181,11 @@ public class TestPoolableConnection {
     }
 
     /**
-     * Tests if the {@link PoolableConnectionMXBean} interface is a valid MXBean
-     * interface.
+     * Tests if the {@link PoolableConnectionMXBean} interface is a valid MXBean interface.
      */
     @Test
     public void testMXBeanCompliance() throws OperationsException {
-       TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
+        TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
     }
 
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the
@@ -199,7 +197,7 @@ public class TestPoolableConnection {
 
         // Now close our innermost delegate, simulating the case where the
         // underlying connection closes itself
-        ((PoolableConnection)conn).getInnermostDelegate().close();
+        ((PoolableConnection) conn).getInnermostDelegate().close();
 
         // At this point, we can close the pooled connection. The
         // PoolableConnection *should* realize that its underlying

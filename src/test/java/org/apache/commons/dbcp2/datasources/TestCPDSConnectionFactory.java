@@ -133,7 +133,7 @@ public class TestCPDSConnectionFactory {
      * JIRA: DBCP-442
      */
     @Test
-    public void testNullValidationQuery_Deprecated() throws Exception {
+    public void testNullValidationQueryDeprecated() throws Exception {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
@@ -155,7 +155,7 @@ public class TestCPDSConnectionFactory {
     }
 
     @Test
-    public void testSetPasswordThenModCharArray_Deprecated() {
+    public void testSetPasswordThenModCharArrayDeprecated() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, -1, false, "userName", "password");
         final char[] pwd = {'a'};
         factory.setPassword(pwd);

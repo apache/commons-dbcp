@@ -184,32 +184,31 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-	public void testTransactionSynchronizationRegistry() throws Exception {
-		try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-			basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
-			final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
-			basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
-			final JdbcDataSource xaDataSource = new JdbcDataSource();
-			xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
-			basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
-			basicManagedDataSource.setMaxIdle(1);
+    public void testTransactionSynchronizationRegistry() throws Exception {
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
+            final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
+            basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
+            final JdbcDataSource xaDataSource = new JdbcDataSource();
+            xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+            basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
+            basicManagedDataSource.setMaxIdle(1);
 
-			final TransactionManager tm = basicManagedDataSource.getTransactionManager();
-			tm.begin();
-			tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
-				@Override
-				public void beforeCompletion() {
-					try (Connection connection = assertDoesNotThrow(
-							(ThrowingSupplier<Connection>) basicManagedDataSource::getConnection)) {
-						assertNotNull(connection);
-					} catch (SQLException e) {
-						fail(e);
-					}
-				}
-			});
-			tm.commit();
-		}
-	}
+            final TransactionManager tm = basicManagedDataSource.getTransactionManager();
+            tm.begin();
+            tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
+                @Override
+                public void beforeCompletion() {
+                    try (Connection connection = assertDoesNotThrow((ThrowingSupplier<Connection>) basicManagedDataSource::getConnection)) {
+                        assertNotNull(connection);
+                    } catch (SQLException e) {
+                        fail(e);
+                    }
+                }
+            });
+            tm.commit();
+        }
+    }
 
     @Test
     public void testXADataSource() throws SQLException {

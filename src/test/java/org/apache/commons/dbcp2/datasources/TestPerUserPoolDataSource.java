@@ -57,7 +57,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Override
     protected Connection getConnection() throws SQLException {
-        return ds.getConnection(user,"bar");
+        return ds.getConnection(user, "bar");
     }
 
     @BeforeEach
@@ -121,13 +121,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testClosing()
-        throws Exception
-    {
+    public void testClosing() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
         }
 
@@ -144,13 +141,10 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testClosingWithUserName()
-        throws Exception
-    {
+    public void testClosingWithUserName() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection("u1", "p1");
         }
 
@@ -165,8 +159,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         }
 
         // open the maximum connections
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection("u1", "p1");
         }
         for (final Connection element : c) {
@@ -183,7 +176,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
         puds.setPerUserMaxTotal("jsmith", 2);
-        final String[] users = {"mkh", "hanafey", "jsmith"};
+        final String[] users = { "mkh", "hanafey", "jsmith" };
         final String password = "password";
         final Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
@@ -204,7 +197,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         final PerUserPoolDataSource puds = (PerUserPoolDataSource) ds;
         puds.setPerUserMaxTotal("jsmith", 2);
-        final String[] users = {"jsmith", "hanafey", "mkh"};
+        final String[] users = { "jsmith", "hanafey", "mkh" };
         final String password = "password";
         final Connection[] c = new Connection[users.length];
         for (int i = 0; i < users.length; i++) {
@@ -265,49 +258,45 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Switching 'u1 to 'u2' and 'p1' to 'p2' will
-     * exhibit the bug detailed in
-     * https://issues.apache.org/bugzilla/show_bug.cgi?id=18905
+     * Switching 'u1 to 'u2' and 'p1' to 'p2' will exhibit the bug detailed in https://issues.apache.org/bugzilla/show_bug.cgi?id=18905
      */
     @Test
-	public void testIncorrectPassword() throws SQLException {
-		// Use bad password
-		assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"));
+    public void testIncorrectPassword() throws SQLException {
+        // Use bad password
+        assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"));
 
-		// Use good password
-		ds.getConnection("u1", "p1").close();
-		final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"),
-				"Able to retrieve connection with incorrect password");
-		assertTrue(e.getMessage().startsWith("Given password did not match"));
+        // Use good password
+        ds.getConnection("u1", "p1").close();
+        final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"), "Able to retrieve connection with incorrect password");
+        assertTrue(e.getMessage().startsWith("Given password did not match"));
 
-		// Make sure we can still use our good password.
-		ds.getConnection("u1", "p1").close();
+        // Make sure we can still use our good password.
+        ds.getConnection("u1", "p1").close();
 
-		// Try related users and passwords
-		ds.getConnection(user, "bar").close();
-		assertThrows(SQLException.class, () -> ds.getConnection("foob", "ar"));
-		assertThrows(SQLException.class, () -> ds.getConnection(user, "baz"));
-	}
+        // Try related users and passwords
+        ds.getConnection(user, "bar").close();
+        assertThrows(SQLException.class, () -> ds.getConnection("foob", "ar"));
+        assertThrows(SQLException.class, () -> ds.getConnection(user, "baz"));
+    }
 
     @Override
     @Test
-	public void testMaxTotal() throws Exception {
-		final Connection[] c = new Connection[getMaxTotal()];
-		for (int i = 0; i < c.length; i++) {
-			c[i] = ds.getConnection();
-			assertNotNull(c[i]);
-		}
-		// should only be able to open 10 connections, so this test should throw an
-		// exception
-		assertThrows(SQLException.class, ds::getConnection, "Allowed to open more than DefaultMaxTotal connections.");
-		for (final Connection element : c) {
-			element.close();
-		}
-	}
+    public void testMaxTotal() throws Exception {
+        final Connection[] c = new Connection[getMaxTotal()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = ds.getConnection();
+            assertNotNull(c[i]);
+        }
+        // should only be able to open 10 connections, so this test should throw an
+        // exception
+        assertThrows(SQLException.class, ds::getConnection, "Allowed to open more than DefaultMaxTotal connections.");
+        for (final Connection element : c) {
+            element.close();
+        }
+    }
 
     /**
-     * Verify that defaultMaxWaitMillis = 0 means immediate failure when
-     * pool is exhausted.
+     * Verify that defaultMaxWaitMillis = 0 means immediate failure when pool is exhausted.
      */
     @Test
     public void testMaxWaitMillisZero() throws Exception {
@@ -339,17 +328,13 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Override
     @Test
-    public void testOpening()
-        throws Exception
-    {
+    public void testOpening() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // test that opening new connections is not closing previous
-        for (int i=0; i<c.length; i++)
-        {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
             assertNotNull(c[i]);
-            for (int j=0; j<=i; j++)
-            {
+            for (int j = 0; j <= i; j++) {
                 assertFalse(c[j].isClosed());
             }
         }
@@ -382,8 +367,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test per user block when exhausted, with the backing map not initialized before.
-     * Instead we pass the map.
+     * Test per user block when exhausted, with the backing map not initialized before. Instead we pass the map.
      */
     @Test
     public void testPerUserBlockWhenExhaustedMapNotInitialized() {
@@ -395,9 +379,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test per user block when exhausted, with the backing map not initialized before.
-     * Instead, we pass the map. And furthermore, we are now searching for an inexistent
-     * key, which should return the default value.
+     * Test per user block when exhausted, with the backing map not initialized before. Instead, we pass the map. And furthermore, we are now searching for an
+     * inexistent key, which should return the default value.
      */
     @Test
     public void testPerUserBlockWhenExhaustedMapNotInitializedMissingKey() {
@@ -409,11 +392,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test per user block when exhausted, with the backing map not initialized before.
-     * Instead we pass the user and value, and hence the map is initialized beforehand.
-     * After that, we pass another user, so both values should still be present. The
-     * PerUserPoolDataSource does not clear the perUserPoolDataSource map, unless you
-     * pass a new map, using another internal/package method.
+     * Test per user block when exhausted, with the backing map not initialized before. Instead we pass the user and value, and hence the map is initialized
+     * beforehand. After that, we pass another user, so both values should still be present. The PerUserPoolDataSource does not clear the perUserPoolDataSource
+     * map, unless you pass a new map, using another internal/package method.
      */
     @Test
     public void testPerUserBlockWhenExhaustedWithUserMapInitialized() {
@@ -428,8 +409,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test per user block when exhausted, with the backing map not initialized before.
-     * Instead we pass the user and value, and hence the map is initialized beforehand.
+     * Test per user block when exhausted, with the backing map not initialized before. Instead we pass the user and value, and hence the map is initialized
+     * beforehand.
      */
     @Test
     public void testPerUserBlockWhenExhaustedWithUserMapNotInitialized() {
@@ -439,10 +420,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Test per user block when exhausted, with the backing map not initialized before.
-     * Instead we pass the user and value, and hence the map is initialized beforehand.
-     * Furthermore, we are now searching for an inexistent key, which should return the
-     * default value.
+     * Test per user block when exhausted, with the backing map not initialized before. Instead we pass the user and value, and hence the map is initialized
+     * beforehand. Furthermore, we are now searching for an inexistent key, which should return the default value.
      */
     @Test
     public void testPerUserBlockWhenExhaustedWithUserMapNotInitializedMissingKey() {
@@ -938,7 +917,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void testPerUserMaxWaitMillisWithUserMapInitialized_Deprecated() {
+    public void testPerUserMaxWaitMillisWithUserMapInitializedDeprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis(user, 0L);
         assertEquals(0L, ds.getPerUserMaxWaitMillis(user));
@@ -951,7 +930,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void testPerUserMaxWaitMillisWithUserMapNotInitialized_Deprecated() {
+    public void testPerUserMaxWaitMillisWithUserMapNotInitializedDeprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis(user, 0L);
         assertEquals(0L, ds.getPerUserMaxWaitMillis(user));
@@ -959,7 +938,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void testPerUserMaxWaitMillisWithUserMapNotInitializedMissingKey_Deprecated() {
+    public void testPerUserMaxWaitMillisWithUserMapNotInitializedMissingKeyDeprecated() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserMaxWaitMillis("whatismyuseragain?", 0L);
         assertEquals(ds.getDefaultMaxWaitMillis(), ds.getPerUserMaxWaitMillis("missingkey"));

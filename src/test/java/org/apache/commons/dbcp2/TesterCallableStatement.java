@@ -265,7 +265,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public Object getObject(final String parameterName, final Map<String,Class<?>> map) throws SQLException {
+    public Object getObject(final String parameterName, final Map<String, Class<?>> map) throws SQLException {
         return null;
     }
 
@@ -573,8 +573,7 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     @Override
-    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType, final int scaleOrLength)
-            throws SQLException {
+    public void setObject(final String parameterName, final Object x, final SQLType targetSqlType, final int scaleOrLength) throws SQLException {
         // Do nothing
     }
 

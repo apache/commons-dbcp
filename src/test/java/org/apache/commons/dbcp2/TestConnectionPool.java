@@ -89,14 +89,14 @@ public abstract class TestConnectionPool {
             this(threadGroup, connHoldDuration, isStopOnException, false, 1);
         }
 
-        private PoolTest(final ThreadGroup threadGroup, final Duration connHoldDuration, final boolean isStopOnException, final boolean once, final int numStatements) {
+        private PoolTest(final ThreadGroup threadGroup, final Duration connHoldDuration, final boolean isStopOnException, final boolean once,
+                final int numStatements) {
             this.loopOnce = once;
             this.connHoldDuration = connHoldDuration;
             stopOnException = isStopOnException;
             isRun = true; // Must be done here so main thread is guaranteed to be able to set it false
             thrown = null;
-            thread =
-                new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
+            thread = new Thread(threadGroup, this, "Thread+" + currentThreadCount++);
             thread.setDaemon(false);
             createdMillis = timeStampMillis();
             this.numStatements = numStatements;
@@ -154,7 +154,7 @@ public abstract class TestConnectionPool {
             }
         }
 
-        public void start(){
+        public void start() {
             thread.start();
         }
 
@@ -219,8 +219,7 @@ public abstract class TestConnectionPool {
 
     private static final Duration MAX_WAIT_DURATION = Duration.ofMillis(100);
 
-    private static final boolean DISPLAY_THREAD_DETAILS=
-    Boolean.getBoolean("TestConnectionPool.display.thread.details");
+    private static final boolean DISPLAY_THREAD_DETAILS = Boolean.getBoolean("TestConnectionPool.display.thread.details");
     // To pass this to a Maven test, use:
     // mvn test -DargLine="-DTestConnectionPool.display.thread.details=true"
     // @see https://issues.apache.org/jira/browse/SUREFIRE-121
@@ -231,7 +230,6 @@ public abstract class TestConnectionPool {
 
     /** Connections opened during the course of a test */
     protected final Stack<Connection> connectionStack = new Stack<>();
-
 
     protected void assertBackPointers(final Connection conn, final Statement statement) throws SQLException {
         assertFalse(conn.isClosed());
@@ -321,42 +319,37 @@ public abstract class TestConnectionPool {
     }
 
     /**
-     * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection
-     * from the pool, hold it for {@code holdTime} ms, and then return it to the pool.  If {@code loopOnce} is false,
-     * threads will continue this process indefinitely.  If {@code expectError} is true, exactly 1/2 of the
-     * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
-     * all threads are expected to complete successfully.
+     * Launches a group of 2 * getMaxTotal() threads, each of which will attempt to obtain a connection from the pool, hold it for {@code holdTime} ms, and then
+     * return it to the pool. If {@code loopOnce} is false, threads will continue this process indefinitely. If {@code expectError} is true, exactly 1/2 of the
+     * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false, all threads are expected to complete successfully.
      *
-     * @param holdDuration Duration that a thread holds a connection before returning it to the pool
-     * @param expectError whether or not an error is expected
-     * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
+     * @param holdDuration    Duration that a thread holds a connection before returning it to the pool
+     * @param expectError     whether or not an error is expected
+     * @param loopOnce        whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
      * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
      * @throws Exception
      */
-    protected void multipleThreads(final Duration holdDuration,
-        final boolean expectError, final boolean loopOnce,
-        final Duration maxWaitDuration) throws Exception {
+    protected void multipleThreads(final Duration holdDuration, final boolean expectError, final boolean loopOnce, final Duration maxWaitDuration)
+            throws Exception {
         multipleThreads(holdDuration, expectError, loopOnce, maxWaitDuration, 1, 2 * getMaxTotal(), 300);
     }
 
     /**
-     * Launches a group of {@code numThreads} threads, each of which will attempt to obtain a connection
-     * from the pool, hold it for {@code holdTime} ms, and then return it to the pool.  If {@code loopOnce} is false,
-     * threads will continue this process indefinitely.  If {@code expectError} is true, exactly 1/2 of the
-     * threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false,
-     * all threads are expected to complete successfully.  Threads are stopped after {@code duration} ms.
+     * Launches a group of {@code numThreads} threads, each of which will attempt to obtain a connection from the pool, hold it for {@code holdTime} ms, and
+     * then return it to the pool. If {@code loopOnce} is false, threads will continue this process indefinitely. If {@code expectError} is true, exactly 1/2 of
+     * the threads are expected to either throw exceptions or fail to complete. If {@code expectError} is false, all threads are expected to complete
+     * successfully. Threads are stopped after {@code duration} ms.
      *
-     * @param holdDuration Duration that a thread holds a connection before returning it to the pool
-     * @param expectError whether or not an error is expected
-     * @param loopOnce whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
+     * @param holdDuration    Duration that a thread holds a connection before returning it to the pool
+     * @param expectError     whether or not an error is expected
+     * @param loopOnce        whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
      * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
-     * @param numThreads the number of threads
-     * @param duration duration in ms of test
+     * @param numThreads      the number of threads
+     * @param duration        duration in ms of test
      * @throws Exception
      */
-    protected void multipleThreads(final Duration holdDuration,
-            final boolean expectError, final boolean loopOnce,
-        final Duration maxWaitDuration, final int numStatements, final int numThreads, final long duration) throws Exception {
+    protected void multipleThreads(final Duration holdDuration, final boolean expectError, final boolean loopOnce, final Duration maxWaitDuration,
+            final int numStatements, final int numThreads, final long duration) throws Exception {
         final long startTimeMillis = timeStampMillis();
         final PoolTest[] pts = new PoolTest[numThreads];
         // Catch Exception so we can stop all threads if one fails
@@ -386,8 +379,8 @@ public abstract class TestConnectionPool {
         }
 
         /*
-         * Wait for all threads to terminate. This is essential to ensure that all threads have a chance to update success[0]
-         * and to ensure that the variable is published correctly.
+         * Wait for all threads to terminate. This is essential to ensure that all threads have a chance to update success[0] and to ensure that the variable is
+         * published correctly.
          */
         int done = 0;
         int failed = 0;
@@ -414,15 +407,9 @@ public abstract class TestConnectionPool {
 
         final long timeMillis = timeStampMillis() - startTimeMillis;
         // @formatter:off
-        println("Multithread test time = " + timeMillis
-            + " ms. Threads: " + pts.length
-            + ". Loops: " + loops
-            + ". Hold time: " + holdDuration
-            + ". maxWaitMillis: " + maxWaitDuration
-            + ". Done: " + done
-            + ". Did not run: " + didNotRun
-            + ". Failed: " + failed
-            + ". expectError: " + expectError);
+        println("Multithread test time = " + timeMillis + " ms. Threads: " + pts.length + ". Loops: " + loops + ". Hold time: " + holdDuration
+                + ". maxWaitMillis: " + maxWaitDuration + ". Done: " + done + ". Did not run: " + didNotRun + ". Failed: " + failed + ". expectError: "
+                + expectError);
         // @formatter:on
         if (expectError) {
             if (DISPLAY_THREAD_DETAILS || pts.length / 2 != failed) {
@@ -431,17 +418,11 @@ public abstract class TestConnectionPool {
                 for (int i = 0; i < pts.length; i++) {
                     final PoolTest pt = pts[i];
                     // @formatter:off
-                    println("Pre: " + (pt.preconnected-offset) // First, so can sort on this easily
-                        + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected-offset): "-")
-                        + ". Hash: " + pt.connHash
-                        + ". Startup: " + (pt.started-pt.createdMillis)
-                        + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected-pt.preconnected) : "-")
-                        + ". Runtime: " + (pt.ended-pt.started)
-                        + ". IDX: " + i
-                        + ". Loops: " + pt.loops
-                        + ". State: " + pt.state
-                        + ". thrown: "+ pt.thrown
-                        + ".");
+                    println("Pre: " + (pt.preconnected - offset) // First, so can sort on this easily
+                            + ". Post: " + (pt.postconnected != 0 ? Long.toString(pt.postconnected - offset) : "-") + ". Hash: " + pt.connHash + ". Startup: "
+                            + (pt.started - pt.createdMillis) + ". getConn(): " + (pt.connected != 0 ? Long.toString(pt.connected - pt.preconnected) : "-")
+                            + ". Runtime: " + (pt.ended - pt.started) + ". IDX: " + i + ". Loops: " + pt.loops + ". State: " + pt.state + ". thrown: "
+                            + pt.thrown + ".");
                     // @formatter:on
                 }
             }
@@ -561,8 +542,7 @@ public abstract class TestConnectionPool {
     }
 
     /**
-     * Verify the close method can be called multiple times on a single connection without
-     * an exception being thrown.
+     * Verify the close method can be called multiple times on a single connection without an exception being thrown.
      */
     @Test
     public void testCanCloseConnectionTwice() throws Exception {
@@ -695,9 +675,9 @@ public abstract class TestConnectionPool {
     @Test
     public void testConnectionsAreDistinct() throws Exception {
         final Connection[] conn = new Connection[getMaxTotal()];
-        for(int i=0;i<conn.length;i++) {
+        for (int i = 0; i < conn.length; i++) {
             conn[i] = newConnection();
-            for(int j=0;j<i;j++) {
+            for (int j = 0; j < i; j++) {
                 assertNotSame(conn[j], conn[i]);
                 assertNotEquals(conn[j], conn[i]);
             }
@@ -719,8 +699,7 @@ public abstract class TestConnectionPool {
     }
 
     /**
-     * DBCP-128: BasicDataSource.getConnection()
-     * Connections don't work as hashtable keys
+     * DBCP-128: BasicDataSource.getConnection() Connections don't work as hashtable keys
      */
     @Test
     public void testHashing() throws Exception {

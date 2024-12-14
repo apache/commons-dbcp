@@ -78,9 +78,8 @@ public class TesterDriver implements Driver {
         return url != null && url.startsWith(CONNECT_STRING);
     }
 
-    private void assertValidUserPassword(final String userName, final String password)
-        throws SQLException {
-        if (userName == null){
+    private void assertValidUserPassword(final String userName, final String password) throws SQLException {
+        if (userName == null) {
             throw new SQLException("user name cannot be null.");
         }
         synchronized (validUserPasswords) {
@@ -89,8 +88,7 @@ public class TesterDriver implements Driver {
                 throw new SQLException(userName + " is not a valid user name.");
             }
             if (!realPassword.equals(password)) {
-                throw new SQLException(password + " is not the correct password for " + userName
-                        + ".  The correct password is " + realPassword);
+                throw new SQLException(password + " is not the correct password for " + userName + ".  The correct password is " + realPassword);
             }
         }
     }

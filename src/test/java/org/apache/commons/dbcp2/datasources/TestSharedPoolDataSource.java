@@ -295,7 +295,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     @Override
     protected Connection getConnection() throws Exception {
-        return ds.getConnection("foo","bar");
+        return ds.getConnection("foo", "bar");
     }
 
     @SuppressWarnings("resource")
@@ -447,33 +447,29 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     /**
-     * Starting with a successful connection, then incorrect password,
-     * then correct password for same user illustrates
-     * JIRA: DBCP-245
+     * Starting with a successful connection, then incorrect password, then correct password for same user illustrates JIRA: DBCP-245
      */
     @Test
-	public void testIncorrectPassword() throws SQLException {
-		ds.getConnection("u2", "p2").close();
-		assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"),
-				"Able to retrieve connection with incorrect password");
-		// Use good password
-		ds.getConnection("u1", "p1").close();
-		final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"),
-				"Able to retrieve connection with incorrect password");
-		assertTrue(e.getMessage().startsWith("Given password did not match"));
-		// Make sure we can still use our good password.
-		ds.getConnection("u1", "p1").close();
-		// Try related users and passwords
-		ds.getConnection("foo", "bar").close();
-		assertThrows(SQLException.class, () -> ds.getConnection("u1", "ar"));
-		assertThrows(SQLException.class, () -> ds.getConnection("u1", "baz"));
-	}
+    public void testIncorrectPassword() throws SQLException {
+        ds.getConnection("u2", "p2").close();
+        assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"), "Able to retrieve connection with incorrect password");
+        // Use good password
+        ds.getConnection("u1", "p1").close();
+        final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"), "Able to retrieve connection with incorrect password");
+        assertTrue(e.getMessage().startsWith("Given password did not match"));
+        // Make sure we can still use our good password.
+        ds.getConnection("u1", "p1").close();
+        // Try related users and passwords
+        ds.getConnection("foo", "bar").close();
+        assertThrows(SQLException.class, () -> ds.getConnection("u1", "ar"));
+        assertThrows(SQLException.class, () -> ds.getConnection("u1", "baz"));
+    }
 
     @Override
     @Test
     public void testMaxTotal() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
-        for (int i=0; i<c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             c[i] = ds.getConnection();
             assertNotNull(c[i]);
         }
@@ -505,7 +501,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
         // Should take ~maxWaitMillis for threads to stop
         for (int i = 0; i < pts.length; i++) {
-            (pts[i] = new PoolTest(threadGroup, Duration.ofMillis(1), true)).start();
+            pts[i] = new PoolTest(threadGroup, Duration.ofMillis(1), true);
+            pts[i].start();
         }
 
         // Wait for all the threads to complete

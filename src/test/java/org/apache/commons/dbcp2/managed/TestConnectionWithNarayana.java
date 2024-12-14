@@ -68,8 +68,8 @@ public class TestConnectionWithNarayana {
 
     @BeforeEach
     public void setUp() throws Exception {
-        jtaPropertyManager.getJTAEnvironmentBean().setLastResourceOptimisationInterfaceClassName(
-                "org.apache.commons.dbcp2.managed.LocalXAConnectionFactory$LocalXAResource");
+        jtaPropertyManager.getJTAEnvironmentBean()
+                .setLastResourceOptimisationInterfaceClassName("org.apache.commons.dbcp2.managed.LocalXAConnectionFactory$LocalXAResource");
         mds = new BasicManagedDataSource();
         mds.setTransactionManager(new TransactionManagerImple());
         mds.setDriverClassName("org.h2.Driver");
@@ -107,100 +107,97 @@ public class TestConnectionWithNarayana {
     }
 
     @Test
-	public void testConnectionCommitAfterTimeout() throws Exception {
-		mds.getTransactionManager().setTransactionTimeout(1);
-		mds.getTransactionManager().begin();
-		try (Connection conn = mds.getConnection()) {
-			do {
-				Thread.sleep(1000);
-			} while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
-			// Let the reaper do it's thing
-			Thread.sleep(1000);
-			final SQLException e = assertThrows(SQLException.class, conn::commit);
-			assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage(),
-					"Should not work after timeout");
-			mds.getTransactionManager().rollback();
-		}
-		assertEquals(0, mds.getNumActive());
-	}
+    public void testConnectionCommitAfterTimeout() throws Exception {
+        mds.getTransactionManager().setTransactionTimeout(1);
+        mds.getTransactionManager().begin();
+        try (Connection conn = mds.getConnection()) {
+            do {
+                Thread.sleep(1000);
+            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
+            // Let the reaper do it's thing
+            Thread.sleep(1000);
+            final SQLException e = assertThrows(SQLException.class, conn::commit);
+            assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage(), "Should not work after timeout");
+            mds.getTransactionManager().rollback();
+        }
+        assertEquals(0, mds.getNumActive());
+    }
 
     @Test
-	public void testConnectionInTimeout() throws Exception {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		for (int i = 0; i < 5; i++) {
-			try {
-				mds.getTransactionManager().setTransactionTimeout(1);
-				mds.getTransactionManager().begin();
+    public void testConnectionInTimeout() throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        for (int i = 0; i < 5; i++) {
+            try {
+                mds.getTransactionManager().setTransactionTimeout(1);
+                mds.getTransactionManager().begin();
 
-				conn = mds.getConnection();
-				ps = conn.prepareStatement(INSERT_STMT);
-				ps.setString(1, Thread.currentThread().getName());
-				ps.setLong(2, i);
-				ps.setDouble(3, new java.util.Random().nextDouble());
-				ps.setString(4, PAYLOAD);
-				ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-				ps.execute();
+                conn = mds.getConnection();
+                ps = conn.prepareStatement(INSERT_STMT);
+                ps.setString(1, Thread.currentThread().getName());
+                ps.setLong(2, i);
+                ps.setDouble(3, new java.util.Random().nextDouble());
+                ps.setString(4, PAYLOAD);
+                ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                ps.execute();
 
-				int n = 0;
-				do {
-					if (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ACTIVE) {
-						n++;
-					}
-					try (Connection c = mds.getConnection();
-							PreparedStatement ps2 = c.prepareStatement(SELECT_STMT);
-							ResultSet rs = ps2.executeQuery()) {
-						// nothing here, all auto-close.
-					}
-				} while (n < 2);
+                int n = 0;
+                do {
+                    if (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ACTIVE) {
+                        n++;
+                    }
+                    try (Connection c = mds.getConnection(); PreparedStatement ps2 = c.prepareStatement(SELECT_STMT); ResultSet rs = ps2.executeQuery()) {
+                        // nothing here, all auto-close.
+                    }
+                } while (n < 2);
 
-				ps.close();
-				ps = null;
-				conn.close();
-				conn = null;
+                ps.close();
+                ps = null;
+                conn.close();
+                conn = null;
 
-				assertThrows(RollbackException.class, () -> mds.getTransactionManager().commit());
-				// this is expected
-				if (mds.getTransactionManager().getTransaction() != null) {
-					// Need to pop it off the thread if a background thread rolled the transaction
-					// back
-					mds.getTransactionManager().rollback();
-				}
-			} catch (final Exception e) {
-				if (mds.getTransactionManager().getTransaction() != null) {
-					// Need to pop it off the thread if a background thread rolled the transaction
-					// back
-					mds.getTransactionManager().rollback();
-				}
-			} finally {
-				if (ps != null) {
-					ps.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-			}
-			Assertions.assertEquals(0, mds.getNumActive());
-		}
-	}
+                assertThrows(RollbackException.class, () -> mds.getTransactionManager().commit());
+                // this is expected
+                if (mds.getTransactionManager().getTransaction() != null) {
+                    // Need to pop it off the thread if a background thread rolled the transaction
+                    // back
+                    mds.getTransactionManager().rollback();
+                }
+            } catch (final Exception e) {
+                if (mds.getTransactionManager().getTransaction() != null) {
+                    // Need to pop it off the thread if a background thread rolled the transaction
+                    // back
+                    mds.getTransactionManager().rollback();
+                }
+            } finally {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+            Assertions.assertEquals(0, mds.getNumActive());
+        }
+    }
 
     @Test
-	public void testRepeatedGetConnectionInTimeout() throws Exception {
-		mds.getTransactionManager().setTransactionTimeout(1);
-		mds.getTransactionManager().begin();
-		try {
-			do {
-				Thread.sleep(1000);
-			} while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
-			// Let the reaper do it's thing
-			Thread.sleep(1000);
-			final SQLException e = assertThrows(SQLException.class, mds::getConnection);
-			assertTrue(e.getCause().getClass().equals(IllegalStateException.class));
-			final SQLException e2 = assertThrows(SQLException.class, mds::getConnection);
-			assertTrue(e2.getCause().getClass().equals(IllegalStateException.class));
-		} finally {
-			mds.getTransactionManager().rollback();
-		}
-		Assertions.assertEquals(0, mds.getNumActive());
-	}
+    public void testRepeatedGetConnectionInTimeout() throws Exception {
+        mds.getTransactionManager().setTransactionTimeout(1);
+        mds.getTransactionManager().begin();
+        try {
+            do {
+                Thread.sleep(1000);
+            } while (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ROLLEDBACK);
+            // Let the reaper do it's thing
+            Thread.sleep(1000);
+            final SQLException e = assertThrows(SQLException.class, mds::getConnection);
+            assertTrue(e.getCause().getClass().equals(IllegalStateException.class));
+            final SQLException e2 = assertThrows(SQLException.class, mds::getConnection);
+            assertTrue(e2.getCause().getClass().equals(IllegalStateException.class));
+        } finally {
+            mds.getTransactionManager().rollback();
+        }
+        Assertions.assertEquals(0, mds.getNumActive());
+    }
 }

@@ -141,29 +141,29 @@ public class TestDelegatingConnection {
      * Verify fix for DBCP-241
      */
     @Test
-	public void testCheckOpenNull() throws Exception {
-		delegatingConnection.close();
-		SQLException e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-		assertTrue(e.getMessage().endsWith("is closed."));
+    public void testCheckOpenNull() throws Exception {
+        delegatingConnection.close();
+        SQLException e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is closed."));
 
-		delegatingConnection = new DelegatingConnection<>(null);
-		delegatingConnection.setClosedInternal(true);
-		e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-		assertTrue(e.getMessage().endsWith("is null."));
+        delegatingConnection = new DelegatingConnection<>(null);
+        delegatingConnection.setClosedInternal(true);
+        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is null."));
 
-		final PoolingConnection pc = new PoolingConnection(connection2);
-		pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
-		delegatingConnection = new DelegatingConnection<>(pc);
-		pc.close();
-		delegatingConnection.close();
-		e = assertThrows(SQLException.class, () -> delegatingConnection.prepareStatement(""));
-		assertTrue(e.getMessage().endsWith("is closed."));
+        final PoolingConnection pc = new PoolingConnection(connection2);
+        pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
+        delegatingConnection = new DelegatingConnection<>(pc);
+        pc.close();
+        delegatingConnection.close();
+        e = assertThrows(SQLException.class, () -> delegatingConnection.prepareStatement(""));
+        assertTrue(e.getMessage().endsWith("is closed."));
 
-		delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
-		delegatingConnection.close();
-		e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
-		assertTrue(e.getMessage().endsWith("is closed."));
-	}
+        delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
+        delegatingConnection.close();
+        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is closed."));
+    }
 
     @Test
     public void testCommit() throws Exception {
@@ -365,7 +365,8 @@ public class TestDelegatingConnection {
 
     @Test
     public void testSetNetworkTimeout() throws Exception {
-        h2DConnection.setNetworkTimeout(r -> {}, 1);
+        h2DConnection.setNetworkTimeout(r -> {
+        }, 1);
         assertEquals(0, h2DConnection.getNetworkTimeout());
     }
 

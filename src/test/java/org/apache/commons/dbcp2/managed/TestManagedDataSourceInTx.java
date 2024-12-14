@@ -111,8 +111,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
         assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
 
         // attempt to set auto commit
-		assertThrows(SQLException.class, () -> connection.setAutoCommit(true),
-				"setAutoCommit method should be disabled while enlisted in a transaction");
+        assertThrows(SQLException.class, () -> connection.setAutoCommit(true), "setAutoCommit method should be disabled while enlisted in a transaction");
 
         // make sure it is still disabled
         assertFalse(connection.getAutoCommit(), "Auto-commit should be disabled");
@@ -171,23 +170,22 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-	public void testCommit() throws Exception {
-		try (Connection connection = newConnection()) {
-			// connection should be open
-			assertFalse(connection.isClosed(), "Connection should be open");
-			// attempt commit directly
-			assertThrows(SQLException.class, connection::commit,
-					"commit method should be disabled while enlisted in a transaction");
-			// make sure it is still open
-			assertFalse(connection.isClosed(), "Connection should be open");
+    public void testCommit() throws Exception {
+        try (Connection connection = newConnection()) {
+            // connection should be open
+            assertFalse(connection.isClosed(), "Connection should be open");
+            // attempt commit directly
+            assertThrows(SQLException.class, connection::commit, "commit method should be disabled while enlisted in a transaction");
+            // make sure it is still open
+            assertFalse(connection.isClosed(), "Connection should be open");
 
-		}
-	}
+        }
+    }
 
     @Override
     @Test
     public void testConnectionReturnOnCommit() throws Exception {
-       // override with no-op test
+        // override with no-op test
     }
 
     @Override
@@ -231,28 +229,27 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             }
 
             @Override
-			public void beforeCompletion() {
-				assertDoesNotThrow(() -> conn = (ManagedConnection<?>) ds.getConnection(), "Could not get connection");
-			}
+            public void beforeCompletion() {
+                assertDoesNotThrow(() -> conn = (ManagedConnection<?>) ds.getConnection(), "Could not get connection");
+            }
         });
         transactionManager.commit();
     }
 
     @Test
-	public void testGetConnectionInAfterCompletion() throws Exception {
-		try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
-			// Don't close so we can check it for warnings in afterCompletion
-			transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
-				@Override
-				public void afterCompletion(final int i) {
-					final Connection connection1 = assertDoesNotThrow((ThrowingSupplier<Connection>) ds::getConnection);
-					assertThrows(SQLException.class, () -> connection1.getWarnings(),
-							"Could operate on closed connection");
-				}
-			});
-		}
-		transactionManager.commit();
-	}
+    public void testGetConnectionInAfterCompletion() throws Exception {
+        try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
+            // Don't close so we can check it for warnings in afterCompletion
+            transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
+                @Override
+                public void afterCompletion(final int i) {
+                    final Connection connection1 = assertDoesNotThrow((ThrowingSupplier<Connection>) ds::getConnection);
+                    assertThrows(SQLException.class, () -> connection1.getWarnings(), "Could operate on closed connection");
+                }
+            });
+        }
+        transactionManager.commit();
+    }
 
     @Override
     @Test
@@ -281,34 +278,33 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
 
     @Override
     @Test
-	public void testMaxTotal() throws Exception {
-		final Transaction[] transactions = new Transaction[getMaxTotal()];
-		final Connection[] c = new Connection[getMaxTotal()];
-		for (int i = 0; i < c.length; i++) {
-			// create a new connection in the current transaction
-			c[i] = newConnection();
-			assertNotNull(c[i]);
+    public void testMaxTotal() throws Exception {
+        final Transaction[] transactions = new Transaction[getMaxTotal()];
+        final Connection[] c = new Connection[getMaxTotal()];
+        for (int i = 0; i < c.length; i++) {
+            // create a new connection in the current transaction
+            c[i] = newConnection();
+            assertNotNull(c[i]);
 
-			// suspend the current transaction and start a new one
-			transactions[i] = transactionManager.suspend();
-			assertNotNull(transactions[i]);
-			transactionManager.begin();
-		}
+            // suspend the current transaction and start a new one
+            transactions[i] = transactionManager.suspend();
+            assertNotNull(transactions[i]);
+            transactionManager.begin();
+        }
 
-		try {
-			assertThrows(SQLException.class, this::newConnection,
-					"Allowed to open more than DefaultMaxTotal connections.");
-			// should only be able to open 10 connections, so this test should
-			// throw an exception
-		} finally {
-			transactionManager.commit();
-			for (int i = 0; i < c.length; i++) {
-				transactionManager.resume(transactions[i]);
-				c[i].close();
-				transactionManager.commit();
-			}
-		}
-	}
+        try {
+            assertThrows(SQLException.class, this::newConnection, "Allowed to open more than DefaultMaxTotal connections.");
+            // should only be able to open 10 connections, so this test should
+            // throw an exception
+        } finally {
+            transactionManager.commit();
+            for (int i = 0; i < c.length; i++) {
+                transactionManager.resume(transactions[i]);
+                c[i].close();
+                transactionManager.commit();
+            }
+        }
+    }
 
     @Override
     @Test
@@ -323,13 +319,11 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             // connection should be read only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
             // attempt to setReadOnly
-			assertThrows(SQLException.class, () -> connection.setReadOnly(true),
-					"setReadOnly method should be disabled while enlisted in a transaction");
+            assertThrows(SQLException.class, () -> connection.setReadOnly(true), "setReadOnly method should be disabled while enlisted in a transaction");
             // make sure it is still read-only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
             // attempt to setReadonly
-			assertThrows(SQLException.class, () -> connection.setReadOnly(false),
-					"setReadOnly method should be disabled while enlisted in a transaction");
+            assertThrows(SQLException.class, () -> connection.setReadOnly(false), "setReadOnly method should be disabled while enlisted in a transaction");
             // make sure it is still read-only
             assertTrue(connection.isReadOnly(), "Connection be read-only");
             // TwR closes the connection

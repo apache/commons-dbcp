@@ -60,7 +60,7 @@ public class TestDelegatingStatement {
 
     @AfterEach
     public void afterEach() {
-    	testerResultSet.setSqlExceptionOnClose(false);
+        testerResultSet.setSqlExceptionOnClose(false);
         testerStatement.setSqlExceptionOnClose(false);
     }
 
@@ -97,7 +97,7 @@ public class TestDelegatingStatement {
     public void testCheckOpen() throws Exception {
         delegatingStatement.checkOpen();
         delegatingStatement.close();
-		assertThrows(SQLException.class, delegatingStatement::checkOpen);
+        assertThrows(SQLException.class, delegatingStatement::checkOpen);
     }
 
     @Test
@@ -293,8 +293,7 @@ public class TestDelegatingStatement {
     }
 
     /**
-     * This method is a bit special, and return the delegate connection, not the
-     * wrapped statement's connection.
+     * This method is a bit special, and return the delegate connection, not the wrapped statement's connection.
      *
      * @throws Exception
      */
@@ -457,8 +456,7 @@ public class TestDelegatingStatement {
     }
 
     /**
-     * This method is a bit special, and call isClosed in the delegate object
-     * itself, not in the wrapped statement.
+     * This method is a bit special, and call isClosed in the delegate object itself, not in the wrapped statement.
      *
      * @throws Exception
      */
@@ -496,9 +494,7 @@ public class TestDelegatingStatement {
         final DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
         final DelegatingStatement stamt = new DelegatingStatement(dconn, tstStmt);
 
-        final Class<?> stmtProxyClass = Proxy.getProxyClass(
-                this.getClass().getClassLoader(),
-                Statement.class);
+        final Class<?> stmtProxyClass = Proxy.getProxyClass(this.getClass().getClassLoader(), Statement.class);
 
         assertTrue(stamt.isWrapperFor(DelegatingStatement.class));
         assertTrue(stamt.isWrapperFor(TesterStatement.class));

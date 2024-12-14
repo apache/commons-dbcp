@@ -56,15 +56,15 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     }
 
     public TesterResultSet(final Statement statement, final int type, final int concurrency) {
-    	this.statement = statement;
-    	this.data = null;
-    	this.type = type;
-    	this.concurrency = concurrency;
+        this.statement = statement;
+        this.data = null;
+        this.type = type;
+        this.concurrency = concurrency;
     }
 
     public TesterResultSet(final Statement statement, final Object[][] data) {
-    	this.statement = statement;
-    	this.data = data;
+        this.statement = statement;
+        this.data = data;
     }
 
     @Override
