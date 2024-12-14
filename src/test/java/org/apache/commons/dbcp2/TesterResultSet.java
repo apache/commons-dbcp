@@ -42,29 +42,29 @@ import java.util.Map;
  */
 public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
-    protected int _type = ResultSet.TYPE_FORWARD_ONLY;
-    protected int _concurrency = ResultSet.CONCUR_READ_ONLY;
-    protected Object[][] _data;
-    protected int _currentRow = -1;
-    protected Statement _statement;
-    protected int _rowsLeft = 2;
-    protected boolean _open = true;
-    protected boolean _sqlExceptionOnClose;
+    protected int type = ResultSet.TYPE_FORWARD_ONLY;
+    protected int concurrency = ResultSet.CONCUR_READ_ONLY;
+    protected Object[][] data;
+    protected int currentRow = -1;
+    protected Statement statement;
+    protected int rowsLeft = 2;
+    protected boolean open = true;
+    protected boolean sqlExceptionOnClose;
 
-    public TesterResultSet(final Statement stmt) {
-        _statement = stmt;
+    public TesterResultSet(final Statement statement) {
+        this.statement = statement;
     }
 
-    public TesterResultSet(final Statement stmt, final int type, final int concurrency) {
-        _statement = stmt;
-        _data = null;
-        _type = type;
-        _concurrency = concurrency;
+    public TesterResultSet(final Statement statement, final int type, final int concurrency) {
+    	this.statement = statement;
+    	this.data = null;
+    	this.type = type;
+    	this.concurrency = concurrency;
     }
 
-    public TesterResultSet(final Statement stmt, final Object[][] data) {
-        _statement = stmt;
-        _data = data;
+    public TesterResultSet(final Statement statement, final Object[][] data) {
+    	this.statement = statement;
+    	this.data = data;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     }
 
     protected void checkOpen() throws SQLException {
-        if (!_open) {
+        if (!open) {
             throw new SQLException("ResultSet is closed.");
         }
     }
@@ -101,20 +101,20 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
     @Override
     public void close() throws SQLException {
-        if (_sqlExceptionOnClose) {
+        if (sqlExceptionOnClose) {
             throw new SQLException("TestSQLExceptionOnClose");
         }
 
-        if (!_open) {
+        if (!open) {
             return;
         }
 
         // Not all result sets are generated from statements eg DatabaseMetaData
-        if (_statement != null) {
-            ((TesterStatement) _statement).resultSet = null;
+        if (statement != null) {
+            ((TesterStatement) statement).resultSet = null;
         }
 
-        _open = false;
+        open = false;
     }
 
     @Override
@@ -272,7 +272,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
     @Override
     public int getConcurrency() throws SQLException {
-        return this._concurrency;
+        return this.concurrency;
     }
 
     @Override
@@ -409,8 +409,8 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public Object getObject(final int columnIndex) throws SQLException {
         checkOpen();
-        if (_data != null) {
-            return _data[_currentRow][columnIndex - 1];
+        if (data != null) {
+            return data[currentRow][columnIndex - 1];
         }
         return new Object();
     }
@@ -458,7 +458,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public int getRow() throws SQLException {
         checkOpen();
-        return 3 - _rowsLeft;
+        return 3 - rowsLeft;
     }
 
     @Override
@@ -496,7 +496,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public Statement getStatement() throws SQLException {
         checkOpen();
-        return _statement;
+        return statement;
     }
 
     @Override
@@ -505,7 +505,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         if (columnIndex == -1) {
             throw new SQLException("broken connection");
         }
-        if (_data != null) {
+        if (data != null) {
             return (String) getObject(columnIndex);
         }
         return "String" + columnIndex;
@@ -567,7 +567,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
 
     @Override
     public int getType() throws SQLException {
-        return this._type;
+        return this.type;
     }
 
     /** @deprecated */
@@ -610,34 +610,34 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public boolean isAfterLast() throws SQLException {
         checkOpen();
-        return _rowsLeft < 0;
+        return rowsLeft < 0;
     }
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
         checkOpen();
-        return _rowsLeft == 2;
+        return rowsLeft == 2;
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return !_open;
+        return !open;
     }
 
     @Override
     public boolean isFirst() throws SQLException {
         checkOpen();
-        return _rowsLeft == 1;
+        return rowsLeft == 1;
     }
 
     @Override
     public boolean isLast() throws SQLException {
         checkOpen();
-        return _rowsLeft == 0;
+        return rowsLeft == 0;
     }
 
     public boolean isSqlExceptionOnClose() {
-        return _sqlExceptionOnClose;
+        return sqlExceptionOnClose;
     }
 
     @Override
@@ -664,11 +664,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     @Override
     public boolean next() throws SQLException {
         checkOpen();
-        if (_data != null) {
-            _currentRow++;
-            return _currentRow < _data.length;
+        if (data != null) {
+            currentRow++;
+            return currentRow < data.length;
         }
-        return --_rowsLeft > 0;
+        return --rowsLeft > 0;
     }
 
     @Override
@@ -717,7 +717,7 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
     }
 
     public void setSqlExceptionOnClose(final boolean sqlExceptionOnClose) {
-        this._sqlExceptionOnClose = sqlExceptionOnClose;
+        this.sqlExceptionOnClose = sqlExceptionOnClose;
     }
 
     @Override
