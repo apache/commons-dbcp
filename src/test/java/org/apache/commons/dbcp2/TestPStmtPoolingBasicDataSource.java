@@ -122,10 +122,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertNotSame(stmt1, stmt2);
 
         // go over the maxOpen limit
-        try (PreparedStatement ps = conn.prepareStatement("select 'c' from dual")) {
-            fail("expected SQLException");
-        }
-        catch (final SQLException e) {}
+        assertThrows(SQLException.class, () -> conn.prepareStatement("select 'c' from dual"));
 
         // make idle
         stmt2.close();
