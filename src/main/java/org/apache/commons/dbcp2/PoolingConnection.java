@@ -22,7 +22,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -47,7 +46,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Statement types.
-     *
+     * <p>
      * See subclasses of {@link Statement}.
      *
      * @since 2.0 protected enum.
@@ -122,7 +121,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             }
         } finally {
             try {
-                @SuppressWarnings("resource")
                 final Connection delegateInternal = getDelegateInternal();
                 if (delegateInternal != null) {
                     delegateInternal.close();
@@ -309,10 +307,8 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public void destroyObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject) throws SQLException {
         if (pooledObject != null) {
-            @SuppressWarnings("resource")
             final DelegatingPreparedStatement object = pooledObject.getObject();
             if (object != null) {
-                @SuppressWarnings("resource")
                 final Statement innermostDelegate = object.getInnermostDelegate();
                 if (innermostDelegate != null) {
                     innermostDelegate.close();
@@ -356,7 +352,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            the key for the {@link PreparedStatement} to be created
      * @see #createKey(String, int, int, StatementType)
      */
-    @SuppressWarnings("resource")
     @Override
     public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws SQLException {
         if (null == key) {
@@ -395,7 +390,6 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public void passivateObject(final PStmtKey key, final PooledObject<DelegatingPreparedStatement> pooledObject)
             throws SQLException {
-        @SuppressWarnings("resource")
         final DelegatingPreparedStatement dps = pooledObject.getObject();
         dps.clearParameters();
         dps.passivate();
@@ -627,7 +621,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
                 return "PoolingConnection: " + pStmtPool.getClass() + "@" + System.identityHashCode(pStmtPool);
             }
         }
-        return "PoolingConnection: " + Objects.toString(pStmtPool);
+        return "PoolingConnection: " + pStmtPool;
     }
 
     /**
