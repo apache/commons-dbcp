@@ -17,6 +17,7 @@
  */
 package org.apache.commons.dbcp2.managed;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -37,6 +38,7 @@ import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.h2.Driver;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchronizationRegistryImple;
@@ -182,41 +184,32 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testTransactionSynchronizationRegistry() throws Exception {
-        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
-            final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
-            basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
-            final JdbcDataSource xaDataSource = new JdbcDataSource();
-            xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
-            basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
-            basicManagedDataSource.setMaxIdle(1);
+	public void testTransactionSynchronizationRegistry() throws Exception {
+		try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+			basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
+			final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
+			basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
+			final JdbcDataSource xaDataSource = new JdbcDataSource();
+			xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+			basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
+			basicManagedDataSource.setMaxIdle(1);
 
-            final TransactionManager tm = basicManagedDataSource.getTransactionManager();
-            tm.begin();
-            tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
-                @Override
-                public void beforeCompletion() {
-                    Connection connection = null;
-                    try {
-                        connection = basicManagedDataSource.getConnection();
-                        assertNotNull(connection);
-                    } catch (final SQLException e) {
-                        fail(e.getMessage());
-                    } finally {
-                        if (connection != null) {
-                            try {
-                                connection.close();
-                            } catch (final SQLException e) {
-                                fail(e.getMessage());
-                            }
-                        }
-                    }
-                }
-            });
-            tm.commit();
-        }
-    }
+			final TransactionManager tm = basicManagedDataSource.getTransactionManager();
+			tm.begin();
+			tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
+				@Override
+				public void beforeCompletion() {
+					try (Connection connection = assertDoesNotThrow(
+							(ThrowingSupplier<Connection>) basicManagedDataSource::getConnection)) {
+						assertNotNull(connection);
+					} catch (SQLException e) {
+						fail(e);
+					}
+				}
+			});
+			tm.commit();
+		}
+	}
 
     @Test
     public void testXADataSource() throws SQLException {
