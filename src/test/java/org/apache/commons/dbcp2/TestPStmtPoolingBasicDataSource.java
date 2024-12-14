@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -78,12 +79,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertNotNull(stmt4);
 
         // Verify that inner1 has been closed
-        try {
-            inner1.clearParameters();
-            fail("expecting SQLExcption - statement should be closed");
-        } catch (final SQLException ex) {
-            //Expected
-        }
+        assertThrows(SQLException.class, inner1::clearParameters, "expecting SQLExcption - statement should be closed");
         // But others are still open
         inner2.clearParameters();
         inner3.clearParameters();
@@ -94,12 +90,8 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
         assertNotSame(inner5, inner1);
 
         // inner2 should be closed now
-        try {
-            inner2.clearParameters();
-            fail("expecting SQLExcption - statement should be closed");
-        } catch (final SQLException ex) {
-            //Expected
-        }
+        assertThrows(SQLException.class, inner2::clearParameters, "expecting SQLExcption - statement should be closed");
+
         // But inner3 should still be open
         inner3.clearParameters();
     }
