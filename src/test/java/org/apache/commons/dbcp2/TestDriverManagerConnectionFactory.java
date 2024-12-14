@@ -81,47 +81,47 @@ public class TestDriverManagerConnectionFactory extends AbstractDriverTest {
         cf.createConnection();
     }
 
-    public void testDriverManagerInit(final boolean withProperties) throws Exception {
-        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
-        config.setMaxTotal(10);
-        config.setMaxIdle(0);
-        final Properties properties = new Properties();
-        // The names "user" and "password" are specified in java.sql.DriverManager.getConnection(String, String, String)
-        properties.setProperty(Constants.KEY_USER, "foo");
-        properties.setProperty(Constants.KEY_PASSWORD, "bar");
-        final ConnectionFactory connectionFactory = withProperties ?
-                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties) :
-                new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "foo", "bar");
-        final PoolableConnectionFactory poolableConnectionFactory =
-            new PoolableConnectionFactory(connectionFactory, null);
-        poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
-        poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
+	public void testDriverManagerInit(final boolean withProperties) throws Exception {
+		final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
+		config.setMaxTotal(10);
+		config.setMaxIdle(0);
+		final Properties properties = new Properties();
+		// The names "user" and "password" are specified in
+		// java.sql.DriverManager.getConnection(String, String, String)
+		properties.setProperty(Constants.KEY_USER, "foo");
+		properties.setProperty(Constants.KEY_PASSWORD, "bar");
+		final ConnectionFactory connectionFactory = withProperties
+				? new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", properties)
+				: new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "foo", "bar");
+		final PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,
+				null);
+		poolableConnectionFactory.setDefaultReadOnly(Boolean.FALSE);
+		poolableConnectionFactory.setDefaultAutoCommit(Boolean.TRUE);
 
-        final GenericObjectPool<PoolableConnection> connectionPool =
-                new GenericObjectPool<>(poolableConnectionFactory, config);
-        poolableConnectionFactory.setPool(connectionPool);
-        final PoolingDataSource<PoolableConnection> dataSource =
-                new PoolingDataSource<>(connectionPool);
+		final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory,
+				config);
+		poolableConnectionFactory.setPool(connectionPool);
+		final PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
 
-        final ConnectionThread[] connectionThreads = new ConnectionThread[10];
-        final Thread[] threads = new Thread[10];
+		final ConnectionThread[] connectionThreads = new ConnectionThread[10];
+		final Thread[] threads = new Thread[10];
 
-        for (int i = 0; i < 10; i++) {
-            connectionThreads[i] = new ConnectionThread(dataSource);
-            threads[i] = new Thread(connectionThreads[i]);
-        }
-        for (int i = 0; i < 10; i++) {
-            threads[i].start();
-        }
-        for (int i = 0; i < 10; i++) {
-            while (threads[i].isAlive()){//JDK1.5: getState() != Thread.State.TERMINATED) {
-                Thread.sleep(100);
-            }
-            if (!connectionThreads[i].getResult()) {
-                fail("Exception during getConnection(): " + connectionThreads[i]);
-            }
-        }
-    }
+		for (int i = 0; i < 10; i++) {
+			connectionThreads[i] = new ConnectionThread(dataSource);
+			threads[i] = new Thread(connectionThreads[i]);
+		}
+		for (int i = 0; i < 10; i++) {
+			threads[i].start();
+		}
+		for (int i = 0; i < 10; i++) {
+			while (threads[i].isAlive()) { // JDK1.5: getState() != Thread.State.TERMINATED) {
+				Thread.sleep(100);
+			}
+			if (!connectionThreads[i].getResult()) {
+				fail("Exception during getConnection(): " + connectionThreads[i]);
+			}
+		}
+	}
 
     @Test
     public void testDriverManagerInitWithCredentials() throws Exception {
