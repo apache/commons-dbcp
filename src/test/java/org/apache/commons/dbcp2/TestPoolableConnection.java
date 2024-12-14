@@ -144,12 +144,8 @@ public class TestPoolableConnection {
         }
 
         // validate should now fail because of previous fatal error, despite cleanup
-        try {
-            conn.validate("SELECT 1", 1000);
-            fail("Should throw SQL exception on validation.");
-        } catch (final SQLException notValid){
-            // expected - fatal error && fastFailValidation
-        }
+		assertThrows(SQLException.class, () -> conn.validate("SELECT 1", 1000),
+				"Should throw SQL exception on validation.");
 
         // verify that bad connection does not get returned to the pool
         conn.close();  // testOnReturn triggers validate, which should fail
