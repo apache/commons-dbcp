@@ -142,29 +142,21 @@ public class TestDelegatingConnection {
      */
     @Test
     public void testCheckOpenNull() throws Exception {
-        try {
-            delegatingConnection.close();
-            delegatingConnection.checkOpen();
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("is closed."));
-        }
+        delegatingConnection.close();
+        SQLException e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is closed."));
 
-        try {
-            delegatingConnection = new DelegatingConnection<>(null);
-            delegatingConnection.setClosedInternal(true);
-            delegatingConnection.checkOpen();
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("is null."));
-        }
+        delegatingConnection = new DelegatingConnection<>(null);
+        delegatingConnection.setClosedInternal(true);
+        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is null."));
 
+        final PoolingConnection pc = new PoolingConnection(connection2);
+        pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
+        delegatingConnection = new DelegatingConnection<>(pc);
+        pc.close();
+        delegatingConnection.close();
         try {
-            final PoolingConnection pc = new PoolingConnection(connection2);
-            pc.setStatementPool(new GenericKeyedObjectPool<>(pc));
-            delegatingConnection = new DelegatingConnection<>(pc);
-            pc.close();
-            delegatingConnection.close();
             try (PreparedStatement ps = delegatingConnection.prepareStatement("")) {
             }
             fail("Expecting SQLException");
@@ -172,14 +164,10 @@ public class TestDelegatingConnection {
             assertTrue(ex.getMessage().endsWith("is closed."));
         }
 
-        try {
-            delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
-            delegatingConnection.close();
-            delegatingConnection.checkOpen();
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            assertTrue(ex.getMessage().endsWith("is closed."));
-        }
+        delegatingConnection = new DelegatingConnection<>(new RTEGeneratingConnection());
+        delegatingConnection.close();
+        e = assertThrows(SQLException.class, delegatingConnection::checkOpen);
+        assertTrue(e.getMessage().endsWith("is closed."));
     }
 
     @Test
