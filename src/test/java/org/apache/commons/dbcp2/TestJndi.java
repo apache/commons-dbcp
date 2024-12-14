@@ -17,7 +17,7 @@
 
 package org.apache.commons.dbcp2;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Hashtable;
 
@@ -93,10 +93,7 @@ public class TestJndi {
     protected DataSource retrieveDataSource() throws Exception {
         final Context ctx = getInitialContext();
         final DataSource dataSource = (DataSource) ctx.lookup(JNDI_PATH);
-
-        if (dataSource == null) {
-            fail("DataSource should not be null");
-        }
+        assertNotNull(dataSource, "DataSource should not be null");
         return dataSource;
     }
 
