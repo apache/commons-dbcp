@@ -19,10 +19,10 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,7 +32,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +57,12 @@ public class TestDelegatingStatement {
     private DelegatingStatement delegatingTesterStatement;
     private TesterResultSet testerResultSet;
     private TesterStatement testerStatement;
+
+    @AfterEach
+    public void afterEach() {
+    	testerResultSet.setSqlExceptionOnClose(false);
+        testerStatement.setSqlExceptionOnClose(false);
+    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -132,30 +138,18 @@ public class TestDelegatingStatement {
 
     @Test
     public void testCloseWithResultSetCloseException() throws Exception {
-        try {
-            testerResultSet.setSqlExceptionOnClose(true);
-            delegatingStatement.addTrace(testerResultSet);
-            delegatingStatement.close();
-            Assertions.fail("Excpected a SQLExceptionList");
-        } catch (final SQLException e) {
-            Assertions.assertInstanceOf(SQLExceptionList.class, e);
-        } finally {
-            testerResultSet.setSqlExceptionOnClose(false);
-        }
+        testerResultSet.setSqlExceptionOnClose(true);
+        delegatingStatement.addTrace(testerResultSet);
+        final SQLException e = assertThrows(SQLException.class, delegatingStatement::close);
+        assertInstanceOf(SQLExceptionList.class, e);
         verify(mockedStatement, times(1)).close();
     }
 
     @Test
     public void testCloseWithStatementCloseException() throws Exception {
-        try {
-            testerStatement.setSqlExceptionOnClose(true);
-            delegatingTesterStatement.close();
-            Assertions.fail("Excpected a SQLExceptionList");
-        } catch (final SQLException e) {
-            Assertions.assertInstanceOf(SQLExceptionList.class, e);
-        } finally {
-            testerStatement.setSqlExceptionOnClose(false);
-        }
+        testerStatement.setSqlExceptionOnClose(true);
+        final SQLException e = assertThrows(SQLException.class, delegatingTesterStatement::close);
+        assertInstanceOf(SQLExceptionList.class, e);
     }
 
     @Test
