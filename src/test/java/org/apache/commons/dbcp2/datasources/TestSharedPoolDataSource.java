@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -453,39 +452,22 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * JIRA: DBCP-245
      */
     @Test
-    public void testIncorrectPassword() throws SQLException {
-        ds.getConnection("u2", "p2").close();
-        try (Connection c = ds.getConnection("u1", "zlsafjk")){ // Use bad password
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e1) {
-            // should fail
-        }
-
-        // Use good password
-        ds.getConnection("u1", "p1").close();
-        try (Connection c = ds.getConnection("u1", "x")) {
-            fail("Able to retrieve connection with incorrect password");
-        } catch (final SQLException e) {
-            if (!e.getMessage().startsWith("Given password did not match")) {
-                throw e;
-            }
-            // else the exception was expected
-        }
-
-        // Make sure we can still use our good password.
-        ds.getConnection("u1", "p1").close();
-
-        // Try related users and passwords
-        ds.getConnection("foo", "bar").close();
-        try (Connection c = ds.getConnection("u1", "ar")) {
-            fail("Should have caused an SQLException");
-        } catch (final SQLException expected) {
-        }
-        try (Connection c = ds.getConnection("u1", "baz")) {
-            fail("Should have generated SQLException");
-        } catch (final SQLException expected) {
-        }
-    }
+	public void testIncorrectPassword() throws SQLException {
+		ds.getConnection("u2", "p2").close();
+		assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"),
+				"Able to retrieve connection with incorrect password");
+		// Use good password
+		ds.getConnection("u1", "p1").close();
+		final SQLException e = assertThrows(SQLException.class, () -> ds.getConnection("u1", "x"),
+				"Able to retrieve connection with incorrect password");
+		assertTrue(e.getMessage().startsWith("Given password did not match"));
+		// Make sure we can still use our good password.
+		ds.getConnection("u1", "p1").close();
+		// Try related users and passwords
+		ds.getConnection("foo", "bar").close();
+		assertThrows(SQLException.class, () -> ds.getConnection("u1", "ar"));
+		assertThrows(SQLException.class, () -> ds.getConnection("u1", "baz"));
+	}
 
     @Override
     @Test
@@ -495,9 +477,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             c[i] = ds.getConnection();
             assertNotNull(c[i]);
         }
-
         assertThrows(SQLException.class, ds::getConnection, "Allowed to open more than DefaultMaxTotal connections.");
-
         for (final Connection element : c) {
             element.close();
         }
