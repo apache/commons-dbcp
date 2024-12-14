@@ -134,12 +134,7 @@ public class TestDelegatingConnection {
     public void testCheckOpen() throws Exception {
         delegatingConnection.checkOpen();
         delegatingConnection.close();
-        try {
-            delegatingConnection.checkOpen();
-            fail("Expecting SQLException");
-        } catch (final SQLException ex) {
-            // expected
-        }
+        assertThrows(SQLException.class, () -> delegatingConnection.checkOpen(), "Expecting SQLException");
     }
 
     /**
