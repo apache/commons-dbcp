@@ -484,28 +484,26 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testAutoCommitBehavior() throws Exception {
-        final Connection conn0 = newConnection();
-        assertNotNull(conn0, "connection should not be null");
-        assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
 
-        final Connection conn1 = newConnection();
-        assertTrue(conn1.getAutoCommit(), "autocommit should be true for conn1");
-        conn1.close();
+        try(final Connection conn0 = newConnection()) {
+            assertNotNull(conn0, "connection should not be null");
+            assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
 
-        assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
-        conn0.setAutoCommit(false);
-        assertFalse(conn0.getAutoCommit(), "autocommit should be false for conn0");
-        conn0.close();
+            try(final Connection conn1 = newConnection()) {
+                assertTrue(conn1.getAutoCommit(), "autocommit should be true for conn1");
+            }
 
-        final Connection conn2 = newConnection();
-        assertTrue(conn2.getAutoCommit(), "autocommit should be true for conn2");
+            assertTrue(conn0.getAutoCommit(), "autocommit should be true for conn0");
+            conn0.setAutoCommit(false);
+            assertFalse(conn0.getAutoCommit(), "autocommit should be false for conn0");
+        }
 
-        final Connection conn3 = newConnection();
-        assertTrue(conn3.getAutoCommit(), "autocommit should be true for conn3");
-
-        conn2.close();
-
-        conn3.close();
+        try(final Connection conn2 = newConnection()) {
+            assertTrue(conn2.getAutoCommit(), "autocommit should be true for conn2");
+            try(final Connection conn3 = newConnection()) {
+                assertTrue(conn3.getAutoCommit(), "autocommit should be true for conn3");
+            }
+        }
     }
 
     @Test
@@ -619,21 +617,22 @@ public abstract class TestConnectionPool {
 
     @Test
     public void testCanCloseStatementTwice() throws Exception {
-        final Connection conn = newConnection();
-        assertNotNull(conn);
-        assertFalse(conn.isClosed());
-        for (int i = 0; i < 2; i++) { // loop to show we *can* close again once we've borrowed it from the pool again
-            final Statement stmt = conn.createStatement();
-            assertNotNull(stmt);
-            assertFalse(isClosed(stmt));
-            stmt.close();
-            assertTrue(isClosed(stmt));
-            stmt.close();
-            assertTrue(isClosed(stmt));
-            stmt.close();
-            assertTrue(isClosed(stmt));
+        try (final Connection conn = newConnection()) {
+            assertNotNull(conn);
+            assertFalse(conn.isClosed());
+            for (int i = 0; i < 2; i++) { // loop to show we *can* close again once we've borrowed it from the pool again
+                try (final Statement stmt = conn.createStatement()) {
+                    assertNotNull(stmt);
+                    assertFalse(isClosed(stmt));
+                    stmt.close();
+                    assertTrue(isClosed(stmt));
+                    stmt.close();
+                    assertTrue(isClosed(stmt));
+                    stmt.close();
+                    assertTrue(isClosed(stmt));
+                }
+            }
         }
-        conn.close();
     }
 
     @Test
@@ -710,12 +709,12 @@ public abstract class TestConnectionPool {
     // Bugzilla Bug 26966: Connectionpool's connections always returns same
     @Test
     public void testHashCode() throws Exception {
-        final Connection conn1 = newConnection();
-        assertNotNull(conn1);
-        final Connection conn2 = newConnection();
-        assertNotNull(conn2);
-
-        assertTrue(conn1.hashCode() != conn2.hashCode());
+        try (final Connection conn1 = newConnection();
+            final Connection conn2 = newConnection()) {
+            assertNotNull(conn1);
+            assertNotNull(conn2);
+            assertNotEquals(conn1.hashCode(), conn2.hashCode());
+        }
     }
 
     /**
