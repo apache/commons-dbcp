@@ -307,7 +307,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
         try (Connection conn = ds.getConnection()) {
             fail("Allowed to open more than DefaultMaxTotal connections.");
-        } catch (final java.sql.SQLException e) {
+        } catch (final SQLException e) {
             // should only be able to open 10 connections, so this test should
             // throw an exception
         }
