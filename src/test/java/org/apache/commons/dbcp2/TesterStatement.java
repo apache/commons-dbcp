@@ -398,8 +398,8 @@ public class TesterStatement extends AbandonedTrace implements Statement {
         this.queryTimeout = seconds;
     }
 
-    public void setSqlExceptionOnClose(final boolean _sqlExceptionOnClose) {
-        this.sqlExceptionOnClose = _sqlExceptionOnClose;
+    public void setSqlExceptionOnClose(final boolean sqlExceptionOnClose) {
+        this.sqlExceptionOnClose = sqlExceptionOnClose;
     }
 
     @Override
