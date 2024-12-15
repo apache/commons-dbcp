@@ -19,8 +19,6 @@ package org.apache.commons.dbcp2.datasources;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -47,11 +45,6 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
 
     /**
-     * Map of PooledConnectionAndInfo instances
-     */
-    private final Map<PooledConnection, PooledConnectionAndInfo> pcMap = new ConcurrentHashMap<>();
-
-    /**
      * Creates a new {@code KeyedPoolableConnectionFactory}.
      *
      * @param cpds
@@ -72,7 +65,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     @Override
-    public void activateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
+    public void activateObject(final UserPassKey ignored, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
         validateLifetime(pooledObject);
     }
 
@@ -147,7 +140,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * Closes the PooledConnection and stops listening for events from it.
      */
     @Override
-    public void destroyObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
+    public void destroyObject(final UserPassKey ignored, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
         final PooledConnection pooledConnection = pooledObject.getObject().getPooledConnection();
         pooledConnection.removeConnectionEventListener(this);
         pcMap.remove(pooledConnection);
@@ -203,22 +196,19 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
         } else {
             pooledConnection = cpds.getPooledConnection(userName, password);
         }
-
         if (pooledConnection == null) {
             throw new IllegalStateException("Connection pool data source returned null from getPooledConnection");
         }
-
         // should we add this object as a listener or the pool.
         // consider the validateObject method in decision
         pooledConnection.addConnectionEventListener(this);
         final PooledConnectionAndInfo pci = new PooledConnectionAndInfo(pooledConnection, userPassKey);
         pcMap.put(pooledConnection, pci);
-
         return new DefaultPooledObject<>(pci);
     }
 
     @Override
-    public void passivateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
+    public void passivateObject(final UserPassKey ignored, final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
         validateLifetime(pooledObject);
     }
 
@@ -240,7 +230,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * A query validation timeout greater than 0 and less than 1 second is converted to 1 second.
      * </p>
      *
-     * @param key
+     * @param ignored
      *            ignored
      * @param pooledObject
      *            wrapped {@code PooledConnectionAndInfo} containing the connection to validate
@@ -248,7 +238,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
      */
     @Override
-    public boolean validateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) {
+    public boolean validateObject(final UserPassKey ignored, final PooledObject<PooledConnectionAndInfo> pooledObject) {
         return super.validateObject(pooledObject);
     }
 }
