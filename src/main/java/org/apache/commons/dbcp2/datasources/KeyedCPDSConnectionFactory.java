@@ -244,12 +244,12 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
      * Sets the maximum lifetime of a connection after which the connection will always fail activation,
      * passivation and validation.
      *
-     * @param maxConnLifetimeMillis
+     * @param maxConnDuration
      *            A value of zero or less indicates an infinite lifetime. The default value is -1 milliseconds.
      * @since 2.10.0
      */
-    public void setMaxConn(final Duration maxConnLifetimeMillis) {
-        this.maxConnDuration = maxConnLifetimeMillis;
+    public void setMaxConn(final Duration maxConnDuration) {
+        this.maxConnDuration = maxConnDuration;
     }
 
     /**
