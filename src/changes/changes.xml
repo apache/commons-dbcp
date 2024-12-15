@@ -70,8 +70,8 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- ADD -->
       <!-- UPDATE -->
       <!-- REMOVE -->
-      <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed two constructors and two methods from the package-private class CPDSConnectionFactory; this is binary compatible.</action>
-      <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed one constructor and two methods from the package-private class KeyedCPDSConnectionFactory; this is binary compatible.</action>
+      <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed internal constructors and methods from the package-private class CPDSConnectionFactory; this is binary compatible.</action>
+      <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed an internal constructor and methods from the package-private class KeyedCPDSConnectionFactory; this is binary compatible.</action>
     </release>
     <release version="2.13.0" date="2024-11-23" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->

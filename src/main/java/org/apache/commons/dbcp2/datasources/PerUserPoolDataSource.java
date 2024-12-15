@@ -689,7 +689,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         // the factory with the pool, so we do not have to do so
         // explicitly)
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(),
-                isRollbackAfterValidation(), userName, password);
+                isRollbackAfterValidation(), userName, Utils.toCharArray(password));
         factory.setMaxConn(getMaxConnDuration());
         // Create an object pool to contain our PooledConnections
         @SuppressWarnings("resource")
