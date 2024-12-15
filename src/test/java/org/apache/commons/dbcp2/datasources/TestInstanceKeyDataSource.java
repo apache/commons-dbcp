@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Properties;
 
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
@@ -311,6 +312,13 @@ public class TestInstanceKeyDataSource {
         assertEquals(-1, spds.getValidationQueryTimeout());
         spds.setValidationQueryTimeout(10);
         assertEquals(10, spds.getValidationQueryTimeout());
+    }
+
+    @Test
+    public void testValidationQueryTimeoutDuration() {
+        assertEquals(Duration.ofSeconds(-1), spds.getValidationQueryTimeoutDuration());
+        spds.setValidationQueryTimeout(Duration.ofSeconds(10));
+        assertEquals(Duration.ofSeconds(10), spds.getValidationQueryTimeoutDuration());
     }
 
     @Test
