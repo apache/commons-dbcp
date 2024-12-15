@@ -339,45 +339,46 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
         boolean valid = false;
         final PooledConnection pooledConn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
+        // logical Connection from the PooledConnection must be closed
+        // before another one can be requested and closing it will
+        // generate an event. Keep track so we know not to return
+        // the PooledConnection
         validatingSet.add(pooledConn);
-        final int timeoutSeconds = toSeconds(validationQueryTimeoutDuration);
-        if (validationQuery == null) {
-            try {
-                conn = pooledConn.getConnection();
-                valid = conn.isValid(timeoutSeconds);
-            } catch (final SQLException e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pooledConn);
-            }
-        } else {
-            Statement stmt = null;
-            ResultSet rset = null;
-            // logical Connection from the PooledConnection must be closed
-            // before another one can be requested and closing it will
-            // generate an event. Keep track so we know not to return
-            // the PooledConnection
-            validatingSet.add(pooledConn);
-            try {
-                conn = pooledConn.getConnection();
-                stmt = conn.createStatement();
-                if (timeoutSeconds > 0) {
-                    stmt.setQueryTimeout(timeoutSeconds);
+        try {
+            final int timeoutSeconds = toSeconds(validationQueryTimeoutDuration);
+            if (validationQuery == null) {
+                try {
+                    conn = pooledConn.getConnection();
+                    valid = conn.isValid(timeoutSeconds);
+                } catch (final SQLException e) {
+                    valid = false;
+                } finally {
+                    Utils.closeQuietly((AutoCloseable) conn);
                 }
-                rset = stmt.executeQuery(validationQuery);
-                valid = rset.next();
-                if (rollbackAfterValidation) {
-                    conn.rollback();
+            } else {
+                Statement stmt = null;
+                ResultSet rset = null;
+                try {
+                    conn = pooledConn.getConnection();
+                    stmt = conn.createStatement();
+                    if (timeoutSeconds > 0) {
+                        stmt.setQueryTimeout(timeoutSeconds);
+                    }
+                    rset = stmt.executeQuery(validationQuery);
+                    valid = rset.next();
+                    if (rollbackAfterValidation) {
+                        conn.rollback();
+                    }
+                } catch (final Exception e) {
+                    valid = false;
+                } finally {
+                    Utils.closeQuietly((AutoCloseable) rset);
+                    Utils.closeQuietly((AutoCloseable) stmt);
+                    Utils.closeQuietly((AutoCloseable) conn);
                 }
-            } catch (final Exception e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly((AutoCloseable) rset);
-                Utils.closeQuietly((AutoCloseable) stmt);
-                Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pooledConn);
             }
+        } finally {
+            validatingSet.remove(pooledConn);
         }
         return valid;
     }
