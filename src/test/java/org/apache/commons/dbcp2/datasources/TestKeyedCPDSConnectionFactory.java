@@ -62,7 +62,7 @@ public class TestKeyedCPDSConnectionFactory {
     public void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         final UserPassKey key = new UserPassKey("userName", "password");
-        final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, -1, false);
+        final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, Duration.ofSeconds(-1), false);
         try (final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory)) {
             factory.setPool(pool);
 
@@ -123,7 +123,7 @@ public class TestKeyedCPDSConnectionFactory {
     @Test
     public void testNullValidationQuery() throws Exception {
         final UserPassKey key = new UserPassKey("userName", "password");
-        final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, -1, false);
+        final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, Duration.ofSeconds(-1), false);
         try (final GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory)) {
             factory.setPool(pool);
             pool.setTestOnBorrow(true);

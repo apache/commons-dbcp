@@ -89,27 +89,6 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
-    /**
-     * Creates a new {@code KeyedPoolableConnectionFactory}.
-     *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnections
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutSeconds
-     *            The time, in seconds, to allow for the validation query to complete
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @deprecated Use {@link #KeyedCPDSConnectionFactory(ConnectionPoolDataSource, String, Duration, boolean)}.
-     */
-    @Deprecated
-    public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation) {
-        this(cpds, validationQuery, Duration.ofSeconds(validationQueryTimeoutSeconds), rollbackAfterValidation);
-    }
-
     @Override
     public void activateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
@@ -271,33 +250,6 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
      */
     public void setMaxConn(final Duration maxConnLifetimeMillis) {
         this.maxConnDuration = maxConnLifetimeMillis;
-    }
-
-    /**
-     * Sets the maximum lifetime of a connection after which the connection will always fail activation,
-     * passivation and validation.
-     *
-     * @param maxConnLifetimeMillis
-     *            A value of zero or less indicates an infinite lifetime. The default value is -1 milliseconds.
-     * @since 2.9.0
-     * @deprecated Use {@link #setMaxConn(Duration)}.
-     */
-    @Deprecated
-    public void setMaxConnLifetime(final Duration maxConnLifetimeMillis) {
-        this.maxConnDuration = maxConnLifetimeMillis;
-    }
-
-    /**
-     * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
-     * passivation and validation.
-     *
-     * @param maxConnLifetimeMillis
-     *            A value of zero or less indicates an infinite lifetime. The default value is -1.
-     * @deprecated Use {@link #setMaxConnLifetime(Duration)}.
-     */
-    @Deprecated
-    public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
-        setMaxConn(Duration.ofMillis(maxConnLifetimeMillis));
     }
 
     /**
