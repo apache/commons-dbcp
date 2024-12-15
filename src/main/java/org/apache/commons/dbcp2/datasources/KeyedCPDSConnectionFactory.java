@@ -54,7 +54,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
     private final Duration validationQueryTimeoutDuration;
     private final boolean rollbackAfterValidation;
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
-    private Duration maxConnLifetime = Duration.ofMillis(-1);
+    private Duration maxConnDuration = Duration.ofMillis(-1);
 
     /**
      * Map of PooledConnections for which close events are ignored. Connections are muted when they are being validated.
@@ -270,7 +270,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
      * @since 2.10.0
      */
     public void setMaxConn(final Duration maxConnLifetimeMillis) {
-        this.maxConnLifetime = maxConnLifetimeMillis;
+        this.maxConnDuration = maxConnLifetimeMillis;
     }
 
     /**
@@ -284,7 +284,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
      */
     @Deprecated
     public void setMaxConnLifetime(final Duration maxConnLifetimeMillis) {
-        this.maxConnLifetime = maxConnLifetimeMillis;
+        this.maxConnDuration = maxConnLifetimeMillis;
     }
 
     /**
@@ -313,7 +313,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
     }
 
     private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
-        Utils.validateLifetime(pooledObject, maxConnLifetime);
+        Utils.validateLifetime(pooledObject, maxConnDuration);
     }
 
     /**
