@@ -352,8 +352,6 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
                     valid = conn.isValid(timeoutSeconds);
                 } catch (final SQLException e) {
                     valid = false;
-                } finally {
-                    Utils.closeQuietly((AutoCloseable) conn);
                 }
             } else {
                 Statement stmt = null;
@@ -374,10 +372,10 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
                 } finally {
                     Utils.closeQuietly((AutoCloseable) rset);
                     Utils.closeQuietly((AutoCloseable) stmt);
-                    Utils.closeQuietly((AutoCloseable) conn);
                 }
             }
         } finally {
+            Utils.closeQuietly((AutoCloseable) conn);
             validatingSet.remove(pooledConn);
         }
         return valid;
