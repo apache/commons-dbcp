@@ -459,7 +459,12 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             // The tester statement throws a SQLTimeoutException when the timeout is > 0 and < 5.
             sharedPoolDataSource.setValidationQueryTimeout(Duration.ofSeconds(1));
             // The SQLTimeoutException is lost for now
-            final SQLException e = assertThrows(SQLException.class, sharedPoolDataSource::getConnection);
+            SQLException e = assertThrows(SQLException.class, sharedPoolDataSource::getConnection);
+            assertEquals(NoSuchElementException.class, e.getCause().getClass());
+            // timeout > 0 and < 1
+            sharedPoolDataSource.setValidationQueryTimeout(Duration.ofMillis(999));
+            // The SQLTimeoutException is lost for now
+            e = assertThrows(SQLException.class, sharedPoolDataSource::getConnection);
             assertEquals(NoSuchElementException.class, e.getCause().getClass());
         }
     }
