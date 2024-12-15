@@ -1195,7 +1195,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     protected ConnectionPoolDataSource testCPDS(final String userName, final String userPassword)
             throws javax.naming.NamingException, SQLException {
-        // The source of physical db connections
+        // The source of physical database connections
         ConnectionPoolDataSource cpds = this.dataSource;
         if (cpds == null) {
             Context ctx = null;
