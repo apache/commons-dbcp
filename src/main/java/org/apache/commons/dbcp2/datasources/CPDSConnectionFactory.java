@@ -298,19 +298,6 @@ final class CPDSConnectionFactory
     }
 
     /**
-     * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
-     * passivation and validation.
-     *
-     * @param maxConnLifetimeMillis
-     *            A value of zero or less indicates an infinite lifetime. The default value is -1.
-     * @deprecated Use {@link #setMaxConn(Duration)}.
-     */
-    @Deprecated
-    public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
-        setMaxConnLifetime(Duration.ofMillis(maxConnLifetimeMillis));
-    }
-
-    /**
      * Sets the database password used when creating new connections.
      *
      * @param userPassword
