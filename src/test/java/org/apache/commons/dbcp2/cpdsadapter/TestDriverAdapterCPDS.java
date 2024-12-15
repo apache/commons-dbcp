@@ -168,7 +168,9 @@ public class TestDriverAdapterCPDS {
         }
     }
 
-    // https://issues.apache.org/jira/browse/DBCP-376
+    /**
+     * Tests https://issues.apache.org/jira/browse/DBCP-376
+     */
     @Test
     public void testDbcp367() throws Exception {
         final ThreadDbcp367[] threads = new ThreadDbcp367[200];
