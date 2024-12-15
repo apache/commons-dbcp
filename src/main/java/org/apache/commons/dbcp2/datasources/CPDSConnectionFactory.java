@@ -422,19 +422,19 @@ final class CPDSConnectionFactory
         return builder.toString();
     }
 
-    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
-        Utils.validateLifetime(p, maxConnDuration);
+    private void validateLifetime(final PooledObject<PooledConnectionAndInfo> pooledObject) throws SQLException {
+        Utils.validateLifetime(pooledObject, maxConnDuration);
     }
 
     @Override
-    public boolean validateObject(final PooledObject<PooledConnectionAndInfo> p) {
+    public boolean validateObject(final PooledObject<PooledConnectionAndInfo> pooledObject) {
         try {
-            validateLifetime(p);
+            validateLifetime(pooledObject);
         } catch (final Exception e) {
             return false;
         }
         boolean valid = false;
-        final PooledConnection pconn = p.getObject().getPooledConnection();
+        final PooledConnection pconn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pconn);
         if (null == validationQuery) {
