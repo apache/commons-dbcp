@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.sql.DataSource;
 
@@ -165,6 +166,26 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         for (final Connection element : c) {
             element.close();
         }
+    }
+
+    /**
+     * Tests https://issues.apache.org/jira/browse/DBCP-597
+     */
+    @Test
+    public void testDbcp597() throws SQLException {
+        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        tds.setDefaultTestOnBorrow(true);
+        tds.setValidationQuery("SELECT 1");
+        // The tester statement throws a SQLTimeoutException when the timeout is > 0 and < 5.
+        tds.setValidationQueryTimeout(Duration.ofSeconds(1));
+        // The SQLTimeoutException is lost for now
+        SQLException e = assertThrows(SQLException.class, tds::getConnection);
+        assertEquals(NoSuchElementException.class, e.getCause().getClass());
+        // timeout > 0 and < 1
+        tds.setValidationQueryTimeout(Duration.ofMillis(999));
+        // The SQLTimeoutException is lost for now
+        e = assertThrows(SQLException.class, tds::getConnection);
+        assertEquals(NoSuchElementException.class, e.getCause().getClass());
     }
 
     // see issue https://issues.apache.org/bugzilla/show_bug.cgi?id=23843

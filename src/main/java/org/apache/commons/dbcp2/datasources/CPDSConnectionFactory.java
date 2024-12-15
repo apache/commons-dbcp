@@ -17,9 +17,7 @@
 package org.apache.commons.dbcp2.datasources;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Duration;
 
 import javax.sql.ConnectionEvent;
@@ -27,7 +25,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -279,58 +276,5 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
         builder.append(pcMap);
         builder.append("]");
         return builder.toString();
-    }
-
-    @Override
-    public boolean validateObject(final PooledObject<PooledConnectionAndInfo> pooledObject) {
-        try {
-            validateLifetime(pooledObject);
-        } catch (final Exception e) {
-            return false;
-        }
-        boolean valid = false;
-        final PooledConnection pconn = pooledObject.getObject().getPooledConnection();
-        Connection conn = null;
-        validatingSet.add(pconn);
-        if (null == validationQuery) {
-            Duration timeoutDuration = validationQueryTimeoutDuration;
-            if (timeoutDuration.isNegative()) {
-                timeoutDuration = Duration.ZERO;
-            }
-            try {
-                conn = pconn.getConnection();
-                valid = conn.isValid((int) timeoutDuration.getSeconds());
-            } catch (final SQLException e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pconn);
-            }
-        } else {
-            Statement stmt = null;
-            ResultSet rset = null;
-            // logical Connection from the PooledConnection must be closed
-            // before another one can be requested and closing it will
-            // generate an event. Keep track so we know not to return
-            // the PooledConnection
-            validatingSet.add(pconn);
-            try {
-                conn = pconn.getConnection();
-                stmt = conn.createStatement();
-                rset = stmt.executeQuery(validationQuery);
-                valid = rset.next();
-                if (rollbackAfterValidation) {
-                    conn.rollback();
-                }
-            } catch (final Exception e) {
-                valid = false;
-            } finally {
-                Utils.closeQuietly((AutoCloseable) rset);
-                Utils.closeQuietly((AutoCloseable) stmt);
-                Utils.closeQuietly((AutoCloseable) conn);
-                validatingSet.remove(pconn);
-            }
-        }
-        return valid;
     }
 }
