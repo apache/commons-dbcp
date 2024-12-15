@@ -149,31 +149,6 @@ final class CPDSConnectionFactory
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
-    /**
-     * Creates a new {@code PoolableConnectionFactory}.
-     *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutSeconds
-     *            Timeout in seconds before validation fails
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param userName
-     *            The user name to use to create connections
-     * @param userPassword
-     *            The password to use to create connections
-     * @deprecated Use {@link #CPDSConnectionFactory(ConnectionPoolDataSource, String, Duration, boolean, String, String)}.
-     */
-    @Deprecated
-    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final int validationQueryTimeoutSeconds,
-            final boolean rollbackAfterValidation, final String userName, final String userPassword) {
-        this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName, Utils.toCharArray(userPassword));
-    }
-
     @Override
     public void activateObject(final PooledObject<PooledConnectionAndInfo> p) throws SQLException {
         validateLifetime(p);
