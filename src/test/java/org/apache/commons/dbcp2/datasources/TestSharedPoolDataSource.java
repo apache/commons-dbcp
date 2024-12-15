@@ -701,4 +701,24 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         conn2.close();
         conn3.close();
     }
+
+    // https://issues.apache.org/jira/browse/DBCP-597
+    @Test
+    void failingTestDbcp597() throws SQLException {
+
+        try (final SharedPoolDataSource sharedPoolDataSource = new SharedPoolDataSource()) {
+            sharedPoolDataSource.setConnectionPoolDataSource(pcds);
+            sharedPoolDataSource.setMaxTotal(getMaxTotal());
+            sharedPoolDataSource.setDefaultMaxWait(getMaxWaitDuration());
+            sharedPoolDataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            sharedPoolDataSource.setDefaultAutoCommit(Boolean.TRUE);
+            sharedPoolDataSource.setDefaultTestOnBorrow(true);
+            sharedPoolDataSource.setValidationQuery("SELECT 1");
+            sharedPoolDataSource.setValidationQueryTimeout(Duration.ofSeconds(1));
+
+            final SQLException ex = assertThrows(SQLException.class, sharedPoolDataSource::getConnection);
+            assertEquals(NoSuchElementException.class, ex.getCause().getClass());
+            assertEquals("Unable to validate object", ex.getCause().getMessage());
+        }
+    }
 }
