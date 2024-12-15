@@ -189,10 +189,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         if ("null".equals(sql)) {
             return null;
         }
-        if (queryTimeout > 0 && queryTimeout < 5) {
-            // Simulate timeout if queryTimout is set to less than 5 seconds
-            throw new SQLException("query timeout");
-        }
+        checkQueryTimeout();
         return new TesterResultSet(this, resultSetType, resultSetConcurrency);
     }
 
@@ -202,6 +199,7 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         if ("null".equals(sql)) {
             return null;
         }
+        checkQueryTimeout();
         return new TesterResultSet(this, resultSetType, resultSetConcurrency);
     }
 

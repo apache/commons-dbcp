@@ -318,12 +318,16 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
 
     /**
      * Validates a pooled connection.
+     * <p>
+     * A query validation timeout greater than 0 and less than 1 second is converted to 1 second.
+     * </p>
      *
      * @param key
      *            ignored
      * @param pooledObject
      *            wrapped {@code PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation succeeds
+     * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
      */
     @Override
     public boolean validateObject(final UserPassKey key, final PooledObject<PooledConnectionAndInfo> pooledObject) {
@@ -361,6 +365,10 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
             try {
                 conn = pooledConn.getConnection();
                 stmt = conn.createStatement();
+                if (!validationQueryTimeoutDuration.isNegative() && !validationQueryTimeoutDuration.isZero()) {
+                    long seconds = validationQueryTimeoutDuration.getSeconds();
+                    stmt.setQueryTimeout(seconds != 0 ? Math.toIntExact(seconds) : 1);
+                }
                 rset = stmt.executeQuery(validationQuery);
                 valid = rset.next();
                 if (rollbackAfterValidation) {

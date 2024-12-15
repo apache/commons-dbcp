@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import javax.sql.DataSource;
 
@@ -443,6 +444,23 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
             t2.join();
         } catch (final InterruptedException ie) {
             // Ignore
+        }
+    }
+
+    /**
+     * Tests https://issues.apache.org/jira/browse/DBCP-597
+     */
+    @Test
+    public void testDbcp597() throws SQLException {
+        try (final SharedPoolDataSource sharedPoolDataSource = new SharedPoolDataSource()) {
+            sharedPoolDataSource.setConnectionPoolDataSource(pcds);
+            sharedPoolDataSource.setDefaultTestOnBorrow(true);
+            sharedPoolDataSource.setValidationQuery("SELECT 1");
+            // The tester statement throws a SQLTimeoutException when the timeout is > 0 and < 5.
+            sharedPoolDataSource.setValidationQueryTimeout(Duration.ofSeconds(1));
+            // The SQLTimeoutException is lost for now
+            final SQLException e = assertThrows(SQLException.class, sharedPoolDataSource::getConnection);
+            assertEquals(NoSuchElementException.class, e.getCause().getClass());
         }
     }
 

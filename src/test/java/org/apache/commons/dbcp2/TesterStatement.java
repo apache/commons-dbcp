@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
@@ -190,10 +191,7 @@ public class TesterStatement extends AbandonedTrace implements Statement {
         default:
             break;
         }
-        // Simulate timeout if queryTimout is set to less than 5 seconds
-        if (queryTimeout > 0 && queryTimeout < 5) {
-            throw new SQLException("query timeout");
-        }
+        checkQueryTimeout();
         return new TesterResultSet(this);
     }
 
@@ -405,5 +403,12 @@ public class TesterStatement extends AbandonedTrace implements Statement {
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
+    }
+
+    protected void checkQueryTimeout() throws SQLTimeoutException {
+        if (queryTimeout > 0 && queryTimeout < 5) {
+            // Simulate timeout if queryTimout is set to less than 5 seconds
+            throw new SQLTimeoutException("query timeout " + queryTimeout);
+        }
     }
 }
