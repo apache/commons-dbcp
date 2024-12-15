@@ -340,14 +340,11 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
         final PooledConnection pooledConn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pooledConn);
+        final int timeoutSeconds = toSeconds(validationQueryTimeoutDuration);
         if (validationQuery == null) {
-            Duration timeoutDuration = validationQueryTimeoutDuration;
-            if (timeoutDuration.isNegative()) {
-                timeoutDuration = Duration.ZERO;
-            }
             try {
                 conn = pooledConn.getConnection();
-                valid = conn.isValid((int) timeoutDuration.getSeconds());
+                valid = conn.isValid(timeoutSeconds);
             } catch (final SQLException e) {
                 valid = false;
             } finally {
@@ -365,9 +362,8 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
             try {
                 conn = pooledConn.getConnection();
                 stmt = conn.createStatement();
-                if (!validationQueryTimeoutDuration.isNegative() && !validationQueryTimeoutDuration.isZero()) {
-                    long seconds = validationQueryTimeoutDuration.getSeconds();
-                    stmt.setQueryTimeout(seconds != 0 ? Math.toIntExact(seconds) : 1);
+                if (timeoutSeconds > 0) {
+                    stmt.setQueryTimeout(timeoutSeconds);
                 }
                 rset = stmt.executeQuery(validationQuery);
                 valid = rset.next();
@@ -384,5 +380,20 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
             }
         }
         return valid;
+    }
+
+    /**
+     * Converts a duration to seconds where a duration less than one second becomes 1 second.
+     *
+     * @param duration the duration to convert.
+     * @return a duration to seconds where a duration less than one second becomes 1 second.
+     * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
+     */
+    private int toSeconds(final Duration duration) {
+        if (duration.isNegative() || duration.isZero()) {
+            return 0;
+        }
+        long seconds = validationQueryTimeoutDuration.getSeconds();
+        return seconds != 0 ? Math.toIntExact(seconds) : 1;
     }
 }
