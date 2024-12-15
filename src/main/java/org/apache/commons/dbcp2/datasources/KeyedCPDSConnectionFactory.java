@@ -336,7 +336,7 @@ final class KeyedCPDSConnectionFactory implements KeyedPooledObjectFactory<UserP
         final PooledConnection pooledConn = pooledObject.getObject().getPooledConnection();
         Connection conn = null;
         validatingSet.add(pooledConn);
-        if (null == validationQuery) {
+        if (validationQuery == null) {
             Duration timeoutDuration = validationQueryTimeoutDuration;
             if (timeoutDuration.isNegative()) {
                 timeoutDuration = Duration.ZERO;
