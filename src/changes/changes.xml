@@ -66,7 +66,7 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- FIX -->
       <action type="fix" issue="DBCP-597" dev="ggregory" due-to="Xiaotian Bai, Raju Gupta, Gary Gregory">Validation query not timing out on connections managed by SharedPoolDataSource.</action>
       <action type="fix" issue="DBCP-597" dev="ggregory" due-to="Gary Gregory">Validation query not timing out on connections managed by PerUserPoolDataSource.</action>
-      <action type="fix" issue="DBCP-597" dev="ggregory" due-to="Gary Gregory">KeyedCPDSConnectionFactory.validateObject(UserPassKey, PooledObject) does ignores timeouts less than 1 second when there is no validation query.</action>
+      <action type="fix" issue="DBCP-597" dev="ggregory" due-to="Gary Gregory">KeyedCPDSConnectionFactory.validateObject(UserPassKey, PooledObject) ignores timeouts less than 1 second when there is no validation query.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Modernize tests to use JUnit 5 features.</action> 
       <!-- ADD -->
       <!-- UPDATE -->
