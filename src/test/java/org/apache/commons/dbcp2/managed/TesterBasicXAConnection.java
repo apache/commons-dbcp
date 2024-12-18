@@ -46,7 +46,7 @@ public class TesterBasicXAConnection implements XAConnection {
      * Delegates everything to a Connection, except for close() which just
      * notifies the parent XAConnection.
      */
-    public static class ConnectionHandle implements InvocationHandler {
+    public static final class ConnectionHandle implements InvocationHandler {
 
         public Connection conn;
 

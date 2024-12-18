@@ -45,7 +45,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
      * Delegates everything to the BasicDataSource (ds field), except for
      * getXAConnection which creates a BasicXAConnection.
      */
-    public class XADataSourceHandle implements InvocationHandler {
+    public final class XADataSourceHandle implements InvocationHandler {
 
         protected XAConnection getXAConnection() throws SQLException {
             return new TesterBasicXAConnection(ds.getConnection(), closeCounter);

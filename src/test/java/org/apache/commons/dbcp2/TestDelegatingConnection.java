@@ -44,7 +44,7 @@ public class TestDelegatingConnection {
      * Delegate that doesn't support read-only or auto-commit. It will merely take the input value of setReadOnly and setAutoCommit and discard it, to keep
      * false.
      */
-    static class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
+    static final class NoReadOnlyOrAutoCommitConnection extends TesterConnection {
         private final boolean readOnly = false;
         private final boolean autoCommit = false;
 
@@ -76,7 +76,7 @@ public class TestDelegatingConnection {
     /**
      * Delegate that will throw RTE on toString Used to validate fix for DBCP-241
      */
-    static class RTEGeneratingConnection extends TesterConnection {
+    static final class RTEGeneratingConnection extends TesterConnection {
 
         public RTEGeneratingConnection() {
             super("", "");
