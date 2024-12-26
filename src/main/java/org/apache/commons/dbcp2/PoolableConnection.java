@@ -83,7 +83,6 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      */
     private final Collection<String> disconnectionIgnoreSqlCodes;
 
-
     /** Whether or not to fast fail validation after fatal connection errors */
     private final boolean fastFailValidation;
 

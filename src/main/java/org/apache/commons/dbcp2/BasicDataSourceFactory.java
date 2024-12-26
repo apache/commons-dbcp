@@ -131,7 +131,6 @@ public class BasicDataSourceFactory implements ObjectFactory {
      */
     private static final String PROP_DISCONNECTION_IGNORE_SQL_CODES = "disconnectionIgnoreSqlCodes";
 
-
     /*
      * Block with obsolete properties from DBCP 1.x. Warn users that these are ignored and they should use the 2.x
      * properties.
