@@ -15,8 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<!DOCTYPE org.apache.commons.menus SYSTEM 'https://commons.apache.org/build/maven-build.dtd'>
-<project name="DBCP">
+<project name="Apache Commons DBCP"
+  xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
   <bannerRight>
     <name>Commons DBCP</name>
     <src>/images/dbcp-logo-white.png</src>
@@ -40,7 +41,7 @@
       </menu>
   
       <menu name="Development">
-        <item name="History"                href="/changes-report.html"/>
+        <item name="History"                href="/changes.html"/>
         <item name="Building"               href="/building.html"/>
         <item name="Mailing&#xA0;Lists"     href="/mail-lists.html"/>
         <item name="Issue&#xA0;Tracking"    href="/issue-tracking.html"/>

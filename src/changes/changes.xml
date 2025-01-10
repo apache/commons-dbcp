@@ -39,9 +39,9 @@ and commit
 The <action> type attribute can be add,update,fix,remove.
 -->
 
-<document xmlns="http://maven.apache.org/changes/1.0.0"
+<document xmlns="http://maven.apache.org/changes/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <properties>
     <title>Apache Commons DBCP Release Notes</title>
   </properties>
@@ -70,6 +70,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Modernize tests to use JUnit 5 features.</action> 
       <!-- ADD -->
       <!-- UPDATE -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 78 to 79.</action>
       <!-- REMOVE -->
       <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed internal constructors and methods from the package-private class CPDSConnectionFactory; this is binary compatible.</action>
       <action type="remove" dev="ggregory" due-to="Gary Gregory">Removed an internal constructor and methods from the package-private class KeyedCPDSConnectionFactory; this is binary compatible.</action>
