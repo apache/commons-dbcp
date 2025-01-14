@@ -1414,7 +1414,7 @@ The <action> type attribute can be add,update,fix,remove.
     <release version="1.3" date="2010-02-14" description="Compatability release for JDBC 3.
       See version 1.4 description and change log.">
      <action type="update">
-        See &lt;a href="changes-report.html#a1.4"&gt;DBCP 1.4 Changes &lt;/a&gt; for details. Version
+        See &lt;a href="changes.html#a1.4"&gt;DBCP 1.4 Changes &lt;/a&gt; for details. Version
         1.3 is identical to 1.4, other than JDBC 4 methods being filtered out of the DBCP 1.3 sources. Changes
         Since 1.2.2 are the same for 1.3 and 1.4.
       </action>
