@@ -104,7 +104,7 @@ Removed
 ## End of main loop
 #end
 
-The list of changes is here: https://commons.apache.org/proper/commons-dbcp/changes-report.html
+The list of changes is here: https://commons.apache.org/proper/commons-dbcp/changes.html
 
 For complete information on ${project.name}, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the ${project.name} website:
