@@ -74,7 +74,6 @@
     <!-- <module name="OperatorWrap"/> -->
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
-    <module name="WhitespaceAroundCheck"/> 
     <!-- Modifier Checks -->
     <!-- See http://checkstyle.sf.net/config_modifiers.html -->
     <!-- <module name="ModifierOrder"/> <module name="RedundantModifier"/> -->
