@@ -78,15 +78,11 @@ public class TestPoolingDataSource extends TestConnectionPool {
 
     @Test
     public void testClose() throws Exception {
-
         final Properties properties = new Properties();
         properties.setProperty(Constants.KEY_USER, "userName");
         properties.setProperty(Constants.KEY_PASSWORD, "password");
-        final PoolableConnectionFactory f =
-            new PoolableConnectionFactory(
-                    new DriverConnectionFactory(new TesterDriver(),
-                            "jdbc:apache:commons:testdriver", properties),
-                    null);
+        final PoolableConnectionFactory f = new PoolableConnectionFactory(
+                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties), null);
         f.setValidationQuery("SELECT DUMMY FROM DUAL");
         f.setDefaultReadOnly(Boolean.TRUE);
         f.setDefaultAutoCommit(Boolean.TRUE);
@@ -94,7 +90,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
         p.setMaxTotal(getMaxTotal());
         p.setMaxWait(getMaxWaitDuration());
 
-        try ( PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p) ) {
+        try (PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p)) {
             final Connection connection = dataSource.getConnection();
             assertNotNull(connection);
             connection.close();
