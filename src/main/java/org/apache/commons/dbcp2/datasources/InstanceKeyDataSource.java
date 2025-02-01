@@ -460,10 +460,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      * @since 2.10.0
      */
@@ -472,10 +472,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      * @deprecated Use {@link #getDefaultSoftMinEvictableIdleDuration()}.
      */
@@ -485,10 +485,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getTestOnBorrow()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getTestOnBorrow()} for each per user pool.
      */
     public boolean getDefaultTestOnBorrow() {
@@ -496,10 +496,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getTestOnCreate()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getTestOnCreate()} for each per user pool.
      */
     public boolean getDefaultTestOnCreate() {
@@ -507,10 +507,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getTestOnReturn()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getTestOnReturn()} for each per user pool.
      */
     public boolean getDefaultTestOnReturn() {
@@ -518,10 +518,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Gets the default value for {@link
      * GenericObjectPool#getTestWhileIdle()} for each per user pool.
      *
-     * @return The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * @return The default value for {@link
      *         GenericObjectPool#getTestWhileIdle()} for each per user pool.
      */
     public boolean getDefaultTestWhileIdle() {
@@ -957,11 +957,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      *
      * @param defaultSoftMinEvictableIdleDuration
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      * @since 2.10.0
      */
@@ -971,11 +971,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      *
      * @param softMinEvictableIdleTimeMillis
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
      * @deprecated Use {@link #setDefaultSoftMinEvictableIdle(Duration)}.
      */
@@ -986,11 +986,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getTestOnBorrow()} for each per user pool.
      *
      * @param testOnBorrow
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getTestOnBorrow()} for each per user pool.
      */
     public void setDefaultTestOnBorrow(final boolean testOnBorrow) {
@@ -999,11 +999,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getTestOnCreate()} for each per user pool.
      *
      * @param testOnCreate
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getTestOnCreate()} for each per user pool.
      */
     public void setDefaultTestOnCreate(final boolean testOnCreate) {
@@ -1012,11 +1012,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getTestOnReturn()} for each per user pool.
      *
      * @param testOnReturn
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getTestOnReturn()} for each per user pool.
      */
     public void setDefaultTestOnReturn(final boolean testOnReturn) {
@@ -1025,11 +1025,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     * Sets the default value for {@link
      * GenericObjectPool#getTestWhileIdle()} for each per user pool.
      *
      * @param testWhileIdle
-     *            The default value for {@link org.apache.commons.pool2.impl.GenericObjectPool
+     *            The default value for {@link
      *            GenericObjectPool#getTestWhileIdle()} for each per user pool.
      */
     public void setDefaultTestWhileIdle(final boolean testWhileIdle) {
