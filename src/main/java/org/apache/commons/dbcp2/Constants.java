@@ -61,4 +61,14 @@ public class Constants {
      * @since 2.9.0
      */
     public static final String KEY_USER = "user";
+
+    /**
+     * Deprecated, only contains static methods.
+     *
+     * @deprecated Will be private in the next major version.
+     */
+    @Deprecated
+    public Constants() {
+        // empty
+    }
 }
