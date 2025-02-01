@@ -123,6 +123,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * Gets the connection URI.
+     *
      * @return The connection URI.
      * @since 2.6.0
      */
@@ -131,7 +133,9 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     }
 
     /**
-     * @return The Properties.
+     * Gets the Properties, may be null.
+     *
+     * @return The Properties, may be null.
      * @since 2.6.0
      */
     public Properties getProperties() {
@@ -139,7 +143,9 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     }
 
     /**
-     * @return The user name.
+     * Gets the user name, may be null.
+     *
+     * @return The user name, may be null.
      * @since 2.6.0
      */
     public String getUserName() {

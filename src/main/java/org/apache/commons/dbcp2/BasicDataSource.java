@@ -390,6 +390,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private ObjectNameWrapper registeredJmxObjectName;
 
     /**
+     * Constructs a new instance.
+     */
+    public BasicDataSource() {
+        // empty
+    }
+
+    /**
      * Adds a custom connection property to the set that will be passed to our JDBC driver. This <strong>MUST</strong>
      * be called before the first connection is retrieved (along with all the other configuration property setters).
      * Calls to this method after the connection pool has been initialized have no effect.
@@ -2112,8 +2119,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets whether connections created by this factory will fast fail validation.
+     *
+     * @param fastFailValidation true means connections created by this factory will fast fail validation.
      * @see #getFastFailValidation()
-     * @param fastFailValidation true means connections created by this factory will fast fail validation
      * @since 2.1
      */
     public void setFastFailValidation(final boolean fastFailValidation) {
@@ -2157,6 +2166,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets whether to log abandoned resources.
+     *
      * @param logAbandoned new logAbandoned property value
      */
     public void setLogAbandoned(final boolean logAbandoned) {
@@ -2394,8 +2405,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * @param removeAbandonedOnBorrow true means abandoned connections may be removed when connections are borrowed from
-     *                                the pool.
+     * Sets abandoned connections may be removed when connections are borrowed from the pool.
+     *
+     * @param removeAbandonedOnBorrow true means abandoned connections may be removed when connections are borrowed from the pool.
      * @see #getRemoveAbandonedOnBorrow()
      */
     public void setRemoveAbandonedOnBorrow(final boolean removeAbandonedOnBorrow) {
@@ -2403,6 +2415,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * Sets whether abandoned connections may be removed on pool maintenance.
+     *
      * @param removeAbandonedOnMaintenance true means abandoned connections may be removed on pool maintenance.
      * @see #getRemoveAbandonedOnMaintenance()
      */

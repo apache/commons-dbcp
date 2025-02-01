@@ -51,6 +51,14 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
      * @since 2.0
      */
     protected class CompletionListener implements TransactionContextListener {
+
+        /**
+         * Constructs a new instance.
+         */
+        public CompletionListener() {
+            // empty
+        }
+
         @Override
         public void afterCompletion(final TransactionContext completedContext, final boolean committed) {
             if (completedContext == transactionContext) {

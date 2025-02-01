@@ -718,9 +718,10 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
+     * Sets whether connections created by this factory will fast fail validation.
+     *
+     * @param fastFailValidation true means connections created by this factory will fast fail validation
      * @see #isFastFailValidation()
-     * @param fastFailValidation
-     *            true means connections created by this factory will fast fail validation
      * @since 2.1
      */
     public void setFastFailValidation(final boolean fastFailValidation) {

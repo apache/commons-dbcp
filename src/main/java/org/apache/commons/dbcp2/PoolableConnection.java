@@ -89,6 +89,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     private final Lock lock = new ReentrantLock();
 
     /**
+     * Constructs a new instance.
      *
      * @param conn
      *            my underlying connection
@@ -103,6 +104,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * Constructs a new instance.
      *
      * @param conn
      *            my underlying connection
@@ -238,6 +240,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * Gets the disconnection SQL codes.
+     *
      * @return The disconnection SQL codes.
      * @since 2.6.0
      */
@@ -311,6 +315,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * Tests whether to fail-fast.
+     *
      * @return Whether to fail-fast.
      * @since 2.6.0
      */

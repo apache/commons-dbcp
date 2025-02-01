@@ -375,6 +375,13 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public BasicDataSourceFactory() {
+        // empty
+    }
+
+    /**
      * Creates and return a new {@code BasicDataSource} instance. If no instance can be created, return
      * {@code null} instead.
      *

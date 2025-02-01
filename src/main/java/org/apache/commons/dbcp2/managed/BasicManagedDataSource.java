@@ -66,6 +66,13 @@ public class BasicManagedDataSource extends BasicDataSource {
     /** Transaction Synchronization Registry */
     private transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
+    /**
+     * Constructs a new instance.
+     */
+    public BasicManagedDataSource() {
+        // empty
+    }
+
     @Override
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         if (transactionManager == null) {
