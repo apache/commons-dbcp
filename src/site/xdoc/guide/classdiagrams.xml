@@ -15,8 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
     <title>Class Diagrams</title>
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
@@ -25,19 +26,19 @@
   <body>
 
     <section name="PoolingDataSource">
-      <img src="../images/uml/PoolingDataSource.gif" />
+      <img src="../images/uml/PoolingDataSource.gif" alt="Poolinf data source"/>
     </section>
 
     <section name="PoolingConnection">
-      <img src="../images/uml/PoolingConnection.gif" />
+      <img src="../images/uml/PoolingConnection.gif" alt="Pooling connection"/>
     </section>
 
     <section name="Delegating">
-      <img src="../images/uml/Delegating.gif" />
+      <img src="../images/uml/Delegating.gif" alt="Delegating"/>
     </section>
 
     <section name="AbandonedObjectPool">
-      <img src="../images/uml/AbandonedObjectPool.gif" />
+      <img src="../images/uml/AbandonedObjectPool.gif" alt="Abandoned object pool"/>
     </section>
 
   </body>

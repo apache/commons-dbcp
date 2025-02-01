@@ -15,8 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
     <title>Sequence Diagrams</title>
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
@@ -25,15 +26,15 @@
   <body>
 
     <section name="createDataSource">
-      <img src="../images/uml/createDataSource.gif" />
+      <img src="../images/uml/createDataSource.gif" alt="Create data source"/>
     </section>
 
     <section name="getConnection">
-      <img src="../images/uml/getConnection.gif" />
+      <img src="../images/uml/getConnection.gif" alt="Get connection"/>
     </section>
 
     <section name="prepareStatement">
-      <img src="../images/uml/prepareStatement.gif" />
+      <img src="../images/uml/prepareStatement.gif" alt="Pprepare statement"/>
     </section>
 
   </body>
