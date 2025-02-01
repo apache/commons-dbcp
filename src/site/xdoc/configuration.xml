@@ -15,8 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>BasicDataSource Configuration</title>
   <author email="dev@commons.apache.org">Commons Documentation Team</author>
@@ -49,7 +50,7 @@ testWhileIdle
 <section name="BasicDataSource Configuration Parameters">
 
 <table>
-<hr><th>Parameter</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Description</th></tr>
 <tr>
    <td>username</td>
    <td>The connection user name to be passed to our JDBC driver to establish a connection.</td>
@@ -78,7 +79,7 @@ testWhileIdle
 
 
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
 <tr>
    <td>defaultAutoCommit</td>
    <td>driver default</td>
@@ -150,7 +151,7 @@ testWhileIdle
 
 
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
 <tr>
    <td>initialSize</td>
    <td>0</td>
@@ -195,7 +196,7 @@ testWhileIdle
 </tr>
 </table>
 <p>
-<img src="images/icon_warning_sml.gif"/>
+<img src="images/icon_warning_sml.gif" alt="Warning"/>
 <strong>NOTE</strong>: If maxIdle is set too low on heavily loaded systems it is
 possible you will see connections being closed and almost immediately new
 connections being opened. This is a result of the active threads momentarily
@@ -206,7 +207,7 @@ loaded system will vary but the default is a good starting point.
 
 
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
 <tr>
    <td>validationQuery</td>
    <td></td>
@@ -342,7 +343,7 @@ isValid() method.
 </table>
 
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr><tr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr><tr>
    <td>poolPreparedStatements</td>
    <td>false</td>
    <td>Enable prepared statement pooling for this pool.</td>
@@ -357,17 +358,17 @@ isValid() method.
 </tr>
 </table>
 <p>
-<img src="images/icon_info_sml.gif"/>
+<img src="images/icon_info_sml.gif" alt="Info"/>
 This component has also the ability to pool PreparedStatements.
 When enabled a statement pool will be created for each Connection
 and PreparedStatements created by one of the following methods will be pooled:
+</p>
 <ul>
    <li>public PreparedStatement prepareStatement(String sql)</li>
    <li>public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)</li>
 </ul>
-</p>
 <p>
-<img src="images/icon_warning_sml.gif"/>
+<img src="images/icon_warning_sml.gif" alt="Warning"/>
 <strong>NOTE</strong> - Make sure your connection has some resources left for the other statements.
 Pooling PreparedStatements may keep their cursors open in the database, causing a connection to run out of cursors,
 especially if maxOpenPreparedStatements is left at the default (unlimited) and an application opens a large number
@@ -375,9 +376,8 @@ of different PreparedStatements per connection. To avoid this problem, maxOpenPr
 value less than the maximum number of cursors that can be open on a Connection.
 </p>
 
-
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr><tr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr><tr>
    <td>accessToUnderlyingConnectionAllowed</td>
    <td>false</td>
    <td>Controls if the PoolGuard allows access to the underlying connection.</td>
@@ -391,18 +391,17 @@ value less than the maximum number of cursors that can be open on a Connection.
     conn.close()
 </source>
 <p>
-<img src="images/icon_info_sml.gif"/>
+<img src="images/icon_info_sml.gif" alt="Info"/>
 Default is false, it is a potential dangerous operation and misbehaving programs can do harmful things. (closing the underlying or continue using it when the guarded connection is already closed)
 Be careful and only use when you need direct access to driver specific extensions.
 </p>
 <p>
-<img src="images/icon_warning_sml.gif"/>
+<img src="images/icon_warning_sml.gif" alt="Warning"/>
 <b>NOTE:</b> Do not close the underlying connection, only the original one.
 </p>
 
-
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
 <tr>
    <td>removeAbandonedOnMaintenance <br/>
        removeAbandonedOnBorrow
@@ -455,7 +454,7 @@ Be careful and only use when you need direct access to driver specific extension
 </tr>
 </table>
 <p>
-<img src="images/icon_info_sml.gif"/>
+<img src="images/icon_info_sml.gif" alt="Info"/>
 If you have enabled removeAbandonedOnMaintenance or removeAbandonedOnBorrow then it is possible that
 a connection is reclaimed by the pool because it is considered to be abandoned. This mechanism is triggered
 when (getNumIdle() &lt; 2) and (getNumActive() &gt; getMaxTotal() - 3) and removeAbandonedOnBorrow is true;
@@ -467,7 +466,7 @@ using one of these to execute a query (using one of the execute methods) resets 
 the parent connection.
 </p>
 <table>
-<hr><th>Parameter</th><th>Default</th><th>Description</th></hr>
+<tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
 <tr>
    <td>fastFailValidation</td>
    <td>false</td>

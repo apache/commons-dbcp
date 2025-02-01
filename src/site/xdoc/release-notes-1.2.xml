@@ -15,7 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
    <properties>
       <title>Release notes for Commons-DBCP 1.2</title>
       <author email="dev@commons.apache.org">Commons Documentation Team</author>
@@ -29,26 +31,18 @@
 
 <p>
 There were some new features were added since the 1.1 release on 20 October 2003.
+</p>
 <ul>
 <li>Performance optimizations for the PoolableConnectionFactory of BasicDataSource.</li>
-<br/>
 <li>Add BasicDataSourceFactory.createDataSource(Properties properties) for creating a BasicDataSource.</li>
-<br/>
 <li>Add initialSize parameter to do pre-loading of the connection.</li>
-<br/>
 <li>Refactoring of the DelegatingStatement classes.</li>
-<br/>
 <li>Make some properties dynamic (changeable at runtime), this will be completed in next release.</li>
-<br/>
 <li>Improvements to the prepared statement pooling.</li>
-<br/>
 <li>Driver specific changes/optimizations for: Oracle, Informix, DaffodilDB.</li>
-<br/>
 <li>Several fixes for PerUserPoolDataSource</li>
-<br/>
 <li>PoolingDriver uses now a PoolGuardConnectionWrapper by default. If access to the 
 underlying connection is needed, you have to enable it: PoolingDriver.setAccessToUnderlyingConnectionAllowed(true)</li>
-<br/>
 
 <li>The following issues were resolved since v1.1: (see Bugzilla for complete description)
 <table>
@@ -86,7 +80,6 @@ underlying connection is needed, you have to enable it: PoolingDriver.setAccessT
 </table>
 </li>
 </ul>
-</p>
 </section>
 </body>
 </document>

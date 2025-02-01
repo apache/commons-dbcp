@@ -15,7 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
    <properties>
       <title>Release notes for Commons-DBCP 1.1</title>
       <author email="dev@commons.apache.org">Commons Documentation Team</author>
@@ -25,30 +27,22 @@
      <section name="Release notes for Commons-DBCP 1.1">
 <p>
 There were a lot changes since the 1.0 release on 12 Aug 2002.
+</p>
 <ul>
 <li>All existing features can now be configured by JNDI Context providers (Tomcat)</li>
-<br/>
 <li>The double close() of a pooled connection is more effectively blocked
   (you may experience more "Already closed" SQLExceptions)</li>
-<br/>
 <li>Prepared statement pooling is now implemented in BasicDataSource
   (set poolPreparedStatements=true, maxOpenPreparedStatements=xxx)</li>
-<br/>
 <li>Access to the underlying connection is blocked by default
   You can access the underlying connection by setting
   accessToUnderlyingConnectionAllowed=true and by using the following construct:
   Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();</li>
-<br/>
 <li>New minIdle parameter for a minimum number of idle connections ready for use</li>
-<br/>
 <li>New connection default properties: defaultCatalog and defaultTransactionIsolation</li>
-<br/>
 <li>Missing driverClassName will now give the following error "No suitable driver"</li>
-<br/>
 <li>Bad validationQuery will produce a meaningful SQLException</li>
-<br/>
 <li>UML Class and sequence diagrams, configuration documentation</li>
-<br/>
 <li>The following issues were resolved since v1.0: (see Bugzilla for complete description)
 <table>
 <tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
@@ -132,7 +126,6 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=23304">23304</a></td><td>2003-09-21</td><td>Nor</td><td>FIXE</td><td>NullpointerException when no driverClassName is specified</td></tr>
 </table>
 </li>
-<br/>
 <li>The following issues were resolved since v1.1RC1:
 <table>
 <tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
@@ -140,7 +133,6 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=23491">23491</a></td><td>2003-10-13</td><td>Cri</td><td>FIXE</td><td>Can't configure PerUserPoolDataSource for use with tomcat, <a href="https://commons.apache.org/dbcp/apidocs/org/apache/commons/dbcp/datasources/package-summary.html">more...</a></td></tr>
 </table>
 </li>
-<br/>
 <li>The following issues were resolved since v1.1RC2:
 <table>
 <tr><th>ID</th><th>Date</th><th>Sev</th><th>State</th><th>Summary</th></tr>
@@ -148,7 +140,6 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 </table>
 </li>
 </ul>
-</p>
 </section>
 </body>
 </document>
