@@ -111,32 +111,70 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Instance key */
     private String instanceKey;
 
-    // Pool properties
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_BLOCK_WHEN_EXHAUSTED}. */
     private boolean defaultBlockWhenExhausted = BaseObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_EVICTION_POLICY_CLASS_NAME}. */
     private String defaultEvictionPolicyClassName = BaseObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_LIFO}. */
     private boolean defaultLifo = BaseObjectPoolConfig.DEFAULT_LIFO;
+
+    /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_IDLE_PER_KEY}. */
     private int defaultMaxIdle = GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
+
+    /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_TOTAL}. */
     private int defaultMaxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_MAX_WAIT}. */
     private Duration defaultMaxWaitDuration = BaseObjectPoolConfig.DEFAULT_MAX_WAIT;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_MIN_EVICTABLE_IDLE_DURATION}. */
     private Duration defaultMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_DURATION;
+
+    /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MIN_IDLE_PER_KEY}. */
     private int defaultMinIdle = GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_NUM_TESTS_PER_EVICTION_RUN}. */
     private int defaultNumTestsPerEvictionRun = BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_SOFT_MIN_EVICTABLE_IDLE_DURATION}. */
     private Duration defaultSoftMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_DURATION;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_CREATE}. */
     private boolean defaultTestOnCreate = BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_BORROW}. */
     private boolean defaultTestOnBorrow = BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_RETURN}. */
     private boolean defaultTestOnReturn = BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_WHILE_IDLE}. */
     private boolean defaultTestWhileIdle = BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
+
+    /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_DURATION_BETWEEN_EVICTION_RUNS}. */
     private Duration defaultDurationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_DURATION_BETWEEN_EVICTION_RUNS;
 
-    // Connection factory properties
+    /** Connection factory property defaults to null. */
     private String validationQuery;
+
+    /** Connection factory property defaults to -1 seconds. */
     private Duration validationQueryTimeoutDuration = Duration.ofSeconds(-1);
+
+    /** Connection factory property defaults to false. */
     private boolean rollbackAfterValidation;
+
+    /** Connection factory property defaults to -1 milliseconds. */
     private Duration maxConnDuration = Duration.ofMillis(-1);
 
-    // Connection properties
+    /** Connection property defaults to false. */
     private Boolean defaultAutoCommit;
+
+    /** Connection property defaults to {@link #UNKNOWN_TRANSACTIONISOLATION}. */
     private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
+
+    /** Connection property defaults to false. */
     private Boolean defaultReadOnly;
 
     /**
@@ -269,6 +307,12 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
     }
 
+    /**
+     * Gets the pooled connection manager for the given key.
+     *
+     * @param upkey the key.
+     * @return the pooled connection manager for the given key.
+     */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
 
     /**
@@ -1155,6 +1199,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         this.rollbackAfterValidation = rollbackAfterValidation;
     }
 
+    /**
+     * Sets up the defaults for a given connection.
+     *
+     * @param connection The target connection.
+     * @param userName   The user name for the connection.
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection
+     */
     protected abstract void setupDefaults(Connection connection, String userName) throws SQLException;
 
     /**
@@ -1193,6 +1244,15 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         this.validationQueryTimeoutDuration = Duration.ofSeconds(validationQueryTimeoutSeconds);
     }
 
+    /**
+     * Tests and returns whether a JNDI context can be created to lookup a ConnectionPoolDataSource to then access a PooledConnection connection.
+     *
+     * @param userName     An optional user name, may be null.
+     * @param userPassword An optional user user password, may be null.
+     * @return A ConnectionPoolDataSource from a JNDI context.
+     * @throws javax.naming.NamingException if a naming exception is encountered.
+     * @throws SQLException                 if a ConnectionPoolDataSource or PooledConnection is not available.
+     */
     protected ConnectionPoolDataSource testCPDS(final String userName, final String userPassword)
             throws javax.naming.NamingException, SQLException {
         // The source of physical database connections
@@ -1211,7 +1271,6 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             }
             cpds = (ConnectionPoolDataSource) ds;
         }
-
         // try to get a connection with the supplied userName/password
         PooledConnection conn = null;
         try {
@@ -1247,6 +1306,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         return builder.toString();
     }
 
+    /**
+     * Appends this instance's fields to a string builder.
+     *
+     * @param builder the target string builder.
+     */
     protected void toStringFields(final StringBuilder builder) {
         builder.append("getConnectionCalled=");
         builder.append(getConnectionCalled);

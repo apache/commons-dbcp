@@ -167,10 +167,14 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
+    /**
+     * Prepares internal states before calling {@link #passivate()}.
+     *
+     * @throws SQLException Thrown closing a traced resource or calling {@link #passivate()}.
+     */
     protected void prepareToReturn() throws SQLException {
         setClosedInternal(true);
         removeThisTrace(getConnectionInternal());
-
         // The JDBC spec requires that a statement close any open
         // ResultSet's when it is closed.
         // FIXME The PreparedStatement we're wrapping should handle this for us.
@@ -184,7 +188,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
                 throw new SQLExceptionList(thrownList);
             }
         }
-
         super.passivate();
     }
 

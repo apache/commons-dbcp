@@ -1045,6 +1045,12 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
+    /**
+     * Handles a SQL exception by delegating to a DelegatingStatement or DelegatingConnection.
+     *
+     * @param e The exception to handle.
+     * @throws SQLException Throws the given exception if not handled.
+     */
     protected void handleException(final SQLException e) throws SQLException {
         if (statement instanceof DelegatingStatement) {
             ((DelegatingStatement) statement).handleException(e);

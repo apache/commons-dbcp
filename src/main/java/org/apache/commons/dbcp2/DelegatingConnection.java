@@ -167,6 +167,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         }
     }
 
+    /**
+     * Closes the underlying connection for {@link #close()}.
+     *
+     * @throws SQLException SQLException if a database access error occurs.
+     */
     protected final void closeInternal() throws SQLException {
         try {
             passivate();

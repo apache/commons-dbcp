@@ -31,6 +31,10 @@ import java.util.List;
 public class SQLExceptionList extends SQLException {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * The list of causes.
+     */
     private final List<? extends Throwable> causeList;
 
     /**

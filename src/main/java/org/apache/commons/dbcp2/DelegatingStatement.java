@@ -93,6 +93,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    /**
+     * Checks whether this instance is closed and throws an exception if it is.
+     *
+     * @throws SQLException Thrown if this instance is closed.
+     */
     protected void checkOpen() throws SQLException {
         if (isClosed()) {
             throw new SQLException(this.getClass().getName() + " with address: \"" + toString() + "\" is closed.");
@@ -391,6 +396,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return getConnectionInternal(); // return the delegating connection that created this
     }
 
+    /**
+     * Gets the internal connection.
+     *
+     * @return the internal connection.
+     */
     protected DelegatingConnection<?> getConnectionInternal() {
         return connection;
     }
@@ -616,6 +626,12 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    /**
+     * Delegates the exception to the internal connection if set, otherwise rethrows it.
+     *
+     * @param e The exception to handle.
+     * @throws SQLException The given exception if not handled.
+     */
     protected void handleException(final SQLException e) throws SQLException {
         if (connection == null) {
             throw e;
@@ -631,6 +647,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         return closed;
     }
 
+    /**
+     * Tests whether this instance is closed.
+     *
+     * @return whether this instance is closed.
+     */
     protected boolean isClosedInternal() {
         return closed;
     }
@@ -680,6 +701,11 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         }
     }
 
+    /**
+     * Sets the closed internal state.
+     *
+     * @param closed whether the instance is now closed.
+     */
     protected void setClosedInternal(final boolean closed) {
         this.closed = closed;
     }

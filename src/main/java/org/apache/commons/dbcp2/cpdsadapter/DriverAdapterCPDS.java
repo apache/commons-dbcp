@@ -134,13 +134,22 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /** Log stream. NOT USED */
     private transient PrintWriter logWriter;
 
-    // PreparedStatement pool properties
+    /** PreparedStatement pool property defaults to false. */
     private boolean poolPreparedStatements;
+
+    /** PreparedStatement pool property defaults to 10. */
     private int maxIdle = 10;
+
+    /** PreparedStatement pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_DURATION_BETWEEN_EVICTION_RUNS}. */
     private Duration durationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_DURATION_BETWEEN_EVICTION_RUNS;
+
+    /** PreparedStatement pool property defaults to -1. */
     private int numTestsPerEvictionRun = -1;
+
+    /** PreparedStatement pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_MIN_EVICTABLE_IDLE_DURATION}. */
     private Duration minEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_DURATION;
 
+    /** Maximum number of prepared statements, defaults to -1, meaning no limit. */
     private int maxPreparedStatements = -1;
 
     /** Whether or not getConnection has been called */
@@ -248,7 +257,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Gets the maximum number of prepared statements.
      *
-     * @return maxPrepartedStatements value
+     * @return maxPrepartedStatements, defaults to -1, meaning no limit.
      */
     public int getMaxPreparedStatements() {
         return maxPreparedStatements;
@@ -658,7 +667,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Sets the maximum number of prepared statements.
      *
-     * @param maxPreparedStatements the new maximum number of prepared statements
+     * @param maxPreparedStatements the new maximum number of prepared statements, &lt;= 0 means no limit.
      */
     public void setMaxPreparedStatements(final int maxPreparedStatements) {
         this.maxPreparedStatements = maxPreparedStatements;

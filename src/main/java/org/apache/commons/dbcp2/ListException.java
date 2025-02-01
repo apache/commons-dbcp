@@ -27,6 +27,9 @@ public class ListException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * A list of causes.
+     */
     private final List<Throwable> exceptionList;
 
     /**
