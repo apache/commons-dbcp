@@ -485,4 +485,14 @@ public class Jdbc41Bridge {
         }
     }
 
+    /**
+     * Deprecated, this class only contains static methods.
+     *
+     * @deprecated Constructor will be private in the next major release.
+     */
+    @Deprecated
+    public Jdbc41Bridge() {
+        // empty
+    }
+
 }
