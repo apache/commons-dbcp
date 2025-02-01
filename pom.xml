@@ -240,13 +240,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${commons.javadoc.version}</version>
-          <configuration>
-            <links>
-              <link>https://commons.apache.org/proper/commons-pool/apidocs</link>
-              <link>${commons.javadoc.javaee.link}</link>
-            </links>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -376,6 +369,29 @@
       <properties>
         <surefire.argline>--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED</surefire.argline>
       </properties>
+    </profile>
+    <profile>
+      <id>jdk11-plus</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <!-- Javadoc 8 doesn't know how to deal with external sites that where generated with newer javadocs versions. -->
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <configuration>
+                <links>
+                  <link>https://commons.apache.org/proper/commons-pool/apidocs</link>
+                  <link>${commons.javadoc.javaee.link}</link>
+                </links>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
   </profiles>
   <developers>
