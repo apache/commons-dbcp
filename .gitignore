@@ -5,7 +5,6 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
-
 site-content
 /.checkstyle
 /.classpath
@@ -22,3 +21,5 @@ site-content
 .vscode
 *.iml
 .nbproject
+
+.DS_Store
