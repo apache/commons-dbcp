@@ -1,6 +1,5 @@
-Apache Commons DBCP
-Version 2.13.0
-RELEASE NOTES
+Apache Commons DBCP 2.13.0 Release Notes
+----------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.13.0.
 
@@ -50,9 +49,9 @@ https://commons.apache.org/proper/commons-dbcp/
 Download page: https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
-Apache Commons DBCP
-Version 2.12.0
-RELEASE NOTES
+
+Apache Commons DBCP 2.12.0 Release Notes
+----------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.12.0.
 
@@ -91,9 +90,8 @@ Download page: https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.11.0
-RELEASE NOTES
+Apache Commons DBCP 2.11.0 Release Notes
+----------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.11.0.
 
@@ -123,9 +121,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.10.0
-RELEASE NOTES
+Apache Commons DBCP 2.10.0 Release Notes
+----------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.10.0.
 
@@ -209,9 +206,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.9.0
-RELEASE NOTES
+Apache Commons DBCP 2.9.0 Release Notes
+---------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.9.0.
 
@@ -293,9 +289,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.8.0
-RELEASE NOTES
+Apache Commons DBCP 2.8.0 Release Notes
+---------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.8.0.
 
@@ -347,9 +342,9 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.7.0
-RELEASE NOTES
+Apache Commons DBCP 2.7.0 Release Notes
+---------------------------------------
+
 7 July 2019
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.7.0.
@@ -404,9 +399,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.6.0
-RELEASE NOTES
+Apache Commons DBCP 2.6.0 Release Notes
+---------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.6.0.
 
@@ -446,9 +440,8 @@ Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.5.0
-RELEASE NOTES
+Apache Commons DBCP 2.5.0 Release Notes
+---------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.5.0.
 
@@ -488,11 +481,8 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Download page: https://commons.apache.org/dbcp/download_dbcp.cgi
-
-Apache Commons DBCP
-Version 2.4.0
-RELEASE NOTES
+Apache Commons DBCP 2.4.0 Release Notes
+---------------------------------------
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.4.0.
 
@@ -532,9 +522,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.3.0
-RELEASE NOTES
+Apache Commons DBCP 2.3.0 Release Notes
+---------------------------------------
+
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.3.0.
 
@@ -567,9 +557,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.2.0
-RELEASE NOTES
+Apache Commons DBCP 2.2.0 Release Notes
+---------------------------------------
+
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.2.0.
 
@@ -632,9 +622,9 @@ Download from https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
 
 -----------------------------------------------------------------------------
 
-Apache Commons DBCP
-Version 2.1.1
-RELEASE NOTES
+Apache Commons DBCP 2.1.1 Release Notes
+---------------------------------------
+
 
 The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.1.1.
 
