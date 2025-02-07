@@ -20,6 +20,19 @@ updates:
     schedule:
       interval: "weekly"
       day: "friday"
+    ignore:
+      - dependency-name: org.jboss.narayana.jta:narayana-jta
+        versions:
+          # require Java 11
+          - ">= 5.13.0"
+      - dependency-name: org.jboss.logging:jboss-logging
+        versions:
+          # require Java 11
+          - ">= 3.5.0"
+      - dependency-name: com.h2database:h2
+        versions:
+          # require Java 11
+          - ">= 2.3.230"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
