@@ -51,7 +51,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * There are 3 different prepareCall statement methods so add a little complexity to reduce what would otherwise be lots
      * of copy and paste.
      */
-    private static abstract class AbstractPrepareCallCallback {
+    private abstract static class AbstractPrepareCallCallback {
         protected Connection conn;
 
         abstract CallableStatement getCallableStatement() throws SQLException;
@@ -65,7 +65,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * There are 6 different prepareStatement statement methods so add a little complexity to reduce what would otherwise be
      * lots of copy and paste.
      */
-    private static abstract class AbstractPrepareStatementCallback {
+    private abstract static class AbstractPrepareStatementCallback {
         protected Connection conn;
 
         abstract PreparedStatement prepareStatement() throws SQLException;

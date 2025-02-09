@@ -53,10 +53,10 @@ public class TestInstanceKeyDataSource {
         }
     }
 
-    private final static String DRIVER = "org.apache.commons.dbcp2.TesterDriver";
-    private final static String URL = "jdbc:apache:commons:testdriver";
-    private final static String USER = "foo";
-    private final static String PASS = "bar";
+    private static final String DRIVER = "org.apache.commons.dbcp2.TesterDriver";
+    private static final String URL = "jdbc:apache:commons:testdriver";
+    private static final String USER = "foo";
+    private static final String PASS = "bar";
 
     private DriverAdapterCPDS pcds;
     private SharedPoolDataSource spds;
