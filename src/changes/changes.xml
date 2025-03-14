@@ -52,7 +52,7 @@ The <action> type attribute can be add,update,fix,remove.
     with a new-line in the release notes. (These spaces are ignored when displaying HTML).
     If the output is not quite correct, check for invisible trailing spaces!
 
-    N.B. The release notes template groups actions by type, and only extracts data for the current release.
+    The release notes template groups actions by type, and only extracts data for the current release.
     The changes report outputs actions in the order they appear in this file.
 
     To regenerate the release notes:
