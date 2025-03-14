@@ -60,7 +60,7 @@ final class DriverFactory {
                 } else {
                     // Usage of DriverManager is not possible, as it does not
                     // respect the ContextClassLoader
-                    // N.B. This cast may cause ClassCastException which is
+                    // This cast may cause ClassCastException which is
                     // handled below
                     driverToUse = (Driver) driverFromCCL.getConstructor().newInstance();
                     if (!driverToUse.acceptsURL(url)) {
