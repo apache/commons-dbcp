@@ -699,8 +699,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @param disconnectionSqlCodes
      *            The disconnection SQL codes.
      * @see #getDisconnectionSqlCodes()
-     * @since 2.1
      * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
+     * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
         Utils.checkSqlCodes(disconnectionSqlCodes, this.disconnectionIgnoreSqlCodes);
