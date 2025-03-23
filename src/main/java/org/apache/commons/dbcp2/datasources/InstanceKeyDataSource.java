@@ -730,7 +730,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Whether a rollback will be issued after executing the SQL query that will be used to validate connections from
+     * Tests whether a rollback will be issued after executing the SQL query that will be used to validate connections from
      * this pool before returning them to the caller.
      *
      * @return true if a rollback will be issued after executing the validation query
@@ -1187,7 +1187,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Whether a rollback will be issued after executing the SQL query that will be used to validate connections from
+     * Sets whether a rollback will be issued after executing the SQL query that will be used to validate connections from
      * this pool before returning them to the caller. Default behavior is NOT to issue a rollback. The setting will only
      * have an effect if a validation query is set
      *

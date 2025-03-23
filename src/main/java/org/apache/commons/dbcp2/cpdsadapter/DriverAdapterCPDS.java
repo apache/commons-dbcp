@@ -548,7 +548,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Whether to toggle the pooling of {@code PreparedStatement}s
+     * Tests whether to toggle the pooling of {@code PreparedStatement}s
      *
      * @return value of poolPreparedStatements.
      */
@@ -747,7 +747,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Whether to toggle the pooling of {@code PreparedStatement}s
+     * Sets whether to toggle the pooling of {@code PreparedStatement}s
      *
      * @param poolPreparedStatements true to pool statements.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called
