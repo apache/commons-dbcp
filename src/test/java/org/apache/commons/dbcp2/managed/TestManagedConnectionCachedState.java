@@ -25,8 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAException;
+
+import jakarta.transaction.TransactionManager;
 
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.Constants;
