@@ -84,7 +84,7 @@ final class PooledConnectionImpl
     private boolean closed;
 
     /** My pool of {@link PreparedStatement}s. */
-    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pStmtPool;
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool;
 
     /**
      * Controls access to the underlying connection.
@@ -157,11 +157,11 @@ final class PooledConnectionImpl
         assertOpen();
         closed = true;
         try {
-            if (pStmtPool != null) {
+            if (stmtPool != null) {
                 try {
-                    pStmtPool.close();
+                    stmtPool.close();
                 } finally {
-                    pStmtPool = null;
+                    stmtPool = null;
                 }
             }
         } catch (final RuntimeException e) {
@@ -427,13 +427,13 @@ final class PooledConnectionImpl
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(connection);
             @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
-            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pStmtPool,
+            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, stmtPool,
                     delegatingConnection);
             return new DefaultPooledObject<>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(connection);
         @SuppressWarnings("unchecked")
-        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, pStmtPool,
+        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, stmtPool,
                 (DelegatingConnection<Connection>) delegatingConnection);
         return new DefaultPooledObject<>(pcs);
     }
@@ -477,11 +477,11 @@ final class PooledConnectionImpl
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     CallableStatement prepareCall(final String sql) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareCall(sql);
         }
         try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT));
+            return (CallableStatement) stmtPool.borrowObject(createKey(sql, StatementType.CALLABLE_STATEMENT));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -511,11 +511,11 @@ final class PooledConnectionImpl
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
             throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareCall(sql, resultSetType, resultSetConcurrency);
         }
         try {
-            return (CallableStatement) pStmtPool.borrowObject(
+            return (CallableStatement) stmtPool.borrowObject(
                     createKey(sql, resultSetType, resultSetConcurrency, StatementType.CALLABLE_STATEMENT));
         } catch (final RuntimeException e) {
             throw e;
@@ -549,11 +549,11 @@ final class PooledConnectionImpl
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         try {
-            return (CallableStatement) pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
+            return (CallableStatement) stmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency,
                     resultSetHoldability, StatementType.CALLABLE_STATEMENT));
         } catch (final RuntimeException e) {
             throw e;
@@ -572,11 +572,11 @@ final class PooledConnectionImpl
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql));
+            return stmtPool.borrowObject(createKey(sql));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -599,11 +599,11 @@ final class PooledConnectionImpl
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql, autoGeneratedKeys);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql, autoGeneratedKeys));
+            return stmtPool.borrowObject(createKey(sql, autoGeneratedKeys));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -632,11 +632,11 @@ final class PooledConnectionImpl
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
             throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql, resultSetType, resultSetConcurrency);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency));
+            return stmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -647,11 +647,11 @@ final class PooledConnectionImpl
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
             final int resultSetHoldability) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+            return stmtPool.borrowObject(createKey(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -661,11 +661,11 @@ final class PooledConnectionImpl
 
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql, columnIndexes);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql, columnIndexes));
+            return stmtPool.borrowObject(createKey(sql, columnIndexes));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -675,11 +675,11 @@ final class PooledConnectionImpl
 
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
-        if (pStmtPool == null) {
+        if (stmtPool == null) {
             return getRawConnection().prepareStatement(sql, columnNames);
         }
         try {
-            return pStmtPool.borrowObject(createKey(sql, columnNames));
+            return stmtPool.borrowObject(createKey(sql, columnNames));
         } catch (final RuntimeException e) {
             throw e;
         } catch (final Exception e) {
@@ -712,7 +712,7 @@ final class PooledConnectionImpl
     }
 
     public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> statementPool) {
-        pStmtPool = statementPool;
+        stmtPool = statementPool;
     }
 
     /**
@@ -733,8 +733,8 @@ final class PooledConnectionImpl
         builder.append(statementEventListeners);
         builder.append(", closed=");
         builder.append(closed);
-        builder.append(", pStmtPool=");
-        builder.append(pStmtPool);
+        builder.append(", stmtPool=");
+        builder.append(stmtPool);
         builder.append(", accessToUnderlyingConnectionAllowed=");
         builder.append(accessToUnderlyingConnectionAllowed);
         builder.append("]");

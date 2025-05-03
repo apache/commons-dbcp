@@ -74,7 +74,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /** Pool of {@link PreparedStatement}s. and {@link CallableStatement}s */
-    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pStmtPool;
+    private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool;
 
     private boolean clearStatementPoolOnReturn;
 
@@ -109,9 +109,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public synchronized void close() throws SQLException {
         try {
-            if (null != pStmtPool) {
-                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldPool = pStmtPool;
-                pStmtPool = null;
+            if (null != stmtPool) {
+                final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldPool = stmtPool;
+                stmtPool = null;
                 try {
                     oldPool.close();
                 } catch (final RuntimeException e) {
@@ -141,9 +141,9 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @since 2.8.0
      */
     public void connectionReturnedToPool() throws SQLException {
-        if (pStmtPool != null && clearStatementPoolOnReturn) {
+        if (stmtPool != null && clearStatementPoolOnReturn) {
             try {
-                pStmtPool.clear();
+                stmtPool.clear();
             } catch (final Exception e) {
                 throw new SQLException("Error clearing statement pool", e);
             }
@@ -344,7 +344,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @since 2.8.0
      */
     public KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> getStatementPool() {
-        return pStmtPool;
+        return stmtPool;
     }
 
     /**
@@ -365,11 +365,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
             final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
             @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
-            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, pStmtPool, this);
+            final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, stmtPool, this);
             return new DefaultPooledObject<>(pps);
         }
         final CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
-        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, pStmtPool, this);
+        final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, stmtPool, this);
         return new DefaultPooledObject<>(pcs);
     }
 
@@ -479,11 +479,11 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
-        if (null == pStmtPool) {
+        if (null == stmtPool) {
             throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
-            return pStmtPool.borrowObject(key);
+            return stmtPool.borrowObject(key);
         } catch (final NoSuchElementException e) {
             throw new SQLException("MaxOpenPreparedStatements limit reached", e);
         } catch (final RuntimeException e) {
@@ -615,19 +615,19 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            the prepared statement pool.
      */
     public void setStatementPool(final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool) {
-        pStmtPool = pool;
+        stmtPool = pool;
     }
 
     @Override
     public synchronized String toString() {
-        if (pStmtPool instanceof GenericKeyedObjectPool) {
+        if (stmtPool instanceof GenericKeyedObjectPool) {
             // DBCP-596 PoolingConnection.toString() causes StackOverflowError
-            final GenericKeyedObjectPool<?, ?> gkop = (GenericKeyedObjectPool<?, ?>) pStmtPool;
+            final GenericKeyedObjectPool<?, ?> gkop = (GenericKeyedObjectPool<?, ?>) stmtPool;
             if (gkop.getFactory() == this) {
-                return "PoolingConnection: " + pStmtPool.getClass() + "@" + System.identityHashCode(pStmtPool);
+                return "PoolingConnection: " + stmtPool.getClass() + "@" + System.identityHashCode(stmtPool);
             }
         }
-        return "PoolingConnection: " + Objects.toString(pStmtPool);
+        return "PoolingConnection: " + Objects.toString(stmtPool);
     }
 
     /**

@@ -113,29 +113,25 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     @Override
     public void activateObject(final PooledObject<PoolableConnection> p) throws SQLException {
-
         validateLifetime(p);
-
-        final PoolableConnection pConnection = p.getObject();
-        pConnection.activate();
-
-        if (defaultAutoCommit != null && pConnection.getAutoCommit() != defaultAutoCommit) {
-            pConnection.setAutoCommit(defaultAutoCommit);
+        final PoolableConnection poolableConnection = p.getObject();
+        poolableConnection.activate();
+        if (defaultAutoCommit != null && poolableConnection.getAutoCommit() != defaultAutoCommit) {
+            poolableConnection.setAutoCommit(defaultAutoCommit);
         }
-        if (defaultTransactionIsolation != UNKNOWN_TRANSACTION_ISOLATION
-                && pConnection.getTransactionIsolation() != defaultTransactionIsolation) {
-            pConnection.setTransactionIsolation(defaultTransactionIsolation);
+        if (defaultTransactionIsolation != UNKNOWN_TRANSACTION_ISOLATION && poolableConnection.getTransactionIsolation() != defaultTransactionIsolation) {
+            poolableConnection.setTransactionIsolation(defaultTransactionIsolation);
         }
-        if (defaultReadOnly != null && pConnection.isReadOnly() != defaultReadOnly) {
-            pConnection.setReadOnly(defaultReadOnly);
+        if (defaultReadOnly != null && poolableConnection.isReadOnly() != defaultReadOnly) {
+            poolableConnection.setReadOnly(defaultReadOnly);
         }
-        if (defaultCatalog != null && !defaultCatalog.equals(pConnection.getCatalog())) {
-            pConnection.setCatalog(defaultCatalog);
+        if (defaultCatalog != null && !defaultCatalog.equals(poolableConnection.getCatalog())) {
+            poolableConnection.setCatalog(defaultCatalog);
         }
-        if (defaultSchema != null && !defaultSchema.equals(Jdbc41Bridge.getSchema(pConnection))) {
-            Jdbc41Bridge.setSchema(pConnection, defaultSchema);
+        if (defaultSchema != null && !defaultSchema.equals(Jdbc41Bridge.getSchema(poolableConnection))) {
+            Jdbc41Bridge.setSchema(poolableConnection, defaultSchema);
         }
-        pConnection.setDefaultQueryTimeout(defaultQueryTimeoutDuration);
+        poolableConnection.setDefaultQueryTimeout(defaultQueryTimeoutDuration);
     }
 
     @Override
