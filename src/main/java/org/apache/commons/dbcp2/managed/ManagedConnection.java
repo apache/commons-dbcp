@@ -215,14 +215,14 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         lock.lock();
         try {
             transactionContext.completeTransaction();
+            // If we were using a shared connection, clear the reference now that
+            // the transaction has completed
+            if (isSharedConnection) {
+                setDelegate(null);
+                isSharedConnection = false;
+            }
         } finally {
             lock.unlock();
-        }
-        // If we were using a shared connection, clear the reference now that
-        // the transaction has completed
-        if (isSharedConnection) {
-            setDelegate(null);
-            isSharedConnection = false;
         }
         // autoCommit may have been changed directly on the underlying connection
         clearCachedState();
