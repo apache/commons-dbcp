@@ -721,7 +721,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setReadOnly(boolean). The default is {@code null} which
-     * will use the default value for the drive.
+     * will use the default value for the driver.
      *
      * @return value of defaultReadOnly.
      */
