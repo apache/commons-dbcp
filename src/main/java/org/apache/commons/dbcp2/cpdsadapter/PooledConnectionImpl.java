@@ -81,7 +81,7 @@ final class PooledConnectionImpl
     /**
      * Flag set to true, once {@link #close()} is called.
      */
-    private boolean closed;
+    private volatile boolean closed;
 
     /** My pool of {@link PreparedStatement}s. */
     private KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> stmtPool;
