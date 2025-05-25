@@ -52,9 +52,9 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
 
     private static final Duration DURATION_1_MILLISECOND = Duration.ofMillis(1);
 
-    private String user;
-
     private DataSource ds;
+
+    private String user;
 
     @Override
     protected Connection getConnection() throws SQLException {
@@ -173,7 +173,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
      */
     @Test
     public void testDbcp597() throws SQLException {
-        PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
+        final PerUserPoolDataSource tds = (PerUserPoolDataSource) ds;
         tds.setDefaultTestOnBorrow(true);
         tds.setValidationQuery("SELECT 1");
         // The tester statement throws a SQLTimeoutException when the timeout is > 0 and < 5.
@@ -186,6 +186,21 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         // The SQLTimeoutException is lost for now
         e = assertThrows(SQLException.class, tds::getConnection);
         assertEquals(NoSuchElementException.class, e.getCause().getClass());
+    }
+
+    @Test
+    public void testDefaultReadOnly() {
+        try (PerUserPoolDataSource ds = new PerUserPoolDataSource()) {
+            assertNull(ds.isDefaultReadOnly());
+            ds.setDefaultReadOnly(true);
+            assertTrue(ds.isDefaultReadOnly().booleanValue());
+            ds.setDefaultReadOnly(false);
+            assertFalse(ds.isDefaultReadOnly().booleanValue());
+            ds.setDefaultReadOnly(true);
+            assertTrue(ds.isDefaultReadOnly().booleanValue());
+            ds.setDefaultReadOnly(null);
+            assertNull(ds.isDefaultReadOnly());
+        }
     }
 
     // see issue https://issues.apache.org/bugzilla/show_bug.cgi?id=23843
@@ -451,6 +466,11 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(Boolean.TRUE, ds.getPerUserBlockWhenExhausted("missingkey"));
     }
 
+    // getters and setters. Most follow the same pattern. The initial tests contain a more
+    // complete documentation, which can be helpful when write/understanding the other methods.
+
+    // -- per user block when exhausted
+
     @Test
     public void testPerUserDefaultAutoCommitMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -464,11 +484,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultAutoCommit("key"));
         assertEquals(Boolean.FALSE, ds.getPerUserDefaultAutoCommit("anonymous"));
     }
-
-    // getters and setters. Most follow the same pattern. The initial tests contain a more
-    // complete documentation, which can be helpful when write/understanding the other methods.
-
-    // -- per user block when exhausted
 
     @Test
     public void testPerUserDefaultAutoCommitMapNotInitialized() {
@@ -514,6 +529,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultAutoCommit("missingkey"));
     }
 
+    // -- per user default auto commit
+
     @Test
     public void testPerUserDefaultReadOnlyMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -527,8 +544,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultReadOnly("key"));
         assertEquals(Boolean.FALSE, ds.getPerUserDefaultReadOnly("anonymous"));
     }
-
-    // -- per user default auto commit
 
     @Test
     public void testPerUserDefaultReadOnlyMapNotInitialized() {
@@ -574,6 +589,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultReadOnly("missingkey"));
     }
 
+    // -- per user default read only
+
     @Test
     public void testPerUserDefaultTransactionIsolationMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -588,8 +605,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultTransactionIsolation("key"));
         assertEquals((Integer) 0, ds.getPerUserDefaultTransactionIsolation("anonymous"));
     }
-
-    // -- per user default read only
 
     @Test
     public void testPerUserDefaultTransactionIsolationMapNotInitialized() {
@@ -635,6 +650,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertNull(ds.getPerUserDefaultTransactionIsolation("missingkey"));
     }
 
+    // -- per user default transaction isolation
+
     @Test
     public void testPerUserDurationBetweenEvictionRunsMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -651,8 +668,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0L, ds.getPerUserTimeBetweenEvictionRunsMillis("anonymous"));
         assertEquals(Duration.ZERO, ds.getPerUserDurationBetweenEvictionRuns("anonymous"));
     }
-
-    // -- per user default transaction isolation
 
     @Test
     public void testPerUserDurationBetweenEvictionRunsMapNotInitialized() {
@@ -706,6 +721,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultEvictionPolicyClassName(), ds.getPerUserEvictionPolicyClassName("missingkey"));
     }
 
+    // -- per user eviction policy class name
+
     @Test
     public void testPerUserEvictionPolicyClassNameWithUserMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -715,8 +732,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals("bar", ds.getPerUserEvictionPolicyClassName(user));
         assertEquals("bar", ds.getPerUserEvictionPolicyClassName("anotheruser"));
     }
-
-    // -- per user eviction policy class name
 
     @Test
     public void testPerUserEvictionPolicyClassNameWithUserMapNotInitialized() {
@@ -764,6 +779,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultLifo(), ds.getPerUserLifo("missingkey"));
     }
 
+    // -- per user lifo
+
     @Test
     public void testPerUserLifoWithUserMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -773,8 +790,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(Boolean.FALSE, ds.getPerUserLifo(user));
         assertEquals(Boolean.FALSE, ds.getPerUserLifo("anotheruser"));
     }
-
-    // -- per user lifo
 
     @Test
     public void testPerUserLifoWithUserMapNotInitialized() {
@@ -822,6 +837,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals((Integer) ds.getDefaultMaxIdle(), (Integer) ds.getPerUserMaxIdle("missingkey"));
     }
 
+    // -- per user max idle
+
     @Test
     public void testPerUserMaxIdleWithUserMapInitialized() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -831,8 +848,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals((Integer) 0, (Integer) ds.getPerUserMaxIdle(user));
         assertEquals((Integer) 0, (Integer) ds.getPerUserMaxIdle("anotheruser"));
     }
-
-    // -- per user max idle
 
     @Test
     public void testPerUserMaxIdleWithUserMapNotInitialized() {
@@ -936,6 +951,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultMaxWait(), ds.getPerUserMaxWaitDuration("missingkey"));
     }
 
+    // -- per user max wait millis
+
     @Test
     @SuppressWarnings("deprecation")
     public void testPerUserMaxWaitMillisWithUserMapInitializedDeprecated() {
@@ -946,8 +963,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(0L, ds.getPerUserMaxWaitMillis(user));
         assertEquals(0L, ds.getPerUserMaxWaitMillis("anotheruser"));
     }
-
-    // -- per user max wait millis
 
     @Test
     @SuppressWarnings("deprecation")
@@ -1041,6 +1056,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(DURATION_1_MILLISECOND, ds.getPerUserMinEvictableIdleDuration("key"));
     }
 
+    // -- per user min evictable idle time millis
+
     @Test
     public void testPerUserMinEvictableIdleDurationMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1050,8 +1067,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultMinEvictableIdleTimeMillis(), ds.getPerUserMinEvictableIdleTimeMillis("missingkey"));
         assertEquals(ds.getDefaultMinEvictableIdleDuration(), ds.getPerUserMinEvictableIdleDuration("missingkey"));
     }
-
-    // -- per user min evictable idle time millis
 
     @Test
     public void testPerUserMinEvictableIdleTimeMillisWithUserMapInitialized() {
@@ -1100,6 +1115,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals((Integer) 1, (Integer) ds.getPerUserMinIdle("key"));
     }
 
+    // -- per user min idle
+
     @Test
     public void testPerUserMinIdleMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1108,8 +1125,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.setPerUserMinIdle(values);
         assertEquals((Integer) ds.getDefaultMinIdle(), (Integer) ds.getPerUserMinIdle("missingkey"));
     }
-
-    // -- per user min idle
 
     @Test
     public void testPerUserMinIdleWithUserMapInitialized() {
@@ -1158,6 +1173,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals((Integer) 1, (Integer) ds.getPerUserNumTestsPerEvictionRun("key"));
     }
 
+    // -- per user num tests per eviction run
+
     @Test
     public void testPerUserNumTestsPerEvictionRunMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1166,8 +1183,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.setPerUserNumTestsPerEvictionRun(values);
         assertEquals((Integer) ds.getDefaultNumTestsPerEvictionRun(), (Integer) ds.getPerUserNumTestsPerEvictionRun("missingkey"));
     }
-
-    // -- per user num tests per eviction run
 
     @Test
     public void testPerUserNumTestsPerEvictionRunWithUserMapInitialized() {
@@ -1220,6 +1235,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(DURATION_1_MILLISECOND, ds.getPerUserSoftMinEvictableIdleDuration("key"));
     }
 
+    // -- per user soft min evictable idle time millis
+
     @Test
     public void testPerUserSoftMinEvictableIdleDurationMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1229,8 +1246,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(ds.getDefaultSoftMinEvictableIdleTimeMillis(), ds.getPerUserSoftMinEvictableIdleTimeMillis("missingkey"));
         assertEquals(ds.getDefaultSoftMinEvictableIdleDuration(), ds.getPerUserSoftMinEvictableIdleDuration("missingkey"));
     }
-
-    // -- per user soft min evictable idle time millis
 
     @Test
     public void testPerUserSoftMinEvictableIdleTimeMillisWithUserMapInitialized() {
@@ -1279,6 +1294,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(Boolean.TRUE, ds.getPerUserTestOnBorrow("key"));
     }
 
+    // -- per user test on borrow
+
     @Test
     public void testPerUserTestOnBorrowMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1287,8 +1304,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.setPerUserTestOnBorrow(values);
         assertEquals(ds.getDefaultTestOnBorrow(), ds.getPerUserTestOnBorrow("missingkey"));
     }
-
-    // -- per user test on borrow
 
     @Test
     public void testPerUserTestOnBorrowWithUserMapInitialized() {
@@ -1337,6 +1352,8 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         assertEquals(Boolean.TRUE, ds.getPerUserTestOnCreate("key"));
     }
 
+    // -- per user test on create
+
     @Test
     public void testPerUserTestOnCreateMapNotInitializedMissingKey() {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
@@ -1345,8 +1362,6 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         ds.setPerUserTestOnCreate(values);
         assertEquals(ds.getDefaultTestOnCreate(), ds.getPerUserTestOnCreate("missingkey"));
     }
-
-    // -- per user test on create
 
     @Test
     public void testPerUserTestOnCreateWithUserMapInitialized() {
