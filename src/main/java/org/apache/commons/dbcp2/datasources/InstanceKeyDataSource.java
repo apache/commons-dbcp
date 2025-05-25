@@ -710,7 +710,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setAutoCommit(boolean). The default is {@code null} which
-     * will use the default value for the drive.
+     * will use the default value for the driver.
      *
      * @return value of defaultAutoCommit.
      */
@@ -786,7 +786,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setAutoCommit(boolean). The default is {@code null} which
-     * will use the default value for the drive.
+     * will use the default value for the driver.
      *
      * @param defaultAutoCommit
      *            Value to assign to defaultAutoCommit.
@@ -946,7 +946,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value
      * can be changed on the Connection using Connection.setReadOnly(boolean). The default is {@code null} which
-     * will use the default value for the drive.
+     * will use the default value for the driver.
      *
      * @param defaultReadOnly
      *            Value to assign to defaultReadOnly.
