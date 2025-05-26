@@ -66,7 +66,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private Collection<String> disconnectionIgnoreSqlCodes;
 
-    private boolean fastFailValidation = true;
+    private volatile boolean fastFailValidation = true;
 
     private volatile ObjectPool<PoolableConnection> pool;
 
@@ -74,23 +74,23 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     private Boolean defaultAutoCommit;
 
-    private boolean autoCommitOnReturn = true;
+    private volatile boolean autoCommitOnReturn = true;
 
-    private boolean rollbackOnReturn = true;
+    private volatile boolean rollbackOnReturn = true;
 
-    private int defaultTransactionIsolation = UNKNOWN_TRANSACTION_ISOLATION;
+    private volatile int defaultTransactionIsolation = UNKNOWN_TRANSACTION_ISOLATION;
 
     private String defaultCatalog;
 
     private String defaultSchema;
 
-    private boolean cacheState;
+    private volatile boolean cacheState;
 
-    private boolean poolStatements;
+    private volatile boolean poolStatements;
 
-    private boolean clearStatementPoolOnReturn;
+    private volatile boolean clearStatementPoolOnReturn;
 
-    private int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
+    private volatile int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY;
 
     private Duration maxConnDuration = Duration.ofMillis(-1);
 
