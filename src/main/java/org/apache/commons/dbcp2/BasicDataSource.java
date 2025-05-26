@@ -154,7 +154,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The property that controls if the pooled connections cache some state rather than query the database for current
      * state to improve performance.
      */
-    private boolean cacheState = true;
+    private volatile boolean cacheState = true;
 
     /**
      * The instance of the JDBC Driver to use.
@@ -220,7 +220,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     private boolean poolPreparedStatements;
 
-    private boolean clearStatementPoolOnReturn;
+    private volatile boolean clearStatementPoolOnReturn;
 
     /**
      * <p>
@@ -331,19 +331,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Controls access to the underlying connection.
      */
-    private boolean accessToUnderlyingConnectionAllowed;
+    private volatile boolean accessToUnderlyingConnectionAllowed;
 
     private Duration maxConnDuration = Duration.ofMillis(-1);
 
-    private boolean logExpiredConnections = true;
+    private volatile boolean logExpiredConnections = true;
 
     private String jmxName;
 
-    private boolean registerConnectionMBean = true;
+    private volatile boolean registerConnectionMBean = true;
 
-    private boolean autoCommitOnReturn = true;
+    private volatile boolean autoCommitOnReturn = true;
 
-    private boolean rollbackOnReturn = true;
+    private volatile boolean rollbackOnReturn = true;
 
     private volatile Set<String> disconnectionSqlCodes;
 
@@ -354,7 +354,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     private volatile Set<String> disconnectionIgnoreSqlCodes;
 
-    private boolean fastFailValidation;
+    private volatile boolean fastFailValidation;
 
     /**
      * The object pool that internally manages our connections.
