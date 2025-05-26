@@ -109,6 +109,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Shared primitive variable "poolStatements" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <!-- ADD -->
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.dbcp2.datasources.PooledConnectionManager.setPassword(char[]).</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 78 to 81.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-pool2 from 2.12.0 to 2.12.1 #474.</action>

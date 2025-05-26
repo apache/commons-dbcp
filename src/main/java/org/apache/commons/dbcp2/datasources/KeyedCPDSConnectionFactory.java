@@ -216,6 +216,14 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * Does nothing. This factory does not cache user credentials.
      */
     @Override
+    public void setPassword(final char[] password) {
+        // Does nothing. This factory does not cache user credentials.
+    }
+
+    /**
+     * Does nothing. This factory does not cache user credentials.
+     */
+    @Override
     public void setPassword(final String password) {
         // Does nothing. This factory does not cache user credentials.
     }

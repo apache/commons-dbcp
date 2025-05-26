@@ -271,7 +271,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             // Destroy and remove from pool
             manager.invalidate(info.getPooledConnection());
             // Reset the password on the factory if using CPDSConnectionFactory
-            manager.setPassword(upkey.getPassword());
+            manager.setPassword(upkey.getPasswordCharArray());
             info = null;
             for (int i = 0; i < 10; i++) { // Bound the number of retries - only needed if bad instances return
                 try {

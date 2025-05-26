@@ -130,12 +130,20 @@ public class TestCPDSConnectionFactory {
     }
 
     @Test
-    public void testSetPasswordThenModCharArray() {
+    public void testSetPasswordCharArray() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
         final char[] pwd = { 'a' };
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
         pwd[0] = 'b';
+        assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
+    }
+
+    @Test
+    public void testSetPasswordString() {
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
+        final String pwd = "a";
+        factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
     }
 

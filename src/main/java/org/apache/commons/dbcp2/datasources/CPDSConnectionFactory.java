@@ -228,6 +228,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
      * @param userPassword
      *            new password
      */
+    @Override
     public synchronized void setPassword(final char[] userPassword) {
         this.userPassKey = new UserPassKey(userPassKey.getUserName(), userPassword);
     }
