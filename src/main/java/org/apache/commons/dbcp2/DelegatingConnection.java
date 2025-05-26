@@ -69,8 +69,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     private volatile C connection;
 
     private volatile boolean closed;
-
-    private boolean cacheState = true;
+    private volatile boolean cacheState = true;
     private Boolean cachedAutoCommit;
     private Boolean cachedReadOnly;
     private String cachedCatalog;
