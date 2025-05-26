@@ -23,19 +23,18 @@ import java.util.Arrays;
 import org.apache.commons.dbcp2.Utils;
 
 /**
- * A {@code char} array wrapper that does not reveal its contents inadvertently through toString(). In contrast to, for
- * example, AtomicReference which toString()'s its contents.
- *
+ * A {@code char} array wrapper that does not reveal its contents inadvertently through toString(). In contrast to, for example, AtomicReference which
+ * toString()'s its contents.
+ * <p>
  * May contain null.
+ * </p>
  *
  * @since 2.9.0
  */
 final class CharArray implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     static final CharArray NULL = new CharArray((char[]) null);
-
     private final char[] chars;
 
     CharArray(final char[] chars) {
@@ -80,5 +79,4 @@ final class CharArray implements Serializable {
     public int hashCode() {
         return Arrays.hashCode(chars);
     }
-
 }
