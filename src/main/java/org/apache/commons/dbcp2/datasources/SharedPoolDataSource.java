@@ -56,7 +56,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     /**
      * Max total defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_TOTAL}.
      */
-    private int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private volatile int maxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /**
      * Maps user credentials to pooled connection with credentials.
