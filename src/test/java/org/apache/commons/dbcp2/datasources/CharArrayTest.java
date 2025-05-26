@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +43,13 @@ public class CharArrayTest {
     @Test
     public void testGet() {
         assertArrayEquals("foo".toCharArray(), new CharArray("foo").get());
+    }
+
+    @Test
+    public void testClear() {
+        assertNull(new CharArray((String) null).clear().get());
+        assertArrayEquals("".toCharArray(), new CharArray("").clear().get());
+        assertArrayEquals("\0\0\0".toCharArray(), new CharArray("foo").clear().get());
     }
 
     @Test

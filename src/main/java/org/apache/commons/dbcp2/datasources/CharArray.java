@@ -33,8 +33,8 @@ import org.apache.commons.dbcp2.Utils;
  */
 final class CharArray implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     static final CharArray NULL = new CharArray((char[]) null);
+    private static final long serialVersionUID = 1L;
     private final char[] chars;
 
     CharArray(final char[] chars) {
@@ -52,6 +52,18 @@ final class CharArray implements Serializable {
      */
     String asString() {
         return Utils.toString(chars);
+    }
+
+    /**
+     * Clears the content of the char array.
+     *
+     * @return {@code this} instance.
+     */
+    CharArray clear() {
+        if (chars != null) {
+            Arrays.fill(chars, '\0');
+        }
+        return this;
     }
 
     @Override
