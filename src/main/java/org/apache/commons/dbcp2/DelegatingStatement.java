@@ -44,7 +44,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /** The connection that created me. **/
     private DelegatingConnection<?> connection;
 
-    private boolean closed;
+    private volatile boolean closed;
 
     /**
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
