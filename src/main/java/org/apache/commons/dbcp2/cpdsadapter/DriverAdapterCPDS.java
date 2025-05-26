@@ -129,28 +129,28 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     private String driver;
 
     /** Login TimeOut in seconds */
-    private int loginTimeout;
+    private volatile int loginTimeout;
 
     /** Log stream. NOT USED */
     private transient PrintWriter logWriter;
 
     /** PreparedStatement pool property defaults to false. */
-    private boolean poolPreparedStatements;
+    private volatile boolean poolPreparedStatements;
 
     /** PreparedStatement pool property defaults to 10. */
-    private int maxIdle = 10;
+    private volatile int maxIdle = 10;
 
     /** PreparedStatement pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_DURATION_BETWEEN_EVICTION_RUNS}. */
     private Duration durationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_DURATION_BETWEEN_EVICTION_RUNS;
 
     /** PreparedStatement pool property defaults to -1. */
-    private int numTestsPerEvictionRun = -1;
+    private volatile int numTestsPerEvictionRun = -1;
 
     /** PreparedStatement pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_MIN_EVICTABLE_IDLE_DURATION}. */
     private Duration minEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_DURATION;
 
     /** Maximum number of prepared statements, defaults to -1, meaning no limit. */
-    private int maxPreparedStatements = -1;
+    private volatile int maxPreparedStatements = -1;
 
     /** Whether or not getConnection has been called */
     private volatile boolean getConnectionCalled;
