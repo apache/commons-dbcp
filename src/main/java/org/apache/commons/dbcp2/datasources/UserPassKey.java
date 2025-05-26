@@ -60,6 +60,17 @@ final class UserPassKey implements Serializable {
     }
 
     /**
+     * Clears the content of the name and password.
+     *
+     * @return {@code this} instance.
+     */
+    UserPassKey clear() {
+        name.clear();
+        password.clear();
+        return this;
+    }
+
+    /**
      * Only takes the user name into account.
      */
     @Override
