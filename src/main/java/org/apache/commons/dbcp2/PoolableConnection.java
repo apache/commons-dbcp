@@ -60,8 +60,9 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     private final ObjectNameWrapper jmxObjectName;
 
-    // Use a prepared statement for validation, retaining the last used SQL to
-    // check if the validation query has changed.
+    /**
+     * Use a prepared statement for validation, retaining the last used SQL to check if the validation query has changed.
+     */
     private PreparedStatement validationPreparedStatement;
     private String lastValidationSql;
 
@@ -270,6 +271,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * This method should not be used by a client to determine whether or not a connection should be return to the
      * connection pool (by calling {@link #close()}). Clients should always attempt to return a connection to the pool
      * once it is no longer required.
+     * </p>
      */
     @Override
     public boolean isClosed() throws SQLException {
