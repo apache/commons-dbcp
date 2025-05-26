@@ -112,19 +112,19 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private String instanceKey;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_BLOCK_WHEN_EXHAUSTED}. */
-    private boolean defaultBlockWhenExhausted = BaseObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED;
+    private volatile boolean defaultBlockWhenExhausted = BaseObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_EVICTION_POLICY_CLASS_NAME}. */
     private String defaultEvictionPolicyClassName = BaseObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_LIFO}. */
-    private boolean defaultLifo = BaseObjectPoolConfig.DEFAULT_LIFO;
+    private volatile boolean defaultLifo = BaseObjectPoolConfig.DEFAULT_LIFO;
 
     /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_IDLE_PER_KEY}. */
-    private int defaultMaxIdle = GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
+    private volatile int defaultMaxIdle = GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY;
 
     /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MAX_TOTAL}. */
-    private int defaultMaxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
+    private volatile int defaultMaxTotal = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_MAX_WAIT}. */
     private Duration defaultMaxWaitDuration = BaseObjectPoolConfig.DEFAULT_MAX_WAIT;
@@ -133,25 +133,25 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private Duration defaultMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_DURATION;
 
     /** Pool property defaults to {@link GenericKeyedObjectPoolConfig#DEFAULT_MIN_IDLE_PER_KEY}. */
-    private int defaultMinIdle = GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
+    private volatile int defaultMinIdle = GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_NUM_TESTS_PER_EVICTION_RUN}. */
-    private int defaultNumTestsPerEvictionRun = BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+    private volatile int defaultNumTestsPerEvictionRun = BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_SOFT_MIN_EVICTABLE_IDLE_DURATION}. */
     private Duration defaultSoftMinEvictableIdleDuration = BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_DURATION;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_CREATE}. */
-    private boolean defaultTestOnCreate = BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
+    private volatile boolean defaultTestOnCreate = BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_BORROW}. */
-    private boolean defaultTestOnBorrow = BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
+    private volatile boolean defaultTestOnBorrow = BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_ON_RETURN}. */
-    private boolean defaultTestOnReturn = BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
+    private volatile boolean defaultTestOnReturn = BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_TEST_WHILE_IDLE}. */
-    private boolean defaultTestWhileIdle = BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
+    private volatile boolean defaultTestWhileIdle = BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
 
     /** Pool property defaults to {@link BaseObjectPoolConfig#DEFAULT_DURATION_BETWEEN_EVICTION_RUNS}. */
     private Duration defaultDurationBetweenEvictionRuns = BaseObjectPoolConfig.DEFAULT_DURATION_BETWEEN_EVICTION_RUNS;
@@ -163,7 +163,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private Duration validationQueryTimeoutDuration = Duration.ofSeconds(-1);
 
     /** Connection factory property defaults to false. */
-    private boolean rollbackAfterValidation;
+    private volatile boolean rollbackAfterValidation;
 
     /** Connection factory property defaults to -1 milliseconds. */
     private Duration maxConnDuration = Duration.ofMillis(-1);
@@ -172,7 +172,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     private Boolean defaultAutoCommit;
 
     /** Connection property defaults to {@link #UNKNOWN_TRANSACTIONISOLATION}. */
-    private int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
+    private volatile int defaultTransactionIsolation = UNKNOWN_TRANSACTIONISOLATION;
 
     /** Connection property defaults to false. */
     private Boolean defaultReadOnly;
