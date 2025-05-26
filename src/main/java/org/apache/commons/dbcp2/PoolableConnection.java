@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -68,7 +69,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Indicate that unrecoverable SQLException was thrown when using this connection. Such a connection should be
      * considered broken and not pass validation in the future.
      */
-    private boolean fatalSqlExceptionThrown;
+    private AtomicBoolean fatalSqlExceptionThrown = new AtomicBoolean();
 
     /**
      * SQL State codes considered to signal fatal conditions. Overrides the defaults in
@@ -259,7 +260,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
 
     @Override
     protected void handleException(final SQLException e) throws SQLException {
-        fatalSqlExceptionThrown |= isFatalException(e);
+        fatalSqlExceptionThrown.compareAndSet(false, isFatalException(e));
         super.handleException(e);
     }
 
@@ -407,7 +408,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * @since 2.10.0
      */
     public void validate(final String sql, Duration timeoutDuration) throws SQLException {
-        if (fastFailValidation && fatalSqlExceptionThrown) {
+        if (fastFailValidation && fatalSqlExceptionThrown.get()) {
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
