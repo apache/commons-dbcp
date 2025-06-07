@@ -117,7 +117,7 @@ public class TestParallelCreationWithNoIdle {
      * @throws Exception
      */
     @Test
-    public void testMassiveConcurrentInitBorrow() throws Exception {
+    void testMassiveConcurrentInitBorrow() throws Exception {
         final int numThreads = 200;
         ds.setDriverClassName("org.apache.commons.dbcp2.TesterConnectionDelayDriver");
         ds.setUrl("jdbc:apache:commons:testerConnectionDelayDriver:20");

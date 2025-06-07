@@ -53,7 +53,7 @@ public class TestTransactionContext {
      * JIRA: DBCP-428
      */
     @Test
-    public void testSetSharedConnectionEnlistFailure() throws Exception {
+    void testSetSharedConnectionEnlistFailure() throws Exception {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");

@@ -57,7 +57,7 @@ public class TestCPDSConnectionFactory {
      * cleaned up when a PooledConnection throws a connectionError event.
      */
     @Test
-    public void testConnectionErrorCleanup() throws Exception {
+    void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
@@ -118,7 +118,7 @@ public class TestCPDSConnectionFactory {
      * JIRA: DBCP-442
      */
     @Test
-    public void testNullValidationQuery() throws Exception {
+    void testNullValidationQuery() throws Exception {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
@@ -130,7 +130,7 @@ public class TestCPDSConnectionFactory {
     }
 
     @Test
-    public void testSetPasswordCharArray() {
+    void testSetPasswordCharArray() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
         final char[] pwd = { 'a' };
         factory.setPassword(pwd);
@@ -140,7 +140,7 @@ public class TestCPDSConnectionFactory {
     }
 
     @Test
-    public void testSetPasswordString() {
+    void testSetPasswordString() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
         final String pwd = "a";
         factory.setPassword(pwd);
@@ -155,7 +155,7 @@ public class TestCPDSConnectionFactory {
      * when PooledConnection itself is closed.
      */
     @Test
-    public void testSharedPoolDSDestroyOnReturn() throws Exception {
+    void testSharedPoolDSDestroyOnReturn() throws Exception {
         try (final PerUserPoolDataSource ds = new PerUserPoolDataSource()) {
             ds.setConnectionPoolDataSource(cpds);
             ds.setPerUserMaxTotal("userName", 10);

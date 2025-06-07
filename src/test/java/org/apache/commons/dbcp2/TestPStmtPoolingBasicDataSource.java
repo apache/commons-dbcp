@@ -54,7 +54,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * for new ones if necessary.
      */
     @Test
-    public void testLRUBehavior() throws Exception {
+    void testLRUBehavior() throws Exception {
         ds.setMaxOpenPreparedStatements(3);
 
         final Connection conn = getConnection();
@@ -100,7 +100,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * DBCP-414
      */
     @Test
-    public void testMultipleThreads1() throws Exception {
+    void testMultipleThreads1() throws Exception {
         ds.setMaxWait(Duration.ofMillis(-1));
         ds.setMaxTotal(5);
         ds.setMaxOpenPreparedStatements(-1);
@@ -108,7 +108,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testPreparedStatementPooling() throws Exception {
+    void testPreparedStatementPooling() throws Exception {
         final Connection conn = getConnection();
         assertNotNull(conn);
 
@@ -142,7 +142,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     // Bugzilla Bug 27246
     // PreparedStatement cache should be different depending on the Catalog
     @Test
-    public void testPStmtCatalog() throws Exception {
+    void testPStmtCatalog() throws Exception {
         final Connection conn = getConnection();
         conn.setCatalog("catalog1");
         final DelegatingPreparedStatement stmt1 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");
@@ -167,7 +167,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testPStmtPoolingAcrossClose() throws Exception {
+    void testPStmtPoolingAcrossClose() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);
@@ -209,7 +209,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * @throws Exception
      */
     @Test
-    public void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
+    void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setClearStatementPoolOnReturn(true);
@@ -263,7 +263,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testPStmtPoolingWithNoClose() throws Exception {
+    void testPStmtPoolingWithNoClose() throws Exception {
         ds.setMaxTotal(1); // only one connection in pool needed
         ds.setMaxIdle(1);
         ds.setAccessToUnderlyingConnectionAllowed(true);

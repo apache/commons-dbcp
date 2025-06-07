@@ -326,7 +326,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
 
     // See DBCP-8
     @Test
-    public void testChangePassword() throws Exception {
+    void testChangePassword() throws Exception {
         assertThrows(SQLException.class, () -> ds.getConnection("foo", "bay"));
         final Connection con1 = ds.getConnection("foo", "bar");
         final Connection con2 = ds.getConnection("foo", "bar");
@@ -357,7 +357,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * @throws Exception
      */
     @Test
-    public void testClosePool() throws Exception {
+    void testClosePool() throws Exception {
         ((SharedPoolDataSource) ds).close();
         @SuppressWarnings("resource") // closed below
         final SharedPoolDataSource tds = new SharedPoolDataSource();
@@ -387,7 +387,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testClosingWithUserName() throws Exception {
+    void testClosingWithUserName() throws Exception {
         final Connection[] c = new Connection[getMaxTotal()];
         // open the maximum connections
         for (int i = 0; i < c.length; i++) {
@@ -414,7 +414,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testDbcp369() {
+    void testDbcp369() {
         final ArrayList<SharedPoolDataSource> dataSources = new ArrayList<>();
         for (int j = 0; j < 10000; j++) {
             dataSources.add(new SharedPoolDataSource());
@@ -451,7 +451,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * Tests https://issues.apache.org/jira/browse/DBCP-597
      */
     @Test
-    public void testDbcp597() throws SQLException {
+    void testDbcp597() throws SQLException {
         try (final SharedPoolDataSource sharedPoolDataSource = new SharedPoolDataSource()) {
             sharedPoolDataSource.setConnectionPoolDataSource(pcds);
             sharedPoolDataSource.setDefaultTestOnBorrow(true);
@@ -473,7 +473,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * Starting with a successful connection, then incorrect password, then correct password for same user illustrates JIRA: DBCP-245
      */
     @Test
-    public void testIncorrectPassword() throws SQLException {
+    void testIncorrectPassword() throws SQLException {
         ds.getConnection("u2", "p2").close();
         assertThrows(SQLException.class, () -> ds.getConnection("u1", "zlsafjk"), "Able to retrieve connection with incorrect password");
         // Use good password
@@ -503,7 +503,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testMaxWaitMillis() throws Exception {
+    void testMaxWaitMillis() throws Exception {
         final int maxWaitMillis = 1000;
         final int theadCount = 20;
 
@@ -547,7 +547,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testMultipleThreads1() throws Exception {
+    void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
         // some JVMs, e.g. Windows.
         final Duration defaultMaxWaitDuration = Duration.ofMillis(430);
@@ -556,7 +556,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testMultipleThreads2() throws Exception {
+    void testMultipleThreads2() throws Exception {
         final Duration defaultMaxWaitDuration = Duration.ofMillis(500);
         ((SharedPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
         multipleThreads(defaultMaxWaitDuration.multipliedBy(2), true, true, defaultMaxWaitDuration);
@@ -584,7 +584,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
      * Bugzilla Bug 24136 ClassCastException in DriverAdapterCPDS when setPoolPreparedStatements(true)
      */
     @Test
-    public void testPoolPrepareCall() throws SQLException {
+    void testPoolPrepareCall() throws SQLException {
         pcds.setPoolPreparedStatements(true);
         try (final Connection conn = ds.getConnection()) {
             assertNotNull(conn);
@@ -599,14 +599,14 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolPreparedCalls() throws Exception {
+    void testPoolPreparedCalls() throws Exception {
         doTestPoolCallableStatements(new CscbString());
         doTestPoolCallableStatements(new CscbStringIntInt());
         doTestPoolCallableStatements(new CscbStringIntIntInt());
     }
 
     @Test
-    public void testPoolPreparedStatements() throws Exception {
+    void testPoolPreparedStatements() throws Exception {
         doTestPoolPreparedStatements(new PscbString());
         doTestPoolPreparedStatements(new PscbStringIntInt());
         doTestPoolPreparedStatements(new PscbStringInt());
@@ -616,7 +616,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolPrepareStatement() throws SQLException {
+    void testPoolPrepareStatement() throws SQLException {
         pcds.setPoolPreparedStatements(true);
 
         try (final Connection conn = ds.getConnection()) {
@@ -695,7 +695,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testSimpleWithUsername() throws Exception {
+    void testSimpleWithUsername() throws Exception {
         try (final Connection conn = ds.getConnection("u1", "p1")) {
             assertNotNull(conn);
             try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
@@ -709,7 +709,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testTransactionIsolationBehavior() throws Exception {
+    void testTransactionIsolationBehavior() throws Exception {
         try (final Connection conn = getConnection()) {
             assertNotNull(conn);
             assertEquals(Connection.TRANSACTION_READ_COMMITTED, conn.getTransactionIsolation());

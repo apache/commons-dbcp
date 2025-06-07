@@ -193,7 +193,7 @@ public class TestManagedConnection {
     }
 
     @Test
-    public void testConnectionReturnOnErrorWhenEnlistingXAResource() throws Exception {
+    void testConnectionReturnOnErrorWhenEnlistingXAResource() throws Exception {
         // see DBCP-433
         transactionManager.begin();
         assertThrows(SQLException.class, this::getConnection);

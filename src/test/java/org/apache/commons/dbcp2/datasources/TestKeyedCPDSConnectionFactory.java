@@ -59,7 +59,7 @@ public class TestKeyedCPDSConnectionFactory {
      * cleaned up when a PooledConnection throws a connectionError event.
      */
     @Test
-    public void testConnectionErrorCleanup() throws Exception {
+    void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         final UserPassKey key = new UserPassKey("userName", "password");
         final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, Duration.ofSeconds(-1), false);
@@ -121,7 +121,7 @@ public class TestKeyedCPDSConnectionFactory {
      * JIRA: DBCP-442
      */
     @Test
-    public void testNullValidationQuery() throws Exception {
+    void testNullValidationQuery() throws Exception {
         final UserPassKey key = new UserPassKey("userName", "password");
         final KeyedCPDSConnectionFactory factory = new KeyedCPDSConnectionFactory(cpds, null, Duration.ofSeconds(-1), false);
         try (final GenericKeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = new GenericKeyedObjectPool<>(factory)) {
@@ -141,7 +141,7 @@ public class TestKeyedCPDSConnectionFactory {
      * when PooledConnection itself is closed.
      */
     @Test
-    public void testSharedPoolDSDestroyOnReturn() throws Exception {
+    void testSharedPoolDSDestroyOnReturn() throws Exception {
         try (final SharedPoolDataSource ds = new SharedPoolDataSource()) {
             ds.setConnectionPoolDataSource(cpds);
             ds.setMaxTotal(10);

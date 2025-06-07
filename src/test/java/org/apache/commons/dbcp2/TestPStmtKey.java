@@ -39,7 +39,7 @@ public class TestPStmtKey {
      * Tests constructors with different catalog.
      */
     @Test
-    public void testCtorDifferentCatalog() {
+    void testCtorDifferentCatalog() {
         assertNotEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog2", "schema1"));
         assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
                 new PStmtKey("sql", "catalog2", "schema1", 0));
@@ -77,7 +77,7 @@ public class TestPStmtKey {
      * Tests constructors with different schemas.
      */
     @Test
-    public void testCtorDifferentSchema() {
+    void testCtorDifferentSchema() {
         assertNotEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog1", "schema2"));
         assertNotEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
                 new PStmtKey("sql", "catalog1", "schema2", 0));
@@ -115,7 +115,7 @@ public class TestPStmtKey {
      * Tests constructors with different catalog.
      */
     @Test
-    public void testCtorEquals() {
+    void testCtorEquals() {
         assertEquals(new PStmtKey("sql", "catalog1", "schema1"), new PStmtKey("sql", "catalog1", "schema1"));
         assertEquals(new PStmtKey("sql", "catalog1", "schema1", 0),
                 new PStmtKey("sql", "catalog1", "schema1", 0));
@@ -155,7 +155,7 @@ public class TestPStmtKey {
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
-    public void testCtorStringStringArrayOfInts() {
+    void testCtorStringStringArrayOfInts() {
         final int[] input = {0, 0};
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         assertArrayEquals(input, pStmtKey.getColumnIndexes());
@@ -170,7 +170,7 @@ public class TestPStmtKey {
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
-    public void testCtorStringStringArrayOfNullInts() {
+    void testCtorStringStringArrayOfNullInts() {
         final int[] input = null;
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         assertArrayEquals(input, pStmtKey.getColumnIndexes());
@@ -182,7 +182,7 @@ public class TestPStmtKey {
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
-    public void testCtorStringStringArrayOfNullStrings() {
+    void testCtorStringStringArrayOfNullStrings() {
         final String[] input = null;
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         assertArrayEquals(input, pStmtKey.getColumnNames());
@@ -194,7 +194,7 @@ public class TestPStmtKey {
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
     @Test
-    public void testCtorStringStringArrayOfStrings() {
+    void testCtorStringStringArrayOfStrings() {
         final String[] input = {"A", "B"};
         final PStmtKey pStmtKey = new PStmtKey("", "", "", input);
         assertArrayEquals(input, pStmtKey.getColumnNames());
@@ -204,7 +204,7 @@ public class TestPStmtKey {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         final PStmtKey pStmtKey = new PStmtKey("SELECT 1", "catalog", "public",
                 java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE, java.sql.ResultSet.CONCUR_READ_ONLY,
                 StatementType.CALLABLE_STATEMENT);
@@ -238,7 +238,7 @@ public class TestPStmtKey {
     }
 
     @Test
-    public void testGettersSetters() {
+    void testGettersSetters() {
         final PStmtKey pStmtKey = new PStmtKey("SELECT 1", "catalog", "public");
         assertEquals("SELECT 1", pStmtKey.getSql());
         assertEquals("public", pStmtKey.getSchema());
@@ -251,7 +251,7 @@ public class TestPStmtKey {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         final PStmtKey pStmtKey = new PStmtKey("SELECT 1", "catalog", "public",
                 StatementType.CALLABLE_STATEMENT, Statement.RETURN_GENERATED_KEYS);
         assertTrue(pStmtKey.toString().contains("sql=SELECT 1"));

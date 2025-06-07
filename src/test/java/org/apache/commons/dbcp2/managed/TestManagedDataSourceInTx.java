@@ -151,7 +151,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testCloseInTransaction() throws Exception {
+    void testCloseInTransaction() throws Exception {
         try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
                 DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection()) {
             assertNotEquals(connectionA, connectionB);
@@ -170,7 +170,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testCommit() throws Exception {
+    void testCommit() throws Exception {
         try (Connection connection = newConnection()) {
             // connection should be open
             assertFalse(connection.isClosed(), "Connection should be open");
@@ -211,7 +211,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testDoubleReturn() throws Exception {
+    void testDoubleReturn() throws Exception {
         transactionManager.getTransaction().registerSynchronization(new Synchronization() {
             private ManagedConnection<?> conn;
 
@@ -237,7 +237,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testGetConnectionInAfterCompletion() throws Exception {
+    void testGetConnectionInAfterCompletion() throws Exception {
         try (DelegatingConnection<?> connection = (DelegatingConnection<?>) newConnection()) {
             // Don't close so we can check it for warnings in afterCompletion
             transactionManager.getTransaction().registerSynchronization(new SynchronizationAdapter() {
@@ -313,7 +313,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testReadOnly() throws Exception {
+    void testReadOnly() throws Exception {
         try (Connection connection = newConnection()) {
             // NOTE: This test class uses connections that are read-only by default
             // connection should be read only
@@ -343,7 +343,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
     }
 
     @Test
-    public void testSharedTransactionConversion() throws Exception {
+    void testSharedTransactionConversion() throws Exception {
         try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
                 DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection()) {
             // in a transaction the inner connections should be equal

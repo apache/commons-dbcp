@@ -56,7 +56,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testAllProceduresAreCallable() throws Exception {
+    void testAllProceduresAreCallable() throws Exception {
         try {
             delegate.allProceduresAreCallable();
         } catch (final SQLException e) {
@@ -70,7 +70,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testAllTablesAreSelectable() throws Exception {
+    void testAllTablesAreSelectable() throws Exception {
         try {
             delegate.allTablesAreSelectable();
         } catch (final SQLException e) {
@@ -84,7 +84,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testAutoCommitFailureClosesAllResultSets() throws Exception {
+    void testAutoCommitFailureClosesAllResultSets() throws Exception {
         try {
             delegate.autoCommitFailureClosesAllResultSets();
         } catch (final SQLException e) {
@@ -98,7 +98,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testCheckOpen() throws Exception {
+    void testCheckOpen() throws Exception {
         delegate = new DelegatingDatabaseMetaData(conn, conn.getMetaData());
         final ResultSet rst = delegate.getSchemas();
         assertFalse(rst.isClosed());
@@ -107,7 +107,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testDataDefinitionCausesTransactionCommit() throws Exception {
+    void testDataDefinitionCausesTransactionCommit() throws Exception {
         try {
             delegate.dataDefinitionCausesTransactionCommit();
         } catch (final SQLException e) {
@@ -121,7 +121,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testDataDefinitionIgnoredInTransactions() throws Exception {
+    void testDataDefinitionIgnoredInTransactions() throws Exception {
         try {
             delegate.dataDefinitionIgnoredInTransactions();
         } catch (final SQLException e) {
@@ -135,7 +135,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testDeletesAreDetectedInteger() throws Exception {
+    void testDeletesAreDetectedInteger() throws Exception {
         try {
             delegate.deletesAreDetected(1);
         } catch (final SQLException e) {
@@ -149,7 +149,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testDoesMaxRowSizeIncludeBlobs() throws Exception {
+    void testDoesMaxRowSizeIncludeBlobs() throws Exception {
         try {
             delegate.doesMaxRowSizeIncludeBlobs();
         } catch (final SQLException e) {
@@ -163,7 +163,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGeneratedKeyAlwaysReturned() throws Exception {
+    void testGeneratedKeyAlwaysReturned() throws Exception {
         try {
             delegate.generatedKeyAlwaysReturned();
         } catch (final SQLException e) {
@@ -177,7 +177,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetAttributesStringStringStringString() throws Exception {
+    void testGetAttributesStringStringStringString() throws Exception {
         try {
             delegate.getAttributes("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -187,7 +187,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetBestRowIdentifierStringStringStringIntegerBoolean() throws Exception {
+    void testGetBestRowIdentifierStringStringStringIntegerBoolean() throws Exception {
         try {
             delegate.getBestRowIdentifier("foo", "foo", "foo", 1, Boolean.TRUE);
         } catch (final SQLException e) {
@@ -197,7 +197,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetCatalogs() throws Exception {
+    void testGetCatalogs() throws Exception {
         try {
             delegate.getCatalogs();
         } catch (final SQLException e) {
@@ -211,7 +211,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetCatalogSeparator() throws Exception {
+    void testGetCatalogSeparator() throws Exception {
         try {
             delegate.getCatalogSeparator();
         } catch (final SQLException e) {
@@ -225,7 +225,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetCatalogTerm() throws Exception {
+    void testGetCatalogTerm() throws Exception {
         try {
             delegate.getCatalogTerm();
         } catch (final SQLException e) {
@@ -239,7 +239,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetClientInfoProperties() throws Exception {
+    void testGetClientInfoProperties() throws Exception {
         try {
             delegate.getClientInfoProperties();
         } catch (final SQLException e) {
@@ -253,7 +253,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetColumnPrivilegesStringStringStringString() throws Exception {
+    void testGetColumnPrivilegesStringStringStringString() throws Exception {
         try {
             delegate.getColumnPrivileges("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -263,7 +263,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetColumnsStringStringStringString() throws Exception {
+    void testGetColumnsStringStringStringString() throws Exception {
         try {
             delegate.getColumns("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -278,7 +278,7 @@ public class TestDelegatingDatabaseMetaData {
      * @throws Exception
      */
     @Test
-    public void testGetConnection() throws Exception {
+    void testGetConnection() throws Exception {
         try {
             delegate.getConnection();
         } catch (final SQLException e) {
@@ -288,7 +288,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetCrossReferenceStringStringStringStringStringString() throws Exception {
+    void testGetCrossReferenceStringStringStringStringStringString() throws Exception {
         try {
             delegate.getCrossReference("foo", "foo", "foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -298,7 +298,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDatabaseMajorVersion() throws Exception {
+    void testGetDatabaseMajorVersion() throws Exception {
         try {
             delegate.getDatabaseMajorVersion();
         } catch (final SQLException e) {
@@ -312,7 +312,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDatabaseMinorVersion() throws Exception {
+    void testGetDatabaseMinorVersion() throws Exception {
         try {
             delegate.getDatabaseMinorVersion();
         } catch (final SQLException e) {
@@ -326,7 +326,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDatabaseProductName() throws Exception {
+    void testGetDatabaseProductName() throws Exception {
         try {
             delegate.getDatabaseProductName();
         } catch (final SQLException e) {
@@ -340,7 +340,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDatabaseProductVersion() throws Exception {
+    void testGetDatabaseProductVersion() throws Exception {
         try {
             delegate.getDatabaseProductVersion();
         } catch (final SQLException e) {
@@ -350,7 +350,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDefaultTransactionIsolation() throws Exception {
+    void testGetDefaultTransactionIsolation() throws Exception {
         try {
             delegate.getDefaultTransactionIsolation();
         } catch (final SQLException e) {
@@ -360,24 +360,24 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDelegate() throws Exception {
+    void testGetDelegate() throws Exception {
         assertEquals(obj, delegate.getDelegate());
     }
 
     @Test
-    public void testGetDriverMajorVersion() throws Exception {
+    void testGetDriverMajorVersion() throws Exception {
         delegate.getDriverMajorVersion();
         verify(obj, times(1)).getDriverMajorVersion();
     }
 
     @Test
-    public void testGetDriverMinorVersion() throws Exception {
+    void testGetDriverMinorVersion() throws Exception {
         delegate.getDriverMinorVersion();
         verify(obj, times(1)).getDriverMinorVersion();
     }
 
     @Test
-    public void testGetDriverName() throws Exception {
+    void testGetDriverName() throws Exception {
         try {
             delegate.getDriverName();
         } catch (final SQLException e) {
@@ -387,7 +387,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetDriverVersion() throws Exception {
+    void testGetDriverVersion() throws Exception {
         try {
             delegate.getDriverVersion();
         } catch (final SQLException e) {
@@ -397,7 +397,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetExportedKeysStringStringString() throws Exception {
+    void testGetExportedKeysStringStringString() throws Exception {
         try {
             delegate.getExportedKeys("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -407,7 +407,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetExtraNameCharacters() throws Exception {
+    void testGetExtraNameCharacters() throws Exception {
         try {
             delegate.getExtraNameCharacters();
         } catch (final SQLException e) {
@@ -417,7 +417,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetFunctionColumnsStringStringStringString() throws Exception {
+    void testGetFunctionColumnsStringStringStringString() throws Exception {
         try {
             delegate.getFunctionColumns("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -427,7 +427,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetFunctionsStringStringString() throws Exception {
+    void testGetFunctionsStringStringString() throws Exception {
         try {
             delegate.getFunctions("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -437,7 +437,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetIdentifierQuoteString() throws Exception {
+    void testGetIdentifierQuoteString() throws Exception {
         try {
             delegate.getIdentifierQuoteString();
         } catch (final SQLException e) {
@@ -447,7 +447,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetImportedKeysStringStringString() throws Exception {
+    void testGetImportedKeysStringStringString() throws Exception {
         try {
             delegate.getImportedKeys("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -457,7 +457,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetIndexInfoStringStringStringBooleanBoolean() throws Exception {
+    void testGetIndexInfoStringStringStringBooleanBoolean() throws Exception {
         try {
             delegate.getIndexInfo("foo", "foo", "foo", Boolean.TRUE, Boolean.TRUE);
         } catch (final SQLException e) {
@@ -467,12 +467,12 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetInnermostDelegate() {
+    void testGetInnermostDelegate() {
         assertNotNull(delegate.getInnermostDelegate());
     }
 
     @Test
-    public void testGetJDBCMajorVersion() throws Exception {
+    void testGetJDBCMajorVersion() throws Exception {
         try {
             delegate.getJDBCMajorVersion();
         } catch (final SQLException e) {
@@ -482,7 +482,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetJDBCMinorVersion() throws Exception {
+    void testGetJDBCMinorVersion() throws Exception {
         try {
             delegate.getJDBCMinorVersion();
         } catch (final SQLException e) {
@@ -492,7 +492,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxBinaryLiteralLength() throws Exception {
+    void testGetMaxBinaryLiteralLength() throws Exception {
         try {
             delegate.getMaxBinaryLiteralLength();
         } catch (final SQLException e) {
@@ -502,7 +502,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxCatalogNameLength() throws Exception {
+    void testGetMaxCatalogNameLength() throws Exception {
         try {
             delegate.getMaxCatalogNameLength();
         } catch (final SQLException e) {
@@ -512,7 +512,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxCharLiteralLength() throws Exception {
+    void testGetMaxCharLiteralLength() throws Exception {
         try {
             delegate.getMaxCharLiteralLength();
         } catch (final SQLException e) {
@@ -522,7 +522,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnNameLength() throws Exception {
+    void testGetMaxColumnNameLength() throws Exception {
         try {
             delegate.getMaxColumnNameLength();
         } catch (final SQLException e) {
@@ -532,7 +532,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnsInGroupBy() throws Exception {
+    void testGetMaxColumnsInGroupBy() throws Exception {
         try {
             delegate.getMaxColumnsInGroupBy();
         } catch (final SQLException e) {
@@ -542,7 +542,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnsInIndex() throws Exception {
+    void testGetMaxColumnsInIndex() throws Exception {
         try {
             delegate.getMaxColumnsInIndex();
         } catch (final SQLException e) {
@@ -552,7 +552,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnsInOrderBy() throws Exception {
+    void testGetMaxColumnsInOrderBy() throws Exception {
         try {
             delegate.getMaxColumnsInOrderBy();
         } catch (final SQLException e) {
@@ -562,7 +562,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnsInSelect() throws Exception {
+    void testGetMaxColumnsInSelect() throws Exception {
         try {
             delegate.getMaxColumnsInSelect();
         } catch (final SQLException e) {
@@ -572,7 +572,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxColumnsInTable() throws Exception {
+    void testGetMaxColumnsInTable() throws Exception {
         try {
             delegate.getMaxColumnsInTable();
         } catch (final SQLException e) {
@@ -582,7 +582,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxConnections() throws Exception {
+    void testGetMaxConnections() throws Exception {
         try {
             delegate.getMaxConnections();
         } catch (final SQLException e) {
@@ -592,7 +592,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxCursorNameLength() throws Exception {
+    void testGetMaxCursorNameLength() throws Exception {
         try {
             delegate.getMaxCursorNameLength();
         } catch (final SQLException e) {
@@ -602,7 +602,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxIndexLength() throws Exception {
+    void testGetMaxIndexLength() throws Exception {
         try {
             delegate.getMaxIndexLength();
         } catch (final SQLException e) {
@@ -612,7 +612,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxLogicalLobSize() throws Exception {
+    void testGetMaxLogicalLobSize() throws Exception {
         try {
             delegate.getMaxLogicalLobSize();
         } catch (final SQLException e) {
@@ -622,7 +622,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxProcedureNameLength() throws Exception {
+    void testGetMaxProcedureNameLength() throws Exception {
         try {
             delegate.getMaxProcedureNameLength();
         } catch (final SQLException e) {
@@ -632,7 +632,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxRowSize() throws Exception {
+    void testGetMaxRowSize() throws Exception {
         try {
             delegate.getMaxRowSize();
         } catch (final SQLException e) {
@@ -642,7 +642,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxSchemaNameLength() throws Exception {
+    void testGetMaxSchemaNameLength() throws Exception {
         try {
             delegate.getMaxSchemaNameLength();
         } catch (final SQLException e) {
@@ -652,7 +652,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxStatementLength() throws Exception {
+    void testGetMaxStatementLength() throws Exception {
         try {
             delegate.getMaxStatementLength();
         } catch (final SQLException e) {
@@ -662,7 +662,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxStatements() throws Exception {
+    void testGetMaxStatements() throws Exception {
         try {
             delegate.getMaxStatements();
         } catch (final SQLException e) {
@@ -672,7 +672,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxTableNameLength() throws Exception {
+    void testGetMaxTableNameLength() throws Exception {
         try {
             delegate.getMaxTableNameLength();
         } catch (final SQLException e) {
@@ -682,7 +682,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxTablesInSelect() throws Exception {
+    void testGetMaxTablesInSelect() throws Exception {
         try {
             delegate.getMaxTablesInSelect();
         } catch (final SQLException e) {
@@ -692,7 +692,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetMaxUserNameLength() throws Exception {
+    void testGetMaxUserNameLength() throws Exception {
         try {
             delegate.getMaxUserNameLength();
         } catch (final SQLException e) {
@@ -702,7 +702,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetNumericFunctions() throws Exception {
+    void testGetNumericFunctions() throws Exception {
         try {
             delegate.getNumericFunctions();
         } catch (final SQLException e) {
@@ -712,7 +712,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetPrimaryKeysStringStringString() throws Exception {
+    void testGetPrimaryKeysStringStringString() throws Exception {
         try {
             delegate.getPrimaryKeys("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -722,7 +722,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetProcedureColumnsStringStringStringString() throws Exception {
+    void testGetProcedureColumnsStringStringStringString() throws Exception {
         try {
             delegate.getProcedureColumns("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -732,7 +732,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetProceduresStringStringString() throws Exception {
+    void testGetProceduresStringStringString() throws Exception {
         try {
             delegate.getProcedures("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -742,7 +742,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetProcedureTerm() throws Exception {
+    void testGetProcedureTerm() throws Exception {
         try {
             delegate.getProcedureTerm();
         } catch (final SQLException e) {
@@ -752,7 +752,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetPseudoColumnsStringStringStringString() throws Exception {
+    void testGetPseudoColumnsStringStringStringString() throws Exception {
         try {
             delegate.getPseudoColumns("foo", "foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -762,7 +762,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetResultSetHoldability() throws Exception {
+    void testGetResultSetHoldability() throws Exception {
         try {
             delegate.getResultSetHoldability();
         } catch (final SQLException e) {
@@ -772,7 +772,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetRowIdLifetime() throws Exception {
+    void testGetRowIdLifetime() throws Exception {
         try {
             delegate.getRowIdLifetime();
         } catch (final SQLException e) {
@@ -782,7 +782,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSchemas() throws Exception {
+    void testGetSchemas() throws Exception {
         try {
             delegate.getSchemas();
         } catch (final SQLException e) {
@@ -792,7 +792,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSchemasStringString() throws Exception {
+    void testGetSchemasStringString() throws Exception {
         try {
             delegate.getSchemas("foo", "foo");
         } catch (final SQLException e) {
@@ -802,7 +802,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSchemaTerm() throws Exception {
+    void testGetSchemaTerm() throws Exception {
         try {
             delegate.getSchemaTerm();
         } catch (final SQLException e) {
@@ -812,7 +812,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSearchStringEscape() throws Exception {
+    void testGetSearchStringEscape() throws Exception {
         try {
             delegate.getSearchStringEscape();
         } catch (final SQLException e) {
@@ -822,7 +822,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSQLKeywords() throws Exception {
+    void testGetSQLKeywords() throws Exception {
         try {
             delegate.getSQLKeywords();
         } catch (final SQLException e) {
@@ -832,7 +832,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSQLStateType() throws Exception {
+    void testGetSQLStateType() throws Exception {
         try {
             delegate.getSQLStateType();
         } catch (final SQLException e) {
@@ -842,7 +842,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetStringFunctions() throws Exception {
+    void testGetStringFunctions() throws Exception {
         try {
             delegate.getStringFunctions();
         } catch (final SQLException e) {
@@ -852,7 +852,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSuperTablesStringStringString() throws Exception {
+    void testGetSuperTablesStringStringString() throws Exception {
         try {
             delegate.getSuperTables("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -862,7 +862,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSuperTypesStringStringString() throws Exception {
+    void testGetSuperTypesStringStringString() throws Exception {
         try {
             delegate.getSuperTypes("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -872,7 +872,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetSystemFunctions() throws Exception {
+    void testGetSystemFunctions() throws Exception {
         try {
             delegate.getSystemFunctions();
         } catch (final SQLException e) {
@@ -882,7 +882,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTablePrivilegesStringStringString() throws Exception {
+    void testGetTablePrivilegesStringStringString() throws Exception {
         try {
             delegate.getTablePrivileges("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -892,7 +892,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTablesStringStringStringStringArray() throws Exception {
+    void testGetTablesStringStringStringStringArray() throws Exception {
         try {
             delegate.getTables("foo", "foo", "foo", (String[]) null);
         } catch (final SQLException e) {
@@ -902,7 +902,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTableTypes() throws Exception {
+    void testGetTableTypes() throws Exception {
         try {
             delegate.getTableTypes();
         } catch (final SQLException e) {
@@ -912,7 +912,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTimeDateFunctions() throws Exception {
+    void testGetTimeDateFunctions() throws Exception {
         try {
             delegate.getTimeDateFunctions();
         } catch (final SQLException e) {
@@ -922,7 +922,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetTypeInfo() throws Exception {
+    void testGetTypeInfo() throws Exception {
         try {
             delegate.getTypeInfo();
         } catch (final SQLException e) {
@@ -932,7 +932,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetUDTsStringStringStringIntegerArray() throws Exception {
+    void testGetUDTsStringStringStringIntegerArray() throws Exception {
         try {
             delegate.getUDTs("foo", "foo", "foo", (int[]) null);
         } catch (final SQLException e) {
@@ -942,7 +942,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetURL() throws Exception {
+    void testGetURL() throws Exception {
         try {
             delegate.getURL();
         } catch (final SQLException e) {
@@ -952,7 +952,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetUserName() throws Exception {
+    void testGetUserName() throws Exception {
         try {
             delegate.getUserName();
         } catch (final SQLException e) {
@@ -962,7 +962,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testGetVersionColumnsStringStringString() throws Exception {
+    void testGetVersionColumnsStringStringString() throws Exception {
         try {
             delegate.getVersionColumns("foo", "foo", "foo");
         } catch (final SQLException e) {
@@ -972,7 +972,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testInsertsAreDetectedInteger() throws Exception {
+    void testInsertsAreDetectedInteger() throws Exception {
         try {
             delegate.insertsAreDetected(1);
         } catch (final SQLException e) {
@@ -982,7 +982,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testIsCatalogAtStart() throws Exception {
+    void testIsCatalogAtStart() throws Exception {
         try {
             delegate.isCatalogAtStart();
         } catch (final SQLException e) {
@@ -992,7 +992,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testIsReadOnly() throws Exception {
+    void testIsReadOnly() throws Exception {
         try {
             delegate.isReadOnly();
         } catch (final SQLException e) {
@@ -1002,7 +1002,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testLocatorsUpdateCopy() throws Exception {
+    void testLocatorsUpdateCopy() throws Exception {
         try {
             delegate.locatorsUpdateCopy();
         } catch (final SQLException e) {
@@ -1012,13 +1012,13 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testNullArguments() throws Exception {
+    void testNullArguments() throws Exception {
         assertThrows(NullPointerException.class, () -> new DelegatingDatabaseMetaData(null, null));
         assertThrows(NullPointerException.class, () -> new DelegatingDatabaseMetaData(new DelegatingConnection(null), null));
     }
 
     @Test
-    public void testNullPlusNonNullIsNull() throws Exception {
+    void testNullPlusNonNullIsNull() throws Exception {
         try {
             delegate.nullPlusNonNullIsNull();
         } catch (final SQLException e) {
@@ -1028,7 +1028,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testNullsAreSortedAtEnd() throws Exception {
+    void testNullsAreSortedAtEnd() throws Exception {
         try {
             delegate.nullsAreSortedAtEnd();
         } catch (final SQLException e) {
@@ -1038,7 +1038,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testNullsAreSortedAtStart() throws Exception {
+    void testNullsAreSortedAtStart() throws Exception {
         try {
             delegate.nullsAreSortedAtStart();
         } catch (final SQLException e) {
@@ -1048,7 +1048,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testNullsAreSortedHigh() throws Exception {
+    void testNullsAreSortedHigh() throws Exception {
         try {
             delegate.nullsAreSortedHigh();
         } catch (final SQLException e) {
@@ -1058,7 +1058,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testNullsAreSortedLow() throws Exception {
+    void testNullsAreSortedLow() throws Exception {
         try {
             delegate.nullsAreSortedLow();
         } catch (final SQLException e) {
@@ -1068,7 +1068,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOthersDeletesAreVisibleInteger() throws Exception {
+    void testOthersDeletesAreVisibleInteger() throws Exception {
         try {
             delegate.othersDeletesAreVisible(1);
         } catch (final SQLException e) {
@@ -1078,7 +1078,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOthersInsertsAreVisibleInteger() throws Exception {
+    void testOthersInsertsAreVisibleInteger() throws Exception {
         try {
             delegate.othersInsertsAreVisible(1);
         } catch (final SQLException e) {
@@ -1088,7 +1088,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOthersUpdatesAreVisibleInteger() throws Exception {
+    void testOthersUpdatesAreVisibleInteger() throws Exception {
         try {
             delegate.othersUpdatesAreVisible(1);
         } catch (final SQLException e) {
@@ -1098,7 +1098,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOwnDeletesAreVisibleInteger() throws Exception {
+    void testOwnDeletesAreVisibleInteger() throws Exception {
         try {
             delegate.ownDeletesAreVisible(1);
         } catch (final SQLException e) {
@@ -1108,7 +1108,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOwnInsertsAreVisibleInteger() throws Exception {
+    void testOwnInsertsAreVisibleInteger() throws Exception {
         try {
             delegate.ownInsertsAreVisible(1);
         } catch (final SQLException e) {
@@ -1118,7 +1118,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testOwnUpdatesAreVisibleInteger() throws Exception {
+    void testOwnUpdatesAreVisibleInteger() throws Exception {
         try {
             delegate.ownUpdatesAreVisible(1);
         } catch (final SQLException e) {
@@ -1128,7 +1128,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresLowerCaseIdentifiers() throws Exception {
+    void testStoresLowerCaseIdentifiers() throws Exception {
         try {
             delegate.storesLowerCaseIdentifiers();
         } catch (final SQLException e) {
@@ -1138,7 +1138,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresLowerCaseQuotedIdentifiers() throws Exception {
+    void testStoresLowerCaseQuotedIdentifiers() throws Exception {
         try {
             delegate.storesLowerCaseQuotedIdentifiers();
         } catch (final SQLException e) {
@@ -1148,7 +1148,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresMixedCaseIdentifiers() throws Exception {
+    void testStoresMixedCaseIdentifiers() throws Exception {
         try {
             delegate.storesMixedCaseIdentifiers();
         } catch (final SQLException e) {
@@ -1158,7 +1158,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresMixedCaseQuotedIdentifiers() throws Exception {
+    void testStoresMixedCaseQuotedIdentifiers() throws Exception {
         try {
             delegate.storesMixedCaseQuotedIdentifiers();
         } catch (final SQLException e) {
@@ -1168,7 +1168,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresUpperCaseIdentifiers() throws Exception {
+    void testStoresUpperCaseIdentifiers() throws Exception {
         try {
             delegate.storesUpperCaseIdentifiers();
         } catch (final SQLException e) {
@@ -1178,7 +1178,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testStoresUpperCaseQuotedIdentifiers() throws Exception {
+    void testStoresUpperCaseQuotedIdentifiers() throws Exception {
         try {
             delegate.storesUpperCaseQuotedIdentifiers();
         } catch (final SQLException e) {
@@ -1188,7 +1188,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsAlterTableWithAddColumn() throws Exception {
+    void testSupportsAlterTableWithAddColumn() throws Exception {
         try {
             delegate.supportsAlterTableWithAddColumn();
         } catch (final SQLException e) {
@@ -1198,7 +1198,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsAlterTableWithDropColumn() throws Exception {
+    void testSupportsAlterTableWithDropColumn() throws Exception {
         try {
             delegate.supportsAlterTableWithDropColumn();
         } catch (final SQLException e) {
@@ -1208,7 +1208,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsANSI92EntryLevelSQL() throws Exception {
+    void testSupportsANSI92EntryLevelSQL() throws Exception {
         try {
             delegate.supportsANSI92EntryLevelSQL();
         } catch (final SQLException e) {
@@ -1218,7 +1218,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsANSI92FullSQL() throws Exception {
+    void testSupportsANSI92FullSQL() throws Exception {
         try {
             delegate.supportsANSI92FullSQL();
         } catch (final SQLException e) {
@@ -1228,7 +1228,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsANSI92IntermediateSQL() throws Exception {
+    void testSupportsANSI92IntermediateSQL() throws Exception {
         try {
             delegate.supportsANSI92IntermediateSQL();
         } catch (final SQLException e) {
@@ -1238,7 +1238,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsBatchUpdates() throws Exception {
+    void testSupportsBatchUpdates() throws Exception {
         try {
             delegate.supportsBatchUpdates();
         } catch (final SQLException e) {
@@ -1248,7 +1248,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCatalogsInDataManipulation() throws Exception {
+    void testSupportsCatalogsInDataManipulation() throws Exception {
         try {
             delegate.supportsCatalogsInDataManipulation();
         } catch (final SQLException e) {
@@ -1258,7 +1258,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCatalogsInIndexDefinitions() throws Exception {
+    void testSupportsCatalogsInIndexDefinitions() throws Exception {
         try {
             delegate.supportsCatalogsInIndexDefinitions();
         } catch (final SQLException e) {
@@ -1268,7 +1268,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCatalogsInPrivilegeDefinitions() throws Exception {
+    void testSupportsCatalogsInPrivilegeDefinitions() throws Exception {
         try {
             delegate.supportsCatalogsInPrivilegeDefinitions();
         } catch (final SQLException e) {
@@ -1278,7 +1278,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCatalogsInProcedureCalls() throws Exception {
+    void testSupportsCatalogsInProcedureCalls() throws Exception {
         try {
             delegate.supportsCatalogsInProcedureCalls();
         } catch (final SQLException e) {
@@ -1288,7 +1288,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCatalogsInTableDefinitions() throws Exception {
+    void testSupportsCatalogsInTableDefinitions() throws Exception {
         try {
             delegate.supportsCatalogsInTableDefinitions();
         } catch (final SQLException e) {
@@ -1298,7 +1298,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsColumnAliasing() throws Exception {
+    void testSupportsColumnAliasing() throws Exception {
         try {
             delegate.supportsColumnAliasing();
         } catch (final SQLException e) {
@@ -1308,7 +1308,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsConvert() throws Exception {
+    void testSupportsConvert() throws Exception {
         try {
             delegate.supportsConvert();
         } catch (final SQLException e) {
@@ -1318,7 +1318,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsConvertIntegerInteger() throws Exception {
+    void testSupportsConvertIntegerInteger() throws Exception {
         try {
             delegate.supportsConvert(1, 1);
         } catch (final SQLException e) {
@@ -1328,7 +1328,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCoreSQLGrammar() throws Exception {
+    void testSupportsCoreSQLGrammar() throws Exception {
         try {
             delegate.supportsCoreSQLGrammar();
         } catch (final SQLException e) {
@@ -1338,7 +1338,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsCorrelatedSubqueries() throws Exception {
+    void testSupportsCorrelatedSubqueries() throws Exception {
         try {
             delegate.supportsCorrelatedSubqueries();
         } catch (final SQLException e) {
@@ -1348,7 +1348,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsDataDefinitionAndDataManipulationTransactions() throws Exception {
+    void testSupportsDataDefinitionAndDataManipulationTransactions() throws Exception {
         try {
             delegate.supportsDataDefinitionAndDataManipulationTransactions();
         } catch (final SQLException e) {
@@ -1358,7 +1358,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsDataManipulationTransactionsOnly() throws Exception {
+    void testSupportsDataManipulationTransactionsOnly() throws Exception {
         try {
             delegate.supportsDataManipulationTransactionsOnly();
         } catch (final SQLException e) {
@@ -1368,7 +1368,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsDifferentTableCorrelationNames() throws Exception {
+    void testSupportsDifferentTableCorrelationNames() throws Exception {
         try {
             delegate.supportsDifferentTableCorrelationNames();
         } catch (final SQLException e) {
@@ -1378,7 +1378,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsExpressionsInOrderBy() throws Exception {
+    void testSupportsExpressionsInOrderBy() throws Exception {
         try {
             delegate.supportsExpressionsInOrderBy();
         } catch (final SQLException e) {
@@ -1388,7 +1388,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsExtendedSQLGrammar() throws Exception {
+    void testSupportsExtendedSQLGrammar() throws Exception {
         try {
             delegate.supportsExtendedSQLGrammar();
         } catch (final SQLException e) {
@@ -1398,7 +1398,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsFullOuterJoins() throws Exception {
+    void testSupportsFullOuterJoins() throws Exception {
         try {
             delegate.supportsFullOuterJoins();
         } catch (final SQLException e) {
@@ -1408,7 +1408,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsGetGeneratedKeys() throws Exception {
+    void testSupportsGetGeneratedKeys() throws Exception {
         try {
             delegate.supportsGetGeneratedKeys();
         } catch (final SQLException e) {
@@ -1418,7 +1418,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsGroupBy() throws Exception {
+    void testSupportsGroupBy() throws Exception {
         try {
             delegate.supportsGroupBy();
         } catch (final SQLException e) {
@@ -1428,7 +1428,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsGroupByBeyondSelect() throws Exception {
+    void testSupportsGroupByBeyondSelect() throws Exception {
         try {
             delegate.supportsGroupByBeyondSelect();
         } catch (final SQLException e) {
@@ -1438,7 +1438,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsGroupByUnrelated() throws Exception {
+    void testSupportsGroupByUnrelated() throws Exception {
         try {
             delegate.supportsGroupByUnrelated();
         } catch (final SQLException e) {
@@ -1448,7 +1448,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsIntegrityEnhancementFacility() throws Exception {
+    void testSupportsIntegrityEnhancementFacility() throws Exception {
         try {
             delegate.supportsIntegrityEnhancementFacility();
         } catch (final SQLException e) {
@@ -1458,7 +1458,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsLikeEscapeClause() throws Exception {
+    void testSupportsLikeEscapeClause() throws Exception {
         try {
             delegate.supportsLikeEscapeClause();
         } catch (final SQLException e) {
@@ -1468,7 +1468,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsLimitedOuterJoins() throws Exception {
+    void testSupportsLimitedOuterJoins() throws Exception {
         try {
             delegate.supportsLimitedOuterJoins();
         } catch (final SQLException e) {
@@ -1478,7 +1478,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMinimumSQLGrammar() throws Exception {
+    void testSupportsMinimumSQLGrammar() throws Exception {
         try {
             delegate.supportsMinimumSQLGrammar();
         } catch (final SQLException e) {
@@ -1488,7 +1488,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMixedCaseIdentifiers() throws Exception {
+    void testSupportsMixedCaseIdentifiers() throws Exception {
         try {
             delegate.supportsMixedCaseIdentifiers();
         } catch (final SQLException e) {
@@ -1498,7 +1498,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMixedCaseQuotedIdentifiers() throws Exception {
+    void testSupportsMixedCaseQuotedIdentifiers() throws Exception {
         try {
             delegate.supportsMixedCaseQuotedIdentifiers();
         } catch (final SQLException e) {
@@ -1508,7 +1508,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMultipleOpenResults() throws Exception {
+    void testSupportsMultipleOpenResults() throws Exception {
         try {
             delegate.supportsMultipleOpenResults();
         } catch (final SQLException e) {
@@ -1518,7 +1518,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMultipleResultSets() throws Exception {
+    void testSupportsMultipleResultSets() throws Exception {
         try {
             delegate.supportsMultipleResultSets();
         } catch (final SQLException e) {
@@ -1528,7 +1528,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsMultipleTransactions() throws Exception {
+    void testSupportsMultipleTransactions() throws Exception {
         try {
             delegate.supportsMultipleTransactions();
         } catch (final SQLException e) {
@@ -1538,7 +1538,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsNamedParameters() throws Exception {
+    void testSupportsNamedParameters() throws Exception {
         try {
             delegate.supportsNamedParameters();
         } catch (final SQLException e) {
@@ -1548,7 +1548,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsNonNullableColumns() throws Exception {
+    void testSupportsNonNullableColumns() throws Exception {
         try {
             delegate.supportsNonNullableColumns();
         } catch (final SQLException e) {
@@ -1558,7 +1558,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOpenCursorsAcrossCommit() throws Exception {
+    void testSupportsOpenCursorsAcrossCommit() throws Exception {
         try {
             delegate.supportsOpenCursorsAcrossCommit();
         } catch (final SQLException e) {
@@ -1568,7 +1568,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOpenCursorsAcrossRollback() throws Exception {
+    void testSupportsOpenCursorsAcrossRollback() throws Exception {
         try {
             delegate.supportsOpenCursorsAcrossRollback();
         } catch (final SQLException e) {
@@ -1578,7 +1578,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOpenStatementsAcrossCommit() throws Exception {
+    void testSupportsOpenStatementsAcrossCommit() throws Exception {
         try {
             delegate.supportsOpenStatementsAcrossCommit();
         } catch (final SQLException e) {
@@ -1588,7 +1588,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOpenStatementsAcrossRollback() throws Exception {
+    void testSupportsOpenStatementsAcrossRollback() throws Exception {
         try {
             delegate.supportsOpenStatementsAcrossRollback();
         } catch (final SQLException e) {
@@ -1598,7 +1598,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOrderByUnrelated() throws Exception {
+    void testSupportsOrderByUnrelated() throws Exception {
         try {
             delegate.supportsOrderByUnrelated();
         } catch (final SQLException e) {
@@ -1608,7 +1608,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsOuterJoins() throws Exception {
+    void testSupportsOuterJoins() throws Exception {
         try {
             delegate.supportsOuterJoins();
         } catch (final SQLException e) {
@@ -1618,7 +1618,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsPositionedDelete() throws Exception {
+    void testSupportsPositionedDelete() throws Exception {
         try {
             delegate.supportsPositionedDelete();
         } catch (final SQLException e) {
@@ -1628,7 +1628,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsPositionedUpdate() throws Exception {
+    void testSupportsPositionedUpdate() throws Exception {
         try {
             delegate.supportsPositionedUpdate();
         } catch (final SQLException e) {
@@ -1638,7 +1638,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsRefCursors() throws Exception {
+    void testSupportsRefCursors() throws Exception {
         try {
             delegate.supportsRefCursors();
         } catch (final SQLException e) {
@@ -1648,7 +1648,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsResultSetConcurrencyIntegerInteger() throws Exception {
+    void testSupportsResultSetConcurrencyIntegerInteger() throws Exception {
         try {
             delegate.supportsResultSetConcurrency(1, 1);
         } catch (final SQLException e) {
@@ -1658,7 +1658,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsResultSetHoldabilityInteger() throws Exception {
+    void testSupportsResultSetHoldabilityInteger() throws Exception {
         try {
             delegate.supportsResultSetHoldability(1);
         } catch (final SQLException e) {
@@ -1668,7 +1668,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsResultSetTypeInteger() throws Exception {
+    void testSupportsResultSetTypeInteger() throws Exception {
         try {
             delegate.supportsResultSetType(1);
         } catch (final SQLException e) {
@@ -1678,7 +1678,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSavepoints() throws Exception {
+    void testSupportsSavepoints() throws Exception {
         try {
             delegate.supportsSavepoints();
         } catch (final SQLException e) {
@@ -1688,7 +1688,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSchemasInDataManipulation() throws Exception {
+    void testSupportsSchemasInDataManipulation() throws Exception {
         try {
             delegate.supportsSchemasInDataManipulation();
         } catch (final SQLException e) {
@@ -1698,7 +1698,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSchemasInIndexDefinitions() throws Exception {
+    void testSupportsSchemasInIndexDefinitions() throws Exception {
         try {
             delegate.supportsSchemasInIndexDefinitions();
         } catch (final SQLException e) {
@@ -1708,7 +1708,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSchemasInPrivilegeDefinitions() throws Exception {
+    void testSupportsSchemasInPrivilegeDefinitions() throws Exception {
         try {
             delegate.supportsSchemasInPrivilegeDefinitions();
         } catch (final SQLException e) {
@@ -1718,7 +1718,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSchemasInProcedureCalls() throws Exception {
+    void testSupportsSchemasInProcedureCalls() throws Exception {
         try {
             delegate.supportsSchemasInProcedureCalls();
         } catch (final SQLException e) {
@@ -1728,7 +1728,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSchemasInTableDefinitions() throws Exception {
+    void testSupportsSchemasInTableDefinitions() throws Exception {
         try {
             delegate.supportsSchemasInTableDefinitions();
         } catch (final SQLException e) {
@@ -1738,7 +1738,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSelectForUpdate() throws Exception {
+    void testSupportsSelectForUpdate() throws Exception {
         try {
             delegate.supportsSelectForUpdate();
         } catch (final SQLException e) {
@@ -1748,7 +1748,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsStatementPooling() throws Exception {
+    void testSupportsStatementPooling() throws Exception {
         try {
             delegate.supportsStatementPooling();
         } catch (final SQLException e) {
@@ -1758,7 +1758,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsStoredFunctionsUsingCallSyntax() throws Exception {
+    void testSupportsStoredFunctionsUsingCallSyntax() throws Exception {
         try {
             delegate.supportsStoredFunctionsUsingCallSyntax();
         } catch (final SQLException e) {
@@ -1768,7 +1768,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsStoredProcedures() throws Exception {
+    void testSupportsStoredProcedures() throws Exception {
         try {
             delegate.supportsStoredProcedures();
         } catch (final SQLException e) {
@@ -1778,7 +1778,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSubqueriesInComparisons() throws Exception {
+    void testSupportsSubqueriesInComparisons() throws Exception {
         try {
             delegate.supportsSubqueriesInComparisons();
         } catch (final SQLException e) {
@@ -1788,7 +1788,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSubqueriesInExists() throws Exception {
+    void testSupportsSubqueriesInExists() throws Exception {
         try {
             delegate.supportsSubqueriesInExists();
         } catch (final SQLException e) {
@@ -1798,7 +1798,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSubqueriesInIns() throws Exception {
+    void testSupportsSubqueriesInIns() throws Exception {
         try {
             delegate.supportsSubqueriesInIns();
         } catch (final SQLException e) {
@@ -1808,7 +1808,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsSubqueriesInQuantifieds() throws Exception {
+    void testSupportsSubqueriesInQuantifieds() throws Exception {
         try {
             delegate.supportsSubqueriesInQuantifieds();
         } catch (final SQLException e) {
@@ -1818,7 +1818,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsTableCorrelationNames() throws Exception {
+    void testSupportsTableCorrelationNames() throws Exception {
         try {
             delegate.supportsTableCorrelationNames();
         } catch (final SQLException e) {
@@ -1828,7 +1828,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsTransactionIsolationLevelInteger() throws Exception {
+    void testSupportsTransactionIsolationLevelInteger() throws Exception {
         try {
             delegate.supportsTransactionIsolationLevel(1);
         } catch (final SQLException e) {
@@ -1838,7 +1838,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsTransactions() throws Exception {
+    void testSupportsTransactions() throws Exception {
         try {
             delegate.supportsTransactions();
         } catch (final SQLException e) {
@@ -1848,7 +1848,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsUnion() throws Exception {
+    void testSupportsUnion() throws Exception {
         try {
             delegate.supportsUnion();
         } catch (final SQLException e) {
@@ -1858,7 +1858,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testSupportsUnionAll() throws Exception {
+    void testSupportsUnionAll() throws Exception {
         try {
             delegate.supportsUnionAll();
         } catch (final SQLException e) {
@@ -1868,7 +1868,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testUpdatesAreDetectedInteger() throws Exception {
+    void testUpdatesAreDetectedInteger() throws Exception {
         try {
             delegate.updatesAreDetected(1);
         } catch (final SQLException e) {
@@ -1878,7 +1878,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testUsesLocalFilePerTable() throws Exception {
+    void testUsesLocalFilePerTable() throws Exception {
         try {
             delegate.usesLocalFilePerTable();
         } catch (final SQLException e) {
@@ -1888,7 +1888,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testUsesLocalFiles() throws Exception {
+    void testUsesLocalFiles() throws Exception {
         try {
             delegate.usesLocalFiles();
         } catch (final SQLException e) {
@@ -1898,7 +1898,7 @@ public class TestDelegatingDatabaseMetaData {
     }
 
     @Test
-    public void testWrap() throws SQLException {
+    void testWrap() throws SQLException {
         assertEquals(delegate, delegate.unwrap(DatabaseMetaData.class));
         assertEquals(delegate, delegate.unwrap(DelegatingDatabaseMetaData.class));
         assertEquals(obj, delegate.unwrap(obj.getClass()));

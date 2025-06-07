@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class TestAbandonedTrace {
 
     @Test
-    public void testDeprecated() throws SQLException {
+    void testDeprecated() throws SQLException {
         try (AbandonedTrace trace = new AbandonedTrace()) {
             assertEquals(trace.getLastUsedInstant().toEpochMilli(), trace.getLastUsed());
         }

@@ -58,7 +58,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testCreateXaDataSourceNewInstance() throws SQLException, XAException {
+    void testCreateXaDataSourceNewInstance() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setXADataSource(JdbcDataSource.class.getCanonicalName());
             basicManagedDataSource.setDriverClassName(Driver.class.getName());
@@ -68,7 +68,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testCreateXaDataSourceNoInstanceSetAndNoDataSource() throws SQLException, XAException {
+    void testCreateXaDataSourceNoInstanceSetAndNoDataSource() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
             basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
@@ -83,7 +83,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
      * when reallyClosed.
      */
     @Test
-    public void testReallyClose() throws Exception {
+    void testReallyClose() throws Exception {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -104,7 +104,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testRuntimeExceptionsAreRethrown() throws SQLException, XAException {
+    void testRuntimeExceptionsAreRethrown() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -118,7 +118,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testSetDriverName() throws SQLException {
+    void testSetDriverName() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setDriverClassName("adams");
             assertEquals("adams", basicManagedDataSource.getDriverClassName());
@@ -128,7 +128,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testSetNullXaDataSourceInstance() throws SQLException, XAException {
+    void testSetNullXaDataSourceInstance() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -143,7 +143,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
 
     /** DBCP-564 */
     @Test
-    public void testSetRollbackOnlyBeforeGetConnectionDoesNotLeak() throws Exception {
+    void testSetRollbackOnlyBeforeGetConnectionDoesNotLeak() throws Exception {
         final TransactionManager transactionManager = ((BasicManagedDataSource) ds).getTransactionManager();
         final int n = 3;
         ds.setMaxIdle(n);
@@ -163,7 +163,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testSetXaDataSourceInstance() throws SQLException, XAException {
+    void testSetXaDataSourceInstance() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
@@ -177,14 +177,14 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testTransactionManagerNotSet() throws SQLException {
+    void testTransactionManagerNotSet() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             assertThrows(SQLException.class, basicManagedDataSource::createConnectionFactory);
         }
     }
 
     @Test
-    public void testTransactionSynchronizationRegistry() throws Exception {
+    void testTransactionSynchronizationRegistry() throws Exception {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
             final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
@@ -211,7 +211,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testXADataSource() throws SQLException {
+    void testXADataSource() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setXADataSource("anything");
             assertEquals("anything", basicManagedDataSource.getXADataSource());
@@ -219,7 +219,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testXaDataSourceInstance() throws SQLException {
+    void testXaDataSourceInstance() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             final XADataSource ds = new JdbcDataSource();
             basicManagedDataSource.setXaDataSourceInstance(ds);

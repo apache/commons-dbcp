@@ -362,7 +362,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testCommit() throws SQLException, XAException {
+    void testCommit() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
@@ -372,7 +372,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testCommitConnectionClosed() throws SQLException, XAException {
+    void testCommitConnectionClosed() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = true;
         conn.setReadOnly(false);
@@ -381,7 +381,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testCommitConnectionNotReadOnly() throws SQLException, XAException {
+    void testCommitConnectionNotReadOnly() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(true);
@@ -391,7 +391,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testCommitInvalidXid() throws SQLException, XAException {
+    void testCommitInvalidXid() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
@@ -400,19 +400,19 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testCommitMissingXid() {
+    void testCommitMissingXid() {
         assertThrows(NullPointerException.class, () -> resource.commit(null, false));
     }
 
     @Test
-    public void testCommitNoTransaction() throws SQLException {
+    void testCommitNoTransaction() throws SQLException {
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
         assertThrows(XAException.class, () -> resource.commit(new TestXid(), false));
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertEquals(0, resource.getTransactionTimeout());
         assertNull(resource.getXid());
         // the current implementation always return false, regardless of the input value
@@ -422,7 +422,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testForget() throws XAException {
+    void testForget() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(xid);
@@ -430,7 +430,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testForgetDifferentXid() throws XAException {
+    void testForgetDifferentXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(new TestXid());
@@ -438,7 +438,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testForgetMissingXid() throws XAException {
+    void testForgetMissingXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.forget(null);
@@ -446,13 +446,13 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testIsSame() {
+    void testIsSame() {
         assertTrue(resource.isSameRM(resource));
         assertFalse(resource.isSameRM(new LocalXAConnectionFactory.LocalXAResource(conn)));
     }
 
     @Test
-    public void testRollback() throws SQLException, XAException {
+    void testRollback() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
@@ -462,7 +462,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testRollbackInvalidXid() throws SQLException, XAException {
+    void testRollbackInvalidXid() throws SQLException, XAException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).closed = false;
         conn.setReadOnly(false);
@@ -471,7 +471,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testRollbackMissingXid() {
+    void testRollbackMissingXid() {
         assertThrows(NullPointerException.class, () -> resource.rollback(null));
     }
 
@@ -482,7 +482,7 @@ public class TestLocalXaResource {
      * @throws SQLException when there are errors with other SQL/DB parts
      */
     @Test
-    public void testStartExceptionOnGetAutoCommit() throws XAException, SQLException {
+    void testStartExceptionOnGetAutoCommit() throws XAException, SQLException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenGetAutoCommit = true;
         conn.setAutoCommit(false);
@@ -497,26 +497,26 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testStartFailsWhenCannotSetAutoCommit() {
+    void testStartFailsWhenCannotSetAutoCommit() {
         final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenSetAutoCommit = true;
         assertThrows(XAException.class, () -> resource.start(xid, XAResource.TMNOFLAGS));
     }
 
     @Test
-    public void testStartInvalidFlag() {
+    void testStartInvalidFlag() {
         // currently, valid values are TMNOFLAGS and TMRESUME
         assertThrows(XAException.class, () -> resource.start(null, XAResource.TMENDRSCAN));
     }
 
     @Test
-    public void testStartNoFlagButAlreadyEnlisted() throws XAException {
+    void testStartNoFlagButAlreadyEnlisted() throws XAException {
         resource.start(new TestXid(), XAResource.TMNOFLAGS);
         assertThrows(XAException.class, () -> resource.start(new TestXid(), XAResource.TMNOFLAGS));
     }
 
     @Test
-    public void testStartNoFlagResume() throws XAException {
+    void testStartNoFlagResume() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
@@ -524,13 +524,13 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testStartNoFlagResumeButDifferentXid() throws XAException {
+    void testStartNoFlagResumeButDifferentXid() throws XAException {
         resource.start(new TestXid(), XAResource.TMNOFLAGS);
         assertThrows(XAException.class, () -> resource.start(new TestXid(), XAResource.TMRESUME));
     }
 
     @Test
-    public void testStartNoFlagResumeEnd() throws XAException {
+    void testStartNoFlagResumeEnd() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
@@ -540,7 +540,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testStartNoFlagResumeEndDifferentXid() throws XAException {
+    void testStartNoFlagResumeEndDifferentXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
@@ -549,7 +549,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testStartNoFlagResumeEndMissingXid() throws XAException {
+    void testStartNoFlagResumeEndMissingXid() throws XAException {
         final Xid xid = new TestXid();
         resource.start(xid, XAResource.TMNOFLAGS);
         resource.start(xid, XAResource.TMRESUME);
@@ -565,7 +565,7 @@ public class TestLocalXaResource {
      * @throws SQLException when there are errors with other SQL/DB parts
      */
     @Test
-    public void testStartReadOnlyConnectionExceptionOnGetAutoCommit() throws XAException, SQLException {
+    void testStartReadOnlyConnectionExceptionOnGetAutoCommit() throws XAException, SQLException {
         final Xid xid = new TestXid();
         ((TestConnection) conn).throwWhenGetAutoCommit = true;
         conn.setAutoCommit(false);
@@ -580,7 +580,7 @@ public class TestLocalXaResource {
     }
 
     @Test
-    public void testStartReadOnlyConnectionPrepare() throws XAException, SQLException {
+    void testStartReadOnlyConnectionPrepare() throws XAException, SQLException {
         final Xid xid = new TestXid();
         conn.setAutoCommit(false);
         conn.setReadOnly(true);

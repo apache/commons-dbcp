@@ -57,7 +57,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testClosingWrappedInDelegate() throws Exception {
+    void testClosingWrappedInDelegate() throws Exception {
         Assertions.assertEquals(0, pool.getNumActive());
 
         final Connection conn = pool.borrowObject();
@@ -76,7 +76,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testConnectionPool() throws Exception {
+    void testConnectionPool() throws Exception {
         // Grab a new connection from the pool
         final Connection c = pool.borrowObject();
 
@@ -90,7 +90,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testDisconnectionIgnoreSqlCodes() throws Exception {
+    void testDisconnectionIgnoreSqlCodes() throws Exception {
         pool.setTestOnReturn(true);
         final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
@@ -111,7 +111,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testFastFailValidation() throws Exception {
+    void testFastFailValidation() throws Exception {
         pool.setTestOnReturn(true);
         final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
@@ -143,7 +143,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testFastFailValidationCustomCodes() throws Exception {
+    void testFastFailValidationCustomCodes() throws Exception {
         pool.setTestOnReturn(true);
         final PoolableConnectionFactory factory = (PoolableConnectionFactory) pool.getFactory();
         factory.setFastFailValidation(true);
@@ -166,7 +166,7 @@ public class TestPoolableConnection {
     }
 
     @Test
-    public void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
+    void testIsDisconnectionSqlExceptionStackOverflow() throws Exception {
         final int maxDeep = 100_000;
         final SQLException rootException = new SQLException("Data truncated", "22001");
         SQLException parentException = rootException;
@@ -184,14 +184,14 @@ public class TestPoolableConnection {
      * Tests if the {@link PoolableConnectionMXBean} interface is a valid MXBean interface.
      */
     @Test
-    public void testMXBeanCompliance() throws OperationsException {
+    void testMXBeanCompliance() throws OperationsException {
         TestBasicDataSourceMXBean.testMXBeanCompliance(PoolableConnectionMXBean.class);
     }
 
     // Bugzilla Bug 33591: PoolableConnection leaks connections if the
     // delegated connection closes itself.
     @Test
-    public void testPoolableConnectionLeak() throws Exception {
+    void testPoolableConnectionLeak() throws Exception {
         // 'Borrow' a connection from the pool
         final Connection conn = pool.borrowObject();
 

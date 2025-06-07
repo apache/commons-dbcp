@@ -111,7 +111,7 @@ public class TestManagedConnectionCachedState {
     }
 
     @Test
-    public void testConnectionCachedState() throws Exception {
+    void testConnectionCachedState() throws Exception {
         // see DBCP-568
 
         // begin a transaction

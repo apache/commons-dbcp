@@ -47,21 +47,21 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testExecuteQueryReturnsNotNull() throws Exception {
+    void testExecuteQueryReturnsNotNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn, "select * from foo");
         obj = new DelegatingCallableStatement(new DelegatingConnection<>(conn), delegateStmt);
         assertNotNull(obj.executeQuery());
     }
 
     @Test
-    public void testExecuteQueryReturnsNull() throws Exception {
+    void testExecuteQueryReturnsNull() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn, "null");
         obj = new DelegatingCallableStatement(new DelegatingConnection<>(conn), delegateStmt);
         assertNull(obj.executeQuery());
     }
 
     @Test
-    public void testGetArrayInteger() throws Exception {
+    void testGetArrayInteger() throws Exception {
         try {
             delegate.getArray(1);
         } catch (final SQLException e) {
@@ -70,7 +70,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetArrayString() throws Exception {
+    void testGetArrayString() throws Exception {
         try {
             delegate.getArray("foo");
         } catch (final SQLException e) {
@@ -79,7 +79,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBigDecimalInteger() throws Exception {
+    void testGetBigDecimalInteger() throws Exception {
         try {
             delegate.getBigDecimal(1);
         } catch (final SQLException e) {
@@ -88,7 +88,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBigDecimalIntegerInteger() throws Exception {
+    void testGetBigDecimalIntegerInteger() throws Exception {
         try {
             delegate.getBigDecimal(1, 1);
         } catch (final SQLException e) {
@@ -97,7 +97,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBigDecimalString() throws Exception {
+    void testGetBigDecimalString() throws Exception {
         try {
             delegate.getBigDecimal("foo");
         } catch (final SQLException e) {
@@ -106,7 +106,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBlobInteger() throws Exception {
+    void testGetBlobInteger() throws Exception {
         try {
             delegate.getBlob(1);
         } catch (final SQLException e) {
@@ -115,7 +115,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBlobString() throws Exception {
+    void testGetBlobString() throws Exception {
         try {
             delegate.getBlob("foo");
         } catch (final SQLException e) {
@@ -124,7 +124,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBooleanInteger() throws Exception {
+    void testGetBooleanInteger() throws Exception {
         try {
             delegate.getBoolean(1);
         } catch (final SQLException e) {
@@ -133,7 +133,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBooleanString() throws Exception {
+    void testGetBooleanString() throws Exception {
         try {
             delegate.getBoolean("foo");
         } catch (final SQLException e) {
@@ -142,7 +142,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetByteInteger() throws Exception {
+    void testGetByteInteger() throws Exception {
         try {
             delegate.getByte(1);
         } catch (final SQLException e) {
@@ -151,7 +151,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBytesInteger() throws Exception {
+    void testGetBytesInteger() throws Exception {
         try {
             delegate.getBytes(1);
         } catch (final SQLException e) {
@@ -160,7 +160,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetBytesString() throws Exception {
+    void testGetBytesString() throws Exception {
         try {
             delegate.getBytes("foo");
         } catch (final SQLException e) {
@@ -169,7 +169,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetByteString() throws Exception {
+    void testGetByteString() throws Exception {
         try {
             delegate.getByte("foo");
         } catch (final SQLException e) {
@@ -178,7 +178,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetCharacterStreamInteger() throws Exception {
+    void testGetCharacterStreamInteger() throws Exception {
         try {
             delegate.getCharacterStream(1);
         } catch (final SQLException e) {
@@ -187,7 +187,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetCharacterStreamString() throws Exception {
+    void testGetCharacterStreamString() throws Exception {
         try {
             delegate.getCharacterStream("foo");
         } catch (final SQLException e) {
@@ -196,7 +196,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetClobInteger() throws Exception {
+    void testGetClobInteger() throws Exception {
         try {
             delegate.getClob(1);
         } catch (final SQLException e) {
@@ -205,7 +205,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetClobString() throws Exception {
+    void testGetClobString() throws Exception {
         try {
             delegate.getClob("foo");
         } catch (final SQLException e) {
@@ -214,7 +214,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDateInteger() throws Exception {
+    void testGetDateInteger() throws Exception {
         try {
             delegate.getDate(1);
         } catch (final SQLException e) {
@@ -223,7 +223,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDateIntegerCalendar() throws Exception {
+    void testGetDateIntegerCalendar() throws Exception {
         try {
             delegate.getDate(1, (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -232,7 +232,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDateString() throws Exception {
+    void testGetDateString() throws Exception {
         try {
             delegate.getDate("foo");
         } catch (final SQLException e) {
@@ -241,7 +241,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDateStringCalendar() throws Exception {
+    void testGetDateStringCalendar() throws Exception {
         try {
             delegate.getDate("foo", (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -250,14 +250,14 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDelegate() throws Exception {
+    void testGetDelegate() throws Exception {
         final TesterCallableStatement delegateStmt = new TesterCallableStatement(conn, "select * from foo");
         obj = new DelegatingCallableStatement(new DelegatingConnection<>(conn), delegateStmt);
         assertEquals(delegateStmt, ((DelegatingCallableStatement) obj).getDelegate());
     }
 
     @Test
-    public void testGetDoubleInteger() throws Exception {
+    void testGetDoubleInteger() throws Exception {
         try {
             delegate.getDouble(1);
         } catch (final SQLException e) {
@@ -266,7 +266,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetDoubleString() throws Exception {
+    void testGetDoubleString() throws Exception {
         try {
             delegate.getDouble("foo");
         } catch (final SQLException e) {
@@ -275,7 +275,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetFloatInteger() throws Exception {
+    void testGetFloatInteger() throws Exception {
         try {
             delegate.getFloat(1);
         } catch (final SQLException e) {
@@ -284,7 +284,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetFloatString() throws Exception {
+    void testGetFloatString() throws Exception {
         try {
             delegate.getFloat("foo");
         } catch (final SQLException e) {
@@ -293,7 +293,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetIntInteger() throws Exception {
+    void testGetIntInteger() throws Exception {
         try {
             delegate.getInt(1);
         } catch (final SQLException e) {
@@ -302,7 +302,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetIntString() throws Exception {
+    void testGetIntString() throws Exception {
         try {
             delegate.getInt("foo");
         } catch (final SQLException e) {
@@ -311,7 +311,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetLongInteger() throws Exception {
+    void testGetLongInteger() throws Exception {
         try {
             delegate.getLong(1);
         } catch (final SQLException e) {
@@ -320,7 +320,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetLongString() throws Exception {
+    void testGetLongString() throws Exception {
         try {
             delegate.getLong("foo");
         } catch (final SQLException e) {
@@ -329,7 +329,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNCharacterStreamInteger() throws Exception {
+    void testGetNCharacterStreamInteger() throws Exception {
         try {
             delegate.getNCharacterStream(1);
         } catch (final SQLException e) {
@@ -338,7 +338,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNCharacterStreamString() throws Exception {
+    void testGetNCharacterStreamString() throws Exception {
         try {
             delegate.getNCharacterStream("foo");
         } catch (final SQLException e) {
@@ -347,7 +347,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNClobInteger() throws Exception {
+    void testGetNClobInteger() throws Exception {
         try {
             delegate.getNClob(1);
         } catch (final SQLException e) {
@@ -356,7 +356,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNClobString() throws Exception {
+    void testGetNClobString() throws Exception {
         try {
             delegate.getNClob("foo");
         } catch (final SQLException e) {
@@ -365,7 +365,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNStringInteger() throws Exception {
+    void testGetNStringInteger() throws Exception {
         try {
             delegate.getNString(1);
         } catch (final SQLException e) {
@@ -374,7 +374,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetNStringString() throws Exception {
+    void testGetNStringString() throws Exception {
         try {
             delegate.getNString("foo");
         } catch (final SQLException e) {
@@ -383,7 +383,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectInteger() throws Exception {
+    void testGetObjectInteger() throws Exception {
         try {
             delegate.getObject(1);
         } catch (final SQLException e) {
@@ -392,7 +392,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectIntegerClass() throws Exception {
+    void testGetObjectIntegerClass() throws Exception {
         try {
             delegate.getObject(1, Object.class);
         } catch (final SQLException e) {
@@ -401,7 +401,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectIntegerMap() throws Exception {
+    void testGetObjectIntegerMap() throws Exception {
         try {
             delegate.getObject(1, (java.util.Map) null);
         } catch (final SQLException e) {
@@ -410,7 +410,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectString() throws Exception {
+    void testGetObjectString() throws Exception {
         try {
             delegate.getObject("foo");
         } catch (final SQLException e) {
@@ -419,7 +419,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectStringClass() throws Exception {
+    void testGetObjectStringClass() throws Exception {
         try {
             delegate.getObject("foo", Object.class);
         } catch (final SQLException e) {
@@ -428,7 +428,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetObjectStringMap() throws Exception {
+    void testGetObjectStringMap() throws Exception {
         try {
             delegate.getObject("foo", (java.util.Map) null);
         } catch (final SQLException e) {
@@ -437,7 +437,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetRefInteger() throws Exception {
+    void testGetRefInteger() throws Exception {
         try {
             delegate.getRef(1);
         } catch (final SQLException e) {
@@ -446,7 +446,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetRefString() throws Exception {
+    void testGetRefString() throws Exception {
         try {
             delegate.getRef("foo");
         } catch (final SQLException e) {
@@ -455,7 +455,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetRowIdInteger() throws Exception {
+    void testGetRowIdInteger() throws Exception {
         try {
             delegate.getRowId(1);
         } catch (final SQLException e) {
@@ -464,7 +464,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetRowIdString() throws Exception {
+    void testGetRowIdString() throws Exception {
         try {
             delegate.getRowId("foo");
         } catch (final SQLException e) {
@@ -473,7 +473,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetShortInteger() throws Exception {
+    void testGetShortInteger() throws Exception {
         try {
             delegate.getShort(1);
         } catch (final SQLException e) {
@@ -482,7 +482,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetShortString() throws Exception {
+    void testGetShortString() throws Exception {
         try {
             delegate.getShort("foo");
         } catch (final SQLException e) {
@@ -491,7 +491,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetSQLXMLInteger() throws Exception {
+    void testGetSQLXMLInteger() throws Exception {
         try {
             delegate.getSQLXML(1);
         } catch (final SQLException e) {
@@ -500,7 +500,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetSQLXMLString() throws Exception {
+    void testGetSQLXMLString() throws Exception {
         try {
             delegate.getSQLXML("foo");
         } catch (final SQLException e) {
@@ -509,7 +509,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetStringInteger() throws Exception {
+    void testGetStringInteger() throws Exception {
         try {
             delegate.getString(1);
         } catch (final SQLException e) {
@@ -518,7 +518,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetStringString() throws Exception {
+    void testGetStringString() throws Exception {
         try {
             delegate.getString("foo");
         } catch (final SQLException e) {
@@ -527,7 +527,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimeInteger() throws Exception {
+    void testGetTimeInteger() throws Exception {
         try {
             delegate.getTime(1);
         } catch (final SQLException e) {
@@ -536,7 +536,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimeIntegerCalendar() throws Exception {
+    void testGetTimeIntegerCalendar() throws Exception {
         try {
             delegate.getTime(1, (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -545,7 +545,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimestampInteger() throws Exception {
+    void testGetTimestampInteger() throws Exception {
         try {
             delegate.getTimestamp(1);
         } catch (final SQLException e) {
@@ -554,7 +554,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimestampIntegerCalendar() throws Exception {
+    void testGetTimestampIntegerCalendar() throws Exception {
         try {
             delegate.getTimestamp(1, (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -563,7 +563,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimestampString() throws Exception {
+    void testGetTimestampString() throws Exception {
         try {
             delegate.getTimestamp("foo");
         } catch (final SQLException e) {
@@ -572,7 +572,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimestampStringCalendar() throws Exception {
+    void testGetTimestampStringCalendar() throws Exception {
         try {
             delegate.getTimestamp("foo", (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -581,7 +581,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimeString() throws Exception {
+    void testGetTimeString() throws Exception {
         try {
             delegate.getTime("foo");
         } catch (final SQLException e) {
@@ -590,7 +590,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetTimeStringCalendar() throws Exception {
+    void testGetTimeStringCalendar() throws Exception {
         try {
             delegate.getTime("foo", (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -599,7 +599,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetURLInteger() throws Exception {
+    void testGetURLInteger() throws Exception {
         try {
             delegate.getURL(1);
         } catch (final SQLException e) {
@@ -608,7 +608,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testGetURLString() throws Exception {
+    void testGetURLString() throws Exception {
         try {
             delegate.getURL("foo");
         } catch (final SQLException e) {
@@ -617,7 +617,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerInteger() throws Exception {
+    void testRegisterOutParameterIntegerInteger() throws Exception {
         try {
             delegate.registerOutParameter(1, 1);
         } catch (final SQLException e) {
@@ -626,7 +626,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerIntegerInteger() throws Exception {
+    void testRegisterOutParameterIntegerIntegerInteger() throws Exception {
         try {
             delegate.registerOutParameter(1, 1, 1);
         } catch (final SQLException e) {
@@ -635,7 +635,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerIntegerString() throws Exception {
+    void testRegisterOutParameterIntegerIntegerString() throws Exception {
         try {
             delegate.registerOutParameter(1, 1, "foo");
         } catch (final SQLException e) {
@@ -644,7 +644,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerSQLType() throws Exception {
+    void testRegisterOutParameterIntegerSQLType() throws Exception {
         try {
             delegate.registerOutParameter(1, (java.sql.SQLType) null);
         } catch (final SQLException e) {
@@ -653,7 +653,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerSQLTypeInteger() throws Exception {
+    void testRegisterOutParameterIntegerSQLTypeInteger() throws Exception {
         try {
             delegate.registerOutParameter(1, (java.sql.SQLType) null, 1);
         } catch (final SQLException e) {
@@ -662,7 +662,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterIntegerSQLTypeString() throws Exception {
+    void testRegisterOutParameterIntegerSQLTypeString() throws Exception {
         try {
             delegate.registerOutParameter(1, (java.sql.SQLType) null, "foo");
         } catch (final SQLException e) {
@@ -671,7 +671,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringInteger() throws Exception {
+    void testRegisterOutParameterStringInteger() throws Exception {
         try {
             delegate.registerOutParameter("foo", 1);
         } catch (final SQLException e) {
@@ -680,7 +680,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringIntegerInteger() throws Exception {
+    void testRegisterOutParameterStringIntegerInteger() throws Exception {
         try {
             delegate.registerOutParameter("foo", 1, 1);
         } catch (final SQLException e) {
@@ -689,7 +689,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringIntegerString() throws Exception {
+    void testRegisterOutParameterStringIntegerString() throws Exception {
         try {
             delegate.registerOutParameter("foo", 1, "foo");
         } catch (final SQLException e) {
@@ -698,7 +698,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringSQLType() throws Exception {
+    void testRegisterOutParameterStringSQLType() throws Exception {
         try {
             delegate.registerOutParameter("foo", (java.sql.SQLType) null);
         } catch (final SQLException e) {
@@ -707,7 +707,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringSQLTypeInteger() throws Exception {
+    void testRegisterOutParameterStringSQLTypeInteger() throws Exception {
         try {
             delegate.registerOutParameter("foo", (java.sql.SQLType) null, 1);
         } catch (final SQLException e) {
@@ -716,7 +716,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testRegisterOutParameterStringSQLTypeString() throws Exception {
+    void testRegisterOutParameterStringSQLTypeString() throws Exception {
         try {
             delegate.registerOutParameter("foo", (java.sql.SQLType) null, "foo");
         } catch (final SQLException e) {
@@ -725,7 +725,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetAsciiStreamStringInputStream() throws Exception {
+    void testSetAsciiStreamStringInputStream() throws Exception {
         try {
             delegate.setAsciiStream("foo", (java.io.InputStream) null);
         } catch (final SQLException e) {
@@ -734,7 +734,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetAsciiStreamStringInputStreamInteger() throws Exception {
+    void testSetAsciiStreamStringInputStreamInteger() throws Exception {
         try {
             delegate.setAsciiStream("foo", (java.io.InputStream) null, 1);
         } catch (final SQLException e) {
@@ -743,7 +743,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetAsciiStreamStringInputStreamLong() throws Exception {
+    void testSetAsciiStreamStringInputStreamLong() throws Exception {
         try {
             delegate.setAsciiStream("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
@@ -752,7 +752,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBigDecimalStringBigDecimal() throws Exception {
+    void testSetBigDecimalStringBigDecimal() throws Exception {
         try {
             delegate.setBigDecimal("foo", java.math.BigDecimal.valueOf(1.0d));
         } catch (final SQLException e) {
@@ -761,7 +761,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBinaryStreamStringInputStream() throws Exception {
+    void testSetBinaryStreamStringInputStream() throws Exception {
         try {
             delegate.setBinaryStream("foo", (java.io.InputStream) null);
         } catch (final SQLException e) {
@@ -770,7 +770,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBinaryStreamStringInputStreamInteger() throws Exception {
+    void testSetBinaryStreamStringInputStreamInteger() throws Exception {
         try {
             delegate.setBinaryStream("foo", (java.io.InputStream) null, 1);
         } catch (final SQLException e) {
@@ -779,7 +779,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBinaryStreamStringInputStreamLong() throws Exception {
+    void testSetBinaryStreamStringInputStreamLong() throws Exception {
         try {
             delegate.setBinaryStream("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
@@ -788,7 +788,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBlobStringBlob() throws Exception {
+    void testSetBlobStringBlob() throws Exception {
         try {
             delegate.setBlob("foo", (java.sql.Blob) null);
         } catch (final SQLException e) {
@@ -797,7 +797,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBlobStringInputStream() throws Exception {
+    void testSetBlobStringInputStream() throws Exception {
         try {
             delegate.setBlob("foo", (java.io.InputStream) null);
         } catch (final SQLException e) {
@@ -806,7 +806,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBlobStringInputStreamLong() throws Exception {
+    void testSetBlobStringInputStreamLong() throws Exception {
         try {
             delegate.setBlob("foo", (java.io.InputStream) null, 1L);
         } catch (final SQLException e) {
@@ -815,7 +815,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBooleanStringBoolean() throws Exception {
+    void testSetBooleanStringBoolean() throws Exception {
         try {
             delegate.setBoolean("foo", Boolean.TRUE);
         } catch (final SQLException e) {
@@ -824,7 +824,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetBytesStringByteArray() throws Exception {
+    void testSetBytesStringByteArray() throws Exception {
         try {
             delegate.setBytes("foo", new byte[] { 1 });
         } catch (final SQLException e) {
@@ -833,7 +833,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetByteStringByte() throws Exception {
+    void testSetByteStringByte() throws Exception {
         try {
             delegate.setByte("foo", (byte) 1);
         } catch (final SQLException e) {
@@ -842,7 +842,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetCharacterStreamStringReader() throws Exception {
+    void testSetCharacterStreamStringReader() throws Exception {
         try {
             delegate.setCharacterStream("foo", (java.io.StringReader) null);
         } catch (final SQLException e) {
@@ -851,7 +851,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetCharacterStreamStringReaderInteger() throws Exception {
+    void testSetCharacterStreamStringReaderInteger() throws Exception {
         try {
             delegate.setCharacterStream("foo", (java.io.StringReader) null, 1);
         } catch (final SQLException e) {
@@ -860,7 +860,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetCharacterStreamStringReaderLong() throws Exception {
+    void testSetCharacterStreamStringReaderLong() throws Exception {
         try {
             delegate.setCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
@@ -869,7 +869,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetClobStringClob() throws Exception {
+    void testSetClobStringClob() throws Exception {
         try {
             delegate.setClob("foo", (java.sql.Clob) null);
         } catch (final SQLException e) {
@@ -878,7 +878,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetClobStringReader() throws Exception {
+    void testSetClobStringReader() throws Exception {
         try {
             delegate.setClob("foo", (java.io.StringReader) null);
         } catch (final SQLException e) {
@@ -887,7 +887,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetClobStringReaderLong() throws Exception {
+    void testSetClobStringReaderLong() throws Exception {
         try {
             delegate.setClob("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
@@ -896,7 +896,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetDateStringSqlDate() throws Exception {
+    void testSetDateStringSqlDate() throws Exception {
         try {
             delegate.setDate("foo", new java.sql.Date(1529827548745L));
         } catch (final SQLException e) {
@@ -905,7 +905,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetDateStringSqlDateCalendar() throws Exception {
+    void testSetDateStringSqlDateCalendar() throws Exception {
         try {
             delegate.setDate("foo", new java.sql.Date(1529827548745L), (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -914,7 +914,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetDoubleStringDouble() throws Exception {
+    void testSetDoubleStringDouble() throws Exception {
         try {
             delegate.setDouble("foo", 1.0d);
         } catch (final SQLException e) {
@@ -923,7 +923,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetFloatStringFloat() throws Exception {
+    void testSetFloatStringFloat() throws Exception {
         try {
             delegate.setFloat("foo", 1.0f);
         } catch (final SQLException e) {
@@ -932,7 +932,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetIntStringInteger() throws Exception {
+    void testSetIntStringInteger() throws Exception {
         try {
             delegate.setInt("foo", 1);
         } catch (final SQLException e) {
@@ -941,7 +941,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetLongStringLong() throws Exception {
+    void testSetLongStringLong() throws Exception {
         try {
             delegate.setLong("foo", 1L);
         } catch (final SQLException e) {
@@ -950,7 +950,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNCharacterStreamStringReader() throws Exception {
+    void testSetNCharacterStreamStringReader() throws Exception {
         try {
             delegate.setNCharacterStream("foo", (java.io.StringReader) null);
         } catch (final SQLException e) {
@@ -959,7 +959,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNCharacterStreamStringReaderLong() throws Exception {
+    void testSetNCharacterStreamStringReaderLong() throws Exception {
         try {
             delegate.setNCharacterStream("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
@@ -968,7 +968,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNClobStringNClob() throws Exception {
+    void testSetNClobStringNClob() throws Exception {
         try {
             delegate.setNClob("foo", (java.sql.NClob) null);
         } catch (final SQLException e) {
@@ -977,7 +977,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNClobStringReader() throws Exception {
+    void testSetNClobStringReader() throws Exception {
         try {
             delegate.setNClob("foo", (java.io.StringReader) null);
         } catch (final SQLException e) {
@@ -986,7 +986,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNClobStringReaderLong() throws Exception {
+    void testSetNClobStringReaderLong() throws Exception {
         try {
             delegate.setNClob("foo", (java.io.StringReader) null, 1L);
         } catch (final SQLException e) {
@@ -995,7 +995,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNStringStringString() throws Exception {
+    void testSetNStringStringString() throws Exception {
         try {
             delegate.setNString("foo", "foo");
         } catch (final SQLException e) {
@@ -1004,7 +1004,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNullStringInteger() throws Exception {
+    void testSetNullStringInteger() throws Exception {
         try {
             delegate.setNull("foo", 1);
         } catch (final SQLException e) {
@@ -1013,7 +1013,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetNullStringIntegerString() throws Exception {
+    void testSetNullStringIntegerString() throws Exception {
         try {
             delegate.setNull("foo", 1, "foo");
         } catch (final SQLException e) {
@@ -1022,7 +1022,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetObjectStringObject() throws Exception {
+    void testSetObjectStringObject() throws Exception {
         try {
             delegate.setObject("foo", System.err);
         } catch (final SQLException e) {
@@ -1031,7 +1031,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetObjectStringObjectInteger() throws Exception {
+    void testSetObjectStringObjectInteger() throws Exception {
         try {
             delegate.setObject("foo", System.err, 1);
         } catch (final SQLException e) {
@@ -1040,7 +1040,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetObjectStringObjectIntegerInteger() throws Exception {
+    void testSetObjectStringObjectIntegerInteger() throws Exception {
         try {
             delegate.setObject("foo", System.err, 1, 1);
         } catch (final SQLException e) {
@@ -1049,7 +1049,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetObjectStringObjectSQLType() throws Exception {
+    void testSetObjectStringObjectSQLType() throws Exception {
         try {
             delegate.setObject("foo", System.err, (java.sql.SQLType) null);
         } catch (final SQLException e) {
@@ -1058,7 +1058,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetObjectStringObjectSQLTypeInteger() throws Exception {
+    void testSetObjectStringObjectSQLTypeInteger() throws Exception {
         try {
             delegate.setObject("foo", System.err, (java.sql.SQLType) null, 1);
         } catch (final SQLException e) {
@@ -1067,7 +1067,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetRowIdStringRowId() throws Exception {
+    void testSetRowIdStringRowId() throws Exception {
         try {
             delegate.setRowId("foo", (java.sql.RowId) null);
         } catch (final SQLException e) {
@@ -1076,7 +1076,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetShortStringShort() throws Exception {
+    void testSetShortStringShort() throws Exception {
         try {
             delegate.setShort("foo", (short) 1);
         } catch (final SQLException e) {
@@ -1085,7 +1085,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetSQLXMLStringSQLXML() throws Exception {
+    void testSetSQLXMLStringSQLXML() throws Exception {
         try {
             delegate.setSQLXML("foo", (java.sql.SQLXML) null);
         } catch (final SQLException e) {
@@ -1094,7 +1094,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetStringStringString() throws Exception {
+    void testSetStringStringString() throws Exception {
         try {
             delegate.setString("foo", "foo");
         } catch (final SQLException e) {
@@ -1103,7 +1103,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetTimestampStringTimestamp() throws Exception {
+    void testSetTimestampStringTimestamp() throws Exception {
         try {
             delegate.setTimestamp("foo", (java.sql.Timestamp) null);
         } catch (final SQLException e) {
@@ -1112,7 +1112,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetTimestampStringTimestampCalendar() throws Exception {
+    void testSetTimestampStringTimestampCalendar() throws Exception {
         try {
             delegate.setTimestamp("foo", (java.sql.Timestamp) null, (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -1121,7 +1121,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetTimeStringTime() throws Exception {
+    void testSetTimeStringTime() throws Exception {
         try {
             delegate.setTime("foo", (java.sql.Time) null);
         } catch (final SQLException e) {
@@ -1130,7 +1130,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetTimeStringTimeCalendar() throws Exception {
+    void testSetTimeStringTimeCalendar() throws Exception {
         try {
             delegate.setTime("foo", (java.sql.Time) null, (java.util.Calendar) null);
         } catch (final SQLException e) {
@@ -1139,7 +1139,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testSetURLStringUrl() throws Exception {
+    void testSetURLStringUrl() throws Exception {
         try {
             delegate.setURL("foo", (java.net.URL) null);
         } catch (final SQLException e) {
@@ -1148,7 +1148,7 @@ public class TestDelegatingCallableStatement {
     }
 
     @Test
-    public void testWasNull() throws Exception {
+    void testWasNull() throws Exception {
         try {
             delegate.wasNull();
         } catch (final SQLException e) {

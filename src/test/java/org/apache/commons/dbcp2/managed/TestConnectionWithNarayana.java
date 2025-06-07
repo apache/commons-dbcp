@@ -107,7 +107,7 @@ public class TestConnectionWithNarayana {
     }
 
     @Test
-    public void testConnectionCommitAfterTimeout() throws Exception {
+    void testConnectionCommitAfterTimeout() throws Exception {
         mds.getTransactionManager().setTransactionTimeout(1);
         mds.getTransactionManager().begin();
         try (Connection conn = mds.getConnection()) {
@@ -124,7 +124,7 @@ public class TestConnectionWithNarayana {
     }
 
     @Test
-    public void testConnectionInTimeout() throws Exception {
+    void testConnectionInTimeout() throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         for (int i = 0; i < 5; i++) {
@@ -182,7 +182,7 @@ public class TestConnectionWithNarayana {
     }
 
     @Test
-    public void testRepeatedGetConnectionInTimeout() throws Exception {
+    void testRepeatedGetConnectionInTimeout() throws Exception {
         mds.getTransactionManager().setTransactionTimeout(1);
         mds.getTransactionManager().begin();
         try {

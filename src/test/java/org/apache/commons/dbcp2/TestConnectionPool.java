@@ -490,7 +490,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testBackPointers() throws Exception {
+    void testBackPointers() throws Exception {
         // normal statement
         Connection conn = newConnection();
         assertBackPointers(conn, conn.createStatement());
@@ -523,7 +523,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testCanCloseCallableStatementTwice() throws Exception {
+    void testCanCloseCallableStatementTwice() throws Exception {
         try (Connection conn = newConnection()) {
             assertNotNull(conn);
             assertFalse(conn.isClosed());
@@ -545,7 +545,7 @@ public abstract class TestConnectionPool {
      * Verify the close method can be called multiple times on a single connection without an exception being thrown.
      */
     @Test
-    public void testCanCloseConnectionTwice() throws Exception {
+    void testCanCloseConnectionTwice() throws Exception {
         for (int i = 0; i < getMaxTotal(); i++) { // loop to show we *can* close again once we've borrowed it from the pool again
             final Connection conn = newConnection();
             assertNotNull(conn);
@@ -558,7 +558,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testCanClosePreparedStatementTwice() throws Exception {
+    void testCanClosePreparedStatementTwice() throws Exception {
         try (Connection conn = newConnection()) {
             assertNotNull(conn);
             assertFalse(conn.isClosed());
@@ -577,7 +577,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testCanCloseResultSetTwice() throws Exception {
+    void testCanCloseResultSetTwice() throws Exception {
         try (Connection conn = newConnection()) {
             assertNotNull(conn);
             assertFalse(conn.isClosed());
@@ -598,7 +598,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testCanCloseStatementTwice() throws Exception {
+    void testCanCloseStatementTwice() throws Exception {
         final Connection conn = newConnection();
         assertNotNull(conn);
         assertFalse(conn.isClosed());
@@ -702,7 +702,7 @@ public abstract class TestConnectionPool {
      * DBCP-128: BasicDataSource.getConnection() Connections don't work as hashtable keys
      */
     @Test
-    public void testHashing() throws Exception {
+    void testHashing() throws Exception {
         final Connection con = getConnection();
         final Hashtable<Connection, String> hash = new Hashtable<>();
         hash.put(con, "test");
@@ -714,7 +714,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testIsClosed() throws Exception {
+    void testIsClosed() throws Exception {
         for (int i = 0; i < getMaxTotal(); i++) {
             @SuppressWarnings("resource")
             final Connection conn = newConnection();
@@ -755,7 +755,7 @@ public abstract class TestConnectionPool {
     // Bugzilla Bug 24966: NullPointer with Oracle 9 driver
     // wrong order of passivate/close when a rset isn't closed
     @Test
-    public void testNoRsetClose() throws Exception {
+    void testNoRsetClose() throws Exception {
         try (Connection conn = newConnection()) {
             assertNotNull(conn);
             try (PreparedStatement stmt = conn.prepareStatement("test")) {
@@ -785,7 +785,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testPooling() throws Exception {
+    void testPooling() throws Exception {
         // Grab a maximal set of open connections from the pool
         final Connection[] c = new Connection[getMaxTotal()];
         final Connection[] u = new Connection[getMaxTotal()];
@@ -822,7 +822,7 @@ public abstract class TestConnectionPool {
     // and Concurrency if statement pooling is not enabled
     // https://issues.apache.org/bugzilla/show_bug.cgi?id=24328
     @Test
-    public void testPrepareStatementOptions() throws Exception {
+    void testPrepareStatementOptions() throws Exception {
         try (Connection conn = newConnection()) {
             assertNotNull(conn);
             try (PreparedStatement stmt = conn.prepareStatement("select * from dual", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
@@ -840,7 +840,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testRepeatedBorrowAndReturn() throws Exception {
+    void testRepeatedBorrowAndReturn() throws Exception {
         for (int i = 0; i < 100; i++) {
             try (Connection conn = newConnection()) {
                 assertNotNull(conn);
@@ -918,7 +918,7 @@ public abstract class TestConnectionPool {
     }
 
     @Test
-    public void testThreaded() {
+    void testThreaded() {
         final TestThread[] threads = new TestThread[getMaxTotal()];
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new TestThread(50, 50);

@@ -30,36 +30,36 @@ import org.junit.jupiter.api.Test;
 public class CharArrayTest {
 
     @Test
-    public void testAsString() {
+    void testAsString() {
         assertEquals("foo", new CharArray("foo").asString());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(new CharArray("foo"), new CharArray("foo"));
         assertNotEquals(new CharArray("foo"), new CharArray("bar"));
     }
 
     @Test
-    public void testGet() {
+    void testGet() {
         assertArrayEquals("foo".toCharArray(), new CharArray("foo").get());
     }
 
     @Test
-    public void testClear() {
+    void testClear() {
         assertNull(new CharArray((String) null).clear().get());
         assertArrayEquals("".toCharArray(), new CharArray("").clear().get());
         assertArrayEquals("\0\0\0".toCharArray(), new CharArray("foo").clear().get());
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(new CharArray("foo").hashCode(), new CharArray("foo").hashCode());
         assertNotEquals(new CharArray("foo").hashCode(), new CharArray("bar").hashCode());
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertFalse(new CharArray("foo").toString().contains("foo"));
     }
 }

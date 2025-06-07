@@ -258,7 +258,7 @@ public class TestBasicDataSourceMXBean {
      * Tests the interface defined default method.
      */
     @Test
-    public void testDefaultSchema() {
+    void testDefaultSchema() {
         assertNull(bean.getDefaultSchema());
     }
 
@@ -266,7 +266,7 @@ public class TestBasicDataSourceMXBean {
      * Tests if the {@link BasicDataSourceMXBean} interface is a valid MXBean interface.
      */
     @Test
-    public void testMXBeanCompliance() throws OperationsException {
+    void testMXBeanCompliance() throws OperationsException {
         testMXBeanCompliance(BasicDataSourceMXBean.class);
     }
 }

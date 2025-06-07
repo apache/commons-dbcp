@@ -105,7 +105,7 @@ public class TestManagedDataSource extends TestConnectionPool {
      * Verify the accessToUnderlyingConnectionAllowed properly limits access to the physical connection.
      */
     @Test
-    public void testAccessToUnderlyingConnectionAllowed() throws Exception {
+    void testAccessToUnderlyingConnectionAllowed() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         try (ManagedConnection<?> connection = (ManagedConnection<?>) newConnection()) {
             assertTrue(connection.isAccessToUnderlyingConnectionAllowed());
@@ -122,7 +122,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testConnectionReturnOnCommit() throws Exception {
+    void testConnectionReturnOnCommit() throws Exception {
         transactionManager.begin();
         try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection()) {
             // auto close.
@@ -134,7 +134,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testManagedConnectionEqualInnermost() throws Exception {
+    void testManagedConnectionEqualInnermost() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         try (DelegatingConnection<?> con = (DelegatingConnection<?>) getConnection()) {
             @SuppressWarnings("resource")
@@ -149,14 +149,14 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testManagedConnectionEqualsFail() throws Exception {
+    void testManagedConnectionEqualsFail() throws Exception {
         try (Connection con1 = getConnection(); final Connection con2 = getConnection()) {
             assertNotEquals(con1, con2);
         }
     }
 
     @Test
-    public void testManagedConnectionEqualsNull() throws Exception {
+    void testManagedConnectionEqualsNull() throws Exception {
         try (Connection con1 = getConnection()) {
             final Connection con2 = null;
             assertNotEquals(con2, con1);
@@ -167,7 +167,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     * JIRA: DBCP-198
     */
     @Test
-    public void testManagedConnectionEqualsReflexive() throws Exception {
+    void testManagedConnectionEqualsReflexive() throws Exception {
         try (Connection con = getConnection()) {
             @SuppressWarnings("resource")
             final Connection con2 = con;
@@ -177,7 +177,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testManagedConnectionEqualsSameDelegate() throws Exception {
+    void testManagedConnectionEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
@@ -199,7 +199,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
+    void testManagedConnectionEqualsSameDelegateNoUnderlyingAccess() throws Exception {
         // Get a maximal set of connections from the pool
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
@@ -224,7 +224,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testManagedConnectionEqualsType() throws Exception {
+    void testManagedConnectionEqualsType() throws Exception {
         try (Connection con1 = getConnection()) {
             final Integer con2 = 0;
             assertNotEquals(con2, con1);
@@ -232,7 +232,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testNestedConnections() throws Exception {
+    void testNestedConnections() throws Exception {
         transactionManager.begin();
         try (Connection c1 = newConnection(); final Connection c2 = newConnection()) {
             transactionManager.commit();
@@ -240,21 +240,21 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testSetNullTransactionRegistry() throws Exception {
+    void testSetNullTransactionRegistry() throws Exception {
         try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
             assertThrows(NullPointerException.class, () -> ds.setTransactionRegistry(null));
         }
     }
 
     @Test()
-    public void testSetTransactionRegistry() throws Exception {
+    void testSetTransactionRegistry() throws Exception {
         try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
             ds.setTransactionRegistry(new TransactionRegistry(transactionManager));
         }
     }
 
     @Test
-    public void testSetTransactionRegistryAlreadySet() {
+    void testSetTransactionRegistryAlreadySet() {
         final ManagedDataSource<?> managed = (ManagedDataSource<?>) ds;
         assertThrows(IllegalStateException.class, () -> managed.setTransactionRegistry(null));
     }
@@ -263,7 +263,7 @@ public class TestManagedDataSource extends TestConnectionPool {
      * Verify that connection sharing is working (or not working) as expected.
      */
     @Test
-    public void testSharedConnection() throws Exception {
+    void testSharedConnection() throws Exception {
         try (DelegatingConnection<?> connectionA = (DelegatingConnection<?>) newConnection();
                 final DelegatingConnection<?> connectionB = (DelegatingConnection<?>) newConnection()) {
             assertNotEquals(connectionA, connectionB);
@@ -274,7 +274,7 @@ public class TestManagedDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testTransactionRegistryNotInitialized() throws Exception {
+    void testTransactionRegistryNotInitialized() throws Exception {
         try (ManagedDataSource<?> ds = new ManagedDataSource<>(pool, null)) {
             assertThrows(IllegalStateException.class, ds::getConnection);
         }

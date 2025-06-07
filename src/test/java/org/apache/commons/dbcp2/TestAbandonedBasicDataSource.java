@@ -121,7 +121,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testAbandoned() throws Exception {
+    void testAbandoned() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
@@ -132,7 +132,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testAbandonedClose() throws Exception {
+    void testAbandonedClose() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
@@ -164,7 +164,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testAbandonedCloseWithExceptions() throws Exception {
+    void testAbandonedCloseWithExceptions() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
@@ -202,7 +202,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
     }
 
     @Test
-    public void testAbandonedStackTraces() throws Exception {
+    void testAbandonedStackTraces() throws Exception {
         // force abandoned
         ds.setRemoveAbandonedTimeout(Duration.ZERO);
         ds.setMaxTotal(1);
@@ -243,7 +243,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-180 - verify that a GC can clean up an unused Statement when it is no longer referenced even when it is tracked via the AbandonedTrace mechanism.
      */
     @Test
-    public void testGarbageCollectorCleanUp01() throws Exception {
+    void testGarbageCollectorCleanUp01() throws Exception {
         try (DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection()) {
             Assertions.assertEquals(0, conn.getTrace().size());
             createStatement(conn);
@@ -257,7 +257,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-180 - things get more interesting with statement pooling.
      */
     @Test
-    public void testGarbageCollectorCleanUp02() throws Exception {
+    void testGarbageCollectorCleanUp02() throws Exception {
         ds.setPoolPreparedStatements(true);
         ds.setAccessToUnderlyingConnectionAllowed(true);
         final DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
@@ -285,7 +285,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * Verify that lastUsed property is updated when a connection creates or prepares a statement
      */
     @Test
-    public void testLastUsed() throws Exception {
+    void testLastUsed() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
@@ -317,7 +317,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-343 - verify that using a DelegatingStatement updates the lastUsed on the parent connection
      */
     @Test
-    public void testLastUsedLargePreparedStatementUse() throws Exception {
+    void testLastUsedLargePreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection(); Statement st = conn1.createStatement()) {
@@ -348,7 +348,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * Verify that lastUsed property is updated when a connection prepares a callable statement.
      */
     @Test
-    public void testLastUsedPrepareCall() throws Exception {
+    void testLastUsedPrepareCall() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection()) {
@@ -380,7 +380,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-343 - verify that using a DelegatingStatement updates the lastUsed on the parent connection
      */
     @Test
-    public void testLastUsedPreparedStatementUse() throws Exception {
+    void testLastUsedPreparedStatementUse() throws Exception {
         ds.setRemoveAbandonedTimeout(Duration.ofSeconds(1));
         ds.setMaxTotal(2);
         try (Connection conn1 = ds.getConnection(); Statement st = conn1.createStatement()) {
@@ -405,7 +405,7 @@ public class TestAbandonedBasicDataSource extends TestBasicDataSource {
      * DBCP-343 - verify additional operations reset lastUsed on the parent connection
      */
     @Test
-    public void testLastUsedUpdate() throws Exception {
+    void testLastUsedUpdate() throws Exception {
         try (DelegatingConnection<?> conn = (DelegatingConnection<?>) ds.getConnection();
                 final PreparedStatement ps = conn.prepareStatement("");
                 final CallableStatement cs = conn.prepareCall("");

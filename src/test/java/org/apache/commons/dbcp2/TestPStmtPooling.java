@@ -73,7 +73,7 @@ public class TestPStmtPooling {
     }
 
     @Test
-    public void testBatchUpdate() throws Exception {
+    void testBatchUpdate() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         final ConnectionFactory connFactory = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "u1", "p1");
 
@@ -98,7 +98,7 @@ public class TestPStmtPooling {
     }
 
     @Test
-    public void testCallableStatementPooling() throws Exception {
+    void testCallableStatementPooling() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         final ConnectionFactory connFactory = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "u1", "p1");
 
@@ -142,7 +142,7 @@ public class TestPStmtPooling {
     }
 
     @Test
-    public void testClosePool() throws Exception {
+    void testClosePool() throws Exception {
         DriverManager.registerDriver(new TesterDriver());
         final ConnectionFactory connFactory = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "u1", "p1");
 
@@ -174,7 +174,7 @@ public class TestPStmtPooling {
      * be in use by another client - see DBCP-414).
      */
     @Test
-    public void testMultipleClose() throws Exception {
+    void testMultipleClose() throws Exception {
         final DataSource ds = createPoolingDataSource();
         final Connection conn = ds.getConnection();
         final PreparedStatement stmt1 = conn.prepareStatement("select 1 from dual");
@@ -196,7 +196,7 @@ public class TestPStmtPooling {
     }
 
     @Test
-    public void testStmtPool() throws Exception {
+    void testStmtPool() throws Exception {
         final DataSource ds = createPoolingDataSource();
         try (Connection conn = ds.getConnection()) {
             final Statement stmt1 = conn.prepareStatement("select 1 from dual");

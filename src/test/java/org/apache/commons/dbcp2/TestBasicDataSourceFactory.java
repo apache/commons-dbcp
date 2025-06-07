@@ -153,7 +153,7 @@ public class TestBasicDataSourceFactory {
     }
 
     @Test
-    public void testAllProperties() throws Exception {
+    void testAllProperties() throws Exception {
         try {
             StackMessageLog.lock();
             StackMessageLog.clear();
@@ -176,7 +176,7 @@ public class TestBasicDataSourceFactory {
     }
 
     @Test
-    public void testNoProperties() throws Exception {
+    void testNoProperties() throws Exception {
         final Properties properties = new Properties();
         try (final BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
             assertNotNull(ds);
@@ -184,14 +184,14 @@ public class TestBasicDataSourceFactory {
     }
 
     @Test
-    public void testProperties() throws Exception {
+    void testProperties() throws Exception {
         try (final BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties())) {
             checkDataSourceProperties(ds);
         }
     }
 
     @Test
-    public void testValidateProperties() throws Exception {
+    void testValidateProperties() throws Exception {
         try {
             StackMessageLog.lock();
             StackMessageLog.clear();

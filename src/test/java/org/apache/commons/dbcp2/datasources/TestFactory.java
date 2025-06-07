@@ -73,7 +73,7 @@ public class TestFactory {
         "defaultTransactionIsolation,    X",
         "defaultReadOnly,                true" })
     // @formatter:on
-    public void testJNDI2Pools(final String string, final String value) throws Exception {
+    void testJNDI2Pools(final String string, final String value) throws Exception {
         final Reference refObj = new Reference(SharedPoolDataSource.class.getName());
         refObj.add(new StringRefAddr(string, value));
         final Context context = new InitialContext();

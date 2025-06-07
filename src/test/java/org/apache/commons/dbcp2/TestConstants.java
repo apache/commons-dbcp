@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class TestConstants {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertNotNull(new Constants());
         assertEquals(",connectionpool=", Constants.JMX_CONNECTION_POOL_BASE_EXT);
         assertEquals("connections", Constants.JMX_CONNECTION_POOL_PREFIX);

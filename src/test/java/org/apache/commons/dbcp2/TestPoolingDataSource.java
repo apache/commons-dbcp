@@ -77,7 +77,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testClose() throws Exception {
+    void testClose() throws Exception {
         final Properties properties = new Properties();
         properties.setProperty(Constants.KEY_USER, "userName");
         properties.setProperty(Constants.KEY_PASSWORD, "password");
@@ -107,7 +107,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
      * result in NPE.
      */
     @Test
-    public void testFixFactoryConfig() throws Exception {
+    void testFixFactoryConfig() throws Exception {
         final Properties properties = new Properties();
         properties.setProperty(Constants.KEY_USER, "userName");
         properties.setProperty(Constants.KEY_PASSWORD, "password");
@@ -128,7 +128,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testIsWrapperFor() throws Exception {
+    void testIsWrapperFor() throws Exception {
         assertTrue(ds.isWrapperFor(PoolingDataSource.class));
         assertTrue(ds.isWrapperFor(AutoCloseable.class));
         assertFalse(ds.isWrapperFor(String.class));
@@ -136,7 +136,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolGuardConnectionWrapperEqualInnermost() throws Exception {
+    void testPoolGuardConnectionWrapperEqualInnermost() throws Exception {
         ds.setAccessToUnderlyingConnectionAllowed(true);
         final DelegatingConnection<?> con = (DelegatingConnection<?>) ds.getConnection();
         final Connection inner = con.getInnermostDelegate();
@@ -149,7 +149,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolGuardConnectionWrapperEqualsFail() throws Exception {
+    void testPoolGuardConnectionWrapperEqualsFail() throws Exception {
         final Connection con1 = ds.getConnection();
         final Connection con2 = ds.getConnection();
         assertNotEquals(con1, con2);
@@ -158,7 +158,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolGuardConnectionWrapperEqualsNull() throws Exception {
+    void testPoolGuardConnectionWrapperEqualsNull() throws Exception {
         final Connection con1 = ds.getConnection();
         final Connection con2 = null;
         assertNotEquals(con2, con1);
@@ -169,7 +169,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
      * JIRA: DBCP-198
      */
     @Test
-    public void testPoolGuardConnectionWrapperEqualsReflexive()
+    void testPoolGuardConnectionWrapperEqualsReflexive()
         throws Exception {
         final Connection con = ds.getConnection();
         final Connection con2 = con;
@@ -179,7 +179,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolGuardConnectionWrapperEqualsSameDelegate() throws Exception {
+    void testPoolGuardConnectionWrapperEqualsSameDelegate() throws Exception {
         // Get a maximal set of connections from the pool
         final Connection[] c = new Connection[getMaxTotal()];
         for (int i = 0; i < c.length; i++) {
@@ -201,7 +201,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testPoolGuardConnectionWrapperEqualsType() throws Exception {
+    void testPoolGuardConnectionWrapperEqualsType() throws Exception {
         final Connection con1 = ds.getConnection();
         final Integer con2 = 0;
         assertNotEquals(con2, con1);
@@ -209,7 +209,7 @@ public class TestPoolingDataSource extends TestConnectionPool {
     }
 
     @Test
-    public void testUnwrap() throws Exception {
+    void testUnwrap() throws Exception {
         assertSame(ds.unwrap(PoolingDataSource.class), ds);
         assertSame(ds.unwrap(AutoCloseable.class), ds);
         assertThrows(SQLException.class, () -> ds.unwrap(String.class));

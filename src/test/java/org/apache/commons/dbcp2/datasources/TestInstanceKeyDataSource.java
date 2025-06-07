@@ -79,7 +79,7 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testConnection() throws SQLException, ClassNotFoundException {
+    void testConnection() throws SQLException, ClassNotFoundException {
         spds = new SharedPoolDataSource();
         pcds.setDriver(DRIVER);
         pcds.setUrl(URL);
@@ -93,24 +93,24 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testConnectionPoolDataSource() {
+    void testConnectionPoolDataSource() {
         assertEquals(pcds, spds.getConnectionPoolDataSource());
     }
 
     @Test
-    public void testConnectionPoolDataSourceAlreadySet() {
+    void testConnectionPoolDataSourceAlreadySet() {
         assertThrows(IllegalStateException.class, () -> spds.setConnectionPoolDataSource(new DriverAdapterCPDS()));
     }
 
     @Test
-    public void testConnectionPoolDataSourceAlreadySetUsingJndi() {
+    void testConnectionPoolDataSourceAlreadySetUsingJndi() {
         spds = new SharedPoolDataSource();
         spds.setDataSourceName("anything");
         assertThrows(IllegalStateException.class, () -> spds.setConnectionPoolDataSource(new DriverAdapterCPDS()));
     }
 
     @Test
-    public void testDataSourceName() {
+    void testDataSourceName() {
         spds = new SharedPoolDataSource();
         assertNull(spds.getDataSourceName());
         spds.setDataSourceName("anything");
@@ -118,19 +118,19 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testDataSourceNameAlreadySet() {
+    void testDataSourceNameAlreadySet() {
         assertThrows(IllegalStateException.class, () -> spds.setDataSourceName("anything"));
     }
 
     @Test
-    public void testDataSourceNameAlreadySetUsingJndi() {
+    void testDataSourceNameAlreadySetUsingJndi() {
         spds = new SharedPoolDataSource();
         spds.setDataSourceName("anything");
         assertThrows(IllegalStateException.class, () -> spds.setDataSourceName("anything"));
     }
 
     @Test
-    public void testDefaultBlockWhenExhausted() {
+    void testDefaultBlockWhenExhausted() {
         spds.setDefaultBlockWhenExhausted(true);
         assertTrue(spds.getDefaultBlockWhenExhausted());
         spds.setDefaultBlockWhenExhausted(false);
@@ -138,13 +138,13 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testDefaultEvictionPolicyClassName() {
+    void testDefaultEvictionPolicyClassName() {
         spds.setDefaultEvictionPolicyClassName(Object.class.getName());
         assertEquals(Object.class.getName(), spds.getDefaultEvictionPolicyClassName());
     }
 
     @Test
-    public void testDefaultLifo() {
+    void testDefaultLifo() {
         spds.setDefaultLifo(true);
         assertTrue(spds.getDefaultLifo());
         spds.setDefaultLifo(false);
@@ -152,13 +152,13 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testDefaultMinIdle() {
+    void testDefaultMinIdle() {
         spds.setDefaultMinIdle(10);
         assertEquals(10, spds.getDefaultMinIdle());
     }
 
     @Test
-    public void testDefaultReadOnly() {
+    void testDefaultReadOnly() {
         spds.setDefaultReadOnly(true);
         assertTrue(spds.isDefaultReadOnly());
         spds.setDefaultReadOnly(false);
@@ -166,13 +166,13 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testDefaultSoftMinEvictableIdleTimeMillis() {
+    void testDefaultSoftMinEvictableIdleTimeMillis() {
         spds.setDefaultSoftMinEvictableIdleTimeMillis(10);
         assertEquals(10, spds.getDefaultSoftMinEvictableIdleTimeMillis());
     }
 
     @Test
-    public void testDefaultTestOnCreate() {
+    void testDefaultTestOnCreate() {
         spds.setDefaultTestOnCreate(false);
         assertFalse(spds.getDefaultTestOnCreate());
         spds.setDefaultTestOnCreate(true);
@@ -180,20 +180,20 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testDefaultTransactionIsolation() {
+    void testDefaultTransactionIsolation() {
         assertEquals(InstanceKeyDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
         spds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         assertEquals(Connection.TRANSACTION_READ_COMMITTED, spds.getDefaultTransactionIsolation());
     }
 
     @Test
-    public void testDefaultTransactionIsolationInvalid() {
+    void testDefaultTransactionIsolationInvalid() {
         assertEquals(InstanceKeyDataSource.UNKNOWN_TRANSACTIONISOLATION, spds.getDefaultTransactionIsolation());
         assertThrows(IllegalArgumentException.class, () -> spds.setDefaultTransactionIsolation(Integer.MAX_VALUE));
     }
 
     @Test
-    public void testDescription() {
+    void testDescription() {
         spds.setDescription("anything");
         assertEquals("anything", spds.getDescription());
     }
@@ -205,7 +205,7 @@ public class TestInstanceKeyDataSource {
      * @throws Exception
      */
     @Test
-    public void testExceptionOnSetupDefaults() throws Exception {
+    void testExceptionOnSetupDefaults() throws Exception {
         try (final ThrowOnSetupDefaultsDataSource tds = new ThrowOnSetupDefaultsDataSource()) {
             final int numConnections = tds.getNumActive();
             assertThrows(SQLException.class, () -> tds.getConnection(USER, PASS));
@@ -214,13 +214,13 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testIsWrapperFor() throws Exception {
+    void testIsWrapperFor() throws Exception {
         assertTrue(spds.isWrapperFor(InstanceKeyDataSource.class));
         assertTrue(spds.isWrapperFor(AutoCloseable.class));
     }
 
     @Test
-    public void testJndiEnvironment() {
+    void testJndiEnvironment() {
         assertNull(spds.getJndiEnvironment("name"));
         final Properties properties = new Properties();
         properties.setProperty("name", "clarke");
@@ -231,12 +231,12 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testJndiNullProperties() {
+    void testJndiNullProperties() {
         assertThrows(NullPointerException.class, () -> spds.setJndiEnvironment(null));
     }
 
     @Test
-    public void testJndiPropertiesCleared() {
+    void testJndiPropertiesCleared() {
         spds.setJndiEnvironment("name", "king");
         assertEquals("king", spds.getJndiEnvironment("name"));
         final Properties properties = new Properties();
@@ -246,47 +246,47 @@ public class TestInstanceKeyDataSource {
     }
 
     @Test
-    public void testJndiPropertiesNotInitialized() {
+    void testJndiPropertiesNotInitialized() {
         assertNull(spds.getJndiEnvironment("name"));
         spds.setJndiEnvironment("name", "king");
         assertEquals("king", spds.getJndiEnvironment("name"));
     }
 
     @Test
-    public void testLoginTimeout() {
+    void testLoginTimeout() {
         spds.setLoginTimeout(10);
         assertEquals(10, spds.getLoginTimeout());
     }
 
     @SuppressWarnings("resource")
     @Test
-    public void testLogWriter() {
+    void testLogWriter() {
         spds.setLogWriter(new PrintWriter(System.out));
         assertNotNull(spds.getLogWriter());
     }
 
     @SuppressWarnings("resource")
     @Test
-    public void testLogWriterAutoInitialized() {
+    void testLogWriterAutoInitialized() {
         assertNotNull(spds.getLogWriter());
     }
 
     @Test
-    public void testMaxConnLifetimeMillis() {
+    void testMaxConnLifetimeMillis() {
         assertEquals(-1, spds.getMaxConnLifetimeMillis());
         spds.setMaxConnLifetimeMillis(10);
         assertEquals(10, spds.getMaxConnLifetimeMillis());
     }
 
     @Test
-    public void testRollbackAfterValidation() {
+    void testRollbackAfterValidation() {
         assertFalse(spds.isRollbackAfterValidation());
         spds.setRollbackAfterValidation(true);
         assertTrue(spds.isRollbackAfterValidation());
     }
 
     @Test
-    public void testRollbackAfterValidationWithConnectionCalled() throws SQLException {
+    void testRollbackAfterValidationWithConnectionCalled() throws SQLException {
         try (Connection connection = spds.getConnection()) {
             assertFalse(spds.isRollbackAfterValidation());
             assertThrows(IllegalStateException.class, () -> spds.setRollbackAfterValidation(true));
@@ -295,34 +295,34 @@ public class TestInstanceKeyDataSource {
 
     @SuppressWarnings("resource")
     @Test
-    public void testUnwrap() throws Exception {
+    void testUnwrap() throws Exception {
         assertSame(spds.unwrap(InstanceKeyDataSource.class), spds);
         assertSame(spds.unwrap(AutoCloseable.class), spds);
     }
 
     @Test
-    public void testValidationQuery() {
+    void testValidationQuery() {
         assertNull(spds.getValidationQuery());
         spds.setValidationQuery("anything");
         assertEquals("anything", spds.getValidationQuery());
     }
 
     @Test
-    public void testValidationQueryTimeout() {
+    void testValidationQueryTimeout() {
         assertEquals(-1, spds.getValidationQueryTimeout());
         spds.setValidationQueryTimeout(10);
         assertEquals(10, spds.getValidationQueryTimeout());
     }
 
     @Test
-    public void testValidationQueryTimeoutDuration() {
+    void testValidationQueryTimeoutDuration() {
         assertEquals(Duration.ofSeconds(-1), spds.getValidationQueryTimeoutDuration());
         spds.setValidationQueryTimeout(Duration.ofSeconds(10));
         assertEquals(Duration.ofSeconds(10), spds.getValidationQueryTimeoutDuration());
     }
 
     @Test
-    public void testValidationQueryWithConnectionCalled() throws SQLException {
+    void testValidationQueryWithConnectionCalled() throws SQLException {
         try (Connection connection = spds.getConnection()) {
             assertNull(spds.getValidationQuery());
             assertThrows(IllegalStateException.class, () -> spds.setValidationQuery("anything"));

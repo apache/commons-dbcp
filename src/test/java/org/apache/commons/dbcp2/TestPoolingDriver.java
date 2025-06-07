@@ -95,7 +95,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
-    public void test1() {
+    void test1() {
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
         final PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
@@ -107,7 +107,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
-    public void test2() {
+    void test2() {
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:some:connect:string", "userName", "password");
         final PoolableConnectionFactory pcf = new PoolableConnectionFactory(connectionFactory, null);
         pcf.setDefaultReadOnly(Boolean.FALSE);
@@ -118,7 +118,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
-    public void testClosePool() throws Exception {
+    void testClosePool() throws Exception {
         final Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
         conn.close();
@@ -130,7 +130,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
-    public void testInvalidateConnection() throws Exception {
+    void testInvalidateConnection() throws Exception {
         final Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
         assertNotNull(conn);
 
@@ -147,7 +147,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
-    public void testLogWriter() throws Exception {
+    void testLogWriter() throws Exception {
         final PrintStream ps = new PrintStream(new ByteArrayOutputStream(), false, StandardCharsets.UTF_8.name());
         final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream(), StandardCharsets.UTF_8));
         System.setErr(new PrintStream(new ByteArrayOutputStream(), false, StandardCharsets.UTF_8.name()));
@@ -192,7 +192,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=12400" */
     @Test
-    public void testReportedBug12400() throws Exception {
+    void testReportedBug12400() throws Exception {
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(70);
         config.setMaxWait(Duration.ofMinutes(1));
@@ -221,7 +221,7 @@ public class TestPoolingDriver extends TestConnectionPool {
 
     /** "https://issues.apache.org/bugzilla/show_bug.cgi?id=28912" */
     @Test
-    public void testReportedBug28912() throws Exception {
+    void testReportedBug28912() throws Exception {
         final Connection conn1 = getConnection();
         assertNotNull(conn1);
         assertFalse(conn1.isClosed());

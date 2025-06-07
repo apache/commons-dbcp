@@ -111,7 +111,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testClose()
+    void testClose()
             throws Exception {
         final Connection[] c = new Connection[10];
         for (int i = 0; i < c.length; i++) {
@@ -140,7 +140,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testCloseWithUserName()
+    void testCloseWithUserName()
             throws Exception {
         final Connection[] c = new Connection[10];
         for (int i = 0; i < c.length; i++) {
@@ -172,7 +172,7 @@ public class TestDriverAdapterCPDS {
      * Tests https://issues.apache.org/jira/browse/DBCP-376
      */
     @Test
-    public void testDbcp367() throws Exception {
+    void testDbcp367() throws Exception {
         final ThreadDbcp367[] threads = new ThreadDbcp367[200];
 
         pcds.setPoolPreparedStatements(true);
@@ -207,7 +207,7 @@ public class TestDriverAdapterCPDS {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void testDeprecatedAccessors() {
+    void testDeprecatedAccessors() {
         int i = 0;
         //
         i++;
@@ -222,14 +222,14 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testGetObjectInstance() throws Exception {
+    void testGetObjectInstance() throws Exception {
         final Reference ref = pcds.getReference();
         final Object o = pcds.getObjectInstance(ref, null, null, null);
         assertEquals(pcds.getDriver(), ((DriverAdapterCPDS) o).getDriver());
     }
 
     @Test
-    public void testGetObjectInstanceChangeDescription() throws Exception {
+    void testGetObjectInstanceChangeDescription() throws Exception {
         final Reference ref = pcds.getReference();
         for (int i = 0; i < ref.size(); i++) {
             if (ref.get(i).getType().equals("description")) {
@@ -243,25 +243,25 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testGetObjectInstanceNull() throws Exception {
+    void testGetObjectInstanceNull() throws Exception {
         final Object o = pcds.getObjectInstance(null, null, null, null);
         assertNull(o);
     }
 
     @Test
-    public void testGetParentLogger() {
+    void testGetParentLogger() {
         assertThrows(SQLFeatureNotSupportedException.class, pcds::getParentLogger);
     }
 
     @Test
-    public void testGetReference() throws NamingException {
+    void testGetReference() throws NamingException {
         final Reference ref = pcds.getReference();
         assertEquals(pcds.getDriver(), ref.get("driver").getContent());
         assertEquals(pcds.getDescription(), ref.get("description").getContent());
     }
 
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         pcds.setUser("foo");
         assertEquals("foo", pcds.getUser());
         pcds.setPassword("bar");
@@ -291,7 +291,7 @@ public class TestDriverAdapterCPDS {
      * JIRA: DBCP-245
      */
     @Test
-    public void testIncorrectPassword() throws Exception {
+    void testIncorrectPassword() throws Exception {
         pcds.getPooledConnection("u2", "p2").close();
         // Use bad password
         assertThrows(SQLException.class, () -> pcds.getPooledConnection("u1", "zlsafjk"), "Able to retrieve connection with incorrect password");
@@ -309,7 +309,7 @@ public class TestDriverAdapterCPDS {
      * JIRA: DBCP-442
      */
     @Test
-    public void testNullValidationQuery() throws Exception {
+    void testNullValidationQuery() throws Exception {
         try (final SharedPoolDataSource spds = new SharedPoolDataSource()) {
             spds.setConnectionPoolDataSource(pcds);
             spds.setDefaultTestOnBorrow(true);
@@ -320,7 +320,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetConnectionProperties() throws Exception {
+    void testSetConnectionProperties() throws Exception {
         // Set user property to bad value
         pcds.setUser("bad");
         // Supply correct value in connection properties
@@ -342,7 +342,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetConnectionPropertiesConnectionCalled() throws Exception {
+    void testSetConnectionPropertiesConnectionCalled() throws Exception {
         final Properties properties = new Properties();
         // call to the connection
         pcds.getPooledConnection().close();
@@ -350,12 +350,12 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetConnectionPropertiesNull() throws Exception {
+    void testSetConnectionPropertiesNull() throws Exception {
         pcds.setConnectionProperties(null);
     }
 
     @Test
-    public void testSetPasswordNull() throws Exception {
+    void testSetPasswordNull() throws Exception {
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
         pcds.setPassword((char[]) null);
@@ -363,7 +363,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetPasswordNullWithConnectionProperties() throws Exception {
+    void testSetPasswordNullWithConnectionProperties() throws Exception {
         pcds.setConnectionProperties(new Properties());
         pcds.setPassword("Secret");
         assertEquals("Secret", pcds.getPassword());
@@ -372,7 +372,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetPasswordThenModCharArray() {
+    void testSetPasswordThenModCharArray() {
         final char[] pwd = {'a'};
         pcds.setPassword(pwd);
         assertEquals("a", pcds.getPassword());
@@ -381,7 +381,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetUserNull() throws Exception {
+    void testSetUserNull() throws Exception {
         pcds.setUser("Alice");
         assertEquals("Alice", pcds.getUser());
         pcds.setUser(null);
@@ -389,7 +389,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSetUserNullWithConnectionProperties() throws Exception {
+    void testSetUserNullWithConnectionProperties() throws Exception {
         pcds.setConnectionProperties(new Properties());
         pcds.setUser("Alice");
         assertEquals("Alice", pcds.getUser());
@@ -398,7 +398,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testSimple() throws Exception {
+    void testSimple() throws Exception {
         try (final Connection conn = pcds.getPooledConnection().getConnection()) {
             assertNotNull(conn);
             try (final PreparedStatement stmt = conn.prepareStatement("select * from dual")) {
@@ -413,7 +413,7 @@ public class TestDriverAdapterCPDS {
 
     @SuppressWarnings("resource")
     @Test
-    public void testSimpleWithUsername() throws Exception {
+    void testSimpleWithUsername() throws Exception {
         final Connection connCheck;
         PStmtKey pStmtKey;
         try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {
@@ -435,7 +435,7 @@ public class TestDriverAdapterCPDS {
     }
 
     @Test
-    public void testToStringWithoutConnectionProperties() throws ClassNotFoundException {
+    void testToStringWithoutConnectionProperties() throws ClassNotFoundException {
         final DriverAdapterCPDS cleanCpds = new DriverAdapterCPDS();
         cleanCpds.setDriver("org.apache.commons.dbcp2.TesterDriver");
         cleanCpds.setUrl("jdbc:apache:commons:testdriver");

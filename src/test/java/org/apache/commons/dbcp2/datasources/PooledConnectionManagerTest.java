@@ -55,14 +55,14 @@ public class PooledConnectionManagerTest {
     }
 
     @Test
-    public void testSetPasswordCharArray() {
+    void testSetPasswordCharArray() {
         final Fixture fixture = new Fixture();
         fixture.setPassword("p".toCharArray());
         assertArrayEquals("p".toCharArray(), fixture.getPassword());
     }
 
     @Test
-    public void testSetPasswordString() {
+    void testSetPasswordString() {
         final Fixture fixture = new Fixture();
         fixture.setPassword("p");
         assertArrayEquals("p".toCharArray(), fixture.getPassword());

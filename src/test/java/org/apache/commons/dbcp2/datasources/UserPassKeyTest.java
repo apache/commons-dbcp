@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class UserPassKeyTest {
 
     @Test
-    public void testClear() {
+    void testClear() {
         // user name
         assertNull(new UserPassKey((String) null).clear().getUserName());
         assertEquals("", new UserPassKey("").clear().getUserName());

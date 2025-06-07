@@ -93,7 +93,7 @@ public class TestPoolableManagedConnection {
     }
 
     @Test
-    public void testManagedConnection() throws Exception {
+    void testManagedConnection() throws Exception {
         assertEquals(0, pool.getNumActive());
         // create a connection
         conn = pool.borrowObject();
@@ -109,7 +109,7 @@ public class TestPoolableManagedConnection {
     }
 
     @Test
-    public void testPoolableConnection() throws Exception {
+    void testPoolableConnection() throws Exception {
         // create a connection
         // pool uses LocalXAConnectionFactory, which register the connection with the TransactionRegistry
         conn = pool.borrowObject();
@@ -121,7 +121,7 @@ public class TestPoolableManagedConnection {
     }
 
     @Test
-    public void testReallyClose() throws Exception {
+    void testReallyClose() throws Exception {
         assertEquals(0, pool.getNumActive());
         // create a connection
         // pool uses LocalXAConnectionFactory, which register the connection with the

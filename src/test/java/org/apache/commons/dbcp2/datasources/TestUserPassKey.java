@@ -41,7 +41,7 @@ public class TestUserPassKey {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(new UserPassKey("user"), new UserPassKey("user", (char[]) null));
         assertEquals(userPassKey, userPassKey);
         assertNotEquals(userPassKey, null);
@@ -52,26 +52,26 @@ public class TestUserPassKey {
     }
 
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         assertEquals("user", userPassKey.getUserName());
         assertEquals("pass", userPassKey.getPassword());
         assertArrayEquals(Utils.toCharArray("pass"), userPassKey.getPasswordCharArray());
     }
 
     @Test
-    public void testHashcode() {
+    void testHashcode() {
         assertEquals(userPassKey.hashCode(), new UserPassKey("user", "pass").hashCode());
         assertNotEquals(userPassKey.hashCode(), anotherUserPassKey.hashCode());
     }
 
     @Test
-    public void testSerialization() {
+    void testSerialization() {
         assertEquals(userPassKey, SerializationUtils.roundtrip(userPassKey));
         assertEquals(anotherUserPassKey, SerializationUtils.roundtrip(anotherUserPassKey));
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals(userPassKey.toString(), new UserPassKey("user", "pass").toString());
         assertNotEquals(userPassKey.toString(), anotherUserPassKey.toString());
     }

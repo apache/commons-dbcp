@@ -38,7 +38,7 @@ public class TestPoolKey {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(poolKey, poolKey);
         assertNotEquals(poolKey, null);
         assertNotEquals(poolKey, new Object());
@@ -51,13 +51,13 @@ public class TestPoolKey {
     }
 
     @Test
-    public void testHashcode() {
+    void testHashcode() {
         assertEquals(poolKey.hashCode(), new PoolKey("ds", "user").hashCode());
         assertNotEquals(poolKey.hashCode(), anotherPoolKey.hashCode());
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals(poolKey.toString(), new PoolKey("ds", "user").toString());
         assertNotEquals(poolKey.toString(), anotherPoolKey.toString());
     }

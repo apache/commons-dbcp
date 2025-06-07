@@ -28,13 +28,13 @@ import org.junit.jupiter.api.Test;
 public class TestLifetimeExceededException {
 
     @Test
-    public void testLifetimeExceededException() {
+    void testLifetimeExceededException() {
         final LifetimeExceededException exception = new LifetimeExceededException("car");
         assertEquals("car", exception.getMessage());
     }
 
     @Test
-    public void testLifetimeExceededExceptionNoMessage() {
+    void testLifetimeExceededExceptionNoMessage() {
         final LifetimeExceededException exception = new LifetimeExceededException();
         assertNull(exception.getMessage());
     }

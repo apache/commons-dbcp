@@ -166,7 +166,7 @@ public class TestSynchronizationOrder {
     }
 
     @Test
-    public void testInterposedSynchronization() throws Exception {
+    void testInterposedSynchronization() throws Exception {
         final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
             xads, transactionSynchronizationRegistry);
 
@@ -199,7 +199,7 @@ public class TestSynchronizationOrder {
     }
 
     @Test
-    public void testSessionSynchronization() throws Exception {
+    void testSessionSynchronization() throws Exception {
         final DataSourceXAConnectionFactory xaConnectionFactory = new DataSourceXAConnectionFactory(transactionManager,
             xads);
 

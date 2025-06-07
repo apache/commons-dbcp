@@ -75,13 +75,13 @@ public class TestDriverManagerConnectionFactory extends AbstractDriverTest {
     }
 
     @Test
-    public void testDriverManagerCredentialsInUrl() throws SQLException {
+    void testDriverManagerCredentialsInUrl() throws SQLException {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver;user=foo;password=bar", null,
                 (char[]) null);
         cf.createConnection();
     }
 
-    public void testDriverManagerInit(final boolean withProperties) throws Exception {
+    void testDriverManagerInit(final boolean withProperties) throws Exception {
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(10);
         config.setMaxIdle(0);
@@ -121,35 +121,35 @@ public class TestDriverManagerConnectionFactory extends AbstractDriverTest {
     }
 
     @Test
-    public void testDriverManagerInitWithCredentials() throws Exception {
+    void testDriverManagerInitWithCredentials() throws Exception {
         testDriverManagerInit(false);
     }
 
     @Test
-    public void testDriverManagerInitWithEmptyProperties() throws Exception {
+    void testDriverManagerInitWithEmptyProperties() throws Exception {
         final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver;user=foo;password=bar");
         connectionFactory.createConnection();
     }
 
     @Test
-    public void testDriverManagerInitWithProperties() throws Exception {
+    void testDriverManagerInitWithProperties() throws Exception {
         testDriverManagerInit(true);
     }
 
     @Test
-    public void testDriverManagerWithoutCredentials() {
+    void testDriverManagerWithoutCredentials() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null, (char[]) null);
         assertThrows(ArrayIndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
     }
 
     @Test
-    public void testDriverManagerWithoutPassword() {
+    void testDriverManagerWithoutPassword() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", "user", (char[]) null);
         assertThrows(SQLException.class, cf::createConnection); // thrown by TestDriver due to invalid password
     }
 
     @Test
-    public void testDriverManagerWithoutUser() {
+    void testDriverManagerWithoutUser() {
         final DriverManagerConnectionFactory cf = new DriverManagerConnectionFactory("jdbc:apache:commons:testdriver", null, "pass");
         assertThrows(IndexOutOfBoundsException.class, cf::createConnection); // thrown by TestDriver due to missing user
     }

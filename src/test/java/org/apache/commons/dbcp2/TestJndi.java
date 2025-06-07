@@ -115,7 +115,7 @@ public class TestJndi {
      * @throws Exception
      */
     @Test
-    public void testBasicDataSourceBind() throws Exception {
+    void testBasicDataSourceBind() throws Exception {
         final BasicDataSource dataSource = new BasicDataSource();
         checkBind(dataSource);
     }
@@ -126,7 +126,7 @@ public class TestJndi {
      * @throws Exception
      */
     @Test
-    public void testPerUserPoolDataSourceBind() throws Exception {
+    void testPerUserPoolDataSourceBind() throws Exception {
         final PerUserPoolDataSource dataSource = new PerUserPoolDataSource();
         checkBind(dataSource);
     }
@@ -137,7 +137,7 @@ public class TestJndi {
      * @throws Exception
      */
     @Test
-    public void testSharedPoolDataSourceBind() throws Exception {
+    void testSharedPoolDataSourceBind() throws Exception {
         final SharedPoolDataSource dataSource = new SharedPoolDataSource();
         checkBind(dataSource);
     }

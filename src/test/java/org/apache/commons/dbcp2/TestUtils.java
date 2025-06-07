@@ -37,40 +37,40 @@ public class TestUtils {
     }
 
     @Test
-    public void testCheckForConflictsBothCollectionsNull() {
+    void testCheckForConflictsBothCollectionsNull() {
         assertDoesNotThrow(() -> Utils.checkSqlCodes(null, null));
     }
 
     @Test
-    public void testCheckForConflictsEmptyCollections() {
+    void testCheckForConflictsEmptyCollections() {
         final Collection<String> codes1 = Collections.emptySet();
         final Collection<String> codes2 = Collections.emptySet();
         assertDoesNotThrow(() -> Utils.checkSqlCodes(codes1, codes2));
     }
 
     @Test
-    public void testCheckForConflictsFirstCollectionNull() {
+    void testCheckForConflictsFirstCollectionNull() {
         final Collection<String> codes1 = null;
         final Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08007"));
         assertDoesNotThrow(() -> Utils.checkSqlCodes(codes1, codes2));
     }
 
     @Test
-    public void testCheckForConflictsNoOverlap() {
+    void testCheckForConflictsNoOverlap() {
         final Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
         final Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08007"));
         assertDoesNotThrow(() -> Utils.checkSqlCodes(codes1, codes2));
     }
 
     @Test
-    public void testCheckForConflictsSecondCollectionNull() {
+    void testCheckForConflictsSecondCollectionNull() {
         final Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
         final Collection<String> codes2 = null;
         assertDoesNotThrow(() -> Utils.checkSqlCodes(codes1, codes2));
     }
 
     @Test
-    public void testCheckForConflictsWith1Overlap() {
+    void testCheckForConflictsWith1Overlap() {
         final Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006"));
         final Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08006"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> Utils.checkSqlCodes(codes1, codes2));
@@ -78,7 +78,7 @@ public class TestUtils {
     }
 
     @Test
-    public void testCheckForConflictsWith2Overlap() {
+    void testCheckForConflictsWith2Overlap() {
         final Collection<String> codes1 = new HashSet<>(Arrays.asList("08003", "08006", "08007"));
         final Collection<String> codes2 = new HashSet<>(Arrays.asList("08005", "08006", "08007"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> Utils.checkSqlCodes(codes1, codes2));
@@ -86,12 +86,12 @@ public class TestUtils {
     }
 
     @Test
-    public void testClassLoads() {
+    void testClassLoads() {
         Utils.closeQuietly((AutoCloseable) null);
     }
 
     @Test
-    public void testIsDisconnectionSqlCode() {
+    void testIsDisconnectionSqlCode() {
         assertTrue(Utils.isDisconnectionSqlCode("57P01"), "57P01 should be recognised as a disconnection SQL code.");
         assertTrue(Utils.isDisconnectionSqlCode("01002"), "01002 should be recognised as a disconnection SQL code.");
         assertTrue(Utils.isDisconnectionSqlCode("JZ0C0"), "JZ0C0 should be recognised as a disconnection SQL code.");

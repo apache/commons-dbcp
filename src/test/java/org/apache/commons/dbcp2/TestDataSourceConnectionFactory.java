@@ -94,7 +94,7 @@ public class TestDataSourceConnectionFactory {
     }
 
     @Test
-    public void testCredentials() throws SQLException {
+    void testCredentials() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", "bar");
         try (Connection conn = factory.createConnection()) {
             assertEquals("foo", ((TesterConnection) conn).getUserName());
@@ -102,14 +102,14 @@ public class TestDataSourceConnectionFactory {
     }
 
     @Test
-    public void testDefaultValues() throws SQLException {
+    void testDefaultValues() throws SQLException {
         try (Connection conn = factory.createConnection()) {
             assertNull(((TesterConnection) conn).getUserName());
         }
     }
 
     @Test
-    public void testEmptyPassword() throws SQLException {
+    void testEmptyPassword() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, "foo", (char[]) null);
         try (Connection conn = factory.createConnection()) {
             assertEquals("foo", ((TesterConnection) conn).getUserName());
@@ -117,7 +117,7 @@ public class TestDataSourceConnectionFactory {
     }
 
     @Test
-    public void testEmptyUser() throws SQLException {
+    void testEmptyUser() throws SQLException {
         final DataSourceConnectionFactory factory = new DataSourceConnectionFactory(datasource, null, new char[] { 'a' });
         try (Connection conn = factory.createConnection()) {
             assertNull(((TesterConnection) conn).getUserName());

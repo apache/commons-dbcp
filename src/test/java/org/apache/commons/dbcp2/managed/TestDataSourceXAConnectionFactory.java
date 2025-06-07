@@ -96,7 +96,7 @@ public class TestDataSourceXAConnectionFactory extends TestBasicDataSource {
      * JIRA: DBCP-355
      */
     @Test
-    public void testPhysicalClose() throws Exception {
+    void testPhysicalClose() throws Exception {
         bmds.setMaxIdle(1);
         final Connection conn1 = bmds.getConnection();
         final Connection conn2 = bmds.getConnection();

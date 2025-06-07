@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class TestSQLExceptionList {
 
     @Test
-    public void testCause() {
+    void testCause() {
         final SQLTransientException cause = new SQLTransientException();
         final List<SQLTransientException> list = Collections.singletonList(cause);
         final SQLExceptionList sqlExceptionList = new SQLExceptionList(list);
@@ -37,7 +37,7 @@ public class TestSQLExceptionList {
     }
 
     @Test
-    public void testNullCause() {
+    void testNullCause() {
         final SQLExceptionList sqlExceptionList = new SQLExceptionList(null);
         Assertions.assertNull(sqlExceptionList.getCause());
         Assertions.assertNull(sqlExceptionList.getCauseList());

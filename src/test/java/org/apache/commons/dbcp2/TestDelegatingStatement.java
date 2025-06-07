@@ -76,7 +76,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testAddBatchString() throws Exception {
+    void testAddBatchString() throws Exception {
         try {
             delegatingStatement.addBatch("foo");
         } catch (final SQLException e) {
@@ -85,7 +85,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testCancel() throws Exception {
+    void testCancel() throws Exception {
         try {
             delegatingStatement.cancel();
         } catch (final SQLException e) {
@@ -94,14 +94,14 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testCheckOpen() throws Exception {
+    void testCheckOpen() throws Exception {
         delegatingStatement.checkOpen();
         delegatingStatement.close();
         assertThrows(SQLException.class, delegatingStatement::checkOpen);
     }
 
     @Test
-    public void testClearBatch() throws Exception {
+    void testClearBatch() throws Exception {
         try {
             delegatingStatement.clearBatch();
         } catch (final SQLException e) {
@@ -110,7 +110,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testClearWarnings() throws Exception {
+    void testClearWarnings() throws Exception {
         try {
             delegatingStatement.clearWarnings();
         } catch (final SQLException e) {
@@ -119,7 +119,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testClose() throws Exception {
+    void testClose() throws Exception {
         try {
             delegatingStatement.close();
         } catch (final SQLException e) {
@@ -128,7 +128,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testCloseOnCompletion() throws Exception {
+    void testCloseOnCompletion() throws Exception {
         try {
             delegatingStatement.closeOnCompletion();
         } catch (final SQLException e) {
@@ -137,7 +137,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testCloseWithResultSetCloseException() throws Exception {
+    void testCloseWithResultSetCloseException() throws Exception {
         testerResultSet.setSqlExceptionOnClose(true);
         delegatingStatement.addTrace(testerResultSet);
         final SQLException e = assertThrows(SQLException.class, delegatingStatement::close);
@@ -146,14 +146,14 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testCloseWithStatementCloseException() throws Exception {
+    void testCloseWithStatementCloseException() throws Exception {
         testerStatement.setSqlExceptionOnClose(true);
         final SQLException e = assertThrows(SQLException.class, delegatingTesterStatement::close);
         assertInstanceOf(SQLExceptionList.class, e);
     }
 
     @Test
-    public void testExecuteBatch() throws Exception {
+    void testExecuteBatch() throws Exception {
         try {
             delegatingStatement.executeBatch();
         } catch (final SQLException e) {
@@ -162,7 +162,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteLargeBatch() throws Exception {
+    void testExecuteLargeBatch() throws Exception {
         try {
             delegatingStatement.executeLargeBatch();
         } catch (final SQLException e) {
@@ -171,7 +171,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteLargeUpdateString() throws Exception {
+    void testExecuteLargeUpdateString() throws Exception {
         try {
             delegatingStatement.executeLargeUpdate("foo");
         } catch (final SQLException e) {
@@ -180,7 +180,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteLargeUpdateStringInteger() throws Exception {
+    void testExecuteLargeUpdateStringInteger() throws Exception {
         try {
             delegatingStatement.executeLargeUpdate("foo", 1);
         } catch (final SQLException e) {
@@ -189,7 +189,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteLargeUpdateStringIntegerArray() throws Exception {
+    void testExecuteLargeUpdateStringIntegerArray() throws Exception {
         try {
             delegatingStatement.executeLargeUpdate("foo", (int[]) null);
         } catch (final SQLException e) {
@@ -198,7 +198,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteLargeUpdateStringStringArray() throws Exception {
+    void testExecuteLargeUpdateStringStringArray() throws Exception {
         try {
             delegatingStatement.executeLargeUpdate("foo", (String[]) null);
         } catch (final SQLException e) {
@@ -207,12 +207,12 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteQueryReturnsNull() throws Exception {
+    void testExecuteQueryReturnsNull() throws Exception {
         assertNull(delegatingStatement.executeQuery("null"));
     }
 
     @Test
-    public void testExecuteQueryString() throws Exception {
+    void testExecuteQueryString() throws Exception {
         try {
             delegatingStatement.executeQuery("foo");
         } catch (final SQLException e) {
@@ -221,7 +221,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteString() throws Exception {
+    void testExecuteString() throws Exception {
         try {
             delegatingStatement.execute("foo");
         } catch (final SQLException e) {
@@ -230,7 +230,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteStringInteger() throws Exception {
+    void testExecuteStringInteger() throws Exception {
         try {
             delegatingStatement.execute("foo", 1);
         } catch (final SQLException e) {
@@ -239,7 +239,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteStringIntegerArray() throws Exception {
+    void testExecuteStringIntegerArray() throws Exception {
         try {
             delegatingStatement.execute("foo", (int[]) null);
         } catch (final SQLException e) {
@@ -248,7 +248,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteStringStringArray() throws Exception {
+    void testExecuteStringStringArray() throws Exception {
         try {
             delegatingStatement.execute("foo", (String[]) null);
         } catch (final SQLException e) {
@@ -257,7 +257,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteUpdateString() throws Exception {
+    void testExecuteUpdateString() throws Exception {
         try {
             delegatingStatement.executeUpdate("foo");
         } catch (final SQLException e) {
@@ -266,7 +266,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteUpdateStringInteger() throws Exception {
+    void testExecuteUpdateStringInteger() throws Exception {
         try {
             delegatingStatement.executeUpdate("foo", 1);
         } catch (final SQLException e) {
@@ -275,7 +275,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteUpdateStringIntegerArray() throws Exception {
+    void testExecuteUpdateStringIntegerArray() throws Exception {
         try {
             delegatingStatement.executeUpdate("foo", (int[]) null);
         } catch (final SQLException e) {
@@ -284,7 +284,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testExecuteUpdateStringStringArray() throws Exception {
+    void testExecuteUpdateStringStringArray() throws Exception {
         try {
             delegatingStatement.executeUpdate("foo", (String[]) null);
         } catch (final SQLException e) {
@@ -298,7 +298,7 @@ public class TestDelegatingStatement {
      * @throws Exception
      */
     @Test
-    public void testGetConnection() throws Exception {
+    void testGetConnection() throws Exception {
         try {
             delegatingStatement.getConnection();
         } catch (final SQLException e) {
@@ -307,12 +307,12 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetDelegate() throws Exception {
+    void testGetDelegate() throws Exception {
         assertEquals(mockedStatement, delegatingStatement.getDelegate());
     }
 
     @Test
-    public void testGetFetchDirection() throws Exception {
+    void testGetFetchDirection() throws Exception {
         try {
             delegatingStatement.getFetchDirection();
         } catch (final SQLException e) {
@@ -321,7 +321,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetFetchSize() throws Exception {
+    void testGetFetchSize() throws Exception {
         try {
             delegatingStatement.getFetchSize();
         } catch (final SQLException e) {
@@ -330,7 +330,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetGeneratedKeys() throws Exception {
+    void testGetGeneratedKeys() throws Exception {
         try {
             delegatingStatement.getGeneratedKeys();
         } catch (final SQLException e) {
@@ -339,7 +339,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetLargeMaxRows() throws Exception {
+    void testGetLargeMaxRows() throws Exception {
         try {
             delegatingStatement.getLargeMaxRows();
         } catch (final SQLException e) {
@@ -348,7 +348,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetLargeUpdateCount() throws Exception {
+    void testGetLargeUpdateCount() throws Exception {
         try {
             delegatingStatement.getLargeUpdateCount();
         } catch (final SQLException e) {
@@ -357,7 +357,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetMaxFieldSize() throws Exception {
+    void testGetMaxFieldSize() throws Exception {
         try {
             delegatingStatement.getMaxFieldSize();
         } catch (final SQLException e) {
@@ -366,7 +366,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetMaxRows() throws Exception {
+    void testGetMaxRows() throws Exception {
         try {
             delegatingStatement.getMaxRows();
         } catch (final SQLException e) {
@@ -375,7 +375,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetMoreResults() throws Exception {
+    void testGetMoreResults() throws Exception {
         try {
             delegatingStatement.getMoreResults();
         } catch (final SQLException e) {
@@ -384,7 +384,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetMoreResultsInteger() throws Exception {
+    void testGetMoreResultsInteger() throws Exception {
         try {
             delegatingStatement.getMoreResults(1);
         } catch (final SQLException e) {
@@ -393,7 +393,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetQueryTimeout() throws Exception {
+    void testGetQueryTimeout() throws Exception {
         try {
             delegatingStatement.getQueryTimeout();
         } catch (final SQLException e) {
@@ -402,7 +402,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetResultSet() throws Exception {
+    void testGetResultSet() throws Exception {
         try {
             delegatingStatement.getResultSet();
         } catch (final SQLException e) {
@@ -411,7 +411,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetResultSetConcurrency() throws Exception {
+    void testGetResultSetConcurrency() throws Exception {
         try {
             delegatingStatement.getResultSetConcurrency();
         } catch (final SQLException e) {
@@ -420,7 +420,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetResultSetHoldability() throws Exception {
+    void testGetResultSetHoldability() throws Exception {
         try {
             delegatingStatement.getResultSetHoldability();
         } catch (final SQLException e) {
@@ -429,7 +429,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetResultSetType() throws Exception {
+    void testGetResultSetType() throws Exception {
         try {
             delegatingStatement.getResultSetType();
         } catch (final SQLException e) {
@@ -438,7 +438,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetUpdateCount() throws Exception {
+    void testGetUpdateCount() throws Exception {
         try {
             delegatingStatement.getUpdateCount();
         } catch (final SQLException e) {
@@ -447,7 +447,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testGetWarnings() throws Exception {
+    void testGetWarnings() throws Exception {
         try {
             delegatingStatement.getWarnings();
         } catch (final SQLException e) {
@@ -461,7 +461,7 @@ public class TestDelegatingStatement {
      * @throws Exception
      */
     @Test
-    public void testIsClosed() throws Exception {
+    void testIsClosed() throws Exception {
         try {
             delegatingStatement.isClosed();
         } catch (final SQLException e) {
@@ -470,7 +470,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testIsCloseOnCompletion() throws Exception {
+    void testIsCloseOnCompletion() throws Exception {
         try {
             delegatingStatement.isCloseOnCompletion();
         } catch (final SQLException e) {
@@ -479,7 +479,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testIsPoolable() throws Exception {
+    void testIsPoolable() throws Exception {
         try {
             delegatingStatement.isPoolable();
         } catch (final SQLException e) {
@@ -488,7 +488,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testIsWrapperFor() throws Exception {
+    void testIsWrapperFor() throws Exception {
         final TesterConnection tstConn = new TesterConnection("test", "test");
         final TesterStatement tstStmt = new TesterStatementNonWrapping(tstConn);
         final DelegatingConnection<TesterConnection> dconn = new DelegatingConnection<>(tstConn);
@@ -504,7 +504,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetCursorNameString() throws Exception {
+    void testSetCursorNameString() throws Exception {
         try {
             delegatingStatement.setCursorName("foo");
         } catch (final SQLException e) {
@@ -513,7 +513,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetEscapeProcessingBoolean() throws Exception {
+    void testSetEscapeProcessingBoolean() throws Exception {
         try {
             delegatingStatement.setEscapeProcessing(Boolean.TRUE);
         } catch (final SQLException e) {
@@ -522,7 +522,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetFetchDirectionInteger() throws Exception {
+    void testSetFetchDirectionInteger() throws Exception {
         try {
             delegatingStatement.setFetchDirection(1);
         } catch (final SQLException e) {
@@ -531,7 +531,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetFetchSizeInteger() throws Exception {
+    void testSetFetchSizeInteger() throws Exception {
         try {
             delegatingStatement.setFetchSize(1);
         } catch (final SQLException e) {
@@ -540,7 +540,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetLargeMaxRowsLong() throws Exception {
+    void testSetLargeMaxRowsLong() throws Exception {
         try {
             delegatingStatement.setLargeMaxRows(1L);
         } catch (final SQLException e) {
@@ -549,7 +549,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetMaxFieldSizeInteger() throws Exception {
+    void testSetMaxFieldSizeInteger() throws Exception {
         try {
             delegatingStatement.setMaxFieldSize(1);
         } catch (final SQLException e) {
@@ -558,7 +558,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetMaxRowsInteger() throws Exception {
+    void testSetMaxRowsInteger() throws Exception {
         try {
             delegatingStatement.setMaxRows(1);
         } catch (final SQLException e) {
@@ -567,7 +567,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetPoolableBoolean() throws Exception {
+    void testSetPoolableBoolean() throws Exception {
         try {
             delegatingStatement.setPoolable(Boolean.TRUE);
         } catch (final SQLException e) {
@@ -576,7 +576,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testSetQueryTimeoutInteger() throws Exception {
+    void testSetQueryTimeoutInteger() throws Exception {
         try {
             delegatingStatement.setQueryTimeout(1);
         } catch (final SQLException e) {
@@ -585,7 +585,7 @@ public class TestDelegatingStatement {
     }
 
     @Test
-    public void testWrap() throws SQLException {
+    void testWrap() throws SQLException {
         assertEquals(delegatingStatement, delegatingStatement.unwrap(Statement.class));
         assertEquals(delegatingStatement, delegatingStatement.unwrap(DelegatingStatement.class));
         assertEquals(mockedStatement, delegatingStatement.unwrap(mockedStatement.getClass()));

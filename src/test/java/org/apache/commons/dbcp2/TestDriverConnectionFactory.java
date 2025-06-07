@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class TestDriverConnectionFactory {
 
     @Test
-    public void testCreateConnection() throws SQLException {
+    void testCreateConnection() throws SQLException {
         final DriverConnectionFactory cf = new DriverConnectionFactory(
                 new TesterDriver(), "jdbc:apache:commons:testdriver", null);
         final Connection conn = cf.createConnection();
@@ -39,7 +39,7 @@ public class TestDriverConnectionFactory {
     }
 
     @Test
-    public void testDriverConnectionFactoryToString() {
+    void testDriverConnectionFactoryToString() {
         final DriverConnectionFactory cf = new DriverConnectionFactory(
                 new TesterDriver(), "jdbc:apache:commons:testdriver", null);
         final String toString = cf.toString();
