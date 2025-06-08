@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link UserPassKey}
  */
-public class UserPassKeyTest {
+class UserPassKeyTest {
 
     @Test
     void testClear() {

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /*
  * Tests {@link PooledConnectionManager}.
  */
-public class PooledConnectionManagerTest {
+class PooledConnectionManagerTest {
 
     static class Fixture implements PooledConnectionManager {
 

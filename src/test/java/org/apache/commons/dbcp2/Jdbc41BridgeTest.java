@@ -37,7 +37,7 @@ import org.mockito.Mockito;
 /**
  * Tests {@link Jdbc41Bridge}.
  */
-public class Jdbc41BridgeTest {
+class Jdbc41BridgeTest {
 
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:h2:mem:test");

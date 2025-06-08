@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link CharArray}.
  */
-public class CharArrayTest {
+class CharArrayTest {
 
     @Test
     void testAsString() {
