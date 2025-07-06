@@ -48,7 +48,7 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:git:http://gitbox.apache.org/repos/asf/commons-dbcp.git</connection>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-dbcp.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-dbcp.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-dbcp.git</url>
   </scm>
