@@ -52,6 +52,10 @@
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-dbcp.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-dbcp.git</url>
   </scm>
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/commons-dbcp/actions</url>
+  </ciManagement>
 
   <dependencies>
     <dependency>
