@@ -236,7 +236,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     public Connection getConnection(final String userName, final String userPassword) throws SQLException {
         if (instanceKey == null) {
             throw new SQLException("Must set the ConnectionPoolDataSource "
-                    + "through setDataSourceName or setConnectionPoolDataSource" + " before calling getConnection.");
+                    + "through setDataSourceName or setConnectionPoolDataSource before calling getConnection.");
         }
         getConnectionCalled = true;
         PooledConnectionAndInfo info = null;
@@ -258,7 +258,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                 // Password has not changed, so refuse client, but return connection to the pool
                 closeDueToException(info);
                 throw new SQLException(
-                        "Given password did not match password used" + " to create the PooledConnection.", ex);
+                        "Given password did not match password used to create the PooledConnection.", ex);
             } catch (final javax.naming.NamingException ne) {
                 throw new SQLException("NamingException encountered connecting to database", ne);
             }
@@ -777,7 +777,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                     + "set using setConnectionPoolDataSource.");
         }
         if (this.dataSourceName != null) {
-            throw new IllegalStateException("The DataSourceName has already been set. " + "It cannot be altered.");
+            throw new IllegalStateException("The DataSourceName has already been set. It cannot be altered.");
         }
         this.dataSourceName = dataSourceName;
         instanceKey = InstanceKeyDataSourceFactory.registerNewInstance(this);
@@ -1266,8 +1266,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             }
             final Object ds = ctx.lookup(dataSourceName);
             if (!(ds instanceof ConnectionPoolDataSource)) {
-                throw new SQLException("Illegal configuration: " + "DataSource " + dataSourceName + " ("
-                        + ds.getClass().getName() + ")" + " doesn't implement javax.sql.ConnectionPoolDataSource");
+                throw new SQLException("Illegal configuration: DataSource " + dataSourceName + " ("
+                        + ds.getClass().getName() + ") doesn't implement javax.sql.ConnectionPoolDataSource");
             }
             cpds = (ConnectionPoolDataSource) ds;
         }

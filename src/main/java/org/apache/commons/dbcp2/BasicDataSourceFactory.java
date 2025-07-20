@@ -174,11 +174,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
                 "Property " + NUPROP_MAX_ACTIVE + " is not used in DBCP2, use " + PROP_MAX_TOTAL + " instead. "
                         + PROP_MAX_TOTAL + " default value is " + GenericObjectPoolConfig.DEFAULT_MAX_TOTAL + ".");
         NUPROP_WARNTEXT.put(NUPROP_REMOVE_ABANDONED,
-                "Property " + NUPROP_REMOVE_ABANDONED + " is not used in DBCP2," + " use one or both of "
+                "Property " + NUPROP_REMOVE_ABANDONED + " is not used in DBCP2, use one or both of "
                         + PROP_REMOVE_ABANDONED_ON_BORROW + " or " + PROP_REMOVE_ABANDONED_ON_MAINTENANCE + " instead. "
                         + "Both have default value set to false.");
         NUPROP_WARNTEXT.put(NUPROP_MAXWAIT,
-                "Property " + NUPROP_MAXWAIT + " is not used in DBCP2" + " , use " + PROP_MAX_WAIT_MILLIS + " instead. "
+                "Property " + NUPROP_MAXWAIT + " is not used in DBCP2 , use " + PROP_MAX_WAIT_MILLIS + " instead. "
                         + PROP_MAX_WAIT_MILLIS + " default value is " + BaseObjectPoolConfig.DEFAULT_MAX_WAIT
                         + ".");
     }

@@ -101,7 +101,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
             try {
                 pool.returnObject(pci.getUserPassKey(), pci);
             } catch (final Exception e) {
-                System.err.println("CLOSING DOWN CONNECTION AS IT COULD " + "NOT BE RETURNED TO THE POOL");
+                System.err.println("CLOSING DOWN CONNECTION AS IT COULD NOT BE RETURNED TO THE POOL");
                 pc.removeConnectionEventListener(this);
                 try {
                     pool.invalidateObject(pci.getUserPassKey(), pci);
