@@ -74,7 +74,7 @@ public class BasicManagedDataSource extends BasicDataSource {
     }
 
     @Override
-    protected ConnectionFactory createConnectionFactory() throws SQLException {
+    protected synchronized ConnectionFactory createConnectionFactory() throws SQLException {
         if (transactionManager == null) {
             throw new SQLException("Transaction manager must be set before a connection can be created");
         }
