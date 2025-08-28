@@ -131,12 +131,12 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
      * @return List of objects.
      */
     protected List<AbandonedTrace> getTrace() {
-        final int size = traceList.size();
-        if (size == 0) {
-            return Collections.emptyList();
-        }
-        final ArrayList<AbandonedTrace> result = new ArrayList<>(size);
         synchronized (this.traceList) {
+            final int size = traceList.size();
+            if (size == 0) {
+                return Collections.emptyList();
+            }
+            final ArrayList<AbandonedTrace> result = new ArrayList<>(size);
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
                 final AbandonedTrace trace = iter.next().get();
@@ -147,8 +147,8 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
                     result.add(trace);
                 }
             }
+            return result;
         }
-        return result;
     }
 
     /**
