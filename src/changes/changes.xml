@@ -116,6 +116,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Shared primitive variable "logExpiredConnections" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Shared primitive variable "registerConnectionMBean" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
+      <action type="fix" dev="markt"    due-to="Coverity Scan">Fix a potential resource leak if an SQLException occurs during an attempt to obtain an XAConnection.</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.dbcp2.datasources.PooledConnectionManager.setPassword(char[]).</action>
       <!-- UPDATE -->
