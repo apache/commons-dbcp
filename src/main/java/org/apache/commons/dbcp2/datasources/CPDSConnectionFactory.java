@@ -92,6 +92,15 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
         }
     }
 
+    private PooledConnectionAndInfo getPci(PooledConnection pc) {
+        PooledConnectionAndInfo pci = pcMap.get(pc);
+        if (pci == null) {
+            throw new IllegalStateException(NO_KEY_MESSAGE);
+        }
+        return pci;
+    }
+
+
     /**
      * This will be called if the Connection returned by the getConnection method came from a PooledConnection, and the
      * user calls the close() method of this connection object. What we need to do here is to release this
@@ -103,11 +112,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
         // if this event occurred because we were validating, ignore it
         // otherwise return the connection to the pool.
         if (!validatingSet.contains(pc)) {
-            final PooledConnectionAndInfo pci = pcMap.get(pc);
-            if (pci == null) {
-                throw new IllegalStateException(NO_KEY_MESSAGE);
-            }
-
+            final PooledConnectionAndInfo pci = getPci(pc);
             try {
                 pool.returnObject(pci);
             } catch (final Exception e) {
@@ -134,10 +139,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
         }
         pc.removeConnectionEventListener(this);
 
-        final PooledConnectionAndInfo pci = pcMap.get(pc);
-        if (pci == null) {
-            throw new IllegalStateException(NO_KEY_MESSAGE);
-        }
+        final PooledConnectionAndInfo pci = getPci(pc);
         try {
             pool.invalidateObject(pci);
         } catch (final Exception e) {
@@ -186,10 +188,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
      */
     @Override
     public void invalidate(final PooledConnection pc) throws SQLException {
-        final PooledConnectionAndInfo pci = pcMap.get(pc);
-        if (pci == null) {
-            throw new IllegalStateException(NO_KEY_MESSAGE);
-        }
+        final PooledConnectionAndInfo pci = getPci(pc);
         try {
             pool.invalidateObject(pci); // Destroy instance and update pool counters
             pool.close(); // Clear any other instances in this pool and kill others as they come back
