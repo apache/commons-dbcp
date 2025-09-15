@@ -305,9 +305,10 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
         final String value = properties.getProperty(PROP_CONNECTION_PROPERTIES);
         if (value != null) {
-            for (final Object key : getProperties(value).keySet()) {
+            final Properties connectionProperties = getProperties(value);
+            for (final Object key : connectionProperties.keySet()) {
                 final String propertyName = Objects.toString(key, null);
-                dataSource.addConnectionProperty(propertyName, getProperties(value).getProperty(propertyName));
+                dataSource.addConnectionProperty(propertyName, connectionProperties.getProperty(propertyName));
             }
         }
 
