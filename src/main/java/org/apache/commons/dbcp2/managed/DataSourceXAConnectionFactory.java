@@ -173,14 +173,14 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException e) {
+                } catch (SQLException ignored) {
                     // Ignore
                 }
             }
             if (xaConnection != null) {
                 try {
                     xaConnection.close();
-                } catch (SQLException e) {
+                } catch (SQLException ignored) {
                     // Ignore
                 }
             }
