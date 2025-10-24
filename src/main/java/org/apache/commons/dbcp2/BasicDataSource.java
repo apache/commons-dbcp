@@ -72,7 +72,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
     static {
-        // Attempt to prevent deadlocks - see DBCP - 272
+        // Attempt to prevent deadlocks - see DBCP-272
         DriverManager.getDrivers();
         try {
             // Load classes now to prevent AccessControlExceptions later
