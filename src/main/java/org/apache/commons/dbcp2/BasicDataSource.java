@@ -73,7 +73,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     static {
         // Attempt to prevent deadlocks - see DBCP-272
-        DriverManager.getDrivers();
+        DriverManager.getDrivers(); // NOPMD
         try {
             // Load classes now to prevent AccessControlExceptions later
             // A number of classes are loaded when getConnection() is called

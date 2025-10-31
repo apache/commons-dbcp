@@ -34,7 +34,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
         // provider interface. This will cause issues is multi-threaded
         // environments. This hack makes sure the drivers are loaded before
         // DBCP tries to use them.
-        DriverManager.getDrivers();
+        DriverManager.getDrivers(); // NOPMD
     }
 
     private final String connectionUri;

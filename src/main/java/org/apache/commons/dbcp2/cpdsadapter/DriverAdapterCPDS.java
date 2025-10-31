@@ -110,7 +110,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     static {
         // Attempt to prevent deadlocks - see DBCP-272
-        DriverManager.getDrivers();
+        DriverManager.getDrivers(); // NOPMD
     }
 
     /** Description */
