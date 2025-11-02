@@ -26,8 +26,8 @@ limitations under the License.
 <!-- ================================================== -->
 <section name="Overview">
 <p>
-  Commons DBCP uses <a href="http://maven.apache.org">Maven</a> or
-  <a href="http://ant.apache.org">Ant</a> as a build system.
+  Commons DBCP uses <a href="https://maven.apache.org">Maven</a> or
+  <a href="https://ant.apache.org">Ant</a> as a build system.
   The maven build requires maven 2 and JDK 1.6.  The Ant build works with
   JDK 1.4, 1.5 or 1.6.
 </p>

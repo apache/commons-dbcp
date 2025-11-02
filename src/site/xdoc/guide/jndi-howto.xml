@@ -27,7 +27,7 @@
 
 <section name="JNDI Howto">
 <p>
-  The <a href="http://java.sun.com/products/jndi/">Java Naming and Directory Interface</a> 
+  The <a href="https://java.sun.com/products/jndi/">Java Naming and Directory Interface</a> 
   (JNDI) is part of the Java platform, 
   providing applications based on Java technology with a unified interface to 
   multiple naming and directory services. You can build powerful and portable 
@@ -42,7 +42,7 @@
 <p>
   The following examples are using the sun filesystem JNDI service provider.
   You can download it from the 
-  <a href="http://java.sun.com/products/jndi/downloads/index.html">JNDI software download</a> page.
+  <a href="https://java.sun.com/products/jndi/downloads/index.html">JNDI software download</a> page.
 </p>
 </section>
 
