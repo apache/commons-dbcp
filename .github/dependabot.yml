@@ -18,8 +18,7 @@ updates:
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "friday"
+      interval: "quarterly"
     ignore:
       - dependency-name: org.jboss.narayana.jta:narayana-jta
         versions:
@@ -36,5 +35,4 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "friday"
+      interval: "quarterly"
