@@ -201,7 +201,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
                 public void beforeCompletion() {
                     try (Connection connection = assertDoesNotThrow((ThrowingSupplier<Connection>) basicManagedDataSource::getConnection)) {
                         assertNotNull(connection);
-                    } catch (SQLException e) {
+                    } catch (final SQLException e) {
                         fail(e);
                     }
                 }
