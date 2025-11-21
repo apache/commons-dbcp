@@ -18,7 +18,9 @@ package org.apache.commons.dbcp2.cpdsadapter;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.Duration;
@@ -35,6 +37,7 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
 import org.apache.commons.dbcp2.Constants;
@@ -49,22 +52,22 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 /**
  * <p>
  * An adapter for JDBC drivers that do not include an implementation of {@link javax.sql.ConnectionPoolDataSource}, but
- * still include a {@link java.sql.DriverManager} implementation. {@code ConnectionPoolDataSource}s are not used
- * within general applications. They are used by {@code DataSource} implementations that pool
- * {@code Connection}s, such as {@link org.apache.commons.dbcp2.datasources.SharedPoolDataSource}. A J2EE container
- * will normally provide some method of initializing the {@code ConnectionPoolDataSource} whose attributes are
+ * still include a {@link java.sql.DriverManager} implementation. {@link ConnectionPoolDataSource}s are not used
+ * within general applications. They are used by {@link DataSource} implementations that pool
+ * {@link Connection}s, such as {@link org.apache.commons.dbcp2.datasources.SharedPoolDataSource}. A J2EE container
+ * will normally provide some method of initializing the {@link ConnectionPoolDataSource} whose attributes are
  * presented as bean getters/setters and then deploying it via JNDI. It is then available as a source of physical
- * connections to the database, when the pooling {@code DataSource} needs to create a new physical connection.
+ * connections to the database, when the pooling {@link DataSource} needs to create a new physical connection.
  * </p>
  * <p>
  * Although normally used within a JNDI environment, the DriverAdapterCPDS can be instantiated and initialized as any
- * bean and then attached directly to a pooling {@code DataSource}. {@code Jdbc2PoolDataSource} can use the
- * {@code ConnectionPoolDataSource} with or without the use of JNDI.
+ * bean and then attached directly to a pooling {@link DataSource}. {@code Jdbc2PoolDataSource} can use the
+ * {@link ConnectionPoolDataSource} with or without the use of JNDI.
  * </p>
  * <p>
- * The DriverAdapterCPDS also provides {@code PreparedStatement} pooling which is not generally available in jdbc2
- * {@code ConnectionPoolDataSource} implementation, but is addressed within the JDBC 3 specification. The
- * {@code PreparedStatement} pool in DriverAdapterCPDS has been in the DBCP package for some time, but it has not
+ * The DriverAdapterCPDS also provides {@link PreparedStatement} pooling which is not generally available in jdbc2
+ * {@link ConnectionPoolDataSource} implementation, but is addressed within the JDBC 3 specification. The
+ * {@link PreparedStatement} pool in DriverAdapterCPDS has been in the DBCP package for some time, but it has not
  * undergone extensive testing in the configuration used here. It should be considered experimental and can be toggled
  * with the poolPreparedStatements attribute.
  * </p>
@@ -548,7 +551,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Tests whether to toggle the pooling of {@code PreparedStatement}s
+     * Tests whether to toggle the pooling of {@link PreparedStatement}s
      *
      * @return value of poolPreparedStatements.
      */
@@ -747,7 +750,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Sets whether to toggle the pooling of {@code PreparedStatement}s
+     * Sets whether to toggle the pooling of {@link PreparedStatement}s
      *
      * @param poolPreparedStatements true to pool statements.
      * @throws IllegalStateException if {@link #getPooledConnection()} has been called

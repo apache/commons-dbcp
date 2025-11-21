@@ -30,6 +30,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.SwallowedExceptionLogger;
 import org.apache.commons.dbcp2.Utils;
@@ -41,7 +42,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>
- * A pooling {@code DataSource} appropriate for deployment within J2EE environment. There are many configuration
+ * A pooling {@link DataSource} appropriate for deployment within J2EE environment. There are many configuration
  * options, most of which are defined in the parent class. This datasource uses individual pools per user, and some
  * properties can be set specifically for a given user, if the deployment environment can support initialization of
  * mapped properties. So for example, a pool of admin or write-access Connections can be guaranteed a certain number of
@@ -645,7 +646,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Returns a {@code PerUserPoolDataSource} {@link Reference}.
+     * Returns a {@link PerUserPoolDataSource} {@link Reference}.
      */
     @Override
     public Reference getReference() throws NamingException {

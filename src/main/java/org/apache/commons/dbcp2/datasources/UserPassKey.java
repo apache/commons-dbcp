@@ -26,7 +26,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
  * Holds a user name and password pair. Serves as a poolable object key for the {@link KeyedObjectPool} backing a
  * {@link SharedPoolDataSource}. Two instances with the same user name are considered equal. This ensures that there
  * will be only one keyed pool for each user in the pool. The password is used (along with the user name) by the
- * {@code KeyedCPDSConnectionFactory} when creating new connections.
+ * {@link KeyedCPDSConnectionFactory} when creating new connections.
  * </p>
  *
  * <p>

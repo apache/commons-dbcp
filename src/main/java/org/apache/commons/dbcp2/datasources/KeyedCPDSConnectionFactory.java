@@ -45,7 +45,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
 
     /**
-     * Creates a new {@code KeyedPoolableConnectionFactory}.
+     * Creates a new {@code KeyedCPDSConnectionFactory}.
      *
      * @param cpds
      *            the ConnectionPoolDataSource from which to obtain PooledConnections

@@ -433,14 +433,14 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * If my underlying {@link Connection} is not a {@code DelegatingConnection}, returns it, otherwise recursively
+     * If my underlying {@link Connection} is not a {@link DelegatingConnection}, returns it, otherwise recursively
      * invokes this method on my delegate.
      * <p>
-     * Hence this method will return the first delegate that is not a {@code DelegatingConnection}, or {@code null} when
-     * no non-{@code DelegatingConnection} delegate can be found by traversing this chain.
+     * Hence this method will return the first delegate that is not a {@link DelegatingConnection}, or {@code null} when
+     * no non-{@link DelegatingConnection} delegate can be found by traversing this chain.
      * </p>
      * <p>
-     * This method is useful when you may have nested {@code DelegatingConnection}s, and you want to make sure to obtain
+     * This method is useful when you may have nested {@link DelegatingConnection}s, and you want to make sure to obtain
      * a "genuine" {@link Connection}.
      * </p>
      *
@@ -549,11 +549,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Handles the given {@code SQLException}.
+     * Handles the given {@link SQLException}.
      *
      * @param <T> The throwable type.
      * @param e   The SQLException
-     * @return the given {@code SQLException}
+     * @return the given {@link SQLException}
      * @since 2.7.0
      */
     protected <T extends Throwable> T handleExceptionNoThrow(final T e) {

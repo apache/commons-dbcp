@@ -25,6 +25,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -34,7 +35,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
  * <p>
- * A pooling {@code DataSource} appropriate for deployment within J2EE environment. There are many configuration
+ * A pooling {@link DataSource} appropriate for deployment within J2EE environment. There are many configuration
  * options, most of which are defined in the parent class. All users (based on user name) share a single maximum number
  * of Connections in this data source.
  * </p>

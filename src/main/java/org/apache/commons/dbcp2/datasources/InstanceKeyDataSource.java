@@ -41,30 +41,30 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * <p>
- * The base class for {@code SharedPoolDataSource} and {@code PerUserPoolDataSource}. Many of the
+ * The base class for {@link SharedPoolDataSource} and {@link PerUserPoolDataSource}. Many of the
  * configuration properties are shared and defined here. This class is declared public in order to allow particular
  * usage with commons-beanutils; do not make direct use of it outside of <em>commons-dbcp2</em>.
  * </p>
  *
  * <p>
- * A J2EE container will normally provide some method of initializing the {@code DataSource} whose attributes are
+ * A J2EE container will normally provide some method of initializing the {@link DataSource} whose attributes are
  * presented as bean getters/setters and then deploying it via JNDI. It is then available to an application as a source
  * of pooled logical connections to the database. The pool needs a source of physical connections. This source is in the
- * form of a {@code ConnectionPoolDataSource} that can be specified via the {@link #setDataSourceName(String)} used
+ * form of a {@link ConnectionPoolDataSource} that can be specified via the {@link #setDataSourceName(String)} used
  * to lookup the source via JNDI.
  * </p>
  *
  * <p>
  * Although normally used within a JNDI environment, A DataSource can be instantiated and initialized as any bean. In
- * this case the {@code ConnectionPoolDataSource} will likely be instantiated in a similar manner. This class
+ * this case the {@link ConnectionPoolDataSource} will likely be instantiated in a similar manner. This class
  * allows the physical source of connections to be attached directly to this pool using the
  * {@link #setConnectionPoolDataSource(ConnectionPoolDataSource)} method.
  * </p>
  *
  * <p>
  * The dbcp package contains an adapter, {@link org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS}, that can be
- * used to allow the use of {@code DataSource}'s based on this class with JDBC driver implementations that do not
- * supply a {@code ConnectionPoolDataSource}, but still provide a {@link java.sql.Driver} implementation.
+ * used to allow the use of {@link DataSource}'s based on this class with JDBC driver implementations that do not
+ * supply a {@link ConnectionPoolDataSource}, but still provide a {@link java.sql.Driver} implementation.
  * </p>
  *
  * <p>

@@ -99,7 +99,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     private Duration defaultQueryTimeoutDuration;
 
     /**
-     * Creates a new {@code PoolableConnectionFactory}.
+     * Creates a new {@link PoolableConnectionFactory}.
      *
      * @param connFactory
      *            the {@link ConnectionFactory} from which to obtain base {@link Connection}s

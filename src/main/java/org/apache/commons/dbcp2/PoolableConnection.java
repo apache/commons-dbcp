@@ -394,11 +394,11 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Validates the connection, using the following algorithm:
      * <ol>
      * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
-     * thrown a fatal disconnection exception, a {@code SQLException} is thrown.</li>
+     * thrown a fatal disconnection exception, a {@link SQLException} is thrown.</li>
      * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
-     * returns {@code false}, {@code SQLException} is thrown; otherwise, this method returns successfully.</li>
-     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
-     * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
+     * returns {@code false}, {@link SQLException} is thrown; otherwise, this method returns successfully.</li>
+     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@link ResultSet} contains at
+     * least one row, this method returns successfully. If not, {@link SQLException} is thrown.</li>
      * </ol>
      *
      * @param sql
@@ -448,11 +448,11 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * Validates the connection, using the following algorithm:
      * <ol>
      * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
-     * thrown a fatal disconnection exception, a {@code SQLException} is thrown.</li>
+     * thrown a fatal disconnection exception, a {@link SQLException} is thrown.</li>
      * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
-     * returns {@code false}, {@code SQLException} is thrown; otherwise, this method returns successfully.</li>
-     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@code ResultSet} contains at
-     * least one row, this method returns successfully. If not, {@code SQLException} is thrown.</li>
+     * returns {@code false}, {@link SQLException} is thrown; otherwise, this method returns successfully.</li>
+     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@link ResultSet} contains at
+     * least one row, this method returns successfully. If not, {@link SQLException} is thrown.</li>
      * </ol>
      *
      * @param sql

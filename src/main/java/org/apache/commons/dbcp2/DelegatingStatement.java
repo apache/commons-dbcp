@@ -451,14 +451,14 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * If my underlying {@link Statement} is not a {@code DelegatingStatement}, returns it, otherwise recursively
+     * If my underlying {@link Statement} is not a {@link DelegatingStatement}, returns it, otherwise recursively
      * invokes this method on my delegate.
      * <p>
-     * Hence this method will return the first delegate that is not a {@code DelegatingStatement} or {@code null} when
-     * no non-{@code DelegatingStatement} delegate can be found by traversing this chain.
+     * Hence this method will return the first delegate that is not a {@link DelegatingStatement} or {@code null} when
+     * no non-{@link DelegatingStatement} delegate can be found by traversing this chain.
      * </p>
      * <p>
-     * This method is useful when you may have nested {@code DelegatingStatement}s, and you want to make sure to obtain
+     * This method is useful when you may have nested {@link DelegatingStatement}s, and you want to make sure to obtain
      * a "genuine" {@link Statement}.
      * </p>
      *

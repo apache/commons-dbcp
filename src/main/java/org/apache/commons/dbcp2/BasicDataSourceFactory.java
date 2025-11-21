@@ -49,12 +49,12 @@ import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * JNDI object factory that creates an instance of {@code BasicDataSource} that has been configured based on the
- * {@code RefAddr} values of the specified {@code Reference}, which must match the names and data types of the
- * {@code BasicDataSource} bean properties with the following exceptions:
+ * JNDI object factory that creates an instance of {@link BasicDataSource} that has been configured based on the
+ * {@link RefAddr} values of the specified {@code Reference}, which must match the names and data types of the
+ * {@link BasicDataSource} bean properties with the following exceptions:
  * <ul>
  * <li>{@code connectionInitSqls} must be passed to this factory as a single String using semicolon to delimit the
- * statements whereas {@code BasicDataSource} requires a collection of Strings.</li>
+ * statements whereas {@link BasicDataSource} requires a collection of Strings.</li>
  * </ul>
  *
  * @since 2.0
@@ -383,7 +383,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Creates and return a new {@code BasicDataSource} instance. If no instance can be created, return
+     * Creates and return a new {@link BasicDataSource} instance. If no instance can be created, return
      * {@code null} instead.
      *
      * @param obj

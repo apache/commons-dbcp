@@ -25,6 +25,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -44,7 +45,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     private UserPassKey userPassKey;
 
     /**
-     * Creates a new {@code PoolableConnectionFactory}.
+     * Creates a new {@link PoolableConnectionFactory}.
      *
      * @param cpds
      *            the ConnectionPoolDataSource from which to obtain PooledConnection's
