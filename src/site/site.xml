@@ -15,39 +15,43 @@
    See the License for the specific language governing permissions and
    limitations under the License.
   -->
-<project name="Apache Commons DBCP"
-  xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 https://maven.apache.org/xsd/decoration-1.8.0.xsd">
-  <bannerRight>
-    <name>Commons DBCP</name>
-    <src>/images/dbcp-logo-white.png</src>
-    <href>/index.html</href>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 http://maven.apache.org/xsd/site-2.0.0.xsd"
+  name="Apache Commons DBCP">
+  <bannerRight name="Commons DBCP" href="/index.html">
+    <image src="/images/logo.png"/>
   </bannerRight>
-    <body>
-      <menu name="Commons&#xA0;DBCP">
-        <item name="Overview"               href="/index.html" />
-        <item name="Configuration"          href="/configuration.html" />
-        <item name="Javadoc"                href="/apidocs/index.html"/>
-        <item name="Javadoc 2.x Archive"    href="https://javadoc.io/doc/org.apache.commons/commons-dbcp2/latest/index.html"/>
-        <item name="Javadoc 1.x Archive"    href="https://javadoc.io/doc/commons-dbcp/commons-dbcp/latest/index.html"/>
-        <item name="Developers&#xA0;Guide"  href="/guide/index.html" collapse="true">
+  <body>
+    <menu name="Commons DBCP">
+      <!-- Start: For all components. -->
+      <item name="About" href="/index.html" />
+      <item name="Asking Questions" href="/mail-lists.html" />
+      <item name="Release History" href="/changes.html" />
+      <item name="Issue Tracking" href="/issue-management.html" />
+      <item name="Dependency Management" href="/dependency-info.html" />
+      <item name="Sources" href="/scm.html" />
+      <item name="Security" href="/security.html" />
+      <item name="License" href="https://www.apache.org/licenses/LICENSE-2.0" />
+      <item name="Code of Conduct" href="https://www.apache.org/foundation/policies/conduct.html" />
+      <item name="Download" href="/download_dbcp.cgi" />
+      <item name="Javadoc">
+        <item name="Javadoc Current" href="/apidocs/index.html" />
+        <item name="Javadoc 2.x Archive" href="https://javadoc.io/doc/org.apache.commons/commons-dbcp2/latest/index.html" />
+        <!-- Specify 1.4 otherwise 20030821.193421 is used  -->
+        <item name="Javadoc 1.x Archive" href="https://javadoc.io/doc/commons-dbcp/commons-dbcp/1.4/index.html" />
+      </item>
+      <!-- End: For all components. -->
+      <item name="Configuration"          href="/configuration.html" />
+      <item name="Developers&#xA0;Guide"  href="/guide/index.html" collapse="true">
         <item name="JNDI&#xA0;Howto"        href="/guide/jndi-howto.html"/>
         <item name="Class&#xA0;Diagrams"    href="/guide/classdiagrams.html"/>
         <item name="Sequence&#xA0;Diagrams" href="/guide/sequencediagrams.html"/>
-        </item>
-        <item name="Examples"               href="https://gitbox.apache.org/repos/asf?p=commons-dbcp.git;a=tree;f=doc;hb=HEAD"/>
-        <item name="Downloads"              href="/download_dbcp.cgi"/>
-        <item name="Wiki"                   href="https://wiki.apache.org/commons/DBCP"/>
-      </menu>
-  
-      <menu name="Development">
-        <item name="History"                href="/changes.html"/>
         <item name="Building"               href="/building.html"/>
-        <item name="Mailing&#xA0;Lists"     href="/mail-lists.html"/>
-        <item name="Issue&#xA0;Tracking"    href="/issue-tracking.html"/>
-        <item name="Team"                   href="/team.html"/>
-        <item name="Source&#xA0;Repository" href="/scm.html"/>
-      </menu>
-
-    </body>
-</project>
+      </item>
+      <item name="Examples"               href="https://gitbox.apache.org/repos/asf?p=commons-dbcp.git;a=tree;f=doc;hb=HEAD"/>
+      <item name="Downloads"              href="/download_dbcp.cgi"/>
+      <item name="Wiki"                   href="https://wiki.apache.org/commons/DBCP"/>
+    </menu>
+  </body>
+</site>

@@ -26,15 +26,11 @@
   <body>
 
     <section name="BasicDataSource">
-      <center>
         <img src="../images/uml/BasicDataSource.gif" alt="Basic data source"/>
-      </center>
     </section>
 
     <section name="ConnectionFactory">
-      <center>
         <img src="../images/uml/ConnectionFactory.gif" alt="Connection factory" />
-      </center>
     </section>
 
   </body>
