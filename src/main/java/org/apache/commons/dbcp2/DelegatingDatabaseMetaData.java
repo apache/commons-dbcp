@@ -581,10 +581,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return true;
-        }
-        if (iface.isAssignableFrom(databaseMetaData.getClass())) {
+        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(databaseMetaData.getClass())) {
             return true;
         }
         return databaseMetaData.isWrapperFor(iface);
