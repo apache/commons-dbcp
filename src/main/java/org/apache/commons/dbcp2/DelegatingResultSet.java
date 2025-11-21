@@ -1122,10 +1122,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return true;
-        }
-        if (iface.isAssignableFrom(resultSet.getClass())) {
+        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(resultSet.getClass())) {
             return true;
         }
         return resultSet.isWrapperFor(iface);
