@@ -169,18 +169,18 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
             // get the real connection and XAResource from the connection
             connection = xaConnection.getConnection();
             xaResource = xaConnection.getXAResource();
-        } catch (SQLException sqle) {
+        } catch (final SQLException sqle) {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException ignored) {
+                } catch (final SQLException ignored) {
                     // Ignore
                 }
             }
             if (xaConnection != null) {
                 try {
                     xaConnection.close();
-                } catch (SQLException ignored) {
+                } catch (final SQLException ignored) {
                     // Ignore
                 }
             }
