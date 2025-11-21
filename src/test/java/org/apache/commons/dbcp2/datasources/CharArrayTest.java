@@ -35,6 +35,13 @@ class CharArrayTest {
     }
 
     @Test
+    void testClear() {
+        assertNull(new CharArray((String) null).clear().get());
+        assertArrayEquals("".toCharArray(), new CharArray("").clear().get());
+        assertArrayEquals("\0\0\0".toCharArray(), new CharArray("foo").clear().get());
+    }
+
+    @Test
     void testEquals() {
         assertEquals(new CharArray("foo"), new CharArray("foo"));
         assertNotEquals(new CharArray("foo"), new CharArray("bar"));
@@ -43,13 +50,6 @@ class CharArrayTest {
     @Test
     void testGet() {
         assertArrayEquals("foo".toCharArray(), new CharArray("foo").get());
-    }
-
-    @Test
-    void testClear() {
-        assertNull(new CharArray((String) null).clear().get());
-        assertArrayEquals("".toCharArray(), new CharArray("").clear().get());
-        assertArrayEquals("\0\0\0".toCharArray(), new CharArray("foo").clear().get());
     }
 
     @Test
