@@ -129,6 +129,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <!-- Versions >= 2.3.232 requires Java 11 -->
       <version>2.2.224</version>
       <scope>test</scope>
     </dependency>
