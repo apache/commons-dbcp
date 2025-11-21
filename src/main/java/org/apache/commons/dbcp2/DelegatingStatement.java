@@ -681,10 +681,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass())) {
-            return true;
-        }
-        if (iface.isAssignableFrom(statement.getClass())) {
+        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(statement.getClass())) {
             return true;
         }
         return statement.isWrapperFor(iface);
