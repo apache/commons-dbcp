@@ -39,9 +39,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
         implements KeyedPooledObjectFactory<UserPassKey, PooledConnectionAndInfo>, ConnectionEventListener, PooledConnectionManager {
 
-    private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but "
-            + "I have no record of the underlying PooledConnection.";
-
+    private static final String NO_KEY_MESSAGE = "close() was called on a Connection, but I have no record of the underlying PooledConnection.";
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
 
     /**
