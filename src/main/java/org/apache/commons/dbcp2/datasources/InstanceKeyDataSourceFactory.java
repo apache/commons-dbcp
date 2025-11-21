@@ -117,7 +117,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
-    private Boolean booleanValueOf(RefAddr refAddr) {
+    private Boolean booleanValueOf(final RefAddr refAddr) {
         return Boolean.valueOf(toString(refAddr));
     }
 
@@ -341,11 +341,11 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
-    private Duration toDurationFromMillis(RefAddr refAddr) {
+    private Duration toDurationFromMillis(final RefAddr refAddr) {
         return Duration.ofMillis(parseLong(refAddr));
     }
 
-    private Duration toDurationFromSeconds(RefAddr refAddr) {
+    private Duration toDurationFromSeconds(final RefAddr refAddr) {
         return Duration.ofSeconds(parseInt(refAddr));
     }
 
