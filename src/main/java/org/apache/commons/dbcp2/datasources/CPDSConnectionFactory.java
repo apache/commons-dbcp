@@ -196,7 +196,6 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
             // Calling close before invalidate ensures that invalidate will not trigger a create attempt
             pool.invalidateObject(pci); // Destroy instance and update pool counters
         } catch (final Exception ex) {
-            ex.printStackTrace();
             throw new SQLException("Error invalidating connection", ex);
         }
     }
