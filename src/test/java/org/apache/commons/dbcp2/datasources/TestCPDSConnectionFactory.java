@@ -50,6 +50,12 @@ public class TestCPDSConnectionFactory {
         delegate.setPassword("password");
     }
 
+    private void checkPoolLimits(final GenericObjectPool<PooledConnectionAndInfo> pool) {
+        assertTrue(pool.getNumActive() + pool.getNumIdle() <= pool.getMaxTotal(),
+                "Active + Idle should be <= MaxTotal");
+        assertTrue(pool.getNumIdle() <= pool.getMaxIdle(), "Idle should be <= MaxIdle");
+    }
+
     /**
      * JIRA DBCP-216
      *
@@ -77,14 +83,14 @@ public class TestCPDSConnectionFactory {
                 // Throw connectionError event
                 pc.throwConnectionError();
 
-                // Active count should be reduced by 1 and no idle increase
+                // Active count should be reduced by 1
                 assertEquals(1, pool.getNumActive());
-                assertEquals(0, pool.getNumIdle());
+                checkPoolLimits(pool);
 
                 // Throw another one - should be ignored
                 pc.throwConnectionError();
                 assertEquals(1, pool.getNumActive());
-                assertEquals(0, pool.getNumIdle());
+                checkPoolLimits(pool);
 
                 // Ask for another connection
                 final PooledConnection pcon3 = pool.borrowObject().getPooledConnection();

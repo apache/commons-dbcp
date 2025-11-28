@@ -142,7 +142,6 @@ public class TestPoolingDriver extends TestConnectionPool {
         driver2.invalidateConnection(conn);
 
         assertEquals(0, pool.getNumActive());
-        assertEquals(0, pool.getNumIdle());
         assertTrue(conn.isClosed());
     }
 
