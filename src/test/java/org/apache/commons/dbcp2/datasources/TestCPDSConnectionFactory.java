@@ -40,6 +40,12 @@ public class TestCPDSConnectionFactory {
 
     protected ConnectionPoolDataSourceProxy cpds;
 
+    private void checkPoolLimits(final GenericObjectPool<PooledConnectionAndInfo> pool) {
+        assertTrue(pool.getNumActive() + pool.getNumIdle() <= pool.getMaxTotal(),
+                "Active + Idle should be <= MaxTotal");
+        assertTrue(pool.getNumIdle() <= pool.getMaxIdle(), "Idle should be <= MaxIdle");
+    }
+
     @BeforeEach
     public void setUp() throws Exception {
         cpds = new ConnectionPoolDataSourceProxy(new DriverAdapterCPDS());
@@ -48,12 +54,6 @@ public class TestCPDSConnectionFactory {
         delegate.setUrl("jdbc:apache:commons:testdriver");
         delegate.setUser("userName");
         delegate.setPassword("password");
-    }
-
-    private void checkPoolLimits(final GenericObjectPool<PooledConnectionAndInfo> pool) {
-        assertTrue(pool.getNumActive() + pool.getNumIdle() <= pool.getMaxTotal(),
-                "Active + Idle should be <= MaxTotal");
-        assertTrue(pool.getNumIdle() <= pool.getMaxIdle(), "Idle should be <= MaxIdle");
     }
 
     /**

@@ -62,6 +62,36 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     protected BasicDataSource ds;
 
+    /**
+     * Cycle through idle connections and verify that they are all valid.
+     * Assumes we are the only client of the pool.
+     *
+     * @throws Exception if an error occurs
+     */
+    private void checkIdleValid() throws Exception {
+        final Set<Connection> idleConnections = new HashSet<>(); // idle connections
+        // Get idle connections by repeatedly making connection requests up to NumIdle
+        for (int i = 0; i < ds.getNumIdle(); i++) {
+            final Connection conn = ds.getConnection();
+            idleConnections.add(conn);
+        }
+        // Cycle through idle connections and verify that they are valid
+        for (final Connection conn : idleConnections) {
+            assertTrue(conn.isValid(2), "Connection should be valid");
+            conn.close();
+        }
+    }
+
+    /**
+     * Check that maxTotal and maxIdle are not exceeded
+     *
+     * @throws Exception
+     */
+    private void checkLimits() throws Exception {
+        assertTrue(ds.getNumActive() + ds.getNumIdle() <= getMaxTotal(), "Total connections exceed maxTotal");
+        assertTrue(ds.getNumIdle() <= ds.getMaxIdle(), "Idle connections exceed maxIdle");
+    }
+
     protected BasicDataSource createDataSource() throws Exception {
         return new BasicDataSource();
     }
@@ -566,36 +596,6 @@ public class TestBasicDataSource extends TestConnectionPool {
         ds.close();
         assertNull(StackMessageLog.popMessage());
         assertNull(ds.getRegisteredJmxName());
-    }
-
-    /**
-     * Cycle through idle connections and verify that they are all valid.
-     * Assumes we are the only client of the pool.
-     *
-     * @throws Exception if an error occurs
-     */
-    private void checkIdleValid() throws Exception {
-        final Set<Connection> idleConnections = new HashSet<>(); // idle connections
-        // Get idle connections by repeatedly making connection requests up to NumIdle
-        for (int i = 0; i < ds.getNumIdle(); i++) {
-            final Connection conn = ds.getConnection();
-            idleConnections.add(conn);
-        }
-        // Cycle through idle connections and verify that they are valid
-        for (final Connection conn : idleConnections) {
-            assertTrue(conn.isValid(2), "Connection should be valid");
-            conn.close();
-        }
-    }
-
-    /**
-     * Check that maxTotal and maxIdle are not exceeded
-     *
-     * @throws Exception
-     */
-    private void checkLimits() throws Exception {
-        assertTrue(ds.getNumActive() + ds.getNumIdle() <= getMaxTotal(), "Total connections exceed maxTotal");
-        assertTrue(ds.getNumIdle() <= ds.getMaxIdle(), "Idle connections exceed maxIdle");
     }
 
 
