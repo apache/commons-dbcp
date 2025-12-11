@@ -1,3 +1,99 @@
+Apache Commons DBCP 2.14.0 Release Notes
+----------------------------------------
+
+The Apache Commons DBCP team is pleased to announce the release of Apache Commons DBCP 2.14.0.
+
+Apache Commons DBCP software implements Database Connection Pooling.
+
+This is a minor release, including bug fixes and enhancements.
+
+Changes
+-------
+New features:
+*            Add org.apache.commons.dbcp2.datasources.PooledConnectionManager.setPassword(char[]). Thanks to Gary Gregory.
+
+Fixed Bugs
+----------
+* DBCP-597:  Validation query not timing out on connections managed by SharedPoolDataSource. Thanks to Xiaotian Bai, Raju Gupta, Gary Gregory.
+* DBCP-597:  Validation query not timing out on connections managed by PerUserPoolDataSource. Thanks to Gary Gregory.
+* DBCP-597:  KeyedCPDSConnectionFactory.validateObject(UserPassKey, PooledObject) ignores timeouts less than 1 second when there is no validation query. Thanks to Gary Gregory.
+*            Modernize tests to use JUnit 5 features. Thanks to Gary Gregory.
+*            Javadoc is missing its Overview page. Thanks to Gary Gregory.
+*            Deprecate org.apache.commons.dbcp2.Jdbc41Bridge.Jdbc41Bridge(), constructor will be private in the next major release. Thanks to Gary Gregory.
+*            Deprecate org.apache.commons.dbcp2.Constants.Constants(), constructor will be private in the next major release. Thanks to Gary Gregory.
+*            Fix Javadoc warnings on Java 17. Thanks to Gary Gregory.
+*            Fix Javadoc warnings on Java 21. Thanks to Gary Gregory.
+*            Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80). Thanks to Gary Gregory.
+*            XAException thrown by LocalXAResource now all include a message. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "isSharedConnection" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.managed.ManagedConnection] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "closed" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.PooledConnectionImpl] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "closed" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.DelegatingStatement] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "cacheState" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.DelegatingConnection] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Operation on the "fatalSqlExceptionThrown" shared variable in "PoolableConnection" class is not atomic [org.apache.commons.dbcp2.PoolableConnection] AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "clearStatementPoolOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolingConnection] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "maxTotal" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.SharedPoolDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultBlockWhenExhausted" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultLifo" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultMaxIdle" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultMaxTotal" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultMinIdle" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultNumTestsPerEvictionRun" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTestOnBorrow" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTestOnCreate" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTestOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTestWhileIdle" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTransactionIsolation" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackAfterValidation" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.datasources.InstanceKeyDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "loginTimeout" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS] At DriverAdapterCPDS.java:[line 644] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "maxIdle" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS] At DriverAdapterCPDS.java:[line 664] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "maxPreparedStatements" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS] At DriverAdapterCPDS.java:[line 673] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "numTestsPerEvictionRun" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS] At DriverAdapterCPDS.java:[line 722] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "poolPreparedStatements" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS] At DriverAdapterCPDS.java:[line 757] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "autoCommitOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory-] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "cacheState" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "clearStatementPoolOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "defaultTransactionIsolation" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "autoCommitOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "fastFailValidation" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "maxOpenPreparedStatements" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "poolStatements" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.PoolableConnectionFactory] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "autoCommitOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbc-p2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "cacheState" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "clearStatementPoolOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "autoCommitOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "fastFailValidation" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "logExpiredConnections" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "registerConnectionMBean" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
+*            Fix a potential resource leak if an SQLException occurs during an attempt to obtain an XAConnection. Thanks to Coverity Scan.
+*            Minor optimisations to the processing of the "connectionProperties" string. Thanks to Coverity Scan.
+
+Changes
+-------
+*            Update tests and CPDSConnectionFactory#invalidate to accomodate changed behavior in the fix for POOL-424.
+*            Bump org.apache.commons:commons-parent from 78 to 93 #521, #537, #538. Thanks to Gary Gregory.
+*            Bump org.apache.commons:commons-pool2 from 2.12.0 to 2.13.0 #474. Thanks to Gary Gregory.
+*            Port site from Doxia 1 to 2. Thanks to Gary Gregory.
+*            Bump commons-logging:commons-logging from 1.3.4 to 1.3.5. Thanks to Gary Gregory.
+*            Bump org.slf4j:slf4j-simple from 2.0.16 to 2.0.17 #481. Thanks to Gary Gregory.
+*            Bump org.apache.commons:commons-lang3 from 3.17.0 to 3.20.0 #506. Thanks to Gary Gregory, Dependabot.
+
+Removed
+-------
+*            Removed internal constructors and methods from the package-private class CPDSConnectionFactory; this is binary compatible. Thanks to Gary Gregory.
+*            Removed an internal constructor and methods from the package-private class KeyedCPDSConnectionFactory; this is binary compatible. Thanks to Gary Gregory.
+
+The list of changes is here: https://commons.apache.org/proper/commons-dbcp/changes.html
+
+For complete information on Apache Commons DBCP, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons DBCP website:
+
+https://commons.apache.org/proper/commons-dbcp/
+
+Download page: https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi
+
+-----------------------------------------------------------------------------
 Apache Commons DBCP 2.13.0 Release Notes
 ----------------------------------------
 

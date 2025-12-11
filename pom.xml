@@ -28,11 +28,9 @@
   <artifactId>commons-dbcp2</artifactId>
   <version>2.14.0-SNAPSHOT</version>
   <name>Apache Commons DBCP</name>
-
   <inceptionYear>2001</inceptionYear>
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
   <url>https://commons.apache.org/proper/commons-dbcp/</url>
-
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
@@ -41,11 +39,9 @@
       <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-dbcp/</url>
     </site>
   </distributionManagement>
-
   <issueManagement>
     <url>https://issues.apache.org/jira/browse/DBCP</url>
   </issueManagement>
-
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-dbcp.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-dbcp.git</developerConnection>
@@ -56,7 +52,6 @@
     <system>GitHub</system>
     <url>https://github.com/apache/commons-dbcp/actions</url>
   </ciManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -161,7 +156,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -172,16 +166,13 @@
     <commons.componentid>dbcp</commons.componentid>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
-    
     <commons.release.version>2.14.0</commons.release.version>
     <commons.release.next>2.14.1</commons.release.next>
     <commons.release.desc>for JDBC 4.2 on Java 8</commons.release.desc>
     <commons.release.hash>sha512</commons.release.hash>
-    
     <commons.release.2.version>2.4.0</commons.release.2.version>
     <commons.release.2.desc>for JDBC 4.1 on Java 7</commons.release.2.desc>
     <commons.release.2.hash>sha256</commons.release.2.hash>
-    
     <commons.site.path>dbcp</commons.site.path>
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-dbcp</commons.scmPubUrl>
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
