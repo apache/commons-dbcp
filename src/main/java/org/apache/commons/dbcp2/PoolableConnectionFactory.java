@@ -425,16 +425,6 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
                 for (final String sql : sqls) {
                     statement.execute(Objects.requireNonNull(sql, "null connectionInitSqls element"));
                 }
-            } catch (SQLException sqle) {
-                /*
-                 * Need to close the connection here as the reference to it will be lost once the SQLEXception is
-                 * thrown.
-                 *
-                 * Cast to AutoCloseable to avoid calling the deprecated method. The cast can be removed once the
-                 * deprecated method has been removed.s
-                 */
-                Utils.closeQuietly((AutoCloseable) conn);
-                throw sqle;
             }
         }
     }
