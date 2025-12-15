@@ -461,10 +461,10 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Gets the default value for {@link
-     * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * GenericObjectPool#getSoftMinEvictableIdleDuration()} for each per user pool.
      *
      * @return The default value for {@link
-     *         GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     *         GenericObjectPool#getSoftMinEvictableIdleDuration()} for each per user pool.
      * @since 2.10.0
      */
     public Duration getDefaultSoftMinEvictableIdleDuration() {
@@ -958,11 +958,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
 
     /**
      * Sets the default value for {@link
-     * GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     * GenericObjectPool#getSoftMinEvictableIdleDuration()} for each per user pool.
      *
      * @param defaultSoftMinEvictableIdleDuration
      *            The default value for {@link
-     *            GenericObjectPool#getSoftMinEvictableIdleTimeMillis()} for each per user pool.
+     *            GenericObjectPool#getSoftMinEvictableIdleDuration()} for each per user pool.
      * @since 2.10.0
      */
     public void setDefaultSoftMinEvictableIdle(final Duration defaultSoftMinEvictableIdleDuration) {
