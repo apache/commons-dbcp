@@ -57,7 +57,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
      * @since 2.10.0
      */
-    public KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
+    KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation) {
         super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation);
     }

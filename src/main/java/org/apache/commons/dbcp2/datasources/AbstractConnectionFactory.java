@@ -54,7 +54,8 @@ class AbstractConnectionFactory {
     protected final String validationQuery;
     protected final Duration validationQueryTimeoutDuration;
 
-    public AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation) {
+    AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
+            final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutDuration = validationQueryTimeoutDuration;

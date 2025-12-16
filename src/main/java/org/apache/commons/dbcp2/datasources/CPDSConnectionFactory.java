@@ -63,7 +63,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
      *            The password to use to create connections
      * @since 2.10.0
      */
-    public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
+    CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
             final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation, final String userName,
             final char[] userPassword) {
         super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation);
