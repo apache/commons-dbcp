@@ -54,9 +54,9 @@ interface PooledConnectionManager {
      * @param password password used when authenticating to the database.
      * @since 2.14.0
      */
-     default void setPassword(final char[] password) {
-         setPassword(String.copyValueOf(password));
-     }
+    default void setPassword(final char[] password) {
+        setPassword(String.copyValueOf(password));
+    }
 
     /**
      * Sets the database password used when creating connections.

@@ -291,7 +291,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public Statement createStatement(final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
+            final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             return init(new DelegatingStatement(this,
@@ -719,7 +719,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
+            final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             return init(new DelegatingCallableStatement(this,
@@ -771,7 +771,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @SuppressWarnings("resource") // Caller is responsible for closing the resource.
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
-        final int resultSetHoldability) throws SQLException {
+            final int resultSetHoldability) throws SQLException {
         checkOpen();
         try {
             return init(new DelegatingPreparedStatement(this,

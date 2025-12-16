@@ -39,7 +39,7 @@ import org.apache.commons.pool2.PooledObject;
 public final class Utils {
 
     private static final ResourceBundle messages = ResourceBundle
-        .getBundle(Utils.class.getPackage().getName() + ".LocalStrings");
+            .getBundle(Utils.class.getPackage().getName() + ".LocalStrings");
 
     /**
      * Whether the security manager is enabled.
