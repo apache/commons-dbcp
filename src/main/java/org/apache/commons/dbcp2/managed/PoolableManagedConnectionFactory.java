@@ -28,6 +28,7 @@ import org.apache.commons.dbcp2.PStmtKey;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingConnection;
+import org.apache.commons.dbcp2.Utils;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -80,7 +81,14 @@ public class PoolableManagedConnectionFactory extends PoolableConnectionFactory 
         if (conn == null) {
             throw new IllegalStateException("Connection factory returned null from createConnection");
         }
-        initializeConnection(conn);
+        try {
+            initializeConnection(conn);
+        } catch (final SQLException e) {
+            // Make sure the connection is closed
+            Utils.closeQuietly((AutoCloseable) conn);
+            // Rethrow original exception so it is visible to caller
+            throw e;
+        }
         if (getPoolStatements()) {
             conn = new PoolingConnection(conn);
             final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
