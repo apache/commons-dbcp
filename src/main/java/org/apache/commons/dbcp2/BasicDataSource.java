@@ -1094,6 +1094,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the maximum permitted duration of a connection. A value of zero or less indicates an
      * infinite lifetime.
+     *
      * @return the maximum permitted duration of a connection.
      * @since 2.10.0
      */
@@ -1104,6 +1105,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
      * infinite lifetime.
+     *
      * @deprecated Use {@link #getMaxConnDuration()}.
      */
     @Override
@@ -1331,6 +1333,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>
      * The default value is 300 seconds.
      * </p>
+     *
      * @deprecated Use {@link #getRemoveAbandonedTimeoutDuration()}.
      */
     @Deprecated
@@ -1356,6 +1359,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>
      * The default value is 300 seconds.
      * </p>
+     *
      * @return Timeout before an abandoned connection can be removed.
      * @since 2.10.0
      */

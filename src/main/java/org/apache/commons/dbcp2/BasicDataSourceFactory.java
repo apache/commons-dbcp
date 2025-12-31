@@ -127,6 +127,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * a state that will be excluded from being treated as a fatal disconnection. The expected format is a series
      * of SQL State codes separated by commas, with no spaces between them (e.g., "08003,08004").
      * </p>
+     *
      * @since 2.13.0
      */
     private static final String PROP_DISCONNECTION_IGNORE_SQL_CODES = "disconnectionIgnoreSqlCodes";

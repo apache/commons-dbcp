@@ -837,6 +837,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * <p>
      * The class must implement {@link EvictionPolicy}.
      * </p>
+     *
      * @param userName
      *            The user name key.
      * @param value

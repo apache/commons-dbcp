@@ -64,6 +64,7 @@ public final class Utils {
      * <li>JZ0C0 (Sybase disconnect error)</li>
      * <li>JZ0C1 (Sybase disconnect error)</li>
      * </ul>
+     *
      * @deprecated Use {@link #getDisconnectionSqlCodes()}.
      */
     @Deprecated
@@ -202,6 +203,7 @@ public final class Utils {
      * <li>JZ0C0 (Sybase disconnect error)</li>
      * <li>JZ0C1 (Sybase disconnect error)</li>
      * </ul>
+     *
      * @return A copy SQL codes of fatal connection errors.
      * @since 2.10.0
      */
