@@ -64,9 +64,10 @@ The <action> type attribute can be add,update,fix,remove.
   <body>
     <release version="2.14.1" date="YYYY-MM-DD" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
+      <action type="fix" dev="ggregory" due-to="Gary Gregory, Mark Thomas">Handle SQLException on connection initialization with SQL statements (#540).</action> 
       <!-- ADD -->
       <!-- UPDATE -->
-      <action type="fix" dev="ggregory" due-to="Gary Gregory, Mark Thomas">Handle SQLException on connection initialization with SQL statements (#540).</action> 
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 94.</action>
     </release>
     <release version="2.14.0" date="2025-12-11" description="This is a minor release, including bug fixes and enhancements.">
       <!-- FIX -->
