@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
  * Demonstrates problem indicated in BZ #38073.
  */
 public class TestJndi {
+
     /**
      * The subcontext where the data source is bound.
      */

@@ -25,6 +25,7 @@ import java.sql.SQLException;
  * @since 2.0
  */
 public interface ConnectionFactory {
+
     /**
      * Create a new {@link Connection} in an implementation specific fashion.
      *

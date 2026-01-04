@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Test;
 public abstract class TestConnectionPool {
 
     protected final class PoolTest implements Runnable {
+
         /**
          * The number of milliseconds to hold onto a database connection
          */

@@ -603,6 +603,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     public void setConnectionInitSql(final Collection<String> connectionInitSqls) {
         this.connectionInitSqls = connectionInitSqls;
     }
+
     /**
      * Sets the default "auto commit" setting for borrowed {@link Connection}s
      *

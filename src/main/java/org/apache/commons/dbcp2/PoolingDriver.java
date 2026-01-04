@@ -219,6 +219,7 @@ public class PoolingDriver implements Driver {
     public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
         return EMPTY_DRIVER_PROPERTY_INFO_ARRAY;
     }
+
     /**
      * Invalidates the given connection.
      *
