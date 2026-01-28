@@ -442,8 +442,8 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         try {
             t1.join();
             t2.join();
-        } catch (final InterruptedException ie) {
-            // Ignore
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
