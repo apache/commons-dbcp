@@ -46,9 +46,10 @@ public class PoolingConnection extends DelegatingConnection<Connection>
         implements KeyedPooledObjectFactory<PStmtKey, DelegatingPreparedStatement> {
 
     /**
-     * Statement types.
-     *
+     * Enumerates statement types.
+     * <p>
      * See subclasses of {@link Statement}.
+     * </p>
      *
      * @since 2.0 protected enum.
      * @since 2.4.0 public enum.
