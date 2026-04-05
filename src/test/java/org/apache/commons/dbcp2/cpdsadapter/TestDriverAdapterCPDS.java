@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.cpdsadapter;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,7 +48,6 @@ import org.apache.commons.dbcp2.PoolablePreparedStatement;
 import org.apache.commons.dbcp2.TestUtils;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -200,7 +200,7 @@ public class TestDriverAdapterCPDS {
 
             for (int i = 0; i < threads.length; i++) {
                 threads[i].join();
-                Assertions.assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
+                assertFalse(threads[i].isFailed(), "Thread " + i + " has failed");
             }
         }
     }

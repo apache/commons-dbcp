@@ -42,7 +42,6 @@ import org.apache.commons.dbcp2.TesterDriver;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -189,8 +188,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         try (Connection con = newConnection()) {
-            Assertions.assertNotEquals(c[0], con);
-            Assertions.assertEquals(((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
+            assertNotEquals(c[0], con);
+            assertEquals(((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
             for (final Connection element : c) {
                 element.close();
@@ -213,8 +212,8 @@ public class TestManagedDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         try (Connection con = newConnection()) {
-            Assertions.assertNotEquals(c[0], con);
-            Assertions.assertEquals(((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
+            assertNotEquals(c[0], con);
+            assertEquals(((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                     ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
             for (final Connection element : c) {
                 element.close();

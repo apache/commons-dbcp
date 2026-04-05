@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,7 +39,6 @@ import javax.transaction.Transaction;
 
 import org.apache.commons.dbcp2.DelegatingConnection;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.ThrowingSupplier;
@@ -196,12 +196,12 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
             conn[i] = newConnection();
             for (int j = 0; j < i; j++) {
                 // two connections should be distinct instances
-                Assertions.assertNotSame(conn[j], conn[i]);
+                assertNotSame(conn[j], conn[i]);
                 // neither should they should be equivalent even though they are
                 // sharing the same underlying connection
-                Assertions.assertNotEquals(conn[j], conn[i]);
+                assertNotEquals(conn[j], conn[i]);
                 // Check underlying connection is the same
-                Assertions.assertEquals(((DelegatingConnection<?>) conn[j]).getInnermostDelegateInternal(),
+                assertEquals(((DelegatingConnection<?>) conn[j]).getInnermostDelegateInternal(),
                         ((DelegatingConnection<?>) conn[i]).getInnermostDelegateInternal());
             }
         }
@@ -260,7 +260,7 @@ public class TestManagedDataSourceInTx extends TestManagedDataSource {
                 assertNotNull(conn2);
 
                 // shared connections should not have the same hash code
-                Assertions.assertNotEquals(conn1.hashCode(), conn2.hashCode());
+                assertNotEquals(conn1.hashCode(), conn2.hashCode());
             }
         }
     }

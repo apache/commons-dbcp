@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -30,7 +31,6 @@ import javax.management.OperationsException;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,21 +58,21 @@ public class TestPoolableConnection {
 
     @Test
     void testClosingWrappedInDelegate() throws Exception {
-        Assertions.assertEquals(0, pool.getNumActive());
+        assertEquals(0, pool.getNumActive());
 
         final Connection conn = pool.borrowObject();
         final DelegatingConnection<Connection> outer = new DelegatingConnection<>(conn);
 
-        Assertions.assertFalse(outer.isClosed());
-        Assertions.assertFalse(conn.isClosed());
-        Assertions.assertEquals(1, pool.getNumActive());
+        assertFalse(outer.isClosed());
+        assertFalse(conn.isClosed());
+        assertEquals(1, pool.getNumActive());
 
         outer.close();
 
-        Assertions.assertTrue(outer.isClosed());
-        Assertions.assertTrue(conn.isClosed());
-        Assertions.assertEquals(0, pool.getNumActive());
-        Assertions.assertEquals(1, pool.getNumIdle());
+        assertTrue(outer.isClosed());
+        assertTrue(conn.isClosed());
+        assertEquals(0, pool.getNumActive());
+        assertEquals(1, pool.getNumIdle());
     }
 
     @Test

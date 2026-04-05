@@ -33,7 +33,6 @@ import javax.transaction.Status;
 
 import org.apache.commons.dbcp2.Utils;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -177,7 +176,7 @@ public class TestConnectionWithNarayana {
                     conn.close();
                 }
             }
-            Assertions.assertEquals(0, mds.getNumActive());
+            assertEquals(0, mds.getNumActive());
         }
     }
 
@@ -198,6 +197,6 @@ public class TestConnectionWithNarayana {
         } finally {
             mds.getTransactionManager().rollback();
         }
-        Assertions.assertEquals(0, mds.getNumActive());
+        assertEquals(0, mds.getNumActive());
     }
 }

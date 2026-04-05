@@ -17,11 +17,13 @@
 
 package org.apache.commons.dbcp2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.sql.SQLTransientException;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TestSQLExceptionList {
@@ -31,15 +33,15 @@ public class TestSQLExceptionList {
         final SQLTransientException cause = new SQLTransientException();
         final List<SQLTransientException> list = Collections.singletonList(cause);
         final SQLExceptionList sqlExceptionList = new SQLExceptionList(list);
-        Assertions.assertEquals(cause, sqlExceptionList.getCause());
-        Assertions.assertEquals(list, sqlExceptionList.getCauseList());
+        assertEquals(cause, sqlExceptionList.getCause());
+        assertEquals(list, sqlExceptionList.getCauseList());
         sqlExceptionList.printStackTrace();
     }
 
     @Test
     void testNullCause() {
         final SQLExceptionList sqlExceptionList = new SQLExceptionList(null);
-        Assertions.assertNull(sqlExceptionList.getCause());
-        Assertions.assertNull(sqlExceptionList.getCauseList());
+        assertNull(sqlExceptionList.getCause());
+        assertNull(sqlExceptionList.getCauseList());
     }
 }

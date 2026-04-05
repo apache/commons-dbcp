@@ -35,7 +35,6 @@ import javax.sql.DataSource;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -93,7 +92,7 @@ public class TestPStmtPooling {
         ps.addBatch();
         ps.close();
         conn.close();
-        Assertions.assertFalse(inner.isClosed());
+        assertFalse(inner.isClosed());
         ds.close();
     }
 
@@ -186,7 +185,7 @@ public class TestPStmtPooling {
         final Connection conn2 = ds.getConnection();
         final PreparedStatement stmt2 = conn2.prepareStatement("select 1 from dual");
         // Confirm stmt2 now wraps the same PPS wrapped by stmt1
-        Assertions.assertSame(pps1, getPoolablePreparedStatement(stmt2));
+        assertSame(pps1, getPoolablePreparedStatement(stmt2));
         stmt1.close(); // close should not cascade to PPS that stmt1 used to wrap
         assertFalse(stmt2.isClosed());
         stmt2.executeQuery(); // wrapped PPS needs to work here - pre DBCP-414 fix this throws

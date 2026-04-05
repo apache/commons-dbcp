@@ -20,6 +20,7 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -48,7 +49,6 @@ import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -738,7 +738,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             }
             assertEquals(0, ds.getNumIdle());
             final String message = StackMessageLog.popMessage();
-            Assertions.assertNotNull(message);
+            assertNotNull(message);
             assertTrue(message.indexOf("exceeds the maximum permitted value") > 0);
         } finally {
             StackMessageLog.clear();
@@ -789,7 +789,7 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (BasicDataSource ds = BasicDataSourceFactory.createDataSource(properties)) {
             final boolean original = ds.getConnectionPool().getLogAbandoned();
             ds.setLogAbandoned(!original);
-            Assertions.assertNotEquals(original, ds.getConnectionPool().getLogAbandoned());
+            assertNotEquals(original, ds.getConnectionPool().getLogAbandoned());
         }
     }
 
@@ -861,7 +861,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             ds.close();
             // Exception must have been swallowed by the pool - verify it is logged
             final String message = StackMessageLog.popMessage();
-            Assertions.assertNotNull(message);
+            assertNotNull(message);
             assertTrue(message.indexOf("bang") > 0);
         } catch (final SQLException ex) {
             assertTrue(ex.getMessage().indexOf("Cannot close") > 0);
@@ -885,7 +885,7 @@ public class TestBasicDataSource extends TestConnectionPool {
             StackMessageLog.clear();
             ds.close();
             final String message = StackMessageLog.popMessage();
-            Assertions.assertNotNull(message);
+            assertNotNull(message);
             assertTrue(message.indexOf("boom") > 0);
         } catch (final IllegalStateException ex) {
             assertTrue(ex.getMessage().indexOf("boom") > 0); // RTE is not wrapped by BDS#close

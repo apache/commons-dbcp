@@ -31,7 +31,6 @@ import java.util.Properties;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -191,8 +190,8 @@ public class TestPoolingDataSource extends TestConnectionPool {
         // Grab a new connection - should get c[0]'s closed connection
         // so should be delegate-equivalent
         final Connection con = newConnection();
-        Assertions.assertNotEquals(c[0], con);
-        Assertions.assertEquals(
+        assertNotEquals(c[0], con);
+        assertEquals(
                 ((DelegatingConnection<?>) c[0]).getInnermostDelegateInternal(),
                 ((DelegatingConnection<?>) con).getInnermostDelegateInternal());
         for (final Connection element : c) {

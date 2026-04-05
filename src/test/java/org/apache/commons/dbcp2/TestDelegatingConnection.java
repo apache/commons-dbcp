@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,7 +32,6 @@ import java.sql.Savepoint;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -287,8 +287,8 @@ public class TestDelegatingConnection {
         testerResultSet.setSqlExceptionOnClose(true);
         delegatingConnection.addTrace(testerResultSet);
         final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
-        Assertions.assertInstanceOf(SQLExceptionList.class, e);
-        Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
+        assertInstanceOf(SQLExceptionList.class, e);
+        assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test
@@ -298,8 +298,8 @@ public class TestDelegatingConnection {
         delegatingConnection.addTrace(testerStatement);
         delegatingConnection.addTrace(testerResultSet);
         final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
-        Assertions.assertInstanceOf(SQLExceptionList.class, e);
-        Assertions.assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
+        assertInstanceOf(SQLExceptionList.class, e);
+        assertEquals(2, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test
@@ -307,8 +307,8 @@ public class TestDelegatingConnection {
         testerStatement.setSqlExceptionOnClose(true);
         delegatingConnection.addTrace(testerStatement);
         final SQLException e = assertThrows(SQLException.class, delegatingConnection::passivate);
-        Assertions.assertInstanceOf(SQLExceptionList.class, e);
-        Assertions.assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
+        assertInstanceOf(SQLExceptionList.class, e);
+        assertEquals(1, ((SQLExceptionList) e).getCauseList().size());
     }
 
     @Test

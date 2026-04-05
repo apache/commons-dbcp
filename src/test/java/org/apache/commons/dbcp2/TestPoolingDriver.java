@@ -41,7 +41,6 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -103,7 +102,7 @@ public class TestPoolingDriver extends TestConnectionPool {
         final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connectionPool);
         final DataSource ds = new PoolingDataSource<>(connectionPool);
-        Assertions.assertNotNull(ds);
+        assertNotNull(ds);
     }
 
     @Test
