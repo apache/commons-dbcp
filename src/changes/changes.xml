@@ -67,7 +67,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory, Mark Thomas">Handle SQLException on connection initialization with SQL statements (#540).</action> 
       <!-- ADD -->
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 98.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 99.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-pool2 from 2.13.0 to 2.13.1.</action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">Bump commons-logging:commons-logging from 1.3.5 to 1.3.6.</action>
     </release>
