@@ -150,7 +150,7 @@ public class TestPStmtKey {
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, int[])}.
+     * Tests {@link StmtKey#PStmtKey(String, String, String, int[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
@@ -165,7 +165,7 @@ public class TestPStmtKey {
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, int[])}.
+     * Tests {@link PStmtKey#PStmtKey(String, String, String, int[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
@@ -177,7 +177,7 @@ public class TestPStmtKey {
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, String[])}.
+     * Tests {@link PStmtKey#PStmtKey(String, String, String, String[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
@@ -189,7 +189,7 @@ public class TestPStmtKey {
     }
 
     /**
-     * Tests {@link org.apache.commons.dbcp2.PStmtKey#PStmtKey(String, String, String, String[])}.
+     * Tests {@link PStmtKey#PStmtKey(String, String, String, String[])}.
      *
      * See https://issues.apache.org/jira/browse/DBCP-494
      */
