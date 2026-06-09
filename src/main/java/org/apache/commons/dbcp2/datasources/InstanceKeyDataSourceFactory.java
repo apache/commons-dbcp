@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.naming.Context;
@@ -74,22 +73,16 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     /**
      * Deserializes the provided byte array to create an object.
      *
-     * @param data
-     *            Data to deserialize to create the configuration parameter.
-     *
+     * @param <T>  The type of the object to be deserialized.
+     * @param data Data to deserialize to create the configuration parameter.
      * @return The Object created by deserializing the data.
-     * @throws ClassNotFoundException
-     *            If a class cannot be found during the deserialization of a configuration parameter.
-     * @throws IOException
-     *            If an I/O error occurs during the deserialization of a configuration parameter.
+     * @throws ClassNotFoundException If a class cannot be found during the deserialization of a configuration parameter.
+     * @throws IOException            If an I/O error occurs during the deserialization of a configuration parameter.
      */
-    protected static final Object deserialize(final byte[] data) throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new ByteArrayInputStream(data));
-            return in.readObject();
-        } finally {
-            Utils.closeQuietly(in);
+    @SuppressWarnings("unchecked") // call site must ensure that the type is correct
+    protected static final <T> T deserialize(final byte[] data) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data))) {
+            return (T) in.readObject();
         }
     }
 
@@ -216,7 +209,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         refAddr = ref.get("jndiEnvironment");
         if (hasContent(refAddr)) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            ikds.setJndiEnvironment((Properties) deserialize(serialized));
+            ikds.setJndiEnvironment(deserialize(serialized));
         }
 
         refAddr = ref.get("loginTimeout");

@@ -18,7 +18,6 @@ package org.apache.commons.dbcp2.datasources;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Map;
 
 import javax.naming.RefAddr;
 import javax.naming.Reference;
@@ -32,13 +31,12 @@ public class PerUserPoolDataSourceFactory extends InstanceKeyDataSourceFactory {
     private static final String PER_USER_POOL_CLASSNAME = PerUserPoolDataSource.class.getName();
 
     /**
-     * Constructs a new instance.
+     * Constructs a new instance.Ωø∂
      */
     public PerUserPoolDataSourceFactory() {
         // empty
     }
 
-    @SuppressWarnings("unchecked") // Avoid warnings on deserialization
     @Override
     protected InstanceKeyDataSource getNewInstance(final Reference ref) throws IOException, ClassNotFoundException {
         final PerUserPoolDataSource pupds = new PerUserPoolDataSource();
@@ -60,37 +58,37 @@ public class PerUserPoolDataSourceFactory extends InstanceKeyDataSourceFactory {
         refAddr = ref.get("perUserDefaultAutoCommit");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserDefaultAutoCommit((Map<String, Boolean>) deserialize(serialized));
+            pupds.setPerUserDefaultAutoCommit(deserialize(serialized));
         }
 
         refAddr = ref.get("perUserDefaultTransactionIsolation");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserDefaultTransactionIsolation((Map<String, Integer>) deserialize(serialized));
+            pupds.setPerUserDefaultTransactionIsolation(deserialize(serialized));
         }
 
         refAddr = ref.get("perUserMaxTotal");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserMaxTotal((Map<String, Integer>) deserialize(serialized));
+            pupds.setPerUserMaxTotal(deserialize(serialized));
         }
 
         refAddr = ref.get("perUserMaxIdle");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserMaxIdle((Map<String, Integer>) deserialize(serialized));
+            pupds.setPerUserMaxIdle(deserialize(serialized));
         }
 
         refAddr = ref.get("perUserMaxWaitMillis");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserMaxWaitMillis((Map<String, Long>) deserialize(serialized));
+            pupds.setPerUserMaxWaitMillis(deserialize(serialized));
         }
 
         refAddr = ref.get("perUserDefaultReadOnly");
         if (refAddr != null && refAddr.getContent() != null) {
             final byte[] serialized = (byte[]) refAddr.getContent();
-            pupds.setPerUserDefaultReadOnly((Map<String, Boolean>) deserialize(serialized));
+            pupds.setPerUserDefaultReadOnly(deserialize(serialized));
         }
         return pupds;
     }
