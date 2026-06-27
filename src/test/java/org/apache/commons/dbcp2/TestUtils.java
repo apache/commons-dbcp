@@ -92,11 +92,11 @@ public class TestUtils {
 
     @Test
     void testIsDisconnectionSqlCode() {
-        assertTrue(Utils.isDisconnectionSqlCode("57P01"), "57P01 should be recognised as a disconnection SQL code.");
-        assertTrue(Utils.isDisconnectionSqlCode("01002"), "01002 should be recognised as a disconnection SQL code.");
-        assertTrue(Utils.isDisconnectionSqlCode("JZ0C0"), "JZ0C0 should be recognised as a disconnection SQL code.");
+        assertTrue(Utils.isDisconnectionSqlCode("57P01"), "57P01 should be recognized as a disconnection SQL code.");
+        assertTrue(Utils.isDisconnectionSqlCode("01002"), "01002 should be recognized as a disconnection SQL code.");
+        assertTrue(Utils.isDisconnectionSqlCode("JZ0C0"), "JZ0C0 should be recognized as a disconnection SQL code.");
 
-        assertFalse(Utils.isDisconnectionSqlCode("INVALID"), "INVALID should not be recognised as a disconnection SQL code.");
-        assertFalse(Utils.isDisconnectionSqlCode("00000"), "00000 should not be recognised as a disconnection SQL code.");
+        assertFalse(Utils.isDisconnectionSqlCode("INVALID"), "INVALID should not be recognized as a disconnection SQL code.");
+        assertFalse(Utils.isDisconnectionSqlCode("00000"), "00000 should not be recognized as a disconnection SQL code.");
     }
 }
