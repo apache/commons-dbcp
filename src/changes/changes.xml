@@ -1496,7 +1496,7 @@ The <action> type attribute can be add,update,fix,remove.
         DriverManagerConnectionFactory: blank user name and password handling.
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-113" due-to="Rohan Lenard">
-        Broken behaviour for BasicDataSource.setMaxActive(0).
+        Broken behavior for BasicDataSource.setMaxActive(0).
       </action>
       <action dev="dirkv " type="fix" issue="DBCP-36" due-to="Jonathan Whitall">
         BasicDataSource does not work with getConnection(String, String).

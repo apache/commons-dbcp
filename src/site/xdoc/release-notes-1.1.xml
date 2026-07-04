@@ -103,7 +103,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21132">21132</a></td><td>2003-08-11</td><td>Cri</td><td>DUPL</td><td>Broken pipe despite validation query set</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21182">21182</a></td><td>2003-08-21</td><td>Nor</td><td>INVA</td><td>[dbcp] removing a webapp does not force connections closed</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21229">21229</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>ConnectionFactory throws SQLException but implementations do</td></tr>
-<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21273">21273</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Memory-leak like behaviour in DBCP due to warnings chained t</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21273">21273</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Memory-leak like behavior in DBCP due to warnings chained t</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21418">21418</a></td><td>2003-08-11</td><td>Min</td><td>FIXE</td><td>Example code</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21453">21453</a></td><td>2003-08-11</td><td>Maj</td><td>INVA</td><td>NullPointerException  in DBCP when used for client-server ap</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21458">21458</a></td><td>2003-08-11</td><td>Nor</td><td>FIXE</td><td>Statements and connections don't implement equals()/hashCode</td></tr>
