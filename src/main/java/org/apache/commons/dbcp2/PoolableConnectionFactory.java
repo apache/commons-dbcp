@@ -779,7 +779,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      *            the {@link ObjectPool} in which to pool those {@link Connection}s
      */
     public synchronized void setPool(final ObjectPool<PoolableConnection> pool) {
-        if (null != this.pool && pool != this.pool) {
+        if (this.pool != null && pool != this.pool) {
             Utils.closeQuietly(this.pool);
         }
         this.pool = pool;

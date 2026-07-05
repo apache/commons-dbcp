@@ -110,7 +110,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @Override
     public synchronized void close() throws SQLException {
         try {
-            if (null != stmtPool) {
+            if (stmtPool != null) {
                 final KeyedObjectPool<PStmtKey, DelegatingPreparedStatement> oldPool = stmtPool;
                 stmtPool = null;
                 try {

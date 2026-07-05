@@ -112,7 +112,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      */
     protected void checkOpen() throws SQLException {
         if (closed) {
-            if (null != connection) {
+            if (connection != null) {
                 String label;
                 try {
                     label = connection.toString();

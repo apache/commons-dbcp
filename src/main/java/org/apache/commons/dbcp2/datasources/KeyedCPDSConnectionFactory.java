@@ -117,7 +117,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     @Override
     public void connectionErrorOccurred(final ConnectionEvent event) {
         final PooledConnection pc = (PooledConnection) event.getSource();
-        if (null != event.getSQLException()) {
+        if (event.getSQLException() != null) {
             System.err.println("CLOSING DOWN CONNECTION DUE TO INTERNAL ERROR (" + event.getSQLException() + ")");
         }
         pc.removeConnectionEventListener(this);
