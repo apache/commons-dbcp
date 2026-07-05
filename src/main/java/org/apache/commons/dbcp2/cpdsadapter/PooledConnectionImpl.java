@@ -422,7 +422,7 @@ final class PooledConnectionImpl
     @SuppressWarnings("resource")
     @Override
     public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws SQLException {
-        if (null == key) {
+        if (key == null) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {

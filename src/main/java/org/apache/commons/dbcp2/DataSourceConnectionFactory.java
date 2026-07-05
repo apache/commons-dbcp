@@ -79,7 +79,7 @@ public class DataSourceConnectionFactory implements ConnectionFactory {
 
     @Override
     public Connection createConnection() throws SQLException {
-        if (null == userName && null == userPassword) {
+        if (userName == null && userPassword == null) {
             return dataSource.getConnection();
         }
         return dataSource.getConnection(userName, Utils.toString(userPassword));

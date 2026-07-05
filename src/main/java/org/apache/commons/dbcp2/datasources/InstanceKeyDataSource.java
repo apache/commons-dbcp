@@ -251,7 +251,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
 
         // Password on PooledConnectionAndInfo does not match
-        if (!(null == userPassword ? null == info.getPassword() : userPassword.equals(info.getPassword()))) {
+        if (!(userPassword == null ? info.getPassword() == null : userPassword.equals(info.getPassword()))) {
             try { // See if password has changed by attempting connection
                 testCPDS(userName, userPassword);
             } catch (final SQLException ex) {

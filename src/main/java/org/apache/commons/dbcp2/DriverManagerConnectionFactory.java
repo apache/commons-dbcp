@@ -113,7 +113,7 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     @Override
     public Connection createConnection() throws SQLException {
-        if (null == properties) {
+        if (properties == null) {
             if (userName == null && userPassword == null) {
                 return DriverManager.getConnection(connectionUri);
             }

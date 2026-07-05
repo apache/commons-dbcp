@@ -360,7 +360,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     @SuppressWarnings("resource")
     @Override
     public PooledObject<DelegatingPreparedStatement> makeObject(final PStmtKey key) throws SQLException {
-        if (null == key) {
+        if (key == null) {
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
@@ -480,7 +480,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *             Wraps an underlying exception.
      */
     private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
-        if (null == stmtPool) {
+        if (stmtPool == null) {
             throw new SQLException("Statement pool is null - closed or invalid PoolingConnection.");
         }
         try {
