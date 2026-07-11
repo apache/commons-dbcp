@@ -46,8 +46,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     /**
      * Constructs a new instance for the given delegating connection and database meta data.
      *
-     * @param connection       the delegating connection
-     * @param databaseMetaData the database meta data
+     * @param connection       The delegating connection
+     * @param databaseMetaData The database meta data
      */
     public DelegatingDatabaseMetaData(final DelegatingConnection<?> connection, final DatabaseMetaData databaseMetaData) {
         this.connection = Objects.requireNonNull(connection, "connection");
@@ -554,7 +554,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     /**
      * Delegates to the connection's {@link DelegatingConnection#handleException(SQLException)}.
      *
-     * @param e the exception to throw or delegate.
+     * @param e The exception to throw or delegate.
      * @throws SQLException the exception to throw.
      */
     protected void handleException(final SQLException e) throws SQLException {

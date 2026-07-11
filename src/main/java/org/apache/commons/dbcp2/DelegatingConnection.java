@@ -79,7 +79,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Creates a wrapper for the Connection which traces this Connection in the AbandonedObjectPool.
      *
-     * @param connection the {@link Connection} to delegate all calls to, may be null (see {@link ManagedConnection}).
+     * @param connection The {@link Connection} to delegate all calls to, may be null (see {@link ManagedConnection}).
      */
     public DelegatingConnection(final C connection) {
         this.connection = connection;
@@ -541,7 +541,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Handles the given exception by throwing it.
      *
-     * @param e the exception to throw.
+     * @param e The exception to throw.
      * @throws SQLException the exception to throw.
      */
     protected void handleException(final SQLException e) throws SQLException {
@@ -906,7 +906,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Sets the raw internal closed state.
      *
-     * @param closed the raw internal closed state.
+     * @param closed The raw internal closed state.
      */
     protected void setClosedInternal(final boolean closed) {
         this.closed = closed;

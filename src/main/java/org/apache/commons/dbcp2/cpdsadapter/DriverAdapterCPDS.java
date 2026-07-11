@@ -670,7 +670,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Sets the maximum number of prepared statements.
      *
-     * @param maxPreparedStatements the new maximum number of prepared statements, &lt;= 0 means no limit.
+     * @param maxPreparedStatements The new maximum number of prepared statements, &lt;= 0 means no limit.
      */
     public void setMaxPreparedStatements(final int maxPreparedStatements) {
         this.maxPreparedStatements = maxPreparedStatements;

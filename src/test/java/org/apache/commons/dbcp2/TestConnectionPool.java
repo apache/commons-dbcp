@@ -345,7 +345,7 @@ public abstract class TestConnectionPool {
      * @param expectError     whether or not an error is expected
      * @param loopOnce        whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
      * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
-     * @param numThreads      the number of threads
+     * @param numThreads      The number of threads
      * @param duration        duration in ms of test
      * @throws Exception
      */

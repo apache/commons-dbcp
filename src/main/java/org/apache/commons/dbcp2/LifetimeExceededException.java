@@ -36,7 +36,7 @@ final class LifetimeExceededException extends SQLException {
     /**
      * Constructs a new instance with the given message.
      *
-     * @param reason a description of the exception
+     * @param reason A description of the exception
      */
     LifetimeExceededException(final String reason) {
         super(reason);

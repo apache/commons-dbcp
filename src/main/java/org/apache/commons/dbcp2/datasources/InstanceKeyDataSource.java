@@ -310,7 +310,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the pooled connection manager for the given key.
      *
-     * @param upkey the key.
+     * @param upkey The key.
      * @return The pooled connection manager for the given key.
      */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
@@ -1309,7 +1309,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Appends this instance's fields to a string builder.
      *
-     * @param builder the target string builder.
+     * @param builder The target string builder.
      */
     protected void toStringFields(final StringBuilder builder) {
         builder.append("getConnectionCalled=");

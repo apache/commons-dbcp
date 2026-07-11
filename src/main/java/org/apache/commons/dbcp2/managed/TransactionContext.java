@@ -46,9 +46,9 @@ public class TransactionContext {
     /**
      * Provided for backwards compatibility
      *
-     * @param transactionRegistry the TransactionRegistry used to obtain the XAResource for the
+     * @param transactionRegistry The TransactionRegistry used to obtain the XAResource for the
      * shared connection
-     * @param transaction the transaction
+     * @param transaction The transaction
      */
     public TransactionContext(final TransactionRegistry transactionRegistry, final Transaction transaction) {
         this (transactionRegistry, transaction, null);

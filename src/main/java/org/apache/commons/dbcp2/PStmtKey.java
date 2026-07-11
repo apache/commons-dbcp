@@ -195,7 +195,7 @@ public class PStmtKey {
      *
      * @param sql The SQL statement.
      * @param catalog The catalog.
-     * @param resultSetType a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
+     * @param resultSetType A result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
      *        {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
      * @param resultSetConcurrency A concurrency type; one of {@link ResultSet#CONCUR_READ_ONLY} or
      *        {@link ResultSet#CONCUR_UPDATABLE}
@@ -213,7 +213,7 @@ public class PStmtKey {
      *
      * @param sql The SQL statement.
      * @param catalog The catalog.
-     * @param resultSetType a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
+     * @param resultSetType A result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
      *        {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or {@link ResultSet#TYPE_SCROLL_SENSITIVE}
      * @param resultSetConcurrency A concurrency type; one of {@link ResultSet#CONCUR_READ_ONLY} or
      *        {@link ResultSet#CONCUR_UPDATABLE}.
@@ -337,7 +337,7 @@ public class PStmtKey {
      * @param sql The SQL statement.
      * @param catalog The catalog.
      * @param schema The schema
-     * @param resultSetType a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
+     * @param resultSetType A result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
      *        {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
      * @param resultSetConcurrency A concurrency type; one of {@link ResultSet#CONCUR_READ_ONLY} or
      *        {@link ResultSet#CONCUR_UPDATABLE}
@@ -356,7 +356,7 @@ public class PStmtKey {
      * @param sql The SQL statement.
      * @param catalog The catalog.
      * @param schema The schema.
-     * @param resultSetType a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
+     * @param resultSetType A result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
      *        {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or {@link ResultSet#TYPE_SCROLL_SENSITIVE}
      * @param resultSetConcurrency A concurrency type; one of {@link ResultSet#CONCUR_READ_ONLY} or
      *        {@link ResultSet#CONCUR_UPDATABLE}.

@@ -103,7 +103,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Validates the given factory.
      *
-     * @param connectionFactory the factory
+     * @param connectionFactory The factory
      * @throws SQLException Thrown by one of the factory methods while managing a temporary pooled object.
      */
     @SuppressWarnings("resource")
@@ -589,9 +589,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Creates an object pool used to provide pooling support for {@link Connection JDBC connections}.
      *
-     * @param factory         the object factory
-     * @param poolConfig      the object pool configuration
-     * @param abandonedConfig the abandoned objects configuration
+     * @param factory         The object factory
+     * @param poolConfig      The object pool configuration
+     * @param abandonedConfig The abandoned objects configuration
      * @return A non-null instance
      */
     protected GenericObjectPool<PoolableConnection> createObjectPool(final PoolableConnectionFactory factory,
@@ -1596,7 +1596,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Delegates in a null-safe manner to {@link String#isEmpty()}.
      *
-     * @param value the string to test, may be null.
+     * @param value The string to test, may be null.
      * @return boolean false if value is null, otherwise {@link String#isEmpty()}.
      */
     private boolean isEmpty(final String value) {
@@ -1640,7 +1640,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Logs the given message.
      *
-     * @param message the message to log.
+     * @param message The message to log.
      */
     protected void log(final String message) {
         if (logWriter != null) {
@@ -1652,7 +1652,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Logs the given message and throwable.
      *
      * @param message value to be log.
-     * @param throwable the throwable.
+     * @param throwable The throwable.
      * @since 2.7.0
      */
     protected void log(final String message, final Throwable throwable) {
@@ -1869,7 +1869,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * NOTE - The "user" and "password" properties will be added explicitly, so they do not need to be included here.
      * </p>
      *
-     * @param connectionProperties the connection properties used to create new connections
+     * @param connectionProperties The connection properties used to create new connections
      */
     public void setConnectionProperties(final String connectionProperties) {
         Objects.requireNonNull(connectionProperties, "connectionProperties");
@@ -1912,7 +1912,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param defaultCatalog the default catalog
+     * @param defaultCatalog The default catalog
      */
     public void setDefaultCatalog(final String defaultCatalog) {
         this.defaultCatalog = isEmpty(defaultCatalog) ? null : defaultCatalog;
@@ -1963,7 +1963,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param defaultSchema the default catalog
+     * @param defaultSchema The default catalog
      * @since 2.5.0
      */
     public void setDefaultSchema(final String defaultSchema) {
@@ -1978,7 +1978,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param defaultTransactionIsolation the default transaction isolation state
+     * @param defaultTransactionIsolation The default transaction isolation state
      * @see Connection#getTransactionIsolation
      */
     public void setDefaultTransactionIsolation(final int defaultTransactionIsolation) {
@@ -2066,7 +2066,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param driverClassLoader the class loader with which to load the JDBC driver
+     * @param driverClassLoader The class loader with which to load the JDBC driver
      */
     public synchronized void setDriverClassLoader(final ClassLoader driverClassLoader) {
         this.driverClassLoader = driverClassLoader;
@@ -2080,7 +2080,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param driverClassName the class name of the JDBC driver
+     * @param driverClassName The class name of the JDBC driver
      */
     public synchronized void setDriverClassName(final String driverClassName) {
         this.driverClassName = isEmpty(driverClassName) ? null : driverClassName;
@@ -2089,7 +2089,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the {code durationBetweenEvictionRuns} property.
      *
-     * @param timeBetweenEvictionRunsMillis the new time between evictor runs
+     * @param timeBetweenEvictionRunsMillis The new time between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.10.0
      */
@@ -2141,7 +2141,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param initialSize the number of connections created when the pool is initialized
+     * @param initialSize The number of connections created when the pool is initialized
      */
     public synchronized void setInitialSize(final int initialSize) {
         this.initialSize = initialSize;
@@ -2162,7 +2162,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the LIFO property. True means the pool behaves as a LIFO queue; false means FIFO.
      *
-     * @param lifo the new value for the LIFO property
+     * @param lifo The new value for the LIFO property
      */
     public synchronized void setLifo(final boolean lifo) {
         this.lifo = lifo;
@@ -2265,7 +2265,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * return to the pool.
      *
      * @see #getMaxIdle()
-     * @param maxIdle the new value for maxIdle
+     * @param maxIdle The new value for maxIdle
      */
     public synchronized void setMaxIdle(final int maxIdle) {
         this.maxIdle = maxIdle;
@@ -2280,7 +2280,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param maxOpenStatements the new maximum number of prepared statements
+     * @param maxOpenStatements The new maximum number of prepared statements
      */
     public synchronized void setMaxOpenPreparedStatements(final int maxOpenStatements) {
         this.maxOpenPreparedStatements = maxOpenStatements;
@@ -2290,7 +2290,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Sets the maximum total number of idle and borrows connections that can be active at the same time. Use a negative
      * value for no limit.
      *
-     * @param maxTotal the new value for maxTotal
+     * @param maxTotal The new value for maxTotal
      * @see #getMaxTotal()
      */
     public synchronized void setMaxTotal(final int maxTotal) {
@@ -2301,7 +2301,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the MaxWaitMillis property. Use -1 to make the pool wait indefinitely.
      *
-     * @param maxWaitDuration the new value for MaxWaitMillis
+     * @param maxWaitDuration The new value for MaxWaitMillis
      * @see #getMaxWaitDuration()
      * @since 2.10.0
      */
@@ -2313,7 +2313,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the MaxWaitMillis property. Use -1 to make the pool wait indefinitely.
      *
-     * @param maxWaitMillis the new value for MaxWaitMillis
+     * @param maxWaitMillis The new value for MaxWaitMillis
      * @see #getMaxWaitDuration()
      * @deprecated {@link #setMaxWait(Duration)}.
      */
@@ -2325,7 +2325,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the {code minEvictableIdleDuration} property.
      *
-     * @param minEvictableIdleDuration the minimum amount of time an object may sit idle in the pool
+     * @param minEvictableIdleDuration The minimum amount of time an object may sit idle in the pool
      * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
@@ -2337,7 +2337,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the {code minEvictableIdleDuration} property.
      *
-     * @param minEvictableIdleTimeMillis the minimum amount of time an object may sit idle in the pool
+     * @param minEvictableIdleTimeMillis The minimum amount of time an object may sit idle in the pool
      * @see #setMinEvictableIdle(Duration)
      * @deprecated Use {@link #setMinEvictableIdle(Duration)}.
      */
@@ -2351,7 +2351,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * available when the idle object evictor runs. The value of this property has no effect unless
      * {code durationBetweenEvictionRuns} has a positive value.
      *
-     * @param minIdle the new value for minIdle
+     * @param minIdle The new value for minIdle
      * @see GenericObjectPool#setMinIdle(int)
      */
     public synchronized void setMinIdle(final int minIdle) {
@@ -2362,7 +2362,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the value of the {code numTestsPerEvictionRun} property.
      *
-     * @param numTestsPerEvictionRun the new {code numTestsPerEvictionRun} value
+     * @param numTestsPerEvictionRun The new {code numTestsPerEvictionRun} value
      * @see #setNumTestsPerEvictionRun(int)
      */
     public synchronized void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
@@ -2550,7 +2550,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Sets the {code durationBetweenEvictionRuns} property.
      *
-     * @param timeBetweenEvictionRunsMillis the new time between evictor runs
+     * @param timeBetweenEvictionRunsMillis The new time between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #setDurationBetweenEvictionRuns(Duration)}.
      */
@@ -2567,7 +2567,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param connectionString the new value for the JDBC connection connectionString
+     * @param connectionString The new value for the JDBC connection connectionString
      */
     public synchronized void setUrl(final String connectionString) {
         this.connectionString = connectionString;
@@ -2581,7 +2581,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param userName the new value for the JDBC connection user name
+     * @param userName The new value for the JDBC connection user name
      */
     public void setUsername(final String userName) {
         this.userName = userName;
@@ -2595,7 +2595,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
      * </p>
      *
-     * @param validationQuery the new value for the validation query
+     * @param validationQuery The new value for the validation query
      */
     public void setValidationQuery(final String validationQuery) {
         this.validationQuery = isEmpty(validationQuery) ? null : validationQuery;

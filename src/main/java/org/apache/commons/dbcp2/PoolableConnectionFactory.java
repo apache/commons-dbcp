@@ -411,7 +411,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Initializes the given connection with the collection of SQL statements set in {@link #setConnectionInitSql(Collection)}.
      *
-     * @param conn the connection to initialize.
+     * @param conn The connection to initialize.
      * @throws SQLException if a database access error occurs or this method is called on a closed connection.
      * @see #setConnectionInitSql(Collection)
      */
@@ -576,7 +576,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Sets the cache state to propagate in {@link #makeObject()}.
      *
-     * @param cacheState the cache state to propagate.
+     * @param cacheState The cache state to propagate.
      */
     public void setCacheState(final boolean cacheState) {
         this.cacheState = cacheState;
@@ -627,7 +627,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Sets the query timeout Duration.
      *
-     * @param defaultQueryTimeoutDuration the query timeout Duration.
+     * @param defaultQueryTimeoutDuration The query timeout Duration.
      * @since 2.10.0
      */
     public void setDefaultQueryTimeout(final Duration defaultQueryTimeoutDuration) {
@@ -637,7 +637,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Sets the query timeout in seconds.
      *
-     * @param defaultQueryTimeoutSeconds the query timeout in seconds.
+     * @param defaultQueryTimeoutSeconds The query timeout in seconds.
      * @deprecated Use {@link #setDefaultQueryTimeout(Duration)}.
      */
     @Deprecated
@@ -841,7 +841,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Validates the given connection if it is open.
      *
-     * @param conn the connection to validate.
+     * @param conn The connection to validate.
      * @throws SQLException if the connection is closed or validate fails.
      */
     public void validateConnection(final PoolableConnection conn) throws SQLException {

@@ -566,7 +566,7 @@ final class PooledConnectionImpl
     /**
      * Creates or obtains a {@link PreparedStatement} from my pool.
      *
-     * @param sql the SQL statement.
+     * @param sql The SQL statement.
      * @return A {@link PoolablePreparedStatement}
      * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or
      *         the borrow failed.

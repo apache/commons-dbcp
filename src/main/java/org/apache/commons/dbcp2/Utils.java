@@ -153,7 +153,7 @@ public final class Utils {
     /**
      * Closes the AutoCloseable (which may be null).
      *
-     * @param autoCloseable an AutoCloseable, may be {@code null}
+     * @param autoCloseable An AutoCloseable, may be {@code null}
      * @since 2.6.0
      */
     public static void closeQuietly(final AutoCloseable autoCloseable) {
@@ -163,7 +163,7 @@ public final class Utils {
     /**
      * Closes the Connection (which may be null).
      *
-     * @param connection a Connection, may be {@code null}
+     * @param connection A Connection, may be {@code null}
      * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
      */
     @Deprecated
@@ -174,7 +174,7 @@ public final class Utils {
     /**
      * Closes the ResultSet (which may be null).
      *
-     * @param resultSet a ResultSet, may be {@code null}
+     * @param resultSet A ResultSet, may be {@code null}
      * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
      */
     @Deprecated
@@ -185,7 +185,7 @@ public final class Utils {
     /**
      * Closes the Statement (which may be null).
      *
-     * @param statement a Statement, may be {@code null}.
+     * @param statement A Statement, may be {@code null}.
      * @deprecated Use {@link #closeQuietly(AutoCloseable)}.
      */
     @Deprecated
@@ -240,7 +240,7 @@ public final class Utils {
     /**
      * Checks if the given SQL state corresponds to a fatal connection error.
      *
-     * @param sqlState the SQL state to check.
+     * @param sqlState The SQL state to check.
      * @return true if the SQL state is a fatal connection error, false otherwise.
      * @since 2.13.0
      */
