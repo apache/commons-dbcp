@@ -47,7 +47,7 @@ final class PooledConnectionAndInfo {
     /**
      * Gets the pooled connection.
      *
-     * @return the pooled connection.
+     * @return The pooled connection.
      */
     PooledConnection getPooledConnection() {
         return pooledConnection;

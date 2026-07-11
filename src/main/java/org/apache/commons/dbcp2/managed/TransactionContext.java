@@ -123,7 +123,7 @@ public class TransactionContext {
      * Gets the connection shared by all ManagedConnections in the transaction. Specifically, connection using the same
      * XAConnectionFactory from which the TransactionRegistry was obtained.
      *
-     * @return the shared connection for this transaction
+     * @return The shared connection for this transaction
      */
     public Connection getSharedConnection() {
         return sharedConnection;

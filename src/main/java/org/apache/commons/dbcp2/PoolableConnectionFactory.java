@@ -174,7 +174,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Gets how many connections were created in {@link #makeObject()}.
      *
-     * @return the connection count.
+     * @return The connection count.
      */
     protected AtomicLong getConnectionIndex() {
         return connectionIndex;
@@ -360,7 +360,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     /**
      * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
      *
-     * @return the connection pool
+     * @return The connection pool
      */
     public synchronized ObjectPool<PoolableConnection> getPool() {
         return pool;

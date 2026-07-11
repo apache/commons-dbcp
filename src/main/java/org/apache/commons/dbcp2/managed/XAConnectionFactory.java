@@ -48,7 +48,7 @@ public interface XAConnectionFactory extends ConnectionFactory {
      * Gets the TransactionRegistry for this connection factory which contains the XAResource for every connection
      * created by this factory.
      *
-     * @return the transaction registry for this connection factory
+     * @return The transaction registry for this connection factory
      */
     TransactionRegistry getTransactionRegistry();
 }

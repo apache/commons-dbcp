@@ -209,7 +209,7 @@ public class PoolingDriver implements Driver {
     /**
      * Gets the pool names.
      *
-     * @return the pool names.
+     * @return The pool names.
      */
     public synchronized String[] getPoolNames() {
         return pools.keySet().toArray(Utils.EMPTY_STRING_ARRAY);

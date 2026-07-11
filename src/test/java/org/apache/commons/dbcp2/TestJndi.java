@@ -75,7 +75,7 @@ public class TestJndi {
     /**
      * Gets (or creates if it does not exist) an InitialContext.
      *
-     * @return the InitialContext.
+     * @return The InitialContext.
      * @throws NamingException if the InitialContext cannot be retrieved
      *         or created.
      */

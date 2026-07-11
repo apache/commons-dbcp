@@ -273,7 +273,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * This method is useful when you may have nested {@link DelegatingResultSet}s, and you want to make sure to obtain a "genuine" {@link ResultSet}.
      * </p>
      *
-     * @return the innermost database meta data.
+     * @return The innermost database meta data.
      */
     public DatabaseMetaData getInnermostDelegate() {
         DatabaseMetaData m = databaseMetaData;

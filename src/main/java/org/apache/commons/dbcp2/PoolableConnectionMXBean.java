@@ -93,7 +93,7 @@ public interface PoolableConnectionMXBean {
     /**
      * Gets the value of the {@link Object#toString()} method via a bean getter, so it can be read as a property via JMX.
      *
-     * @return the value of the {@link Object#toString()}.
+     * @return The value of the {@link Object#toString()}.
      */
     String getToString();
 

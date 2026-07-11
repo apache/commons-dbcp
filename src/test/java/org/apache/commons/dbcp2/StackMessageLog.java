@@ -71,7 +71,7 @@ public class StackMessageLog extends SimpleLog {
     }
 
     /**
-     * @return the most recent log message, or null if the log is empty
+     * @return The most recent log message, or null if the log is empty
      */
     public static String popMessage() {
         LOCK.lock();

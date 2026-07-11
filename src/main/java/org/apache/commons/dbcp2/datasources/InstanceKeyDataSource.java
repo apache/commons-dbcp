@@ -311,7 +311,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Gets the pooled connection manager for the given key.
      *
      * @param upkey the key.
-     * @return the pooled connection manager for the given key.
+     * @return The pooled connection manager for the given key.
      */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
 
@@ -563,7 +563,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Gets the instance key.
      *
-     * @return the instance key.
+     * @return The instance key.
      */
     protected String getInstanceKey() {
         return instanceKey;

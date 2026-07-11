@@ -602,7 +602,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * a "genuine" {@link ResultSet}.
      * </p>
      *
-     * @return the innermost delegate.
+     * @return The innermost delegate.
      */
     @SuppressWarnings("resource")
     public ResultSet getInnermostDelegate() {

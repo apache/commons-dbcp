@@ -194,7 +194,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /**
      * Gets the backing object pool.
      *
-     * @return the backing object pool.
+     * @return The backing object pool.
      */
     protected ObjectPool<C> getPool() {
         return pool;

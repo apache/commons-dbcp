@@ -87,7 +87,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     /**
      * Gets the delegated connection, if allowed.
      *
-     * @return the internal connection, or null if access is not allowed.
+     * @return The internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */
     @Override
@@ -101,7 +101,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     /**
      * Gets the innermost connection, if allowed.
      *
-     * @return the innermost internal connection, or null if access is not allowed.
+     * @return The innermost internal connection, or null if access is not allowed.
      * @see #isAccessToUnderlyingConnectionAllowed()
      */
     @Override
@@ -115,7 +115,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     /**
      * Package-private for tests.
      *
-     * @return the PooledConnectionImpl.
+     * @return The PooledConnectionImpl.
      */
     PooledConnectionImpl getPooledConnectionImpl() {
         return pooledConnection;
@@ -229,7 +229,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      *
      * @param sql
      *            SQL statement to be prepared
-     * @return the prepared statement
+     * @return The prepared statement
      * @throws SQLException
      *             if this connection is closed or an error occurs in the wrapped connection.
      */

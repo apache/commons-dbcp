@@ -188,7 +188,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     /**
      * Gets the connection properties passed to the JDBC driver.
      *
-     * @return the JDBC connection properties used when creating connections.
+     * @return The JDBC connection properties used when creating connections.
      */
     public Properties getConnectionProperties() {
         return connectionProperties;
@@ -218,7 +218,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
      *
-     * @return the value of the evictor thread timer
+     * @return The value of the evictor thread timer
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.9.0
      */
@@ -251,7 +251,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Gets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
      * negative for no limit.
      *
-     * @return the value of maxIdle
+     * @return The value of maxIdle
      */
     public int getMaxIdle() {
         return maxIdle;
@@ -272,7 +272,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @see #setMinEvictableIdleDuration
      * @see #setDurationBetweenEvictionRuns
-     * @return the minimum amount of time a statement may sit idle in the pool.
+     * @return The minimum amount of time a statement may sit idle in the pool.
      * @since 2.9.0
      */
     public Duration getMinEvictableIdleDuration() {
@@ -285,7 +285,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @see #setMinEvictableIdleTimeMillis
      * @see #setTimeBetweenEvictionRunsMillis
-     * @return the minimum amount of time a statement may sit idle in the pool.
+     * @return The minimum amount of time a statement may sit idle in the pool.
      * @deprecated USe {@link #getMinEvictableIdleDuration()}.
      */
     @Deprecated
@@ -298,7 +298,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @see #setNumTestsPerEvictionRun
      * @see #setTimeBetweenEvictionRunsMillis
-     * @return the number of statements to examine during each run of the idle object evictor thread (if any.)
+     * @return The number of statements to examine during each run of the idle object evictor thread (if any.)
      */
     public int getNumTestsPerEvictionRun() {
         return numTestsPerEvictionRun;
@@ -510,7 +510,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Gets the number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no
      * idle object evictor thread will be run.
      *
-     * @return the value of the evictor thread timer
+     * @return The value of the evictor thread timer
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */

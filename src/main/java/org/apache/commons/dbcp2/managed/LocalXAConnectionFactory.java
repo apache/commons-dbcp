@@ -161,7 +161,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         /**
          * Gets the current xid of the transaction branch associated with this XAResource.
          *
-         * @return the current xid of the transaction branch associated with this XAResource.
+         * @return The current xid of the transaction branch associated with this XAResource.
          */
         public synchronized Xid getXid() {
             return currentXid;

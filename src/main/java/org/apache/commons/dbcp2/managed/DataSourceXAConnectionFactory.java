@@ -204,7 +204,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     /**
      * Gets the user name used to authenticate new connections.
      *
-     * @return the user name or null if unauthenticated connections are used
+     * @return The user name or null if unauthenticated connections are used
      * @deprecated Use {@link #getUserName()}.
      */
     @Deprecated
@@ -215,7 +215,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     /**
      * Gets the user name used to authenticate new connections.
      *
-     * @return the user name or null if unauthenticated connections are used
+     * @return The user name or null if unauthenticated connections are used
      * @since 2.6.0
      */
     public String getUserName() {
@@ -225,7 +225,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     /**
      * Gets the user password.
      *
-     * @return the user password.
+     * @return The user password.
      */
     public char[] getUserPassword() {
         return Utils.clone(userPassword);
@@ -234,7 +234,7 @@ public class DataSourceXAConnectionFactory implements XAConnectionFactory {
     /**
      * Gets the XA data source.
      *
-     * @return the XA data source.
+     * @return The XA data source.
      */
     public XADataSource getXaDataSource() {
         return xaDataSource;

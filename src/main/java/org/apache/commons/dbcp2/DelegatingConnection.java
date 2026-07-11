@@ -337,7 +337,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * <li>read-only</li>
      * </ul>
      *
-     * @return the state caching flag
+     * @return The state caching flag
      */
     public boolean getCacheState() {
         return cacheState;
@@ -415,7 +415,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Gets the delegate connection.
      *
-     * @return the delegate connection.
+     * @return The delegate connection.
      */
     protected final C getDelegateInternal() {
         return connection;
@@ -553,7 +553,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      *
      * @param <T> The throwable type.
      * @param e   The SQLException
-     * @return the given {@link SQLException}
+     * @return The given {@link SQLException}
      * @since 2.7.0
      */
     protected <T extends Throwable> T handleExceptionNoThrow(final T e) {
@@ -599,7 +599,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Tests the raw internal closed state.
      *
-     * @return the raw internal closed state.
+     * @return The raw internal closed state.
      */
     protected boolean isClosedInternal() {
         return closed;

@@ -697,7 +697,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the state caching flag.
      *
-     * @return the state caching flag
+     * @return The state caching flag
      */
     @Override
     public boolean getCacheState() {
@@ -749,7 +749,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Note: This getter only returns the last value set by a call to {@link #setConnectionFactoryClassName(String)}.
      * </p>
      *
-     * @return the ConnectionFactoryClassName that has been configured for use by this pool.
+     * @return The ConnectionFactoryClassName that has been configured for use by this pool.
      * @since 2.7.0
      */
     public String getConnectionFactoryClassName() {
@@ -778,7 +778,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the underlying connection pool.
      *
-     * @return the underlying connection pool.
+     * @return The underlying connection pool.
      * @since 2.10.0
      */
     public GenericObjectPool<PoolableConnection> getConnectionPool() {
@@ -802,7 +802,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the default catalog.
      *
-     * @return the default catalog
+     * @return The default catalog
      */
     @Override
     public String getDefaultCatalog() {
@@ -845,7 +845,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the default schema.
      *
-     * @return the default schema.
+     * @return The default schema.
      * @since 2.5.0
      */
     @Override
@@ -856,7 +856,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the default transaction isolation state of returned connections.
      *
-     * @return the default value for transaction isolation state
+     * @return The default value for transaction isolation state
      * @see Connection#getTransactionIsolation
      */
     @Override
@@ -919,7 +919,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * driver instance that may have been created from the value set via {@link #setDriverClassName(String)}.
      * </p>
      *
-     * @return the JDBC Driver that has been configured for use by this pool
+     * @return The JDBC Driver that has been configured for use by this pool
      */
     public synchronized Driver getDriver() {
         return driver;
@@ -946,7 +946,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * return the class name of any driver that may have been set via {@link #setDriver(Driver)}.
      * </p>
      *
-     * @return the JDBC driver class name
+     * @return The JDBC driver class name
      */
     @Override
     public synchronized String getDriverClassName() {
@@ -956,7 +956,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the {code durationBetweenEvictionRuns} property.
      *
-     * @return the time (in milliseconds) between evictor runs
+     * @return The time (in milliseconds) between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @since 2.10.0
      */
@@ -1003,7 +1003,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the initial size of the connection pool.
      *
-     * @return the number of connections created when the pool is initialized
+     * @return The number of connections created when the pool is initialized
      */
     @Override
     public synchronized int getInitialSize() {
@@ -1095,7 +1095,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the maximum permitted duration of a connection. A value of zero or less indicates an
      * infinite lifetime.
      *
-     * @return the maximum permitted duration of a connection.
+     * @return The maximum permitted duration of a connection.
      * @since 2.10.0
      */
     public Duration getMaxConnDuration() {
@@ -1121,7 +1121,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * A negative value indicates that there is no limit
      * </p>
      *
-     * @return the maximum number of idle connections
+     * @return The maximum number of idle connections
      */
     @Override
     public synchronized int getMaxIdle() {
@@ -1131,7 +1131,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the {@code maxOpenPreparedStatements} property.
      *
-     * @return the maximum number of open statements
+     * @return The maximum number of open statements
      */
     @Override
     public synchronized int getMaxOpenPreparedStatements() {
@@ -1144,7 +1144,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * A negative number means that there is no limit.
      * </p>
      *
-     * @return the maximum number of active connections
+     * @return The maximum number of active connections
      */
     @Override
     public synchronized int getMaxTotal() {
@@ -1155,7 +1155,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the maximum Duration that the pool will wait for a connection to be returned before throwing an exception. A
      * value less than or equal to zero means the pool is set to wait indefinitely.
      *
-     * @return the maxWaitDuration property value.
+     * @return The maxWaitDuration property value.
      * @since 2.10.0
      */
     public synchronized Duration getMaxWaitDuration() {
@@ -1166,7 +1166,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Gets the maximum number of milliseconds that the pool will wait for a connection to be returned before
      * throwing an exception. A value less than or equal to zero means the pool is set to wait indefinitely.
      *
-     * @return the maxWaitMillis property value.
+     * @return The maxWaitMillis property value.
      * @deprecated Use {@link #getMaxWaitDuration()}.
      */
     @Deprecated
@@ -1178,7 +1178,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the {code minEvictableIdleDuration} property.
      *
-     * @return the value of the {code minEvictableIdleDuration} property
+     * @return The value of the {code minEvictableIdleDuration} property
      * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
@@ -1189,7 +1189,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the {code minEvictableIdleDuration} property.
      *
-     * @return the value of the {code minEvictableIdleDuration} property
+     * @return The value of the {code minEvictableIdleDuration} property
      * @see #setMinEvictableIdle(Duration)
      * @deprecated Use {@link #getMinEvictableIdleDuration()}.
      */
@@ -1204,7 +1204,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * are available when the idle object evictor runs. The value of this property has no effect unless
      * {code durationBetweenEvictionRuns} has a positive value.
      *
-     * @return the minimum number of idle connections
+     * @return The minimum number of idle connections
      * @see GenericObjectPool#getMinIdle()
      */
     @Override
@@ -1215,7 +1215,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * [Read Only] The current number of active connections that have been allocated from this data source.
      *
-     * @return the current number of active connections
+     * @return The current number of active connections
      */
     @Override
     public int getNumActive() {
@@ -1227,7 +1227,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * [Read Only] The current number of idle connections that are waiting to be allocated from this data source.
      *
-     * @return the current number of idle connections
+     * @return The current number of idle connections
      */
     @Override
     public int getNumIdle() {
@@ -1239,7 +1239,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the {code numTestsPerEvictionRun} property.
      *
-     * @return the number of objects to examine during idle object evictor runs
+     * @return The number of objects to examine during idle object evictor runs
      * @see #setNumTestsPerEvictionRun(int)
      */
     @Override
@@ -1255,7 +1255,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the password passed to the JDBC driver to establish connections.
      *
-     * @return the connection password
+     * @return The connection password
      * @deprecated Exposing passwords via JMX is an Information Exposure issue.
      */
     @Deprecated
@@ -1267,7 +1267,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the registered JMX ObjectName.
      *
-     * @return the registered JMX ObjectName.
+     * @return The registered JMX ObjectName.
      */
     protected ObjectName getRegisteredJmxName() {
         return ObjectNameWrapper.unwrap(registeredJmxObjectName);
@@ -1463,7 +1463,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the value of the {code durationBetweenEvictionRuns} property.
      *
-     * @return the time (in milliseconds) between evictor runs
+     * @return The time (in milliseconds) between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
      * @deprecated Use {@link #getDurationBetweenEvictionRuns()}.
      */
@@ -1476,7 +1476,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the JDBC connection {code connectionString} property.
      *
-     * @return the {code connectionString} passed to the JDBC driver to establish connections
+     * @return The {code connectionString} passed to the JDBC driver to establish connections
      */
     @Override
     public synchronized String getUrl() {
@@ -1486,7 +1486,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the JDBC connection {code userName} property.
      *
-     * @return the {code userName} passed to the JDBC driver to establish connections
+     * @return The {code userName} passed to the JDBC driver to establish connections
      * @deprecated Use {@link #getUserName()}.
      */
     @Deprecated
@@ -1498,7 +1498,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the validation query used to validate connections before returning them.
      *
-     * @return the SQL validation query
+     * @return The SQL validation query
      * @see #setValidationQuery(String)
      */
     @Override
@@ -1509,7 +1509,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the validation query timeout.
      *
-     * @return the timeout in seconds before connection validation queries fail.
+     * @return The timeout in seconds before connection validation queries fail.
      * @deprecated Use {@link #getValidationQueryTimeoutDuration()}.
      */
     @Deprecated
@@ -1521,7 +1521,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the validation query timeout.
      *
-     * @return the timeout in seconds before connection validation queries fail.
+     * @return The timeout in seconds before connection validation queries fail.
      */
     public Duration getValidationQueryTimeoutDuration() {
         return validationQueryTimeoutDuration;

@@ -245,7 +245,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Gets the underlying pre-allocated pool (does NOT allocate).
      *
      * @param manager A CPDSConnectionFactory.
-     * @return the underlying pool.
+     * @return The underlying pool.
      */
     private ObjectPool<PooledConnectionAndInfo> getCPDSConnectionFactoryPool(final PooledConnectionManager manager) {
         return ((CPDSConnectionFactory) manager).getPool();
@@ -577,7 +577,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      *
      * @param poolKey
      *            PoolKey identifying the pool
-     * @return the GenericObjectPool pooling connections for the userName and datasource specified by the PoolKey
+     * @return The GenericObjectPool pooling connections for the userName and datasource specified by the PoolKey
      */
     private ObjectPool<PooledConnectionAndInfo> getPool(final PoolKey poolKey) {
         final CPDSConnectionFactory mgr = (CPDSConnectionFactory) managers.get(poolKey);

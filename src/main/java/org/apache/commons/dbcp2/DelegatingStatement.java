@@ -400,7 +400,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Gets the internal connection.
      *
-     * @return the internal connection.
+     * @return The internal connection.
      */
     protected DelegatingConnection<?> getConnectionInternal() {
         return connection;

@@ -596,7 +596,7 @@ public class PStmtKey {
      * Gets the result set type, one of {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or
      * {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
      *
-     * @return the result set type.
+     * @return The result set type.
      */
     public Integer getResultSetType() {
         return resultSetType;
@@ -614,7 +614,7 @@ public class PStmtKey {
     /**
      * Gets the SQL statement.
      *
-     * @return the SQL statement.
+     * @return The SQL statement.
      */
     public String getSql() {
         return sql;
