@@ -33,7 +33,7 @@ final class ConnectionFactoryFactory {
      *
      * @param basicDataSource Configures creation.
      * @param driver          The JDBC driver.
-     * @return a new {@link DriverConnectionFactory} allowing for a {@link BasicDataSource#getDriverClassName()}
+     * @return A new {@link DriverConnectionFactory} allowing for a {@link BasicDataSource#getDriverClassName()}
      *         override.
      * @throws SQLException Thrown when instantiation fails.
      */

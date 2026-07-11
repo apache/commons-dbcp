@@ -138,7 +138,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * @param sql
      *            an SQL statement that may contain one or more '?' parameter placeholders. Typically, this statement is
      *            specified using JDBC call escape syntax.
-     * @return a default {@link CallableStatement} object containing the pre-compiled SQL statement.
+     * @return A default {@link CallableStatement} object containing the pre-compiled SQL statement.
      * @throws SQLException
      *                Thrown if a database access error occurs or this method is called on a closed connection.
      * @since 2.4.0
@@ -167,7 +167,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * @param resultSetConcurrency
      *            a concurrency type; one of {@link ResultSet#CONCUR_READ_ONLY} or
      *            {@link ResultSet#CONCUR_UPDATABLE}.
-     * @return a {@link CallableStatement} object containing the pre-compiled SQL statement that will produce
+     * @return A {@link CallableStatement} object containing the pre-compiled SQL statement that will produce
      *         {@link ResultSet} objects with the given type and concurrency.
      * @throws SQLException
      *             Thrown if a database access error occurs, this method is called on a closed connection or the given
@@ -203,7 +203,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * @param resultSetHoldability
      *            one of the following {@link ResultSet} constants: {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}
      *            or {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}.
-     * @return a new {@link CallableStatement} object, containing the pre-compiled SQL statement, that will
+     * @return A new {@link CallableStatement} object, containing the pre-compiled SQL statement, that will
      *         generate {@link ResultSet} objects with the given type, concurrency, and holdability.
      * @throws SQLException
      *             Thrown if a database access error occurs, this method is called on a closed connection or the given

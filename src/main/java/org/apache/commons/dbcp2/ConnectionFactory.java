@@ -29,7 +29,7 @@ public interface ConnectionFactory {
     /**
      * Create a new {@link Connection} in an implementation specific fashion.
      *
-     * @return a new {@link Connection}
+     * @return A new {@link Connection}
      * @throws SQLException
      *             if a database error occurs creating the connection
      */

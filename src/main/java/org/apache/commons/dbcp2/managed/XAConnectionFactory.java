@@ -38,7 +38,7 @@ public interface XAConnectionFactory extends ConnectionFactory {
      * the setAutoCommit, commit and rollback when enrolled in a XA transaction.
      * </p>
      *
-     * @return a new {@link Connection}
+     * @return A new {@link Connection}
      * @throws SQLException if a database error occurs creating the connection
      */
     @Override

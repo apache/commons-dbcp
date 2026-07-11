@@ -592,7 +592,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @param factory         the object factory
      * @param poolConfig      the object pool configuration
      * @param abandonedConfig the abandoned objects configuration
-     * @return a non-null instance
+     * @return A non-null instance
      */
     protected GenericObjectPool<PoolableConnection> createObjectPool(final PoolableConnectionFactory factory,
             final GenericObjectPoolConfig<PoolableConnection> poolConfig, final AbandonedConfig abandonedConfig) {
@@ -708,7 +708,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Creates (if necessary) and return a connection to the database.
      *
      * @throws SQLException if a database access error occurs
-     * @return a database connection
+     * @return A database connection
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -872,7 +872,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * trigger a disconnection even if they match other disconnection criteria.
      * </p>
      *
-     * @return a set of SQL State codes that should be ignored for disconnection checks, or an empty set if none have been specified.
+     * @return A set of SQL State codes that should be ignored for disconnection checks, or an empty set if none have been specified.
      * @since 2.13.0
      */
     public Set<String> getDisconnectionIgnoreSqlCodes() {

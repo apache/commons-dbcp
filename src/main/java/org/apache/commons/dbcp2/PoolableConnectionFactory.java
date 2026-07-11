@@ -301,7 +301,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * being treated as fatal even if they match the typical disconnection criteria.
      * </p>
      *
-     * @return a {@link Collection} of SQL State codes that should be ignored for disconnection checks.
+     * @return A {@link Collection} of SQL State codes that should be ignored for disconnection checks.
      * @since 2.13.0
      */
     public Collection<String> getDisconnectionIgnoreSqlCodes() {

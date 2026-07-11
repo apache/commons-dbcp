@@ -108,7 +108,7 @@ public final class Utils {
      * Clones the given char[] if not null.
      *
      * @param value may be null.
-     * @return a cloned char[] or null.
+     * @return A cloned char[] or null.
      */
     public static char[] clone(final char[] value) {
         return value == null ? null : value.clone();
@@ -118,7 +118,7 @@ public final class Utils {
      * Clones the given {@link Properties} without the standard "user" or "password" entries.
      *
      * @param properties may be null
-     * @return a clone of the input without the standard "user" or "password" entries.
+     * @return A clone of the input without the standard "user" or "password" entries.
      * @since 2.8.0
      */
     public static Properties cloneWithoutCredentials(final Properties properties) {
@@ -260,7 +260,7 @@ public final class Utils {
      * Converts the given String to a char[].
      *
      * @param value may be null.
-     * @return a char[] or null.
+     * @return A char[] or null.
      */
     public static char[] toCharArray(final String value) {
         return value != null ? value.toCharArray() : null;
@@ -270,7 +270,7 @@ public final class Utils {
      * Converts the given char[] to a String.
      *
      * @param value may be null.
-     * @return a String or null.
+     * @return A String or null.
      */
     public static String toString(final char[] value) {
         return value == null ? null : String.valueOf(value);

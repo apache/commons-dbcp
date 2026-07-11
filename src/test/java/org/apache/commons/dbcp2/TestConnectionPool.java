@@ -442,7 +442,7 @@ public abstract class TestConnectionPool {
     /**
      * Acquires a new connection and push it onto the connections stack.
      *
-     * @return a new connection.
+     * @return A new connection.
      * @throws Exception Defined in subclasses.
      */
     @SuppressWarnings("resource") // Caller closes

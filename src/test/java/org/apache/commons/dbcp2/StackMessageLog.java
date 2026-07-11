@@ -53,7 +53,7 @@ public class StackMessageLog extends SimpleLog {
      * Note: lock the stack first.
      * </p>
      *
-     * @return a new list.
+     * @return A new list.
      */
     public static List<String> getAll() {
         return new ArrayList<>(MESSAGE_STACK);

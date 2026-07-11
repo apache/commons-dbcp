@@ -61,7 +61,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      *            The Connection which created the ResultSet.
      * @param resultSet
      *            The ResultSet to wrap.
-     * @return a new delegate.
+     * @return A new delegate.
      */
     public static ResultSet wrapResultSet(final Connection connection, final ResultSet resultSet) {
         if (resultSet == null) {
@@ -77,7 +77,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      *            The Statement which created the ResultSet.
      * @param resultSet
      *            The ResultSet to wrap.
-     * @return a new delegate.
+     * @return A new delegate.
      */
     public static ResultSet wrapResultSet(final Statement statement, final ResultSet resultSet) {
         if (resultSet == null) {

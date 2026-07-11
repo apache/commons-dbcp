@@ -78,7 +78,7 @@ class AbstractConnectionFactory {
      * Converts a duration to seconds where a duration less than one second becomes 1 second.
      *
      * @param duration the duration to convert.
-     * @return a duration to seconds where a duration less than one second becomes 1 second.
+     * @return A duration to seconds where a duration less than one second becomes 1 second.
      * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
      */
     private int toSeconds(final Duration duration) {
