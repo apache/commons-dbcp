@@ -17,8 +17,8 @@
 
 package org.apache.commons.dbcp2.transaction;
 
-import javax.transaction.Synchronization;
-import javax.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 /**
  * A TransactionSynchronizationRegistry adapter.
