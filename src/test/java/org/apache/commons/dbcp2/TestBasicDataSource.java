@@ -66,7 +66,7 @@ public class TestBasicDataSource extends TestConnectionPool {
      * Cycle through idle connections and verify that they are all valid.
      * Assumes we are the only client of the pool.
      *
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     private void checkIdleValid() throws Exception {
         final Set<Connection> idleConnections = new HashSet<>(); // idle connections

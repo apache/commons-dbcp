@@ -55,7 +55,7 @@ public class TestJndi {
     /**
      * Binds a DataSource into JNDI.
      *
-     * @throws Exception if creation or binding fails.
+     * @throws Exception Thrown if creation or binding fails.
      */
     protected void bindDataSource(final DataSource dataSource) throws Exception {
         context.bind(JNDI_PATH, dataSource);
@@ -65,7 +65,7 @@ public class TestJndi {
      * Binds a DataSource to the JNDI and checks that we have successfully
      * bound it by looking it up again.
      *
-     * @throws Exception if the bind, lookup or connect fails
+     * @throws Exception Thrown if the bind, lookup or connect fails
      */
     protected void checkBind(final DataSource dataSource) throws Exception {
         bindDataSource(dataSource);
@@ -89,7 +89,7 @@ public class TestJndi {
     /**
      * Retrieves a DataSource from JNDI.
      *
-     * @throws Exception if the JNDI lookup fails or no DataSource is bound.
+     * @throws Exception Thrown if the JNDI lookup fails or no DataSource is bound.
      */
     protected DataSource retrieveDataSource() throws Exception {
         final Context ctx = getInitialContext();

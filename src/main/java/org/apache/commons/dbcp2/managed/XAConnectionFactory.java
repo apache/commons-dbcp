@@ -39,7 +39,7 @@ public interface XAConnectionFactory extends ConnectionFactory {
      * </p>
      *
      * @return A new {@link Connection}
-     * @throws SQLException if a database error occurs creating the connection
+     * @throws SQLException Thrown if a database error occurs creating the connection
      */
     @Override
     Connection createConnection() throws SQLException;

@@ -412,7 +412,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Initializes the given connection with the collection of SQL statements set in {@link #setConnectionInitSql(Collection)}.
      *
      * @param conn The connection to initialize.
-     * @throws SQLException if a database access error occurs or this method is called on a closed connection.
+     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection.
      * @see #setConnectionInitSql(Collection)
      */
     protected void initializeConnection(final Connection conn) throws SQLException {
@@ -842,7 +842,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * Validates the given connection if it is open.
      *
      * @param conn The connection to validate.
-     * @throws SQLException if the connection is closed or validate fails.
+     * @throws SQLException Thrown if the connection is closed or validate fails.
      */
     public void validateConnection(final PoolableConnection conn) throws SQLException {
         if (conn.isClosed()) {

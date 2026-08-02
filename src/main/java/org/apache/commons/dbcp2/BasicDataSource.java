@@ -425,7 +425,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * exceptions.
      * </p>
      *
-     * @throws SQLException if an error occurs closing idle connections
+     * @throws SQLException Thrown if an error occurs closing idle connections
      */
     @Override
     public synchronized void close() throws SQLException {
@@ -524,7 +524,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Creates (if necessary) and return the internal data source we are using to manage our connections.
      *
      * @return The current internal DataSource or a newly created instance if it has not yet been created.
-     * @throws SQLException if the object pool cannot be created.
+     * @throws SQLException Thrown if the object pool cannot be created.
      */
     protected synchronized DataSource createDataSource() throws SQLException {
         if (closed) {
@@ -577,7 +577,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Creates the actual data source instance. This method only exists so that subclasses can replace the
      * implementation class.
      *
-     * @throws SQLException if unable to create a datasource instance
+     * @throws SQLException Thrown if unable to create a datasource instance
      * @return A new DataSource instance
      */
     protected DataSource createDataSourceInstance() throws SQLException {
@@ -611,7 +611,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * subclasses can replace the default implementation.
      *
      * @param driverConnectionFactory JDBC connection factory
-     * @throws SQLException if an error occurs creating the PoolableConnectionFactory
+     * @throws SQLException Thrown if an error occurs creating the PoolableConnectionFactory
      * @return A new PoolableConnectionFactory configured with the current configuration of this BasicDataSource
      */
     protected PoolableConnectionFactory createPoolableConnectionFactory(final ConnectionFactory driverConnectionFactory)
@@ -707,7 +707,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Creates (if necessary) and return a connection to the database.
      *
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs
      * @return A database connection
      */
     @Override
@@ -1083,7 +1083,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
      * </p>
      *
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs
      * @return log writer in use
      */
     @Override
@@ -1725,7 +1725,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * <p>
      * The new connection pool created by this method is initialized with currently set configuration properties.
      *
-     * @throws SQLException if an error occurs initializing the datasource
+     * @throws SQLException Thrown if an error occurs initializing the datasource
      */
     @Override
     public synchronized void restart() throws SQLException {
@@ -2219,7 +2219,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * </p>
      *
      * @param logWriter The new log writer
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs
      */
     @Override
     public void setLogWriter(final PrintWriter logWriter) throws SQLException {
@@ -2649,7 +2649,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * return 0.  These connections will be physically closed when they are returned, but they will not count against
      * the maximum allowed in the newly started datasource.
      *
-     * @throws SQLException if an error occurs initializing the datasource
+     * @throws SQLException Thrown if an error occurs initializing the datasource
      */
     @Override
     public synchronized void start() throws SQLException {

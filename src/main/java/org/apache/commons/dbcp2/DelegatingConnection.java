@@ -566,7 +566,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * @param <T> The DelegatingStatement type.
      * @param delegatingStatement The DelegatingStatement to initialize.
      * @return The given DelegatingStatement.
-     * @throws SQLException if a database access error occurs, this method is called on a closed Statement.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed Statement.
      */
     private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
         if (defaultQueryTimeoutDuration != null && defaultQueryTimeoutDuration.getSeconds() != delegatingStatement.getQueryTimeout()) {

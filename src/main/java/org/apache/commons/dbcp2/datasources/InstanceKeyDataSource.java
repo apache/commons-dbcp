@@ -1204,7 +1204,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @param connection The target connection.
      * @param userName   The user name for the connection.
-     * @throws SQLException if a database access error occurs or this method is called on a closed connection
+     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection
      */
     protected abstract void setupDefaults(Connection connection, String userName) throws SQLException;
 
