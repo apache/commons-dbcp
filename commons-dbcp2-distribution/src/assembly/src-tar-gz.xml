@@ -19,11 +19,14 @@
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
     <id>src</id>
     <formats>
-        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
-    <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
+    <baseDirectory>commons-dbcp2-${project.version}-src</baseDirectory>
     <fileSets>
+        <!-- Paths are relative to the root of the multi-module build -->
         <fileSet>
+            <directory>..</directory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>CODE_OF_CONDUCT.md</include>
                 <include>LICENSE.txt</include>
@@ -32,48 +35,30 @@
                 <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
                 <include>SECURITY.md</include>
+                <include>doc/**</include>
+                <include>src/site/xdoc/**</include>
+                <include>src/site/site.xml</include>
+                <include>src/changes/**</include>
+                <include>*/pom.xml</include>
+                <include>*/src/main/**</include>
+                <include>*/src/test/**</include>
+                <include>*/src/assembly/**</include>
             </includes>
-            <lineEnding>crlf</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>doc</directory>
-            <!-- once this diagram is updated, add it back without lf -->
             <excludes>
-               <exclude>static_structure_dia.gif</exclude>
+                <!-- once this diagram is updated, add it back without lf -->
+                <exclude>doc/static_structure_dia.gif</exclude>
             </excludes>
-            <lineEnding>crlf</lineEnding>
+            <lineEnding>lf</lineEnding>
         </fileSet>
         <fileSet>
-            <directory>src/conf</directory>
-        </fileSet>
-        <fileSet>
-            <directory>src/site/resources</directory>
-        </fileSet>
-        <fileSet>
-            <directory>src/site/xdoc</directory>
-            <lineEnding>crlf</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>src/site</directory>
+            <directory>..</directory>
+            <outputDirectory></outputDirectory>
             <includes>
-              <include>site.xml</include>
+                <include>src/site/resources/**</include>
+                <include>src/media/**</include>
+                <include>*/src/conf/**</include>
+                <include>*/src/site/**</include>
             </includes>
-            <lineEnding>crlf</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>src/media</directory>
-        </fileSet>
-        <fileSet>
-            <directory>src/changes</directory>
-            <lineEnding>crlf</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>src/main</directory>
-            <lineEnding>crlf</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>src/test</directory>
-            <lineEnding>crlf</lineEnding>
         </fileSet>
     </fileSets>
 </assembly>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2-parent</artifactId>
+    <version>2.15.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>commons-dbcp2</artifactId>
+  <name>Apache Commons DBCP</name>
+  <description>Apache Commons DBCP software implements Database Connection Pooling</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- For managed connections -->
+    <dependency>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
+      <version>1.3.3</version>
+    </dependency>
+    <!-- tomcat naming jars for jndi reference tests -->
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>naming-common</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>naming-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- for testing of managed connections -->
+    <dependency>
+      <groupId>org.apache.geronimo.modules</groupId>
+      <artifactId>geronimo-transaction</artifactId>
+      <version>2.2.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>org.junit.jupiter</artifactId>
+          <groupId>junit-jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.narayana.jta</groupId>
+      <artifactId>narayana-jta</artifactId>
+      <!-- Versions >= 5.13.0 require Java 11 -->
+      <version>5.12.7.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-transaction-spi</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
+    <!-- See DBCP-445 and DBCP-454 -->
+    <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
+    <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
+    <japicmp.skip>false</japicmp.skip>
+    <dbcp.conf.dir>${project.basedir}/src/conf</dbcp.conf.dir>
+    <!-- JaCoCo: Don't make code coverage worse than: -->
+    <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
+    <!-- Keep the jacoco property order below which matches console output -->
+    <commons.jacoco.classRatio>0.98</commons.jacoco.classRatio>
+    <commons.jacoco.instructionRatio>0.74</commons.jacoco.instructionRatio>
+    <commons.jacoco.methodRatio>0.89</commons.jacoco.methodRatio>
+    <commons.jacoco.branchRatio>0.66</commons.jacoco.branchRatio>
+    <commons.jacoco.lineRatio>0.62</commons.jacoco.lineRatio>
+    <commons.jacoco.complexityRatio>0.78</commons.jacoco.complexityRatio>
+  </properties>
+  <profiles>
+    <profile>
+      <id>module-info-static-transaction</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- The JTA API is only needed by the managed package, and commons-dbcp2-jakarta must not need the javax flavour -->
+            <groupId>org.moditect</groupId>
+            <artifactId>moditect-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-module-infos</id>
+                <configuration>
+                  <module>
+                    <moduleInfo>
+                      <requires>static java.transaction; *;</requires>
+                    </moduleInfo>
+                  </module>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <build>
+    <!-- NOTICE and LICENSE live in the root directory, commons-parent looks for them in ${basedir} -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>${project.basedir}/..</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </testResource>
+    </testResources>
+  </build>
+</project>
