@@ -25,12 +25,18 @@
     <version>105</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>commons-dbcp2</artifactId>
-  <version>2.14.1-SNAPSHOT</version>
-  <name>Apache Commons DBCP</name>
+  <artifactId>commons-dbcp2-parent</artifactId>
+  <version>2.15.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Apache Commons DBCP Parent</name>
   <inceptionYear>2001</inceptionYear>
   <description>Apache Commons DBCP software implements Database Connection Pooling</description>
   <url>https://commons.apache.org/proper/commons-dbcp/</url>
+  <modules>
+    <module>commons-dbcp2</module>
+    <module>commons-dbcp2-jakarta</module>
+    <module>commons-dbcp2-distribution</module>
+  </modules>
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
@@ -52,109 +58,75 @@
     <system>GitHub</system>
     <url>https://github.com/apache/commons-dbcp/actions</url>
   </ciManagement>
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-pool2</artifactId>
-      <version>${commons.pool.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.4.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.20.0</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- For managed connections -->
-    <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
-      <version>1.3.3</version>
-    </dependency>
-    <!-- tomcat naming jars for jndi reference tests -->
-    <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>naming-common</artifactId>
-      <version>5.0.28</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>naming-java</artifactId>
-      <version>5.0.28</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- for testing of managed connections -->
-    <dependency>
-      <groupId>org.apache.geronimo.modules</groupId>
-      <artifactId>geronimo-transaction</artifactId>
-      <version>2.2.1</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>org.junit.jupiter</artifactId>
-          <groupId>junit-jupiter</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>2.0.19</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <!-- Versions >= 2.3.232 requires Java 11 -->
-      <version>2.2.224</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.narayana.jta</groupId>
-      <artifactId>narayana-jta</artifactId>
-      <!-- Versions >= 5.13.0 require Java 11 -->
-      <version>5.12.7.Final</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss</groupId>
-      <artifactId>jboss-transaction-spi</artifactId>
-      <version>8.0.0.Final</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.logging</groupId>
-          <artifactId>jboss-logging-spi</artifactId>
-        </exclusion>
-      </exclusions>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging</artifactId>
-      <!-- Versions >= 3.5.0 require Java 11 -->
-      <version>3.4.3.Final</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>${commons.pool.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.4.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.20.0</version>
+      </dependency>
+      <!-- tomcat naming jars for jndi reference tests -->
+      <dependency>
+        <groupId>tomcat</groupId>
+        <artifactId>naming-common</artifactId>
+        <version>5.0.28</version>
+      </dependency>
+      <dependency>
+        <groupId>tomcat</groupId>
+        <artifactId>naming-java</artifactId>
+        <version>5.0.28</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>2.0.19</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <!-- Versions >= 2.3.232 requires Java 11 -->
+        <version>2.2.224</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-transaction-spi</artifactId>
+        <version>8.0.0.Final</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging-spi</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <!-- Versions >= 3.5.0 require Java 11 -->
+        <version>3.4.3.Final</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -164,9 +136,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <commons.componentid>dbcp</commons.componentid>
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.module.name>org.apache.commons.dbcp2</commons.module.name>
-    <commons.release.version>2.14.1</commons.release.version>
-    <commons.release.next>2.14.2</commons.release.next>
+    <commons.release.version>2.15.0</commons.release.version>
+    <commons.release.next>2.15.1</commons.release.next>
     <commons.release.desc>for JDBC 4.2 on Java 8</commons.release.desc>
     <commons.release.hash>sha512</commons.release.hash>
     <commons.release.2.version>2.4.0</commons.release.2.version>
@@ -178,27 +149,17 @@
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
     <commons.pool.version>2.13.1</commons.pool.version>
-    <!-- See DBCP-445 and DBCP-454 -->
-    <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
-    <commons.japicmp.ignoreMissingClasses>true</commons.japicmp.ignoreMissingClasses>
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.14.0</commons.bc.version>
-    <commons.release.isDistModule>true</commons.release.isDistModule>
-    <japicmp.skip>false</japicmp.skip>
+    <!-- The archives are built by commons-dbcp2-distribution -->
+    <commons.release.isDistModule>false</commons.release.isDistModule>
     <spotbugs.skip>false</spotbugs.skip>
     <findbugs.skip>true</findbugs.skip>
     <!-- spdx 0.6.0 can require Java 11 depending on undocumented behavior which kicks in for us here. -->
     <commons.spdx.version>0.5.5</commons.spdx.version>
     <surefire.argline></surefire.argline>
-    <!-- JaCoCo: Don't make code coverage worse than: -->
-    <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
-    <!-- Keep the jacoco property order below which matches console output -->
-    <commons.jacoco.classRatio>0.98</commons.jacoco.classRatio>
-    <commons.jacoco.instructionRatio>0.74</commons.jacoco.instructionRatio>
-    <commons.jacoco.methodRatio>0.89</commons.jacoco.methodRatio>
-    <commons.jacoco.branchRatio>0.66</commons.jacoco.branchRatio>
-    <commons.jacoco.lineRatio>0.62</commons.jacoco.lineRatio>
-    <commons.jacoco.complexityRatio>0.78</commons.jacoco.complexityRatio>
+    <!-- Checkstyle and SpotBugs configuration lives in the core module; modules override this path -->
+    <dbcp.conf.dir>${project.basedir}/commons-dbcp2/src/conf</dbcp.conf.dir>
   </properties>
   <build>
     <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check pmd:check pmd:cpd-check javadoc:javadoc</defaultGoal>
@@ -220,7 +181,7 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${commons.checkstyle-plugin.version}</version>
           <configuration>
-            <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
+            <configLocation>${dbcp.conf.dir}/checkstyle.xml</configLocation>
             <enableRulesSummary>false</enableRulesSummary>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
           </configuration>
@@ -229,7 +190,7 @@
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <configuration>
-            <excludeFilterFile>${basedir}/src/conf/spotbugs-exclude-filter.xml</excludeFilterFile>
+            <excludeFilterFile>${dbcp.conf.dir}/spotbugs-exclude-filter.xml</excludeFilterFile>
           </configuration>
         </plugin>
         <plugin>
@@ -241,6 +202,25 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>javadoc.resources</id>
+            <configuration>
+              <target>
+                <copy todir="${project.build.directory}/apidocs/META-INF">
+                  <fileset dir="${project.basedir}/..">
+                    <include name="LICENSE.txt" />
+                    <include name="NOTICE.txt" />
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>${argLine} ${surefire.argline}</argLine>
@@ -250,17 +230,6 @@
             <!-- Exclude nested classes which Surefire cannot handle -->
             <exclude>**/Test*$*.java</exclude>
           </excludes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/bin.xml</descriptor>
-            <descriptor>src/main/assembly/src-tar-gz.xml</descriptor>
-            <descriptor>src/main/assembly/src-zip.xml</descriptor>
-          </descriptors>
-          <tarLongFileMode>gnu</tarLongFileMode>
         </configuration>
       </plugin>
       <plugin>
@@ -309,7 +278,7 @@
             </dependency>
           </dependencies>
         </configuration>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -334,7 +303,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
+          <configLocation>${dbcp.conf.dir}/checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
@@ -356,6 +325,20 @@
     </plugins>
   </reporting>
   <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- The archives are built by commons-dbcp2-distribution -->
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <skipAssembly>true</skipAssembly>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>jdk9-plus</id>
       <activation>

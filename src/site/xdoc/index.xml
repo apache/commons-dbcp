@@ -49,6 +49,19 @@ efficient, feature-rich package under the ASF license.</p>
 <code>commons-pool2</code> artifact to provide the underlying object pool
 mechanisms.</p>
 
+<p>Pooled connections that take part in JTA transactions are provided by the
+<code>org.apache.commons.dbcp2.managed</code> package of <code>commons-dbcp2</code>,
+which uses the <code>javax.transaction</code> API. Applications on the Jakarta
+Transactions API (<code>jakarta.transaction</code>, Jakarta EE 9 and later) use the
+<code>commons-dbcp2-jakarta</code> artifact instead, which provides the same classes in the
+<code><a href="commons-dbcp2-jakarta/apidocs/org/apache/commons/dbcp2/managed/jakarta/package-summary.html">org.apache.commons.dbcp2.managed.jakarta</a></code>
+package:</p>
+<source><![CDATA[<dependency>
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-dbcp2-jakarta</artifactId>
+  <version>2.15.0</version>
+</dependency>]]></source>
+
 <p>DBCP now comes in four different versions to support different versions of
 JDBC. Here is how it works:</p>
 <p>Developing</p>
@@ -85,10 +98,10 @@ Pool.</p>
 <section name="Documentation">
 
 <p>The 
-<a href="apidocs/index.html">Javadoc API documents</a> 
+<a href="commons-dbcp2/apidocs/index.html">Javadoc API documents</a> 
 are available online.  In particular, you should
 read the package overview of the 
-<code><a href="apidocs/org/apache/commons/dbcp2/package-summary.html#package_description">org.apache.commons.dbcp2</a></code>
+<code><a href="commons-dbcp2/apidocs/org/apache/commons/dbcp2/package-summary.html#package_description">org.apache.commons.dbcp2</a></code>
 package for an overview of how to use DBCP.</p>
 
 <p>There are 

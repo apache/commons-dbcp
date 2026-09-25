@@ -36,7 +36,8 @@
       <item name="Code of Conduct" href="https://www.apache.org/foundation/policies/conduct.html" />
       <item name="Download" href="/download_dbcp.cgi" />
       <item name="Javadoc">
-        <item name="Javadoc Current" href="/apidocs/index.html" />
+        <item name="Javadoc Current" href="/commons-dbcp2/apidocs/index.html" />
+        <item name="Javadoc Current (Jakarta)" href="/commons-dbcp2-jakarta/apidocs/index.html" />
         <item name="Javadoc 2.x Archive" href="https://javadoc.io/doc/org.apache.commons/commons-dbcp2/latest/index.html" />
         <!-- Specify 1.4 otherwise 20030821.193421 is used  -->
         <item name="Javadoc 1.x Archive" href="https://javadoc.io/doc/commons-dbcp/commons-dbcp/1.4/index.html" />
