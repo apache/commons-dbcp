@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons DBCP"
   homepage: https://commons.apache.org/dbcp/
+  autolink_jira:
+    - DBCP
   
   pull_requests:
     # allow auto-merge
