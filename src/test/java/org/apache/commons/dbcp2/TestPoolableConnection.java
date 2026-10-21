@@ -21,9 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -212,5 +217,19 @@ public class TestPoolableConnection {
         }
 
         assertEquals(0, pool.getNumActive(), "The pool should have no active connections");
+    }
+
+    /**
+     * Without a validation query, a positive sub-second timeout must reach {@link Connection#isValid(int)} as 1 second,
+     * not 0 (no timeout).
+     */
+    @Test
+    void testValidateWithoutQuerySubSecondTimeout() throws Exception {
+        final Connection nativeConnection = mock(Connection.class);
+        when(nativeConnection.isValid(1)).thenReturn(true);
+        final PoolableConnection conn = new PoolableConnection(nativeConnection, null, null);
+        conn.validate(null, Duration.ofMillis(100));
+        verify(nativeConnection).isValid(1);
+        verify(nativeConnection, never()).isValid(0);
     }
 }
