@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2-parent</artifactId>
+    <version>2.15.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>commons-dbcp2-jakarta</artifactId>
+  <name>Apache Commons DBCP Jakarta</name>
+  <description>
+    Managed (JTA) connection pooling for Apache Commons DBCP on the Jakarta Transactions API (jakarta.transaction).
+    The sources are generated at build time from the javax.transaction based org.apache.commons.dbcp2.managed package
+    of commons-dbcp2 into org.apache.commons.dbcp2.managed.jakarta.
+  </description>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <exclusions>
+        <!-- The javax.transaction flavour of the API; replaced by jakarta.transaction-api 2.x below -->
+        <exclusion>
+          <groupId>jakarta.transaction</groupId>
+          <artifactId>jakarta.transaction-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <!-- Required by the jakarta.transaction module descriptor, needed by jdeps (moditect) -->
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <!-- Versions >= 5.0.0 require Java 17 -->
+      <version>4.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.interceptor</groupId>
+      <artifactId>jakarta.interceptor-api</artifactId>
+      <version>2.2.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.components</groupId>
+      <artifactId>geronimo-transaction</artifactId>
+      <!-- Versions >= 4.0.0 require Java 11 -->
+      <version>3.1.5</version>
+      <classifier>jakarta</classifier>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>org.junit.jupiter</artifactId>
+          <groupId>junit-jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.narayana.jta</groupId>
+      <artifactId>narayana-jta-jakarta</artifactId>
+      <!-- Versions >= 5.13.0 require Java 11 -->
+      <version>5.12.7.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Pins the version pulled in by cdi-api; versions >= 6.0.0 require Java 17 -->
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <version>5.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-transaction-spi</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <commons.module.name>org.apache.commons.dbcp2.jakarta</commons.module.name>
+    <dbcp.core.dir>${project.basedir}/../commons-dbcp2</dbcp.core.dir>
+    <dbcp.conf.dir>${dbcp.core.dir}/src/conf</dbcp.conf.dir>
+    <dbcp.jakarta.main>${project.build.directory}/generated-sources/jakarta</dbcp.jakarta.main>
+    <dbcp.jakarta.test>${project.build.directory}/generated-test-sources/jakarta</dbcp.jakarta.test>
+    <!-- First release of this module, used for @since in the generated sources -->
+    <dbcp.jakarta.since>2.15.0</dbcp.jakarta.since>
+    <!-- New artifact, nothing to compare against yet -->
+    <japicmp.skip>true</japicmp.skip>
+    <!-- Generated from sources that are already checked in commons-dbcp2 -->
+    <checkstyle.skip>true</checkstyle.skip>
+  </properties>
+  <build>
+    <!-- NOTICE and LICENSE live in the root directory, commons-parent looks for them in ${basedir} -->
+    <resources>
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>${dbcp.core.dir}/src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>${project.basedir}/..</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-jakarta-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <delete dir="${dbcp.jakarta.main}" quiet="true" />
+                <copy todir="${dbcp.jakarta.main}/org/apache/commons/dbcp2/managed/jakarta" encoding="UTF-8" outputencoding="UTF-8" overwrite="true">
+                  <fileset dir="${dbcp.core.dir}/src/main/java/org/apache/commons/dbcp2/managed" includes="*.java" />
+                  <filterchain>
+                    <tokenfilter>
+                      <replaceregex pattern="org\.apache\.commons\.dbcp2\.(managed|transaction)\b" replace="org.apache.commons.dbcp2.\1.jakarta" flags="g" />
+                      <replaceregex pattern="javax\.transaction(?!\.xa\b)" replace="jakarta.transaction" flags="g" />
+                      <!-- Anything older than the first jakarta release becomes that release, newer versions are kept -->
+                      <replaceregex pattern="@since\s+(1\.\S+|2\.([0-9]|1[0-4])(\.\S+)?)(?=\s|$)" replace="@since ${dbcp.jakarta.since}" flags="g" />
+                    </tokenfilter>
+                  </filterchain>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-jakarta-test-sources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <delete dir="${dbcp.jakarta.test}" quiet="true" />
+                <copy todir="${dbcp.jakarta.test}/org/apache/commons/dbcp2" encoding="UTF-8" outputencoding="UTF-8" overwrite="true">
+                  <fileset dir="${dbcp.core.dir}/src/test/java/org/apache/commons/dbcp2" includes="managed/*.java transaction/*.java" />
+                  <regexpmapper from="^(managed|transaction)([/\\].*)$" to="\1/jakarta\2" handledirsep="true" />
+                  <filterchain>
+                    <tokenfilter>
+                      <replaceregex pattern="org\.apache\.commons\.dbcp2\.(managed|transaction)\b" replace="org.apache.commons.dbcp2.\1.jakarta" flags="g" />
+                      <replaceregex pattern="javax\.transaction(?!\.xa\b)" replace="jakarta.transaction" flags="g" />
+                    </tokenfilter>
+                  </filterchain>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-jakarta-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${dbcp.jakarta.main}</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-jakarta-test-sources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${dbcp.jakarta.test}</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
