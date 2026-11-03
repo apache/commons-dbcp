@@ -390,7 +390,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         userDefaultBlockWhenExhausted.put("key", Boolean.FALSE);
         ds.setPerUserBlockWhenExhausted(userDefaultBlockWhenExhausted);
         assertEquals(Boolean.FALSE, ds.getPerUserBlockWhenExhausted("key"));
-        // when the code above is executed, the backing map was initalized
+        // when the code above is executed, the backing map was initialized
         // now check if that still works. The backing map is clear'ed.
         userDefaultBlockWhenExhausted = new HashMap<>();
         userDefaultBlockWhenExhausted.put("anonymous", Boolean.FALSE);
@@ -437,7 +437,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
         final PerUserPoolDataSource ds = (PerUserPoolDataSource) this.ds;
         ds.setPerUserBlockWhenExhausted(user, Boolean.FALSE);
         assertEquals(Boolean.FALSE, ds.getPerUserBlockWhenExhausted(user));
-        // when the code above is executed, the backing map was initalized
+        // when the code above is executed, the backing map was initialized
         // now check if that still works. The backing map is NOT clear'ed.
         ds.setPerUserBlockWhenExhausted("anotheruser", Boolean.FALSE);
         assertEquals(Boolean.FALSE, ds.getPerUserBlockWhenExhausted(user));
