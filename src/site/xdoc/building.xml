@@ -28,7 +28,7 @@
           <code>mvn clean package</code>
         </strong>
         .
-        The result will be in the "target" subdirectory.
+        The results will be in "commons-dbcp2/target/" and "commons-dbcp2-jakarta/target/".
       </p>
       <p>
         To build the Javadocs, run
@@ -36,7 +36,7 @@
           <code>mvn clean javadoc:javadoc</code>
         </strong>
         .
-        The result will be in "target/site/apidocs/".
+        The result will be in "commons-dbcp2/target/site/apidocs/" and "commons-dbcp2-jakarta/target/site/apidocs/".
       </p>
       <p>
         To build the full website, run

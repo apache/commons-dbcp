@@ -11,7 +11,7 @@ site-content
 /.pmd
 /.project
 /.settings
-/ObjectStore/
+ObjectStore/
 /bin/
 
 # no IDE stuff in our SCM

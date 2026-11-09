@@ -22,26 +22,40 @@
         <format>tar.gz</format>
         <format>zip</format>
     </formats>
+    <baseDirectory>commons-dbcp2-${project.version}</baseDirectory>
     <includeSiteDirectory>false</includeSiteDirectory>
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>org.apache.commons:commons-dbcp2:*</include>
+                <include>org.apache.commons:commons-dbcp2-jakarta:*</include>
+            </includes>
+            <excludes>
+                <exclude>*:*:jar:javadoc</exclude>
+            </excludes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>org.apache.commons:*:jar:javadoc</include>
+            </includes>
+            <outputDirectory>apidocs/${artifact.artifactId}</outputDirectory>
+            <unpack>true</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+        </dependencySet>
+    </dependencySets>
     <fileSets>
         <fileSet>
+            <directory>..</directory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>LICENSE.txt</include>
                 <include>NOTICE.txt</include>
-                <include>README.txt</include>
+                <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>target</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>target/site/apidocs</directory>
-            <outputDirectory>apidocs</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>
