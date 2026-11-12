@@ -20,7 +20,7 @@ updates:
     schedule:
       interval: "quarterly"
     ignore:
-      - dependency-name: org.jboss.narayana.jta:narayana-jta
+      - dependency-name: org.jboss.narayana.jta:narayana-jta-jakarta
         versions:
           # require Java 11
           - ">= 5.13.0"
