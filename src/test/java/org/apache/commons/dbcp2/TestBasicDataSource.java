@@ -1131,10 +1131,19 @@ public class TestBasicDataSource extends TestConnectionPool {
     void testValidationQueryTimeoutSucceed() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
-        ds.setValidationQueryTimeout(Duration.ofMillis(100)); // Works for TesterStatement
+        ds.setValidationQueryTimeout(Duration.ofSeconds(5)); // Works for TesterStatement
         try (final Connection con = ds.getConnection()) {
             // close right away.
         }
+    }
+
+    @Test
+    void testValidationQueryTimeoutSubSecondFail() {
+        ds.setTestOnBorrow(true);
+        // A positive sub-second timeout must not be truncated to 0 (no timeout); it becomes 1 second, too fast for TesterStatement.
+        ds.setValidationQueryTimeout(Duration.ofMillis(100));
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("timeout"));
     }
 
     @Test
