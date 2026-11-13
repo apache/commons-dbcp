@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
@@ -31,6 +32,8 @@ import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
@@ -47,6 +50,57 @@ import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchroniza
  * TestSuite for BasicManagedDataSource
  */
 public class TestBasicManagedDataSource extends TestBasicDataSource {
+
+    /**
+     * A second transaction participant that votes {@link XAResource#XA_OK} and does nothing else.
+     */
+    private static final class OtherXAResource implements XAResource {
+
+        @Override
+        public void commit(final Xid xid, final boolean onePhase) {
+        }
+
+        @Override
+        public void end(final Xid xid, final int flags) {
+        }
+
+        @Override
+        public void forget(final Xid xid) {
+        }
+
+        @Override
+        public int getTransactionTimeout() {
+            return 0;
+        }
+
+        @Override
+        public boolean isSameRM(final XAResource xaResource) {
+            return xaResource == this;
+        }
+
+        @Override
+        public int prepare(final Xid xid) {
+            return XA_OK;
+        }
+
+        @Override
+        public Xid[] recover(final int flag) {
+            return new Xid[0];
+        }
+
+        @Override
+        public void rollback(final Xid xid) {
+        }
+
+        @Override
+        public boolean setTransactionTimeout(final int seconds) {
+            return false;
+        }
+
+        @Override
+        public void start(final Xid xid, final int flags) {
+        }
+    }
 
     @Override
     protected BasicDataSource createDataSource() throws Exception {
@@ -74,6 +128,39 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             assertNotNull(basicManagedDataSource.createConnectionFactory());
+        }
+    }
+
+    /**
+     * In a two-phase commit, a read-only connection votes {@link XAResource#XA_RDONLY} and the transaction manager
+     * does not call commit or rollback on it afterwards. The pooled connection must still enlist in the next
+     * transaction.
+     *
+     * @throws Exception if the test fails
+     */
+    @Test
+    void testReadOnlyConnectionReusableAfterTwoPhaseCommit() throws Exception {
+        final TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
+            basicManagedDataSource.setTransactionManager(transactionManager);
+            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
+            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
+            basicManagedDataSource.setUsername("userName");
+            basicManagedDataSource.setPassword("password");
+            basicManagedDataSource.setDefaultReadOnly(Boolean.TRUE);
+            basicManagedDataSource.setMaxTotal(1);
+            for (int i = 0; i < 2; i++) {
+                transactionManager.begin();
+                // A second resource makes the transaction manager use two-phase commit
+                transactionManager.getTransaction().enlistResource(new OtherXAResource());
+                try (Connection connection = basicManagedDataSource.getConnection()) {
+                    assertTrue(connection.isReadOnly());
+                }
+                transactionManager.commit();
+            }
+            // The same pooled connection served both transactions
+            assertEquals(1, basicManagedDataSource.getConnectionPool().getCreatedCount());
+            assertEquals(0, basicManagedDataSource.getConnectionPool().getDestroyedCount());
         }
     }
 
