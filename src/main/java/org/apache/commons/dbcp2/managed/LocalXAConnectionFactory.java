@@ -203,6 +203,10 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                     // update the auto commit flag
                     connection.setAutoCommit(originalAutoCommit);
 
+                    // A read-only vote ends this branch: the transaction manager will not call commit or rollback,
+                    // so the resource must not stay associated with the xid.
+                    this.currentXid = null;
+
                     // tell the transaction manager we are read only
                     return XA_RDONLY;
                 }

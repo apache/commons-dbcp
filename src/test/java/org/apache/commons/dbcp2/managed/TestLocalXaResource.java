@@ -451,6 +451,39 @@ public class TestLocalXaResource {
         assertFalse(resource.isSameRM(new LocalXAConnectionFactory.LocalXAResource(conn)));
     }
 
+    /**
+     * A read-only vote ends the transaction branch: the transaction manager does not call commit or rollback after
+     * {@link XAResource#XA_RDONLY}, so the resource must be free to start the next transaction.
+     *
+     * @throws XAException when there are errors with the transaction
+     * @throws SQLException when there are errors with other SQL/DB parts
+     */
+    @Test
+    void testPrepareReadOnlyEndsTransactionBranch() throws SQLException, XAException {
+        final Xid xid = new TestXid();
+        conn.setReadOnly(true);
+        resource.start(xid, XAResource.TMNOFLAGS);
+        assertEquals(XAResource.XA_RDONLY, resource.prepare(xid));
+        assertNull(resource.getXid());
+        assertFalse(((TestConnection) conn).committed);
+        assertFalse(((TestConnection) conn).rolledback);
+        final Xid nextXid = new TestXid();
+        resource.start(nextXid, XAResource.TMNOFLAGS);
+        assertEquals(nextXid, resource.getXid());
+    }
+
+    @Test
+    void testPrepareReadWriteKeepsTransactionBranch() throws SQLException, XAException {
+        final Xid xid = new TestXid();
+        conn.setReadOnly(false);
+        resource.start(xid, XAResource.TMNOFLAGS);
+        assertEquals(XAResource.XA_OK, resource.prepare(xid));
+        assertEquals(xid, resource.getXid());
+        resource.commit(xid, false);
+        assertTrue(((TestConnection) conn).committed);
+        assertNull(resource.getXid());
+    }
+
     @Test
     void testRollback() throws SQLException, XAException {
         final Xid xid = new TestXid();
