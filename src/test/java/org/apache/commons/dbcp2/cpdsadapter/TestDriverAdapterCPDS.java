@@ -336,9 +336,9 @@ public class TestDriverAdapterCPDS {
         // This does not change local field
         assertEquals("bar", pcds.getPassword());
         // Supply correct password in getPooledConnection
-        // Call will succeed and overwrite property
+        // Call will succeed without changing the configured properties
         pcds.getPooledConnection("foo", "bar").close();
-        assertEquals("bar", pcds.getConnectionProperties().getProperty("password"));
+        assertEquals("bad", pcds.getConnectionProperties().getProperty("password"));
     }
 
     @Test
