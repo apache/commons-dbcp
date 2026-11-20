@@ -839,6 +839,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public void setAutoCommit(final boolean autoCommit) throws SQLException {
         checkOpen();
+        cachedAutoCommit = null;
         try {
             connection.setAutoCommit(autoCommit);
             if (cacheState) {

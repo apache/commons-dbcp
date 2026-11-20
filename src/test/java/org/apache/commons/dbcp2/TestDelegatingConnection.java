@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -340,6 +341,112 @@ public class TestDelegatingConnection {
             h2DConnection.rollback(h2DConnection.setSavepoint());
         } finally {
             h2DConnection.setAutoCommit(true);
+        }
+    }
+
+    @Test
+    void testSetAutoCommitErrorAfterPhysicalChange() throws SQLException {
+        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_error")) {
+            physical.setAutoCommit(true);
+            final AssertionError failure = new AssertionError("setAutoCommit failed");
+            final Connection faulty = new DelegatingConnection<Connection>(physical) {
+                @Override
+                public void setAutoCommit(final boolean autoCommit) throws SQLException {
+                    super.setAutoCommit(autoCommit);
+                    throw failure;
+                }
+            };
+            try (DelegatingConnection<Connection> outer = new DelegatingConnection<>(faulty)) {
+                assertTrue(outer.getAutoCommit());
+                final AssertionError thrown = assertThrows(AssertionError.class, () -> outer.setAutoCommit(false));
+                assertSame(failure, thrown);
+                assertFalse(physical.getAutoCommit());
+                assertFalse(outer.getAutoCommit());
+            }
+        }
+    }
+
+    @Test
+    void testSetAutoCommitErrorFromDelegateGetter() throws SQLException {
+        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_getter_error")) {
+            physical.setAutoCommit(true);
+            final AssertionError failure = new AssertionError("getAutoCommit failed");
+            final Connection faulty = new DelegatingConnection<Connection>(physical) {
+                private boolean failedOnce;
+
+                @Override
+                public boolean getAutoCommit() throws SQLException {
+                    if (!failedOnce && !physical.getAutoCommit()) {
+                        failedOnce = true;
+                        throw failure;
+                    }
+                    return physical.getAutoCommit();
+                }
+            };
+            try (DelegatingConnection<Connection> outer = new DelegatingConnection<>(faulty)) {
+                assertTrue(outer.getAutoCommit());
+                final AssertionError thrown = assertThrows(AssertionError.class, () -> outer.setAutoCommit(false));
+                assertSame(failure, thrown);
+                assertFalse(physical.getAutoCommit());
+                assertFalse(outer.getAutoCommit());
+            }
+        }
+    }
+
+    @Test
+    void testSetAutoCommitErrorWithCacheStateDisabled() throws SQLException {
+        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_no_cache")) {
+            physical.setAutoCommit(true);
+            final AssertionError failure = new AssertionError("setAutoCommit failed");
+            final DelegatingConnection<Connection> faulty = new DelegatingConnection<Connection>(physical) {
+                @Override
+                public void setAutoCommit(final boolean autoCommit) throws SQLException {
+                    super.setAutoCommit(autoCommit);
+                    throw failure;
+                }
+            };
+            faulty.setCacheState(false);
+            try (DelegatingConnection<DelegatingConnection<Connection>> outer = new DelegatingConnection<>(faulty)) {
+                outer.setCacheState(false);
+                assertTrue(outer.getAutoCommit());
+                final AssertionError thrown = assertThrows(AssertionError.class, () -> outer.setAutoCommit(false));
+                assertSame(failure, thrown);
+                assertFalse(physical.getAutoCommit());
+                assertFalse(outer.getAutoCommit());
+            }
+        }
+    }
+
+    @Test
+    void testSetAutoCommitSqlExceptionAfterPhysicalChange() throws SQLException {
+        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_sql_exception")) {
+            physical.setAutoCommit(true);
+            final SQLException failure = new SQLException("setAutoCommit failed");
+            final Connection faulty = new DelegatingConnection<Connection>(physical) {
+                @Override
+                public void setAutoCommit(final boolean autoCommit) throws SQLException {
+                    super.setAutoCommit(autoCommit);
+                    throw failure;
+                }
+            };
+            try (DelegatingConnection<Connection> outer = new DelegatingConnection<>(faulty)) {
+                assertTrue(outer.getAutoCommit());
+                final SQLException thrown = assertThrows(SQLException.class, () -> outer.setAutoCommit(false));
+                assertSame(failure, thrown);
+                assertFalse(physical.getAutoCommit());
+                assertFalse(outer.getAutoCommit());
+            }
+        }
+    }
+
+    @Test
+    void testSetAutoCommitSuccessUpdatesCache() throws SQLException {
+        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_success");
+                DelegatingConnection<Connection> outer = new DelegatingConnection<>(physical)) {
+            assertTrue(outer.getAutoCommit());
+            outer.setAutoCommit(false);
+            assertFalse(physical.getAutoCommit());
+            assertFalse(outer.getAutoCommit());
         }
     }
 
