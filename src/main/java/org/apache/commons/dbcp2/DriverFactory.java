@@ -24,9 +24,46 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * Creates {@link Driver} instances.
+ * Selects JDBC drivers and creates instances for explicitly configured driver classes.
+ * <p>
+ * Driver discovery and loading depend on the JDBC version:
+ * </p>
+ * <ul>
+ * <li>Before JDBC 4.0, applications using {@link DriverManager} generally arranged for drivers to be loaded explicitly, commonly through
+ * {@link Class#forName(String)} or the {@code jdbc.drivers} system property. Drivers then registered themselves with {@link DriverManager}. This was the usual
+ * model for JDBC 1.x, 2.x, and 3.0. JDBC 3.0 was introduced in J2SE 1.4 and remained the JDBC version in Java 5.</li>
+ * <li>JDBC 4.0, introduced in Java SE 6, added automatic driver discovery through Java's service-provider mechanism. A driver JAR on the classpath declares its
+ * driver implementations in {@code META-INF/services/java.sql.Driver}. Provided the service metadata and driver classes are visible to the relevant class
+ * loaders, an application using {@link DriverManager} normally supplies the JDBC URL and any required credentials or connection properties without explicitly
+ * naming or loading the driver class. Explicit loading remains supported for compatibility.</li>
+ * <li>JDBC 4.1 (Java 7), 4.2 (Java 8), and 4.3 (Java 9) retained automatic discovery while adding other JDBC capabilities.</li>
+ * </ul>
+ * <p>
+ * URL-based driver selection predates JDBC 4.0. Automatic discovery changes how drivers become available to {@link DriverManager}; selection uses drivers that
+ * are registered and accessible to the caller. A driver JAR can contain multiple implementations for compatibility or specialized use cases. If several drivers
+ * accept the same JDBC URL, that URL alone does not uniquely identify the intended implementation.
+ * </p>
+ * <p>
+ * Tools and deployment environments may still require an explicit driver class name, including when using modern JDBC drivers. For {@link BasicDataSource}, a
+ * driver supplied through {@link BasicDataSource#setDriver(Driver)} takes precedence over a class name supplied through
+ * {@link BasicDataSource#setDriverClassName(String)}. If neither is configured, this factory uses {@link DriverManager#getDriver(String)} to select an
+ * available driver for the configured URL.
+ * </p>
+ * <p>
+ * Whether a driver JAR is supplied through a user interface, obtained as a Maven dependency, or made available through another build or deployment process, it
+ * contains executable code chosen for the application to load. Automatic discovery neither downloads the driver nor establishes its trustworthiness. Developers
+ * and administrators are responsible for selecting trusted dependencies and controlling who can change driver configuration.
+ * </p>
+ * <p>
+ * When a driver class name is configured, this factory checks that the class implements {@link Driver} before initializing it or invoking its constructor. This
+ * hardening prevents unrelated classes from being initialized or instantiated through this driver-creation path. A malicious implementation of {@link Driver}
+ * can still pass the type check and execute code with the privileges available to it. Type validation does not establish that a driver is safe, and DBCP does
+ * not provide a sandbox for driver implementations. The driver JAR must therefore be trusted.
+ * </p>
  *
  * @since 2.7.0
+ * @see DriverManager
+ * @see <a href="https://docs.oracle.com/javase/9/docs/api/java/sql/package-summary.html">JDBC version history and features</a>
  */
 final class DriverFactory {
 
@@ -43,14 +80,12 @@ final class DriverFactory {
 
     /**
      * Selects the JDBC driver for a data source, creating an instance when a driver class name is configured.
-     *
      * <p>
      * An explicitly configured driver takes precedence. Otherwise, a named class is loaded without initialization using the configured class loader, or DBCP's
      * defining class loader if none is configured. If the class is not found, the thread context class loader is tried. The class must implement {@link Driver}
      * before DBCP initializes and instantiates it, and its instance must accept the configured URL. If neither a driver instance nor a class name is
      * configured, {@link DriverManager#getDriver(String)} selects a driver for that URL.
      * </p>
-     *
      * <p>
      * Failures use SQLState {@code 08001} (client unable to establish a connection). If driver instantiation or URL validation throws a {@link SQLException},
      * its vendor code and any non-null SQLState are preserved in the wrapping exception. The original exception chain is retained.
