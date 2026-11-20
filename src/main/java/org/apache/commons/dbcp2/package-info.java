@@ -124,5 +124,62 @@
  * <pre>
  * Connection conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:example");
  * </pre>
+ * <p>
+ * Q: Do I need to specify or explicitly load a JDBC driver class?
+ * </p>
+ * <p>
+ * A: Usually not with JDBC 4.0 or later when using {@link java.sql.DriverManager}. JDBC 4.0, introduced in Java SE 6,
+ * added automatic driver discovery through Java's service-provider mechanism. A driver JAR on the classpath declares
+ * its driver implementations in {@code META-INF/services/java.sql.Driver}. Provided the service metadata and driver
+ * classes are visible to the relevant class loaders, the application normally supplies the JDBC URL and any required
+ * credentials or connection properties without explicitly naming or loading the driver class.
+ * </p>
+ * <p>
+ * Before JDBC 4.0, applications using {@link java.sql.DriverManager} generally arranged for drivers to be loaded
+ * explicitly, commonly through {@link java.lang.Class#forName(String)} or the {@code jdbc.drivers} system property.
+ * Drivers then registered themselves with {@link java.sql.DriverManager}. This was the usual model for JDBC 1.x,
+ * 2.x, and 3.0. JDBC 3.0 was introduced in J2SE 1.4 and remained the JDBC version in Java 5.
+ * </p>
+ * <p>
+ * JDBC 4.1 (Java 7), 4.2 (Java 8), and 4.3 (Java 9) retained automatic discovery while adding other JDBC capabilities.
+ * Explicit loading remains supported for compatibility. Tools and deployment environments may still require a driver
+ * class name, including with modern JDBC drivers. See the
+ * <a href="https://docs.oracle.com/javase/9/docs/api/java/sql/package-summary.html">JDBC version history and features</a>.
+ * </p>
+ * <p>
+ * Q: How does DBCP select a JDBC driver?
+ * </p>
+ * <p>
+ * A: When using {@link org.apache.commons.dbcp2.BasicDataSource}, a driver instance supplied through
+ * {@link org.apache.commons.dbcp2.BasicDataSource#setDriver(java.sql.Driver)} takes precedence over a class name
+ * supplied through {@link org.apache.commons.dbcp2.BasicDataSource#setDriverClassName(String)}. If neither is
+ * configured, DBCP uses {@link java.sql.DriverManager#getDriver(String)} to select an available driver for the
+ * configured JDBC URL. See {@link org.apache.commons.dbcp2.BasicDataSource#createConnectionFactory()} for details
+ * of class loading and driver validation.
+ * </p>
+ * <p>
+ * URL-based selection predates JDBC 4.0. Automatic discovery changes how drivers become available to
+ * {@link java.sql.DriverManager}; selection uses drivers that are registered and accessible to the caller. A driver
+ * JAR can contain multiple implementations for compatibility or specialized use cases. If several drivers accept
+ * the same JDBC URL, that URL alone does not uniquely identify the intended implementation.
+ * </p>
+ * <p>
+ * Q: Does DBCP make an untrusted JDBC driver safe to use?
+ * </p>
+ * <p>
+ * A: No. Whether a driver JAR is supplied through a user interface, obtained as a Maven dependency, or made available
+ * through another build or deployment process, it contains executable code chosen for the application to load.
+ * Automatic discovery neither downloads the driver nor establishes its trustworthiness. Developers and
+ * administrators are responsible for selecting trusted dependencies and controlling who can change driver
+ * configuration.
+ * </p>
+ * <p>
+ * When {@link org.apache.commons.dbcp2.BasicDataSource} loads a driver class by name, it checks that the class
+ * implements {@link java.sql.Driver} before initializing it or invoking its constructor. This hardening prevents
+ * unrelated classes from being initialized or instantiated through that driver-creation path. A malicious
+ * implementation of {@link java.sql.Driver} can still pass the check and execute code with the privileges available
+ * to it. Type validation does not establish that a driver is safe, and DBCP does not provide a sandbox for driver
+ * implementations. The driver JAR must therefore be trusted.
+ * </p>
  */
 package org.apache.commons.dbcp2;

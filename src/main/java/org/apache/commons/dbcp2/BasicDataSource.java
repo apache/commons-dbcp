@@ -458,21 +458,60 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
-     * Creates a JDBC connection factory for this data source. The JDBC driver is loaded using the following algorithm:
+     * Creates a JDBC connection factory for this data source.
+     *
+     * <p>
+     * The JDBC driver is selected using the following algorithm:
+     * </p>
      * <ol>
-     * <li>If a Driver instance has been specified via {@link #setDriver(Driver)}, use it.</li>
+     * <li>If a {@link Driver} instance has been specified via {@link #setDriver(Driver)}, use it.</li>
      * <li>If no Driver instance was specified and {@code driverClassName} is specified, load that class without initialization using the
      * {@link ClassLoader} that loaded DBCP or the {@code driverClassLoader}, if set.</li>
      * <li>If the class cannot be found with that loader, try the context class loader of the current thread.</li>
      * <li>Check that the loaded class implements {@link Driver} before initializing and instantiating it, then check that it accepts the configured URL.</li>
      * <li>If neither a Driver instance nor a class name was specified, use {@link DriverManager#getDriver(String)} with the configured URL.</li>
      * </ol>
+     *
+     * <p>
+     * Before JDBC 4.0, applications using {@link DriverManager} generally arranged for drivers to be loaded explicitly, commonly through
+     * {@link Class#forName(String)} or the {@code jdbc.drivers} system property. Drivers then registered themselves with {@link DriverManager}. This was the
+     * usual model for JDBC 1.x, 2.x, and 3.0. JDBC 3.0 was introduced in J2SE 1.4 and remained the JDBC version in Java 5.
+     * </p>
+     *
+     * <p>
+     * JDBC 4.0, introduced in Java SE 6, added automatic driver discovery through Java's service-provider mechanism. A driver JAR on the classpath declares
+     * its driver implementations in {@code META-INF/services/java.sql.Driver}. Provided the service metadata and driver classes are visible to the relevant
+     * class loaders, applications using {@link DriverManager} normally supply the JDBC URL and any required credentials or connection properties without
+     * explicitly naming or loading the driver class. Explicit loading remains supported. JDBC 4.1 (Java 7), 4.2 (Java 8), and 4.3 (Java 9) retained automatic
+     * discovery while adding other JDBC capabilities.
+     * </p>
+     *
+     * <p>
+     * URL-based selection predates JDBC 4.0 and uses drivers that are registered and accessible to the caller. A driver JAR can contain multiple
+     * implementations for compatibility or specialized use cases. If several drivers accept the same JDBC URL, that URL alone does not uniquely identify
+     * the intended implementation. Tools and deployment environments may still require an explicit driver class name, including with modern JDBC drivers.
+     * </p>
+     *
+     * <p>
+     * Whether supplied through a user interface, obtained as a Maven dependency, or made available through another build or deployment process, a driver
+     * JAR contains executable code chosen for the application to load. Automatic discovery neither downloads the driver nor establishes its trustworthiness.
+     * Developers and administrators are responsible for selecting trusted dependencies and controlling who can change driver configuration.
+     * </p>
+     *
+     * <p>
+     * When this method loads a class by name, the type check prevents unrelated classes from being initialized or instantiated through this driver-creation
+     * path. A malicious implementation of {@link Driver} can still pass the check and execute code with the privileges available to it. Type validation
+     * does not establish that a driver is safe, and DBCP does not provide a sandbox for driver implementations. The driver JAR must therefore be trusted.
+     * </p>
+     *
      * <p>
      * This method exists so subclasses can replace the implementation class.
      * </p>
      *
      * @return A new connection factory.
-     * @throws SQLException If the connection factory cannot be created
+     * @throws SQLException If the connection factory cannot be created.
+     * @see DriverManager
+     * @see <a href="https://docs.oracle.com/javase/9/docs/api/java/sql/package-summary.html">JDBC version history and features</a>
      */
     protected ConnectionFactory createConnectionFactory() throws SQLException {
         // Load the JDBC driver class
