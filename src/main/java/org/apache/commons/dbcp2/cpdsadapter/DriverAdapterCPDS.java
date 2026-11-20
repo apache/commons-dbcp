@@ -186,9 +186,13 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the connection properties passed to the JDBC driver.
+     * Gets the configured connection properties.
      *
-     * @return The JDBC connection properties used when creating connections.
+     * <p>
+     * Connection requests apply their credentials to a shallow copy of these properties without changing the configured properties.
+     * </p>
+     *
+     * @return The configured JDBC connection properties, or {@code null} if none are configured.
      */
     public Properties getConnectionProperties() {
         return connectionProperties;
@@ -413,21 +417,23 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Attempts to establish a database connection.
      *
      * @param pooledUserName name to be used for the connection
-     * @param pooledUserPassword password to be used fur the connection
+     * @param pooledUserPassword password to be used for the connection
      */
     @Override
     public PooledConnection getPooledConnection(final String pooledUserName, final String pooledUserPassword) throws SQLException {
         getConnectionCalled = true;
-        if (connectionProperties != null) {
-            update(connectionProperties, Constants.KEY_USER, pooledUserName);
-            update(connectionProperties, Constants.KEY_PASSWORD, pooledUserPassword);
+        final Properties configuredProperties = connectionProperties;
+        final Properties properties = configuredProperties == null ? null : (Properties) configuredProperties.clone();
+        if (properties != null) {
+            update(properties, Constants.KEY_USER, pooledUserName);
+            update(properties, Constants.KEY_PASSWORD, pooledUserPassword);
         }
         // Workaround for buggy WebLogic 5.1 class loader - ignore ClassCircularityError upon first invocation.
         PooledConnectionImpl pooledConnection = null;
         try {
-            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword);
+            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword, properties);
         } catch (final ClassCircularityError e) {
-            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword);
+            pooledConnection = getPooledConnectionImpl(pooledUserName, pooledUserPassword, properties);
         }
         if (isPoolPreparedStatements()) {
             final GenericKeyedObjectPoolConfig<DelegatingPreparedStatement> config = new GenericKeyedObjectPoolConfig<>();
@@ -458,10 +464,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     @SuppressWarnings("resource") // Caller closes
-    private PooledConnectionImpl getPooledConnectionImpl(final String pooledUserName, final String pooledUserPassword) throws SQLException {
+    private PooledConnectionImpl getPooledConnectionImpl(final String pooledUserName, final String pooledUserPassword, final Properties properties)
+            throws SQLException {
         PooledConnectionImpl pooledConnection;
-        if (connectionProperties != null) {
-            pooledConnection = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), connectionProperties));
+        if (properties != null) {
+            pooledConnection = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), properties));
         } else {
             pooledConnection = new PooledConnectionImpl(DriverManager.getConnection(getUrl(), pooledUserName, pooledUserPassword));
         }
@@ -571,13 +578,17 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     /**
      * Sets the connection properties passed to the JDBC driver.
+     *
      * <p>
-     * If {@code props} contains "user" and/or "password" properties, the corresponding instance properties are
-     * set. If these properties are not present, they are filled in using {@link #getUser()}, {@link #getPassword()}
-     * when {@link #getPooledConnection()} is called, or using the actual parameters to the method call when
-     * {@link #getPooledConnection(String, String)} is called. Calls to {@link #setUser(String)} or
-     * {@link #setPassword(String)} overwrite the values of these properties if {@code connectionProperties} is not
-     * null.
+     * If {@code props} contains "user" and/or "password" properties, including inherited defaults, the corresponding instance properties are set.
+     * Calls to {@link #setUser(String)} or {@link #setPassword(String)} overwrite these entries in {@code props} if it is not {@code null}.
+     * </p>
+     *
+     * <p>
+     * Each connection request uses a shallow copy of the configured properties. The copy's "user" and "password" entries are overwritten using
+     * {@link #getUser()} and {@link #getPassword()} for {@link #getPooledConnection()}, or the supplied arguments for
+     * {@link #getPooledConnection(String, String)}. A {@code null} credential removes the corresponding explicit entry from the copy; inherited
+     * {@link Properties} defaults remain in effect. Connection requests do not modify {@code props}.
      * </p>
      *
      * @param props Connection properties to use when creating new connections.

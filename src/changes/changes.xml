@@ -68,6 +68,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory, Stamatis Zampetakis">Check configured JDBC driver classes implement java.sql.Driver before initializing or instantiating them.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Report SQLState 08001 for driver loading and creation failures, preserving driver-supplied SQLStates and vendor codes.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Mockito/Objenesis test failures on Java 28 and later using a Maven profile.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Isolate DriverAdapterCPDS connection properties for concurrent connection requests so credentials cannot cross between users. Per-call credentials no longer modify the configured connection properties.</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 107.</action>
