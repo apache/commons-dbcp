@@ -167,8 +167,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     private String driverClassName;
 
     /**
-     * The class loader instance to use to load the JDBC driver. If not specified, {@link Class#forName(String)} is used
-     * to load the JDBC driver. If specified, {@link Class#forName(String, boolean, ClassLoader)} is used.
+     * The class loader instance to use to load the JDBC driver. If not specified, the class loader that loaded DBCP is used.
+     * The driver class is loaded without initialization using {@link Class#forName(String, boolean, ClassLoader)}.
      */
     private ClassLoader driverClassLoader;
 
@@ -460,13 +460,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Creates a JDBC connection factory for this data source. The JDBC driver is loaded using the following algorithm:
      * <ol>
-     * <li>If a Driver instance has been specified via {@link #setDriver(Driver)} use it</li>
-     * <li>If no Driver instance was specified and {code driverClassName} is specified that class is loaded using the
-     * {@link ClassLoader} of this class or, if {code driverClassLoader} is set, {code driverClassName} is loaded
-     * with the specified {@link ClassLoader}.</li>
-     * <li>If {code driverClassName} is specified and the previous attempt fails, the class is loaded using the
-     * context class loader of the current thread.</li>
-     * <li>If a driver still isn't loaded one is loaded via the {@link DriverManager} using the specified {code connectionString}.</li>
+     * <li>If a Driver instance has been specified via {@link #setDriver(Driver)}, use it.</li>
+     * <li>If no Driver instance was specified and {@code driverClassName} is specified, load that class without initialization using the
+     * {@link ClassLoader} that loaded DBCP or the {@code driverClassLoader}, if set.</li>
+     * <li>If the class cannot be found with that loader, try the context class loader of the current thread.</li>
+     * <li>Check that the loaded class implements {@link Driver} before initializing and instantiating it, then check that it accepts the configured URL.</li>
+     * <li>If neither a Driver instance nor a class name was specified, use {@link DriverManager#getDriver(String)} with the configured URL.</li>
      * </ol>
      * <p>
      * This method exists so subclasses can replace the implementation class.
@@ -2074,6 +2073,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
     /**
      * Sets the JDBC driver class name.
+     *
+     * <p>
+     * The class name must identify a trusted implementation of {@link Driver}. DBCP checks that the class implements {@link Driver} before
+     * initializing or instantiating it. This type check does not restrict the code that a Driver implementation or a custom class loader can execute.
+     * </p>
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
