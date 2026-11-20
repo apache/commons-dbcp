@@ -388,6 +388,24 @@
         </pluginManagement>
       </build>
     </profile>
+    <profile>
+      <id>jdk28-plus</id>
+      <activation>
+        <jdk>[28,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Temporarily allow Mockito/Objenesis to construct test doubles on Java 28 and later. -->
+              <argLine>@{argLine} ${surefire.argline} -Djdk.reflect.allowNonSerializableConstruction=true</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
   <developers>
     <developer>
