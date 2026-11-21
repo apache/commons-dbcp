@@ -59,11 +59,11 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     private final ObjectPool<PoolableConnection> pool;
 
     private final ObjectNameWrapper jmxObjectName;
-
     /**
      * Use a prepared statement for validation, retaining the last used SQL to check if the validation query has changed.
      */
     private PreparedStatement validationPreparedStatement;
+
     private String lastValidationSql;
 
     /**
@@ -197,7 +197,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 } catch (final IllegalStateException ise) {
                     // pool is closed, so close the connection
                     passivate();
-                    getInnermostDelegate().close();
+                    close(getInnermostDelegateInternal());
                 } catch (final Exception ignored) {
                     // DO NOTHING the original exception will be rethrown
                 }
@@ -217,7 +217,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 } catch (final IllegalStateException e) {
                     // pool is closed, so close the connection
                     passivate();
-                    getInnermostDelegate().close();
+                    close(getInnermostDelegateInternal());
                 } catch (final Exception e) {
                     throw new SQLException("Cannot close connection (invalidating pooled object failed)", e);
                 }
@@ -229,7 +229,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
                 } catch (final IllegalStateException e) {
                     // pool is closed, so close the connection
                     passivate();
-                    getInnermostDelegate().close();
+                    close(getInnermostDelegateInternal());
                 } catch (final SQLException | RuntimeException e) {
                     throw e;
                 } catch (final Exception e) {
@@ -328,7 +328,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Checks the SQLState of the input exception and any nested SQLExceptions it wraps.
+     * Checks the SQLState of the input exception and its linked SQLExceptions, examining each exception at most once even if the chain contains a cycle.
      * <p>
      * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the
      * configured list of fatal exception codes. If this property is not set, codes are compared against the default
@@ -341,17 +341,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * @return true if the exception signals a disconnection
      */
     boolean isFatalException(final SQLException e) {
-        boolean fatalException = isDisconnectionSqlException(e);
-        if (!fatalException) {
-            SQLException parentException = e;
-            SQLException nextException = e.getNextException();
-            while (nextException != null && nextException != parentException && !fatalException) {
-                fatalException = isDisconnectionSqlException(nextException);
-                parentException = nextException;
-                nextException = parentException.getNextException();
-            }
-        }
-        return fatalException;
+        return Utils.findInChain(e, this::isDisconnectionSqlException, SQLException::getNextException) != null;
     }
 
     @Override

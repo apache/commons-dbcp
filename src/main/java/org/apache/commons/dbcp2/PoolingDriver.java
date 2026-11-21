@@ -71,6 +71,11 @@ public class PoolingDriver implements Driver {
             }
             return null;
         }
+
+        @Override
+        protected boolean isAccessToUnderlyingConnectionAllowed() {
+            return PoolingDriver.this.isAccessToUnderlyingConnectionAllowed();
+        }
     }
 
     private static final DriverPropertyInfo[] EMPTY_DRIVER_PROPERTY_INFO_ARRAY = {};
@@ -112,6 +117,9 @@ public class PoolingDriver implements Driver {
 
     /**
      * Constructs a new driver with {@code accessToUnderlyingConnectionAllowed} enabled.
+     * <p>
+     * This permits delegate getters and JDBC unwrapping on its connections, statements, result sets, and database metadata.
+     * </p>
      */
     public PoolingDriver() {
         this(true);
@@ -121,7 +129,8 @@ public class PoolingDriver implements Driver {
      * For unit testing purposes.
      *
      * @param accessToUnderlyingConnectionAllowed
-     *            Do {@link DelegatingConnection}s created by this driver permit access to the delegate?
+     *            Whether connections and their statements, result sets, and database metadata permit access to delegates. When false,
+     *            delegate getters return {@code null} and JDBC unwrapping is limited to interfaces implemented by the wrapper itself.
      */
     protected PoolingDriver(final boolean accessToUnderlyingConnectionAllowed) {
         this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;

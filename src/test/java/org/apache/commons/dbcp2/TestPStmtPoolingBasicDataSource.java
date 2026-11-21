@@ -56,6 +56,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     @Test
     void testLRUBehavior() throws Exception {
         ds.setMaxOpenPreparedStatements(3);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
 
         final Connection conn = getConnection();
         assertNotNull(conn);
@@ -143,6 +144,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
     // PreparedStatement cache should be different depending on the Catalog
     @Test
     void testPStmtCatalog() throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(true);
         final Connection conn = getConnection();
         conn.setCatalog("catalog1");
         final DelegatingPreparedStatement stmt1 = (DelegatingPreparedStatement) conn.prepareStatement("select 'a' from dual");

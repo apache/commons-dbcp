@@ -21,18 +21,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.commons.pool2.BaseObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * TestSuite for PoolingDataSource
@@ -42,6 +49,19 @@ public class TestPoolingDataSource extends TestConnectionPool {
     protected PoolingDataSource<PoolableConnection> ds;
 
     private GenericObjectPool<PoolableConnection> pool;
+
+    private static void closeWithStatementFailure(final DelegatingConnection<?> connection) throws SQLException {
+        try (TesterStatement physicalStatement = new TesterStatement(connection);
+                DelegatingStatement statement = new DelegatingStatement(connection, physicalStatement)) {
+            physicalStatement.setSqlExceptionOnClose(true);
+            try {
+                assertThrows(SQLException.class, connection::close);
+            } finally {
+                physicalStatement.setSqlExceptionOnClose(false);
+            }
+        }
+    }
+
     @Override
     protected Connection getConnection() throws Exception {
         return ds.getConnection();
@@ -73,6 +93,111 @@ public class TestPoolingDataSource extends TestConnectionPool {
     public void tearDown() throws Exception {
         ds.close();
         super.tearDown();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false, false", "false, true", "true, false", "true, true"})
+    void testAbortClosedGuardDoesNotAffectNextBorrower(final boolean allowed, final boolean failedClose) throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(allowed);
+        try (DelegatingConnection<?> first = (DelegatingConnection<?>) ds.getConnection()) {
+            final Connection pooled = first.getDelegateInternal();
+            final TesterConnection physical = (TesterConnection) first.getInnermostDelegateInternal();
+            if (failedClose) {
+                closeWithStatementFailure(first);
+            } else {
+                first.close();
+            }
+            assertTrue(first.isClosed());
+            try (DelegatingConnection<?> second = (DelegatingConnection<?>) ds.getConnection()) {
+                assertSame(pooled, second.getDelegateInternal());
+                first.abort(Runnable::run);
+                assertFalse(physical.isAborted());
+                assertFalse(second.isClosed());
+                assertTrue(second.isValid(1));
+                assertEquals(1, pool.getNumActive());
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testAbortOpenGuardReleasesPoolCapacity(final boolean allowed) throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(allowed);
+        pool.setMaxTotal(1);
+        try (DelegatingConnection<?> first = (DelegatingConnection<?>) ds.getConnection()) {
+            final TesterConnection physical = (TesterConnection) first.getInnermostDelegateInternal();
+            first.abort(Runnable::run);
+            assertTrue(physical.isAborted());
+            first.close();
+            assertTrue(first.isClosed());
+            assertNull(first.getDelegateInternal());
+            assertEquals(0, pool.getNumActive());
+            // Invalidation may already have created an idle replacement.
+            try (DelegatingConnection<?> second = (DelegatingConnection<?>) ds.getConnection()) {
+                final TesterConnection replacement = (TesterConnection) second.getInnermostDelegateInternal();
+                assertNotSame(physical, replacement);
+                assertTrue(second.isValid(1));
+                first.abort(Runnable::run);
+                assertFalse(replacement.isAborted());
+                assertEquals(1, pool.getNumActive());
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testCloseClearsDelegateAfterStatementFailure(final boolean allowed) throws Exception {
+        ds.setAccessToUnderlyingConnectionAllowed(allowed);
+        try (DelegatingConnection<?> connection = (DelegatingConnection<?>) ds.getConnection()) {
+            closeWithStatementFailure(connection);
+            assertTrue(connection.isClosed());
+            assertNull(connection.getDelegateInternal());
+            assertNull(connection.getDelegate());
+            assertNull(connection.getInnermostDelegateInternal());
+            assertThrows(SQLException.class, connection::createStatement);
+            assertEquals(0, pool.getNumActive());
+            assertEquals(1, pool.getNumIdle());
+            connection.close();
+            assertEquals(1, pool.getNumIdle());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"isClosed", "close"})
+    void testCloseFailureLeavesGuardClosedAndDetached(final String failedMethod) throws Exception {
+        final Exception failure = "isClosed".equals(failedMethod) ? new IllegalStateException("State check failed") : new SQLException("Close failed");
+        final Connection physical = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[] {Connection.class},
+                (proxy, method, args) -> {
+                    if (failedMethod.equals(method.getName())) {
+                        throw failure;
+                    }
+                    if ("isClosed".equals(method.getName())) {
+                        return false;
+                    }
+                    throw new AssertionError("Unexpected call: " + method.getName());
+                });
+        try (PoolingDataSource<Connection> dataSource = new PoolingDataSource<>(new BaseObjectPool<Connection>() {
+            @Override
+            public Connection borrowObject() {
+                return physical;
+            }
+
+            @Override
+            public void invalidateObject(final Connection connection) {
+                throw new AssertionError("The guard must close its delegate directly");
+            }
+
+            @Override
+            public void returnObject(final Connection connection) {
+                throw new AssertionError("The guard must close its delegate directly");
+            }
+        }); DelegatingConnection<?> guard = (DelegatingConnection<?>) dataSource.getConnection()) {
+            assertSame(failure, assertThrows(failure.getClass(), guard::close));
+            assertTrue(guard.isClosed());
+            assertNull(guard.getDelegateInternal());
+            assertThrows(SQLException.class, guard::createStatement);
+            guard.close();
+        }
     }
 
     @Test

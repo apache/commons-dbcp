@@ -54,31 +54,17 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
 
         @Override
         public void close() throws SQLException {
-            if (getDelegateInternal() != null) {
+            try {
                 super.close();
+            } finally {
+                setClosedInternal(true);
                 super.setDelegate(null);
             }
         }
 
-        /**
-         * @see org.apache.commons.dbcp2.DelegatingConnection#getDelegate()
-         */
         @Override
-        public D getDelegate() {
-            return isAccessToUnderlyingConnectionAllowed() ? super.getDelegate() : null;
-        }
-
-        /**
-         * @see org.apache.commons.dbcp2.DelegatingConnection#getInnermostDelegate()
-         */
-        @Override
-        public Connection getInnermostDelegate() {
-            return isAccessToUnderlyingConnectionAllowed() ? super.getInnermostDelegate() : null;
-        }
-
-        @Override
-        public boolean isClosed() throws SQLException {
-            return getDelegateInternal() == null || super.isClosed();
+        protected boolean isAccessToUnderlyingConnectionAllowed() {
+            return PoolingDataSource.this.isAccessToUnderlyingConnectionAllowed();
         }
     }
 
@@ -217,6 +203,14 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     /**
      * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to
      * the underlying connection. (Default: false)
+     *
+     * <p>
+     * Since 2.15.0, this also controls delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
+     * When disabled, delegate getters return {@code null}, {@code isWrapperFor} returns {@code false}, and {@code unwrap} throws
+     * {@link SQLException} for types requiring access to the delegate. Interfaces implemented by the wrapper itself remain accessible.
+     * Enable this property before creating connections if the application needs driver-specific extensions. This is a safeguard against
+     * accidental misuse, not a security boundary against code running in the same JVM.
+     * </p>
      *
      * @param allow
      *            Access to the underlying connection is granted when true.

@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -117,6 +118,36 @@ public class TestDelegatingConnection {
     void testAbort() throws Exception {
         h2DConnection.abort(r -> {
         });
+    }
+
+    @Test
+    void testAbortClosedWrapperDoesNotTouchDelegate() throws SQLException {
+        delegatingConnection.setClosedInternal(true);
+        delegatingConnection.abort(Runnable::run);
+        assertFalse(((TesterConnection) connection).isAborted());
+        assertFalse(connection.isClosed());
+    }
+
+    @Test
+    void testAbortMissingDelegate() throws SQLException {
+        delegatingConnection.setDelegate(null);
+        delegatingConnection.abort(Runnable::run);
+        assertTrue(delegatingConnection.isClosed());
+        assertFalse(((TesterConnection) connection).isAborted());
+    }
+
+    @Test
+    void testAbortOpenWrapper() throws SQLException {
+        delegatingConnection.abort(Runnable::run);
+        assertTrue(((TesterConnection) connection).isAborted());
+        assertTrue(delegatingConnection.isClosed());
+    }
+
+    @Test
+    void testAbortPreservesSQLException() {
+        final SQLException failure = new SQLException("Abort failed", "HY000", 42);
+        ((TesterConnection) connection).setFailure(failure);
+        assertSame(failure, assertThrows(SQLException.class, () -> delegatingConnection.abort(Runnable::run)));
     }
 
     @Test

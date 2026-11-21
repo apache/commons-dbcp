@@ -53,7 +53,9 @@ public class TestPStmtPooling {
         final ObjectPool<PoolableConnection> connPool = new GenericObjectPool<>(pcf);
         pcf.setPool(connPool);
 
-        return new PoolingDataSource<>(connPool);
+        final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
+        return ds;
 
     }
 
@@ -84,6 +86,7 @@ public class TestPStmtPooling {
         pcf.setPool(connPool);
 
         final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
 
         final Connection conn = ds.getConnection();
         final PreparedStatement ps = conn.prepareStatement("select 1 from dual");
@@ -114,6 +117,7 @@ public class TestPStmtPooling {
         pcf.setPool(connPool);
 
         final PoolingDataSource<?> ds = new PoolingDataSource<>(connPool);
+        ds.setAccessToUnderlyingConnectionAllowed(true);
 
         try (Connection conn = ds.getConnection()) {
             final Statement stmt1 = conn.prepareStatement("select 1 from dual");

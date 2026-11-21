@@ -164,6 +164,8 @@ class TestDriverAdapterCPDSConnectionProperties {
         dataSource.setUser("foo");
         dataSource.setPassword("bar");
         dataSource.setConnectionProperties(properties);
+        // These tests inspect the physical connection's authenticated user.
+        dataSource.setAccessToUnderlyingConnectionAllowed(true);
         return dataSource;
     }
 

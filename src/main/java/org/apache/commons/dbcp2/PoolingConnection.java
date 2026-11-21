@@ -313,11 +313,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             @SuppressWarnings("resource")
             final DelegatingPreparedStatement object = pooledObject.getObject();
             if (object != null) {
-                @SuppressWarnings("resource")
-                final Statement innermostDelegate = object.getInnermostDelegate();
-                if (innermostDelegate != null) {
-                    innermostDelegate.close();
-                }
+                close(object.getInnermostDelegateInternal());
             }
         }
     }
@@ -364,12 +360,12 @@ public class PoolingConnection extends DelegatingConnection<Connection>
             throw new IllegalArgumentException("Prepared statement key is null or invalid.");
         }
         if (key.getStmtType() == StatementType.PREPARED_STATEMENT) {
-            final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegate());
+            final PreparedStatement statement = (PreparedStatement) key.createStatement(getDelegateInternal());
             @SuppressWarnings({"rawtypes", "unchecked" }) // Unable to find way to avoid this
             final PoolablePreparedStatement pps = new PoolablePreparedStatement(statement, key, stmtPool, this);
             return new DefaultPooledObject<>(pps);
         }
-        final CallableStatement statement = (CallableStatement) key.createStatement(getDelegate());
+        final CallableStatement statement = (CallableStatement) key.createStatement(getDelegateInternal());
         final PoolableCallableStatement pcs = new PoolableCallableStatement(statement, key, stmtPool, this);
         return new DefaultPooledObject<>(pcs);
     }

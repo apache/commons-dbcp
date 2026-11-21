@@ -87,8 +87,15 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     @Override
     public void abort(final Executor executor) throws SQLException {
+        if (closed) {
+            return;
+        }
+        final C delegate = connection;
+        if (delegate == null) {
+            return;
+        }
         try {
-            Jdbc41Bridge.abort(connection, executor);
+            Jdbc41Bridge.abort(delegate, executor);
         } catch (final SQLException e) {
             handleException(e);
         }
@@ -156,7 +163,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * <ol>
      * <li>Call {@link #passivate()}</li>
      * <li>Call close (or the equivalent appropriate action) on the wrapped connection</li>
-     * <li>Set {@code closed} to {@code false}</li>
+     * <li>Set {@code closed} to {@code true}</li>
      * </ol>
      */
     @Override
@@ -404,18 +411,18 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Returns my underlying {@link Connection}.
+     * Gets my underlying {@link Connection}, if access is allowed.
      *
-     * @return my underlying {@link Connection}.
+     * @return my underlying {@link Connection}, or {@code null} if unavailable or access is not allowed.
      */
     public C getDelegate() {
-        return getDelegateInternal();
+        return isAccessToUnderlyingConnectionAllowed() ? getDelegateInternal() : null;
     }
 
     /**
      * Gets the delegate connection.
      *
-     * @return The delegate connection.
+     * @return The delegate connection, may be null.
      */
     protected final C getDelegateInternal() {
         return connection;
@@ -433,39 +440,28 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * If my underlying {@link Connection} is not a {@link DelegatingConnection}, returns it, otherwise recursively
-     * invokes this method on my delegate.
+     * Gets the innermost connection delegate, if access is allowed.
      * <p>
-     * Hence this method will return the first delegate that is not a {@link DelegatingConnection}, or {@code null} when
-     * no non-{@link DelegatingConnection} delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@link DelegatingConnection}s, and you want to make sure to obtain
-     * a "genuine" {@link Connection}.
+     * Traverses nested {@link DelegatingConnection} wrappers, respecting each wrapper's access policy, to find the first delegate
+     * that is not a {@link DelegatingConnection}.
      * </p>
      *
-     * @return innermost delegate.
+     * @return the innermost delegate, or {@code null} if access is denied, the chain ends in {@code null}, or a cycle is detected.
      */
+    @SuppressWarnings("resource")
     public Connection getInnermostDelegate() {
-        return getInnermostDelegateInternal();
+        return Utils.getInnermostDelegate((Connection) this, DelegatingConnection.class, DelegatingConnection::getDelegate);
     }
 
     /**
      * Although this method is public, it is part of the internal API and should not be used by clients. The signature
      * of this method may change at any time including in ways that break backwards compatibility.
      *
-     * @return innermost delegate.
+     * @return the innermost delegate, or {@code null} if the chain ends in {@code null} or a cycle is detected.
      */
     @SuppressWarnings("resource")
     public final Connection getInnermostDelegateInternal() {
-        Connection conn = connection;
-        while (conn instanceof DelegatingConnection) {
-            conn = ((DelegatingConnection<?>) conn).getDelegateInternal();
-            if (this == conn) {
-                return null;
-            }
-        }
-        return conn;
+        return Utils.getInnermostDelegate((Connection) this, DelegatingConnection.class, DelegatingConnection::getDelegateInternal);
     }
 
     @Override
@@ -578,9 +574,8 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Compares innermost delegate to the given connection.
      *
-     * @param c
-     *            connection to compare innermost delegate with
-     * @return true if innermost delegate equals {@code c}
+     * @param c connection to compare innermost delegate with.
+     * @return true if innermost delegate equals {@code c}.
      */
     @SuppressWarnings("resource")
     public boolean innermostDelegateEquals(final Connection c) {
@@ -650,9 +645,31 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         return isValid(Duration.ofSeconds(timeoutSeconds));
     }
 
+    /**
+     * Tests whether this wrapper allows access to its underlying connection.
+     * <p>
+     * This policy applies to delegate getters and JDBC unwrapping on this connection and its statements, result sets, and database metadata.
+     * Unwrapping an interface implemented by the wrapper itself remains allowed. The default implementation returns {@code true}; pool guard
+     * wrappers override it to consult their configuration. This policy helps prevent accidental misuse and is not a security boundary against
+     * code running in the same JVM. Internal accessors used by pool lifecycle operations bypass it.
+     * </p>
+     *
+     * @return true if access to the underlying connection is allowed.
+     * @since 2.15.0
+     */
+    protected boolean isAccessToUnderlyingConnectionAllowed() {
+        return true;
+    }
+
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(connection.getClass())) {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        }
+        if (!isAccessToUnderlyingConnectionAllowed() || connection == null) {
+            return false;
+        }
+        if (iface.isAssignableFrom(connection.getClass())) {
             return true;
         }
         return connection.isWrapperFor(iface);
@@ -1073,6 +1090,9 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
+        }
+        if (!isAccessToUnderlyingConnectionAllowed() || connection == null) {
+            throw new SQLException("Access to the underlying connection is not allowed or the delegate is unavailable.");
         }
         if (iface.isAssignableFrom(connection.getClass())) {
             return iface.cast(connection);

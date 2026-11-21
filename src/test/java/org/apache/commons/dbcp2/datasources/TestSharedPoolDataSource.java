@@ -150,6 +150,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         myPcds.setUser("foo");
         myPcds.setPassword("bar");
         myPcds.setPoolPreparedStatements(true);
+        myPcds.setAccessToUnderlyingConnectionAllowed(true);
         myPcds.setMaxPreparedStatements(10);
 
         try (final SharedPoolDataSource spDs = new SharedPoolDataSource()) {
@@ -225,6 +226,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
         mypcds.setUser("foo");
         mypcds.setPassword("bar");
         mypcds.setPoolPreparedStatements(true);
+        mypcds.setAccessToUnderlyingConnectionAllowed(true);
         mypcds.setMaxPreparedStatements(10);
 
         try (final SharedPoolDataSource tds = new SharedPoolDataSource()) {

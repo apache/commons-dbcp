@@ -137,10 +137,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     @Override
     public C getDelegate() {
-        if (isAccessToUnderlyingConnectionAllowed()) {
-            return getDelegateInternal();
-        }
-        return null;
+        return isAccessToUnderlyingConnectionAllowed() ? super.getDelegateInternal() : null;
     }
 
     //
@@ -149,10 +146,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     @Override
     public Connection getInnermostDelegate() {
-        if (isAccessToUnderlyingConnectionAllowed()) {
-            return super.getInnermostDelegateInternal();
-        }
-        return null;
+        return isAccessToUnderlyingConnectionAllowed() ? super.getInnermostDelegate() : null;
     }
 
     /**
@@ -176,10 +170,15 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
     }
 
     /**
-     * If false, getDelegate() and getInnermostDelegate() will return null.
+     * Tests whether access to underlying JDBC objects is allowed.
+     * <p>
+     * When disabled, delegate getters return {@code null} and JDBC unwrapping cannot expose delegates of this connection or its statements,
+     * result sets, and database metadata. Unwrapping an interface implemented by the wrapper itself remains allowed.
+     * </p>
      *
-     * @return if false, getDelegate() and getInnermostDelegate() will return null
+     * @return true if access to underlying JDBC objects is allowed.
      */
+    @Override
     public boolean isAccessToUnderlyingConnectionAllowed() {
         return accessToUnderlyingConnectionAllowed;
     }
