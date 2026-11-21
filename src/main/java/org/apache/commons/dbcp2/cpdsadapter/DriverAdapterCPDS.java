@@ -93,6 +93,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     private static final String KEY_DESCRIPTION = "description";
 
+    private static final String KEY_EXPORT_PASSWORD_AS_REF_ADDR = "exportPasswordAsRefAddr";
+
     private static final String KEY_ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED = "accessToUnderlyingConnectionAllowed";
 
     private static final String KEY_MAX_PREPARED_STATEMENTS = "maxPreparedStatements";
@@ -165,6 +167,12 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Controls access to the underlying connection
      */
     private boolean accessToUnderlyingConnectionAllowed;
+
+    /**
+     * Omits the password from JNDI References when true. The negative form preserves password export when reading serialized instances
+     * written before this field existed, for which the field defaults to false.
+     */
+    private volatile boolean omitPasswordFromReference;
 
     /**
      * Default no-argument constructor for Serialization
@@ -341,6 +349,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                     setPassword(getStringContent(ra));
                 }
 
+                ra = ref.get(KEY_EXPORT_PASSWORD_AS_REF_ADDR);
+                if (isNotEmpty(ra)) {
+                    setExportPasswordAsRefAddr(getBooleanContentString(ra));
+                }
+
                 ra = ref.get(KEY_POOL_PREPARED_STATEMENTS);
                 if (isNotEmpty(ra)) {
                     setPoolPreparedStatements(getBooleanContentString(ra));
@@ -477,7 +490,23 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Implements {@link Referenceable}.
+     * Gets a JNDI Reference containing this data source's connection configuration.
+     *
+     * <p>
+     * By default, the Reference includes the default user's password as a cleartext {@link StringRefAddr}, preserving authentication
+     * when a naming provider reconstructs this data source. Protect the Reference and any directory entries, logs, backups, or replication
+     * streams that contain it as credentials. To omit the password address, call {@link #setExportPasswordAsRefAddr(boolean)} with
+     * {@code false} before creating or binding the Reference. The export setting is itself included in the Reference and restored on lookup.
+     * </p>
+     *
+     * <p>
+     * This option only controls the dedicated {@code password} address. Other values, including credentials embedded in the JDBC URL,
+     * are exported unchanged. It does not omit the configured password from Java serialization or remove passwords from previously created References.
+     * </p>
+     *
+     * @return a Reference describing this data source.
+     * @throws NamingException if the Reference cannot be created.
+     * @see #setExportPasswordAsRefAddr(boolean)
      */
     @Override
     public Reference getReference() throws NamingException {
@@ -485,11 +514,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         final String factory = getClass().getName();
 
         final Reference ref = new Reference(getClass().getName(), factory, null);
+        final boolean exportPassword = isExportPasswordAsRefAddr();
 
         ref.add(new StringRefAddr(KEY_DESCRIPTION, getDescription()));
         ref.add(new StringRefAddr(KEY_DRIVER, getDriver()));
         ref.add(new StringRefAddr(KEY_LOGIN_TIMEOUT, String.valueOf(getLoginTimeout())));
-        ref.add(new StringRefAddr(Constants.KEY_PASSWORD, getPassword()));
+        if (exportPassword) {
+            ref.add(new StringRefAddr(Constants.KEY_PASSWORD, getPassword()));
+        }
+        ref.add(new StringRefAddr(KEY_EXPORT_PASSWORD_AS_REF_ADDR, Boolean.toString(exportPassword)));
         ref.add(new StringRefAddr(Constants.KEY_USER, getUser()));
         ref.add(new StringRefAddr(KEY_URL, getUrl()));
 
@@ -551,6 +584,17 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      */
     public synchronized boolean isAccessToUnderlyingConnectionAllowed() {
         return this.accessToUnderlyingConnectionAllowed;
+    }
+
+    /**
+     * Gets whether {@link #getReference()} includes the default user's password address.
+     *
+     * @return true (the default) to export the password address, or false to omit it.
+     * @since 2.15.0
+     * @see #setExportPasswordAsRefAddr(boolean)
+     */
+    public boolean isExportPasswordAsRefAddr() {
+        return !omitPasswordFromReference;
     }
 
     private boolean isNotEmpty(final RefAddr ra) {
@@ -655,6 +699,29 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     public void setDurationBetweenEvictionRuns(final Duration durationBetweenEvictionRuns) {
         assertInitializationAllowed();
         this.durationBetweenEvictionRuns = durationBetweenEvictionRuns;
+    }
+
+    /**
+     * Sets whether {@link #getReference()} includes the default user's password address.
+     *
+     * <p>
+     * The default is {@code true} for compatibility with existing JNDI deployments. When {@code false}, a newly reconstructed data source
+     * has no default password unless it is supplied separately. Before its first connection attempt, including an unsuccessful attempt,
+     * provision the password with {@link #setPassword(String)} or {@link #setPassword(char[])}. Alternatively, supply credentials to
+     * {@link #getPooledConnection(String, String)}. Containers that look up and immediately use the data source must provide credentials
+     * through their own configuration or retain password export.
+     * </p>
+     *
+     * <p>
+     * This setting can be changed after connections have been requested and affects subsequent References only. It is retained through
+     * JNDI lookup and Java serialization. It does not clear the configured password or redact other Reference addresses, such as the URL.
+     * </p>
+     *
+     * @param exportPasswordAsRefAddr true to export the password address, or false to omit it.
+     * @since 2.15.0
+     */
+    public void setExportPasswordAsRefAddr(final boolean exportPasswordAsRefAddr) {
+        omitPasswordFromReference = !exportPasswordAsRefAddr;
     }
 
     /**

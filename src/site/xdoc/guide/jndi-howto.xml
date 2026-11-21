@@ -72,6 +72,37 @@
 ]]></source>
 </section>
 
+<section name="DriverAdapterCPDS password export">
+<p>
+  Since 2.15.0, <code>DriverAdapterCPDS.setExportPasswordAsRefAddr(false)</code> omits the dedicated
+  <code>password</code> address from References produced by <code>getReference()</code>, including when a naming provider
+  binds the data source through <code>Referenceable</code>. Export remains enabled by default for compatibility.
+  Protect References containing credentials and any directory entries, logs, backups, or replication streams that store them.
+</p>
+<p>
+  When export is disabled, a newly reconstructed data source has no default password. Supply it with <code>setPassword()</code>
+  before the first connection attempt, even an unsuccessful one, or pass credentials to <code>getPooledConnection(user, password)</code>.
+  A container that looks up and immediately uses the data source must supply credentials through its own configuration or retain export.
+  For example, an application that performs the lookup itself can provision the resolved instance before handing it to its pool:
+</p>
+<source><![CDATA[
+  cpds.setExportPasswordAsRefAddr(false);
+  context.rebind("jdbc/cpds", cpds);
+
+  DriverAdapterCPDS resolved = (DriverAdapterCPDS) context.lookup("jdbc/cpds");
+  resolved.setPassword(passwordFromSecretStore);
+  SharedPoolDataSource pool = new SharedPoolDataSource();
+  pool.setConnectionPoolDataSource(resolved);
+]]></source>
+<p>
+  The export setting is retained through lookup and rebinding, so provisioning the resolved password does not re-enable export.
+  A manually constructed Reference can configure it with a <code>StringRefAddr("exportPasswordAsRefAddr", "false")</code>;
+  this controls future exports and does not prevent the factory from reading a supplied <code>password</code> address.
+  Other addresses, including credentials embedded in JDBC URLs, remain unchanged. Java serialization still contains the configured
+  password. Changing the setting does not remove credentials from previously created References or directory entries.
+</p>
+</section>
+
 <section name="PerUserPoolDataSource">
 <source><![CDATA[
   System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
