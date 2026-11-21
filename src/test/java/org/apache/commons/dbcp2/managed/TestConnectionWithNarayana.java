@@ -116,7 +116,7 @@ public class TestConnectionWithNarayana {
             // Let the reaper do it's thing
             Thread.sleep(1000);
             final SQLException e = assertThrows(SQLException.class, conn::commit);
-            assertEquals("Commit cannot be set while enrolled in a transaction", e.getMessage(), "Should not work after timeout");
+            assertEquals("Cannot commit while enlisted in a transaction", e.getMessage(), "Should not work after timeout");
             mds.getTransactionManager().rollback();
         }
         assertEquals(0, mds.getNumActive());

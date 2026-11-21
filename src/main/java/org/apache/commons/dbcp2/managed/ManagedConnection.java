@@ -102,6 +102,18 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
         updateTransactionStatus();
     }
 
+    /**
+     * Checks if the connection is enlisted in a transaction and throws a SQLException if it is.
+     *
+     * @param operation The operation being performed.
+     * @throws SQLException Thrown when the connection is enlisted in a transaction.
+     */
+    private void checkTransactionContext(final String operation) throws SQLException {
+        if (transactionContext != null) {
+            throw new SQLException("Cannot " + operation + " while enlisted in a transaction");
+        }
+    }
+
     @Override
     public void close() throws SQLException {
         if (!isClosedInternal()) {
@@ -129,9 +141,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     @Override
     public void commit() throws SQLException {
-        if (transactionContext != null) {
-            throw new SQLException("Commit cannot be set while enrolled in a transaction");
-        }
+        checkTransactionContext("commit");
         super.commit();
     }
 
@@ -185,25 +195,19 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     @Override
     public void rollback() throws SQLException {
-        if (transactionContext != null) {
-            throw new SQLException("Commit cannot be set while enrolled in a transaction");
-        }
+        checkTransactionContext("rollback");
         super.rollback();
     }
 
     @Override
     public void setAutoCommit(final boolean autoCommit) throws SQLException {
-        if (transactionContext != null) {
-            throw new SQLException("Auto-commit cannot be set while enrolled in a transaction");
-        }
+        checkTransactionContext("set auto-commit");
         super.setAutoCommit(autoCommit);
     }
 
     @Override
     public void setReadOnly(final boolean readOnly) throws SQLException {
-        if (transactionContext != null) {
-            throw new SQLException("Read-only cannot be set while enrolled in a transaction");
-        }
+        checkTransactionContext("set read-only");
         super.setReadOnly(readOnly);
     }
 
