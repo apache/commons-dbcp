@@ -706,7 +706,7 @@ final class PooledConnectionImpl
      * the underlying connection. (Default: false.)
      *
      * <p>
-     * Since 2.14.1, this also controls delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
+     * Since 2.15.0, this also controls delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
      * When disabled, delegate getters return {@code null}, {@code isWrapperFor} returns {@code false}, and {@code unwrap} throws
      * {@link SQLException} for types requiring access to the delegate. Interfaces implemented by the wrapper itself remain accessible.
      * Enable this property before creating connections if the application needs driver-specific extensions. This is a safeguard against

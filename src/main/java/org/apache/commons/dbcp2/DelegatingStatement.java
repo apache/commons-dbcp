@@ -428,7 +428,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * </p>
      *
      * @return my underlying {@link Statement}, regardless of {@link #isAccessToUnderlyingConnectionAllowed()}.
-     * @since 2.14.1
+     * @since 2.15.0
      */
     protected final Statement getDelegateInternal() {
         return statement;
@@ -491,7 +491,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * </p>
      *
      * @return the innermost delegate, or {@code null} if the chain ends in {@code null} or a cycle is detected.
-     * @since 2.14.1
+     * @since 2.15.0
      */
     public final Statement getInnermostDelegateInternal() {
         return Utils.getInnermostDelegate(this, DelegatingStatement.class, DelegatingStatement::getDelegateInternal);
@@ -504,7 +504,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * </p>
      *
      * @return true if access to the underlying statement is allowed.
-     * @since 2.14.1
+     * @since 2.15.0
      */
     protected boolean isAccessToUnderlyingConnectionAllowed() {
         return connection == null ? accessToUnderlyingConnectionAllowed : connection.isAccessToUnderlyingConnectionAllowed();

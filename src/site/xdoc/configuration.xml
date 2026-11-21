@@ -396,7 +396,7 @@ Default is false, it is a potential dangerous operation and misbehaving programs
 Be careful and only use when you need direct access to driver specific extensions.
 </p>
 <p>
-Since 2.14.1, this property also controls delegate getters and JDBC <code>unwrap</code>/<code>isWrapperFor</code>
+Since 2.15.0, this property also controls delegate getters and JDBC <code>unwrap</code>/<code>isWrapperFor</code>
 on connections, statements, result sets, and database metadata. When disabled, delegate getters return
 <code>null</code>, <code>isWrapperFor</code> returns <code>false</code>, and <code>unwrap</code> throws
 <code>SQLException</code> for types that require delegate access. Unwrapping an interface implemented by the

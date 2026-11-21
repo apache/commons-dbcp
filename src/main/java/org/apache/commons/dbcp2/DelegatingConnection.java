@@ -655,7 +655,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * </p>
      *
      * @return true if access to the underlying connection is allowed.
-     * @since 2.14.1
+     * @since 2.15.0
      */
     protected boolean isAccessToUnderlyingConnectionAllowed() {
         return true;
