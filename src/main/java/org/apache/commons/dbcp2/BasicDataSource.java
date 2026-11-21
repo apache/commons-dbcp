@@ -1570,7 +1570,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * and reclaim pool capacity.
      *
      * @param connection The Connection to invalidate.
-     * @throws IllegalStateException if invalidating the connection failed.
+     * @throws IllegalStateException if invalidating the connection failed, including if a cycle is encountered while locating the pooled connection.
      * @since 2.1
      */
     @SuppressWarnings("resource")
@@ -1584,7 +1584,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 
         final PoolableConnection poolableConnection;
         try {
-            poolableConnection = connection.unwrap(PoolableConnection.class);
+            // Pool lifecycle operations must work even when client access to delegates is disabled.
+            final Connection delegate = Utils.findInChain(connection,
+                    current -> current instanceof PoolableConnection || !(current instanceof DelegatingConnection)
+                            && !current.isWrapperFor(DelegatingConnection.class),
+                    current -> current instanceof DelegatingConnection ? ((DelegatingConnection<?>) current).getDelegateInternal()
+                            : current.unwrap(DelegatingConnection.class),
+                    current -> {
+                        throw new SQLException("Cyclic connection delegate chain.");
+                    });
+            poolableConnection = delegate == null ? null : delegate.unwrap(PoolableConnection.class);
             if (poolableConnection == null) {
                 throw new IllegalStateException(
                         "Cannot invalidate connection: Connection is not a poolable connection.");
@@ -1810,6 +1819,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
      * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
+     * </p>
+     *
+     * <p>
+     * Since 2.14.1, this also controls delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
+     * When disabled, delegate getters return {@code null}, {@code isWrapperFor} returns {@code false}, and {@code unwrap} throws
+     * {@link SQLException} for types requiring access to the delegate. Interfaces implemented by the wrapper itself remain accessible.
+     * Enable this property before creating connections if the application needs driver-specific extensions. This is a safeguard against
+     * accidental misuse, not a security boundary against code running in the same JVM.
      * </p>
      *
      * @param allow Access to the underlying connection is granted when true.

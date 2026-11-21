@@ -570,6 +570,14 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to
      * the underlying connection. (Default: false)
      *
+     * <p>
+     * Since 2.14.1, this also controls delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
+     * When disabled, delegate getters return {@code null}, {@code isWrapperFor} returns {@code false}, and {@code unwrap} throws
+     * {@link SQLException} for types requiring access to the delegate. Interfaces implemented by the wrapper itself remain accessible.
+     * Enable this property before creating connections if the application needs driver-specific extensions. This is a safeguard against
+     * accidental misuse, not a security boundary against code running in the same JVM.
+     * </p>
+     *
      * @param allow Access to the underlying connection is granted when true.
      */
     public synchronized void setAccessToUnderlyingConnectionAllowed(final boolean allow) {

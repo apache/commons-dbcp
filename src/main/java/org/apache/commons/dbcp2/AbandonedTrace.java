@@ -17,7 +17,9 @@
 package org.apache.commons.dbcp2;
 
 import java.lang.ref.WeakReference;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,18 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
     static void add(final AbandonedTrace receiver, final AbandonedTrace trace) {
         if (receiver != null) {
             receiver.addTrace(trace);
+        }
+    }
+
+    static void close(final Connection connection) throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
+
+    static void close(final Statement connection) throws SQLException {
+        if (connection != null) {
+            connection.close();
         }
     }
 
@@ -197,7 +211,7 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
     }
 
     /**
-     * Sets the time this object was last used to the current time in milliseconds.
+     * Sets the time this object was last used to the current instant.
      */
     protected void setLastUsed() {
         lastUsedInstant = Instant.now();

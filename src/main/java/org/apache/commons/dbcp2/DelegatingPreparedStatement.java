@@ -142,7 +142,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     private PreparedStatement getDelegatePreparedStatement() {
-        return (PreparedStatement) getDelegate();
+        return (PreparedStatement) getDelegateInternal();
     }
 
     @Override
@@ -714,6 +714,6 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     @SuppressWarnings("resource")
     @Override
     public synchronized String toString() {
-        return Objects.toString(getDelegate(), "NULL");
+        return Objects.toString(getDelegateInternal(), "NULL");
     }
 }

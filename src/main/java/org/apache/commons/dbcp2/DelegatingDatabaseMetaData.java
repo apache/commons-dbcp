@@ -194,12 +194,12 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
-     * Gets the underlying database meta data.
+     * Gets the underlying database metadata, if access is allowed.
      *
-     * @return The underlying database meta data.
+     * @return the underlying database metadata, or {@code null} if access is not allowed.
      */
     public DatabaseMetaData getDelegate() {
-        return databaseMetaData;
+        return isAccessToUnderlyingConnectionAllowed() ? databaseMetaData : null;
     }
 
     @Override
@@ -264,26 +264,26 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
-     * If my underlying {@link ResultSet} is not a {@link DelegatingResultSet}, returns it, otherwise recursively invokes this method on my delegate.
+     * Gets the innermost database metadata delegate, if access is allowed.
      * <p>
-     * Hence this method will return the first delegate that is not a {@link DelegatingResultSet}, or {@code null} when no non-{@link DelegatingResultSet}
-     * delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@link DelegatingResultSet}s, and you want to make sure to obtain a "genuine" {@link ResultSet}.
+     * Traverses nested {@link DelegatingDatabaseMetaData} wrappers, respecting each wrapper's access policy, to find the first delegate
+     * that is not a {@link DelegatingDatabaseMetaData}.
      * </p>
      *
-     * @return The innermost database meta data.
+     * @return the innermost delegate, or {@code null} if access is denied, the chain ends in {@code null}, or a cycle is detected.
      */
     public DatabaseMetaData getInnermostDelegate() {
-        DatabaseMetaData m = databaseMetaData;
-        while (m instanceof DelegatingDatabaseMetaData) {
-            m = ((DelegatingDatabaseMetaData) m).getDelegate();
-            if (this == m) {
-                return null;
-            }
-        }
-        return m;
+        return Utils.getInnermostDelegate(this, DelegatingDatabaseMetaData.class, DelegatingDatabaseMetaData::getDelegate);
+    }
+
+    /**
+     * Tests whether access to the underlying {@link DatabaseMetaData} is allowed, consulting the connection that
+     * created me.
+     *
+     * @return false only when the connection that created me forbids access to the underlying connection.
+     */
+    private boolean isAccessToUnderlyingConnectionAllowed() {
+        return connection.isAccessToUnderlyingConnectionAllowed();
     }
 
     @Override
@@ -581,7 +581,13 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(databaseMetaData.getClass())) {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        }
+        if (!isAccessToUnderlyingConnectionAllowed()) {
+            return false;
+        }
+        if (iface.isAssignableFrom(databaseMetaData.getClass())) {
             return true;
         }
         return databaseMetaData.isWrapperFor(iface);
@@ -1025,6 +1031,9 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
+        }
+        if (!isAccessToUnderlyingConnectionAllowed()) {
+            throw new SQLException("Access to the underlying database meta data is not allowed.");
         }
         if (iface.isAssignableFrom(databaseMetaData.getClass())) {
             return iface.cast(databaseMetaData);

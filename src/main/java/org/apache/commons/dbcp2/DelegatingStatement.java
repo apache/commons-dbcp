@@ -38,6 +38,9 @@ import java.util.Objects;
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
 
+    /** Access policy retained after the connection reference is cleared on close. */
+    private volatile boolean accessToUnderlyingConnectionAllowed = true;
+
     /** My delegate. */
     private Statement statement;
 
@@ -136,6 +139,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
         final List<Exception> thrownList = new ArrayList<>();
         try {
             if (connection != null) {
+                accessToUnderlyingConnectionAllowed = isAccessToUnderlyingConnectionAllowed();
                 connection.removeTrace(this);
                 connection = null;
             }
@@ -407,12 +411,26 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * Returns my underlying {@link Statement}.
+     * Gets my underlying {@link Statement}, if access is allowed.
      *
-     * @return my underlying {@link Statement}.
+     * @return my underlying {@link Statement}, or {@code null} if unavailable or access is not allowed.
      * @see #getInnermostDelegate
      */
     public Statement getDelegate() {
+        return isAccessToUnderlyingConnectionAllowed() ? statement : null;
+    }
+
+    /**
+     * Gets my underlying {@link Statement} without applying the access policy.
+     * <p>
+     * This method is part of the internal API and should not be used by clients. Its signature may change at any time, including in ways
+     * that break backwards compatibility.
+     * </p>
+     *
+     * @return my underlying {@link Statement}, regardless of {@link #isAccessToUnderlyingConnectionAllowed()}.
+     * @since 2.14.1
+     */
+    protected final Statement getDelegateInternal() {
         return statement;
     }
 
@@ -451,30 +469,45 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * If my underlying {@link Statement} is not a {@link DelegatingStatement}, returns it, otherwise recursively
-     * invokes this method on my delegate.
+     * Gets the innermost statement delegate, if access is allowed.
      * <p>
-     * Hence this method will return the first delegate that is not a {@link DelegatingStatement} or {@code null} when
-     * no non-{@link DelegatingStatement} delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@link DelegatingStatement}s, and you want to make sure to obtain
-     * a "genuine" {@link Statement}.
+     * Traverses nested {@link DelegatingStatement} wrappers, respecting each wrapper's access policy, to find the first delegate
+     * that is not a {@link DelegatingStatement}.
      * </p>
      *
-     * @return The innermost delegate, may return null.
-     * @see #getDelegate
+     * @return the innermost delegate, or {@code null} if access is denied, the chain ends in {@code null}, or a cycle is detected.
+     * @see #getDelegate()
      */
     @SuppressWarnings("resource")
     public Statement getInnermostDelegate() {
-        Statement stmt = statement;
-        while (stmt instanceof DelegatingStatement) {
-            stmt = ((DelegatingStatement) stmt).getDelegate();
-            if (this == stmt) {
-                return null;
-            }
-        }
-        return stmt;
+        return Utils.getInnermostDelegate(this, DelegatingStatement.class, DelegatingStatement::getDelegate);
+    }
+
+    /**
+     * Gets the innermost statement delegate without applying the access policy.
+     * <p>
+     * Although this method is public, it is part of the internal API and should not be used by clients. Its signature may change at any time,
+     * including in ways that break backwards compatibility.
+     * </p>
+     *
+     * @return the innermost delegate, or {@code null} if the chain ends in {@code null} or a cycle is detected.
+     * @since 2.14.1
+     */
+    public final Statement getInnermostDelegateInternal() {
+        return Utils.getInnermostDelegate(this, DelegatingStatement.class, DelegatingStatement::getDelegateInternal);
+    }
+
+    /**
+     * Tests whether access to the underlying {@link Statement} is allowed.
+     * <p>
+     * Consults the creating connection while it is attached, and retains the last policy when close clears that reference.
+     * </p>
+     *
+     * @return true if access to the underlying statement is allowed.
+     * @since 2.14.1
+     */
+    protected boolean isAccessToUnderlyingConnectionAllowed() {
+        return connection == null ? accessToUnderlyingConnectionAllowed : connection.isAccessToUnderlyingConnectionAllowed();
     }
 
     /**
@@ -681,7 +714,13 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(statement.getClass())) {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        }
+        if (!isAccessToUnderlyingConnectionAllowed() || statement == null) {
+            return false;
+        }
+        if (iface.isAssignableFrom(statement.getClass())) {
             return true;
         }
         return statement.isWrapperFor(iface);
@@ -832,6 +871,9 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
+        }
+        if (!isAccessToUnderlyingConnectionAllowed() || statement == null) {
+            throw new SQLException("Access to the underlying statement is not allowed or the delegate is unavailable.");
         }
         if (iface.isAssignableFrom(statement.getClass())) {
             return iface.cast(statement);

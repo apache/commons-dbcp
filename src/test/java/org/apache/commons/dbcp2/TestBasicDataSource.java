@@ -32,6 +32,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -804,6 +805,20 @@ public class TestBasicDataSource extends TestConnectionPool {
 
             dconn = ((DelegatingConnection<?>) conn).getInnermostDelegate();
             assertNull(dconn);
+
+            // The guard must also hold for unwrap and for the statements, result sets and metadata created from the
+            // guarded connection.
+            assertFalse(conn.isWrapperFor(TesterConnection.class));
+            assertThrows(SQLException.class, () -> conn.unwrap(TesterConnection.class));
+            assertNull(((DelegatingDatabaseMetaData) conn.getMetaData()).getDelegate());
+            assertNull(((DelegatingDatabaseMetaData) conn.getMetaData()).getInnermostDelegate());
+            try (Statement stmt = conn.createStatement()) {
+                final DelegatingStatement delegatingStatement = (DelegatingStatement) stmt;
+                assertNull(delegatingStatement.getDelegate());
+                assertNull(delegatingStatement.getInnermostDelegate());
+                assertFalse(stmt.isWrapperFor(TesterStatement.class));
+                assertThrows(SQLException.class, () -> stmt.unwrap(TesterStatement.class));
+            }
         }
     }
 

@@ -107,7 +107,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     @Override
     public Connection getInnermostDelegate() {
         if (isAccessToUnderlyingConnectionAllowed()) {
-            return super.getInnermostDelegateInternal();
+            return super.getInnermostDelegate();
         }
         return null;
     }
@@ -122,11 +122,16 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * If false, getDelegate() and getInnermostDelegate() will return null.
+     * Tests whether access to underlying JDBC objects is allowed.
+     * <p>
+     * When disabled, delegate getters return {@code null} and JDBC unwrapping cannot expose delegates of this connection or its statements,
+     * result sets, and database metadata. Unwrapping an interface implemented by the wrapper itself remains allowed.
+     * </p>
      *
      * @return true if access is allowed to the underlying connection
      * @see ConnectionImpl
      */
+    @Override
     public boolean isAccessToUnderlyingConnectionAllowed() {
         return accessToUnderlyingConnectionAllowed;
     }

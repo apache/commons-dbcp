@@ -298,7 +298,7 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     private CallableStatement getDelegateCallableStatement() {
-        return (CallableStatement) getDelegate();
+        return (CallableStatement) getDelegateInternal();
     }
 
     @Override

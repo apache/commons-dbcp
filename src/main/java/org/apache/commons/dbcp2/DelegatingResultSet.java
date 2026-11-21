@@ -86,6 +86,9 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         return new DelegatingResultSet(statement, resultSet);
     }
 
+    /** Access policy retained after the parent references are cleared on close. */
+    private volatile boolean accessToUnderlyingConnectionAllowed = true;
+
     /** My delegate. **/
     private final ResultSet resultSet;
 
@@ -183,6 +186,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      */
     @Override
     public void close() throws SQLException {
+        accessToUnderlyingConnectionAllowed = isAccessToUnderlyingConnectionAllowed();
         try {
             if (statement != null) {
                 removeThisTrace(statement);
@@ -512,12 +516,12 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     /**
-     * Gets my delegate.
+     * Gets my delegate, if access is allowed.
      *
-     * @return my delegate.
+     * @return my delegate, or {@code null} if access is not allowed.
      */
     public ResultSet getDelegate() {
-        return resultSet;
+        return isAccessToUnderlyingConnectionAllowed() ? resultSet : null;
     }
 
     @Override
@@ -591,29 +595,35 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     }
 
     /**
-     * If my underlying {@link ResultSet} is not a {@link DelegatingResultSet}, returns it, otherwise recursively
-     * invokes this method on my delegate.
+     * Gets the innermost result set delegate, if access is allowed.
      * <p>
-     * Hence this method will return the first delegate that is not a {@link DelegatingResultSet}, or {@code null} when
-     * no non-{@link DelegatingResultSet} delegate can be found by traversing this chain.
-     * </p>
-     * <p>
-     * This method is useful when you may have nested {@link DelegatingResultSet}s, and you want to make sure to obtain
-     * a "genuine" {@link ResultSet}.
+     * Traverses nested {@link DelegatingResultSet} wrappers, respecting each wrapper's access policy, to find the first delegate
+     * that is not a {@link DelegatingResultSet}.
      * </p>
      *
-     * @return The innermost delegate.
+     * @return the innermost delegate, or {@code null} if access is denied, the chain ends in {@code null}, or a cycle is detected.
      */
     @SuppressWarnings("resource")
     public ResultSet getInnermostDelegate() {
-        ResultSet r = resultSet;
-        while (r instanceof DelegatingResultSet) {
-            r = ((DelegatingResultSet) r).getDelegate();
-            if (this == r) {
-                return null;
-            }
+        return Utils.getInnermostDelegate(this, DelegatingResultSet.class, DelegatingResultSet::getDelegate);
+    }
+
+    /**
+     * Tests whether access to the underlying {@link ResultSet} is allowed.
+     * <p>
+     * Consults the creating statement or connection while it is attached, and retains the last policy when close clears those references.
+     * </p>
+     *
+     * @return true if access to the underlying result set is allowed.
+     */
+    private boolean isAccessToUnderlyingConnectionAllowed() {
+        if (statement instanceof DelegatingStatement) {
+            return ((DelegatingStatement) statement).isAccessToUnderlyingConnectionAllowed();
         }
-        return r;
+        if (connection instanceof DelegatingConnection) {
+            return ((DelegatingConnection<?>) connection).isAccessToUnderlyingConnectionAllowed();
+        }
+        return accessToUnderlyingConnectionAllowed;
     }
 
     @Override
@@ -1122,7 +1132,13 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        if (iface.isAssignableFrom(getClass()) || iface.isAssignableFrom(resultSet.getClass())) {
+        if (iface.isAssignableFrom(getClass())) {
+            return true;
+        }
+        if (!isAccessToUnderlyingConnectionAllowed()) {
+            return false;
+        }
+        if (iface.isAssignableFrom(resultSet.getClass())) {
             return true;
         }
         return resultSet.isWrapperFor(iface);
@@ -1252,6 +1268,9 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         if (iface.isAssignableFrom(getClass())) {
             return iface.cast(this);
+        }
+        if (!isAccessToUnderlyingConnectionAllowed()) {
+            throw new SQLException("Access to the underlying result set is not allowed.");
         }
         if (iface.isAssignableFrom(resultSet.getClass())) {
             return iface.cast(resultSet);

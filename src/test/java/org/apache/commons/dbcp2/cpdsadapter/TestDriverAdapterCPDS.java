@@ -88,7 +88,11 @@ public class TestDriverAdapterCPDS {
     @SuppressWarnings("resource")
     private static void checkAfterClose(final Connection element, final PStmtKey pStmtKey) throws SQLException {
         final ConnectionImpl connectionImpl = (ConnectionImpl) element;
-        assertNull(connectionImpl.getInnermostDelegate());
+        if (connectionImpl.isAccessToUnderlyingConnectionAllowed()) {
+            assertNotNull(connectionImpl.getInnermostDelegate());
+        } else {
+            assertNull(connectionImpl.getInnermostDelegate());
+        }
         assertNotNull(connectionImpl.getInnermostDelegateInternal());
         final PooledConnectionImpl pooledConnectionImpl = connectionImpl.getPooledConnectionImpl();
         assertNotNull(pooledConnectionImpl);
@@ -414,6 +418,9 @@ public class TestDriverAdapterCPDS {
     @SuppressWarnings("resource")
     @Test
     void testSimpleWithUsername() throws Exception {
+        // This test digs the pooled statement out through getDelegate(), which requires access to the underlying
+        // connection to be allowed.
+        pcds.setAccessToUnderlyingConnectionAllowed(true);
         final Connection connCheck;
         PStmtKey pStmtKey;
         try (final Connection conn = pcds.getPooledConnection("u1", "p1").getConnection()) {

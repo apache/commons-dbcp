@@ -23,11 +23,15 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.commons.pool2.PooledObject;
 
@@ -37,6 +41,18 @@ import org.apache.commons.pool2.PooledObject;
  * @since 2.0
  */
 public final class Utils {
+
+    /** A function whose evaluation may throw a checked exception. */
+    @FunctionalInterface
+    interface CheckedFunction<T, R, E extends Exception> {
+        R apply(T value) throws E;
+    }
+
+    /** A predicate whose evaluation may throw a checked exception. */
+    @FunctionalInterface
+    interface CheckedPredicate<T, E extends Exception> {
+        boolean test(T value) throws E;
+    }
 
     private static final ResourceBundle messages = ResourceBundle
             .getBundle(Utils.class.getPackage().getName() + ".LocalStrings");
@@ -194,6 +210,47 @@ public final class Utils {
     }
 
     /**
+     * Finds the first matching object in a chain, visiting each object by identity at most once.
+     *
+     * @param <T> the chain element type.
+     * @param start the first object to inspect, which may be null.
+     * @param matches tests whether the current object is the desired result.
+     * @param next gets the next object in the chain.
+     * @return the first match, or null if the chain ends or cycles before a match is found.
+     */
+    static <T> T findInChain(final T start, final Predicate<? super T> matches, final Function<? super T, ? extends T> next) {
+        return Utils.<T, RuntimeException>findInChain(start, matches::test, next::apply, current -> null);
+    }
+
+    /**
+     * Finds the first matching object in a chain, allowing checked exceptions and caller-specific cycle handling.
+     *
+     * @param <T> the chain element type.
+     * @param <E> the exception type.
+     * @param start the first object to inspect, which may be null.
+     * @param matches tests whether the current object is the desired result.
+     * @param next gets the next object in the chain.
+     * @param onCycle handles the first repeated object, returning a result or throwing an exception.
+     * @return the first match, null if the chain ends, or the result of the cycle handler.
+     * @throws E if the predicate, next function, or cycle handler throws an exception.
+     */
+    static <T, E extends Exception> T findInChain(final T start, final CheckedPredicate<? super T, E> matches,
+            final CheckedFunction<? super T, ? extends T, E> next, final CheckedFunction<? super T, ? extends T, E> onCycle) throws E {
+        final Set<T> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        T current = start;
+        while (current != null) {
+            if (!visited.add(current)) {
+                return onCycle.apply(current);
+            }
+            if (matches.test(current)) {
+                return current;
+            }
+            current = next.apply(current);
+        }
+        return null;
+    }
+
+    /**
      * Gets a copy of SQL codes of fatal connection errors.
      * <ul>
      * <li>57P01 (Admin shutdown)</li>
@@ -209,6 +266,21 @@ public final class Utils {
      */
     public static Set<String> getDisconnectionSqlCodes() {
         return new HashSet<>(DISCONNECTION_SQL_CODES);
+    }
+
+    /**
+     * Follows a delegate chain, visiting each wrapper by identity at most once.
+     *
+     * @param <T> the JDBC type.
+     * @param <W> the wrapper type.
+     * @param start the first object to inspect, which may be null.
+     * @param wrapperType the wrappers to traverse.
+     * @param getDelegate gets the next delegate, applying the caller's chosen access policy.
+     * @return the first non-wrapper delegate, or null if the chain ends in null or contains a cycle.
+     */
+    static <T, W extends T> T getInnermostDelegate(final T start, final Class<W> wrapperType,
+            final Function<? super W, ? extends T> getDelegate) {
+        return findInChain(start, current -> !wrapperType.isInstance(current), current -> getDelegate.apply(wrapperType.cast(current)));
     }
 
     /**
