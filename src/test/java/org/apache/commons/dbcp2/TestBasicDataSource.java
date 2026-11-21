@@ -53,6 +53,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * TestSuite for BasicDataSource
@@ -691,17 +693,25 @@ public class TestBasicDataSource extends TestConnectionPool {
      * Make sure Password Attribute is not exported via JMXBean.
      * </p>
      */
-    @Test
-    void testJmxDoesNotExposePassword() throws Exception {
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testJmxDoesNotExposePassword(final boolean directRegistration) throws Exception {
         final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        final ObjectName objectName = new ObjectName(ds.getJmxName());
+        if (directRegistration) {
+            mbs.registerMBean(ds, objectName);
+            mbs.invoke(objectName, "start", new Object[0], new String[0]);
+        }
         try (Connection c = ds.getConnection()) {
             // nothing
         }
-        final ObjectName objectName = new ObjectName(ds.getJmxName());
         final MBeanAttributeInfo[] attributes = mbs.getMBeanInfo(objectName).getAttributes();
         assertTrue(attributes != null && attributes.length > 0);
         Arrays.asList(attributes).forEach(attrInfo -> assertFalse("password".equalsIgnoreCase(attrInfo.getName())));
         assertThrows(AttributeNotFoundException.class, () -> mbs.getAttribute(objectName, "Password"));
+        assertEquals("userName", mbs.getAttribute(objectName, "UserName"));
+        ds.close();
+        assertFalse(mbs.isRegistered(objectName));
     }
 
     @Test

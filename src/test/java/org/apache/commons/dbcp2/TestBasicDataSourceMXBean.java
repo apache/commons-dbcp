@@ -263,10 +263,11 @@ public class TestBasicDataSourceMXBean {
     }
 
     /**
-     * Tests if the {@link BasicDataSourceMXBean} interface is a valid MXBean interface.
+     * Tests that both interfaces retain MXBean compliance, including MXBean reference mapping.
      */
     @Test
     void testMXBeanCompliance() throws OperationsException {
         testMXBeanCompliance(BasicDataSourceMXBean.class);
+        testMXBeanCompliance(DataSourceMXBean.class);
     }
 }

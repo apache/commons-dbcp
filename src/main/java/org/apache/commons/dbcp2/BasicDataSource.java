@@ -41,11 +41,19 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.DynamicMBean;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.management.StandardMBean;
 import javax.sql.DataSource;
 
@@ -65,9 +73,15 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * one-stop solution for basic requirements.
  * </p>
  *
+ * <p>
+ * Since 2.15.0, direct JMX registration exposes {@link DataSourceMXBean} through {@link DynamicMBean}, without a {@code Password} attribute. Only one
+ * direct registration may be active at a time. See {@link BasicDataSourceMXBean} for compatibility details and explicit registration with wrappers.
+ * Closing the data source unregisters its direct registration from the {@link MBeanServer} used to register it.
+ * </p>
+ *
  * @since 2.0
  */
-public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable {
+public class BasicDataSource implements DataSource, BasicDataSourceMXBean, DynamicMBean, MBeanRegistration, AutoCloseable {
 
     private static final Log log = LogFactory.getLog(BasicDataSource.class);
 
@@ -388,6 +402,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * Actual name under which this component has been registered.
      */
     private ObjectNameWrapper registeredJmxObjectName;
+
+    /** The management view for direct registration, initialized only when needed. */
+    private StandardMBean managementBean;
+
+    /** Whether a direct registration is pending or active. Guarded by this instance. */
+    private boolean managementRegistered;
 
     /**
      * Constructs a new instance.
@@ -719,6 +739,26 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     @Override
     public boolean getAbandonedUsageTracking() {
         return abandonedConfig != null && abandonedConfig.getUseUsageTracking();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public Object getAttribute(final String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
+        return getManagementBean().getAttribute(attribute);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public AttributeList getAttributes(final String[] attributes) {
+        return getManagementBean().getAttributes(attributes);
     }
 
     /**
@@ -1129,6 +1169,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         return createDataSource().getLogWriter();
     }
 
+    private synchronized StandardMBean getManagementBean() {
+        if (managementBean == null) {
+            managementBean = new StandardMBean(this, DataSourceMXBean.class, true);
+        }
+        return managementBean;
+    }
+
     /**
      * Gets the maximum permitted duration of a connection. A value of zero or less indicates an
      * infinite lifetime.
@@ -1214,6 +1261,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public MBeanInfo getMBeanInfo() {
+        return getManagementBean().getMBeanInfo();
+    }
+
+    /**
      * Gets the {code minEvictableIdleDuration} property.
      *
      * @return The value of the {code minEvictableIdleDuration} property
@@ -1293,8 +1350,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * Gets the password passed to the JDBC driver to establish connections.
      *
-     * @return The connection password
-     * @deprecated Exposing passwords via JMX is an Information Exposure issue.
+     * <p>
+     * Since 2.15.0, direct JMX registration uses {@link DataSourceMXBean} and does not expose a {@code Password} attribute. Java callers can still obtain
+     * the configured password from this method.
+     * </p>
+     *
+     * @return The connection password.
+     * @deprecated Retained for Java API compatibility. Use {@link DataSourceMXBean} for JMX management to avoid exposing this accessor.
      */
     @Deprecated
     @Override
@@ -1610,6 +1672,16 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public Object invoke(final String actionName, final Object[] params, final String[] signature) throws MBeanException, ReflectionException {
+        return getManagementBean().invoke(actionName, params, signature);
+    }
+
+    /**
      * Gets the value of the accessToUnderlyingConnectionAllowed property.
      *
      * @return true if access to the underlying connection is allowed, false otherwise.
@@ -1710,13 +1782,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     @Override
-    public void postDeregister() {
-        // NO-OP
+    public synchronized void postDeregister() {
+        if (managementBean != null) {
+            managementBean.postDeregister();
+            managementBean = null;
+        }
+        managementRegistered = false;
+        registeredJmxObjectName = null;
     }
 
     @Override
-    public void postRegister(final Boolean registrationDone) {
-        // NO-OP
+    public synchronized void postRegister(final Boolean registrationDone) {
+        if (Boolean.FALSE.equals(registrationDone)) {
+            if (managementBean != null) {
+                managementBean.postRegister(registrationDone);
+                managementBean = null;
+            }
+            managementRegistered = false;
+            registeredJmxObjectName = null;
+        }
     }
 
     @Override
@@ -1725,9 +1809,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
     @Override
-    public ObjectName preRegister(final MBeanServer server, final ObjectName objectName) {
-        registeredJmxObjectName = registerJmxObjectName(getJmxName(), objectName);
-        return ObjectNameWrapper.unwrap(registeredJmxObjectName);
+    public synchronized ObjectName preRegister(final MBeanServer server, final ObjectName objectName) {
+        if (managementRegistered) {
+            throw new IllegalStateException("The data source already has a direct JMX registration");
+        }
+        final ObjectNameWrapper registeredName = registerJmxObjectName(getJmxName(), objectName);
+        ObjectName name = ObjectNameWrapper.unwrap(registeredName);
+        try {
+            if (name != null && name.getDomain().isEmpty()) {
+                name = new ObjectName(server.getDefaultDomain() + name);
+            }
+            getManagementBean().preRegister(server, name);
+        } catch (final Exception e) {
+            managementBean = null;
+            // Keep the existing signature: direct callers need not catch checked exceptions.
+            throw new IllegalStateException("Cannot register the data source MXBean", e);
+        }
+        registeredJmxObjectName = ObjectNameWrapper.wrap(server, name);
+        managementRegistered = true;
+        return name;
     }
 
     private ObjectNameWrapper registerJmxObjectName(final String requestedName, final ObjectName objectName) {
@@ -1833,6 +1933,26 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     public synchronized void setAccessToUnderlyingConnectionAllowed(final boolean allow) {
         this.accessToUnderlyingConnectionAllowed = allow;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public void setAttribute(final Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
+        getManagementBean().setAttribute(attribute);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.15.0
+     */
+    @Override
+    public AttributeList setAttributes(final AttributeList attributes) {
+        return getManagementBean().setAttributes(attributes);
     }
 
     /**
