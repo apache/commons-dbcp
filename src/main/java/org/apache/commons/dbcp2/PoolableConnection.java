@@ -385,30 +385,40 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * <ol>
      * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
      * thrown a fatal disconnection exception, a {@link SQLException} is thrown.</li>
-     * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
+     * <li>If {@code sql} is null or empty, the driver's {@link Connection#isValid(int) isValid(timeout)} is called. If it
      * returns {@code false}, {@link SQLException} is thrown; otherwise, this method returns successfully.</li>
-     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@link ResultSet} contains at
+     * <li>Otherwise, {@code sql} is executed as a query and if the resulting {@link ResultSet} contains at
      * least one row, this method returns successfully. If not, {@link SQLException} is thrown.</li>
      * </ol>
      *
+     * <p>
+     * Positive timeouts are converted to whole seconds, discarding any fractional second, with a minimum of one second and a maximum of
+     * {@link Integer#MAX_VALUE} seconds. For example, 100 milliseconds and 1.9 seconds both become one second.
+     * </p>
+     *
+     * <p>
+     * A zero or negative timeout passes zero (no timeout) to {@link Connection#isValid(int)}. When executing a validation query, a zero or negative timeout
+     * leaves the statement's timeout unchanged. The validation statement is cached for reuse with the same SQL, so any previously applied timeout is retained.
+     * </p>
+     *
      * @param sql
-     *            The validation SQL query.
+     *            The validation SQL query, or null or empty to use {@link Connection#isValid(int)}.
      * @param timeoutDuration
-     *            The validation timeout in seconds.
+     *            The validation timeout, converted to whole seconds as described above.
      * @throws SQLException
-     *             Thrown when validation fails or an SQLException occurs during validation
+     *             Thrown when validation fails or an SQLException occurs during validation.
      * @since 2.10.0
      */
-    public void validate(final String sql, Duration timeoutDuration) throws SQLException {
+    public void validate(final String sql, final Duration timeoutDuration) throws SQLException {
         if (fastFailValidation && fatalSqlExceptionThrown.get()) {
             throw new SQLException(Utils.getMessage("poolableConnection.validate.fastFail"));
         }
 
+        // JDBC timeouts are whole seconds where 0 means no timeout, so a positive sub-second timeout becomes 1 second.
+        final int timeoutSeconds = timeoutDuration.isNegative() || timeoutDuration.isZero() ? 0
+                : (int) Math.max(1, Math.min(Integer.MAX_VALUE, timeoutDuration.getSeconds()));
         if (sql == null || sql.isEmpty()) {
-            if (timeoutDuration.isNegative()) {
-                timeoutDuration = Duration.ZERO;
-            }
-            if (!isValid(timeoutDuration)) {
+            if (!isValid(Duration.ofSeconds(timeoutSeconds))) {
                 throw new SQLException("isValid() returned false");
             }
             return;
@@ -421,8 +431,8 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
             validationPreparedStatement = getInnermostDelegateInternal().prepareStatement(sql);
         }
 
-        if (timeoutDuration.compareTo(Duration.ZERO) > 0) {
-            validationPreparedStatement.setQueryTimeout((int) timeoutDuration.getSeconds());
+        if (timeoutSeconds > 0) {
+            validationPreparedStatement.setQueryTimeout(timeoutSeconds);
         }
 
         try (ResultSet rs = validationPreparedStatement.executeQuery()) {
@@ -439,18 +449,22 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      * <ol>
      * <li>If {@code fastFailValidation} (constructor argument) is {@code true} and this connection has previously
      * thrown a fatal disconnection exception, a {@link SQLException} is thrown.</li>
-     * <li>If {@code sql} is null, the driver's #{@link Connection#isValid(int) isValid(timeout)} is called. If it
+     * <li>If {@code sql} is null or empty, the driver's {@link Connection#isValid(int) isValid(timeout)} is called. If it
      * returns {@code false}, {@link SQLException} is thrown; otherwise, this method returns successfully.</li>
-     * <li>If {@code sql} is not null, it is executed as a query and if the resulting {@link ResultSet} contains at
+     * <li>Otherwise, {@code sql} is executed as a query and if the resulting {@link ResultSet} contains at
      * least one row, this method returns successfully. If not, {@link SQLException} is thrown.</li>
      * </ol>
      *
+     * <p>
+     * Zero and negative timeouts are handled as described in {@link #validate(String, Duration)}.
+     * </p>
+     *
      * @param sql
-     *            The validation SQL query.
+     *            The validation SQL query, or null or empty to use {@link Connection#isValid(int)}.
      * @param timeoutSeconds
      *            The validation timeout in seconds.
      * @throws SQLException
-     *             Thrown when validation fails or an SQLException occurs during validation
+     *             Thrown when validation fails or an SQLException occurs during validation.
      * @deprecated Use {@link #validate(String, Duration)}.
      */
     @Deprecated
