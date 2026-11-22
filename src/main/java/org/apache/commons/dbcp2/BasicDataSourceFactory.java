@@ -435,7 +435,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
     /**
      * Collects warnings and info messages. Warnings are generated when an obsolete property is set. Unknown properties
-     * generate info messages.
+     * generate info messages. Property values are omitted because they may contain credentials supplied under a misspelled property name.
      *
      * @param ref
      *            Reference to check properties of
@@ -446,20 +446,20 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param infoMessages
      *            container for info messages
      */
-    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages,
-            final List<String> infoMessages) {
-        final String nameString = name != null ? "Name = " + name.toString() + " " : "";
-        NUPROP_WARNTEXT.forEach((propertyName, value) -> {
+    private void validatePropertyNames(final Reference ref, final Name name, final List<String> warnMessages, final List<String> infoMessages) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        if (name != null) {
+            stringBuilder.append("Name = ").append(name).append(' ');
+        }
+        final int nameLength = stringBuilder.length();
+        NUPROP_WARNTEXT.forEach((propertyName, warningText) -> {
             final RefAddr ra = ref.get(propertyName);
             if (ra != null && !ALL_PROPERTY_NAMES.contains(ra.getType())) {
-                final StringBuilder stringBuilder = new StringBuilder(nameString);
-                final String propertyValue = Objects.toString(ra.getContent(), null);
-                stringBuilder.append(value).append(" You have set value of \"").append(propertyValue).append("\" for \"").append(propertyName)
-                        .append("\" property, which is being ignored.");
+                stringBuilder.setLength(nameLength);
+                stringBuilder.append(warningText).append(" You have set a value for \"").append(propertyName).append("\" property, which is being ignored.");
                 warnMessages.add(stringBuilder.toString());
             }
         });
-
         final Enumeration<RefAddr> allRefAddrs = ref.getAll();
         while (allRefAddrs.hasMoreElements()) {
             final RefAddr ra = allRefAddrs.nextElement();
@@ -467,10 +467,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
             // If property name is not in the properties list, we haven't warned on it
             // and it is not in the "silent" list, tell user we are ignoring it.
             if (!(ALL_PROPERTY_NAMES.contains(propertyName) || NUPROP_WARNTEXT.containsKey(propertyName) || SILENT_PROPERTIES.contains(propertyName))) {
-                final String propertyValue = Objects.toString(ra.getContent(), null);
-                final StringBuilder stringBuilder = new StringBuilder(nameString);
-                stringBuilder.append("Ignoring unknown property: ").append("value of \"").append(propertyValue).append("\" for \"").append(propertyName)
-                        .append("\" property");
+                stringBuilder.setLength(nameLength);
+                stringBuilder.append("Ignoring unknown property: \"").append(propertyName).append('"');
                 infoMessages.add(stringBuilder.toString());
             }
         }

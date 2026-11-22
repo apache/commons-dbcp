@@ -20,26 +20,66 @@ package org.apache.commons.dbcp2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import javax.management.MBeanServer;
+import javax.naming.CompositeName;
+import javax.naming.Name;
+import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.SimpleLog;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * TestSuite for BasicDataSourceFactory
  */
 public class TestBasicDataSourceFactory {
+
+    static Stream<Arguments> loggingLevels() {
+        return Stream.of(
+                Arguments.of(SimpleLog.LOG_LEVEL_INFO, 3, 3),
+                Arguments.of(SimpleLog.LOG_LEVEL_WARN, 3, 0),
+                Arguments.of(SimpleLog.LOG_LEVEL_ERROR, 0, 0),
+                Arguments.of(SimpleLog.LOG_LEVEL_OFF, 0, 0));
+    }
+
+    static Stream<Arguments> obsoletePropertyValues() {
+        return Stream.of(
+                new String[] {"maxActive", "use maxTotal instead."},
+                new String[] {"removeAbandoned", "use one or both of removeAbandonedOnBorrow or removeAbandonedOnMaintenance instead."},
+                new String[] {"maxWait", "use maxWaitMillis instead."})
+                .flatMap(property -> propertyValues().flatMap(value -> Stream.of(false, true)
+                        .map(named -> Arguments.of(property[0], property[1], value, named))));
+    }
+
+    private static Stream<String> propertyValues() {
+        return Stream.of(null, "", "secret-password", "secret-\"quoted\"\r\nforged-log-entry", "secret-p\u00e4ssw\u00f6rd-\u20ac");
+    }
+
+    static Stream<Arguments> unknownPropertyValues() {
+        return Stream.of("passwd", "pwd", "Password", "password ", "apiToken", "customProperty")
+                .flatMap(property -> propertyValues().flatMap(value -> Stream.of(false, true)
+                        .map(named -> Arguments.of(property, value, named))));
+    }
 
     private void checkConnectionPoolProperties(final GenericObjectPool<PoolableConnection> cp) {
         assertEquals(10, cp.getMaxTotal());
@@ -110,6 +150,20 @@ public class TestBasicDataSourceFactory {
         mbs.unregisterMBean(ds.getRegisteredJmxName());
     }
 
+    private List<String> getMessages(final Reference ref, final Name name) throws SQLException {
+        try {
+            StackMessageLog.lock();
+            StackMessageLog.clear();
+            try (final BasicDataSource ds = (BasicDataSource) new BasicDataSourceFactory().getObjectInstance(ref, name, null, null)) {
+                assertNotNull(ds);
+                return StackMessageLog.getAll();
+            }
+        } finally {
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }
+
     private Properties getTestProperties() {
         final Properties properties = new Properties();
         properties.setProperty("driverClassName", "org.apache.commons.dbcp2.TesterDriver");
@@ -175,6 +229,80 @@ public class TestBasicDataSourceFactory {
         }
     }
 
+    @ParameterizedTest
+    @CsvSource({"passwd, 1", "customProperty, 1", "maxActive, 1", "removeAbandoned, 1", "maxWait, 1",
+            "factory, 0", "scope, 0", "singleton, 0", "auth, 0"})
+    void testIgnoredPropertyContentIsNotAccessed(final String propertyName, final int messageCount) throws Exception {
+        final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+        ref.add(new RefAddr(propertyName) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Object getContent() {
+                throw new AssertionError("Ignored property content must not be accessed");
+            }
+        });
+        final List<String> messages = getMessages(ref, null);
+        assertEquals(messageCount, messages.size(), messages.toString());
+        if (messageCount != 0) {
+            assertTrue(messages.get(0).contains(propertyName), messages.toString());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("loggingLevels")
+    void testMixedPropertiesPreserveConfigurationAndLogLevels(final int level, final int warningCount, final int infoCount) throws Exception {
+        final StackMessageLog log = (StackMessageLog) LogFactory.getLog(BasicDataSourceFactory.class);
+        StackMessageLog.lock();
+        final int originalLevel = log.getLevel();
+        try {
+            StackMessageLog.clear();
+            log.setLevel(level);
+            final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+            ref.add(new StringRefAddr("username", "secret-username"));
+            ref.add(new StringRefAddr("password", "secret-password"));
+            ref.add(new StringRefAddr("url", "jdbc:apache:commons:testdriver"));
+            ref.add(new StringRefAddr("maxTotal", "17"));
+            ref.add(new StringRefAddr("maxWaitMillis", "123"));
+            ref.add(new StringRefAddr("removeAbandonedOnBorrow", "true"));
+            for (final String property : new String[] {"maxActive", "removeAbandoned", "maxWait", "passwd", "customProperty",
+                    "factory", "scope", "singleton", "auth"}) {
+                ref.add(new StringRefAddr(property, "secret-" + property));
+            }
+            ref.add(new StringRefAddr("passwd", "secret-duplicate"));
+            ref.add(new StringRefAddr("maxWait", "secret-duplicate-obsolete"));
+            final Name name = new CompositeName("jdbc/test");
+            try (final BasicDataSource ds = (BasicDataSource) new BasicDataSourceFactory().getObjectInstance(ref, name, null, null)) {
+                assertEquals("secret-username", ds.getUsername());
+                assertEquals("secret-password", ds.getPassword());
+                assertEquals("jdbc:apache:commons:testdriver", ds.getUrl());
+                assertEquals(17, ds.getMaxTotal());
+                assertEquals(Duration.ofMillis(123), ds.getMaxWaitDuration());
+                assertTrue(ds.getRemoveAbandonedOnBorrow());
+                assertNull(ds.getConnectionPool());
+                final List<String> messages = StackMessageLog.getAll();
+                assertEquals(warningCount + infoCount, messages.size(), messages.toString());
+                assertEquals(warningCount, messages.stream().filter(message -> message.startsWith("Name = jdbc/test Property ")).count());
+                assertEquals(infoCount, messages.stream().filter(message -> message.startsWith("Name = jdbc/test Ignoring unknown property: ")).count());
+                if (warningCount != 0) {
+                    assertTrue(messages.get(0).startsWith("Name = jdbc/test Property maxActive "), messages.toString());
+                    assertTrue(messages.get(1).startsWith("Name = jdbc/test Property removeAbandoned "), messages.toString());
+                    assertTrue(messages.get(2).startsWith("Name = jdbc/test Property maxWait "), messages.toString());
+                }
+                if (infoCount != 0) {
+                    assertEquals("Name = jdbc/test Ignoring unknown property: \"passwd\"", messages.get(3));
+                    assertEquals("Name = jdbc/test Ignoring unknown property: \"customProperty\"", messages.get(4));
+                    assertEquals("Name = jdbc/test Ignoring unknown property: \"passwd\"", messages.get(5));
+                }
+                messages.forEach(message -> assertFalse(message.contains("secret-"), message));
+            }
+        } finally {
+            log.setLevel(originalLevel);
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }
+
     @Test
     void testNoProperties() throws Exception {
         final Properties properties = new Properties();
@@ -183,11 +311,38 @@ public class TestBasicDataSourceFactory {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("obsoletePropertyValues")
+    void testObsoletePropertyValuesAreNotLogged(final String propertyName, final String guidance, final String value,
+            final boolean named) throws Exception {
+        final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+        ref.add(new StringRefAddr(propertyName, value));
+        final List<String> messages = getMessages(ref, named ? new CompositeName("jdbc/test") : null);
+        assertEquals(1, messages.size(), messages.toString());
+        final String message = messages.get(0);
+        assertTrue(message.startsWith((named ? "Name = jdbc/test " : "") + "Property " + propertyName + " is not used in DBCP2"), message);
+        assertTrue(message.contains(guidance), message);
+        assertTrue(message.endsWith("You have set a value for \"" + propertyName + "\" property, which is being ignored."), message);
+        if (value != null && !value.isEmpty()) {
+            assertFalse(message.contains(value), message);
+        }
+    }
+
     @Test
     void testProperties() throws Exception {
         try (final BasicDataSource ds = BasicDataSourceFactory.createDataSource(getTestProperties())) {
             checkDataSourceProperties(ds);
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("unknownPropertyValues")
+    void testUnknownPropertyValuesAreNotLogged(final String propertyName, final String value, final boolean named) throws Exception {
+        final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+        ref.add(new StringRefAddr(propertyName, value));
+        final List<String> messages = getMessages(ref, named ? new CompositeName("jdbc/test") : null);
+        assertEquals(1, messages.size(), messages.toString());
+        assertEquals((named ? "Name = jdbc/test " : "") + "Ignoring unknown property: \"" + propertyName + "\"", messages.get(0));
     }
 
     @Test
@@ -211,6 +366,27 @@ public class TestBasicDataSourceFactory {
                     assertTrue(message.contains("Ignoring unknown property"));
                 }
             }
+        } finally {
+            StackMessageLog.clear();
+            StackMessageLog.unLock();
+        }
+    }
+
+    @Test
+    void testValuesAreNotLoggedWhenDataSourceCreationFails() {
+        try {
+            StackMessageLog.lock();
+            StackMessageLog.clear();
+            final Reference ref = new Reference("javax.sql.DataSource", BasicDataSourceFactory.class.getName(), null);
+            ref.add(new StringRefAddr("passwd", "secret-password"));
+            ref.add(new StringRefAddr("maxWait", "secret-obsolete"));
+            ref.add(new StringRefAddr("maxTotal", "invalid-integer"));
+            assertThrows(NumberFormatException.class, () -> new BasicDataSourceFactory().getObjectInstance(ref, null, null, null));
+            final List<String> messages = StackMessageLog.getAll();
+            assertEquals(2, messages.size(), messages.toString());
+            assertTrue(messages.get(0).contains("use maxWaitMillis instead."), messages.toString());
+            assertEquals("Ignoring unknown property: \"passwd\"", messages.get(1));
+            messages.forEach(message -> assertFalse(message.contains("secret-"), message));
         } finally {
             StackMessageLog.clear();
             StackMessageLog.unLock();
