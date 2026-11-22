@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,9 +33,11 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.function.Supplier;
 
 import javax.sql.DataSource;
 
@@ -114,6 +118,42 @@ public class TestPoolingDriver extends TestConnectionPool {
         final GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(pcf);
         final PoolingDriver driver2 = new PoolingDriver();
         driver2.registerPool("example", connectionPool);
+    }
+
+    @Test
+    void testBuilderConfiguration() throws Exception {
+        final String url = PoolingDriver.URL_PREFIX + "test";
+        final Driver registered = DriverManager.getDriver(url);
+        final PoolingDriver.Builder builder = PoolingDriver.builder();
+        assertSame(builder, builder.setAccessToUnderlyingConnectionAllowed(false));
+        final PoolingDriver restricted = builder.get();
+        final PoolingDriver permissive = builder.setAccessToUnderlyingConnectionAllowed(true).get();
+        assertSame(registered, DriverManager.getDriver(url));
+        try (Connection restrictedConnection = restricted.connect(url, null);
+                Connection permissiveConnection = permissive.connect(url, null)) {
+            final DelegatingConnection<?> restrictedWrapper = (DelegatingConnection<?>) restrictedConnection;
+            final DelegatingConnection<?> permissiveWrapper = (DelegatingConnection<?>) permissiveConnection;
+            assertNull(restrictedWrapper.getDelegate());
+            assertNull(restrictedWrapper.getInnermostDelegate());
+            assertFalse(restrictedConnection.isWrapperFor(TesterConnection.class));
+            assertThrows(SQLException.class, () -> restrictedConnection.unwrap(TesterConnection.class));
+            assertNotNull(permissiveWrapper.getDelegate());
+            assertSame(permissiveWrapper.getInnermostDelegate(), permissiveConnection.unwrap(TesterConnection.class));
+        }
+        assertEquals(0, driver.getConnectionPool("test").getNumActive());
+    }
+
+    @Test
+    void testBuilderDefaults() {
+        final Supplier<PoolingDriver> supplier = PoolingDriver.builder();
+        final PoolingDriver first = supplier.get();
+        final PoolingDriver second = supplier.get();
+        assertTrue(first.isAccessToUnderlyingConnectionAllowed());
+        assertTrue(second.isAccessToUnderlyingConnectionAllowed());
+        assertNotSame(first, second);
+        final PoolingDriver.Builder restrictedBuilder = PoolingDriver.builder().setAccessToUnderlyingConnectionAllowed(false);
+        assertTrue(PoolingDriver.builder().get().isAccessToUnderlyingConnectionAllowed());
+        assertFalse(restrictedBuilder.get().isAccessToUnderlyingConnectionAllowed());
     }
 
     @Test

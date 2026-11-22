@@ -241,7 +241,7 @@ class TestUnderlyingConnectionAccess {
             dataSource.setAccessToUnderlyingConnectionAllowed(allowed);
             return new Fixture(dataSource.getConnection(), dataSource, nested);
         }
-        final PoolingDriver driver = new PoolingDriver(allowed);
+        final PoolingDriver driver = PoolingDriver.builder().setAccessToUnderlyingConnectionAllowed(allowed).get();
         final String name = "underlying-access-" + IDS.incrementAndGet();
         driver.registerPool(name, pool);
         return new Fixture(driver.connect(PoolingDriver.URL_PREFIX + name, new Properties()), () -> driver.closePool(name), nested);

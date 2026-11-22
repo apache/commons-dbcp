@@ -25,6 +25,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.apache.commons.pool2.ObjectPool;
@@ -35,6 +36,55 @@ import org.apache.commons.pool2.ObjectPool;
  * @since 2.0
  */
 public class PoolingDriver implements Driver {
+
+    /**
+     * Builds {@link PoolingDriver} instances.
+     * <p>
+     * Access to underlying connections is enabled by default, matching {@link PoolingDriver#PoolingDriver()}.
+     * </p>
+     *
+     * @since 2.15.0
+     */
+    public static class Builder implements Supplier<PoolingDriver> {
+
+        private boolean accessToUnderlyingConnectionAllowed = true;
+
+        /**
+         * Constructs a new builder.
+         */
+        public Builder() {
+            // empty
+        }
+
+        /**
+         * Gets a new driver with this builder's current configuration.
+         * <p>
+         * This method does not register the returned driver with {@link DriverManager} or replace the driver registered by
+         * {@link PoolingDriver}'s static initializer. Changes to this builder do not affect drivers already created by it.
+         * </p>
+         *
+         * @return a new driver.
+         */
+        @Override
+        public PoolingDriver get() {
+            return new PoolingDriver(this);
+        }
+
+        /**
+         * Sets whether connections and their statements, result sets, and database metadata permit access to delegates.
+         * <p>
+         * The default is {@code true}. When {@code false}, delegate getters return {@code null} and JDBC unwrapping is limited to
+         * interfaces implemented by the wrapper itself.
+         * </p>
+         *
+         * @param accessToUnderlyingConnectionAllowed whether to allow access to delegates.
+         * @return this builder.
+         */
+        public Builder setAccessToUnderlyingConnectionAllowed(final boolean accessToUnderlyingConnectionAllowed) {
+            this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+            return this;
+        }
+    }
 
     /**
      * PoolGuardConnectionWrapper is a Connection wrapper that makes sure a closed connection cannot be used anymore.
@@ -112,6 +162,16 @@ public class PoolingDriver implements Driver {
      */
     protected static final int MINOR_VERSION = 0;
 
+    /**
+     * Creates a new builder.
+     *
+     * @return a new builder.
+     * @since 2.15.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
     /** Controls access to the underlying connection */
     private final boolean accessToUnderlyingConnectionAllowed;
 
@@ -122,7 +182,7 @@ public class PoolingDriver implements Driver {
      * </p>
      */
     public PoolingDriver() {
-        this(true);
+        this(builder());
     }
 
     /**
@@ -134,6 +194,15 @@ public class PoolingDriver implements Driver {
      */
     protected PoolingDriver(final boolean accessToUnderlyingConnectionAllowed) {
         this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+    }
+
+    /**
+     * Constructs a new driver from a builder.
+     *
+     * @param builder the builder.
+     */
+    private PoolingDriver(final Builder builder) {
+        this(builder.accessToUnderlyingConnectionAllowed);
     }
 
     @Override

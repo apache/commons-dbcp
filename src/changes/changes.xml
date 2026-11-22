@@ -76,6 +76,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Extend Utils.cloneWithoutCredentials(Properties) to omit java.naming.security.principal and java.naming.security.credentials in addition to user and password. Use the shared filter for SharedPoolDataSource, PerUserPoolDataSource, DriverAdapterCPDS, and DriverConnectionFactory diagnostic strings without changing configured properties (f006).</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add DriverAdapterCPDS.exportPasswordAsRefAddr to optionally omit the password address from JNDI References. Password export remains enabled by default for compatibility; the setting survives JNDI lookup and Java serialization.</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add PoolingDriver.Builder and PoolingDriver.builder() to configure delegate access when creating drivers, preserving the existing permissive default.</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 107.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-pool2 from 2.13.0 to 2.13.1.</action>
