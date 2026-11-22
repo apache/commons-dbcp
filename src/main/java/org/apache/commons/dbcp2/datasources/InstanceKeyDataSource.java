@@ -1295,6 +1295,24 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Builds a diagnostic string with standard JNDI environment credentials omitted.
+     *
+     * <p>
+     * The JNDI environment omits the following exact, case-sensitive keys using {@link Utils#cloneWithoutCredentials(Properties)}:
+     * </p>
+     * <ul>
+     * <li>{@code user}</li>
+     * <li>{@code password}</li>
+     * <li>{@link Context#SECURITY_PRINCIPAL java.naming.security.principal}</li>
+     * <li>{@link Context#SECURITY_CREDENTIALS java.naming.security.credentials}</li>
+     * </ul>
+     *
+     * <p>
+     * The configured environment is unchanged. This does not provide general redaction of other environment entries, including provider-specific credential
+     * keys, or other datasource fields.
+     * </p>
+     *
+     * @return a diagnostic string for this datasource.
      * @since 2.6.0
      */
     @Override
@@ -1321,7 +1339,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(", description=");
         builder.append(description);
         builder.append(", jndiEnvironment=");
-        builder.append(jndiEnvironment);
+        builder.append(Utils.cloneWithoutCredentials(jndiEnvironment));
         builder.append(", loginTimeoutDuration=");
         builder.append(loginTimeoutDuration);
         builder.append(", logWriter=");

@@ -33,6 +33,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.naming.Context;
+
 import org.apache.commons.pool2.PooledObject;
 
 /**
@@ -131,10 +133,30 @@ public final class Utils {
     }
 
     /**
-     * Clones the given {@link Properties} without the standard "user" or "password" entries.
+     * Clones the given {@link Properties} without standard credential entries.
      *
-     * @param properties may be null
-     * @return A clone of the input without the standard "user" or "password" entries.
+     * <p>
+     * Removes direct entries with the following exact, case-sensitive keys from the clone:
+     * </p>
+     * <ul>
+     * <li>{@code user}</li>
+     * <li>{@code password}</li>
+     * <li>{@link Context#SECURITY_PRINCIPAL java.naming.security.principal}</li>
+     * <li>{@link Context#SECURITY_CREDENTIALS java.naming.security.credentials}</li>
+     * </ul>
+     *
+     * <p>
+     * The input is unchanged. This is a shallow clone: other entries, including provider-specific credential keys, are retained without filtering.
+     * Inherited defaults remain shared with the input, including any credential defaults. Defaults are not included in {@link Properties#toString()},
+     * but remain accessible through {@link Properties#getProperty(String)}.
+     * </p>
+     *
+     * <p>
+     * Removal of the two JNDI entries was added in 2.15.0.
+     * </p>
+     *
+     * @param properties the properties to clone, may be null.
+     * @return a shallow clone without the four direct credential entries, or null if the input is null.
      * @since 2.8.0
      */
     public static Properties cloneWithoutCredentials(final Properties properties) {
@@ -142,6 +164,8 @@ public final class Utils {
             final Properties temp = (Properties) properties.clone();
             temp.remove(Constants.KEY_USER);
             temp.remove(Constants.KEY_PASSWORD);
+            temp.remove(Context.SECURITY_PRINCIPAL);
+            temp.remove(Context.SECURITY_CREDENTIALS);
             return temp;
         }
         return properties;
