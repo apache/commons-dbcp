@@ -45,19 +45,32 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junitpioneer.jupiter.ClearSystemProperty;
+import org.junitpioneer.jupiter.ReadsSystemProperty;
+import org.junitpioneer.jupiter.SetSystemProperty;
 
 /**
  * Tests for a {@link GenericObjectPool} based {@link PoolingDriver}.
  */
+@ReadsSystemProperty
 public class TestPoolingDriver extends TestConnectionPool {
+
+    @BeforeAll
+    static void loadDriver() throws ClassNotFoundException {
+        // Initialize the registered driver before individual tests change the builder's default property.
+        Class.forName(PoolingDriver.class.getName());
+    }
 
     private PoolingDriver driver;
 
     @Override
     protected Connection getConnection() throws Exception {
-        return DriverManager.getConnection("jdbc:apache:commons:dbcp:test");
+        return driver.connect(PoolingDriver.URL_PREFIX + "test", null);
     }
 
     @BeforeEach
@@ -144,6 +157,7 @@ public class TestPoolingDriver extends TestConnectionPool {
     }
 
     @Test
+    @ClearSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY)
     void testBuilderDefaults() {
         final Supplier<PoolingDriver> supplier = PoolingDriver.builder();
         final PoolingDriver first = supplier.get();
@@ -154,6 +168,35 @@ public class TestPoolingDriver extends TestConnectionPool {
         final PoolingDriver.Builder restrictedBuilder = PoolingDriver.builder().setAccessToUnderlyingConnectionAllowed(false);
         assertTrue(PoolingDriver.builder().get().isAccessToUnderlyingConnectionAllowed());
         assertFalse(restrictedBuilder.get().isAccessToUnderlyingConnectionAllowed());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"true, true", "TRUE, true", "TrUe, true", "false, false", "FALSE, false", "'', false", "invalid, false"})
+    @ClearSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY)
+    void testBuilderSystemProperty(final String value, final boolean expected) throws Exception {
+        System.setProperty(PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY, value);
+        final PoolingDriver.Builder builder = PoolingDriver.builder();
+        final PoolingDriver configured = builder.get();
+        assertEquals(expected, configured.isAccessToUnderlyingConnectionAllowed());
+        assertEquals(expected, new PoolingDriver.Builder().get().isAccessToUnderlyingConnectionAllowed());
+        assertEquals(expected, new PoolingDriver().isAccessToUnderlyingConnectionAllowed());
+        try (Connection connection = configured.connect(PoolingDriver.URL_PREFIX + "test", null)) {
+            assertEquals(expected, connection.isWrapperFor(TesterConnection.class));
+        }
+        assertEquals(!expected, builder.setAccessToUnderlyingConnectionAllowed(!expected).get().isAccessToUnderlyingConnectionAllowed());
+        assertEquals(expected, configured.isAccessToUnderlyingConnectionAllowed());
+    }
+
+    @Test
+    @SetSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY, value = "false")
+    void testBuilderSystemPropertySnapshot() {
+        final PoolingDriver.Builder builder = PoolingDriver.builder();
+        final PoolingDriver configured = builder.get();
+        System.setProperty(PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY, "true");
+        assertFalse(configured.isAccessToUnderlyingConnectionAllowed());
+        assertFalse(builder.get().isAccessToUnderlyingConnectionAllowed());
+        assertTrue(PoolingDriver.builder().get().isAccessToUnderlyingConnectionAllowed());
+        assertTrue(new PoolingDriver().isAccessToUnderlyingConnectionAllowed());
     }
 
     @Test

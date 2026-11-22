@@ -40,17 +40,27 @@ public class PoolingDriver implements Driver {
     /**
      * Builds {@link PoolingDriver} instances.
      * <p>
-     * Access to underlying connections is enabled by default, matching {@link PoolingDriver#PoolingDriver()}.
+     * Access to underlying connections is initialized from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY}
+     * when the builder is constructed and is enabled by default, matching {@link PoolingDriver#PoolingDriver()}.
      * </p>
      *
      * @since 2.15.0
      */
     public static class Builder implements Supplier<PoolingDriver> {
 
-        private boolean accessToUnderlyingConnectionAllowed = true;
+        private static boolean getDefaultAccessToUnderlyingConnectionAllowed() {
+            final boolean defaultValue = true;
+            try {
+                return Boolean.parseBoolean(System.getProperty(ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY, Boolean.toString(defaultValue)));
+            } catch (final SecurityException ignored) {
+                return defaultValue;
+            }
+        }
+
+        private boolean accessToUnderlyingConnectionAllowed = getDefaultAccessToUnderlyingConnectionAllowed();
 
         /**
-         * Constructs a new builder.
+         * Constructs a new builder using the current system property value.
          */
         public Builder() {
             // empty
@@ -73,8 +83,9 @@ public class PoolingDriver implements Driver {
         /**
          * Sets whether connections and their statements, result sets, and database metadata permit access to delegates.
          * <p>
-         * The default is {@code true}. When {@code false}, delegate getters return {@code null} and JDBC unwrapping is limited to
-         * interfaces implemented by the wrapper itself.
+         * This setting overrides the value read from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY} when this builder was
+         * constructed. When {@code false}, delegate getters return {@code null} and JDBC unwrapping is limited to interfaces implemented by
+         * the wrapper itself.
          * </p>
          *
          * @param accessToUnderlyingConnectionAllowed whether to allow access to delegates.
@@ -128,6 +139,22 @@ public class PoolingDriver implements Driver {
         }
     }
 
+    /**
+     * The system property used to initialize access to underlying connections: {@value}.
+     * <p>
+     * Each new {@link Builder} reads this property. If it is absent or cannot be read because of a {@link SecurityException}, access is enabled. Otherwise,
+     * access is enabled only when the value equals {@code "true"}, ignoring case. Existing builders and drivers are unaffected by later property changes. An
+     * explicit call to {@link Builder#setAccessToUnderlyingConnectionAllowed(boolean)} overrides the property value.
+     * </p>
+     * <p>
+     * The no-argument constructor uses a new builder. To configure the driver registered by this class's static initializer, set the property before this class
+     * is initialized, for example on the JVM command line.
+     * </p>
+     *
+     * @since 2.15.0
+     */
+    public static final String ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY = "org.apache.commons.dbcp2.PoolingDriver.accessToUnderlyingConnectionAllowed";
+
     private static final DriverPropertyInfo[] EMPTY_DRIVER_PROPERTY_INFO_ARRAY = {};
 
     /* Register myself with the {@link DriverManager}. */
@@ -176,9 +203,10 @@ public class PoolingDriver implements Driver {
     private final boolean accessToUnderlyingConnectionAllowed;
 
     /**
-     * Constructs a new driver with {@code accessToUnderlyingConnectionAllowed} enabled.
+     * Constructs a new driver using a new builder's configuration.
      * <p>
-     * This permits delegate getters and JDBC unwrapping on its connections, statements, result sets, and database metadata.
+     * Access to underlying connections is initialized from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY} and is enabled by
+     * default. When enabled, this permits delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
      * </p>
      */
     public PoolingDriver() {
