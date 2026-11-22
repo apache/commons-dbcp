@@ -61,10 +61,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junitpioneer.jupiter.ClearSystemProperty;
+import org.junitpioneer.jupiter.ReadsSystemProperty;
 
 /**
  * Exercises delegate access through every pool guard and JDBC wrapper, with and without statement pooling and nested wrappers.
  */
+@ReadsSystemProperty
 class TestUnderlyingConnectionAccess {
 
     private enum CloseWith {
@@ -286,51 +289,6 @@ class TestUnderlyingConnectionAccess {
     }
 
     @ParameterizedTest
-    @MethodSource("statementArguments")
-    void testAccessAndExecution(final Source source, final boolean allowed, final boolean poolStatements, final boolean nested,
-            final StatementKind kind) throws Exception {
-        try (Fixture fixture = createFixture(source, allowed, poolStatements, nested)) {
-            final Connection connection = fixture.connection;
-            assertConnectionAccess(connection, allowed);
-            assertFalse(connection.isWrapperFor(String.class));
-            assertThrows(SQLException.class, () -> connection.unwrap(String.class));
-            try (Statement statement = kind.create(connection)) {
-                assertSame(connection, statement.getConnection());
-                assertStatementAccess(statement, allowed);
-                assertNotEquals("NULL", statement.toString());
-                final ResultSet resultSet = execute(statement);
-                try (ResultSet ignored = resultSet) {
-                    assertSame(statement, resultSet.getStatement());
-                    assertResultSetAccess(resultSet, allowed);
-                    assertTrue(resultSet.next());
-                    assertEquals(7, resultSet.getInt(1));
-                    if (statement instanceof CallableStatement) {
-                        assertEquals(7, ((CallableStatement) statement).getInt(1));
-                    }
-                    if (!allowed && !nested) {
-                        assertNull(((DelegatingConnection<?>) connection).getDelegate());
-                        assertNull(((DelegatingStatement) statement).getDelegate());
-                        assertNull(((DelegatingResultSet) resultSet).getDelegate());
-                    }
-                }
-                assertResultSetAccess(resultSet, allowed);
-            }
-            final DatabaseMetaData metadata = connection.getMetaData();
-            assertSame(connection, metadata.getConnection());
-            assertMetadataAccess(metadata, allowed);
-            if (!allowed && !nested) {
-                assertNull(((DelegatingDatabaseMetaData) metadata).getDelegate());
-            }
-            final ResultSet tables = metadata.getTables(null, null, null, null);
-            try (ResultSet ignored = tables) {
-                assertResultSetAccess(tables, allowed);
-                assertNull(tables.getStatement());
-            }
-            assertResultSetAccess(tables, allowed);
-        }
-    }
-
-    @ParameterizedTest
     @MethodSource("closeArguments")
     void testAccessAfterClose(final Source source, final boolean allowed, final boolean nested, final StatementKind kind,
             final CloseWith closeWith) throws Exception {
@@ -414,6 +372,51 @@ class TestUnderlyingConnectionAccess {
     }
 
     @ParameterizedTest
+    @MethodSource("statementArguments")
+    void testAccessAndExecution(final Source source, final boolean allowed, final boolean poolStatements, final boolean nested,
+            final StatementKind kind) throws Exception {
+        try (Fixture fixture = createFixture(source, allowed, poolStatements, nested)) {
+            final Connection connection = fixture.connection;
+            assertConnectionAccess(connection, allowed);
+            assertFalse(connection.isWrapperFor(String.class));
+            assertThrows(SQLException.class, () -> connection.unwrap(String.class));
+            try (Statement statement = kind.create(connection)) {
+                assertSame(connection, statement.getConnection());
+                assertStatementAccess(statement, allowed);
+                assertNotEquals("NULL", statement.toString());
+                final ResultSet resultSet = execute(statement);
+                try (ResultSet ignored = resultSet) {
+                    assertSame(statement, resultSet.getStatement());
+                    assertResultSetAccess(resultSet, allowed);
+                    assertTrue(resultSet.next());
+                    assertEquals(7, resultSet.getInt(1));
+                    if (statement instanceof CallableStatement) {
+                        assertEquals(7, ((CallableStatement) statement).getInt(1));
+                    }
+                    if (!allowed && !nested) {
+                        assertNull(((DelegatingConnection<?>) connection).getDelegate());
+                        assertNull(((DelegatingStatement) statement).getDelegate());
+                        assertNull(((DelegatingResultSet) resultSet).getDelegate());
+                    }
+                }
+                assertResultSetAccess(resultSet, allowed);
+            }
+            final DatabaseMetaData metadata = connection.getMetaData();
+            assertSame(connection, metadata.getConnection());
+            assertMetadataAccess(metadata, allowed);
+            if (!allowed && !nested) {
+                assertNull(((DelegatingDatabaseMetaData) metadata).getDelegate());
+            }
+            final ResultSet tables = metadata.getTables(null, null, null, null);
+            try (ResultSet ignored = tables) {
+                assertResultSetAccess(tables, allowed);
+                assertNull(tables.getStatement());
+            }
+            assertResultSetAccess(tables, allowed);
+        }
+    }
+
+    @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void testGeneratedKeys(final boolean allowed) throws Exception {
         try (Fixture fixture = createFixture(Source.BASIC, allowed, true, true);
@@ -429,6 +432,26 @@ class TestUnderlyingConnectionAccess {
                     assertResultSetAccess(keys, allowed);
                 }
             }
+        }
+    }
+
+    @Test
+    void testGuardHookAndInternalAccess() throws Exception {
+        try (Connection physical = new Driver().connect(newUrl(), new Properties());
+                DelegatingConnection<Connection> connection = new DelegatingConnection<Connection>(physical) {
+                    @Override
+                    protected boolean isAccessToUnderlyingConnectionAllowed() {
+                        return false;
+                    }
+                }; Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT 7")) {
+            assertNull(connection.getDelegate());
+            assertConnectionAccess(connection, false);
+            assertStatementAccess(statement, false);
+            assertResultSetAccess(resultSet, false);
+            assertMetadataAccess(connection.getMetaData(), false);
+            // Internal access remains available to pool lifecycle operations.
+            assertSame(physical, connection.getDelegateInternal());
+            assertSame(physical, connection.getInnermostDelegateInternal());
         }
     }
 
@@ -455,26 +478,6 @@ class TestUnderlyingConnectionAccess {
             try (Connection foreign = new Driver().connect(newUrl(), new Properties())) {
                 assertThrows(IllegalStateException.class, () -> dataSource.invalidateConnection(foreign));
             }
-        }
-    }
-
-    @Test
-    void testGuardHookAndInternalAccess() throws Exception {
-        try (Connection physical = new Driver().connect(newUrl(), new Properties());
-                DelegatingConnection<Connection> connection = new DelegatingConnection<Connection>(physical) {
-                    @Override
-                    protected boolean isAccessToUnderlyingConnectionAllowed() {
-                        return false;
-                    }
-                }; Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT 7")) {
-            assertNull(connection.getDelegate());
-            assertConnectionAccess(connection, false);
-            assertStatementAccess(statement, false);
-            assertResultSetAccess(resultSet, false);
-            assertMetadataAccess(connection.getMetaData(), false);
-            // Internal access remains available to pool lifecycle operations.
-            assertSame(physical, connection.getDelegateInternal());
-            assertSame(physical, connection.getInnermostDelegateInternal());
         }
     }
 
@@ -547,6 +550,7 @@ class TestUnderlyingConnectionAccess {
     }
 
     @Test
+    @ClearSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY)
     void testPlainWrappersAndDriverDefault() throws Exception {
         assertTrue(new PoolingDriver().isAccessToUnderlyingConnectionAllowed());
         try (Connection physical = new Driver().connect(newUrl(), new Properties());

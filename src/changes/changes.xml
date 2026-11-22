@@ -77,6 +77,7 @@ The <action> type attribute can be add,update,fix,remove.
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add DriverAdapterCPDS.exportPasswordAsRefAddr to optionally omit the password address from JNDI References. Password export remains enabled by default for compatibility; the setting survives JNDI lookup and Java serialization.</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add PoolingDriver.Builder and PoolingDriver.builder() to configure delegate access when creating drivers, preserving the existing permissive default.</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Initialize PoolingDriver.Builder delegate access from the org.apache.commons.dbcp2.PoolingDriver.accessToUnderlyingConnectionAllowed system property. Preserve the enabled default when the property is absent or unreadable, and allow explicit builder settings to override it.</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 93 to 107.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-pool2 from 2.13.0 to 2.13.1.</action>
