@@ -886,6 +886,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public void setCatalog(final String catalog) throws SQLException {
         checkOpen();
+        cachedCatalog = null;
         try {
             connection.setCatalog(catalog);
             if (cacheState) {
@@ -988,6 +989,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public void setReadOnly(final boolean readOnly) throws SQLException {
         checkOpen();
+        cachedReadOnly = null;
         try {
             connection.setReadOnly(readOnly);
             if (cacheState) {
@@ -1024,6 +1026,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public void setSchema(final String schema) throws SQLException {
         checkOpen();
+        cachedSchema = null;
         try {
             Jdbc41Bridge.setSchema(connection, schema);
             if (cacheState) {
