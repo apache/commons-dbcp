@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -102,8 +103,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Environment that may be used to set up a JNDI initial context. */
     private Properties jndiEnvironment;
 
-    /** Login Timeout */
-    private Duration loginTimeoutDuration = Duration.ZERO;
+    /** Login timeout, or null to retain the provider's configuration. */
+    private volatile Duration loginTimeoutDuration;
+
+    /** Original datasource whose pool and live login timeout are shared after deserialization. */
+    private transient InstanceKeyDataSource loginTimeoutSource;
 
     /** Log stream */
     private PrintWriter logWriter;
@@ -314,6 +318,11 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @return The pooled connection manager for the given key.
      */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
+
+    /** Gets the optional timeout used for physical connection attempts. */
+    Duration getConfiguredLoginTimeout() {
+        return loginTimeoutSource == null ? loginTimeoutDuration : loginTimeoutSource.getConfiguredLoginTimeout();
+    }
 
     /**
      * Gets the value of connectionPoolDataSource. This method will return null, if the backing data source is being
@@ -586,15 +595,16 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of loginTimeout.
+     * Gets the configured login timeout converted to JDBC seconds, or zero if none was configured.
+     * Positive durations are truncated to whole seconds, with a minimum of one and a maximum of {@link Integer#MAX_VALUE}.
      *
-     * @return value of loginTimeout.
+     * @return the configured timeout in JDBC seconds.
      * @deprecated Use {@link #getLoginTimeoutDuration()}.
      */
     @Deprecated
     @Override
     public int getLoginTimeout() {
-        return (int) loginTimeoutDuration.getSeconds();
+        return Utils.toJdbcSeconds(getLoginTimeoutDuration());
     }
 
     /**
@@ -604,7 +614,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @since 2.10.0
      */
     public Duration getLoginTimeoutDuration() {
-        return loginTimeoutDuration;
+        final Duration timeout = getConfiguredLoginTimeout();
+        return timeout == null ? Duration.ZERO : timeout;
     }
 
     /**
@@ -1117,27 +1128,51 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the value of loginTimeout.
+     * Sets the timeout applied to the underlying ConnectionPoolDataSource for each physical connection attempt,
+     * including connections created after pool initialization. The provider's previous timeout is restored afterwards.
+     * Until this method is called, the provider's configured timeout is used unchanged. Deserialized wrappers sharing
+     * the same pool also share this live configuration.
+     * <p>
+     * Positive durations use whole seconds, with a minimum of one second and a maximum of {@link Integer#MAX_VALUE}.
+     * Zero uses the provider's default login timeout behavior. Enforcement depends on the provider; this setting does
+     * not limit JNDI lookup or waiting for an available pooled connection. A timeout override excludes other connection
+     * attempts through these pools while the provider's setting is temporarily changed. A positive timeout also bounds
+     * waiting to access that setting, using the same whole-second conversion. Attempts without an override remain concurrent.
+     * </p>
      *
-     * @param loginTimeout
-     *            Value to assign to loginTimeout.
+     * @param loginTimeout a nonnegative timeout, not null.
+     * @throws NullPointerException if loginTimeout is null.
+     * @throws IllegalArgumentException if loginTimeout is negative.
      * @since 2.10.0
      */
     public void setLoginTimeout(final Duration loginTimeout) {
-        this.loginTimeoutDuration = loginTimeout;
+        Objects.requireNonNull(loginTimeout, "loginTimeout");
+        if (loginTimeout.isNegative()) {
+            throw new IllegalArgumentException("loginTimeout must not be negative");
+        }
+        if (loginTimeoutSource == null) {
+            this.loginTimeoutDuration = loginTimeout;
+        } else {
+            loginTimeoutSource.setLoginTimeout(loginTimeout);
+        }
     }
 
     /**
      * Sets the value of loginTimeout.
      *
-     * @param loginTimeout
-     *            Value to assign to loginTimeout.
+     * @param loginTimeout a nonnegative timeout in seconds.
+     * @throws IllegalArgumentException if loginTimeout is negative.
      * @deprecated Use {@link #setLoginTimeout(Duration)}.
      */
     @Deprecated
     @Override
     public void setLoginTimeout(final int loginTimeout) {
-        this.loginTimeoutDuration = Duration.ofSeconds(loginTimeout);
+        setLoginTimeout(Duration.ofSeconds(loginTimeout));
+    }
+
+    /** Shares the live login timeout configuration along with the pool during deserialization. */
+    final void setLoginTimeoutSource(final InstanceKeyDataSource source) {
+        loginTimeoutSource = source;
     }
 
     /**
@@ -1274,11 +1309,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         // try to get a connection with the supplied userName/password
         PooledConnection conn = null;
         try {
-            if (userName != null) {
-                conn = cpds.getPooledConnection(userName, userPassword);
-            } else {
-                conn = cpds.getPooledConnection();
-            }
+            conn = ConnectionPoolDataSourceUtils.getPooledConnection(cpds, userName, userPassword, getConfiguredLoginTimeout());
             if (conn == null) {
                 throw new SQLException("Cannot connect using the supplied userName/password");
             }
@@ -1341,7 +1372,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         builder.append(", jndiEnvironment=");
         builder.append(Utils.cloneWithoutCredentials(jndiEnvironment));
         builder.append(", loginTimeoutDuration=");
-        builder.append(loginTimeoutDuration);
+        builder.append(getLoginTimeoutDuration());
         builder.append(", logWriter=");
         builder.append(logWriter);
         builder.append(", instanceKey=");

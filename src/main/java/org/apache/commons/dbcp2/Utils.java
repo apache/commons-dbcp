@@ -363,6 +363,25 @@ public final class Utils {
     }
 
     /**
+     * Converts a duration to the integer seconds accepted by JDBC timeout methods.
+     * Positive durations are truncated to whole seconds, with a minimum of one second and a maximum of
+     * {@link Integer#MAX_VALUE}. Zero remains zero. Negative durations remain negative, capped at
+     * {@link Integer#MIN_VALUE}, so callers can preserve JDBC's rejection of negative timeouts.
+     *
+     * @param duration the duration to convert, not null.
+     * @return the bounded number of seconds.
+     * @throws NullPointerException if duration is null.
+     * @since 2.15.0
+     */
+    public static int toJdbcSeconds(final Duration duration) {
+        final long seconds = duration.getSeconds();
+        if (duration.isNegative()) {
+            return (int) Math.max(Integer.MIN_VALUE, seconds);
+        }
+        return duration.isZero() ? 0 : (int) Math.max(1, Math.min(Integer.MAX_VALUE, seconds));
+    }
+
+    /**
      * Converts the given char[] to a String.
      *
      * @param value may be null.

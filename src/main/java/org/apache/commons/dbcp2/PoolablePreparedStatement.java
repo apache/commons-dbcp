@@ -131,4 +131,10 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
         }
         prepareToReturn();
     }
+
+    @Override
+    public void setQueryTimeout(final int seconds) throws SQLException {
+        setQueryTimeoutAndRememberOriginal(seconds);
+    }
+
 }

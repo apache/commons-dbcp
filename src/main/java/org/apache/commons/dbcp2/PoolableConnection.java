@@ -415,8 +415,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         }
 
         // JDBC timeouts are whole seconds where 0 means no timeout, so a positive sub-second timeout becomes 1 second.
-        final int timeoutSeconds = timeoutDuration.isNegative() || timeoutDuration.isZero() ? 0
-                : (int) Math.max(1, Math.min(Integer.MAX_VALUE, timeoutDuration.getSeconds()));
+        final int timeoutSeconds = timeoutDuration.isNegative() ? 0 : Utils.toJdbcSeconds(timeoutDuration);
         if (sql == null || sql.isEmpty()) {
             if (!isValid(Duration.ofSeconds(timeoutSeconds))) {
                 throw new SQLException("isValid() returned false");

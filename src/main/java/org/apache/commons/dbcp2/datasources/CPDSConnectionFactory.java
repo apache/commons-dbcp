@@ -202,12 +202,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
 
     @Override
     public synchronized PooledObject<PooledConnectionAndInfo> makeObject() throws SQLException {
-        PooledConnection pc = null;
-        if (userPassKey.getUserName() == null) {
-            pc = cpds.getPooledConnection();
-        } else {
-            pc = cpds.getPooledConnection(userPassKey.getUserName(), userPassKey.getPassword());
-        }
+        final PooledConnection pc = getPooledConnection(userPassKey);
         if (pc == null) {
             throw new IllegalStateException("Connection pool data source returned null from getPooledConnection");
         }

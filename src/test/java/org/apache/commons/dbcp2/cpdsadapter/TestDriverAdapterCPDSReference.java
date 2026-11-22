@@ -33,6 +33,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -362,4 +363,62 @@ class TestDriverAdapterCPDSReference {
         assertEquals(export, restored.getReference().get("password") != null);
         assertCanConnect(restored);
     }
+    static Stream<Arguments> durationReferences() {
+        return Stream.of(Duration.ZERO, Duration.ofNanos(1), Duration.ofNanos(-1), Duration.ofMillis(1_901),
+                Duration.ofDays(30), Duration.ofMillis(Long.MAX_VALUE), Duration.ofSeconds(Long.MAX_VALUE, 999_999_999),
+                Duration.ofSeconds(Long.MIN_VALUE))
+                .flatMap(duration -> Stream.of(false, true).map(modernOnly -> Arguments.of(duration, modernOnly)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("durationReferences")
+    void testDurationReferenceRoundTrip(final Duration duration, final boolean modernOnly) throws Exception {
+        final DriverAdapterCPDS source = newDataSource();
+        source.setDurationBetweenEvictionRuns(duration);
+        source.setMinEvictableIdleDuration(duration);
+        final Reference reference = source.getReference();
+        if (modernOnly) {
+            removeAddress(reference, "timeBetweenEvictionRunsMillis");
+            removeAddress(reference, "minEvictableIdleTimeMillis");
+        }
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(duration, restored.getDurationBetweenEvictionRuns());
+        assertEquals(duration, restored.getMinEvictableIdleDuration());
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {Long.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, 2_592_000_000L, Long.MAX_VALUE})
+    void testLegacyDurationReference(final long millis) throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", Long.toString(millis)));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", Long.toString(millis)));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofMillis(millis), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofMillis(millis), restored.getMinEvictableIdleDuration());
+    }
+
+    @Test
+    void testModernDurationReferenceOverridesMalformedLegacyValues() throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("durationBetweenEvictionRuns", "PT0.001S"));
+        reference.add(new StringRefAddr("minEvictableIdleDuration", "PT720H"));
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "invalid"));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "invalid"));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofMillis(1), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
+    }
+
+    @Test
+    void testNullModernDurationReferenceFallsBackToLegacy() throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("durationBetweenEvictionRuns", null));
+        reference.add(new StringRefAddr("minEvictableIdleDuration", null));
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "2592000000"));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "2592000000"));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofDays(30), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
+    }
+
 }
