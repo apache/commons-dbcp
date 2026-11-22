@@ -32,6 +32,7 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLType;
 import java.sql.SQLXML;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ import java.util.Objects;
  * @since 2.0
  */
 public class DelegatingPreparedStatement extends DelegatingStatement implements PreparedStatement {
+
+    /** Driver timeout before the first change, restored when this statement is returned to a pool. */
+    private Integer originalQueryTimeout;
 
     /**
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
@@ -168,7 +172,8 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     /**
-     * Prepares internal states before calling {@link #passivate()}.
+     * Prepares internal states before calling {@link #passivate()}, restoring any saved query timeout.
+     * A failure to restore the timeout prevents this statement from being reused by the pool.
      *
      * @throws SQLException Thrown closing a traced resource or calling {@link #passivate()}.
      */
@@ -187,6 +192,10 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
             if (!thrownList.isEmpty()) {
                 throw new SQLExceptionList(thrownList);
             }
+        }
+        if (originalQueryTimeout != null) {
+            getDelegatePreparedStatement().setQueryTimeout(originalQueryTimeout);
+            originalQueryTimeout = null;
         }
         super.passivate();
     }
@@ -416,6 +425,19 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
+    /**
+     * Sets the delegate, discarding any saved query timeout when the delegate changes.
+     *
+     * @param statement the new delegate.
+     */
+    @Override
+    public void setDelegate(final Statement statement) {
+        if (getDelegateInternal() != statement) {
+            originalQueryTimeout = null;
+        }
+        super.setDelegate(statement);
+    }
+
     @Override
     public void setDouble(final int parameterIndex, final double x) throws SQLException {
         checkOpen();
@@ -592,6 +614,15 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         } catch (final SQLException e) {
             handleException(e);
         }
+    }
+
+    /** Remembers the original timeout before changing a statement that will be returned to a pool. */
+    void setQueryTimeoutAndRememberOriginal(final int seconds) throws SQLException {
+        checkOpen();
+        if (originalQueryTimeout == null) {
+            originalQueryTimeout = getQueryTimeout();
+        }
+        super.setQueryTimeout(seconds);
     }
 
     @Override

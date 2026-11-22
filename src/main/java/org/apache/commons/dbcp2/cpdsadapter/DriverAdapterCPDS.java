@@ -180,6 +180,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     public DriverAdapterCPDS() {
     }
 
+    private void addDurationReference(final Reference reference, final String durationKey, final String millisKey, final Duration duration) {
+        reference.add(new StringRefAddr(durationKey, duration.toString()));
+        try {
+            reference.add(new StringRefAddr(millisKey, Long.toString(duration.toMillis())));
+        } catch (final ArithmeticException ignored) {
+            // Only the Duration representation can preserve values outside the range of long milliseconds.
+        }
+    }
+
     /**
      * Throws an IllegalStateException, if a PooledConnection has already been requested.
      */
@@ -236,6 +245,15 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      */
     public Duration getDurationBetweenEvictionRuns() {
         return durationBetweenEvictionRuns;
+    }
+
+    private Duration getDuration(final Reference reference, final String durationKey, final String millisKey) {
+        final RefAddr duration = reference.get(durationKey);
+        if (isNotEmpty(duration)) {
+            return Duration.parse(getStringContent(duration));
+        }
+        final RefAddr millis = reference.get(millisKey);
+        return isNotEmpty(millis) ? Duration.ofMillis(Long.parseLong(getStringContent(millis))) : null;
     }
 
     private int getIntegerStringContent(final RefAddr ra) {
@@ -363,9 +381,9 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                     setMaxIdle(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get(KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
-                if (isNotEmpty(ra)) {
-                    setTimeBetweenEvictionRunsMillis(getIntegerStringContent(ra));
+                final Duration evictionInterval = getDuration(ref, KEY_DURATION_BETWEEN_EVICTION_RUNS, KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+                if (evictionInterval != null) {
+                    setDurationBetweenEvictionRuns(evictionInterval);
                 }
 
                 ra = ref.get(KEY_NUM_TESTS_PER_EVICTION_RUN);
@@ -373,9 +391,9 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
                     setNumTestsPerEvictionRun(getIntegerStringContent(ra));
                 }
 
-                ra = ref.get(KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-                if (isNotEmpty(ra)) {
-                    setMinEvictableIdleTimeMillis(getIntegerStringContent(ra));
+                final Duration idleDuration = getDuration(ref, KEY_MIN_EVICTABLE_IDLE_DURATION, KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+                if (idleDuration != null) {
+                    setMinEvictableIdleDuration(idleDuration);
                 }
 
                 ra = ref.get(KEY_MAX_PREPARED_STATEMENTS);
@@ -504,6 +522,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * are exported unchanged. It does not omit the configured password from Java serialization or remove passwords from previously created References.
      * </p>
      *
+     * <p>
+     * Duration properties include their ISO-8601 representations and, when representable as a long, legacy millisecond
+     * representations. The ISO-8601 properties take precedence when this factory reconstructs the data source.
+     * </p>
+     *
      * @return a Reference describing this data source.
      * @throws NamingException if the Reference cannot be created.
      * @see #setExportPasswordAsRefAddr(boolean)
@@ -530,14 +553,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         ref.add(new StringRefAddr(KEY_MAX_IDLE, String.valueOf(getMaxIdle())));
         ref.add(new StringRefAddr(KEY_NUM_TESTS_PER_EVICTION_RUN, String.valueOf(getNumTestsPerEvictionRun())));
         ref.add(new StringRefAddr(KEY_MAX_PREPARED_STATEMENTS, String.valueOf(getMaxPreparedStatements())));
-        //
-        // Pair of current and deprecated.
-        ref.add(new StringRefAddr(KEY_DURATION_BETWEEN_EVICTION_RUNS, String.valueOf(getDurationBetweenEvictionRuns())));
-        ref.add(new StringRefAddr(KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS, String.valueOf(getTimeBetweenEvictionRunsMillis())));
-        //
-        // Pair of current and deprecated.
-        ref.add(new StringRefAddr(KEY_MIN_EVICTABLE_IDLE_DURATION, String.valueOf(getMinEvictableIdleDuration())));
-        ref.add(new StringRefAddr(KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS, String.valueOf(getMinEvictableIdleTimeMillis())));
+        addDurationReference(ref, KEY_DURATION_BETWEEN_EVICTION_RUNS, KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS, getDurationBetweenEvictionRuns());
+        addDurationReference(ref, KEY_MIN_EVICTABLE_IDLE_DURATION, KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS, getMinEvictableIdleDuration());
 
         return ref;
     }

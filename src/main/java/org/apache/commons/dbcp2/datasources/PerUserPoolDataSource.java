@@ -673,7 +673,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     @SuppressWarnings("resource")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.managers = readObjectImpl().managers;
+        final PerUserPoolDataSource source = readObjectImpl();
+        this.managers = source.managers;
+        setLoginTimeoutSource(source);
     }
 
     private PerUserPoolDataSource readObjectImpl() throws IOException, ClassNotFoundException {
@@ -691,6 +693,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         // explicitly)
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(),
                 isRollbackAfterValidation(), userName, Utils.toCharArray(password));
+        factory.setLoginTimeoutSupplier(this::getConfiguredLoginTimeout);
         factory.setMaxConn(getMaxConnDuration());
         // Create an object pool to contain our PooledConnections
         @SuppressWarnings("resource")

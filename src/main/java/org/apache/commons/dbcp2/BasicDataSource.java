@@ -2097,6 +2097,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
      * Sets the default query timeout that will be used for {@link java.sql.Statement Statement}s created from this
      * connection. {@code null} means that the driver default will be used.
      *
+     * <p>
+     * Positive durations use whole seconds, with a minimum of one second and a maximum of {@link Integer#MAX_VALUE}.
+     * Zero means no timeout. Negative values are passed to the driver as negative seconds for JDBC validation when a statement is created.
+     * </p>
+     *
      * @param defaultQueryTimeoutDuration The default query timeout Duration.
      * @since 2.10.0
      */

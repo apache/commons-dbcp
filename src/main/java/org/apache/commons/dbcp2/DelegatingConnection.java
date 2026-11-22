@@ -565,8 +565,22 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * @throws SQLException Thrown if a database access error occurs, this method is called on a closed Statement.
      */
     private <T extends DelegatingStatement> T init(final T delegatingStatement) throws SQLException {
-        if (defaultQueryTimeoutDuration != null && defaultQueryTimeoutDuration.getSeconds() != delegatingStatement.getQueryTimeout()) {
-            delegatingStatement.setQueryTimeout((int) defaultQueryTimeoutDuration.getSeconds());
+        if (defaultQueryTimeoutDuration != null) {
+            final int timeoutSeconds = Utils.toJdbcSeconds(defaultQueryTimeoutDuration);
+            try {
+                if (timeoutSeconds != delegatingStatement.getQueryTimeout()) {
+                    delegatingStatement.setQueryTimeout(timeoutSeconds);
+                }
+            } catch (final SQLException | RuntimeException e) {
+                try {
+                    delegatingStatement.close();
+                } catch (final SQLException | RuntimeException closeException) {
+                    if (e != closeException) {
+                        e.addSuppressed(closeException);
+                    }
+                }
+                throw e;
+            }
         }
         return delegatingStatement;
     }
@@ -618,6 +632,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Tests if the connection has not been closed and is still valid.
      *
+     * <p>
+     * Positive timeouts use whole seconds, with a minimum of one second and a maximum of {@link Integer#MAX_VALUE}.
+     * Zero means no timeout; negative values are passed to the driver as negative seconds for JDBC validation.
+     * </p>
+     *
      * @param timeout The duration to wait for the database operation used to validate the connection to complete.
      * @return See {@link Connection#isValid(int)}.
      * @throws SQLException See {@link Connection#isValid(int)}.
@@ -629,7 +648,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
             return false;
         }
         try {
-            return connection.isValid((int) timeout.getSeconds());
+            return connection.isValid(Utils.toJdbcSeconds(timeout));
         } catch (final SQLException e) {
             handleException(e);
             return false;
@@ -637,10 +656,14 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * @deprecated Use {@link #isValid(Duration)}.
+     * Tests if the connection has not been closed and is still valid.
+     *
+     * @param timeoutSeconds The duration to wait for the database operation used to validate the connection to complete, in seconds.
+     * @return See {@link Connection#isValid(int)}.
+     * @throws SQLException See {@link Connection#isValid(int)}.
+     * @see Connection#isValid(int)
      */
     @Override
-    @Deprecated
     public boolean isValid(final int timeoutSeconds) throws SQLException {
         return isValid(Duration.ofSeconds(timeoutSeconds));
     }
@@ -934,6 +957,11 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Sets the default query timeout that will be used for {@link Statement}s created from this connection.
      * {@code null} means that the driver default will be used.
+     *
+     * <p>
+     * Positive durations use whole seconds, with a minimum of one second and a maximum of {@link Integer#MAX_VALUE}.
+     * Negative values are passed to the driver as negative seconds for JDBC validation when a statement is created.
+     * </p>
      *
      * @param defaultQueryTimeoutDuration
      *            the new query timeout limit Duration; zero means there is no limit.

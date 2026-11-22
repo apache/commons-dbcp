@@ -159,12 +159,14 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.pool = readObjectImpl();
+        final SharedPoolDataSource source = readObjectImpl();
+        this.pool = source.pool;
+        setLoginTimeoutSource(source);
     }
 
-    private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> readObjectImpl() throws IOException, ClassNotFoundException {
+    private SharedPoolDataSource readObjectImpl() throws IOException, ClassNotFoundException {
         try {
-            return ((SharedPoolDataSource) new SharedPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null)).pool;
+            return (SharedPoolDataSource) new SharedPoolDataSourceFactory().getObjectInstance(getReference(), null, null, null);
         } catch (final NamingException e) {
             throw new IOException("NamingException: " + e);
         }
@@ -176,6 +178,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
 
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(), isRollbackAfterValidation());
+        factory.setLoginTimeoutSupplier(this::getConfiguredLoginTimeout);
         factory.setMaxConn(getMaxConnDuration());
 
         final GenericKeyedObjectPoolConfig<PooledConnectionAndInfo> config = new GenericKeyedObjectPoolConfig<>();
