@@ -89,11 +89,21 @@ class TestGuardedPoolLifecycle {
             };
             final PoolableConnectionFactory factory = new PoolableConnectionFactory(() -> guarded, null);
             try (GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<PoolableConnection>(factory) {
+                /**
+                 * Always throws {@link IllegalStateException}.
+                 *
+                 * @throws IllegalStateException Thrown always.
+                 */
                 @Override
                 public void invalidateObject(final PoolableConnection connection) {
                     throw new IllegalStateException("Pool rejected connection");
                 }
 
+                /**
+                 * Always throws {@link IllegalStateException}.
+                 *
+                 * @throws IllegalStateException Thrown always.
+                 */
                 @Override
                 public void returnObject(final PoolableConnection connection) {
                     throw new IllegalStateException("Pool rejected connection");

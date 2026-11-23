@@ -46,7 +46,7 @@ public class TestAbandonedTrace {
      * Tests that a null or absent removal target discards every cleared reference while retaining live children.
      *
      * @param nullTarget whether to remove null instead of an untracked child.
-     * @throws Exception if accessing the trace list or closing a trace fails.
+     * @throws Exception Thrown if accessing the trace list or closing a trace fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -70,7 +70,7 @@ public class TestAbandonedTrace {
     /**
      * Tests that removal stops after the first matching child and cleans up only cleared references encountered before it.
      *
-     * @throws Exception if accessing the trace list or closing a trace fails.
+     * @throws Exception Thrown if accessing the trace list or closing a trace fails.
      */
     @Test
     void testRemoveTraceStopsAtFirstMatch() throws Exception {

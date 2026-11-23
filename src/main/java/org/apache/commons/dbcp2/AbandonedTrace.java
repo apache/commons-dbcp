@@ -32,6 +32,7 @@ import org.apache.commons.pool2.TrackedUse;
 
 /**
  * Tracks connection usage for recovering and reporting abandoned connections.
+ *
  * <p>
  * The JDBC Connection, Statement, and ResultSet classes extend this class.
  * </p>
@@ -104,9 +105,9 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
     }
 
     /**
-     * Subclasses can implement this nop.
+     * Does nothing; subclasses can override this method to close their resources.
      *
-     * @throws SQLException Ignored here, for subclasses.
+     * @throws SQLException Thrown by subclasses if closing a resource fails; not thrown by this implementation.
      * @since 2.10.0
      */
     @Override

@@ -347,7 +347,7 @@ public class TestPerUserPoolDataSource extends TestConnectionPool {
     @Test
     void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
-        // some JVMs, e.g. Windows.
+        // some JVMs, such as those on Windows.
         final Duration defaultMaxWaitDuration = Duration.ofMillis(430);
         ((PerUserPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
         ((PerUserPoolDataSource) ds).setPerUserMaxWait(user, defaultMaxWaitDuration);

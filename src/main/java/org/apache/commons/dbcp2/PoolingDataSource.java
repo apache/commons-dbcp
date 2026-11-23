@@ -115,7 +115,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Returns a {@link Connection} from my pool, according to the contract specified by
+     * Gets a {@link Connection} from my pool, according to the contract specified by
      * {@link ObjectPool#borrowObject}.
      */
     @Override
@@ -140,10 +140,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Throws {@link UnsupportedOperationException}
-     *
-     * @throws UnsupportedOperationException
-     *             always thrown
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      */
     @Override
     public Connection getConnection(final String userName, final String password) throws SQLException {
@@ -151,10 +148,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Throws {@link UnsupportedOperationException}.
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      *
-     * @throws UnsupportedOperationException
-     *             As this implementation does not support this feature.
+     * @throws UnsupportedOperationException Thrown always because this implementation does not support this feature.
      */
     @Override
     public int getLoginTimeout() {
@@ -162,7 +158,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Returns my log writer.
+     * Gets my log writer.
      *
      * @return my log writer
      * @see DataSource#getLogWriter
@@ -172,6 +168,11 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         return logWriter;
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
@@ -187,7 +188,7 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * Tests whether access to the underlying connection is allowed.
      *
      * @return true if access to the underlying {@link Connection} is allowed, false otherwise.
      */
@@ -220,10 +221,9 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
     }
 
     /**
-     * Throws {@link UnsupportedOperationException}.
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      *
-     * @throws UnsupportedOperationException
-     *             As this implementation does not support this feature.
+     * @throws UnsupportedOperationException Thrown always because this implementation does not support this feature.
      */
     @Override
     public void setLoginTimeout(final int seconds) {

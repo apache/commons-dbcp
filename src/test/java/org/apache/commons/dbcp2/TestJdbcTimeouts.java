@@ -69,8 +69,8 @@ class TestJdbcTimeouts {
      * @param connection the connection that creates the statement.
      * @param variant the creation overload index, from 0 through 11.
      * @return the created statement.
-     * @throws SQLException if statement creation fails.
-     * @throws IllegalArgumentException if variant is not a supported overload index.
+     * @throws SQLException Thrown if statement creation fails.
+     * @throws IllegalArgumentException Thrown if variant is not a supported overload index.
      */
     private static Statement createStatement(final Connection connection, final int variant) throws SQLException {
         switch (variant) {
@@ -117,7 +117,7 @@ class TestJdbcTimeouts {
      *
      * @param timeout the value read and updated by the timeout accessors.
      * @return the statement test double.
-     * @throws SQLException if configuring the statement test double fails.
+     * @throws SQLException Thrown if configuring the statement test double fails.
      */
     private static CallableStatement mockStatement(final AtomicInteger timeout) throws SQLException {
         final CallableStatement statement = mock(CallableStatement.class);
@@ -198,7 +198,7 @@ class TestJdbcTimeouts {
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
      * @param defaultTimeout the configured default query timeout, or {@code null} for the driver default.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @MethodSource("pooledTimeouts")
@@ -220,7 +220,7 @@ class TestJdbcTimeouts {
      * Tests that closing a connection restores the timeout of a statement left open by its borrower.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -241,7 +241,7 @@ class TestJdbcTimeouts {
      * Tests that DriverAdapterCPDS restores query timeouts between statement borrowers.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -270,7 +270,7 @@ class TestJdbcTimeouts {
      * @param variant the statement creation overload index, from 0 through 11.
      * @param timeout the duration under test.
      * @param expected the expected timeout passed to JDBC, in seconds.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @ParameterizedTest
     @MethodSource("statementTimeouts")
@@ -303,7 +303,7 @@ class TestJdbcTimeouts {
     /**
      * Tests that a matching query timeout avoids a redundant setter call.
      *
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @Test
     void testDefaultQueryTimeoutAvoidsRedundantSetter() throws SQLException {
@@ -322,7 +322,7 @@ class TestJdbcTimeouts {
     /**
      * Tests that a timeout initialization failure retains a subsequent statement close failure.
      *
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @Test
     void testDefaultQueryTimeoutPreservesInitializationAndCloseFailures() throws SQLException {
@@ -345,7 +345,7 @@ class TestJdbcTimeouts {
      *
      * @param timeout the duration under test.
      * @param expected the expected timeout passed to JDBC, in seconds.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @ParameterizedTest
     @MethodSource("timeouts")
@@ -370,7 +370,7 @@ class TestJdbcTimeouts {
     /**
      * Tests that validating a closed wrapper does not call the driver.
      *
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @Test
     void testIsValidClosedDoesNotCallDriver() throws SQLException {
@@ -386,7 +386,7 @@ class TestJdbcTimeouts {
      * Tests that setting a nonpooled statement timeout does not require driver support for reading it.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     * @throws SQLException Thrown if JDBC setup, an operation, or cleanup unexpectedly fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -404,7 +404,7 @@ class TestJdbcTimeouts {
      * Tests that a statement is discarded when its original query timeout cannot be restored.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -431,7 +431,7 @@ class TestJdbcTimeouts {
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
      * @param changeTimeout whether to change the replacement delegate's timeout before returning the statement.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @MethodSource("changedDelegates")
@@ -467,7 +467,7 @@ class TestJdbcTimeouts {
      * Tests that reassigning the same delegate retains the saved original timeout.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
@@ -494,7 +494,7 @@ class TestJdbcTimeouts {
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
      * @param unchecked whether the timeout setter throws an unchecked exception.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @MethodSource("failedTimeoutSetters")
@@ -554,7 +554,7 @@ class TestJdbcTimeouts {
      * Tests that an unchanged pooled statement does not access the driver query timeout.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(booleans = {false, true})

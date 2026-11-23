@@ -164,7 +164,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return new BigDecimal(columnIndex);
     }
 
-    /** @deprecated */
+    /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
+     * @deprecated
+     */
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(final int columnIndex, final int scale) throws SQLException {
@@ -178,7 +182,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return new BigDecimal(columnName.hashCode());
     }
 
-    /** @deprecated */
+    /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
+     * @deprecated
+     */
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(final String columnName, final int scale) throws SQLException {
@@ -341,6 +349,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return columnName.hashCode();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public int getHoldability() throws SQLException {
         throw new SQLException("Not implemented.");
@@ -376,31 +389,61 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return null;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Reader getNCharacterStream(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Reader getNCharacterStream(final String columnLabel) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public NClob getNClob(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public NClob getNClob(final String columnLabel) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public String getNString(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public String getNString(final String columnLabel) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -415,6 +458,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return new Object();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public <T> T getObject(final int columnIndex, final Class<T> type) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -432,6 +480,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return columnName;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public <T> T getObject(final String columnLabel, final Class<T> type) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -461,11 +514,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return 3 - rowsLeft;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public RowId getRowId(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public RowId getRowId(final String columnLabel) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -483,11 +546,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return (short) columnName.hashCode();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public SQLXML getSQLXML(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public SQLXML getSQLXML(final String columnLabel) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -570,7 +643,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return this.type;
     }
 
-    /** @deprecated */
+    /**
+     * Gets the column value as a Unicode stream.
+     *
+     * @deprecated
+     */
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(final int columnIndex) throws SQLException {
@@ -578,7 +655,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return null;
     }
 
-    /** @deprecated */
+    /**
+     * Gets the column value as a Unicode stream.
+     *
+     * @deprecated
+     */
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(final String columnName) throws SQLException {
@@ -586,11 +667,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return null;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public java.net.URL getURL(final int columnIndex) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public java.net.URL getURL(final String columnName) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -640,6 +731,11 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         return sqlExceptionOnClose;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -720,26 +816,51 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         this.sqlExceptionOnClose = sqlExceptionOnClose;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateArray(final int columnIndex, final java.sql.Array x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateArray(final String columnName, final java.sql.Array x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateAsciiStream(final int columnIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateAsciiStream(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -750,11 +871,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateAsciiStream(final String columnLabel, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateAsciiStream(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -775,11 +906,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBinaryStream(final int columnIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBinaryStream(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -790,11 +931,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBinaryStream(final String columnLabel, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBinaryStream(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -805,31 +956,61 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final int columnIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final int columnIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final int columnIndex, final java.sql.Blob x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final String columnLabel, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final String columnLabel, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateBlob(final String columnName, final java.sql.Blob x) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -870,11 +1051,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateCharacterStream(final int columnIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateCharacterStream(final int columnIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -885,41 +1076,81 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateCharacterStream(final String columnLabel, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateCharacterStream(final String columnLabel, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final int columnIndex, final java.sql.Clob x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final int columnIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final int columnIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final String columnName, final java.sql.Clob x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final String columnLabel, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateClob(final String columnLabel, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -975,61 +1206,121 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNCharacterStream(final int columnIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNCharacterStream(final int columnIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNCharacterStream(final String columnLabel, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNCharacterStream(final String columnLabel, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final int columnIndex, final NClob value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final int columnIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final int columnIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final String columnLabel, final NClob value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final String columnLabel, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNClob(final String columnLabel, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNString(final int columnIndex, final String value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateNString(final String columnLabel, final String value) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -1085,11 +1376,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateRef(final int columnIndex, final java.sql.Ref x) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateRef(final String columnName, final java.sql.Ref x) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -1100,11 +1401,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateRowId(final int columnIndex, final RowId value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateRowId(final String columnLabel, final RowId value) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -1120,11 +1431,21 @@ public class TesterResultSet extends AbandonedTrace implements ResultSet {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateSQLXML(final int columnIndex, final SQLXML value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void updateSQLXML(final String columnLabel, final SQLXML value) throws SQLException {
         throw new SQLException("Not implemented.");

@@ -65,7 +65,7 @@ public class TestJndi {
      * Binds a DataSource to the JNDI and checks that we have successfully
      * bound it by looking it up again.
      *
-     * @throws Exception Thrown if the bind, lookup or connect fails
+     * @throws Exception Thrown if the bind, lookup or connect fails.
      */
     protected void checkBind(final DataSource dataSource) throws Exception {
         bindDataSource(dataSource);
@@ -76,8 +76,7 @@ public class TestJndi {
      * Gets (or creates if it does not exist) an InitialContext.
      *
      * @return The InitialContext.
-     * @throws NamingException if the InitialContext cannot be retrieved
-     *         or created.
+     * @throws NamingException Thrown if the InitialContext cannot be retrieved or created.
      */
     protected InitialContext getInitialContext() throws NamingException {
         final Hashtable<String, String> environment = new Hashtable<>();
@@ -111,9 +110,9 @@ public class TestJndi {
     }
 
     /**
-     * Test BasicDatasource bind and lookup
+     * Tests BasicDataSource binding and lookup.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testBasicDataSourceBind() throws Exception {
@@ -122,9 +121,9 @@ public class TestJndi {
     }
 
     /**
-     * Test PerUserPoolDataSource bind and lookup
+     * Tests PerUserPoolDataSource binding and lookup.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testPerUserPoolDataSourceBind() throws Exception {
@@ -133,9 +132,9 @@ public class TestJndi {
     }
 
     /**
-     * Test SharedPoolDataSource bind and lookup
+     * Tests SharedPoolDataSource binding and lookup.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testSharedPoolDataSourceBind() throws Exception {

@@ -207,11 +207,21 @@ public class TestPoolingDataSource extends TestConnectionPool {
                 return physical;
             }
 
+            /**
+             * Always throws {@link AssertionError}.
+             *
+             * @throws AssertionError Thrown always.
+             */
             @Override
             public void invalidateObject(final Connection connection) {
                 throw new AssertionError("The guard must close its delegate directly");
             }
 
+            /**
+             * Always throws {@link AssertionError}.
+             *
+             * @throws AssertionError Thrown always.
+             */
             @Override
             public void returnObject(final Connection connection) {
                 throw new AssertionError("The guard must close its delegate directly");

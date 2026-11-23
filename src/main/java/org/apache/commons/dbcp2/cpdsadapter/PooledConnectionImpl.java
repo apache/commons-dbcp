@@ -150,8 +150,7 @@ final class PooledConnectionImpl
      * Closes the physical connection and marks this {@link PooledConnection} so that it may not be used to
      * generate any more logical {@link Connection}s.
      *
-     * @throws SQLException
-     *             Thrown when an error occurs or the connection is already closed.
+     * @throws SQLException Thrown when an error occurs or the connection is already closed.
      */
     @Override
     public void close() throws SQLException {
@@ -370,11 +369,10 @@ final class PooledConnectionImpl
     }
 
     /**
-     * Returns a JDBC connection.
+     * Gets a JDBC connection.
      *
      * @return The database connection.
-     * @throws SQLException
-     *             if the connection is not open or the previous logical connection is still open
+     * @throws SQLException Thrown if the connection is not open or the previous logical connection is still open.
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -405,7 +403,7 @@ final class PooledConnectionImpl
     }
 
     /**
-     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * Tests whether access to the underlying connection is allowed.
      *
      * @return true if access to the underlying is allowed, false otherwise.
      */
@@ -472,8 +470,7 @@ final class PooledConnectionImpl
      *            an SQL statement that may contain one or more '?' parameter placeholders. Typically, this statement is
      *            specified using JDBC call escape syntax.
      * @return A default {@link CallableStatement} object containing the pre-compiled SQL statement.
-     * @throws SQLException
-     *                Thrown if a database access error occurs or this method is called on a closed connection.
+     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection.
      * @since 2.4.0
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
@@ -494,7 +491,7 @@ final class PooledConnectionImpl
      * Creates or obtains a {@link CallableStatement} from my pool.
      *
      * @param sql
-     *            a {@link String} object that is the SQL statement to be sent to the database; may contain on or
+     *            a {@link String} object that is the SQL statement to be sent to the database; may contain one or
      *            more '?' parameters.
      * @param resultSetType
      *            a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
@@ -504,9 +501,8 @@ final class PooledConnectionImpl
      *            {@link ResultSet#CONCUR_UPDATABLE}.
      * @return A {@link CallableStatement} object containing the pre-compiled SQL statement that will produce
      *         {@link ResultSet} objects with the given type and concurrency.
-     * @throws SQLException
-     *             Thrown if a database access error occurs, this method is called on a closed connection or the given
-     *             parameters are not {@link ResultSet} constants indicating type and concurrency.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection or the given parameters are not
+     *     {@link ResultSet} constants indicating type and concurrency.
      * @since 2.4.0
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
@@ -529,7 +525,7 @@ final class PooledConnectionImpl
      * Creates or obtains a {@link CallableStatement} from my pool.
      *
      * @param sql
-     *            a {@link String} object that is the SQL statement to be sent to the database; may contain on or
+     *            a {@link String} object that is the SQL statement to be sent to the database; may contain one or
      *            more '?' parameters.
      * @param resultSetType
      *            one of the following {@link ResultSet} constants: {@link ResultSet#TYPE_FORWARD_ONLY},
@@ -542,9 +538,8 @@ final class PooledConnectionImpl
      *            or {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}.
      * @return A new {@link CallableStatement} object, containing the pre-compiled SQL statement, that will
      *         generate {@link ResultSet} objects with the given type, concurrency, and holdability.
-     * @throws SQLException
-     *             Thrown if a database access error occurs, this method is called on a closed connection or the given
-     *             parameters are not {@link ResultSet} constants indicating type, concurrency, and holdability.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection or the given parameters are not
+     *     {@link ResultSet} constants indicating type, concurrency, and holdability.
      * @since 2.4.0
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
@@ -568,8 +563,7 @@ final class PooledConnectionImpl
      *
      * @param sql The SQL statement.
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or
-     *         the borrow failed.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or the borrow failed.
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
     PreparedStatement prepareStatement(final String sql) throws SQLException {
@@ -594,8 +588,7 @@ final class PooledConnectionImpl
      *            a flag indicating whether auto-generated keys should be returned; one of
      *            {@link Statement#RETURN_GENERATED_KEYS} or {@link Statement#NO_GENERATED_KEYS}.
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or
-     *         the borrow failed.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or the borrow failed.
      * @see Connection#prepareStatement(String, int)
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate
@@ -626,8 +619,7 @@ final class PooledConnectionImpl
      *            {@link ResultSet#CONCUR_UPDATABLE}.
      *
      * @return A {@link PoolablePreparedStatement}.
-     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or
-     *         the borrow failed.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection, or the borrow failed.
      * @see Connection#prepareStatement(String, int, int)
      */
     @SuppressWarnings("resource") // getRawConnection() does not allocate

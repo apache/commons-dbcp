@@ -41,10 +41,12 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
      * LocalXAResource is a fake XAResource for non-XA connections. When a transaction is started the connection
      * auto-commit is turned off. When the connection is committed or rolled back, the commit or rollback method is
      * called on the connection and then the original auto-commit value is restored.
+     *
      * <p>
      * The LocalXAResource also respects the connection read-only setting. If the connection is read-only the commit
      * method will not be called, and the prepare method returns the XA_RDONLY.
      * </p>
+     *
      * <p>
      * It is assumed that the wrapper around a managed connection disables the setAutoCommit(), commit(), rollback() and
      * setReadOnly() methods while a transaction is in progress.
@@ -81,8 +83,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *            the id of the transaction branch for this connection
          * @param flag
          *            ignored
-         * @throws XAException
-         *             if connection.commit() throws an SQLException
+         * @throws XAException Thrown if connection.commit() throws an SQLException.
          */
         @Override
         public synchronized void commit(final Xid xid, final boolean flag) throws XAException {
@@ -120,8 +121,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *            the id of the transaction branch for this connection
          * @param flag
          *            ignored
-         * @throws XAException
-         *             if the connection is already enlisted in another transaction
+         * @throws XAException Thrown if the connection is already enlisted in another transaction.
          */
         @Override
         public synchronized void end(final Xid xid, final int flag) throws XAException {
@@ -149,7 +149,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * Always returns 0 since we have no way to set a transaction timeout on a JDBC connection.
+         * Gets the transaction timeout, always returning 0 because JDBC connections do not support setting a transaction timeout.
          *
          * @return always 0
          */
@@ -168,7 +168,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * Returns true if the specified XAResource == this XAResource.
+         * Tests whether the specified XAResource is this XAResource.
          *
          * @param xaResource
          *            the XAResource to test
@@ -247,8 +247,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *
          * @param xid
          *            the id of the transaction branch for this connection
-         * @throws XAException
-         *             if connection.rollback() throws an SQLException
+         * @throws XAException Thrown if connection.rollback() throws an SQLException.
          */
         @Override
         public synchronized void rollback(final Xid xid) throws XAException {
@@ -272,7 +271,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * Always returns false since we have no way to set a transaction timeout on a JDBC connection.
+         * Sets no transaction timeout and always returns false because JDBC connections do not support this operation.
          *
          * @param transactionTimeout
          *            ignored since we have no way to set a transaction timeout on a JDBC connection
@@ -292,9 +291,7 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
          *            the id of the transaction branch for this connection
          * @param flag
          *            either XAResource.TMNOFLAGS or XAResource.TMRESUME
-         * @throws XAException
-         *             if the connection is already enlisted in another transaction, or if auto-commit could not be
-         *             disabled
+         * @throws XAException Thrown if the connection is already enlisted in another transaction, or if auto-commit could not be disabled.
          */
         @Override
         public synchronized void start(final Xid xid, final int flag) throws XAException {

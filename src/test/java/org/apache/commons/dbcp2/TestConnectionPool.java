@@ -328,7 +328,7 @@ public abstract class TestConnectionPool {
      * @param expectError     whether or not an error is expected
      * @param loopOnce        whether threads should complete the borrow - hold - return cycle only once, or loop indefinitely
      * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     protected void multipleThreads(final Duration holdDuration, final boolean expectError, final boolean loopOnce, final Duration maxWaitDuration)
             throws Exception {
@@ -347,7 +347,7 @@ public abstract class TestConnectionPool {
      * @param maxWaitDuration passed in by client - has no impact on the test itself, but does get reported
      * @param numThreads      The number of threads
      * @param duration        duration in ms of test
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     protected void multipleThreads(final Duration holdDuration, final boolean expectError, final boolean loopOnce, final Duration maxWaitDuration,
             final int numStatements, final int numThreads, final long duration) throws Exception {
@@ -440,10 +440,10 @@ public abstract class TestConnectionPool {
     }
 
     /**
-     * Acquires a new connection and push it onto the connections stack.
+     * Acquires a new connection and pushes it onto the connections stack.
      *
      * @return A new connection.
-     * @throws Exception Defined in subclasses.
+     * @throws Exception Thrown if acquiring a new connection fails.
      */
     @SuppressWarnings("resource") // Caller closes
     protected Connection newConnection() throws Exception {

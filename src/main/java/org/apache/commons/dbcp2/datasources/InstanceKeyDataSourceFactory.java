@@ -47,8 +47,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     /**
      * Closes all pools associated with this class.
      *
-     * @throws ListException
-     *             a {@link ListException} containing all exceptions thrown by {@link InstanceKeyDataSource#close()}
+     * @throws ListException Thrown to collect all exceptions thrown by {@link InstanceKeyDataSource#close()}.
      * @see InstanceKeyDataSource#close()
      * @since 2.4.0 throws a {@link ListException} instead of, in 2.3.0 and before, the first exception thrown by
      *        {@link InstanceKeyDataSource#close()}.
@@ -76,8 +75,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      * @param <T>  The type of the object to be deserialized.
      * @param data Data to deserialize to create the configuration parameter.
      * @return The Object created by deserializing the data.
-     * @throws ClassNotFoundException If a class cannot be found during the deserialization of a configuration parameter.
-     * @throws IOException            If an I/O error occurs during the deserialization of a configuration parameter.
+     * @throws ClassNotFoundException Thrown if a class cannot be found during the deserialization of a configuration parameter.
+     * @throws IOException Thrown if an I/O error occurs during the deserialization of a configuration parameter.
      */
     @SuppressWarnings("unchecked") // call site must ensure that the type is correct
     protected static final <T> T deserialize(final byte[] data) throws IOException, ClassNotFoundException {
@@ -115,21 +114,19 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Creates an instance of the subclass and sets any properties contained in the Reference.
+     * Gets a new instance of the subclass with the properties contained in the Reference.
      *
      * @param ref
      *            The properties to be set on the created DataSource
      *
      * @return A configured DataSource of the appropriate type.
-     * @throws ClassNotFoundException
-     *            If a class cannot be found during the deserialization of a configuration parameter.
-     * @throws IOException
-     *            If an I/O error occurs during the deserialization of a configuration parameter.
+     * @throws ClassNotFoundException Thrown if a class cannot be found during the deserialization of a configuration parameter.
+     * @throws IOException Thrown if an I/O error occurs during the deserialization of a configuration parameter.
      */
     protected abstract InstanceKeyDataSource getNewInstance(Reference ref) throws IOException, ClassNotFoundException;
 
     /**
-     * Implements ObjectFactory to create an instance of SharedPoolDataSource or PerUserPoolDataSource
+     * Gets a SharedPoolDataSource or PerUserPoolDataSource instance through the ObjectFactory contract.
      */
     @Override
     public Object getObjectInstance(final Object refObj, final Name name, final Context context,

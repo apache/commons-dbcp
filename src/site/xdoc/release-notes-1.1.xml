@@ -26,7 +26,7 @@
    <body>
      <section name="Release notes for Commons-DBCP 1.1">
 <p>
-There were a lot changes since the 1.0 release on 12 Aug 2002.
+There have been many changes since the 1.0 release on 12 Aug 2002.
 </p>
 <ul>
 <li>All existing features can now be configured by JNDI Context providers (Tomcat)</li>
@@ -70,7 +70,7 @@ There were a lot changes since the 1.0 release on 12 Aug 2002.
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=13930">13930</a></td><td>2003-03-06</td><td>Enh</td><td>FIXE</td><td>Adding connection parameters to BasicDataSourceFactory</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=13988">13988</a></td><td>2003-03-17</td><td>Enh</td><td>DUPL</td><td>permission error makes connection loop</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=14267">14267</a></td><td>2003-04-28</td><td>Maj</td><td>INVA</td><td>DBCP doesn't work on Tomcat 4.1.12 and Oracle JDBC driver</td></tr>
-<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=14592">14592</a></td><td>2002-11-15</td><td>Enh</td><td>INVA</td><td>DBCP must be robust against e.g. database shutdowns</td></tr>
+<tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=14592">14592</a></td><td>2002-11-15</td><td>Enh</td><td>INVA</td><td>DBCP must be robust against events such as database shutdowns</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=14663">14663</a></td><td>2003-05-14</td><td>Nor</td><td>REMI</td><td>Tomcat5 server hangs when trying to get the database connect</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=15123">15123</a></td><td>2003-08-21</td><td>Maj</td><td>FIXE</td><td>Incorrect stack trace shown when abandoned connections are c</td></tr>
 <tr><td><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=15539">15539</a></td><td>2003-02-06</td><td>Maj</td><td>DUPL</td><td>Strange Result Set on output</td></tr>

@@ -34,11 +34,9 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
- * <p>
- * A pooling {@link DataSource} appropriate for deployment within J2EE environment. There are many configuration
+ * A pooling {@link DataSource} appropriate for deployment within a J2EE environment. There are many configuration
  * options, most of which are defined in the parent class. All users (based on user name) share a single maximum number
  * of Connections in this data source.
- * </p>
  *
  * <p>
  * User passwords can be changed without re-initializing the data source. When a
@@ -141,7 +139,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Creates a new {@link Reference} to a {@link SharedPoolDataSource}.
+     * Gets a new {@link Reference} to this {@link SharedPoolDataSource}.
      */
     @Override
     public Reference getReference() throws NamingException {
@@ -159,8 +157,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * </p>
      *
      * @param in The source ObjectInputStream.
-     * @throws IOException            Any of the usual Input/Output related exceptions.
-     * @throws ClassNotFoundException A class of a serialized object cannot be found.
+     * @throws IOException Thrown if an I/O error occurs during deserialization.
+     * @throws ClassNotFoundException Thrown if the class of a serialized object cannot be found.
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();

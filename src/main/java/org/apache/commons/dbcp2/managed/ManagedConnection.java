@@ -33,6 +33,7 @@ import org.apache.commons.pool2.ObjectPool;
  * committed or rolled back the enlisted connections are committed or rolled back. Typically, upon transaction
  * completion, a connection returns to the auto commit setting in effect before being enlisted in the transaction, but
  * some vendors do not properly implement this.
+ *
  * <p>
  * When enlisted in a transaction the setAutoCommit(), commit(), rollback(), and setReadOnly() methods throw a
  * SQLException. This is necessary to assure that the transaction completes as a single unit.
@@ -83,8 +84,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
      *            The transaction registry.
      * @param accessToUnderlyingConnectionAllowed
      *            Whether or not to allow access to the underlying Connection.
-     * @throws SQLException
-     *             Thrown when there is problem managing transactions.
+     * @throws SQLException Thrown when there is a problem managing transactions.
      */
     public ManagedConnection(final ObjectPool<C> pool, final TransactionRegistry transactionRegistry,
             final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
@@ -181,6 +181,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
 
     /**
      * Tests whether access to underlying JDBC objects is allowed.
+     *
      * <p>
      * When disabled, delegate getters return {@code null} and JDBC unwrapping cannot expose delegates of this connection or its statements,
      * result sets, and database metadata. Unwrapping an interface implemented by the wrapper itself remains allowed.

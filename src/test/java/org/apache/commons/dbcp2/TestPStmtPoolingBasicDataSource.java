@@ -208,7 +208,7 @@ public class TestPStmtPoolingBasicDataSource extends TestBasicDataSource {
      * Tests clearStatementPoolOnReturn introduced with DBCP-566.
      * When turned on, the statement pool must be empty after the connection is closed.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testPStmtPoolingAcrossCloseWithClearOnReturn() throws Exception {

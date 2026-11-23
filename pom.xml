@@ -129,7 +129,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <!-- Versions >= 2.3.232 requires Java 11 -->
+      <!-- Versions >= 2.3.232 require Java 11 -->
       <version>2.2.224</version>
       <scope>test</scope>
     </dependency>
@@ -379,7 +379,7 @@
         <pluginManagement>
           <plugins>
             <plugin>
-              <!-- Javadoc 8 doesn't know how to deal with external sites that where generated with newer javadocs versions. -->
+              <!-- Javadoc 8 doesn't know how to deal with external sites that were generated with newer Javadoc versions. -->
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-javadoc-plugin</artifactId>
               <configuration>

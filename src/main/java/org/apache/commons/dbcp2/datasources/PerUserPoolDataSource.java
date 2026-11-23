@@ -41,13 +41,11 @@ import org.apache.commons.pool2.impl.EvictionPolicy;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
- * <p>
- * A pooling {@link DataSource} appropriate for deployment within J2EE environment. There are many configuration
+ * A pooling {@link DataSource} appropriate for deployment within a J2EE environment. There are many configuration
  * options, most of which are defined in the parent class. This datasource uses individual pools per user, and some
  * properties can be set specifically for a given user, if the deployment environment can support initialization of
  * mapped properties. So for example, a pool of admin or write-access Connections can be guaranteed a certain number of
  * connections, separate from a maximum set for users with read-only connections.
- * </p>
  *
  * <p>
  * User passwords can be changed without re-initializing the datasource. When a
@@ -357,6 +355,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Gets the user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool or the default if no user specific value is defined.
+     *
      * <p>
      * The class must implement {@link EvictionPolicy}.
      * </p>
@@ -573,7 +572,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Returns the object pool associated with the given PoolKey.
+     * Gets the object pool associated with the given PoolKey.
      *
      * @param poolKey
      *            PoolKey identifying the pool
@@ -635,7 +634,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Creates a pool key from the provided parameters.
+     * Gets a pool key created from the provided parameters.
      *
      * @param userName
      *            User name
@@ -646,7 +645,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Returns a {@link PerUserPoolDataSource} {@link Reference}.
+     * Gets a {@link PerUserPoolDataSource} {@link Reference}.
      */
     @Override
     public Reference getReference() throws NamingException {
@@ -672,8 +671,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * </p>
      *
      * @param in The source ObjectInputStream.
-     * @throws IOException            Any of the usual Input/Output related exceptions.
-     * @throws ClassNotFoundException A class of a serialized object cannot be found.
+     * @throws IOException Thrown if an I/O error occurs during deserialization.
+     * @throws ClassNotFoundException Thrown if the class of a serialized object cannot be found.
      */
     @SuppressWarnings("resource")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -840,6 +839,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Sets a user specific value for {@link GenericObjectPool#getEvictionPolicyClassName()} for the specified user's
      * pool.
+     *
      * <p>
      * The class must implement {@link EvictionPolicy}.
      * </p>

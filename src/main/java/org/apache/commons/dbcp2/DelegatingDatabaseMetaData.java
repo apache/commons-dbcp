@@ -25,9 +25,8 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
- * <p>
  * A base delegating implementation of {@link DatabaseMetaData}.
- * </p>
+ *
  * <p>
  * Methods that create {@link ResultSet} objects are wrapped to create {@link DelegatingResultSet} objects and the remaining methods simply call the
  * corresponding method on the "delegate" provided in the constructor.
@@ -265,6 +264,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
 
     /**
      * Gets the innermost database metadata delegate, if access is allowed.
+     *
      * <p>
      * Traverses nested {@link DelegatingDatabaseMetaData} wrappers, respecting each wrapper's access policy, to find the first delegate
      * that is not a {@link DelegatingDatabaseMetaData}.
@@ -351,6 +351,8 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
+     * Gets the maximum logical size of a large object.
+     *
      * @since 2.5.0
      */
     @Override
@@ -545,7 +547,7 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
      * Delegates to the connection's {@link DelegatingConnection#handleException(SQLException)}.
      *
      * @param e The exception to throw or delegate.
-     * @throws SQLException the exception to throw.
+     * @throws SQLException Thrown when handling the given exception.
      */
     protected void handleException(final SQLException e) throws SQLException {
         if (connection == null) {

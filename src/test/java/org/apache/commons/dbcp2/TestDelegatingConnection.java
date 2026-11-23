@@ -50,6 +50,11 @@ public class TestDelegatingConnection {
             super("", "");
         }
 
+        /**
+         * Always throws {@link RuntimeException}.
+         *
+         * @throws RuntimeException Thrown always.
+         */
         @Override
         public String toString() {
             throw new RuntimeException("bang!");

@@ -32,6 +32,7 @@ import org.apache.commons.dbcp2.DelegatingPreparedStatement;
  * {@link Connection}. A few exceptions include preparedStatement and close. In accordance with the JDBC
  * specification this Connection cannot be used after closed() is called. Any further usage will result in an
  * SQLException.
+ *
  * <p>
  * ConnectionImpl extends DelegatingConnection to enable access to the underlying connection.
  * </p>
@@ -64,13 +65,13 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Marks the Connection as closed, and notifies the pool that the pooled connection is available.
+     *
      * <p>
      * In accordance with the JDBC specification this Connection cannot be used after closed() is called. Any further
      * usage will result in an SQLException.
      * </p>
      *
-     * @throws SQLException
-     *             The database connection couldn't be closed.
+     * @throws SQLException Thrown if the database connection cannot be closed.
      */
     @Override
     public void close() throws SQLException {
@@ -113,7 +114,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
     }
 
     /**
-     * Package-private for tests.
+     * Gets the pooled connection for tests.
      *
      * @return The PooledConnectionImpl.
      */
@@ -123,6 +124,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
 
     /**
      * Tests whether access to underlying JDBC objects is allowed.
+     *
      * <p>
      * When disabled, delegate getters return {@code null} and JDBC unwrapping cannot expose delegates of this connection or its statements,
      * result sets, and database metadata. Unwrapping an interface implemented by the wrapper itself remains allowed.
@@ -144,8 +146,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      *            an SQL statement that may contain one or more '?' parameter placeholders. Typically, this statement is
      *            specified using JDBC call escape syntax.
      * @return A default {@link CallableStatement} object containing the pre-compiled SQL statement.
-     * @throws SQLException
-     *                Thrown if a database access error occurs or this method is called on a closed connection.
+     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection.
      * @since 2.4.0
      */
     @Override
@@ -164,7 +165,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * be returned, otherwise delegate to the wrapped JDBC 1.x {@link Connection}.
      *
      * @param sql
-     *            a {@link String} object that is the SQL statement to be sent to the database; may contain on or
+     *            a {@link String} object that is the SQL statement to be sent to the database; may contain one or
      *            more '?' parameters.
      * @param resultSetType
      *            a result set type; one of {@link ResultSet#TYPE_FORWARD_ONLY},
@@ -174,9 +175,8 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      *            {@link ResultSet#CONCUR_UPDATABLE}.
      * @return A {@link CallableStatement} object containing the pre-compiled SQL statement that will produce
      *         {@link ResultSet} objects with the given type and concurrency.
-     * @throws SQLException
-     *             Thrown if a database access error occurs, this method is called on a closed connection or the given
-     *             parameters are not {@link ResultSet} constants indicating type and concurrency.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection or the given parameters are not
+     *     {@link ResultSet} constants indicating type and concurrency.
      * @since 2.4.0
      */
     @Override
@@ -197,7 +197,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * be returned, otherwise delegate to the wrapped JDBC 1.x {@link Connection}.
      *
      * @param sql
-     *            a {@link String} object that is the SQL statement to be sent to the database; may contain on or
+     *            a {@link String} object that is the SQL statement to be sent to the database; may contain one or
      *            more '?' parameters.
      * @param resultSetType
      *            one of the following {@link ResultSet} constants: {@link ResultSet#TYPE_FORWARD_ONLY},
@@ -210,9 +210,8 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      *            or {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}.
      * @return A new {@link CallableStatement} object, containing the pre-compiled SQL statement, that will
      *         generate {@link ResultSet} objects with the given type, concurrency, and holdability.
-     * @throws SQLException
-     *             Thrown if a database access error occurs, this method is called on a closed connection or the given
-     *             parameters are not {@link ResultSet} constants indicating type, concurrency, and holdability.
+     * @throws SQLException Thrown if a database access error occurs, this method is called on a closed connection or the given parameters are not
+     *     {@link ResultSet} constants indicating type, concurrency, and holdability.
      * @since 2.4.0
      */
     @Override
@@ -235,8 +234,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * @param sql
      *            SQL statement to be prepared
      * @return The prepared statement
-     * @throws SQLException
-     *             if this connection is closed or an error occurs in the wrapped connection.
+     * @throws SQLException Thrown if this connection is closed or an error occurs in the wrapped connection.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
@@ -268,8 +266,7 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * If pooling of {@link PreparedStatement}s is turned on in the {@link DriverAdapterCPDS}, a pooled object may
      * be returned, otherwise delegate to the wrapped JDBC 1.x {@link Connection}.
      *
-     * @throws SQLException
-     *             if this connection is closed or an error occurs in the wrapped connection.
+     * @throws SQLException Thrown if this connection is closed or an error occurs in the wrapped connection.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)

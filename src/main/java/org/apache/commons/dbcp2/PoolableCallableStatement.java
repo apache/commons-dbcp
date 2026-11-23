@@ -25,8 +25,10 @@ import org.apache.commons.pool2.KeyedObjectPool;
 /**
  * A {@link DelegatingCallableStatement} that cooperates with {@link PoolingConnection} to implement a pool of
  * {@link CallableStatement}s.
+ *
  * <p>
  * The {@link #close} method returns this statement to its containing pool. (See {@link PoolingConnection}.)
+ * </p>
  *
  * @see PoolingConnection
  * @since 2.0
@@ -81,7 +83,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
     }
 
     /**
-     * Returns the CallableStatement to the pool. If {{@link #isClosed()}, this is a No-op.
+     * Returns the CallableStatement to the pool. If {@link #isClosed()} returns true, this is a no-op.
      */
     @Override
     public void close() throws SQLException {
@@ -112,7 +114,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
      * Sets the query timeout while retaining the original value for restoration when this statement returns to its pool.
      *
      * @param seconds the query timeout in seconds; zero means no timeout.
-     * @throws SQLException if the statement is closed, the timeout is negative, or reading or changing the timeout fails.
+     * @throws SQLException Thrown if the statement is closed, the timeout is negative, or reading or changing the timeout fails.
      * @since 2.15.0
      */
     @Override

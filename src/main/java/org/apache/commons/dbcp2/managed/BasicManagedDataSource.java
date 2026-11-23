@@ -31,12 +31,11 @@ import org.apache.commons.dbcp2.PoolingDataSource;
 import org.apache.commons.dbcp2.Utils;
 
 /**
- * <p>
  * BasicManagedDataSource is an extension of BasicDataSource which creates ManagedConnections. This data source can
  * create either full two-phase-commit XA connections or one-phase-commit local connections. Both types of connections
  * are committed or rolled back as part of the global transaction (a.k.a. XA transaction or JTA Transaction), but only
  * XA connections can be recovered in the case of a system crash.
- * </p>
+ *
  * <p>
  * BasicManagedDataSource adds the TransactionManager and XADataSource properties. The TransactionManager property is
  * required and is used to enlist connections in global transactions. The XADataSource is optional and if set is the
@@ -125,8 +124,7 @@ public class BasicManagedDataSource extends BasicDataSource {
      *
      * @param driverConnectionFactory
      *            JDBC connection factory created by {@link #createConnectionFactory()}
-     * @throws SQLException
-     *             if an error occurs creating the PoolableConnectionFactory
+     * @throws SQLException Thrown if an error occurs creating the PoolableConnectionFactory.
      */
     @Override
     protected PoolableConnectionFactory createPoolableConnectionFactory(final ConnectionFactory driverConnectionFactory)
@@ -242,6 +240,7 @@ public class BasicManagedDataSource extends BasicDataSource {
 
     /**
      * Sets the XADataSource instance used by the XAConnectionFactory.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
      * invoked: {@link #getConnection()}, {@link #setLogWriter(java.io.PrintWriter)}, {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()},

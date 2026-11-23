@@ -356,7 +356,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     /**
      * Tests pool close. Illustrates BZ 37359.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testClosePool() throws Exception {
@@ -551,7 +551,7 @@ public class TestSharedPoolDataSource extends TestConnectionPool {
     @Test
     void testMultipleThreads1() throws Exception {
         // Override wait time in order to allow for Thread.sleep(1) sometimes taking a lot longer on
-        // some JVMs, e.g. Windows.
+        // some JVMs, such as those on Windows.
         final Duration defaultMaxWaitDuration = Duration.ofMillis(430);
         ((SharedPoolDataSource) ds).setDefaultMaxWait(defaultMaxWaitDuration);
         multipleThreads(Duration.ofMillis(1), false, false, defaultMaxWaitDuration);

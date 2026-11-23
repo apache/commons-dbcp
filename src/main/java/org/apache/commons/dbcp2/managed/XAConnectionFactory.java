@@ -33,13 +33,14 @@ public interface XAConnectionFactory extends ConnectionFactory {
 
     /**
      * Creates a new {@link Connection} in an implementation specific fashion.
+     *
      * <p>
      * An implementation can assume that the caller of this will wrap the connection in a proxy that protects access to
      * the setAutoCommit, commit and rollback when enrolled in a XA transaction.
      * </p>
      *
      * @return A new {@link Connection}
-     * @throws SQLException Thrown if a database error occurs creating the connection
+     * @throws SQLException Thrown if a database error occurs creating the connection.
      */
     @Override
     Connection createConnection() throws SQLException;

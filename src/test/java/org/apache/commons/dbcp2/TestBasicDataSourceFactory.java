@@ -237,6 +237,11 @@ public class TestBasicDataSourceFactory {
         ref.add(new RefAddr(propertyName) {
             private static final long serialVersionUID = 1L;
 
+            /**
+             * Always throws {@link AssertionError}.
+             *
+             * @throws AssertionError Thrown always.
+             */
             @Override
             public Object getContent() {
                 throw new AssertionError("Ignored property content must not be accessed");

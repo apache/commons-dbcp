@@ -16,13 +16,13 @@
  */
 
 /**
- * <p>
  * This package contains two DataSources: {@code PerUserPoolDataSource} and
  * {@code SharedPoolDataSource} which provide a database connection pool.
  * Below are a couple of usage examples.  One shows deployment into a JNDI system.
  * The other is a simple example initializing the pool using standard Java code.
- * </p>
+ *
  * <h2>JNDI</h2>
+ *
  * <p>
  * Most
  * J2EE containers will provide some way of deploying resources into JNDI.  The
@@ -30,7 +30,9 @@
  * JNDI, the application can access the resource in a container independent
  * manner.  The following example shows deployment into tomcat (catalina).
  * </p>
- * <p>In server.xml, the following would be added to the &lt;Context&gt; for your
+ *
+ * <p>
+ * In server.xml, the following would be added to the &lt;Context&gt; for your
  * webapp:
  * </p>
  * <pre>
@@ -49,6 +51,7 @@
  *     &lt;/parameter&gt;
  *   &lt;/ResourceParams&gt;
  * </pre>
+ *
  * <p>
  * In web.xml.  Note that elements must be given in the order of the dtd
  * described in the servlet specification:
@@ -71,6 +74,7 @@
  *   &lt;/res-auth&gt;
  * &lt;/resource-ref&gt;
  * </pre>
+ *
  * <p>
  * Apache Tomcat deploys all objects configured similarly to above within the
  * <strong>java:comp/env</strong> namespace.  So the JNDI path given for
@@ -78,6 +82,7 @@
  * {@code ConnectionPoolDataSource} that is deployed as given in the
  * <a href="../cpdsadapter/package-summary.html">cpdsadapter example</a>
  * </p>
+ *
  * <p>
  * The {@code DataSource} is now available to the application as shown
  * below:
@@ -100,6 +105,7 @@
  *             con.close();
  *     }
  * </pre>
+ *
  * <p>
  * The reference to the {@code DataSource} could be maintained, for
  * multiple getConnection() requests.  Or the {@code DataSource} can be
@@ -110,6 +116,7 @@
  * implementations.
  * </p>
  * <h2>Without JNDI</h2>
+ *
  * <p>
  * Connection pooling is useful in applications regardless of whether they run
  * in a J2EE environment and a {@code DataSource} can be used within a
@@ -141,6 +148,7 @@
  *     }
  * }
  * </pre>
+ *
  * <p>
  * This class can then be used wherever a connection is needed:
  * </p>

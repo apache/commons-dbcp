@@ -16,14 +16,14 @@
  */
 
 /**
- * <p>
  * This package contains one public class which is a
  * {@code ConnectionPoolDataSource} (CPDS) implementation that can be used to
  * adapt older {@code Driver} based JDBC implementations. Below is an
  * example of setting up the CPDS to be available via JNDI in the
  * catalina servlet container.
- * </p>
- * <p>In server.xml, the following would be added to the &lt;Context&gt; for your
+ *
+ * <p>
+ * In server.xml, the following would be added to the &lt;Context&gt; for your
  * webapp:
  * </p>
  *

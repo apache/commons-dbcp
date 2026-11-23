@@ -44,7 +44,7 @@ public class TransactionContext {
     private boolean transactionComplete;
 
     /**
-     * Provided for backwards compatibility
+     * Provided for backward compatibility
      *
      * @param transactionRegistry The TransactionRegistry used to obtain the XAResource for the
      * shared connection
@@ -81,8 +81,7 @@ public class TransactionContext {
      *
      * @param listener
      *            the listener to add
-     * @throws SQLException
-     *             if a problem occurs adding the listener to the transaction
+     * @throws SQLException Thrown if a problem occurs adding the listener to the transaction.
      */
     public void addTransactionContextListener(final TransactionContextListener listener) throws SQLException {
         try {
@@ -138,11 +137,10 @@ public class TransactionContext {
     }
 
     /**
-     * True if the transaction is active or marked for rollback only.
+     * Tests whether the transaction is active or marked for rollback only.
      *
      * @return true if the transaction is active or marked for rollback only; false otherwise
-     * @throws SQLException
-     *             if a problem occurs obtaining the transaction status
+     * @throws SQLException Thrown if a problem occurs obtaining the transaction status.
      */
     public boolean isActive() throws SQLException {
         try {
@@ -158,7 +156,7 @@ public class TransactionContext {
     }
 
     /**
-     * Gets the transaction complete flag to true.
+     * Tests whether the transaction is complete.
      *
      * @return The transaction complete flag.
      * @since 2.4.0
@@ -172,9 +170,8 @@ public class TransactionContext {
      *
      * @param sharedConnection
      *            the shared connection
-     * @throws SQLException
-     *             if a shared connection is already set, if XAResource for the connection could not be found in the
-     *             transaction registry, or if there was a problem enlisting the connection in the transaction
+     * @throws SQLException Thrown if a shared connection is already set, if XAResource for the connection could not be found in the transaction registry, or if
+     *     there was a problem enlisting the connection in the transaction.
      */
     public void setSharedConnection(final Connection sharedConnection) throws SQLException {
         if (this.sharedConnection != null) {

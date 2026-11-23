@@ -275,7 +275,7 @@ public class TestDelegatingDatabaseMetaData {
     /**
      * This method is a bit special, and doesn't call the method on the wrapped object, instead returning the connection from the delegate object itself.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testGetConnection() throws Exception {

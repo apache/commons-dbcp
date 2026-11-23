@@ -76,6 +76,8 @@ public class TesterCallableStatement extends TesterPreparedStatement implements 
     }
 
     /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
      * @deprecated See {@link CallableStatement#getBigDecimal(int,int)}.
      */
     @Deprecated

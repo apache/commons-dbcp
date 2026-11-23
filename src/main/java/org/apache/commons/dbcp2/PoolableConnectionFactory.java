@@ -295,6 +295,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Gets the collection of SQL State codes that are not considered fatal disconnection codes.
+     *
      * <p>
      * This method returns the collection of SQL State codes that have been set to be ignored when
      * determining if a {@link SQLException} signals a disconnection. These codes are excluded from
@@ -310,6 +311,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
 
     /**
      * Gets SQL State codes considered to signal fatal conditions.
+     *
      * <p>
      * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
      * {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this property is non-null and {@link #isFastFailValidation()} is
@@ -317,6 +319,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * they will be marked as "fatally disconnected" and subsequent validations will fail fast (no attempt at isValid or
      * validation query).
      * </p>
+     *
      * <p>
      * If {@link #isFastFailValidation()} is {@code false} setting this property has no effect.
      * </p>
@@ -358,7 +361,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Returns the {@link ObjectPool} in which {@link Connection}s are pooled.
+     * Gets the {@link ObjectPool} in which {@link Connection}s are pooled.
      *
      * @return The connection pool
      */
@@ -367,7 +370,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Tests whether to pool statements.
+     * Gets whether statements are pooled.
      *
      * @return Whether to pool statements.
      * @since 2.6.0.
@@ -451,8 +454,8 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * True means that validation will fail immediately for connections that have previously thrown SQLExceptions with
-     * SQL State indicating fatal disconnection errors.
+     * Tests whether validation fails immediately for connections that have previously thrown SQLExceptions with SQL states indicating fatal disconnection
+     * errors.
      *
      * @return true if connections created by this factory will fast fail validation.
      * @see #setDisconnectionSqlCodes(Collection)
@@ -682,7 +685,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @param disconnectionIgnoreSqlCodes
      *            The collection of SQL State codes to be ignored.
      * @see #getDisconnectionIgnoreSqlCodes()
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
+     * @throws IllegalArgumentException Thrown if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
      * @since 2.13.0
      */
     public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
@@ -696,7 +699,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @param disconnectionSqlCodes
      *            The disconnection SQL codes.
      * @see #getDisconnectionSqlCodes()
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
+     * @throws IllegalArgumentException Thrown if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
@@ -761,7 +764,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
     }
 
     /**
-     * Deprecated due to typo in method name.
+     * Sets the maximum number of open prepared statements. This method is deprecated because its name contains a typo.
      *
      * @param maxOpenPreparedStatements
      *            The maximum number of open prepared statements.

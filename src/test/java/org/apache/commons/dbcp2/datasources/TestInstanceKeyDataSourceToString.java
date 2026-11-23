@@ -202,6 +202,11 @@ public class TestInstanceKeyDataSourceToString {
     void testToStringNonStringCredentials(final DataSourceType type) throws Exception {
         try (final InstanceKeyDataSource dataSource = type.create()) {
             final Object secret = new Object() {
+                /**
+                 * Always throws {@link AssertionError}.
+                 *
+                 * @throws AssertionError Thrown always.
+                 */
                 @Override
                 public String toString() {
                     throw new AssertionError("Credential values must not be stringified.");

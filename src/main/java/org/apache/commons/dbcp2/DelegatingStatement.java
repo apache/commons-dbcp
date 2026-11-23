@@ -27,12 +27,16 @@ import java.util.Objects;
 
 /**
  * A base delegating implementation of {@link Statement}.
+ *
  * <p>
  * All of the methods from the {@link Statement} interface simply check to see that the {@link Statement} is active, and
  * call the corresponding method on the "delegate" provided in my constructor.
+ * </p>
+ *
  * <p>
  * Extends AbandonedTrace to implement Statement tracking and logging of code which created the Statement. Tracking the
- * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
+ * Statement ensures that the Connection which created it can close any open Statements on Connection close.
+ * </p>
  *
  * @since 2.0
  */
@@ -67,8 +71,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Activates this instance by delegating to the underlying statement.
      *
-     * @throws SQLException
-     *             thrown by the delegating statement.
+     * @throws SQLException Thrown by the delegating statement.
      * @since 2.4.0 made public, was protected in 2.3.0.
      */
     public void activate() throws SQLException {
@@ -129,7 +132,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * Close this DelegatingStatement, and close any ResultSets that were not explicitly closed.
+     * Closes this DelegatingStatement and closes any ResultSets that were not explicitly closed.
      */
     @Override
     public void close() throws SQLException {
@@ -422,9 +425,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Gets my underlying {@link Statement} without applying the access policy.
+     *
      * <p>
      * This method is part of the internal API and should not be used by clients. Its signature may change at any time, including in ways
-     * that break backwards compatibility.
+     * that break backward compatibility.
      * </p>
      *
      * @return my underlying {@link Statement}, regardless of {@link #isAccessToUnderlyingConnectionAllowed()}.
@@ -470,6 +474,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Gets the innermost statement delegate, if access is allowed.
+     *
      * <p>
      * Traverses nested {@link DelegatingStatement} wrappers, respecting each wrapper's access policy, to find the first delegate
      * that is not a {@link DelegatingStatement}.
@@ -485,9 +490,10 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Gets the innermost statement delegate without applying the access policy.
+     *
      * <p>
      * Although this method is public, it is part of the internal API and should not be used by clients. Its signature may change at any time,
-     * including in ways that break backwards compatibility.
+     * including in ways that break backward compatibility.
      * </p>
      *
      * @return the innermost delegate, or {@code null} if the chain ends in {@code null} or a cycle is detected.
@@ -498,6 +504,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
+     * Gets the maximum number of rows a result set can contain.
+     *
      * @since 2.5.0
      */
     @Override
@@ -512,6 +520,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
+     * Gets the current update count as a long.
+     *
      * @since 2.5.0
      */
     @Override
@@ -651,7 +661,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * Delegates the exception to the internal connection if set, otherwise rethrows it.
      *
      * @param e The exception to handle.
-     * @throws SQLException The given exception if not handled.
+     * @throws SQLException Thrown if the given exception is not handled.
      */
     protected void handleException(final SQLException e) throws SQLException {
         if (connection == null) {
@@ -662,6 +672,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Tests whether access to the underlying {@link Statement} is allowed.
+     *
      * <p>
      * Consults the creating connection while it is attached, and retains the last policy when close clears that reference.
      * </p>
@@ -729,8 +740,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Passivates this instance by delegating to the underlying statement.
      *
-     * @throws SQLException
-     *             thrown by the delegating statement.
+     * @throws SQLException Thrown by the delegating statement.
      * @since 2.4.0 made public, was protected in 2.3.0.
      */
     public void passivate() throws SQLException {
@@ -799,6 +809,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
+     * Sets the maximum number of rows a result set can contain.
+     *
      * @since 2.5.0
      */
     @Override

@@ -67,7 +67,7 @@ Fixed Bugs
 *            Fix SpotBugs [ERROR] Medium: Shared primitive variable "registerConnectionMBean" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
 *            Fix SpotBugs [ERROR] Medium: Shared primitive variable "rollbackOnReturn" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.dbcp2.BasicDataSource] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory.
 *            Fix a potential resource leak if an SQLException occurs during an attempt to obtain an XAConnection. Thanks to Coverity Scan.
-*            Minor optimisations to the processing of the "connectionProperties" string. Thanks to Coverity Scan.
+*            Minor optimizations to the processing of the "connectionProperties" string. Thanks to Coverity Scan.
 
 Changes
 -------

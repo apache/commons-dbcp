@@ -41,10 +41,12 @@ import java.util.Map;
 
 /**
  * A base delegating implementation of {@link ResultSet}.
+ *
  * <p>
  * All of the methods from the {@link ResultSet} interface simply call the corresponding method on the "delegate"
  * provided in my constructor.
  * </p>
+ *
  * <p>
  * Extends AbandonedTrace to implement result set tracking and logging of code which created the ResultSet. Tracking the
  * ResultSet ensures that the Statement which created it can close any open ResultSet's on Statement close.
@@ -101,6 +103,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     /**
      * Creates a wrapper for the ResultSet which traces this ResultSet to the Connection which created it (via, for
      * example DatabaseMetadata), and the code which created it.
+     *
      * <p>
      * Private to ensure all construction is {@link #wrapResultSet(Connection, ResultSet)}
      * </p>
@@ -119,6 +122,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
     /**
      * Creates a wrapper for the ResultSet which traces this ResultSet to the Statement which created it and the code
      * which created it.
+     *
      * <p>
      * Private to ensure all construction is {@link #wrapResultSet(Statement, ResultSet)}
      * </p>
@@ -281,7 +285,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
-    /** @deprecated Use {@link #getBigDecimal(int)} */
+    /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
+     * @deprecated Use {@link #getBigDecimal(int)}
+     */
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(final int columnIndex, final int scale) throws SQLException {
@@ -303,7 +311,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
-    /** @deprecated Use {@link #getBigDecimal(String)} */
+    /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
+     * @deprecated Use {@link #getBigDecimal(String)}
+     */
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(final String columnName, final int scale) throws SQLException {
@@ -596,6 +608,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     /**
      * Gets the innermost result set delegate, if access is allowed.
+     *
      * <p>
      * Traverses nested {@link DelegatingResultSet} wrappers, respecting each wrapper's access policy, to find the first delegate
      * that is not a {@link DelegatingResultSet}.
@@ -983,7 +996,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
-    /** @deprecated Use {@link #getCharacterStream(int)} */
+    /**
+     * Gets the column value as a Unicode stream.
+     *
+     * @deprecated Use {@link #getCharacterStream(int)}
+     */
     @Deprecated
     @Override
     public InputStream getUnicodeStream(final int columnIndex) throws SQLException {
@@ -995,7 +1012,11 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         }
     }
 
-    /** @deprecated Use {@link #getCharacterStream(String)} */
+    /**
+     * Gets the column value as a Unicode stream.
+     *
+     * @deprecated Use {@link #getCharacterStream(String)}
+     */
     @Deprecated
     @Override
     public InputStream getUnicodeStream(final String columnName) throws SQLException {
@@ -1041,7 +1062,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
      * Handles a SQL exception by delegating to a DelegatingStatement or DelegatingConnection.
      *
      * @param e The exception to handle.
-     * @throws SQLException Throws the given exception if not handled.
+     * @throws SQLException Thrown if the given exception is not handled.
      */
     protected void handleException(final SQLException e) throws SQLException {
         if (statement instanceof DelegatingStatement) {
@@ -1064,6 +1085,7 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
 
     /**
      * Tests whether access to the underlying {@link ResultSet} is allowed.
+     *
      * <p>
      * Consults the creating statement or connection while it is attached, and retains the last policy when close clears those references.
      * </p>

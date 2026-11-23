@@ -38,10 +38,12 @@ import java.util.Map;
 
 /**
  * A base delegating implementation of {@link CallableStatement}.
+ *
  * <p>
  * All of the methods from the {@link CallableStatement} interface simply call the corresponding method on the
  * "delegate" provided in my constructor.
  * </p>
+ *
  * <p>
  * Extends AbandonedTrace to implement Statement tracking and logging of code which created the Statement. Tracking the
  * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
@@ -97,7 +99,11 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
         }
     }
 
-    /** @deprecated Use {@link #getBigDecimal(int)} or {@link #getBigDecimal(String)} */
+    /**
+     * Gets the column value as a {@link java.math.BigDecimal}.
+     *
+     * @deprecated Use {@link #getBigDecimal(int)} or {@link #getBigDecimal(String)}
+     */
     @Override
     @Deprecated
     public BigDecimal getBigDecimal(final int parameterIndex, final int scale) throws SQLException {
@@ -1250,6 +1256,8 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     /**
+     * Sets the parameter value to the given object.
+     *
      * @since 2.5.0
      */
     @Override
@@ -1263,6 +1271,8 @@ public class DelegatingCallableStatement extends DelegatingPreparedStatement imp
     }
 
     /**
+     * Sets the parameter value to the given object.
+     *
      * @since 2.5.0
      */
     @Override

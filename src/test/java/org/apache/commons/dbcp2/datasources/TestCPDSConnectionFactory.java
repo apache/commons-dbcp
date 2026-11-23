@@ -64,7 +64,7 @@ public class TestCPDSConnectionFactory {
      * @param poolUserName the user name managed by the pool, or null for default credentials.
      * @param userName the user name passed to closePool.
      * @param expectedClosed whether the pool should close and release its idle connection.
-     * @throws Exception if creating, populating, or closing the pool fails.
+     * @throws Exception Thrown if creating, populating, or closing the pool fails.
      */
     @ParameterizedTest
     @CsvSource(value = {"userName, userName, true", "NULL, NULL, true", "userName, other, false",

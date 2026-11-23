@@ -93,6 +93,11 @@ class TestCredentialRedaction {
                 return value.getBytes(StandardCharsets.UTF_8);
             default:
                 return new Object() {
+                    /**
+                     * Always throws {@link AssertionError}.
+                     *
+                     * @throws AssertionError Thrown always.
+                     */
                     @Override
                     public String toString() {
                         throw new AssertionError("Credential values must not be stringified.");
