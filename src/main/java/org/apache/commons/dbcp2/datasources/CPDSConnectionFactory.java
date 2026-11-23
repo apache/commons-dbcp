@@ -26,7 +26,6 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -46,18 +45,17 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     private UserPassKey userPassKey;
 
     /**
-     * Constructs a new {@link PoolableConnectionFactory}.
+     * Constructs a factory for pooled connections using one set of credentials.
      *
-     * @param cpds                           The ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery                A query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one row. May be
-     *                                       {@code null} in which case {@link Connection#isValid(int)} will be used to validate connections.
-     * @param validationQueryTimeoutDuration Timeout Duration before validation fails.
-     * @param rollbackAfterValidation        whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param userName                       The user name to use to create connections.
-     * @param userPassword                   The password to use to create connections.
-     * @param maxConnDuration                The maximum lifetime of a connection after which the connection will always fail activation, passivation and
-     *                                       validation. A value of zero or less indicates an infinite lifetime.
-     * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
+     * @param cpds the provider from which to obtain pooled connections.
+     * @param validationQuery the validation query, or {@code null} to use {@link Connection#isValid(int)}.
+     * @param validationQueryTimeoutDuration the timeout for connection validation.
+     * @param rollbackAfterValidation whether to roll back after executing the validation query.
+     * @param userName the user name, or {@code null} to use the provider's default credentials.
+     * @param userPassword the password for the supplied user name.
+     * @param maxConnDuration the maximum connection lifetime, not null; zero or a negative duration disables the limit.
+     * @param loginTimeoutSupplier the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
+     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
      */
     CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final String userName, final char[] userPassword, final Duration maxConnDuration,

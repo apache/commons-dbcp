@@ -106,7 +106,9 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Login timeout, or null to retain the provider's configuration. */
     private volatile Duration loginTimeoutDuration;
 
-    /** Original datasource whose pool and live login timeout are shared after deserialization. */
+    /**
+     * Registered data source supplying the live login timeout after deserialization, or null to use the local setting.
+     */
     private transient InstanceKeyDataSource loginTimeoutSource;
 
     /** Log stream */
@@ -319,7 +321,16 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
 
-    /** Gets the optional timeout used for physical connection attempts. */
+    /**
+     * Gets the optional timeout used for physical connection attempts.
+     *
+     * <p>
+     * Deserialized instances that reuse a registered data source read its live configuration. Otherwise, the local setting is used, including a timeout
+     * serialized before a provider or JNDI data source name has been configured. An unset timeout remains distinct from an explicitly configured zero.
+     * </p>
+     *
+     * @return the local or shared timeout, or {@code null} to leave the provider's configured timeout unchanged.
+     */
     Duration getConfiguredLoginTimeout() {
         return loginTimeoutSource == null ? loginTimeoutDuration : loginTimeoutSource.getConfiguredLoginTimeout();
     }
@@ -608,9 +619,14 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of loginTimeout.
+     * Gets the configured login timeout, or zero if no override has been configured.
      *
-     * @return value of loginTimeout.
+     * <p>
+     * Both an unset timeout and an explicitly configured zero are reported as {@link Duration#ZERO}. An unset timeout leaves the provider's configuration
+     * unchanged, while an explicit zero is passed to the provider. Deserialized instances that reuse a registered data source report its live setting.
+     * </p>
+     *
+     * @return the configured timeout, or {@link Duration#ZERO} if no override has been configured.
      * @since 2.10.0
      */
     public Duration getLoginTimeoutDuration() {
@@ -1130,8 +1146,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Sets the timeout applied to the underlying ConnectionPoolDataSource for each physical connection attempt,
      * including connections created after pool initialization. The provider's previous timeout is restored afterwards.
-     * Until this method is called, the provider's configured timeout is used unchanged. Deserialized wrappers sharing
-     * the same pool also share this live configuration.
+     * Until an override is configured, the provider's configured timeout is used unchanged.
+     *
+     * <p>
+     * Deserialized instances that reuse a registered data source share its live login timeout configuration, even before the pool is initialized.
+     * Instances serialized before a provider or JNDI data source name has been configured retain their own serialized timeout setting.
+     * </p>
+     *
      * <p>
      * Positive durations use whole seconds, with a minimum of one second and a maximum of {@link Integer#MAX_VALUE}.
      * Zero uses the provider's default login timeout behavior. Enforcement depends on the provider; this setting does
@@ -1158,7 +1179,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Sets the value of loginTimeout.
+     * Sets the login timeout in seconds.
      *
      * @param loginTimeout a nonnegative timeout in seconds.
      * @throws IllegalArgumentException if loginTimeout is negative.
@@ -1168,9 +1189,18 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         setLoginTimeout(Duration.ofSeconds(loginTimeout));
     }
 
-    /** Shares the live login timeout configuration along with the pool during deserialization. */
+    /**
+     * Sets the source of the live login timeout configuration when deserialization reuses a registered data source.
+     *
+     * <p>
+     * Without an instance key, the factory creates a new data source instead of locating an existing one. In that case, the supplied source is ignored
+     * and this instance retains its own deserialized timeout setting.
+     * </p>
+     *
+     * @param source the registered data source whose configuration is shared, or {@code null} to use this instance's setting.
+     */
     final void setLoginTimeoutSource(final InstanceKeyDataSource source) {
-        loginTimeoutSource = source;
+        loginTimeoutSource = instanceKey == null ? null : source;
     }
 
     /**

@@ -429,6 +429,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      * Sets the delegate, discarding any saved query timeout when the delegate changes.
      *
      * @param statement the new delegate.
+     * @since 2.15.0
      */
     @Override
     public void setDelegate(final Statement statement) {
@@ -616,7 +617,16 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
-    /** Caches the original timeout before changing a statement that will be returned to a pool. */
+    /**
+     * Sets the query timeout after caching the original value for restoration when the statement returns to its pool.
+     *
+     * <p>
+     * The original value is read only before the first change and remains cached until the statement returns to its pool or its delegate changes.
+     * </p>
+     *
+     * @param seconds the query timeout in seconds; zero means no timeout.
+     * @throws SQLException if the statement is closed or reading or changing its timeout fails.
+     */
     void setQueryTimeoutAndCacheOriginal(final int seconds) throws SQLException {
         checkOpen();
         if (originalQueryTimeout == null) {

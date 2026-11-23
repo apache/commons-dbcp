@@ -184,6 +184,19 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     public DriverAdapterCPDS() {
     }
 
+    /**
+     * Adds a duration property and, when representable, its legacy millisecond property to a JNDI Reference.
+     *
+     * <p>
+     * The legacy property is omitted when converting the duration to milliseconds would overflow a {@code long}.
+     * </p>
+     *
+     * @param reference the Reference to update.
+     * @param durationKey the address type for the ISO-8601 duration.
+     * @param millisKey the address type for the legacy millisecond value.
+     * @param duration the duration to export, not null.
+     * @throws NullPointerException if reference or duration is null.
+     */
     private void addDurationReference(final Reference reference, final String durationKey, final String millisKey, final Duration duration) {
         reference.add(new StringRefAddr(durationKey, duration.toString()));
         try {
@@ -251,6 +264,16 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return durationBetweenEvictionRuns;
     }
 
+    /**
+     * Gets a duration from a JNDI Reference, preferring the ISO-8601 property over the legacy millisecond property.
+     *
+     * @param reference the Reference to read.
+     * @param durationKey the address type for the ISO-8601 duration.
+     * @param millisKey the address type for the legacy millisecond value.
+     * @return the configured duration, or {@code null} if both properties are absent or empty.
+     * @throws java.time.format.DateTimeParseException if the nonempty ISO-8601 property is invalid.
+     * @throws NumberFormatException if the selected legacy property is not a valid long integer.
+     */
     private Duration getDuration(final Reference reference, final String durationKey, final String millisKey) {
         final RefAddr duration = reference.get(durationKey);
         if (isNotEmpty(duration)) {
@@ -631,6 +654,19 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return poolPreparedStatements;
     }
 
+    /**
+     * Parses a duration without losing the sign of negative fractional seconds on Java 8.
+     *
+     * <p>
+     * A negative-zero seconds component is temporarily changed to negative one before parsing. The result is adjusted by one second, respecting any leading
+     * sign for the whole duration.
+     * </p>
+     *
+     * @param text the duration text, not null.
+     * @return the parsed duration.
+     * @throws java.time.format.DateTimeParseException if the text is invalid or the duration exceeds the supported range.
+     * @throws NullPointerException if text is null.
+     */
     private Duration parseDuration(final String text) {
         final Matcher matcher = NEGATIVE_ZERO_SECONDS_PATTERN.matcher(text);
         if (matcher.find()) {

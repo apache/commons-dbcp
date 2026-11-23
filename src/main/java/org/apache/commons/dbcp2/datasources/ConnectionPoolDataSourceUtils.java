@@ -42,11 +42,22 @@ final class ConnectionPoolDataSourceUtils {
     private static final class ProviderReference extends WeakReference<ConnectionPoolDataSource> {
         private final int hashCode;
 
+        /**
+         * Constructs a weak provider reference with a stable identity hash code.
+         *
+         * @param provider the provider to track by identity.
+         */
         ProviderReference(final ConnectionPoolDataSource provider) {
             super(provider, STALE_PROVIDERS);
             hashCode = System.identityHashCode(provider);
         }
 
+        /**
+         * Tests whether this reference or its live provider is identical to that of another reference.
+         *
+         * @param obj the object to compare with this reference.
+         * @return true if obj is this reference or another reference to the same live provider.
+         */
         @Override
         public boolean equals(final Object obj) {
             if (this == obj) {
@@ -56,6 +67,11 @@ final class ConnectionPoolDataSourceUtils {
             return provider != null && obj instanceof ProviderReference && provider == ((ProviderReference) obj).get();
         }
 
+        /**
+         * Gets the provider identity hash code captured when this reference was created.
+         *
+         * @return the cached identity hash code, even after the provider is reclaimed.
+         */
         @Override
         public int hashCode() {
             return hashCode;
@@ -67,13 +83,39 @@ final class ConnectionPoolDataSourceUtils {
     /** Neither the weak keys nor the lock values retain providers after their pools are closed. */
     private static final Map<ProviderReference, ReentrantReadWriteLock> LOCKS = new HashMap<>();
 
+    /**
+     * Opens a pooled connection using explicit credentials or the provider's default credentials.
+     *
+     * @param cpds the provider from which to obtain a pooled connection.
+     * @param userName the user name, or {@code null} to use the provider's default credentials.
+     * @param password the password, ignored when userName is null.
+     * @return the pooled connection returned by the provider.
+     * @throws SQLException if the provider cannot create the connection.
+     */
     private static PooledConnection connect(final ConnectionPoolDataSource cpds, final String userName, final String password) throws SQLException {
         return userName == null ? cpds.getPooledConnection() : cpds.getPooledConnection(userName, password);
     }
 
     /**
-     * Opens a physical connection with an optional login timeout, restoring the provider's setting afterwards.
-     * Timeout overrides exclude other connection attempts through these pools. Attempts without an override remain concurrent.
+     * Gets a pooled connection using an optional temporary provider login timeout.
+     *
+     * <p>
+     * Timeout overrides exclude other connection attempts through these pools. Attempts without an override may run concurrently. A positive override also
+     * bounds the provider lock wait in JDBC seconds; the provider enforces the connection timeout.
+     * </p>
+     *
+     * <p>
+     * After changing the timeout, this method attempts to restore its previous value. Restoration failures are suppressed on an existing failure; otherwise,
+     * the acquired connection is closed and the restoration failure is thrown.
+     * </p>
+     *
+     * @param cpds the provider from which to obtain a pooled connection.
+     * @param userName the user name, or {@code null} to use the provider's default credentials.
+     * @param password the password, ignored when userName is null.
+     * @param loginTimeout the timeout override, or {@code null} to retain the provider setting.
+     * @return the pooled connection returned by the provider.
+     * @throws SQLException if accessing or restoring the provider fails, the provider lock wait expires, or waiting is interrupted.
+     * @throws NullPointerException if cpds is null.
      */
     static PooledConnection getPooledConnection(final ConnectionPoolDataSource cpds, final String userName, final String password,
             final Duration loginTimeout) throws SQLException {
@@ -133,6 +175,14 @@ final class ConnectionPoolDataSourceUtils {
         }
     }
 
+    /**
+     * Acquires a provider lock interruptibly, using a bounded wait for positive timeouts.
+     *
+     * @param lock the provider lock to acquire.
+     * @param timeout the wait limit, or {@code null}, zero, or a negative value for an unbounded wait.
+     * @throws SQLException if the wait is interrupted; the thread's interrupted status is preserved.
+     * @throws SQLTimeoutException if the bounded lock wait expires.
+     */
     private static void lock(final Lock lock, final Duration timeout) throws SQLException {
         try {
             if (timeout != null && !timeout.isNegative() && !timeout.isZero()) {
@@ -148,6 +198,9 @@ final class ConnectionPoolDataSourceUtils {
         }
     }
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private ConnectionPoolDataSourceUtils() {
         // Not instantiable.
     }

@@ -44,16 +44,15 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
 
     /**
-     * Constructs a new {@code KeyedCPDSConnectionFactory}.
+     * Constructs a factory for pooled connections keyed by user credentials.
      *
-     * @param cpds                           The ConnectionPoolDataSource from which to obtain PooledConnections
-     * @param validationQuery                A query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one row. May be
-     *                                       {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate connections.
-     * @param validationQueryTimeoutDuration The Duration to allow for the validation query to complete
-     * @param rollbackAfterValidation        Whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param maxConnDuration                The maximum lifetime of a connection after which the connection will always fail activation, passivation and
-     *                                       validation. A value of zero or less indicates an infinite lifetime.
-     * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
+     * @param cpds                           the provider from which to obtain pooled connections.
+     * @param validationQuery                the validation query, or {@code null} to use {@link Connection#isValid(int)}.
+     * @param validationQueryTimeoutDuration the timeout for connection validation.
+     * @param rollbackAfterValidation        whether to roll back after executing the validation query.
+     * @param maxConnDuration                the maximum connection lifetime, not null; zero or a negative duration disables the limit.
+     * @param loginTimeoutSupplier           the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
+     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
      */
     KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {

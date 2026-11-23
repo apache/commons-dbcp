@@ -366,6 +366,11 @@ class TestDriverAdapterCPDSReference {
         assertCanConnect(restored);
     }
 
+    /**
+     * Supplies duration and property combinations for JNDI round-trip tests.
+     *
+     * @return duration boundaries with and without legacy millisecond properties.
+     */
     static Stream<Arguments> durationReferences() {
         return Stream.concat(Stream.of(Duration.ZERO, Duration.ofNanos(1), Duration.ofMillis(1_901),
                 Duration.ofDays(30), Duration.ofMillis(Long.MIN_VALUE), Duration.ofMillis(Long.MAX_VALUE),
@@ -376,6 +381,11 @@ class TestDriverAdapterCPDSReference {
                 .flatMap(duration -> Stream.of(false, true).map(modernOnly -> Arguments.of(duration, modernOnly)));
     }
 
+    /**
+     * Supplies JNDI duration strings with independently constructed expected values.
+     *
+     * @return duration text and value pairs covering signs, fractions, and range boundaries.
+     */
     static Stream<Arguments> durationReferenceStrings() {
         return Stream.of(
                 Arguments.of("PT-0.000000001S", Duration.ofNanos(-1)),
@@ -407,6 +417,13 @@ class TestDriverAdapterCPDSReference {
                 Arguments.of("PT9223372036854775807.999999999S", Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)));
     }
 
+    /**
+     * Tests that JNDI References preserve eviction durations through reconstruction.
+     *
+     * @param duration the duration under test.
+     * @param modernOnly whether to omit the legacy millisecond properties.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
     @ParameterizedTest
     @MethodSource("durationReferences")
     void testDurationReferenceRoundTrip(final Duration duration, final boolean modernOnly) throws Exception {
@@ -423,6 +440,13 @@ class TestDriverAdapterCPDSReference {
         assertEquals(duration, restored.getMinEvictableIdleDuration());
     }
 
+    /**
+     * Tests duration parsing and precedence over legacy JNDI millisecond properties.
+     *
+     * @param text the duration text under test.
+     * @param expected the duration represented by the supplied text.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
     @ParameterizedTest
     @MethodSource("durationReferenceStrings")
     void testDurationReferenceStrings(final String text, final Duration expected) throws Exception {
@@ -436,6 +460,11 @@ class TestDriverAdapterCPDSReference {
         assertEquals(expected, restored.getMinEvictableIdleDuration());
     }
 
+    /**
+     * Tests that malformed or overflowing duration properties fail instead of falling back to legacy values.
+     *
+     * @param text the duration text under test.
+     */
     @ParameterizedTest
     @ValueSource(strings = {"PT-0.1234567890S", "PT--0.1S", "PT-0.-1S", "P-0.1S", "PT-0.1Sx", " PT-0.1S", "PT-0.1S\n",
             "PT1M-0.1S-0.1S", "PT-0.1", "PT-0,1.2S", "PT9223372036854775808S", "PT-9223372036854775809S"})
@@ -449,6 +478,12 @@ class TestDriverAdapterCPDSReference {
         }
     }
 
+    /**
+     * Tests that legacy JNDI millisecond properties accept the full long integer range.
+     *
+     * @param millis the legacy timeout in milliseconds.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
     @ParameterizedTest
     @ValueSource(longs = {Long.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, 2_592_000_000L, Long.MAX_VALUE})
     void testLegacyDurationReference(final long millis) throws Exception {
@@ -460,6 +495,11 @@ class TestDriverAdapterCPDSReference {
         assertEquals(Duration.ofMillis(millis), restored.getMinEvictableIdleDuration());
     }
 
+    /**
+     * Tests that valid duration properties take precedence over malformed legacy millisecond values.
+     *
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
     @Test
     void testModernDurationReferenceOverridesMalformedLegacyValues() throws Exception {
         final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
@@ -472,6 +512,11 @@ class TestDriverAdapterCPDSReference {
         assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
     }
 
+    /**
+     * Tests that null duration properties fall back to legacy millisecond values.
+     *
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
     @Test
     void testNullModernDurationReferenceFallsBackToLegacy() throws Exception {
         final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
