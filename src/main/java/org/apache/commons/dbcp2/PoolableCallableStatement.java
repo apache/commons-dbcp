@@ -110,7 +110,7 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
 
     @Override
     public void setQueryTimeout(final int seconds) throws SQLException {
-        setQueryTimeoutAndRememberOriginal(seconds);
+        setQueryTimeoutAndCacheOriginal(seconds);
     }
 
 }
