@@ -27,6 +27,8 @@ import java.time.Duration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -80,6 +82,8 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @since 2.0
  */
 public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceable, Serializable, ObjectFactory {
+
+    private static final Pattern NEGATIVE_ZERO_SECONDS_PATTERN = Pattern.compile("-0+([.,][0-9]{0,9})S$", Pattern.CASE_INSENSITIVE);
 
     private static final String KEY_MIN_EVICTABLE_IDLE_DURATION = "minEvictableIdleDuration";
 
@@ -250,7 +254,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     private Duration getDuration(final Reference reference, final String durationKey, final String millisKey) {
         final RefAddr duration = reference.get(durationKey);
         if (isNotEmpty(duration)) {
-            return Duration.parse(getStringContent(duration));
+            return parseDuration(getStringContent(duration));
         }
         final RefAddr millis = reference.get(millisKey);
         return isNotEmpty(millis) ? Duration.ofMillis(Long.parseLong(getStringContent(millis))) : null;
@@ -625,6 +629,17 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      */
     public boolean isPoolPreparedStatements() {
         return poolPreparedStatements;
+    }
+
+    private Duration parseDuration(final String text) {
+        final Matcher matcher = NEGATIVE_ZERO_SECONDS_PATTERN.matcher(text);
+        if (matcher.find()) {
+            // Java 8 loses the sign of a "-0" seconds component. Parse "-1" instead, then compensate
+            // after applying any leading sign to the whole duration. This also handles mixed-sign components.
+            final Duration duration = Duration.parse(matcher.replaceFirst("-1$1S"));
+            return text.startsWith("-") ? duration.minusSeconds(1) : duration.plusSeconds(1);
+        }
+        return Duration.parse(text);
     }
 
     /**
