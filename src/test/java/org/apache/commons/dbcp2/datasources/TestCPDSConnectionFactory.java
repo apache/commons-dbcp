@@ -65,54 +65,45 @@ public class TestCPDSConnectionFactory {
     @Test
     void testConnectionErrorCleanup() throws Exception {
         // Setup factory
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
+                () -> null);
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
-
             // Checkout a pair of connections
             final PooledConnection pcon1 = pool.borrowObject().getPooledConnection();
             try (final Connection con1 = pcon1.getConnection()) {
                 final PooledConnection pcon2 = pool.borrowObject().getPooledConnection();
                 assertEquals(2, pool.getNumActive());
                 assertEquals(0, pool.getNumIdle());
-
                 // Verify listening
                 final PooledConnectionProxy pc = (PooledConnectionProxy) pcon1;
                 assertTrue(pc.getListeners().contains(factory));
-
                 // Throw connectionError event
                 pc.throwConnectionError();
-
                 // Active count should be reduced by 1
                 assertEquals(1, pool.getNumActive());
                 checkPoolLimits(pool);
-
                 // Throw another one - should be ignored
                 pc.throwConnectionError();
                 assertEquals(1, pool.getNumActive());
                 checkPoolLimits(pool);
-
                 // Ask for another connection
                 final PooledConnection pcon3 = pool.borrowObject().getPooledConnection();
                 assertNotEquals(pcon3, pcon1); // better not get baddie back
                 assertFalse(pc.getListeners().contains(factory)); // verify cleanup
                 assertEquals(2, pool.getNumActive());
                 assertEquals(0, pool.getNumIdle());
-
                 // Return good connections back to pool
                 pcon2.getConnection().close();
                 pcon3.getConnection().close();
                 assertEquals(2, pool.getNumIdle());
                 assertEquals(0, pool.getNumActive());
-
                 // Verify pc is closed
                 assertThrows(SQLException.class, pc::getConnection, "Expecting SQLException using closed PooledConnection");
-
                 // Back from the dead - ignore the ghost!
                 con1.close();
                 assertEquals(2, pool.getNumIdle());
                 assertEquals(0, pool.getNumActive());
-
                 // Clear pool
                 pool.clear();
                 assertEquals(0, pool.getNumIdle());
@@ -125,7 +116,8 @@ public class TestCPDSConnectionFactory {
      */
     @Test
     void testNullValidationQuery() throws Exception {
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
+                () -> null);
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
             pool.setTestOnBorrow(true);
@@ -137,7 +129,8 @@ public class TestCPDSConnectionFactory {
 
     @Test
     void testSetPasswordCharArray() {
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
+                () -> null);
         final char[] pwd = { 'a' };
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
@@ -147,7 +140,8 @@ public class TestCPDSConnectionFactory {
 
     @Test
     void testSetPasswordString() {
-        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray());
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
+                () -> null);
         final String pwd = "a";
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));

@@ -24,6 +24,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -40,7 +41,7 @@ import org.apache.commons.pool2.PooledObject;
 class AbstractConnectionFactory {
 
     protected final ConnectionPoolDataSource cpds;
-    private Supplier<Duration> loginTimeoutSupplier = () -> null;
+    private final Supplier<Duration> loginTimeoutSupplier;
     protected Duration maxConnDuration = Duration.ofMillis(-1);
     protected final boolean rollbackAfterValidation;
 
@@ -56,20 +57,17 @@ class AbstractConnectionFactory {
     protected final String validationQuery;
     protected final Duration validationQueryTimeoutDuration;
 
-    AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation) {
+    AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
+            final boolean rollbackAfterValidation, Supplier<Duration> loginTimeoutSupplier) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutDuration = validationQueryTimeoutDuration;
         this.rollbackAfterValidation = rollbackAfterValidation;
+        this.loginTimeoutSupplier = Objects.requireNonNull(loginTimeoutSupplier, "loginTimeoutSupplier");
     }
 
     protected PooledConnection getPooledConnection(final UserPassKey userPassKey) throws SQLException {
         return ConnectionPoolDataSourceUtils.getPooledConnection(cpds, userPassKey.getUserName(), userPassKey.getPassword(), loginTimeoutSupplier.get());
-    }
-
-    void setLoginTimeoutSupplier(final Supplier<Duration> loginTimeoutSupplier) {
-        this.loginTimeoutSupplier = loginTimeoutSupplier;
     }
 
     /**
