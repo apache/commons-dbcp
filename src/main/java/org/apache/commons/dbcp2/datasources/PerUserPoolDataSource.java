@@ -666,6 +666,11 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     /**
      * Deserializes an instance from an ObjectInputStream.
      *
+     * <p>
+     * When the registration key resolves to an existing data source, its pool managers and live login timeout configuration are reused. An instance serialized
+     * without a key retains its own login timeout setting.
+     * </p>
+     *
      * @param in The source ObjectInputStream.
      * @throws IOException            Any of the usual Input/Output related exceptions.
      * @throws ClassNotFoundException A class of a serialized object cannot be found.

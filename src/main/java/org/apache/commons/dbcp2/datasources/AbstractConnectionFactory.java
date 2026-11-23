@@ -57,6 +57,17 @@ class AbstractConnectionFactory {
     protected final String validationQuery;
     protected final Duration validationQueryTimeoutDuration;
 
+    /**
+     * Constructs a connection factory with validation, lifetime, and live login timeout settings.
+     *
+     * @param cpds the provider from which to obtain pooled connections.
+     * @param validationQuery the validation query, or {@code null} to use {@link Connection#isValid(int)}.
+     * @param validationQueryTimeoutDuration the timeout for connection validation.
+     * @param rollbackAfterValidation whether to roll back after executing the validation query.
+     * @param maxConnDuration the maximum connection lifetime, not null; zero or a negative duration disables the limit.
+     * @param loginTimeoutSupplier the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
+     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
+     */
     AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {
         this.cpds = cpds;
@@ -67,6 +78,15 @@ class AbstractConnectionFactory {
         this.loginTimeoutSupplier = Objects.requireNonNull(loginTimeoutSupplier, "loginTimeoutSupplier");
     }
 
+    /**
+     * Gets a pooled connection using the supplied credentials and the current login timeout.
+     *
+     * @param userPassKey the credentials, not null; a null user name selects the provider's default credentials.
+     * @return the pooled connection returned by the provider.
+     * @throws SQLException if provider access fails, waiting for the provider lock times out, or the wait is interrupted.
+     * @throws NullPointerException if userPassKey is null.
+     * @since 2.15.0
+     */
     protected PooledConnection getPooledConnection(final UserPassKey userPassKey) throws SQLException {
         return ConnectionPoolDataSourceUtils.getPooledConnection(cpds, userPassKey.getUserName(), userPassKey.getPassword(), loginTimeoutSupplier.get());
     }

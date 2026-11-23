@@ -108,6 +108,13 @@ public class PoolableCallableStatement extends DelegatingCallableStatement {
         prepareToReturn();
     }
 
+    /**
+     * Sets the query timeout while retaining the original value for restoration when this statement returns to its pool.
+     *
+     * @param seconds the query timeout in seconds; zero means no timeout.
+     * @throws SQLException if the statement is closed, the timeout is negative, or reading or changing the timeout fails.
+     * @since 2.15.0
+     */
     @Override
     public void setQueryTimeout(final int seconds) throws SQLException {
         setQueryTimeoutAndCacheOriginal(seconds);
