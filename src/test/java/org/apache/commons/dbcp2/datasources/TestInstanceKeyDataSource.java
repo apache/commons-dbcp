@@ -24,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -31,10 +36,14 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Properties;
 
+import javax.sql.ConnectionPoolDataSource;
+
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  */
@@ -89,6 +98,40 @@ public class TestInstanceKeyDataSource {
         assertNull(info.getPassword());
         try (final Connection conn = spds.getConnection()) {
             assertNotNull(conn);
+        }
+    }
+
+    /**
+     * Tests password changes, including changes to and from null, using real pools and a provider that validates the current password.
+     *
+     * @param shared whether to use a shared pool instead of a per-user pool.
+     * @param oldPassword the password used to create the initial pooled connection.
+     * @param newPassword the replacement password accepted by the provider.
+     * @throws SQLException if obtaining or closing a connection fails.
+     */
+    @ParameterizedTest
+    @CsvSource(value = {"true, bar, baz", "true, bar, NULL", "true, NULL, baz",
+            "false, bar, baz", "false, bar, NULL", "false, NULL, baz"}, nullValues = "NULL")
+    void testConnectionPasswordChange(final boolean shared, final String oldPassword, final String newPassword) throws SQLException {
+        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
+        doThrow(new SQLException("Invalid password")).when(provider).getPooledConnection(eq(USER), nullable(String.class));
+        doAnswer(invocation -> pcds.getPooledConnection()).when(provider).getPooledConnection(USER, oldPassword);
+        try (final InstanceKeyDataSource dataSource = shared ? new SharedPoolDataSource() : new PerUserPoolDataSource()) {
+            dataSource.setConnectionPoolDataSource(provider);
+            try (final Connection connection = dataSource.getConnection(USER, oldPassword)) {
+                assertFalse(connection.isClosed());
+            }
+            assertThrows(SQLException.class, () -> dataSource.getConnection(USER, oldPassword == null ? PASS : null));
+
+            doThrow(new SQLException("Invalid password")).when(provider).getPooledConnection(USER, oldPassword);
+            doAnswer(invocation -> pcds.getPooledConnection()).when(provider).getPooledConnection(USER, newPassword);
+            try (final Connection connection = dataSource.getConnection(USER, newPassword)) {
+                assertFalse(connection.isClosed());
+            }
+            assertThrows(SQLException.class, () -> dataSource.getConnection(USER, oldPassword));
+            try (final Connection connection = dataSource.getConnection(USER, newPassword)) {
+                assertFalse(connection.isClosed());
+            }
         }
     }
 
