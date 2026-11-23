@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.datasources;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.function.Supplier;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -45,28 +46,21 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     private UserPassKey userPassKey;
 
     /**
-     * Creates a new {@link PoolableConnectionFactory}.
+     * Constructs a new {@link PoolableConnectionFactory}.
      *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutDuration
-     *            Timeout Duration before validation fails
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param userName
-     *            The user name to use to create connections
-     * @param userPassword
-     *            The password to use to create connections
-     * @since 2.10.0
+     * @param cpds                           The ConnectionPoolDataSource from which to obtain PooledConnection's
+     * @param validationQuery                A query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one row. May be
+     *                                       {@code null} in which case {@link Connection#isValid(int)} will be used to validate connections.
+     * @param validationQueryTimeoutDuration Timeout Duration before validation fails.
+     * @param rollbackAfterValidation        whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param userName                       The user name to use to create connections.
+     * @param userPassword                   The password to use to create connections.
+     * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
      */
     CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
             final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation, final String userName,
-            final char[] userPassword) {
-        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation);
+            final char[] userPassword, Supplier<Duration> loginTimeoutSupplier) {
+        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, loginTimeoutSupplier);
         this.userPassKey = new UserPassKey(userName, userPassword);
     }
 

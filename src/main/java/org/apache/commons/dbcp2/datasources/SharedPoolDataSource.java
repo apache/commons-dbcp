@@ -173,14 +173,11 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     private void registerPool(final String userName, final String password) throws NamingException, SQLException {
-
         final ConnectionPoolDataSource cpds = testCPDS(userName, password);
-
         // Create an object pool to contain our PooledConnections
-        factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(), isRollbackAfterValidation());
-        factory.setLoginTimeoutSupplier(this::getConfiguredLoginTimeout);
+        factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(), isRollbackAfterValidation(),
+                this::getConfiguredLoginTimeout);
         factory.setMaxConn(getMaxConnDuration());
-
         final GenericKeyedObjectPoolConfig<PooledConnectionAndInfo> config = new GenericKeyedObjectPoolConfig<>();
         config.setBlockWhenExhausted(getDefaultBlockWhenExhausted());
         config.setEvictionPolicyClassName(getDefaultEvictionPolicyClassName());
@@ -198,7 +195,6 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         config.setTestOnReturn(getDefaultTestOnReturn());
         config.setTestWhileIdle(getDefaultTestWhileIdle());
         config.setTimeBetweenEvictionRuns(getDefaultDurationBetweenEvictionRuns());
-
         final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> tmpPool = new GenericKeyedObjectPool<>(factory, config);
         factory.setPool(tmpPool);
         pool = tmpPool;

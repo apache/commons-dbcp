@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.datasources;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.function.Supplier;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -43,23 +44,18 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     private KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool;
 
     /**
-     * Creates a new {@code KeyedCPDSConnectionFactory}.
+     * Constructs a new {@code KeyedCPDSConnectionFactory}.
      *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnections
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutDuration
-     *            The Duration to allow for the validation query to complete
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @since 2.10.0
+     * @param cpds                           The ConnectionPoolDataSource from which to obtain PooledConnections
+     * @param validationQuery                A query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one row. May be
+     *                                       {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate connections.
+     * @param validationQueryTimeoutDuration The Duration to allow for the validation query to complete
+     * @param rollbackAfterValidation        Whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
      */
     KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
-            final boolean rollbackAfterValidation) {
-        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation);
+            final boolean rollbackAfterValidation, Supplier<Duration> loginTimeoutSupplier) {
+        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, loginTimeoutSupplier);
     }
 
     @Override
