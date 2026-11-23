@@ -616,8 +616,8 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
-    /** Remembers the original timeout before changing a statement that will be returned to a pool. */
-    void setQueryTimeoutAndRememberOriginal(final int seconds) throws SQLException {
+    /** Caches the original timeout before changing a statement that will be returned to a pool. */
+    void setQueryTimeoutAndCacheOriginal(final int seconds) throws SQLException {
         checkOpen();
         if (originalQueryTimeout == null) {
             originalQueryTimeout = getQueryTimeout();
