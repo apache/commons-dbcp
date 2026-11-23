@@ -130,6 +130,11 @@ public class TesterDriver implements Driver {
         return MINOR_VERSION;
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();

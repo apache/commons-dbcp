@@ -66,7 +66,7 @@ class AbstractConnectionFactory {
      * @param rollbackAfterValidation whether to roll back after executing the validation query.
      * @param maxConnDuration the maximum connection lifetime, not null; zero or a negative duration disables the limit.
      * @param loginTimeoutSupplier the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
-     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
+     * @throws NullPointerException Thrown if maxConnDuration or loginTimeoutSupplier is null.
      */
     AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {
@@ -83,8 +83,8 @@ class AbstractConnectionFactory {
      *
      * @param userPassKey the credentials, not null; a null user name selects the provider's default credentials.
      * @return the pooled connection returned by the provider.
-     * @throws SQLException if provider access fails, waiting for the provider lock times out, or the wait is interrupted.
-     * @throws NullPointerException if userPassKey is null.
+     * @throws SQLException Thrown if provider access fails, waiting for the provider lock times out, or the wait is interrupted.
+     * @throws NullPointerException Thrown if userPassKey is null.
      * @since 2.15.0
      */
     protected PooledConnection getPooledConnection(final UserPassKey userPassKey) throws SQLException {
@@ -96,7 +96,7 @@ class AbstractConnectionFactory {
      *
      * @param duration The duration to convert.
      * @return A duration to seconds where a duration less than one second becomes 1 second.
-     * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
+     * @throws ArithmeticException Thrown if the query validation timeout does not fit as seconds in an int.
      */
     private int toSeconds(final Duration duration) {
         if (duration.isNegative() || duration.isZero()) {

@@ -700,7 +700,7 @@ public class TestDelegatingResultSet {
      * {@link DelegatingResultSet} object itself, instead of calling in the
      * underlying {@link ResultSet}.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testGetStatement() throws Exception {

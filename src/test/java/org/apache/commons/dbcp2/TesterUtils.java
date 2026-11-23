@@ -21,8 +21,7 @@ import java.lang.reflect.Field;
 public final class TesterUtils {
 
     /**
-     * Access a private field. Do it this way rather than increasing the
-     * visibility of the field in the public API.
+     * Gets the value of a private field. Do it this way rather than increasing the visibility of the field in the public API.
      */
     public static Object getField(final Object target, final String fieldName)
             throws Exception {

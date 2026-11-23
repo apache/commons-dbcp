@@ -42,12 +42,16 @@ import java.util.Objects;
 
 /**
  * A base delegating implementation of {@link PreparedStatement}.
+ *
  * <p>
  * All of the methods from the {@link PreparedStatement} interface simply check to see that the
  * {@link PreparedStatement} is active, and call the corresponding method on the "delegate" provided in my constructor.
+ * </p>
+ *
  * <p>
  * Extends AbandonedTrace to implement Statement tracking and logging of code which created the Statement. Tracking the
- * Statement ensures that the Connection which created it can close any open Statement's on Connection close.
+ * Statement ensures that the Connection which created it can close any open Statements on Connection close.
+ * </p>
  *
  * @since 2.0
  */
@@ -592,6 +596,8 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     /**
+     * Sets the parameter value to the given object.
+     *
      * @since 2.5.0
      */
     @Override
@@ -605,6 +611,8 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
     }
 
     /**
+     * Sets the parameter value to the given object.
+     *
      * @since 2.5.0
      */
     @Override
@@ -625,7 +633,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
      * </p>
      *
      * @param seconds the query timeout in seconds; zero means no timeout.
-     * @throws SQLException if the statement is closed or reading or changing its timeout fails.
+     * @throws SQLException Thrown if the statement is closed or reading or changing its timeout fails.
      */
     void setQueryTimeoutAndCacheOriginal(final int seconds) throws SQLException {
         checkOpen();
@@ -725,7 +733,11 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
-    /** @deprecated Use setAsciiStream(), setCharacterStream() or setNCharacterStream() */
+    /**
+     * Sets the parameter value to the given Unicode stream.
+     *
+     * @deprecated Use setAsciiStream(), setCharacterStream() or setNCharacterStream()
+     */
     @Deprecated
     @Override
     public void setUnicodeStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {

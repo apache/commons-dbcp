@@ -190,7 +190,7 @@ class TestDriverAdapterCPDSReference {
      *
      * @param duration the duration under test.
      * @param modernOnly whether to omit the legacy millisecond properties.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @MethodSource("durationReferences")
@@ -213,7 +213,7 @@ class TestDriverAdapterCPDSReference {
      *
      * @param text the duration text under test.
      * @param expected the duration represented by the supplied text.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @MethodSource("durationReferenceStrings")
@@ -345,7 +345,7 @@ class TestDriverAdapterCPDSReference {
      * Tests that legacy JNDI millisecond properties accept the full long integer range.
      *
      * @param millis the legacy timeout in milliseconds.
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @ParameterizedTest
     @ValueSource(longs = {Long.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, 2_592_000_000L, Long.MAX_VALUE})
@@ -397,7 +397,7 @@ class TestDriverAdapterCPDSReference {
     /**
      * Tests that valid duration properties take precedence over malformed legacy millisecond values.
      *
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @Test
     void testModernDurationReferenceOverridesMalformedLegacyValues() throws Exception {
@@ -414,7 +414,7 @@ class TestDriverAdapterCPDSReference {
     /**
      * Tests that null duration properties fall back to legacy millisecond values.
      *
-     * @throws Exception if setting up, using, or closing the test resources fails.
+     * @throws Exception Thrown if setting up, using, or closing the test resources fails.
      */
     @Test
     void testNullModernDurationReferenceFallsBackToLegacy() throws Exception {

@@ -134,7 +134,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     /**
      * Tests that a read-only connection remains reusable after voting {@link XAResource#XA_RDONLY} in a two-phase commit.
      *
-     * @throws Exception if the test fails.
+     * @throws Exception Thrown if the test fails.
      */
     @Test
     void testReadOnlyConnectionReusableAfterTwoPhaseCommit() throws Exception {

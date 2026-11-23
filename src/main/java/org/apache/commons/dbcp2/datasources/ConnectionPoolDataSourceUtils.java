@@ -90,7 +90,7 @@ final class ConnectionPoolDataSourceUtils {
      * @param userName the user name, or {@code null} to use the provider's default credentials.
      * @param password the password, ignored when userName is null.
      * @return the pooled connection returned by the provider.
-     * @throws SQLException if the provider cannot create the connection.
+     * @throws SQLException Thrown if the provider cannot create the connection.
      */
     private static PooledConnection connect(final ConnectionPoolDataSource cpds, final String userName, final String password) throws SQLException {
         return userName == null ? cpds.getPooledConnection() : cpds.getPooledConnection(userName, password);
@@ -114,8 +114,8 @@ final class ConnectionPoolDataSourceUtils {
      * @param password the password, ignored when userName is null.
      * @param loginTimeout the timeout override, or {@code null} to retain the provider setting.
      * @return the pooled connection returned by the provider.
-     * @throws SQLException if accessing or restoring the provider fails, the provider lock wait expires, or waiting is interrupted.
-     * @throws NullPointerException if cpds is null.
+     * @throws SQLException Thrown if accessing or restoring the provider fails, the provider lock wait expires, or waiting is interrupted.
+     * @throws NullPointerException Thrown if cpds is null.
      */
     static PooledConnection getPooledConnection(final ConnectionPoolDataSource cpds, final String userName, final String password,
             final Duration loginTimeout) throws SQLException {
@@ -180,8 +180,8 @@ final class ConnectionPoolDataSourceUtils {
      *
      * @param lock the provider lock to acquire.
      * @param timeout the wait limit, or {@code null}, zero, or a negative value for an unbounded wait.
-     * @throws SQLException if the wait is interrupted; the thread's interrupted status is preserved.
-     * @throws SQLTimeoutException if the bounded lock wait expires.
+     * @throws SQLException Thrown if the wait is interrupted; the thread's interrupted status is preserved.
+     * @throws SQLTimeoutException Thrown if the bounded lock wait expires.
      */
     private static void lock(final Lock lock, final Duration timeout) throws SQLException {
         try {

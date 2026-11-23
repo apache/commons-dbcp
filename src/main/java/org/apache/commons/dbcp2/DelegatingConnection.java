@@ -45,10 +45,12 @@ import org.apache.commons.dbcp2.managed.ManagedConnection;
 
 /**
  * A base delegating implementation of {@link Connection}.
+ *
  * <p>
  * All of the methods from the {@link Connection} interface simply check to see that the {@link Connection} is active,
  * and call the corresponding method on the "delegate" provided in my constructor.
  * </p>
+ *
  * <p>
  * Extends AbandonedTrace to implement Connection tracking and logging of code which created the Connection. Tracking
  * the Connection ensures that the AbandonedObjectPool can close this connection and recycle it if its pool of
@@ -158,7 +160,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Closes the underlying connection, and close any Statements that were not explicitly closed. Sub-classes that
+     * Closes the underlying connection and closes any Statements that were not explicitly closed. Sub-classes that
      * override this method must:
      * <ol>
      * <li>Call {@link #passivate()}</li>
@@ -176,7 +178,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     /**
      * Closes the underlying connection for {@link #close()}.
      *
-     * @throws SQLException SQLException if a database access error occurs.
+     * @throws SQLException Thrown if a database access error occurs.
      */
     protected final void closeInternal() throws SQLException {
         try {
@@ -441,6 +443,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Gets the innermost connection delegate, if access is allowed.
+     *
      * <p>
      * Traverses nested {@link DelegatingConnection} wrappers, respecting each wrapper's access policy, to find the first delegate
      * that is not a {@link DelegatingConnection}.
@@ -454,8 +457,12 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
+     * Gets the innermost delegate connection for internal use.
+     *
+     * <p>
      * Although this method is public, it is part of the internal API and should not be used by clients. The signature
-     * of this method may change at any time including in ways that break backwards compatibility.
+     * of this method may change at any time including in ways that break backward compatibility.
+     * </p>
      *
      * @return the innermost delegate, or {@code null} if the chain ends in {@code null} or a cycle is detected.
      */
@@ -535,10 +542,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Handles the given exception by throwing it.
+     * Always throws the given {@link SQLException}.
      *
      * @param e The exception to throw.
-     * @throws SQLException the exception to throw.
+     * @throws SQLException Thrown always; this is the given exception.
      */
     protected void handleException(final SQLException e) throws SQLException {
         throw e;
@@ -602,6 +609,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Tests whether this wrapper allows access to its underlying connection.
+     *
      * <p>
      * This policy applies to delegate getters and JDBC unwrapping on this connection and its statements, result sets, and database metadata.
      * Unwrapping an interface implemented by the wrapper itself remains allowed. The default implementation returns {@code true}; pool guard
@@ -655,7 +663,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      *
      * @param timeout The duration to wait for the database operation used to validate the connection to complete.
      * @return See {@link Connection#isValid(int)}.
-     * @throws SQLException See {@link Connection#isValid(int)}.
+     * @throws SQLException Thrown as specified by {@link Connection#isValid(int)}.
      * @see Connection#isValid(int)
      * @since 2.10.0
      */
@@ -676,7 +684,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      *
      * @param timeoutSeconds The duration to wait for the database operation used to validate the connection to complete, in seconds.
      * @return See {@link Connection#isValid(int)}.
-     * @throws SQLException See {@link Connection#isValid(int)}.
+     * @throws SQLException Thrown as specified by {@link Connection#isValid(int)}.
      * @see Connection#isValid(int)
      */
     @Override

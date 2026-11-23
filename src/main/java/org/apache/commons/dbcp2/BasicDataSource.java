@@ -68,6 +68,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * Basic implementation of {@code javax.sql.DataSource} that is configured via JavaBeans properties.
+ *
  * <p>
  * This is not the only way to combine the <em>commons-dbcp2</em> and <em>commons-pool2</em> packages, but provides a
  * one-stop solution for basic requirements.
@@ -237,16 +238,13 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     private volatile boolean clearStatementPoolOnReturn;
 
     /**
+     * The maximum number of open statements that can be allocated from the statement pool at the same time, or negative for no limit. Since a connection
+     * usually only uses one or two statements at a time, this is mostly used to help detect resource leaks.
+     *
      * <p>
-     * The maximum number of open statements that can be allocated from the statement pool at the same time, or negative
-     * for no limit. Since a connection usually only uses one or two statements at a time, this is mostly used to help
-     * detect resource leaks.
-     * </p>
-     * <p>
-     * Note: As of version 1.3, CallableStatements (those produced by {@link Connection#prepareCall}) are pooled along
-     * with PreparedStatements (produced by {@link Connection#prepareStatement}) and
-     * {@code maxOpenPreparedStatements} limits the total number of prepared or callable statements that may be in
-     * use at a given time.
+     * Note: As of version 1.3, CallableStatements (those produced by {@link Connection#prepareCall}) are pooled along with PreparedStatements (produced by
+     * {@link Connection#prepareStatement}) and {@code maxOpenPreparedStatements} limits the total number of prepared or callable statements that may be in use
+     * at a given time.
      * </p>
      */
     private int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
@@ -335,9 +333,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * These SQL statements run once after a Connection is created.
+     *
      * <p>
-     * This property can be used for example to run ALTER SESSION SET NLS_SORT=XCYECH in an Oracle Database only once
-     * after connection creation.
+     * This property can be used for example to run ALTER SESSION SET NLS_SORT=XCYECH in an Oracle Database only once after connection creation.
      * </p>
      */
     private volatile List<String> connectionInitSqls;
@@ -429,23 +427,23 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Closes and releases all idle connections that are currently stored in the connection pool associated with this
-     * data source.
+     * Closes and releases all idle connections that are currently stored in the connection pool associated with this data source.
+     *
      * <p>
-     * Connections that are checked out to clients when this method is invoked are not affected. When client
-     * applications subsequently invoke {@link Connection#close()} to return these connections to the pool, the
-     * underlying JDBC connections are closed.
-     * </p>
-     * <p>
-     * Attempts to acquire connections using {@link #getConnection()} after this method has been invoked result in
-     * SQLExceptions.  To reopen a datasource that has been closed using this method, use {@link #start()}.
-     * </p>
-     * <p>
-     * This method is idempotent - i.e., closing an already closed BasicDataSource has no effect and does not generate
-     * exceptions.
+     * Connections that are checked out to clients when this method is invoked are not affected. When client applications subsequently invoke
+     * {@link Connection#close()} to return these connections to the pool, the underlying JDBC connections are closed.
      * </p>
      *
-     * @throws SQLException Thrown if an error occurs closing idle connections
+     * <p>
+     * Attempts to acquire connections using {@link #getConnection()} after this method has been invoked result in SQLExceptions. To reopen a datasource that
+     * has been closed using this method, use {@link #start()}.
+     * </p>
+     *
+     * <p>
+     * This method is idempotent: that is, closing an already closed BasicDataSource has no effect and does not generate exceptions.
+     * </p>
+     *
+     * @throws SQLException Thrown if an error occurs closing idle connections.
      */
     @Override
     public synchronized void close() throws SQLException {
@@ -529,7 +527,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
      * </p>
      *
      * @return A new connection factory.
-     * @throws SQLException If the connection factory cannot be created.
+     * @throws SQLException Thrown if the connection factory cannot be created.
      * @see DriverManager
      * @see <a href="https://docs.oracle.com/javase/9/docs/api/java/sql/package-summary.html">JDBC version history and features</a>
      */
@@ -539,12 +537,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Creates a connection pool for this datasource. This method only exists so subclasses can replace the
-     * implementation class.
+     * Creates a connection pool for this datasource. This method only exists so subclasses can replace the implementation class.
+     *
      * <p>
-     * This implementation configures all pool properties other than timeBetweenEvictionRunsMillis. Setting that
-     * property is deferred to {@link #startPoolMaintenance()}, since setting timeBetweenEvictionRunsMillis to a
-     * positive value causes {@link GenericObjectPool}'s eviction timer to be started.
+     * This implementation configures all pool properties other than timeBetweenEvictionRunsMillis. Setting that property is deferred to
+     * {@link #startPoolMaintenance()}, since setting timeBetweenEvictionRunsMillis to a positive value causes {@link GenericObjectPool}'s eviction timer to be
+     * started.
      * </p>
      *
      * @param factory The factory to use to create new connections for this pool.
@@ -579,7 +577,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Creates (if necessary) and return the internal data source we are using to manage our connections.
+     * Creates (if necessary) and returns the internal data source we are using to manage our connections.
      *
      * @return The current internal DataSource or a newly created instance if it has not yet been created.
      * @throws SQLException Thrown if the object pool cannot be created.
@@ -632,10 +630,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Creates the actual data source instance. This method only exists so that subclasses can replace the
-     * implementation class.
+     * Creates the actual data source instance. This method only exists so that subclasses can replace the implementation class.
      *
-     * @throws SQLException Thrown if unable to create a datasource instance
+     * @throws SQLException Thrown if unable to create a datasource instance.
      * @return A new DataSource instance
      */
     protected DataSource createDataSourceInstance() throws SQLException {
@@ -669,7 +666,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
      * subclasses can replace the default implementation.
      *
      * @param driverConnectionFactory JDBC connection factory
-     * @throws SQLException Thrown if an error occurs creating the PoolableConnectionFactory
+     * @throws SQLException Thrown if an error occurs creating the PoolableConnectionFactory.
      * @return A new PoolableConnectionFactory configured with the current configuration of this BasicDataSource
      */
     protected PoolableConnectionFactory createPoolableConnectionFactory(final ConnectionFactory driverConnectionFactory)
@@ -712,7 +709,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Manually evicts idle connections
      *
-     * @throws Exception when there is a problem evicting idle objects.
+     * @throws Exception Thrown when there is a problem evicting idle objects.
      */
     public void evict() throws Exception {
         if (connectionPool != null) {
@@ -730,9 +727,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * If the connection pool implements {@link org.apache.commons.pool2.UsageTracking UsageTracking}, should the
-     * connection pool record a stack trace every time a method is called on a pooled connection and retain the most
-     * recent stack trace to aid debugging of abandoned connections?
+     * Gets whether a connection pool that implements {@link org.apache.commons.pool2.UsageTracking UsageTracking} records a stack trace every time a method is
+     * called on a pooled connection and retains the most recent stack trace to aid debugging of abandoned connections.
      *
      * @return {@code true} if usage tracking is enabled
      */
@@ -742,7 +738,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the value of the named management attribute.
      *
      * @since 2.15.0
      */
@@ -752,7 +748,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the values of the named management attributes.
      *
      * @since 2.15.0
      */
@@ -783,9 +779,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Creates (if necessary) and return a connection to the database.
+     * Gets a connection to the database, creating the data source if necessary.
      *
-     * @throws SQLException Thrown if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs.
      * @return A database connection
      */
     @Override
@@ -806,23 +802,22 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * <strong>BasicDataSource does NOT support this method.</strong>
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      *
      * @param user Database user on whose behalf the Connection is being made
      * @param pass The database user's password
-     * @throws UnsupportedOperationException always thrown.
-     * @throws SQLException                  if a database access error occurs
-     * @return nothing - always throws UnsupportedOperationException
+     * @return never returns normally.
+     * @throws UnsupportedOperationException Thrown always because this operation is not supported.
      */
     @Override
     public Connection getConnection(final String user, final String pass) throws SQLException {
-        // This method isn't supported by the PoolingDataSource returned by the
-        // createDataSource
+        // This method is not supported by the PoolingDataSource returned by createDataSource().
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
     }
 
     /**
      * Gets the ConnectionFactoryClassName that has been configured for use by this pool.
+     *
      * <p>
      * Note: This getter only returns the last value set by a call to {@link #setConnectionFactoryClassName(String)}.
      * </p>
@@ -846,7 +841,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Provides the same data as {@link #getConnectionInitSqls()} but in an array so it is accessible via JMX.
+     * Gets the same data as {@link #getConnectionInitSqls()} but in an array so it is accessible via JMX.
      */
     @Override
     public String[] getConnectionInitSqlsAsArray() {
@@ -944,10 +939,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the set of SQL State codes that are not considered fatal disconnection codes.
+     *
      * <p>
-     * This method returns the set of SQL State codes that have been specified to be ignored
-     * when determining if a {@link SQLException} signals a disconnection. These codes will not
-     * trigger a disconnection even if they match other disconnection criteria.
+     * This method returns the set of SQL State codes that have been specified to be ignored when determining if a {@link SQLException} signals a disconnection.
+     * These codes will not trigger a disconnection even if they match other disconnection criteria.
      * </p>
      *
      * @return A set of SQL State codes that should be ignored for disconnection checks, or an empty set if none have been specified.
@@ -959,7 +954,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Provides the same data as {@link #getDisconnectionIgnoreSqlCodes()} but in an array, so it is accessible via JMX.
+     * Gets the same data as {@link #getDisconnectionIgnoreSqlCodes()} but in an array, so it is accessible via JMX.
      *
      * @since 2.13.0
      */
@@ -981,7 +976,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Provides the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
+     * Gets the same data as {@link #getDisconnectionSqlCodes} but in an array so it is accessible via JMX.
      *
      * @since 2.1
      */
@@ -992,6 +987,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the JDBC Driver that has been configured for use by this pool.
+     *
      * <p>
      * Note: This getter only returns the last value set by a call to {@link #setDriver(Driver)}. It does not return any
      * driver instance that may have been created from the value set via {@link #setDriverClassName(String)}.
@@ -1004,11 +1000,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the class loader specified for loading the JDBC driver. Returns {@code null} if no class loader has
-     * been explicitly specified.
+     * Gets the class loader specified for loading the JDBC driver. Returns {@code null} if no class loader has been explicitly specified.
+     *
      * <p>
-     * Note: This getter only returns the last value set by a call to {@link #setDriverClassLoader(ClassLoader)}. It
-     * does not return the class loader of any driver that may have been set via {@link #setDriver(Driver)}.
+     * Note: This getter only returns the last value set by a call to {@link #setDriverClassLoader(ClassLoader)}. It does not return the class loader of any
+     * driver that may have been set via {@link #setDriver(Driver)}.
      * </p>
      *
      * @return The class loader specified for loading the JDBC driver.
@@ -1019,6 +1015,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the JDBC driver class name.
+     *
      * <p>
      * Note: This getter only returns the last value set by a call to {@link #setDriverClassName(String)}. It does not
      * return the class name of any driver that may have been set via {@link #setDriver(Driver)}.
@@ -1032,7 +1029,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the {code durationBetweenEvictionRuns} property.
+     * Gets the value of the {@code durationBetweenEvictionRuns} property.
      *
      * @return The time (in milliseconds) between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
@@ -1065,8 +1062,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * True means that validation will fail immediately for connections that have previously thrown SQLExceptions with
-     * SQL State indicating fatal disconnection errors.
+     * Gets whether validation fails immediately for connections that have previously thrown SQLExceptions with SQL states indicating fatal disconnection
+     * errors.
      *
      * @return true if connections created by this datasource will fast fail validation.
      * @see #setDisconnectionSqlCodes(Collection)
@@ -1109,13 +1106,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Flag to log stack traces for application code which abandoned a Statement or Connection.
+     * Gets whether to log stack traces for application code that abandoned a Statement or Connection.
+     *
      * <p>
      * Defaults to false.
      * </p>
+     *
      * <p>
-     * Logging of abandoned Statements and Connections adds overhead for every Connection open or new Statement because
-     * a stack trace has to be generated.
+     * Logging of abandoned Statements and Connections adds overhead for every Connection open or new Statement because a stack trace has to be generated.
      * </p>
      */
     @Override
@@ -1124,8 +1122,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether or
-     * not log messages are generated when the pool closes connections due to maximum lifetime exceeded.
+     * Gets whether to log messages when the pool closes connections that exceed the maximum lifetime configured by {@link #getMaxConnDuration()}.
      *
      * @since 2.1
      */
@@ -1135,33 +1132,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * <strong>BasicDataSource does NOT support this method.</strong>
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      *
-     * <p>
-     * Gets the login timeout (in seconds) for connecting to the database.
-     * </p>
-     * <p>
-     * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
-     * </p>
-     *
-     * @throws SQLException                  if a database access error occurs
-     * @throws UnsupportedOperationException If the DataSource implementation does not support the login timeout
-     *                                       feature.
-     * @return login timeout in seconds
+     * @return never returns normally.
+     * @throws UnsupportedOperationException Thrown always because this operation is not supported.
      */
     @Override
     public int getLoginTimeout() throws SQLException {
-        // This method isn't supported by the PoolingDataSource returned by the createDataSource
+        // This method is not supported by the PoolingDataSource returned by createDataSource().
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
     }
 
     /**
      * Gets the log writer being used by this data source.
+     *
      * <p>
      * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
      * </p>
      *
-     * @throws SQLException Thrown if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs.
      * @return log writer in use
      */
     @Override
@@ -1200,8 +1189,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the maximum number of connections that can remain idle in the pool. Excess idle connections are destroyed
-     * on return to the pool.
+     * Gets the maximum number of connections that can remain idle in the pool. Excess idle connections are destroyed on return to the pool.
+     *
      * <p>
      * A negative value indicates that there is no limit
      * </p>
@@ -1225,6 +1214,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the maximum number of active connections that can be allocated at the same time.
+     *
      * <p>
      * A negative number means that there is no limit.
      * </p>
@@ -1261,7 +1251,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the metadata describing the management interface.
      *
      * @since 2.15.0
      */
@@ -1271,9 +1261,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the {code minEvictableIdleDuration} property.
+     * Gets the {@code minEvictableIdleDuration} property.
      *
-     * @return The value of the {code minEvictableIdleDuration} property
+     * @return The value of the {@code minEvictableIdleDuration} property
      * @see #setMinEvictableIdle(Duration)
      * @since 2.10.0
      */
@@ -1282,9 +1272,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the {code minEvictableIdleDuration} property.
+     * Gets the {@code minEvictableIdleDuration} property.
      *
-     * @return The value of the {code minEvictableIdleDuration} property
+     * @return The value of the {@code minEvictableIdleDuration} property
      * @see #setMinEvictableIdle(Duration)
      * @deprecated Use {@link #getMinEvictableIdleDuration()}.
      */
@@ -1297,7 +1287,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Gets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections
      * are available when the idle object evictor runs. The value of this property has no effect unless
-     * {code durationBetweenEvictionRuns} has a positive value.
+     * {@code durationBetweenEvictionRuns} has a positive value.
      *
      * @return The minimum number of idle connections
      * @see GenericObjectPool#getMinIdle()
@@ -1308,7 +1298,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * [Read Only] The current number of active connections that have been allocated from this data source.
+     * Gets the current number of active connections that have been allocated from this data source.
      *
      * @return The current number of active connections
      */
@@ -1320,7 +1310,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * [Read Only] The current number of idle connections that are waiting to be allocated from this data source.
+     * Gets the current number of idle connections that are waiting to be allocated from this data source.
      *
      * @return The current number of idle connections
      */
@@ -1332,7 +1322,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the {code numTestsPerEvictionRun} property.
+     * Gets the value of the {@code numTestsPerEvictionRun} property.
      *
      * @return The number of objects to examine during idle object evictor runs
      * @see #setNumTestsPerEvictionRun(int)
@@ -1342,6 +1332,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
         return this.numTestsPerEvictionRun;
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
@@ -1374,17 +1369,19 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Flag to remove abandoned connections if they exceed the removeAbandonedTimeout when borrowObject is invoked.
+     * Gets whether to remove abandoned connections that exceed the removeAbandonedTimeout when borrowObject is invoked.
+     *
      * <p>
      * The default value is false.
      * </p>
+     *
      * <p>
-     * If set to true a connection is considered abandoned and eligible for removal if it has not been used for more
-     * than {@link #getRemoveAbandonedTimeoutDuration() removeAbandonedTimeout} seconds.
+     * If set to true a connection is considered abandoned and eligible for removal if it has not been used for more than
+     * {@link #getRemoveAbandonedTimeoutDuration() removeAbandonedTimeout} seconds.
      * </p>
+     *
      * <p>
-     * Abandoned connections are identified and removed when {@link #getConnection()} is invoked and all of the
-     * following conditions hold:
+     * Abandoned connections are identified and removed when {@link #getConnection()} is invoked and all of the following conditions hold:
      * </p>
      * <ul>
      * <li>{@link #getRemoveAbandonedOnBorrow()}</li>
@@ -1400,10 +1397,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Flag to remove abandoned connections if they exceed the removeAbandonedTimeout during pool maintenance.
+     * Gets whether to remove abandoned connections that exceed the removeAbandonedTimeout during pool maintenance.
+     *
      * <p>
      * The default value is false.
      * </p>
+     *
      * <p>
      * If set to true a connection is considered abandoned and eligible for removal if it has not been used for more
      * than {@link #getRemoveAbandonedTimeoutDuration() removeAbandonedTimeout} seconds.
@@ -1418,10 +1417,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the timeout in seconds before an abandoned connection can be removed.
+     *
      * <p>
      * Creating a Statement, PreparedStatement or CallableStatement or using one of these to execute a query (using one
      * of the execute methods) resets the lastUsed property of the parent connection.
      * </p>
+     *
      * <p>
      * Abandoned connection cleanup happens when:
      * </p>
@@ -1430,6 +1431,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
      * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
      * </ul>
+     *
      * <p>
      * The default value is 300 seconds.
      * </p>
@@ -1444,10 +1446,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Gets the timeout before an abandoned connection can be removed.
+     *
      * <p>
      * Creating a Statement, PreparedStatement or CallableStatement or using one of these to execute a query (using one
      * of the execute methods) resets the lastUsed property of the parent connection.
      * </p>
+     *
      * <p>
      * Abandoned connection cleanup happens when:
      * </p>
@@ -1456,6 +1460,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
      * <li>{@link #getNumIdle() numIdle} &lt; 2</li>
      * <li>{@link #getNumActive() numActive} &gt; {@link #getMaxTotal() maxTotal} - 3</li>
      * </ul>
+     *
      * <p>
      * The default value is 300 seconds.
      * </p>
@@ -1478,14 +1483,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction by
-     * the idle object evictor, with the extra condition that at least "minIdle" connections remain in the pool.
+     * Gets the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction by the idle object evictor, with the extra
+     * condition that at least "minIdle" connections remain in the pool.
+     *
      * <p>
-     * When {@link #getMinEvictableIdleTimeMillis() minEvictableIdleTimeMillis} is set to a positive value,
-     * minEvictableIdleTimeMillis is examined first by the idle connection evictor - i.e. when idle connections are
-     * visited by the evictor, idle time is first compared against {@code minEvictableIdleTimeMillis} (without
-     * considering the number of idle connections in the pool) and then against {@code softMinEvictableIdleTimeMillis},
-     * including the {@code minIdle}, constraint.
+     * When {@link #getMinEvictableIdleTimeMillis() minEvictableIdleTimeMillis} is set to a positive value, minEvictableIdleTimeMillis is examined first by the
+     * idle connection evictor, that is, when idle connections are visited by the evictor, idle time is first compared against
+     * {@code minEvictableIdleTimeMillis} (without considering the number of idle connections in the pool) and then against
+     * {@code softMinEvictableIdleTimeMillis}, including the {@code minIdle}, constraint.
      * </p>
      *
      * @return minimum amount of time a connection may sit idle in the pool before it is eligible for eviction, assuming
@@ -1497,14 +1502,14 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction by
-     * the idle object evictor, with the extra condition that at least "minIdle" connections remain in the pool.
+     * Gets the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction by the idle object evictor, with the extra
+     * condition that at least "minIdle" connections remain in the pool.
+     *
      * <p>
-     * When {@link #getMinEvictableIdleTimeMillis() minEvictableIdleTimeMillis} is set to a positive value,
-     * minEvictableIdleTimeMillis is examined first by the idle connection evictor - i.e. when idle connections are
-     * visited by the evictor, idle time is first compared against {@code minEvictableIdleTimeMillis} (without
-     * considering the number of idle connections in the pool) and then against {@code softMinEvictableIdleTimeMillis},
-     * including the {@code minIdle}, constraint.
+     * When {@link #getMinEvictableIdleTimeMillis() minEvictableIdleTimeMillis} is set to a positive value, minEvictableIdleTimeMillis is examined first by the
+     * idle connection evictor, that is, when idle connections are visited by the evictor, idle time is first compared against
+     * {@code minEvictableIdleTimeMillis} (without considering the number of idle connections in the pool) and then against
+     * {@code softMinEvictableIdleTimeMillis}, including the {@code minIdle}, constraint.
      * </p>
      *
      * @return minimum amount of time a connection may sit idle in the pool before it is eligible for eviction, assuming
@@ -1518,7 +1523,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the {code testOnBorrow} property.
+     * Gets the {@code testOnBorrow} property.
      *
      * @return true if objects are validated before being borrowed from the pool
      * @see #setTestOnBorrow(boolean)
@@ -1529,7 +1534,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the {code testOnCreate} property.
+     * Gets the {@code testOnCreate} property.
      *
      * @return true if objects are validated immediately after they are created by the pool
      * @see #setTestOnCreate(boolean)
@@ -1540,7 +1545,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the {code testOnReturn} property.
+     * Gets the value of the {@code testOnReturn} property.
      *
      * @return true if objects are validated before being returned to the pool
      * @see #setTestOnReturn(boolean)
@@ -1550,7 +1555,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the {code testWhileIdle} property.
+     * Gets the value of the {@code testWhileIdle} property.
      *
      * @return true if objects examined by the idle object evictor are validated
      * @see #setTestWhileIdle(boolean)
@@ -1561,7 +1566,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the {code durationBetweenEvictionRuns} property.
+     * Gets the value of the {@code durationBetweenEvictionRuns} property.
      *
      * @return The time (in milliseconds) between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
@@ -1574,9 +1579,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the JDBC connection {code connectionString} property.
+     * Gets the JDBC connection {@code connectionString} property.
      *
-     * @return The {code connectionString} passed to the JDBC driver to establish connections
+     * @return The {@code connectionString} passed to the JDBC driver to establish connections
      */
     @Override
     public synchronized String getUrl() {
@@ -1584,9 +1589,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the JDBC connection {code userName} property.
+     * Gets the JDBC connection {@code userName} property.
      *
-     * @return The {code userName} passed to the JDBC driver to establish connections
+     * @return The {@code userName} passed to the JDBC driver to establish connections
      * @deprecated Use {@link #getUserName()}.
      */
     @Deprecated
@@ -1628,11 +1633,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Manually invalidates a connection, effectively requesting the pool to try to close it, remove it from the pool
-     * and reclaim pool capacity.
+     * Manually invalidates a connection, effectively requesting the pool to try to close it, remove it from the pool and reclaim pool capacity.
      *
      * @param connection The Connection to invalidate.
-     * @throws IllegalStateException if invalidating the connection failed, including if a cycle is encountered while locating the pooled connection.
+     * @throws IllegalStateException Thrown if invalidating the connection failed, including if a cycle is encountered while locating the pooled connection.
      * @since 2.1
      */
     @SuppressWarnings("resource")
@@ -1682,7 +1686,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Gets the value of the accessToUnderlyingConnectionAllowed property.
+     * Tests whether access to the underlying connection is allowed.
      *
      * @return true if access to the underlying connection is allowed, false otherwise.
      */
@@ -1692,7 +1696,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Returns true if the statement pool is cleared when the connection is returned to its pool.
+     * Tests whether the statement pool is cleared when the connection is returned to its pool.
      *
      * @return true if the statement pool is cleared at connection return
      * @since 2.8.0
@@ -1703,7 +1707,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * If true, this data source is closed and no more connections can be retrieved from this data source.
+     * Tests whether this data source is closed and no more connections can be retrieved from it.
      *
      * @return true, if the data source is closed; false otherwise
      */
@@ -1713,17 +1717,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Delegates in a null-safe manner to {@link String#isEmpty()}.
+     * Tests whether the given string is null or empty after trimming whitespace.
      *
      * @param value The string to test, may be null.
-     * @return boolean false if value is null, otherwise {@link String#isEmpty()}.
+     * @return true if the value is null or empty after trimming whitespace; false otherwise.
      */
     private boolean isEmpty(final String value) {
         return value == null || value.trim().isEmpty();
     }
 
     /**
-     * Returns true if we are pooling statements.
+     * Tests whether prepared statements are pooled.
      *
      * @return true if prepared and callable statements are pooled
      */
@@ -1857,22 +1861,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Restarts the datasource.
+     *
      * <p>
-     * This method calls {@link #close()} and {@link #start()} in sequence within synchronized scope so any
-     * connection requests that come in while the datasource is shutting down will be served by the new pool.
+     * This method calls {@link #close()} and {@link #start()} in sequence within synchronized scope so any connection requests that come in while the
+     * datasource is shutting down will be served by the new pool.
+     * </p>
+     *
      * <p>
-     * Idle connections that are stored in the connection pool when this method is invoked are closed, but
-     * connections that are checked out to clients when this method is invoked are not affected. When client
-     * applications subsequently invoke {@link Connection#close()} to return these connections to the pool, the
-     * underlying JDBC connections are closed. These connections do not count in {@link #getMaxTotal()} or
-     * {@link #getNumActive()} after invoking this method. For example, if there are 3 connections checked out by
-     * clients when {@link #restart()} is invoked, after this method is called, {@link #getNumActive()} will
-     * return 0 and up to {@link #getMaxTotal()} + 3 connections may be open until the connections sourced from
-     * the original pool are returned.
+     * Idle connections that are stored in the connection pool when this method is invoked are closed, but connections that are checked out to clients when this
+     * method is invoked are not affected. When client applications subsequently invoke {@link Connection#close()} to return these connections to the pool, the
+     * underlying JDBC connections are closed. These connections do not count in {@link #getMaxTotal()} or {@link #getNumActive()} after invoking this method.
+     * For example, if there are 3 connections checked out by clients when {@link #restart()} is invoked, after this method is called, {@link #getNumActive()}
+     * will return 0 and up to {@link #getMaxTotal()} + 3 connections may be open until the connections sourced from the original pool are returned.
+     * </p>
+     *
      * <p>
      * The new connection pool created by this method is initialized with currently set configuration properties.
+     * </p>
      *
-     * @throws SQLException Thrown if an error occurs initializing the datasource
+     * @throws SQLException Thrown if an error occurs initializing the datasource.
      */
     @Override
     public synchronized void restart() throws SQLException {
@@ -1901,9 +1908,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * If the connection pool implements {@link org.apache.commons.pool2.UsageTracking UsageTracking}, configure whether
-     * the connection pool should record a stack trace every time a method is called on a pooled connection and retain
-     * the most recent stack trace to aid debugging of abandoned connections.
+     * Sets whether a connection pool that implements {@link org.apache.commons.pool2.UsageTracking UsageTracking} records a stack trace every time a method is
+     * called on a pooled connection and retains the most recent stack trace to aid debugging of abandoned connections.
      *
      * @param usageTracking A value of {@code true} will enable the recording of a stack trace on every use of a
      *                      pooled connection
@@ -1915,6 +1921,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Sets the value of the accessToUnderlyingConnectionAllowed property. It controls if the PoolGuard allows access to
      * the underlying connection. (Default: false)
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -1936,7 +1943,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the value of the named management attribute.
      *
      * @since 2.15.0
      */
@@ -1946,7 +1953,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the values of the named management attributes.
      *
      * @since 2.15.0
      */
@@ -2000,6 +2007,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the collection of SQL statements to be executed when a physical connection is first created.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2016,6 +2024,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the list of SQL statements to be executed when a physical connection is first created.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2037,9 +2046,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the connection properties passed to driver.connect(...).
+     *
      * <p>
      * Format of the string must be [propertyName=property;]*
      * </p>
+     *
      * <p>
      * NOTE - The "user" and "password" properties will be added explicitly, so they do not need to be included here.
      * </p>
@@ -2067,6 +2078,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets default auto-commit state of connections returned by this datasource.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2081,6 +2093,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the default catalog.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2123,6 +2136,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets defaultReadonly property.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2137,6 +2151,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the default schema.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2152,6 +2167,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the default transaction isolation state for returned connections.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2167,25 +2183,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the SQL State codes that should be ignored when determining fatal disconnection conditions.
+     *
      * <p>
-     * This method allows you to specify a collection of SQL State codes that will be excluded from
-     * disconnection checks. These codes will not trigger the "fatally disconnected" status even if they
-     * match the typical disconnection criteria. This can be useful in scenarios where certain SQL State
-     * codes (e.g., specific codes starting with "08") are known to be non-fatal in your environment.
+     * This method allows you to specify a collection of SQL State codes that will be excluded from disconnection checks. These codes will not trigger the
+     * "fatally disconnected" status even if they match the typical disconnection criteria. This can be useful in scenarios where certain SQL State codes (for
+     * example, specific codes starting with "08") are known to be non-fatal in your environment.
      * </p>
+     *
      * <p>
-     * The effect of this method is similar to the one described in {@link #setDisconnectionSqlCodes(Collection)},
-     * but instead of setting codes that signal fatal disconnections, it defines codes that should be ignored
-     * during such checks.
+     * The effect of this method is similar to the one described in {@link #setDisconnectionSqlCodes(Collection)}, but instead of setting codes that signal
+     * fatal disconnections, it defines codes that should be ignored during such checks.
      * </p>
+     *
      * <p>
-     * Note: This method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: {@code getConnection, setLogwriter, setLoginTimeout,
-     * getLoginTimeout, getLogWriter}.
+     * Note: This method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
+     * invoked: {@code getConnection, setLogwriter, setLoginTimeout, getLoginTimeout, getLogWriter}.
      * </p>
      *
      * @param disconnectionIgnoreSqlCodes SQL State codes that should be ignored in disconnection checks
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
+     * @throws IllegalArgumentException Thrown if any SQL state codes overlap with those in {@link #disconnectionSqlCodes}.
      * @since 2.13.0
      */
     public void setDisconnectionIgnoreSqlCodes(final Collection<String> disconnectionIgnoreSqlCodes) {
@@ -2197,24 +2213,25 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the SQL State codes considered to signal fatal conditions.
+     *
      * <p>
-     * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with
-     * {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this property is non-null and {@link #getFastFailValidation()}
-     * is {@code true}, whenever connections created by this datasource generate exceptions with SQL State codes in this
-     * list, they will be marked as "fatally disconnected" and subsequent validations will fail fast (no attempt at
-     * isValid or validation query).
+     * Overrides the defaults in {@link Utils#getDisconnectionSqlCodes()} (plus anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX}). If this
+     * property is non-null and {@link #getFastFailValidation()} is {@code true}, whenever connections created by this datasource generate exceptions with SQL
+     * State codes in this list, they will be marked as "fatally disconnected" and subsequent validations will fail fast (no attempt at isValid or validation
+     * query).
      * </p>
+     *
      * <p>
      * If {@link #getFastFailValidation()} is {@code false} setting this property has no effect.
      * </p>
+     *
      * <p>
-     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: {@code getConnection, setLogwriter,
-     * setLoginTimeout, getLoginTimeout, getLogWriter}.
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
+     * invoked: {@code getConnection, setLogwriter, setLoginTimeout, getLoginTimeout, getLogWriter}.
      * </p>
      *
      * @param disconnectionSqlCodes SQL State codes considered to signal fatal conditions
-     * @throws IllegalArgumentException if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
+     * @throws IllegalArgumentException Thrown if any SQL state codes overlap with those in {@link #disconnectionIgnoreSqlCodes}.
      * @since 2.1
      */
     public void setDisconnectionSqlCodes(final Collection<String> disconnectionSqlCodes) {
@@ -2226,6 +2243,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the JDBC Driver instance to use for this pool.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2240,6 +2258,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the class loader to be used to load the JDBC driver.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2273,7 +2292,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code durationBetweenEvictionRuns} property.
+     * Sets the {@code durationBetweenEvictionRuns} property.
      *
      * @param timeBetweenEvictionRunsMillis The new time between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
@@ -2321,6 +2340,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the initial size of the connection pool.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2365,8 +2385,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * When {@link #getMaxConnDuration()} is set to limit connection lifetime, this property determines whether or
-     * not log messages are generated when the pool closes connections due to maximum lifetime exceeded. Set this
+     * Sets whether to log messages when the pool closes connections that exceed the maximum lifetime configured by {@link #getMaxConnDuration()}. Set this
      * property to false to suppress log messages when connections expire.
      *
      * @param logExpiredConnections Whether or not log messages are generated when the pool closes connections due to
@@ -2377,35 +2396,26 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * <strong>BasicDataSource does NOT support this method. </strong>
-     *
-     * <p>
-     * Sets the login timeout (in seconds) for connecting to the database.
-     * </p>
-     * <p>
-     * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
-     * </p>
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
      *
      * @param loginTimeout The new login timeout, or zero for no timeout
-     * @throws UnsupportedOperationException If the DataSource implementation does not support the login timeout
-     *                                       feature.
-     * @throws SQLException                  if a database access error occurs
+     * @throws UnsupportedOperationException Thrown always because this operation is not supported.
      */
     @Override
     public void setLoginTimeout(final int loginTimeout) throws SQLException {
-        // This method isn't supported by the PoolingDataSource returned by the
-        // createDataSource
+        // This method is not supported by the PoolingDataSource returned by createDataSource().
         throw new UnsupportedOperationException("Not supported by BasicDataSource");
     }
 
     /**
      * Sets the log writer being used by this data source.
+     *
      * <p>
      * Calls {@link #createDataSource()}, so has the side effect of initializing the connection pool.
      * </p>
      *
      * @param logWriter The new log writer
-     * @throws SQLException Thrown if a database access error occurs
+     * @throws SQLException Thrown if a database access error occurs.
      */
     @Override
     public void setLogWriter(final PrintWriter logWriter) throws SQLException {
@@ -2414,12 +2424,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the maximum permitted lifetime of a connection. A value of zero or less indicates an
-     * infinite lifetime.
+     * Sets the maximum permitted lifetime of a connection. A value of zero or less indicates an infinite lifetime.
+     *
      * <p>
-     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
-     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
+     * invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)}, {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()},
+     * {@link #getLogWriter()}.
      * </p>
      *
      * @param maxConnDuration The maximum permitted lifetime of a connection.
@@ -2430,12 +2440,12 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an
-     * infinite lifetime.
+     * Sets the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an infinite lifetime.
+     *
      * <p>
-     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
-     * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
-     * {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()}, {@link #getLogWriter()}.
+     * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
+     * invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)}, {@link #setLoginTimeout(int)}, {@link #getLoginTimeout()},
+     * {@link #getLogWriter()}.
      * </p>
      *
      * @param maxConnLifetimeMillis The maximum permitted lifetime of a connection in milliseconds.
@@ -2460,6 +2470,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the value of the {@code maxOpenPreparedStatements} property.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2509,7 +2520,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code minEvictableIdleDuration} property.
+     * Sets the {@code minEvictableIdleDuration} property.
      *
      * @param minEvictableIdleDuration The minimum amount of time an object may sit idle in the pool
      * @see #setMinEvictableIdle(Duration)
@@ -2521,7 +2532,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code minEvictableIdleDuration} property.
+     * Sets the {@code minEvictableIdleDuration} property.
      *
      * @param minEvictableIdleTimeMillis The minimum amount of time an object may sit idle in the pool
      * @see #setMinEvictableIdle(Duration)
@@ -2535,7 +2546,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Sets the minimum number of idle connections in the pool. The pool attempts to ensure that minIdle connections are
      * available when the idle object evictor runs. The value of this property has no effect unless
-     * {code durationBetweenEvictionRuns} has a positive value.
+     * {@code durationBetweenEvictionRuns} has a positive value.
      *
      * @param minIdle The new value for minIdle
      * @see GenericObjectPool#setMinIdle(int)
@@ -2546,9 +2557,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the value of the {code numTestsPerEvictionRun} property.
+     * Sets the value of the {@code numTestsPerEvictionRun} property.
      *
-     * @param numTestsPerEvictionRun The new {code numTestsPerEvictionRun} value
+     * @param numTestsPerEvictionRun The new {@code numTestsPerEvictionRun} value
      * @see #setNumTestsPerEvictionRun(int)
      */
     public synchronized void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
@@ -2557,7 +2568,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code password}.
+     * Sets the {@code password}.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2572,6 +2584,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets whether to pool statements or not.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2616,9 +2629,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the timeout before an abandoned connection can be removed.
+     *
      * <p>
-     * Setting this property has no effect if {@link #getRemoveAbandonedOnBorrow()} and
-     * {code getRemoveAbandonedOnMaintenance()} are false.
+     * Setting this property has no effect if {@link #getRemoveAbandonedOnBorrow()} and {@code getRemoveAbandonedOnMaintenance()} are false.
      * </p>
      *
      * @param removeAbandonedTimeout new abandoned timeout
@@ -2633,9 +2646,9 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Sets the timeout in seconds before an abandoned connection can be removed.
+     *
      * <p>
-     * Setting this property has no effect if {@link #getRemoveAbandonedOnBorrow()} and
-     * {@link #getRemoveAbandonedOnMaintenance()} are false.
+     * Setting this property has no effect if {@link #getRemoveAbandonedOnBorrow()} and {@link #getRemoveAbandonedOnMaintenance()} are false.
      * </p>
      *
      * @param removeAbandonedTimeout new abandoned timeout in seconds
@@ -2690,7 +2703,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code testOnBorrow} property. This property determines whether or not the pool will validate objects
+     * Sets the {@code testOnBorrow} property. This property determines whether or not the pool will validate objects
      * before they are borrowed from the pool.
      *
      * @param testOnBorrow new value for testOnBorrow property
@@ -2701,7 +2714,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code testOnCreate} property. This property determines whether or not the pool will validate objects
+     * Sets the {@code testOnCreate} property. This property determines whether or not the pool will validate objects
      * immediately after they are created by the pool
      *
      * @param testOnCreate new value for testOnCreate property
@@ -2734,7 +2747,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code durationBetweenEvictionRuns} property.
+     * Sets the {@code durationBetweenEvictionRuns} property.
      *
      * @param timeBetweenEvictionRunsMillis The new time between evictor runs
      * @see #setDurationBetweenEvictionRuns(Duration)
@@ -2746,7 +2759,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code connection string}.
+     * Sets the {@code connection string}.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2760,7 +2774,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code userName}.
+     * Sets the {@code userName}.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2774,7 +2789,8 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     }
 
     /**
-     * Sets the {code validationQuery}.
+     * Sets the {@code validationQuery}.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2790,6 +2806,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Sets the validation query timeout, the amount of time, in seconds, that connection validation will wait for a
      * response from the database when executing a validation query. Use a value less than or equal to 0 for no timeout.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2806,6 +2823,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
     /**
      * Sets the validation query timeout, the amount of time, in seconds, that connection validation will wait for a
      * response from the database when executing a validation query. Use a value less than or equal to 0 for no timeout.
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first
      * time one of the following methods is invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)},
@@ -2822,20 +2840,21 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, Dynam
 
     /**
      * Starts the datasource.
-     * <p>
-     * It is not necessary to call this method before using a newly created BasicDataSource instance, but
-     * calling it in that context causes the datasource to be immediately initialized (instead of waiting for
-     * the first {@link #getConnection()} request). Its primary use is to restart and reinitialize a
-     * datasource that has been closed.
-     * <p>
-     * When this method is called after {@link #close()}, connections checked out by clients
-     * before the datasource was stopped do not count in {@link #getMaxTotal()} or {@link #getNumActive()}.
-     * For example, if there are 3 connections checked out by clients when {@link #close()} is invoked and they are
-     * not returned before {@link #start()} is invoked, after this method is called, {@link #getNumActive()} will
-     * return 0.  These connections will be physically closed when they are returned, but they will not count against
-     * the maximum allowed in the newly started datasource.
      *
-     * @throws SQLException Thrown if an error occurs initializing the datasource
+     * <p>
+     * It is not necessary to call this method before using a newly created BasicDataSource instance, but calling it in that context causes the datasource to be
+     * immediately initialized (instead of waiting for the first {@link #getConnection()} request). Its primary use is to restart and reinitialize a datasource
+     * that has been closed.
+     * </p>
+     *
+     * <p>
+     * When this method is called after {@link #close()}, connections checked out by clients before the datasource was stopped do not count in
+     * {@link #getMaxTotal()} or {@link #getNumActive()}. For example, if there are 3 connections checked out by clients when {@link #close()} is invoked and
+     * they are not returned before {@link #start()} is invoked, after this method is called, {@link #getNumActive()} will return 0. These connections will be
+     * physically closed when they are returned, but they will not count against the maximum allowed in the newly started datasource.
+     * </p>
+     *
+     * @throws SQLException Thrown if an error occurs initializing the datasource.
      */
     @Override
     public synchronized void start() throws SQLException {

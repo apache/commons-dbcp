@@ -41,11 +41,9 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
- * <p>
  * The base class for {@link SharedPoolDataSource} and {@link PerUserPoolDataSource}. Many of the
  * configuration properties are shared and defined here. This class is declared public in order to allow particular
  * usage with commons-beanutils; do not make direct use of it outside of <em>commons-dbcp2</em>.
- * </p>
  *
  * <p>
  * A J2EE container will normally provide some method of initializing the {@link DataSource} whose attributes are
@@ -234,7 +232,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Attempts to establish a database connection.
+     * Gets a database connection.
      */
     @Override
     public Connection getConnection() throws SQLException {
@@ -242,15 +240,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Attempts to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the
-     * provided user name and password. The password on the {@code PooledConnectionAndInfo} instance returned by
-     * {@code getPooledConnectionAndInfo} is compared to the {@code userPassword} parameter. Two null passwords are considered equal. If the comparison
-     * fails, a database connection using the supplied user name and password is attempted. If the connection attempt
-     * fails, an SQLException is thrown, indicating that the given password did not match the password used to create
-     * the pooled connection. If the connection attempt succeeds, this means that the database password has been
-     * changed. In this case, the {@code PooledConnectionAndInfo} instance retrieved with the old password is
-     * destroyed and the {@code getPooledConnectionAndInfo} is repeatedly invoked until a
-     * {@code PooledConnectionAndInfo} instance with the new password is returned.
+     * Gets a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the provided user name and password. The password on the
+     * {@code PooledConnectionAndInfo} instance returned by {@code getPooledConnectionAndInfo} is compared to the {@code userPassword} parameter. Two null
+     * passwords are considered equal. If the comparison fails, a database connection using the supplied user name and password is attempted. If the connection
+     * attempt fails, an SQLException is thrown, indicating that the given password did not match the password used to create the pooled connection. If the
+     * connection attempt succeeds, this means that the database password has been changed. In this case, the {@code PooledConnectionAndInfo} instance retrieved
+     * with the old password is destroyed and the {@code getPooledConnectionAndInfo} is repeatedly invoked until a {@code PooledConnectionAndInfo} instance with
+     * the new password is returned.
      */
     @Override
     public Connection getConnection(final String userName, final String userPassword) throws SQLException {
@@ -685,19 +681,28 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         return maxConnDuration.toMillis();
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
     }
 
     /**
+     * Gets a pooled connection and its associated user information.
+     *
+     * <p>
      * This method is protected but can only be implemented in this package because PooledConnectionAndInfo is a package
      * private type.
+     * </p>
      *
      * @param userName The user name.
      * @param userPassword The user password.
      * @return Matching PooledConnectionAndInfo.
-     * @throws SQLException Connection or registration failure.
+     * @throws SQLException Thrown if connecting or registering the connection fails.
      */
     protected abstract PooledConnectionAndInfo getPooledConnectionAndInfo(String userName, String userPassword)
             throws SQLException;
@@ -715,7 +720,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Returns the timeout in seconds before the validation query fails.
+     * Gets the timeout in seconds before the validation query fails.
      *
      * @return The timeout in seconds before the validation query fails.
      * @deprecated Use {@link #getValidationQueryTimeoutDuration()}.
@@ -726,7 +731,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Returns the timeout Duration before the validation query fails.
+     * Gets the timeout Duration before the validation query fails.
      *
      * @return The timeout Duration before the validation query fails.
      */
@@ -735,9 +740,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of defaultAutoCommit, which defines the state of connections handed out from this pool. The value
-     * can be changed on the Connection using Connection.setAutoCommit(boolean). The default is {@code null} which
-     * will use the default value for the driver.
+     * Tests whether connections handed out from this pool use auto-commit by default. The value can be changed on the Connection using
+     * Connection.setAutoCommit(boolean). The default is {@code null} which will use the default value for the driver.
      *
      * @return value of defaultAutoCommit.
      */
@@ -746,9 +750,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Gets the value of defaultReadOnly, which defines the state of connections handed out from this pool. The value
-     * can be changed on the Connection using Connection.setReadOnly(boolean). The default is {@code null} which
-     * will use the default value for the driver.
+     * Tests whether connections handed out from this pool are read-only by default. The value can be changed on the Connection using
+     * Connection.setReadOnly(boolean). The default is {@code null} which will use the default value for the driver.
      *
      * @return value of defaultReadOnly.
      */
@@ -1162,8 +1165,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * </p>
      *
      * @param loginTimeout a nonnegative timeout, not null.
-     * @throws NullPointerException if loginTimeout is null.
-     * @throws IllegalArgumentException if loginTimeout is negative.
+     * @throws NullPointerException Thrown if loginTimeout is null.
+     * @throws IllegalArgumentException Thrown if loginTimeout is negative.
      * @since 2.10.0
      */
     public void setLoginTimeout(final Duration loginTimeout) {
@@ -1182,7 +1185,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * Sets the login timeout in seconds.
      *
      * @param loginTimeout a nonnegative timeout in seconds.
-     * @throws IllegalArgumentException if loginTimeout is negative.
+     * @throws IllegalArgumentException Thrown if loginTimeout is negative.
      */
     @Override
     public void setLoginTimeout(final int loginTimeout) {
@@ -1215,9 +1218,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * <p>
      * Sets the maximum permitted lifetime of a connection. A value of zero or less indicates an infinite lifetime.
-     * </p>
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
      * invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)}, {@link #setLoginTimeout(Duration)}, {@link #getLoginTimeoutDuration()},
@@ -1232,9 +1234,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * <p>
      * Sets the maximum permitted lifetime of a connection in milliseconds. A value of zero or less indicates an infinite lifetime.
-     * </p>
+     *
      * <p>
      * Note: this method currently has no effect once the pool has been initialized. The pool is initialized the first time one of the following methods is
      * invoked: {@link #getConnection()}, {@link #setLogWriter(PrintWriter)}, {@link #setLoginTimeout(Duration)}, {@link #getLoginTimeoutDuration()},
@@ -1267,7 +1268,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @param connection The target connection.
      * @param userName   The user name for the connection.
-     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection
+     * @throws SQLException Thrown if a database access error occurs or this method is called on a closed connection.
      */
     protected abstract void setupDefaults(Connection connection, String userName) throws SQLException;
 
@@ -1313,8 +1314,8 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @param userName     An optional user name, may be null.
      * @param userPassword An optional user user password, may be null.
      * @return A ConnectionPoolDataSource from a JNDI context.
-     * @throws javax.naming.NamingException if a naming exception is encountered.
-     * @throws SQLException                 if a ConnectionPoolDataSource or PooledConnection is not available.
+     * @throws javax.naming.NamingException Thrown if a naming exception is encountered.
+     * @throws SQLException Thrown if a ConnectionPoolDataSource or PooledConnection is not available.
      */
     protected ConnectionPoolDataSource testCPDS(final String userName, final String userPassword)
             throws javax.naming.NamingException, SQLException {

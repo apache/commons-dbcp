@@ -24,6 +24,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
 /**
  * A {@link DelegatingPreparedStatement} that cooperates with {@link PoolingConnection} to implement a pool of
  * {@link PreparedStatement}s.
+ *
  * <p>
  * My {@link #close} method returns me to my containing pool. (See {@link PoolingConnection}.)
  * </p>
@@ -114,7 +115,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
     }
 
     /**
-     * Package-protected for tests.
+     * Gets the statement pool key for tests.
      *
      * @return The key.
      */
@@ -124,7 +125,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
 
     @Override
     public void passivate() throws SQLException {
-        // DBCP-372. clearBatch with throw an exception if called when the
+        // DBCP-372. clearBatch will throw an exception if called when the
         // connection is marked as closed.
         if (batchAdded) {
             clearBatch();
@@ -136,7 +137,7 @@ public class PoolablePreparedStatement<K> extends DelegatingPreparedStatement {
      * Sets the query timeout while retaining the original value for restoration when this statement returns to its pool.
      *
      * @param seconds the query timeout in seconds; zero means no timeout.
-     * @throws SQLException if the statement is closed, the timeout is negative, or reading or changing the timeout fails.
+     * @throws SQLException Thrown if the statement is closed, the timeout is negative, or reading or changing the timeout fails.
      * @since 2.15.0
      */
     @Override

@@ -30,13 +30,22 @@
 </p>
 
 <hr/>
-<p>DBCP 1.2.1 is a maintenance release to restore full JDK 1.3 compatibility.</p>
-<p>The problem lies in the improper use of a JDK 1.4 method: java.lang.Boolean.valueOf(boolean)</p>
-<p>This method was used in the defaultReadOnly property processing.</p>
-<p>We recommend to upgrade to DBCP 1.2.1 to avoid this problem altogether.</p>
+<p>
+DBCP 1.2.1 is a maintenance release to restore full JDK 1.3 compatibility.
+</p>
+<p>
+The problem lies in the improper use of a JDK 1.4 method: java.lang.Boolean.valueOf(boolean)
+</p>
+<p>
+This method was used in the defaultReadOnly property processing.
+</p>
+<p>
+We recommend upgrading to DBCP 1.2.1 to avoid this problem altogether.
+</p>
 <hr/>
 
-<p>If you use the defaultReadOnly property in a JRE &lt;1.4, you will get the following error:
+<p>
+If you use the defaultReadOnly property in a JRE &lt;1.4, you will get the following error:
 <source>
 java.lang.NoSuchMethodError
     at org.apache.commons.dbcp.BasicDataSource.setDefaultReadOnly(BasicDataSource.java:75)
@@ -46,7 +55,8 @@ java.lang.NoSuchMethodError
 </source>
 </p>
 
-<p>The simple workaround is not to use this property. For example remove the following from the tomcat config.xml.
+<p>
+The simple workaround is not to use this property. For example, remove the following from the Tomcat config.xml file:
 <source><![CDATA[
 <parameter>
     <name>defaultReadOnly</name>

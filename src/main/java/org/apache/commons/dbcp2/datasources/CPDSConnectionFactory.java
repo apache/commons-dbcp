@@ -56,7 +56,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
      * @param userPassword the password for the supplied user name.
      * @param maxConnDuration the maximum connection lifetime, not null; zero or a negative duration disables the limit.
      * @param loginTimeoutSupplier the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
-     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
+     * @throws NullPointerException Thrown if maxConnDuration or loginTimeoutSupplier is null.
      */
     CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final String userName, final char[] userPassword, final Duration maxConnDuration,
@@ -158,7 +158,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
-     * (Testing API) Gets the value of password for the default user.
+     * Gets the password for the default user for testing.
      *
      * @return value of password.
      */
@@ -167,7 +167,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
-     * Returns the object pool used to pool connections created by this factory.
+     * Gets the object pool used to pool connections created by this factory.
      *
      * @return ObjectPool managing pooled connections
      */
@@ -237,6 +237,7 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
+     * Sets the object pool used to pool connections created by this factory.
      *
      * @param pool
      *            the {@link ObjectPool} in which to pool those {@link Connection}s

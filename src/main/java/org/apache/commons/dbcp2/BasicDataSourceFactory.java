@@ -122,10 +122,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
 
     /**
      * Property key for specifying the SQL State codes that should be ignored during disconnection checks.
+     *
      * <p>
      * The value for this property must be a comma-separated string of SQL State codes, where each code represents
      * a state that will be excluded from being treated as a fatal disconnection. The expected format is a series
-     * of SQL State codes separated by commas, with no spaces between them (e.g., "08003,08004").
+     * of SQL State codes separated by commas, with no spaces between them (for example, "08003,08004").
      * </p>
      *
      * @since 2.13.0
@@ -227,9 +228,8 @@ public class BasicDataSourceFactory implements ObjectFactory {
      *
      * @param properties
      *            The data source configuration properties.
-     * @return A new a {@link BasicDataSource} instance based on the given properties.
-     * @throws SQLException
-     *             Thrown when an error occurs creating the data source.
+     * @return A new {@link BasicDataSource} instance based on the given properties.
+     * @throws SQLException Thrown when an error occurs creating the data source.
      */
     public static BasicDataSource createDataSource(final Properties properties) throws SQLException {
         final BasicDataSource dataSource = new BasicDataSource();
@@ -340,11 +340,11 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Parse properties from the string. Format of the string must be [propertyName=property;]*
+     * Gets properties parsed from the string. The string must have the format {@code [propertyName=property;]*}.
      *
      * @param propText The source text
      * @return Properties A new Properties instance
-     * @throws SQLException When a paring exception occurs
+     * @throws SQLException Thrown when a parsing exception occurs.
      */
     private static Properties getProperties(final String propText) throws SQLException {
         final Properties p = new Properties();
@@ -359,7 +359,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Parses list of property values from a delimited string
+     * Parses a list of property values from a delimited string.
      *
      * @param value
      *            delimited list of values
@@ -384,8 +384,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
     }
 
     /**
-     * Creates and return a new {@link BasicDataSource} instance. If no instance can be created, return
-     * {@code null} instead.
+     * Gets a new {@link BasicDataSource} instance, or {@code null} if no instance can be created.
      *
      * @param obj
      *            The possibly null object containing location or reference information that can be used in creating an
@@ -398,8 +397,7 @@ public class BasicDataSourceFactory implements ObjectFactory {
      * @param environment
      *            The possibly null environment that is used in creating this object
      *
-     * @throws SQLException
-     *             if an exception occurs creating the instance
+     * @throws SQLException Thrown if an exception occurs creating the instance.
      */
     @Override
     public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx,

@@ -260,17 +260,29 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         return resultSetMetaData;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public boolean getMoreResults(final int current) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public java.sql.ParameterMetaData getParameterMetaData() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
-    /** For junit test only */
+    /**
+     * Gets the SQL statement for tests.
+     */
     public String getSql() {
         return sql;
     }
@@ -280,11 +292,21 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setAsciiStream(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -300,11 +322,21 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setBinaryStream(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -320,11 +352,21 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setBlob(final int parameterIndex, final InputStream inputStream) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setBlob(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -350,11 +392,21 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setCharacterStream(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -365,11 +417,21 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setClob(final int parameterIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -405,31 +467,61 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNCharacterStream(final int parameterIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNCharacterStream(final int parameterIndex, final Reader value, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNClob(final int parameterIndex, final NClob value) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNClob(final int parameterIndex, final Reader reader) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNString(final int parameterIndex, final String value) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -475,6 +567,11 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setRowId(final int parameterIndex, final RowId value) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -485,6 +582,11 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setSQLXML(final int parameterIndex, final SQLXML value) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -515,13 +617,22 @@ public class TesterPreparedStatement extends TesterStatement implements Prepared
         checkOpen();
     }
 
-    /** @deprecated */
+    /**
+     * Sets the parameter value to the given Unicode stream.
+     *
+     * @deprecated
+     */
     @Deprecated
     @Override
     public void setUnicodeStream(final int parameterIndex, final java.io.InputStream x, final int length) throws SQLException {
         checkOpen();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setURL(final int parameterIndex, final java.net.URL x) throws SQLException {
         throw new SQLException("Not implemented.");

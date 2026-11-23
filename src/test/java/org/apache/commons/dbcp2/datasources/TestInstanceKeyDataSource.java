@@ -56,6 +56,11 @@ public class TestInstanceKeyDataSource {
         ThrowOnSetupDefaultsDataSource() {
         }
 
+        /**
+         * Always throws {@link SQLException}.
+         *
+         * @throws SQLException Thrown always.
+         */
         @Override
         protected void setupDefaults(final Connection connection, final String userName) throws SQLException {
             throw new SQLException("bang!");
@@ -107,7 +112,7 @@ public class TestInstanceKeyDataSource {
      * @param shared whether to use a shared pool instead of a per-user pool.
      * @param oldPassword the password used to create the initial pooled connection.
      * @param newPassword the replacement password accepted by the provider.
-     * @throws SQLException if obtaining or closing a connection fails.
+     * @throws SQLException Thrown if obtaining or closing a connection fails.
      */
     @ParameterizedTest
     @CsvSource(value = {"true, bar, baz", "true, bar, NULL", "true, NULL, baz",
@@ -242,10 +247,10 @@ public class TestInstanceKeyDataSource {
     }
 
     /**
-     * Verify that exception on setupDefaults does not leak PooledConnection
+     * Verifies that an exception in setupDefaults does not leak a PooledConnection.
      *
      * JIRA: DBCP-237
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testExceptionOnSetupDefaults() throws Exception {

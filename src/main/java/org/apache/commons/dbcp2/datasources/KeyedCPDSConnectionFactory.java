@@ -52,7 +52,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * @param rollbackAfterValidation        whether to roll back after executing the validation query.
      * @param maxConnDuration                the maximum connection lifetime, not null; zero or a negative duration disables the limit.
      * @param loginTimeoutSupplier           the supplier of the current login timeout, not null; a supplied {@code null} preserves the provider setting.
-     * @throws NullPointerException if maxConnDuration or loginTimeoutSupplier is null.
+     * @throws NullPointerException Thrown if maxConnDuration or loginTimeoutSupplier is null.
      */
     KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
             final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {
@@ -143,7 +143,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
-     * Returns the keyed object pool used to pool connections created by this factory.
+     * Gets the keyed object pool used to pool connections created by this factory.
      *
      * @return KeyedObjectPool managing pooled connections
      */
@@ -177,8 +177,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      *
      * @param userPassKey
      *            {@code UserPassKey} containing user credentials
-     * @throws SQLException
-     *             if the connection could not be created.
+     * @throws SQLException Thrown if the connection could not be created.
      * @see org.apache.commons.pool2.KeyedPooledObjectFactory#makeObject(Object)
      */
     @Override
@@ -201,7 +200,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
-     * Does nothing. This factory does not cache user credentials.
+     * Sets the password, which this implementation ignores because it does not cache user credentials.
      */
     @Override
     public void setPassword(final char[] password) {
@@ -209,7 +208,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
     }
 
     /**
-     * Does nothing. This factory does not cache user credentials.
+     * Sets the password, which this implementation ignores because it does not cache user credentials.
      */
     @Override
     public void setPassword(final String password) {
@@ -222,6 +221,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
 
     /**
      * Validates a pooled connection.
+     *
      * <p>
      * A query validation timeout greater than 0 and less than 1 second is converted to 1 second.
      * </p>
@@ -231,7 +231,7 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      * @param pooledObject
      *            wrapped {@code PooledConnectionAndInfo} containing the connection to validate
      * @return true if validation succeeds
-     * @throws ArithmeticException if the query validation timeout does not fit as seconds in an int.
+     * @throws ArithmeticException Thrown if the query validation timeout does not fit as seconds in an int.
      */
     @Override
     public boolean validateObject(final UserPassKey ignored, final PooledObject<PooledConnectionAndInfo> pooledObject) {

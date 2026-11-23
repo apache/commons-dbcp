@@ -32,6 +32,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 
 /**
  * A {@link DelegatingConnection} that pools {@link PreparedStatement}s.
+ *
  * <p>
  * The {@link #prepareStatement} and {@link #prepareCall} methods, rather than creating a new PreparedStatement each
  * time, may actually pull the statement from a pool of unused statements. The {@link PreparedStatement#close} method of
@@ -47,6 +48,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
 
     /**
      * Enumerates statement types.
+     *
      * <p>
      * See subclasses of {@link Statement}.
      * </p>
@@ -104,7 +106,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     }
 
     /**
-     * Closes and frees all {@link PreparedStatement}s or {@link CallableStatement}s from the pool, and close the
+     * Closes and frees all {@link PreparedStatement}s or {@link CallableStatement}s from the pool, and closes the
      * underlying connection.
      */
     @Override
@@ -137,8 +139,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
     /**
      * Notification from {@link PoolableConnection} that we returned to the pool.
      *
-     * @throws SQLException when {@code clearStatementPoolOnReturn} is true and the statement pool could not be
-     *                      cleared
+     * @throws SQLException Thrown when {@code clearStatementPoolOnReturn} is true and the statement pool could not be cleared.
      * @since 2.8.0
      */
     public void connectionReturnedToPool() throws SQLException {
@@ -404,8 +405,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param key
      *            a {@link PStmtKey} for the given arguments
      * @return A {@link PoolableCallableStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     private CallableStatement prepareCall(final PStmtKey key) throws SQLException {
         return (CallableStatement) prepareStatement(key);
@@ -417,8 +417,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param sql
      *            the SQL string used to define the CallableStatement
      * @return A {@link PoolableCallableStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql) throws SQLException {
@@ -435,8 +434,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param resultSetConcurrency
      *            result set concurrency
      * @return A {@link PoolableCallableStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency)
@@ -456,8 +454,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param resultSetHoldability
      *            result set holdability
      * @return A {@link PoolableCallableStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency,
@@ -472,8 +469,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param key
      *            a {@link PStmtKey} for the given arguments
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     private PreparedStatement prepareStatement(final PStmtKey key) throws SQLException {
         if (stmtPool == null) {
@@ -496,8 +492,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param sql
      *            the SQL string used to define the PreparedStatement
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
@@ -531,8 +526,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param resultSetConcurrency
      *            result set concurrency
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency)
@@ -552,8 +546,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param resultSetHoldability
      *            result set holdability
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency,
@@ -570,8 +563,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      *            An array of column indexes indicating the columns that should be returned from the inserted row or
      *            rows.
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
@@ -586,8 +578,7 @@ public class PoolingConnection extends DelegatingConnection<Connection>
      * @param columnNames
      *            column names
      * @return A {@link PoolablePreparedStatement}
-     * @throws SQLException
-     *             Wraps an underlying exception.
+     * @throws SQLException Thrown to wrap an underlying exception.
      */
     @Override
     public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {

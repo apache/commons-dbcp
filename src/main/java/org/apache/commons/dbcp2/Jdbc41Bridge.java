@@ -43,9 +43,11 @@ import javax.sql.CommonDataSource;
 /**
  * Defines bridge methods to JDBC 4.1 (Java 7 or above) methods to allow call sites to operate safely (without
  * {@link AbstractMethodError}) when using a JDBC driver written for JDBC 4.0 (Java 6 or above).
+ *
  * <p>
- * There should be no need to this kind of code for JDBC 4.2 in Java 8 due to JDBC's use of default methods.
+ * There should be no need for this kind of code for JDBC 4.2 in Java 8 due to JDBC's use of default methods.
  * </p>
+ *
  * <p>
  * This should probably be moved or at least copied in some form to Apache Commons DbUtils.
  * </p>
@@ -56,6 +58,7 @@ public class Jdbc41Bridge {
 
     /**
      * Delegates to {@link Connection#abort(Executor)} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link Connection#abort(Executor)}, then call {@link Connection#close()}.
      * </p>
@@ -64,8 +67,7 @@ public class Jdbc41Bridge {
      *            the receiver
      * @param executor
      *            See {@link Connection#abort(Executor)}.
-     * @throws SQLException
-     *             See {@link Connection#abort(Executor)}.
+     * @throws SQLException Thrown as specified by {@link Connection#abort(Executor)}.
      * @see Connection#abort(Executor)
      */
     public static void abort(final Connection connection, final Executor executor) throws SQLException {
@@ -78,15 +80,15 @@ public class Jdbc41Bridge {
 
     /**
      * Delegates to {@link Statement#closeOnCompletion()} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
-     * If the JDBC driver does not implement {@link Statement#closeOnCompletion()}, then just check that the connection
-     * is closed to then throw an SQLException.
+     * If the JDBC driver does not implement {@link Statement#closeOnCompletion()}, this method throws an
+     * {@link SQLException} if the statement is closed and otherwise does nothing.
      * </p>
      *
      * @param statement
      *            See {@link Statement#closeOnCompletion()}
-     * @throws SQLException
-     *             See {@link Statement#closeOnCompletion()}
+     * @throws SQLException Thrown as specified by {@link Statement#closeOnCompletion()}.
      * @see Statement#closeOnCompletion()
      */
     public static void closeOnCompletion(final Statement statement) throws SQLException {
@@ -102,6 +104,7 @@ public class Jdbc41Bridge {
     /**
      * Delegates to {@link DatabaseMetaData#generatedKeyAlwaysReturned()} without throwing a
      * {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link DatabaseMetaData#generatedKeyAlwaysReturned()}, then return false.
      * </p>
@@ -109,8 +112,7 @@ public class Jdbc41Bridge {
      * @param databaseMetaData
      *            See {@link DatabaseMetaData#generatedKeyAlwaysReturned()}
      * @return See {@link DatabaseMetaData#generatedKeyAlwaysReturned()}
-     * @throws SQLException
-     *             See {@link DatabaseMetaData#generatedKeyAlwaysReturned()}
+     * @throws SQLException Thrown as specified by {@link DatabaseMetaData#generatedKeyAlwaysReturned()}.
      * @see DatabaseMetaData#generatedKeyAlwaysReturned()
      */
     public static boolean generatedKeyAlwaysReturned(final DatabaseMetaData databaseMetaData) throws SQLException {
@@ -123,7 +125,8 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link Connection#getNetworkTimeout()} without throwing an {@link AbstractMethodError}.
+     * Gets the network timeout by delegating to {@link Connection#getNetworkTimeout()} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link Connection#getNetworkTimeout()}, then return 0.
      * </p>
@@ -131,8 +134,7 @@ public class Jdbc41Bridge {
      * @param connection
      *            the receiver
      * @return See {@link Connection#getNetworkTimeout()}
-     * @throws SQLException
-     *             See {@link Connection#getNetworkTimeout()}
+     * @throws SQLException Thrown as specified by {@link Connection#getNetworkTimeout()}.
      * @see Connection#getNetworkTimeout()
      */
     public static int getNetworkTimeout(final Connection connection) throws SQLException {
@@ -144,9 +146,11 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link ResultSet#getObject(int, Class)} without throwing an {@link AbstractMethodError}.
+     * Gets the column value as an instance of the requested type without throwing an {@link AbstractMethodError}.
+     *
      * <p>
-     * If the JDBC driver does not implement {@link ResultSet#getObject(int, Class)}, then return 0.
+     * If the JDBC driver does not implement {@link ResultSet#getObject(int, Class)}, this method uses a type-specific getter
+     * or throws {@link SQLFeatureNotSupportedException} if the requested type is not supported.
      * </p>
      *
      * @param <T>
@@ -158,8 +162,7 @@ public class Jdbc41Bridge {
      * @param type
      *            See {@link ResultSet#getObject(int, Class)}
      * @return See {@link ResultSet#getObject(int, Class)}
-     * @throws SQLException
-     *             See {@link ResultSet#getObject(int, Class)}
+     * @throws SQLException Thrown as specified by {@link ResultSet#getObject(int, Class)}.
      * @see ResultSet#getObject(int, Class)
      */
     @SuppressWarnings("unchecked")
@@ -244,7 +247,7 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link ResultSet#getObject(String, Class)} without throwing an {@link AbstractMethodError}.
+     * Gets the column value as an instance of the requested type without throwing an {@link AbstractMethodError}.
      *
      * @param <T>
      *            See {@link ResultSet#getObject(String, Class)}
@@ -255,8 +258,7 @@ public class Jdbc41Bridge {
      * @param type
      *            See {@link ResultSet#getObject(String, Class)}
      * @return See {@link ResultSet#getObject(String, Class)}
-     * @throws SQLException
-     *             See {@link ResultSet#getObject(String, Class)}
+     * @throws SQLException Thrown as specified by {@link ResultSet#getObject(String, Class)}.
      * @see ResultSet#getObject(int, Class)
      */
     @SuppressWarnings("unchecked")
@@ -338,16 +340,17 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link CommonDataSource#getParentLogger()} without throwing an {@link AbstractMethodError}.
+     * Gets the parent logger by delegating to {@link CommonDataSource#getParentLogger()} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
-     * If the JDBC driver does not implement {@link CommonDataSource#getParentLogger()}, then return null.
+     * If the JDBC driver does not implement {@link CommonDataSource#getParentLogger()}, this method throws
+     * {@link SQLFeatureNotSupportedException}.
      * </p>
      *
      * @param commonDataSource
      *            See {@link CommonDataSource#getParentLogger()}
      * @return See {@link CommonDataSource#getParentLogger()}
-     * @throws SQLFeatureNotSupportedException
-     *             See {@link CommonDataSource#getParentLogger()}
+     * @throws SQLFeatureNotSupportedException Thrown as specified by {@link CommonDataSource#getParentLogger()}.
      */
     public static Logger getParentLogger(final CommonDataSource commonDataSource) throws SQLFeatureNotSupportedException {
         try {
@@ -358,8 +361,9 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} without throwing a
+     * Gets the pseudo columns by delegating to {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} without throwing an
      * {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)},
      * then return null.
@@ -376,8 +380,7 @@ public class Jdbc41Bridge {
      * @param columnNamePattern
      *            See {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)}
      * @return See {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)}
-     * @throws SQLException
-     *             See {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)}
+     * @throws SQLException Thrown as specified by {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)}.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     public static ResultSet getPseudoColumns(final DatabaseMetaData databaseMetaData, final String catalog,
@@ -392,7 +395,8 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link Connection#getSchema()} without throwing an {@link AbstractMethodError}.
+     * Gets the schema by delegating to {@link Connection#getSchema()} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link Connection#getSchema()}, then return null.
      * </p>
@@ -400,8 +404,7 @@ public class Jdbc41Bridge {
      * @param connection
      *            the receiver
      * @return null for a JDBC 4 driver or a value per {@link Connection#getSchema()}.
-     * @throws SQLException
-     *             See {@link Connection#getSchema()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getSchema()}.
      * @see Connection#getSchema()
      */
     public static String getSchema(final Connection connection) throws SQLException {
@@ -414,17 +417,17 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link Statement#isCloseOnCompletion()} without throwing an {@link AbstractMethodError}.
+     * Tests whether the statement closes when all dependent result sets are closed without throwing an {@link AbstractMethodError}.
+     *
      * <p>
-     * If the JDBC driver does not implement {@link Statement#isCloseOnCompletion()}, then just check that the
-     * connection is closed to then throw an SQLException.
+     * If the JDBC driver does not implement {@link Statement#isCloseOnCompletion()}, this method throws an
+     * {@link SQLException} if the statement is closed and returns false otherwise.
      * </p>
      *
      * @param statement
      *            See {@link Statement#isCloseOnCompletion()}
      * @return See {@link Statement#isCloseOnCompletion()}
-     * @throws SQLException
-     *             See {@link Statement#isCloseOnCompletion()}
+     * @throws SQLException Thrown as specified by {@link Statement#isCloseOnCompletion()}.
      * @see Statement#closeOnCompletion()
      */
     public static boolean isCloseOnCompletion(final Statement statement) throws SQLException {
@@ -439,7 +442,8 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link Connection#setNetworkTimeout(Executor, int)} without throwing an {@link AbstractMethodError}.
+     * Sets the network timeout by delegating to {@link Connection#setNetworkTimeout(Executor, int)} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link Connection#setNetworkTimeout(Executor, int)}, then do nothing.
      * </p>
@@ -450,8 +454,7 @@ public class Jdbc41Bridge {
      *            See {@link Connection#setNetworkTimeout(Executor, int)}
      * @param milliseconds
      *            {@link Connection#setNetworkTimeout(Executor, int)}
-     * @throws SQLException
-     *             {@link Connection#setNetworkTimeout(Executor, int)}
+     * @throws SQLException Thrown as specified by {@link Connection#setNetworkTimeout(Executor, int)}.
      * @see Connection#setNetworkTimeout(Executor, int)
      */
     public static void setNetworkTimeout(final Connection connection, final Executor executor, final int milliseconds)
@@ -464,7 +467,8 @@ public class Jdbc41Bridge {
     }
 
     /**
-     * Delegates to {@link Connection#setSchema(String)} without throwing an {@link AbstractMethodError}.
+     * Sets the schema by delegating to {@link Connection#setSchema(String)} without throwing an {@link AbstractMethodError}.
+     *
      * <p>
      * If the JDBC driver does not implement {@link Connection#setSchema(String)}, then do nothing.
      * </p>
@@ -473,8 +477,7 @@ public class Jdbc41Bridge {
      *            the receiver
      * @param schema
      *            See {@link Connection#setSchema(String)}.
-     * @throws SQLException
-     *             See {@link Connection#setSchema(String)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setSchema(String)}.
      * @see Connection#setSchema(String)
      */
     public static void setSchema(final Connection connection, final String schema) throws SQLException {

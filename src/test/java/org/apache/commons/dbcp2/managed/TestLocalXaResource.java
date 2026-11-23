@@ -530,8 +530,8 @@ public class TestLocalXaResource {
     /**
      * When an exception is thrown on the {@link Connection#getAutoCommit()}, then the
      * value is set to {@code true} by default.
-     * @throws XAException when there are errors with the transaction
-     * @throws SQLException when there are errors with other SQL/DB parts
+     * @throws XAException Thrown when there are errors with the transaction.
+     * @throws SQLException Thrown when there are errors with other SQL/DB parts.
      */
     @Test
     void testStartExceptionOnGetAutoCommit() throws XAException, SQLException {
@@ -613,8 +613,8 @@ public class TestLocalXaResource {
      * When an exception is thrown on the {@link Connection#getAutoCommit()}, then the
      * value is set to {@code true} by default. However, if the connection is not read-only,
      * then the value set by the user in the original connection will be kept.
-     * @throws XAException when there are errors with the transaction
-     * @throws SQLException when there are errors with other SQL/DB parts
+     * @throws XAException Thrown when there are errors with the transaction.
+     * @throws SQLException Thrown when there are errors with other SQL/DB parts.
      */
     @Test
     void testStartReadOnlyConnectionExceptionOnGetAutoCommit() throws XAException, SQLException {

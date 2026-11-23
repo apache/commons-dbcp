@@ -39,6 +39,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Builds {@link PoolingDriver} instances.
+     *
      * <p>
      * Access to underlying connections is initialized from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY}
      * when the builder is constructed and is enabled by default, matching {@link PoolingDriver#PoolingDriver()}.
@@ -68,6 +69,7 @@ public class PoolingDriver implements Driver {
 
         /**
          * Gets a new driver with this builder's current configuration.
+         *
          * <p>
          * This method does not register the returned driver with {@link DriverManager} or replace the driver registered by
          * {@link PoolingDriver}'s static initializer. Changes to this builder do not affect drivers already created by it.
@@ -82,6 +84,7 @@ public class PoolingDriver implements Driver {
 
         /**
          * Sets whether connections and their statements, result sets, and database metadata permit access to delegates.
+         *
          * <p>
          * This setting overrides the value read from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY} when this builder was
          * constructed. When {@code false}, delegate getters return {@code null} and JDBC unwrapping is limited to interfaces implemented by
@@ -112,6 +115,8 @@ public class PoolingDriver implements Driver {
         }
 
         /**
+         * Gets the delegate connection if access is allowed.
+         *
          * @see org.apache.commons.dbcp2.DelegatingConnection#getDelegate()
          */
         @Override
@@ -123,6 +128,8 @@ public class PoolingDriver implements Driver {
         }
 
         /**
+         * Gets the innermost delegate connection if access is allowed.
+         *
          * @see org.apache.commons.dbcp2.DelegatingConnection#getInnermostDelegate()
          */
         @Override
@@ -141,11 +148,13 @@ public class PoolingDriver implements Driver {
 
     /**
      * The system property used to initialize access to underlying connections: {@value}.
+     *
      * <p>
      * Each new {@link Builder} reads this property. If it is absent or cannot be read because of a {@link SecurityException}, access is enabled. Otherwise,
      * access is enabled only when the value equals {@code "true"}, ignoring case. Existing builders and drivers are unaffected by later property changes. An
      * explicit call to {@link Builder#setAccessToUnderlyingConnectionAllowed(boolean)} overrides the property value.
      * </p>
+     *
      * <p>
      * The no-argument constructor uses a new builder. To configure the driver registered by this class's static initializer, set the property before this class
      * is initialized, for example on the JVM command line.
@@ -204,6 +213,7 @@ public class PoolingDriver implements Driver {
 
     /**
      * Constructs a new driver using a new builder's configuration.
+     *
      * <p>
      * Access to underlying connections is initialized from {@link #ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY} and is enabled by
      * default. When enabled, this permits delegate getters and JDBC unwrapping on connections, statements, result sets, and database metadata.
@@ -243,8 +253,7 @@ public class PoolingDriver implements Driver {
      *
      * @param name
      *            The pool name.
-     * @throws SQLException
-     *             Thrown when a problem is caught closing the pool.
+     * @throws SQLException Thrown when a problem is caught closing the pool.
      */
     public synchronized void closePool(final String name) throws SQLException {
         @SuppressWarnings("resource")
@@ -286,8 +295,7 @@ public class PoolingDriver implements Driver {
      * @param name
      *            The pool name
      * @return The pool
-     * @throws SQLException
-     *             Thrown when the named pool is not registered.
+     * @throws SQLException Thrown when the named pool is not registered.
      */
     public synchronized ObjectPool<? extends Connection> getConnectionPool(final String name) throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
@@ -307,6 +315,11 @@ public class PoolingDriver implements Driver {
         return MINOR_VERSION;
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
@@ -331,9 +344,7 @@ public class PoolingDriver implements Driver {
      *
      * @param conn
      *            connection to invalidate
-     * @throws SQLException
-     *             if the connection is not a {@code PoolGuardConnectionWrapper} or an error occurs invalidating
-     *             the connection
+     * @throws SQLException Thrown if the connection is not a {@code PoolGuardConnectionWrapper} or an error occurs invalidating the connection.
      */
     public void invalidateConnection(final Connection conn) throws SQLException {
         if (!(conn instanceof PoolGuardConnectionWrapper)) {
@@ -350,7 +361,7 @@ public class PoolingDriver implements Driver {
     }
 
     /**
-     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * Tests whether access to the underlying connection is allowed.
      *
      * @return true if access to the underlying is allowed, false otherwise.
      */

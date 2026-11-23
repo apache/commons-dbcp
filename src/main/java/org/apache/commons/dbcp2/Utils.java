@@ -103,13 +103,14 @@ public final class Utils {
 
     /**
      * Checks for conflicts between two collections.
+     *
      * <p>
      * If any overlap is found between the two provided collections, an {@link IllegalArgumentException} is thrown.
      * </p>
      *
      * @param codes1 The first collection of SQL state codes.
      * @param codes2 The second collection of SQL state codes.
-     * @throws IllegalArgumentException if any codes overlap between the two collections.
+     * @throws IllegalArgumentException Thrown if any codes overlap between the two collections.
      * @since 2.13.0
      */
     static void checkSqlCodes(final Collection<String> codes1, final Collection<String> codes2) {
@@ -243,7 +244,7 @@ public final class Utils {
      * @param next gets the next object in the chain.
      * @param onCycle handles the first repeated object, returning a result or throwing an exception.
      * @return the first match, null if the chain ends, or the result of the cycle handler.
-     * @throws E if the predicate, next function, or cycle handler throws an exception.
+     * @throws E Thrown if the predicate, next function, or cycle handler throws an exception.
      */
     static <T, E extends Exception> T findInChain(final T start, final CheckedPredicate<? super T, E> matches,
             final CheckedFunction<? super T, ? extends T, E> next, final CheckedFunction<? super T, ? extends T, E> onCycle) throws E {
@@ -293,7 +294,7 @@ public final class Utils {
     }
 
     /**
-     * Follows a delegate chain, visiting each wrapper by identity at most once.
+     * Gets the innermost delegate by following the chain, visiting each wrapper by identity at most once.
      *
      * @param <T> the JDBC type.
      * @param <W> the wrapper type.
@@ -334,7 +335,7 @@ public final class Utils {
     }
 
     /**
-     * Checks if the given SQL state corresponds to a fatal connection error.
+     * Tests whether the given SQL state corresponds to a fatal connection error.
      *
      * @param sqlState The SQL state to check.
      * @return true if the SQL state is a fatal connection error, false otherwise.
@@ -370,7 +371,7 @@ public final class Utils {
      *
      * @param duration the duration to convert, not null.
      * @return the bounded number of seconds.
-     * @throws NullPointerException if duration is null.
+     * @throws NullPointerException Thrown if duration is null.
      * @since 2.15.0
      */
     public static int toJdbcSeconds(final Duration duration) {

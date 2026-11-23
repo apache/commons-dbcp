@@ -47,7 +47,7 @@ public class PooledConnectionProxy implements PooledConnection,
 
     /**
      * True means we will (dubiously) notify listeners with a
-     * ConnectionClosed event when this (i.e. the PooledConnection itself)
+     * ConnectionClosed event when this (that is, the PooledConnection itself)
      * is closed
      */
     private boolean notifyOnClose;
@@ -110,7 +110,7 @@ public class PooledConnectionProxy implements PooledConnection,
     }
 
     /**
-     * Expose listeners
+     * Gets the registered connection event listeners.
      */
     public Collection<EventListener> getListeners() {
         return eventListeners;

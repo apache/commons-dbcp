@@ -22,12 +22,10 @@ import java.util.Objects;
 import org.apache.commons.pool2.KeyedObjectPool;
 
 /**
- * <p>
  * Holds a user name and password pair. Serves as a poolable object key for the {@link KeyedObjectPool} backing a
  * {@link SharedPoolDataSource}. Two instances with the same user name are considered equal. This ensures that there
  * will be only one keyed pool for each user in the pool. The password is used (along with the user name) by the
  * {@link KeyedCPDSConnectionFactory} when creating new connections.
- * </p>
  *
  * <p>
  * {@link InstanceKeyDataSource#getConnection(String, String)} validates that the password used to create a connection

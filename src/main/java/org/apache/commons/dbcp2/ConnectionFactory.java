@@ -30,8 +30,7 @@ public interface ConnectionFactory {
      * Create a new {@link Connection} in an implementation specific fashion.
      *
      * @return A new {@link Connection}
-     * @throws SQLException
-     *             if a database error occurs creating the connection
+     * @throws SQLException Thrown if a database error occurs creating the connection.
      */
     Connection createConnection() throws SQLException;
 }

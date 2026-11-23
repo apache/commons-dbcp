@@ -83,7 +83,7 @@ public class TestDriverFactory {
      */
     public static final class ConstructorFailureDriver extends TesterDriver {
         /**
-         * Fails during construction.
+         * Always throws {@link IllegalStateException}.
          */
         public ConstructorFailureDriver() {
             throw new IllegalStateException("Constructor failed");
@@ -95,9 +95,9 @@ public class TestDriverFactory {
      */
     public static final class ConstructorSqlExceptionDriver extends TesterDriver {
         /**
-         * Fails during construction.
+         * Always throws {@link SQLException}.
          *
-         * @throws SQLException always, with a SQLState and vendor code.
+         * @throws SQLException Thrown always, with a SQLState and vendor code.
          */
         public ConstructorSqlExceptionDriver() throws SQLException {
             throw new SQLException("Constructor failed", "08006", -7);
@@ -109,9 +109,9 @@ public class TestDriverFactory {
      */
     public static final class ConstructorSqlExceptionWithoutStateDriver extends TesterDriver {
         /**
-         * Fails during construction.
+         * Always throws {@link SQLException}.
          *
-         * @throws SQLException always, with a vendor code but no SQLState.
+         * @throws SQLException Thrown always, with a vendor code but no SQLState.
          */
         public ConstructorSqlExceptionWithoutStateDriver() throws SQLException {
             throw new SQLException("Constructor failed", null, -7);
@@ -391,6 +391,11 @@ public class TestDriverFactory {
      * A driver that fails while inspecting the URL, using the URL as the exception's SQLState.
      */
     public static final class UrlFailureDriver extends TesterDriver {
+        /**
+         * Always throws {@link SQLException}.
+         *
+         * @throws SQLException Thrown always.
+         */
         @Override
         public boolean acceptsURL(final String url) throws SQLException {
             throw new SQLException("URL validation failed", url, 7);
@@ -427,6 +432,11 @@ public class TestDriverFactory {
                 .flatMap(mode -> Stream.of(Arguments.of(mode, false), Arguments.of(mode, true)));
     }
 
+    /**
+     * Always throws {@link IllegalStateException}.
+     *
+     * @throws IllegalStateException Thrown always.
+     */
     private static void failInitialization() {
         throw new IllegalStateException("Initialization failed");
     }
@@ -485,6 +495,11 @@ public class TestDriverFactory {
             thread.setContextClassLoader(context);
             dataSource.setDriverClassName(TesterDriver.class.getName());
             dataSource.setDriverClassLoader(new ClassLoader(null) {
+                /**
+                 * Always throws {@link SQLException}.
+                 *
+                 * @throws SQLException Thrown always.
+                 */
                 @Override
                 protected Class<?> loadClass(final String name, final boolean resolve) {
                     throw failure;
@@ -620,6 +635,11 @@ public class TestDriverFactory {
     void testDriverInstanceTakesPrecedence() throws SQLException {
         try (BasicDataSource dataSource = new BasicDataSource()) {
             final Driver driver = new TesterDriver() {
+                /**
+                 * Always throws {@link AssertionError}.
+                 *
+                 * @throws AssertionError Thrown always.
+                 */
                 @Override
                 public boolean acceptsURL(final String url) {
                     throw new AssertionError("An explicit driver must bypass URL validation");
@@ -629,6 +649,11 @@ public class TestDriverFactory {
             dataSource.setDriverClassName(DefaultLoaderNonDriver.class.getName());
             dataSource.setUrl("jdbc:unsupported");
             dataSource.setDriverClassLoader(new ClassLoader(null) {
+                /**
+                 * Always throws {@link AssertionError}.
+                 *
+                 * @throws AssertionError Thrown always.
+                 */
                 @Override
                 protected Class<?> loadClass(final String name, final boolean resolve) {
                     throw new AssertionError("An explicit driver must bypass class loading");
@@ -713,6 +738,11 @@ public class TestDriverFactory {
             thread.setContextClassLoader(context);
             dataSource.setDriverClassName(TesterDriver.class.getName());
             dataSource.setDriverClassLoader(new ClassLoader(null) {
+                /**
+                 * Always throws {@link SQLException}.
+                 *
+                 * @throws SQLException Thrown always.
+                 */
                 @Override
                 protected Class<?> loadClass(final String name, final boolean resolve) {
                     throw failure;

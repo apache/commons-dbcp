@@ -69,7 +69,7 @@ public class TestBasicDataSource extends TestConnectionPool {
      * Cycle through idle connections and verify that they are all valid.
      * Assumes we are the only client of the pool.
      *
-     * @throws Exception Thrown if an error occurs
+     * @throws Exception Thrown if an error occurs.
      */
     private void checkIdleValid() throws Exception {
         final Set<Connection> idleConnections = new HashSet<>(); // idle connections
@@ -86,9 +86,9 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     /**
-     * Check that maxTotal and maxIdle are not exceeded
+     * Checks that maxTotal and maxIdle are not exceeded.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     private void checkLimits() throws Exception {
         assertTrue(ds.getNumActive() + ds.getNumIdle() <= getMaxTotal(), "Total connections exceed maxTotal");
@@ -500,7 +500,7 @@ public class TestBasicDataSource extends TestConnectionPool {
     /**
      * JIRA DBCP-333: Check that a custom class loader is used.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testDriverClassLoader() throws Exception {
@@ -689,6 +689,7 @@ public class TestBasicDataSource extends TestConnectionPool {
 
     /**
      * Tests JIRA <a href="https://issues.apache.org/jira/browse/DBCP-562">DBCP-562</a>.
+     *
      * <p>
      * Make sure Password Attribute is not exported via JMXBean.
      * </p>

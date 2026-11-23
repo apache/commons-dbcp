@@ -101,26 +101,51 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         }
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Array createArrayOf(final String typeName, final Object[] elements) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Blob createBlob() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Clob createClob() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public NClob createNClob() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public SQLXML createSQLXML() throws SQLException {
         throw new SQLException("Not implemented.");
@@ -143,6 +168,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return createStatement();
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -160,16 +190,31 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return catalog;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public Properties getClientInfo() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public String getClientInfo(final String name) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public int getHoldability() throws SQLException {
         throw new SQLException("Not implemented.");
@@ -181,6 +226,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return metaData;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public int getNetworkTimeout() throws SQLException {
         throw new SQLException("Not implemented.");
@@ -240,6 +290,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return open;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -318,6 +373,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         return new TesterPreparedStatement(this, sql, columnNames);
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void releaseSavepoint(final java.sql.Savepoint savepoint) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -334,6 +394,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         }
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void rollback(final java.sql.Savepoint savepoint) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -351,11 +416,21 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         this.catalog = catalog;
     }
 
+    /**
+     * Always throws {@link SQLClientInfoException}.
+     *
+     * @throws SQLClientInfoException Thrown always.
+     */
     @Override
     public void setClientInfo(final Properties properties) throws SQLClientInfoException {
         throw new SQLClientInfoException();
     }
 
+    /**
+     * Always throws {@link SQLClientInfoException}.
+     *
+     * @throws SQLClientInfoException Thrown always.
+     */
     @Override
     public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
         throw new SQLClientInfoException();
@@ -365,11 +440,21 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         this.failure = failure;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setHoldability(final int holdability) throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public void setNetworkTimeout(final Executor executor, final int milliseconds) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -381,11 +466,21 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         this.readOnly = readOnly;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public java.sql.Savepoint setSavepoint() throws SQLException {
         throw new SQLException("Not implemented.");
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public java.sql.Savepoint setSavepoint(final String name) throws SQLException {
         throw new SQLException("Not implemented.");
@@ -417,6 +512,11 @@ public class TesterConnection extends AbandonedTrace implements Connection {
         this.warnings = warning;
     }
 
+    /**
+     * Always throws {@link SQLException} because this operation is not implemented.
+     *
+     * @throws SQLException Thrown always.
+     */
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new SQLException("Not implemented.");

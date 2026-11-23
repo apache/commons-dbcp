@@ -293,9 +293,9 @@ public class TestDelegatingStatement {
     }
 
     /**
-     * This method is a bit special, and return the delegate connection, not the wrapped statement's connection.
+     * This method is a bit special and returns the delegate connection, not the wrapped statement's connection.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testGetConnection() throws Exception {
@@ -456,9 +456,9 @@ public class TestDelegatingStatement {
     }
 
     /**
-     * This method is a bit special, and call isClosed in the delegate object itself, not in the wrapped statement.
+     * This method is a bit special and calls isClosed in the delegate object itself, not in the wrapped statement.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testIsClosed() throws Exception {

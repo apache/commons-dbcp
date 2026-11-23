@@ -52,7 +52,6 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
- * <p>
  * An adapter for JDBC drivers that do not include an implementation of {@link javax.sql.ConnectionPoolDataSource}, but
  * still include a {@link java.sql.DriverManager} implementation. {@link ConnectionPoolDataSource}s are not used
  * within general applications. They are used by {@link DataSource} implementations that pool
@@ -60,12 +59,13 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * will normally provide some method of initializing the {@link ConnectionPoolDataSource} whose attributes are
  * presented as bean getters/setters and then deploying it via JNDI. It is then available as a source of physical
  * connections to the database, when the pooling {@link DataSource} needs to create a new physical connection.
- * </p>
+ *
  * <p>
  * Although normally used within a JNDI environment, the DriverAdapterCPDS can be instantiated and initialized as any
  * bean and then attached directly to a pooling {@link DataSource}. {@code Jdbc2PoolDataSource} can use the
  * {@link ConnectionPoolDataSource} with or without the use of JNDI.
  * </p>
+ *
  * <p>
  * The DriverAdapterCPDS also provides {@link PreparedStatement} pooling which is not generally available in jdbc2
  * {@link ConnectionPoolDataSource} implementation, but is addressed within the JDBC 3 specification. The
@@ -73,6 +73,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * undergone extensive testing in the configuration used here. It should be considered experimental and can be toggled
  * with the poolPreparedStatements attribute.
  * </p>
+ *
  * <p>
  * The <a href="package-summary.html">package documentation</a> contains an example using Apache Catalina and JNDI. The
  * <a href="../datasources/package-summary.html">datasources package documentation</a> shows how to use
@@ -195,7 +196,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param durationKey the address type for the ISO-8601 duration.
      * @param millisKey the address type for the legacy millisecond value.
      * @param duration the duration to export, not null.
-     * @throws NullPointerException if reference or duration is null.
+     * @throws NullPointerException Thrown if reference or duration is null.
      */
     private void addDurationReference(final Reference reference, final String durationKey, final String millisKey, final Duration duration) {
         reference.add(new StringRefAddr(durationKey, duration.toString()));
@@ -259,8 +260,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param durationKey the address type for the ISO-8601 duration.
      * @param millisKey the address type for the legacy millisecond value.
      * @return the configured duration, or {@code null} if both properties are absent or empty.
-     * @throws java.time.format.DateTimeParseException if the nonempty ISO-8601 property is invalid.
-     * @throws NumberFormatException if the selected legacy property is not a valid long integer.
+     * @throws java.time.format.DateTimeParseException Thrown if the nonempty ISO-8601 property is invalid.
+     * @throws NumberFormatException Thrown if the selected legacy property is not a valid long integer.
      */
     private Duration getDuration(final Reference reference, final String durationKey, final String millisKey) {
         final RefAddr duration = reference.get(durationKey);
@@ -362,7 +363,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Implements {@link ObjectFactory} to create an instance of this class
+     * Gets a new instance of this class through the {@link ObjectFactory} contract.
      */
     @Override
     public Object getObjectInstance(final Object refObj, final Name name, final Context context, final Hashtable<?, ?> env) throws ClassNotFoundException {
@@ -439,6 +440,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         return cpds;
     }
 
+    /**
+     * Always throws {@link SQLFeatureNotSupportedException} because this operation is not supported.
+     *
+     * @throws SQLFeatureNotSupportedException Thrown always.
+     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
@@ -464,7 +470,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Attempts to establish a database connection using the default user and password.
+     * Gets a pooled database connection using the default user and password.
      */
     @Override
     public PooledConnection getPooledConnection() throws SQLException {
@@ -472,7 +478,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Attempts to establish a database connection.
+     * Gets a pooled database connection.
      *
      * @param pooledUserName name to be used for the connection
      * @param pooledUserPassword password to be used for the connection
@@ -555,7 +561,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * </p>
      *
      * @return a Reference describing this data source.
-     * @throws NamingException if the Reference cannot be created.
+     * @throws NamingException Thrown if the Reference cannot be created.
      * @see #setExportPasswordAsRefAddr(boolean)
      */
     @Override
@@ -622,7 +628,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Returns the value of the accessToUnderlyingConnectionAllowed property.
+     * Tests whether access to the underlying connection is allowed.
      *
      * @return true if access to the underlying is allowed, false otherwise.
      */
@@ -631,7 +637,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets whether {@link #getReference()} includes the default user's password address.
+     * Tests whether {@link #getReference()} includes the default user's password address.
      *
      * @return true (the default) to export the password address, or false to omit it.
      * @since 2.15.0
@@ -664,8 +670,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      *
      * @param text the duration text, not null.
      * @return the parsed duration.
-     * @throws java.time.format.DateTimeParseException if the text is invalid or the duration exceeds the supported range.
-     * @throws NullPointerException if text is null.
+     * @throws java.time.format.DateTimeParseException Thrown if the text is invalid or the duration exceeds the supported range.
+     * @throws NullPointerException Thrown if text is null.
      */
     private Duration parseDuration(final String text) {
         final Matcher matcher = NEGATIVE_ZERO_SECONDS_PATTERN.matcher(text);
@@ -712,7 +718,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * </p>
      *
      * @param props Connection properties to use when creating new connections.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setConnectionProperties(final Properties props) {
         assertInitializationAllowed();
@@ -744,8 +750,8 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * DriverManager.
      *
      * @param driver Value to assign to driver.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
-     * @throws ClassNotFoundException if the class cannot be located
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
+     * @throws ClassNotFoundException Thrown if the class cannot be located.
      */
     public void setDriver(final String driver) throws ClassNotFoundException {
         assertInitializationAllowed();
@@ -761,7 +767,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param durationBetweenEvictionRuns The duration to sleep between runs of the idle object evictor
      *        thread. When non-positive, no idle object evictor thread will be run.
      * @see #getDurationBetweenEvictionRuns()
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      * @since 2.9.0
      */
     public void setDurationBetweenEvictionRuns(final Duration durationBetweenEvictionRuns) {
@@ -810,11 +816,11 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
+     * Sets the maximum number of statements that can remain idle in the pool, without extra ones being released, or
      * negative for no limit.
      *
      * @param maxIdle The maximum number of statements that can remain idle
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setMaxIdle(final int maxIdle) {
         assertInitializationAllowed();
@@ -837,7 +843,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param minEvictableIdleDuration minimum time to set in milliseconds.
      * @see #getMinEvictableIdleDuration()
      * @see #setDurationBetweenEvictionRuns(Duration)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called.
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      * @since 2.9.0
      */
     public void setMinEvictableIdleDuration(final Duration minEvictableIdleDuration) {
@@ -852,7 +858,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param minEvictableIdleTimeMillis minimum time to set in milliseconds.
      * @see #getMinEvictableIdleDuration()
      * @see #setDurationBetweenEvictionRuns(Duration)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      * @deprecated Use {@link #setMinEvictableIdleDuration(Duration)}.
      */
     @Deprecated
@@ -863,16 +869,17 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
 
     /**
      * Sets the number of statements to examine during each run of the idle object evictor thread (if any).
+     *
      * <p>
      * When a negative value is supplied,
      * {@code ceil({@link BasicDataSource#getNumIdle})/abs({@link #getNumTestsPerEvictionRun})} tests will be run.
-     * I.e., when the value is <em>-n</em>, roughly one <em>n</em>th of the idle objects will be tested per run.
+     * That is, when the value is <em>-n</em>, roughly one <em>n</em>th of the idle objects will be tested per run.
      * </p>
      *
      * @param numTestsPerEvictionRun number of statements to examine per run
      * @see #getNumTestsPerEvictionRun()
      * @see #setDurationBetweenEvictionRuns(Duration)
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
         assertInitializationAllowed();
@@ -883,7 +890,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of password for the default user.
      *
      * @param userPassword Value to assign to password.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setPassword(final char[] userPassword) {
         assertInitializationAllowed();
@@ -895,7 +902,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of password for the default user.
      *
      * @param userPassword Value to assign to password.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setPassword(final String userPassword) {
         assertInitializationAllowed();
@@ -907,7 +914,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets whether to toggle the pooling of {@link PreparedStatement}s
      *
      * @param poolPreparedStatements true to pool statements.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setPoolPreparedStatements(final boolean poolPreparedStatements) {
         assertInitializationAllowed();
@@ -921,7 +928,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * @param timeBetweenEvictionRunsMillis The number of milliseconds to sleep between runs of the idle object evictor
      *        thread. When non-positive, no idle object evictor thread will be run.
      * @see #getDurationBetweenEvictionRuns()
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      * @deprecated Use {@link #setDurationBetweenEvictionRuns(Duration)}.
      */
     @Deprecated
@@ -934,7 +941,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of URL string used to locate the database for this data source.
      *
      * @param connectionString Value to assign to connection string.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setUrl(final String connectionString) {
         assertInitializationAllowed();
@@ -945,7 +952,7 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
      * Sets the value of default user (login or user name).
      *
      * @param userName Value to assign to user.
-     * @throws IllegalStateException if {@link #getPooledConnection()} has been called
+     * @throws IllegalStateException Thrown if {@link #getPooledConnection()} has been called.
      */
     public void setUser(final String userName) {
         assertInitializationAllowed();

@@ -125,6 +125,11 @@ public class TesterBasicXAConnection implements XAConnection {
         listeners.add(connectionEventListener);
     }
 
+    /**
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
+     *
+     * @throws UnsupportedOperationException Thrown always.
+     */
     @Override
     public void addStatementEventListener(final StatementEventListener listener) {
         throw new UnsupportedOperationException();
@@ -209,6 +214,11 @@ public class TesterBasicXAConnection implements XAConnection {
         listeners.remove(connectionEventListener);
     }
 
+    /**
+     * Always throws {@link UnsupportedOperationException} because this operation is not supported.
+     *
+     * @throws UnsupportedOperationException Thrown always.
+     */
     @Override
     public void removeStatementEventListener(final StatementEventListener listener) {
         throw new UnsupportedOperationException();

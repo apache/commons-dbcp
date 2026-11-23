@@ -34,22 +34,22 @@ public interface PoolableConnectionMXBean {
     /**
      * See {@link Connection#clearWarnings()}.
      *
-     * @throws SQLException See {@link Connection#clearWarnings()}.
+     * @throws SQLException Thrown as specified by {@link Connection#clearWarnings()}.
      */
     void clearWarnings() throws SQLException;
 
     /**
      * Returns this instance to my containing pool.
      *
-     * @throws SQLException Throw if this instance cannot be returned.
+     * @throws SQLException Thrown if this instance cannot be returned.
      */
     void close() throws SQLException;
 
     /**
-     * See {@link Connection#getAutoCommit()}.
+     * Gets the auto-commit mode. See {@link Connection#getAutoCommit()}.
      *
      * @return See {@link Connection#getAutoCommit()}.
-     * @throws SQLException See {@link Connection#getAutoCommit()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getAutoCommit()}.
      */
     boolean getAutoCommit() throws SQLException;
 
@@ -67,26 +67,26 @@ public interface PoolableConnectionMXBean {
     boolean getCacheState();
 
     /**
-     * See {@link Connection#getCatalog()}.
+     * Gets the current catalog name. See {@link Connection#getCatalog()}.
      *
      * @return See {@link Connection#getCatalog()}.
-     * @throws SQLException See {@link Connection#getCatalog()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getCatalog()}.
      */
     String getCatalog() throws SQLException;
 
     /**
-     * See {@link Connection#getHoldability()}.
+     * Gets the holdability of result sets created by this connection. See {@link Connection#getHoldability()}.
      *
      * @return See {@link Connection#getHoldability()}.
-     * @throws SQLException See {@link Connection#getHoldability()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getHoldability()}.
      */
     int getHoldability() throws SQLException;
 
     /**
-     * See {@link Connection#getSchema()}.
+     * Gets the current schema name. See {@link Connection#getSchema()}.
      *
      * @return See {@link Connection#getSchema()}.
-     * @throws SQLException See {@link Connection#getSchema()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getSchema()}.
      */
     String getSchema() throws SQLException;
 
@@ -98,41 +98,41 @@ public interface PoolableConnectionMXBean {
     String getToString();
 
     /**
-     * See {@link Connection#getTransactionIsolation()}.
+     * Gets the transaction isolation level. See {@link Connection#getTransactionIsolation()}.
      *
      * @return See {@link Connection#getTransactionIsolation()}.
-     * @throws SQLException See {@link Connection#getTransactionIsolation()}.
+     * @throws SQLException Thrown as specified by {@link Connection#getTransactionIsolation()}.
      */
     int getTransactionIsolation() throws SQLException;
 
     /**
-     * See {@link Connection#isClosed()}.
+     * Tests whether this connection is closed. See {@link Connection#isClosed()}.
      *
      * @return See {@link Connection#isClosed()}.
-     * @throws SQLException See {@link Connection#isClosed()}.
+     * @throws SQLException Thrown as specified by {@link Connection#isClosed()}.
      */
     boolean isClosed() throws SQLException;
 
     /**
-     * See {@link Connection#isReadOnly()}.
+     * Tests whether this connection is read-only. See {@link Connection#isReadOnly()}.
      *
      * @return See {@link Connection#isReadOnly()}.
-     * @throws SQLException See {@link Connection#isReadOnly()}.
+     * @throws SQLException Thrown as specified by {@link Connection#isReadOnly()}.
      */
     boolean isReadOnly() throws SQLException;
 
     /**
      * Closes the underlying {@link Connection}.
      *
-     * @throws SQLException Thrown if the connection can be closed.
+     * @throws SQLException Thrown if the connection cannot be closed.
      */
     void reallyClose() throws SQLException;
 
     /**
-     * See {@link Connection#setAutoCommit(boolean)}.
+     * Sets the auto-commit mode. See {@link Connection#setAutoCommit(boolean)}.
      *
      * @param autoCommit See {@link Connection#setAutoCommit(boolean)}.
-     * @throws SQLException See {@link Connection#setAutoCommit(boolean)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setAutoCommit(boolean)}.
      */
     void setAutoCommit(boolean autoCommit) throws SQLException;
 
@@ -150,42 +150,42 @@ public interface PoolableConnectionMXBean {
     void setCacheState(boolean cacheState);
 
     /**
-     * See {@link Connection#setCatalog(String)}.
+     * Sets the current catalog name. See {@link Connection#setCatalog(String)}.
      *
      * @param catalog See {@link Connection#setCatalog(String)}.
-     * @throws SQLException See {@link Connection#setCatalog(String)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setCatalog(String)}.
      */
     void setCatalog(String catalog) throws SQLException;
 
     /**
-     * See {@link Connection#setHoldability(int)}.
+     * Sets the holdability of result sets created by this connection. See {@link Connection#setHoldability(int)}.
      *
      * @param holdability {@link Connection#setHoldability(int)}.
-     * @throws SQLException See {@link Connection#setHoldability(int)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setHoldability(int)}.
      */
     void setHoldability(int holdability) throws SQLException;
 
     /**
-     * See {@link Connection#setReadOnly(boolean)}.
+     * Sets whether this connection is read-only. See {@link Connection#setReadOnly(boolean)}.
      *
      * @param readOnly See {@link Connection#setReadOnly(boolean)}.
-     * @throws SQLException See {@link Connection#setReadOnly(boolean)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setReadOnly(boolean)}.
      */
     void setReadOnly(boolean readOnly) throws SQLException;
 
     /**
-     * See {@link Connection#setSchema(String)}.
+     * Sets the current schema name. See {@link Connection#setSchema(String)}.
      *
      * @param schema See {@link Connection#setSchema(String)}.
-     * @throws SQLException See {@link Connection#setSchema(String)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setSchema(String)}.
      */
     void setSchema(String schema) throws SQLException;
 
     /**
-     * See {@link Connection#setTransactionIsolation(int)}.
+     * Sets the transaction isolation level. See {@link Connection#setTransactionIsolation(int)}.
      *
      * @param level See {@link Connection#setTransactionIsolation(int)}.
-     * @throws SQLException See {@link Connection#setTransactionIsolation(int)}.
+     * @throws SQLException Thrown as specified by {@link Connection#setTransactionIsolation(int)}.
      */
     void setTransactionIsolation(int level) throws SQLException;
 }

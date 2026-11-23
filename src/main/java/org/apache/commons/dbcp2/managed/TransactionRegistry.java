@@ -32,6 +32,7 @@ import org.apache.commons.dbcp2.DelegatingConnection;
 
 /**
  * TransactionRegistry tracks Connections and XAResources in a transacted environment for a single XAConnectionFactory.
+ *
  * <p>
  * The TransactionRegistry hides the details of transaction processing from the existing DBCP pooling code, and gives
  * the ManagedConnection a way to enlist connections in a transaction, allowing for the maximal rescue of DBCP.
@@ -46,7 +47,7 @@ public class TransactionRegistry {
     private final TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     /**
-     * Provided for backwards compatibility
+     * Provided for backward compatibility
      *
      * @param transactionManager The transaction manager used to enlist connections
      */
@@ -72,8 +73,7 @@ public class TransactionRegistry {
      * Gets the active TransactionContext or null if not Transaction is active.
      *
      * @return The active TransactionContext or null if no Transaction is active.
-     * @throws SQLException
-     *             Thrown when an error occurs while fetching the transaction.
+     * @throws SQLException Thrown when an error occurs while fetching the transaction.
      */
     public TransactionContext getActiveTransactionContext() throws SQLException {
         Transaction transaction = null;
@@ -113,8 +113,7 @@ public class TransactionRegistry {
      * @param connection
      *            the connection
      * @return The XAResource registered for the connection; never null.
-     * @throws SQLException
-     *             Thrown when the connection does not have a registered XAResource.
+     * @throws SQLException Thrown when the connection does not have a registered XAResource.
      */
     public synchronized XAResource getXAResource(final Connection connection) throws SQLException {
         Objects.requireNonNull(connection, "connection");

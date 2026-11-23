@@ -27,7 +27,9 @@
 
 <!--
 <section name="Introduction">
-<p>TODO: add section about tomcat configuration and avoiding the resource leak when reloading tomcat webapps.</p>
+<p>
+TODO: add section about tomcat configuration and avoiding the resource leak when reloading tomcat webapps.
+</p>
 </section>
 -->
 
@@ -296,7 +298,7 @@ isValid() method.
       the extra condition that at least "minIdle" connections remain in the
       pool. When minEvictableIdleTimeMillis is set to a positive value,
       minEvictableIdleTimeMillis is examined first by the idle 
-      connection evictor - i.e. when idle connections are visited by the
+      connection evictor, that is, when idle connections are visited by the
       evictor, idle time is first compared against minEvictableIdleTimeMillis
       (without considering the number of idle connections in the pool) and then
       against softMinEvictableIdleTimeMillis, including the minIdle constraint.
@@ -383,7 +385,9 @@ value less than the maximum number of cursors that can be open on a Connection.
    <td>Controls if the PoolGuard allows access to the underlying connection.</td>
 </tr>
 </table>
-<p>When allowed you can access the underlying connection using the following construct:</p>
+<p>
+When allowed you can access the underlying connection using the following construct:
+</p>
 <source>
     Connection conn = ds.getConnection();
     Connection dconn = ((DelegatingConnection) conn).getInnermostDelegate();

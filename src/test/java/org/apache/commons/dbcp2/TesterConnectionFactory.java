@@ -56,6 +56,8 @@ public class TesterConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * Gets the connection string.
+     *
      * @return The connection String.
      */
     public String getConnectionString() {
@@ -63,6 +65,8 @@ public class TesterConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * Gets the driver.
+     *
      * @return The Driver.
      */
     public Driver getDriver() {
@@ -70,6 +74,8 @@ public class TesterConnectionFactory implements ConnectionFactory {
     }
 
     /**
+     * Gets the connection properties.
+     *
      * @return The Properties.
      */
     public Properties getProperties() {

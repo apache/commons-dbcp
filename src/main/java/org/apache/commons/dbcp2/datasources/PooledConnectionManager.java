@@ -33,18 +33,16 @@ interface PooledConnectionManager {
      *
      * @param userName
      *            user name.
-     * @throws SQLException
-     *             if an error occurs closing idle connections in the pool.
+     * @throws SQLException Thrown if an error occurs closing idle connections in the pool.
      */
     void closePool(String userName) throws SQLException;
 
      /**
-     * Closes the PooledConnection and remove it from the connection pool to which it belongs, adjusting pool counters.
+     * Closes the PooledConnection and removes it from the connection pool to which it belongs, adjusting pool counters.
      *
      * @param pc
      *            PooledConnection to be invalidated.
-     * @throws SQLException
-     *             if an SQL error occurs closing the connection.
+     * @throws SQLException Thrown if an SQL error occurs closing the connection.
      */
     void invalidate(PooledConnection pc) throws SQLException;
 

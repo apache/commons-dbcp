@@ -49,6 +49,7 @@ public class StackMessageLog extends SimpleLog {
 
     /**
      * Gets a copy of the message stack.
+     *
      * <p>
      * Note: lock the stack first.
      * </p>

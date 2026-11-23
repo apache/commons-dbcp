@@ -112,9 +112,9 @@ public class TestParallelCreationWithNoIdle {
     }
 
     /**
-     * Fire up 100 Threads but only have 10 maxActive and forcedBlock. See
+     * Starts 200 threads with a maximum of 10 active connections and blocking enabled.
      *
-     * @throws Exception
+     * @throws Exception Thrown if test setup, execution, or cleanup fails.
      */
     @Test
     void testMassiveConcurrentInitBorrow() throws Exception {

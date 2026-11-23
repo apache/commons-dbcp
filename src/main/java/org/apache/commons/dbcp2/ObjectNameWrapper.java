@@ -105,8 +105,8 @@ final class ObjectNameWrapper {
      *
      * @param name The object name to parse, must not be {@code null}.
      * @return A new wrapper for the parsed name, associated with the platform MBean server or a {@code null} server if unavailable.
-     * @throws MalformedObjectNameException If the name is not a valid JMX object name.
-     * @throws NullPointerException If {@code name} is {@code null}.
+     * @throws MalformedObjectNameException Thrown if the name is not a valid JMX object name.
+     * @throws NullPointerException Thrown if {@code name} is {@code null}.
      */
     static ObjectNameWrapper wrap(final String name) throws MalformedObjectNameException {
         return wrap(new ObjectName(name));

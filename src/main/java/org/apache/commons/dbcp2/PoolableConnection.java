@@ -266,9 +266,10 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * {@inheritDoc}
+     * Tests whether this connection is closed.
+     *
      * <p>
-     * This method should not be used by a client to determine whether or not a connection should be return to the
+     * This method should not be used by a client to determine whether or not a connection should be returned to the
      * connection pool (by calling {@link #close()}). Clients should always attempt to return a connection to the pool
      * once it is no longer required.
      * </p>
@@ -291,12 +292,13 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Checks the SQLState of the input exception.
+     * Tests whether the SQL state of the input exception indicates a fatal disconnection.
+     *
      * <p>
-     * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the configured list of fatal
+     * If {@link #disconnectionSqlCodes} has been set, SQL states are compared to those in the configured list of fatal
      * exception codes. If this property is not set, codes are compared against the default codes in
-     * {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with #{link
-     * Utils.DISCONNECTION_SQL_CODE_PREFIX} is considered a disconnection. Additionally, any SQL state
+     * {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX} is considered a
+     * disconnection. Additionally, any SQL state
      * listed in {@link #disconnectionIgnoreSqlCodes} will be ignored and not treated as fatal.
      * </p>
      *
@@ -328,12 +330,14 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
-     * Checks the SQLState of the input exception and its linked SQLExceptions, examining each exception at most once even if the chain contains a cycle.
+     * Tests whether the input exception or a linked SQLException indicates a fatal disconnection, examining each exception at most once even if the chain
+     * contains a cycle.
+     *
      * <p>
-     * If {@link #disconnectionSqlCodes} has been set, sql states are compared to those in the
+     * If {@link #disconnectionSqlCodes} has been set, SQL states are compared to those in the
      * configured list of fatal exception codes. If this property is not set, codes are compared against the default
-     * codes in {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with #{link
-     * Utils.DISCONNECTION_SQL_CODE_PREFIX} is considered a disconnection.
+     * codes in {@link Utils#getDisconnectionSqlCodes()} and in this case anything starting with {@link Utils#DISCONNECTION_SQL_CODE_PREFIX} is considered a
+     * disconnection.
      * </p>
      *
      * @param e
@@ -405,8 +409,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      *            The validation SQL query, or null or empty to use {@link Connection#isValid(int)}.
      * @param timeoutDuration
      *            The validation timeout, converted to whole seconds as described above.
-     * @throws SQLException
-     *             Thrown when validation fails or an SQLException occurs during validation.
+     * @throws SQLException Thrown when validation fails or an SQLException occurs during validation.
      * @since 2.10.0
      */
     public void validate(final String sql, final Duration timeoutDuration) throws SQLException {
@@ -462,8 +465,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      *            The validation SQL query, or null or empty to use {@link Connection#isValid(int)}.
      * @param timeoutSeconds
      *            The validation timeout in seconds.
-     * @throws SQLException
-     *             Thrown when validation fails or an SQLException occurs during validation.
+     * @throws SQLException Thrown when validation fails or an SQLException occurs during validation.
      * @deprecated Use {@link #validate(String, Duration)}.
      */
     @Deprecated
