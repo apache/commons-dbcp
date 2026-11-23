@@ -19,6 +19,7 @@ package org.apache.commons.dbcp2.datasources;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import javax.sql.ConnectionEvent;
@@ -71,12 +72,12 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
 
     /**
      * Verifies that the user name matches the user whose connections are being managed by this factory and closes the
-     * pool if this is the case; otherwise does nothing.
+     * pool if this is the case; otherwise does nothing. Two null user names match.
      */
     @Override
     public void closePool(final String userName) throws SQLException {
         synchronized (this) {
-            if (userName == null || !userName.equals(this.userPassKey.getUserName())) {
+            if (!Objects.equals(userName, userPassKey.getUserName())) {
                 return;
             }
         }

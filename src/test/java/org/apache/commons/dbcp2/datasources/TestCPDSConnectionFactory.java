@@ -33,6 +33,8 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  */
@@ -54,6 +56,30 @@ public class TestCPDSConnectionFactory {
         delegate.setUrl("jdbc:apache:commons:testdriver");
         delegate.setUser("userName");
         delegate.setPassword("password");
+    }
+
+    /**
+     * Tests that closing a pool requires matching user names, including two null names for default credentials.
+     *
+     * @param poolUserName the user name managed by the pool, or null for default credentials.
+     * @param userName the user name passed to closePool.
+     * @param expectedClosed whether the pool should close and release its idle connection.
+     * @throws Exception if creating, populating, or closing the pool fails.
+     */
+    @ParameterizedTest
+    @CsvSource(value = {"userName, userName, true", "NULL, NULL, true", "userName, other, false",
+            "userName, NULL, false", "NULL, userName, false"}, nullValues = "NULL")
+    void testClosePool(final String poolUserName, final String userName, final boolean expectedClosed) throws Exception {
+        final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, poolUserName,
+                "password".toCharArray(), Duration.ofMillis(-1), () -> null);
+        try (GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
+            factory.setPool(pool);
+            pool.addObject();
+            assertEquals(1, pool.getNumIdle());
+            factory.closePool(userName);
+            assertEquals(expectedClosed, pool.isClosed());
+            assertEquals(expectedClosed ? 0 : 1, pool.getNumIdle());
+        }
     }
 
     /**
