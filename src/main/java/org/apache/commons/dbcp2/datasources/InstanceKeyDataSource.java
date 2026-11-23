@@ -230,7 +230,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /**
      * Attempts to retrieve a database connection using {@link #getPooledConnectionAndInfo(String, String)} with the
      * provided user name and password. The password on the {@code PooledConnectionAndInfo} instance returned by
-     * {@code getPooledConnectionAndInfo} is compared to the {@code password} parameter. If the comparison
+     * {@code getPooledConnectionAndInfo} is compared to the {@code userPassword} parameter. Two null passwords are considered equal. If the comparison
      * fails, a database connection using the supplied user name and password is attempted. If the connection attempt
      * fails, an SQLException is thrown, indicating that the given password did not match the password used to create
      * the pooled connection. If the connection attempt succeeds, this means that the database password has been
@@ -257,7 +257,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
         }
 
         // Password on PooledConnectionAndInfo does not match
-        if (!(userPassword == null ? info.getPassword() == null : userPassword.equals(info.getPassword()))) {
+        if (!Objects.equals(userPassword, info.getPassword())) {
             try { // See if password has changed by attempting connection
                 testCPDS(userName, userPassword);
             } catch (final SQLException ex) {
@@ -289,7 +289,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
                     closeDueToException(info);
                     throw new SQLException("Cannot borrow connection from pool", e);
                 }
-                if (info != null && userPassword != null && userPassword.equals(info.getPassword())) {
+                if (info != null && Objects.equals(userPassword, info.getPassword())) {
                     break;
                 }
                 if (info != null) {
