@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.pool2.TrackedUse;
@@ -188,23 +189,22 @@ public class AbandonedTrace implements TrackedUse, AutoCloseable {
     }
 
     /**
-     * Removes a child object this object is tracing.
+     * Removes the first matching child object this object is tracing, discarding cleared references encountered during the search.
      *
      * @param trace
-     *            AbandonedTrace object to remove.
+     *            AbandonedTrace object to remove, or {@code null} to only discard cleared references.
      */
     protected void removeTrace(final AbandonedTrace trace) {
         synchronized (this.traceList) {
             final Iterator<WeakReference<AbandonedTrace>> iter = traceList.iterator();
             while (iter.hasNext()) {
                 final AbandonedTrace traceInList = iter.next().get();
-                if (trace != null && trace.equals(traceInList)) {
-                    iter.remove();
-                    break;
-                }
                 if (traceInList == null) {
                     // Clean-up since we are here anyway
                     iter.remove();
+                } else if (Objects.equals(trace, traceInList)) {
+                    iter.remove();
+                    break;
                 }
             }
         }
