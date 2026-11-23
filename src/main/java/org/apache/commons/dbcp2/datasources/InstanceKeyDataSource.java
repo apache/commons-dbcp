@@ -220,6 +220,20 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Gets the optional timeout used for physical connection attempts.
+     *
+     * <p>
+     * Deserialized instances that reuse a registered data source read its live configuration. Otherwise, the local setting is used, including a timeout
+     * serialized before a provider or JNDI data source name has been configured. An unset timeout remains distinct from an explicitly configured zero.
+     * </p>
+     *
+     * @return the local or shared timeout, or {@code null} to leave the provider's configured timeout unchanged.
+     */
+    Duration getConfiguredLoginTimeout() {
+        return loginTimeoutSource == null ? loginTimeoutDuration : loginTimeoutSource.getConfiguredLoginTimeout();
+    }
+
+    /**
      * Attempts to establish a database connection.
      */
     @Override
@@ -320,20 +334,6 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      * @return The pooled connection manager for the given key.
      */
     protected abstract PooledConnectionManager getConnectionManager(UserPassKey upkey);
-
-    /**
-     * Gets the optional timeout used for physical connection attempts.
-     *
-     * <p>
-     * Deserialized instances that reuse a registered data source read its live configuration. Otherwise, the local setting is used, including a timeout
-     * serialized before a provider or JNDI data source name has been configured. An unset timeout remains distinct from an explicitly configured zero.
-     * </p>
-     *
-     * @return the local or shared timeout, or {@code null} to leave the provider's configured timeout unchanged.
-     */
-    Duration getConfiguredLoginTimeout() {
-        return loginTimeoutSource == null ? loginTimeoutDuration : loginTimeoutSource.getConfiguredLoginTimeout();
-    }
 
     /**
      * Gets the value of connectionPoolDataSource. This method will return null, if the backing data source is being

@@ -498,19 +498,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     * Tests whether access to the underlying {@link Statement} is allowed.
-     * <p>
-     * Consults the creating connection while it is attached, and retains the last policy when close clears that reference.
-     * </p>
-     *
-     * @return true if access to the underlying statement is allowed.
-     * @since 2.15.0
-     */
-    protected boolean isAccessToUnderlyingConnectionAllowed() {
-        return connection == null ? accessToUnderlyingConnectionAllowed : connection.isAccessToUnderlyingConnectionAllowed();
-    }
-
-    /**
      * @since 2.5.0
      */
     @Override
@@ -671,6 +658,19 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
             throw e;
         }
         connection.handleException(e);
+    }
+
+    /**
+     * Tests whether access to the underlying {@link Statement} is allowed.
+     * <p>
+     * Consults the creating connection while it is attached, and retains the last policy when close clears that reference.
+     * </p>
+     *
+     * @return true if access to the underlying statement is allowed.
+     * @since 2.15.0
+     */
+    protected boolean isAccessToUnderlyingConnectionAllowed() {
+        return connection == null ? accessToUnderlyingConnectionAllowed : connection.isAccessToUnderlyingConnectionAllowed();
     }
 
     /*

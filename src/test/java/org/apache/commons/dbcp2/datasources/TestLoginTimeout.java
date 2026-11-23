@@ -73,23 +73,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 /** Tests physical connection login timeouts, including configuration after pool initialization. */
 class TestLoginTimeout {
 
-    /** Isolated JNDI lookup using only the environment supplied by each test. */
-    public static final class TestContextFactory implements InitialContextFactory {
-        /**
-         * Gets an isolated context that resolves the provider supplied in the test environment.
-         *
-         * @param environment the environment containing the provider under the {@code test.cpds} key.
-         * @return the context exposing the provider through the {@code timeoutTest} name.
-         * @throws NamingException if configuring the context lookup fails.
-         */
-        @Override
-        public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException {
-            final Context context = mock(Context.class);
-            when(context.lookup("timeoutTest")).thenReturn(environment.get("test.cpds"));
-            return context;
-        }
-    }
-
     private static final class RecordingCpds extends ConnectionPoolDataSourceProxy {
         private int timeout = 9;
         private final List<Integer> attempts = new ArrayList<>();
@@ -237,64 +220,21 @@ class TestLoginTimeout {
         }
     }
 
-    /**
-     * Supplies bounded and unbounded timeout settings for interruption tests.
-     *
-     * @return an unset timeout, zero, and a positive sub-second timeout.
-     */
-    static Stream<Duration> interruptedTimeouts() {
-        return Stream.of(null, Duration.ZERO, Duration.ofMillis(100));
-    }
-
-    /**
-     * Supplies pool types and initial timeout settings for serialization tests.
-     *
-     * @return shared-pool and configured-timeout flag combinations.
-     */
-    static Stream<Arguments> serializationTimeouts() {
-        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).map(configured -> Arguments.of(shared, configured)));
-    }
-
-    /**
-     * Supplies pool types, provider lookup modes, and timeouts for serialization before provider configuration.
-     *
-     * @return configuration combinations and the timeout expected by the provider after deserialization.
-     */
-    static Stream<Arguments> unregisteredSerializationTimeouts() {
-        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).flatMap(jndi ->
-                Stream.of(Arguments.of(null, 9), Arguments.of(Duration.ZERO, 0), Arguments.of(Duration.ofMillis(100), 1),
-                        Arguments.of(Duration.ofSeconds(5), 5), Arguments.of(Duration.ofSeconds(Long.MAX_VALUE), Integer.MAX_VALUE))
-                        .map(timeout -> Arguments.of(shared, jndi, timeout.get()[0], timeout.get()[1]))));
-    }
-
-    /**
-     * Supplies pool, lookup, credential, and timeout combinations for connection tests.
-     *
-     * @return connection configuration combinations and their expected JDBC timeout values.
-     */
-    static Stream<Arguments> loginTimeouts() {
-        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).flatMap(jndi -> Stream.of(false, true)
-                .flatMap(credentials -> Stream.of(Arguments.of(Duration.ZERO, 0), Arguments.of(Duration.ofNanos(1), 1),
-                        Arguments.of(Duration.ofMillis(1900), 1), Arguments.of(Duration.ofSeconds(5), 5),
-                        Arguments.of(Duration.ofSeconds(Long.MAX_VALUE), Integer.MAX_VALUE))
-                        .map(timeout -> Arguments.of(shared, jndi, credentials, timeout.get()[0], timeout.get()[1])))));
-    }
-
-    /**
-     * Creates a provider test double backed by a mutable login timeout.
-     *
-     * @param timeout the value read and updated by the timeout accessors.
-     * @return the provider test double.
-     * @throws SQLException if configuring the provider test double fails.
-     */
-    private static ConnectionPoolDataSource mockProvider(final AtomicInteger timeout) throws SQLException {
-        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
-        when(provider.getLoginTimeout()).thenAnswer(invocation -> timeout.get());
-        doAnswer(invocation -> {
-            timeout.set(invocation.getArgument(0));
-            return null;
-        }).when(provider).setLoginTimeout(anyInt());
-        return provider;
+    /** Isolated JNDI lookup using only the environment supplied by each test. */
+    public static final class TestContextFactory implements InitialContextFactory {
+        /**
+         * Gets an isolated context that resolves the provider supplied in the test environment.
+         *
+         * @param environment the environment containing the provider under the {@code test.cpds} key.
+         * @return the context exposing the provider through the {@code timeoutTest} name.
+         * @throws NamingException if configuring the context lookup fails.
+         */
+        @Override
+        public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException {
+            final Context context = mock(Context.class);
+            when(context.lookup("timeoutTest")).thenReturn(environment.get("test.cpds"));
+            return context;
+        }
     }
 
     /**
@@ -332,6 +272,45 @@ class TestLoginTimeout {
     }
 
     /**
+     * Supplies bounded and unbounded timeout settings for interruption tests.
+     *
+     * @return an unset timeout, zero, and a positive sub-second timeout.
+     */
+    static Stream<Duration> interruptedTimeouts() {
+        return Stream.of(null, Duration.ZERO, Duration.ofMillis(100));
+    }
+
+    /**
+     * Supplies pool, lookup, credential, and timeout combinations for connection tests.
+     *
+     * @return connection configuration combinations and their expected JDBC timeout values.
+     */
+    static Stream<Arguments> loginTimeouts() {
+        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).flatMap(jndi -> Stream.of(false, true)
+                .flatMap(credentials -> Stream.of(Arguments.of(Duration.ZERO, 0), Arguments.of(Duration.ofNanos(1), 1),
+                        Arguments.of(Duration.ofMillis(1900), 1), Arguments.of(Duration.ofSeconds(5), 5),
+                        Arguments.of(Duration.ofSeconds(Long.MAX_VALUE), Integer.MAX_VALUE))
+                        .map(timeout -> Arguments.of(shared, jndi, credentials, timeout.get()[0], timeout.get()[1])))));
+    }
+
+    /**
+     * Creates a provider test double backed by a mutable login timeout.
+     *
+     * @param timeout the value read and updated by the timeout accessors.
+     * @return the provider test double.
+     * @throws SQLException if configuring the provider test double fails.
+     */
+    private static ConnectionPoolDataSource mockProvider(final AtomicInteger timeout) throws SQLException {
+        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
+        when(provider.getLoginTimeout()).thenAnswer(invocation -> timeout.get());
+        doAnswer(invocation -> {
+            timeout.set(invocation.getArgument(0));
+            return null;
+        }).when(provider).setLoginTimeout(anyInt());
+        return provider;
+    }
+
+    /**
      * Creates a data source that obtains its provider directly or through JNDI and retains no idle connections.
      *
      * @param shared whether to use a shared pool instead of per-user pools.
@@ -343,6 +322,15 @@ class TestLoginTimeout {
         final InstanceKeyDataSource source = shared ? new SharedPoolDataSource() : new PerUserPoolDataSource();
         configureDataSource(source, jndi, provider);
         return source;
+    }
+
+    /**
+     * Supplies pool types and initial timeout settings for serialization tests.
+     *
+     * @return shared-pool and configured-timeout flag combinations.
+     */
+    static Stream<Arguments> serializationTimeouts() {
+        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).map(configured -> Arguments.of(shared, configured)));
     }
 
     /**
@@ -358,6 +346,27 @@ class TestLoginTimeout {
             output.writeObject(source);
         }
         return bytes.toByteArray();
+    }
+
+    /**
+     * Supplies unchecked failures that a provider may throw while connecting.
+     *
+     * @return a runtime exception and an error.
+     */
+    static Stream<Throwable> uncheckedFailures() {
+        return Stream.of(new IllegalStateException("Driver failure"), new AssertionError("Driver error"));
+    }
+
+    /**
+     * Supplies pool types, provider lookup modes, and timeouts for serialization before provider configuration.
+     *
+     * @return configuration combinations and the timeout expected by the provider after deserialization.
+     */
+    static Stream<Arguments> unregisteredSerializationTimeouts() {
+        return Stream.of(false, true).flatMap(shared -> Stream.of(false, true).flatMap(jndi ->
+                Stream.of(Arguments.of(null, 9), Arguments.of(Duration.ZERO, 0), Arguments.of(Duration.ofMillis(100), 1),
+                        Arguments.of(Duration.ofSeconds(5), 5), Arguments.of(Duration.ofSeconds(Long.MAX_VALUE), Integer.MAX_VALUE))
+                        .map(timeout -> Arguments.of(shared, jndi, timeout.get()[0], timeout.get()[1]))));
     }
 
     /**
@@ -395,6 +404,47 @@ class TestLoginTimeout {
         assertSame(failure, assertThrows(SQLTimeoutException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
                 null, null, Duration.ofSeconds(1))));
         assertEquals(Arrays.asList(restoreFailure), Arrays.asList(failure.getSuppressed()));
+    }
+
+    /**
+     * Tests that deserialized wrappers and their original data sources share live login timeout changes.
+     *
+     * @param shared whether to use a shared pool instead of per-user pools.
+     * @param configured whether to configure a timeout before serializing the data source.
+     * @throws Exception if serialization, deserialization, or a JDBC operation fails.
+     */
+    @ParameterizedTest
+    @MethodSource("serializationTimeouts")
+    void testDeserializedWrappersShareLiveLoginTimeout(final boolean shared, final boolean configured) throws Exception {
+        final SerializableCpds provider = new SerializableCpds();
+        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
+            if (configured) {
+                source.setLoginTimeout(Duration.ofSeconds(5));
+            }
+            try (Connection connection = source.getConnection()) {
+                assertFalse(connection.isClosed());
+            }
+            try (InstanceKeyDataSource restored = deserialize(serialize(source))) {
+                assertEquals(source.getLoginTimeoutDuration(), restored.getLoginTimeoutDuration());
+                restored.setLoginTimeout(Duration.ofSeconds(3));
+                assertEquals(Duration.ofSeconds(3), source.getLoginTimeoutDuration());
+                provider.attempts.clear();
+                try (Connection connection = restored.getConnection()) {
+                    assertFalse(connection.isClosed());
+                }
+                assertFalse(provider.attempts.isEmpty());
+                provider.attempts.forEach(value -> assertEquals(3, value.intValue()));
+                source.setLoginTimeout(Duration.ofSeconds(7));
+                assertEquals(Duration.ofSeconds(7), restored.getLoginTimeoutDuration());
+                provider.attempts.clear();
+                try (Connection connection = restored.getConnection()) {
+                    assertFalse(connection.isClosed());
+                }
+                assertFalse(provider.attempts.isEmpty());
+                provider.attempts.forEach(value -> assertEquals(7, value.intValue()));
+                assertEquals(9, provider.getLoginTimeout());
+            }
+        }
     }
 
     /**
@@ -462,6 +512,190 @@ class TestLoginTimeout {
             assertThrows(IllegalArgumentException.class, () -> source.setLoginTimeout(-1));
             assertEquals(Duration.ofSeconds(5), source.getLoginTimeoutDuration());
         }
+    }
+
+    /**
+     * Tests that provider-enforced login timeouts apply before and after pool initialization.
+     *
+     * @param shared whether to use a shared pool instead of per-user pools.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testProviderEnforcesTimeoutForInitialAndLaterConnections(final boolean shared) throws Exception {
+        final RecordingCpds provider = new RecordingCpds();
+        provider.enforceTimeout = true;
+        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
+            source.setLoginTimeout(Duration.ofMillis(100));
+            assertThrows(SQLException.class, source::getConnection);
+            assertEquals(9, provider.getLoginTimeout());
+        }
+        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
+            source.setLoginTimeout(5);
+            try (Connection connection = source.getConnection()) {
+                assertFalse(connection.isClosed());
+            }
+            source.setLoginTimeout(Duration.ofMillis(100));
+            assertThrows(SQLException.class, source::getConnection);
+            assertEquals(9, provider.getLoginTimeout());
+        }
+    }
+
+    /**
+     * Tests that interrupted lock acquisition preserves the interrupt flag and avoids provider access.
+     *
+     * @param timeout the provider lock timeout, or {@code null} for an unbounded read-lock wait.
+     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     */
+    @ParameterizedTest
+    @MethodSource("interruptedTimeouts")
+    void testProviderLockPreservesInterruption(final Duration timeout) throws SQLException {
+        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
+        Thread.currentThread().interrupt();
+        try {
+            final SQLException failure = assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
+                    null, null, timeout));
+            assertInstanceOf(InterruptedException.class, failure.getCause());
+            assertTrue(Thread.currentThread().isInterrupted());
+            verify(provider, never()).getPooledConnection();
+            verify(provider, never()).setLoginTimeout(anyInt());
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
+    /**
+     * Tests that each provider failure path releases the lock for a subsequent attempt from another thread.
+     *
+     * @param phase the failing operation: reading, setting, connecting, or restoring the timeout.
+     * @throws Exception if a JDBC operation or worker task fails, times out, or is interrupted.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {"read", "set", "connect", "restore"})
+    void testProviderLockReleasedAfterFailure(final String phase) throws Exception {
+        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
+        final AtomicInteger timeout = new AtomicInteger(9);
+        final AtomicBoolean failOnce = new AtomicBoolean(true);
+        final SQLException failure = new SQLException("Provider failure during " + phase);
+        when(provider.getLoginTimeout()).thenAnswer(invocation -> {
+            if ("read".equals(phase) && failOnce.getAndSet(false)) {
+                throw failure;
+            }
+            return timeout.get();
+        });
+        doAnswer(invocation -> {
+            final int seconds = invocation.getArgument(0);
+            timeout.set(seconds);
+            if (("set".equals(phase) && seconds == 1 || "restore".equals(phase) && seconds == 9) && failOnce.getAndSet(false)) {
+                throw failure;
+            }
+            return null;
+        }).when(provider).setLoginTimeout(anyInt());
+        when(provider.getPooledConnection()).thenAnswer(invocation -> {
+            if ("connect".equals(phase) && failOnce.getAndSet(false)) {
+                throw failure;
+            }
+            return mock(PooledConnection.class);
+        });
+        assertSame(failure, assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
+                null, null, Duration.ofSeconds(1))));
+        assertEquals(9, timeout.get());
+        // A different thread must be able to acquire the provider lock after every failure path.
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            final Future<PooledConnection> next = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
+                    null, null, Duration.ofSeconds(2)));
+            final PooledConnection connection = next.get(5, TimeUnit.SECONDS);
+            assertNotNull(connection);
+            connection.close();
+            assertEquals(9, timeout.get());
+        } finally {
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+        }
+    }
+
+    /**
+     * Tests provider lock isolation by identity despite mutable hashes or equality between distinct providers.
+     *
+     * @param sameProvider whether both attempts use the same provider instance.
+     * @throws Exception if a JDBC operation or worker task fails, times out, or is interrupted.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testProviderLocksUseIdentity(final boolean sameProvider) throws Exception {
+        final SerializableCpds firstProvider = new SerializableCpds();
+        final SerializableCpds secondProvider = sameProvider ? firstProvider : new SerializableCpds();
+        // Equal but distinct providers must not share a lock. A changing hash must not bypass a provider's own lock.
+        firstProvider.equalToOtherProviders = !sameProvider;
+        secondProvider.equalToOtherProviders = !sameProvider;
+        firstProvider.entered = new CountDownLatch(1);
+        firstProvider.release = new CountDownLatch(1);
+        final ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            final Future<PooledConnection> first = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(firstProvider,
+                    null, null, Duration.ofSeconds(1)));
+            assertTrue(firstProvider.entered.await(10, TimeUnit.SECONDS));
+            final Future<PooledConnection> second = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(secondProvider,
+                    null, null, Duration.ofSeconds(2)));
+            if (sameProvider) {
+                assertThrows(TimeoutException.class, () -> second.get(100, TimeUnit.MILLISECONDS));
+            } else {
+                assertNotNull(second.get(5, TimeUnit.SECONDS));
+                assertEquals(Collections.singletonList(2), secondProvider.attempts);
+            }
+            firstProvider.release.countDown();
+            first.get(10, TimeUnit.SECONDS).close();
+            second.get(10, TimeUnit.SECONDS).close();
+            assertEquals(sameProvider ? Arrays.asList(1, 2) : Collections.singletonList(1), firstProvider.attempts);
+            assertEquals(9, firstProvider.getLoginTimeout());
+            assertEquals(9, secondProvider.getLoginTimeout());
+        } finally {
+            firstProvider.release.countDown();
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+        }
+    }
+
+    /**
+     * Tests that registered data sources share live timeouts after deserialization even before their pools are initialized.
+     *
+     * @param shared whether to use a shared pool instead of per-user pools.
+     * @param configured whether to configure a timeout before serializing the data source.
+     * @throws Exception if serialization, deserialization, or closing the data source fails.
+     */
+    @ParameterizedTest
+    @MethodSource("serializationTimeouts")
+    void testRegisteredSerializationSharesTimeoutBeforePoolInitialization(final boolean shared, final boolean configured) throws Exception {
+        try (InstanceKeyDataSource source = newDataSource(shared, false, new SerializableCpds())) {
+            if (configured) {
+                source.setLoginTimeout(Duration.ofSeconds(5));
+            }
+            final byte[] bytes = serialize(source);
+            source.setLoginTimeout(Duration.ofSeconds(7));
+            try (InstanceKeyDataSource restored = deserialize(bytes)) {
+                assertEquals(Duration.ofSeconds(7), restored.getConfiguredLoginTimeout());
+                restored.setLoginTimeout(Duration.ofSeconds(3));
+                assertEquals(Duration.ofSeconds(3), source.getConfiguredLoginTimeout());
+            }
+        }
+    }
+
+    /**
+     * Tests that reusing the same driver exception for connection and restoration failures avoids self-suppression.
+     *
+     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     */
+    @Test
+    void testRepeatedDriverExceptionDoesNotSuppressItself() throws SQLException {
+        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
+        final SQLException failure = new SQLException("Driver failed");
+        when(provider.getLoginTimeout()).thenReturn(9);
+        when(provider.getPooledConnection()).thenThrow(failure);
+        doThrow(failure).when(provider).setLoginTimeout(9);
+        assertSame(failure, assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
+                null, null, Duration.ofSeconds(1))));
+        assertEquals(0, failure.getSuppressed().length);
     }
 
     /**
@@ -554,6 +788,23 @@ class TestLoginTimeout {
     }
 
     /**
+     * Tests that unchecked connection failures preserve their identity and restore the provider timeout.
+     *
+     * @param failure the unchecked failure thrown by the provider.
+     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     */
+    @ParameterizedTest
+    @MethodSource("uncheckedFailures")
+    void testUncheckedConnectionFailureRestoresTimeout(final Throwable failure) throws SQLException {
+        final AtomicInteger timeout = new AtomicInteger(9);
+        final ConnectionPoolDataSource provider = mockProvider(timeout);
+        when(provider.getPooledConnection()).thenThrow(failure);
+        assertSame(failure, assertThrows(failure.getClass(), () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
+                null, null, Duration.ofSeconds(1))));
+        assertEquals(9, timeout.get());
+    }
+
+    /**
      * Tests that an unset login timeout avoids reading or changing the provider's setting.
      *
      * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
@@ -582,141 +833,6 @@ class TestLoginTimeout {
             assertFalse(connection.isClosed());
             assertFalse(provider.attempts.isEmpty());
             provider.attempts.forEach(value -> assertEquals(9, value.intValue()));
-        }
-    }
-
-    /**
-     * Supplies unchecked failures that a provider may throw while connecting.
-     *
-     * @return a runtime exception and an error.
-     */
-    static Stream<Throwable> uncheckedFailures() {
-        return Stream.of(new IllegalStateException("Driver failure"), new AssertionError("Driver error"));
-    }
-
-    /**
-     * Tests that unchecked connection failures preserve their identity and restore the provider timeout.
-     *
-     * @param failure the unchecked failure thrown by the provider.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
-     */
-    @ParameterizedTest
-    @MethodSource("uncheckedFailures")
-    void testUncheckedConnectionFailureRestoresTimeout(final Throwable failure) throws SQLException {
-        final AtomicInteger timeout = new AtomicInteger(9);
-        final ConnectionPoolDataSource provider = mockProvider(timeout);
-        when(provider.getPooledConnection()).thenThrow(failure);
-        assertSame(failure, assertThrows(failure.getClass(), () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
-                null, null, Duration.ofSeconds(1))));
-        assertEquals(9, timeout.get());
-    }
-
-    /**
-     * Tests that reusing the same driver exception for connection and restoration failures avoids self-suppression.
-     *
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
-     */
-    @Test
-    void testRepeatedDriverExceptionDoesNotSuppressItself() throws SQLException {
-        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
-        final SQLException failure = new SQLException("Driver failed");
-        when(provider.getLoginTimeout()).thenReturn(9);
-        when(provider.getPooledConnection()).thenThrow(failure);
-        doThrow(failure).when(provider).setLoginTimeout(9);
-        assertSame(failure, assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
-                null, null, Duration.ofSeconds(1))));
-        assertEquals(0, failure.getSuppressed().length);
-    }
-
-    /**
-     * Tests that provider-enforced login timeouts apply before and after pool initialization.
-     *
-     * @param shared whether to use a shared pool instead of per-user pools.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void testProviderEnforcesTimeoutForInitialAndLaterConnections(final boolean shared) throws Exception {
-        final RecordingCpds provider = new RecordingCpds();
-        provider.enforceTimeout = true;
-        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
-            source.setLoginTimeout(Duration.ofMillis(100));
-            assertThrows(SQLException.class, source::getConnection);
-            assertEquals(9, provider.getLoginTimeout());
-        }
-        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
-            source.setLoginTimeout(5);
-            try (Connection connection = source.getConnection()) {
-                assertFalse(connection.isClosed());
-            }
-            source.setLoginTimeout(Duration.ofMillis(100));
-            assertThrows(SQLException.class, source::getConnection);
-            assertEquals(9, provider.getLoginTimeout());
-        }
-    }
-
-    /**
-     * Tests that deserialized wrappers and their original data sources share live login timeout changes.
-     *
-     * @param shared whether to use a shared pool instead of per-user pools.
-     * @param configured whether to configure a timeout before serializing the data source.
-     * @throws Exception if serialization, deserialization, or a JDBC operation fails.
-     */
-    @ParameterizedTest
-    @MethodSource("serializationTimeouts")
-    void testDeserializedWrappersShareLiveLoginTimeout(final boolean shared, final boolean configured) throws Exception {
-        final SerializableCpds provider = new SerializableCpds();
-        try (InstanceKeyDataSource source = newDataSource(shared, false, provider)) {
-            if (configured) {
-                source.setLoginTimeout(Duration.ofSeconds(5));
-            }
-            try (Connection connection = source.getConnection()) {
-                assertFalse(connection.isClosed());
-            }
-            try (InstanceKeyDataSource restored = deserialize(serialize(source))) {
-                assertEquals(source.getLoginTimeoutDuration(), restored.getLoginTimeoutDuration());
-                restored.setLoginTimeout(Duration.ofSeconds(3));
-                assertEquals(Duration.ofSeconds(3), source.getLoginTimeoutDuration());
-                provider.attempts.clear();
-                try (Connection connection = restored.getConnection()) {
-                    assertFalse(connection.isClosed());
-                }
-                assertFalse(provider.attempts.isEmpty());
-                provider.attempts.forEach(value -> assertEquals(3, value.intValue()));
-                source.setLoginTimeout(Duration.ofSeconds(7));
-                assertEquals(Duration.ofSeconds(7), restored.getLoginTimeoutDuration());
-                provider.attempts.clear();
-                try (Connection connection = restored.getConnection()) {
-                    assertFalse(connection.isClosed());
-                }
-                assertFalse(provider.attempts.isEmpty());
-                provider.attempts.forEach(value -> assertEquals(7, value.intValue()));
-                assertEquals(9, provider.getLoginTimeout());
-            }
-        }
-    }
-
-    /**
-     * Tests that registered data sources share live timeouts after deserialization even before their pools are initialized.
-     *
-     * @param shared whether to use a shared pool instead of per-user pools.
-     * @param configured whether to configure a timeout before serializing the data source.
-     * @throws Exception if serialization, deserialization, or closing the data source fails.
-     */
-    @ParameterizedTest
-    @MethodSource("serializationTimeouts")
-    void testRegisteredSerializationSharesTimeoutBeforePoolInitialization(final boolean shared, final boolean configured) throws Exception {
-        try (InstanceKeyDataSource source = newDataSource(shared, false, new SerializableCpds())) {
-            if (configured) {
-                source.setLoginTimeout(Duration.ofSeconds(5));
-            }
-            final byte[] bytes = serialize(source);
-            source.setLoginTimeout(Duration.ofSeconds(7));
-            try (InstanceKeyDataSource restored = deserialize(bytes)) {
-                assertEquals(Duration.ofSeconds(7), restored.getConfiguredLoginTimeout());
-                restored.setLoginTimeout(Duration.ofSeconds(3));
-                assertEquals(Duration.ofSeconds(3), source.getConfiguredLoginTimeout());
-            }
         }
     }
 
@@ -769,71 +885,6 @@ class TestLoginTimeout {
     }
 
     /**
-     * Tests provider lock isolation by identity despite mutable hashes or equality between distinct providers.
-     *
-     * @param sameProvider whether both attempts use the same provider instance.
-     * @throws Exception if a JDBC operation or worker task fails, times out, or is interrupted.
-     */
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void testProviderLocksUseIdentity(final boolean sameProvider) throws Exception {
-        final SerializableCpds firstProvider = new SerializableCpds();
-        final SerializableCpds secondProvider = sameProvider ? firstProvider : new SerializableCpds();
-        // Equal but distinct providers must not share a lock. A changing hash must not bypass a provider's own lock.
-        firstProvider.equalToOtherProviders = !sameProvider;
-        secondProvider.equalToOtherProviders = !sameProvider;
-        firstProvider.entered = new CountDownLatch(1);
-        firstProvider.release = new CountDownLatch(1);
-        final ExecutorService executor = Executors.newFixedThreadPool(2);
-        try {
-            final Future<PooledConnection> first = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(firstProvider,
-                    null, null, Duration.ofSeconds(1)));
-            assertTrue(firstProvider.entered.await(10, TimeUnit.SECONDS));
-            final Future<PooledConnection> second = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(secondProvider,
-                    null, null, Duration.ofSeconds(2)));
-            if (sameProvider) {
-                assertThrows(TimeoutException.class, () -> second.get(100, TimeUnit.MILLISECONDS));
-            } else {
-                assertNotNull(second.get(5, TimeUnit.SECONDS));
-                assertEquals(Collections.singletonList(2), secondProvider.attempts);
-            }
-            firstProvider.release.countDown();
-            first.get(10, TimeUnit.SECONDS).close();
-            second.get(10, TimeUnit.SECONDS).close();
-            assertEquals(sameProvider ? Arrays.asList(1, 2) : Collections.singletonList(1), firstProvider.attempts);
-            assertEquals(9, firstProvider.getLoginTimeout());
-            assertEquals(9, secondProvider.getLoginTimeout());
-        } finally {
-            firstProvider.release.countDown();
-            executor.shutdownNow();
-            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
-        }
-    }
-
-    /**
-     * Tests that interrupted lock acquisition preserves the interrupt flag and avoids provider access.
-     *
-     * @param timeout the provider lock timeout, or {@code null} for an unbounded read-lock wait.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
-     */
-    @ParameterizedTest
-    @MethodSource("interruptedTimeouts")
-    void testProviderLockPreservesInterruption(final Duration timeout) throws SQLException {
-        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
-        Thread.currentThread().interrupt();
-        try {
-            final SQLException failure = assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
-                    null, null, timeout));
-            assertInstanceOf(InterruptedException.class, failure.getCause());
-            assertTrue(Thread.currentThread().isInterrupted());
-            verify(provider, never()).getPooledConnection();
-            verify(provider, never()).setLoginTimeout(anyInt());
-        } finally {
-            Thread.interrupted();
-        }
-    }
-
-    /**
      * Tests that a positive login timeout bounds the wait for another attempt to release the provider lock.
      *
      * @throws Exception if a JDBC operation or worker task fails, times out, or is interrupted.
@@ -856,57 +907,6 @@ class TestLoginTimeout {
             assertEquals(9, provider.getLoginTimeout());
         } finally {
             provider.release.countDown();
-            executor.shutdownNow();
-            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
-        }
-    }
-
-    /**
-     * Tests that each provider failure path releases the lock for a subsequent attempt from another thread.
-     *
-     * @param phase the failing operation: reading, setting, connecting, or restoring the timeout.
-     * @throws Exception if a JDBC operation or worker task fails, times out, or is interrupted.
-     */
-    @ParameterizedTest
-    @ValueSource(strings = {"read", "set", "connect", "restore"})
-    void testProviderLockReleasedAfterFailure(final String phase) throws Exception {
-        final ConnectionPoolDataSource provider = mock(ConnectionPoolDataSource.class);
-        final AtomicInteger timeout = new AtomicInteger(9);
-        final AtomicBoolean failOnce = new AtomicBoolean(true);
-        final SQLException failure = new SQLException("Provider failure during " + phase);
-        when(provider.getLoginTimeout()).thenAnswer(invocation -> {
-            if ("read".equals(phase) && failOnce.getAndSet(false)) {
-                throw failure;
-            }
-            return timeout.get();
-        });
-        doAnswer(invocation -> {
-            final int seconds = invocation.getArgument(0);
-            timeout.set(seconds);
-            if (("set".equals(phase) && seconds == 1 || "restore".equals(phase) && seconds == 9) && failOnce.getAndSet(false)) {
-                throw failure;
-            }
-            return null;
-        }).when(provider).setLoginTimeout(anyInt());
-        when(provider.getPooledConnection()).thenAnswer(invocation -> {
-            if ("connect".equals(phase) && failOnce.getAndSet(false)) {
-                throw failure;
-            }
-            return mock(PooledConnection.class);
-        });
-        assertSame(failure, assertThrows(SQLException.class, () -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
-                null, null, Duration.ofSeconds(1))));
-        assertEquals(9, timeout.get());
-        // A different thread must be able to acquire the provider lock after every failure path.
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        try {
-            final Future<PooledConnection> next = executor.submit(() -> ConnectionPoolDataSourceUtils.getPooledConnection(provider,
-                    null, null, Duration.ofSeconds(2)));
-            final PooledConnection connection = next.get(5, TimeUnit.SECONDS);
-            assertNotNull(connection);
-            connection.close();
-            assertEquals(9, timeout.get());
-        } finally {
             executor.shutdownNow();
             assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
         }

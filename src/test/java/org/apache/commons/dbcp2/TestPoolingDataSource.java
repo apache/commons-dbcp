@@ -46,10 +46,6 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 public class TestPoolingDataSource extends TestConnectionPool {
 
-    protected PoolingDataSource<PoolableConnection> ds;
-
-    private GenericObjectPool<PoolableConnection> pool;
-
     private static void closeWithStatementFailure(final DelegatingConnection<?> connection) throws SQLException {
         try (TesterStatement physicalStatement = new TesterStatement(connection);
                 DelegatingStatement statement = new DelegatingStatement(connection, physicalStatement)) {
@@ -61,6 +57,10 @@ public class TestPoolingDataSource extends TestConnectionPool {
             }
         }
     }
+
+    protected PoolingDataSource<PoolableConnection> ds;
+
+    private GenericObjectPool<PoolableConnection> pool;
 
     @Override
     protected Connection getConnection() throws Exception {
@@ -144,6 +144,31 @@ public class TestPoolingDataSource extends TestConnectionPool {
         }
     }
 
+    @Test
+    void testClose() throws Exception {
+        final Properties properties = new Properties();
+        properties.setProperty(Constants.KEY_USER, "userName");
+        properties.setProperty(Constants.KEY_PASSWORD, "password");
+        final PoolableConnectionFactory f = new PoolableConnectionFactory(
+                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties), null);
+        f.setValidationQuery("SELECT DUMMY FROM DUAL");
+        f.setDefaultReadOnly(Boolean.TRUE);
+        f.setDefaultAutoCommit(Boolean.TRUE);
+        final GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
+        p.setMaxTotal(getMaxTotal());
+        p.setMaxWait(getMaxWaitDuration());
+
+        try (PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p)) {
+            final Connection connection = dataSource.getConnection();
+            assertNotNull(connection);
+            connection.close();
+        }
+
+        assertTrue(p.isClosed());
+        assertEquals(0, p.getNumIdle());
+        assertEquals(0, p.getNumActive());
+    }
+
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void testCloseClearsDelegateAfterStatementFailure(final boolean allowed) throws Exception {
@@ -198,31 +223,6 @@ public class TestPoolingDataSource extends TestConnectionPool {
             assertThrows(SQLException.class, guard::createStatement);
             guard.close();
         }
-    }
-
-    @Test
-    void testClose() throws Exception {
-        final Properties properties = new Properties();
-        properties.setProperty(Constants.KEY_USER, "userName");
-        properties.setProperty(Constants.KEY_PASSWORD, "password");
-        final PoolableConnectionFactory f = new PoolableConnectionFactory(
-                new DriverConnectionFactory(new TesterDriver(), "jdbc:apache:commons:testdriver", properties), null);
-        f.setValidationQuery("SELECT DUMMY FROM DUAL");
-        f.setDefaultReadOnly(Boolean.TRUE);
-        f.setDefaultAutoCommit(Boolean.TRUE);
-        final GenericObjectPool<PoolableConnection> p = new GenericObjectPool<>(f);
-        p.setMaxTotal(getMaxTotal());
-        p.setMaxWait(getMaxWaitDuration());
-
-        try (PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(p)) {
-            final Connection connection = dataSource.getConnection();
-            assertNotNull(connection);
-            connection.close();
-        }
-
-        assertTrue(p.isClosed());
-        assertEquals(0, p.getNumIdle());
-        assertEquals(0, p.getNumActive());
     }
 
     /**

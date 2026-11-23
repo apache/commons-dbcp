@@ -253,18 +253,6 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
     }
 
     /**
-     * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
-     * idle object evictor thread will be run.
-     *
-     * @return The value of the evictor thread timer
-     * @see #setDurationBetweenEvictionRuns(Duration)
-     * @since 2.9.0
-     */
-    public Duration getDurationBetweenEvictionRuns() {
-        return durationBetweenEvictionRuns;
-    }
-
-    /**
      * Gets a duration from a JNDI Reference, preferring the ISO-8601 property over the legacy millisecond property.
      *
      * @param reference the Reference to read.
@@ -281,6 +269,18 @@ public class DriverAdapterCPDS implements ConnectionPoolDataSource, Referenceabl
         }
         final RefAddr millis = reference.get(millisKey);
         return isNotEmpty(millis) ? Duration.ofMillis(Long.parseLong(getStringContent(millis))) : null;
+    }
+
+    /**
+     * Gets the duration to sleep between runs of the idle object evictor thread. When non-positive, no
+     * idle object evictor thread will be run.
+     *
+     * @return The value of the evictor thread timer
+     * @see #setDurationBetweenEvictionRuns(Duration)
+     * @since 2.9.0
+     */
+    public Duration getDurationBetweenEvictionRuns() {
+        return durationBetweenEvictionRuns;
     }
 
     private int getIntegerStringContent(final RefAddr ra) {

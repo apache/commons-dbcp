@@ -57,8 +57,6 @@ import org.mockito.InOrder;
  */
 public class TestPoolableConnection {
 
-    private GenericObjectPool<PoolableConnection> pool;
-
     private static Stream<Arguments> fastFailValidationArguments() {
         return Stream.of(false, true).flatMap(fastFail -> Stream.of(null, "", "SELECT 1").map(sql -> Arguments.of(fastFail, sql)));
     }
@@ -100,6 +98,8 @@ public class TestPoolableConnection {
         return Stream.concat(positiveValidationTimeouts(), nonPositiveValidationTimeouts().map(timeout -> Arguments.of(timeout, 0)))
                 .flatMap(timeout -> Stream.of(null, "").map(sql -> Arguments.of(sql, timeout.get()[0], timeout.get()[1])));
     }
+
+    private GenericObjectPool<PoolableConnection> pool;
 
     @BeforeEach
     public void setUp() throws Exception {

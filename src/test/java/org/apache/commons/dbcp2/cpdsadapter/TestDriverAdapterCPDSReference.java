@@ -83,6 +83,57 @@ class TestDriverAdapterCPDSReference {
         }
     }
 
+    /**
+     * Supplies duration and property combinations for JNDI round-trip tests.
+     *
+     * @return duration boundaries with and without legacy millisecond properties.
+     */
+    static Stream<Arguments> durationReferences() {
+        return Stream.concat(Stream.of(Duration.ZERO, Duration.ofNanos(1), Duration.ofMillis(1_901),
+                Duration.ofDays(30), Duration.ofMillis(Long.MIN_VALUE), Duration.ofMillis(Long.MAX_VALUE),
+                Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)),
+                LongStream.of(-1, -2, -59, -60, -61, -3599, -3600, -3601, Long.MIN_VALUE)
+                        .boxed().flatMap(seconds -> IntStream.of(0, 1, 500_000_000, 999_999_999)
+                                .mapToObj(nanos -> Duration.ofSeconds(seconds, nanos))))
+                .flatMap(duration -> Stream.of(false, true).map(modernOnly -> Arguments.of(duration, modernOnly)));
+    }
+
+    /**
+     * Supplies JNDI duration strings with independently constructed expected values.
+     *
+     * @return duration text and value pairs covering signs, fractions, and range boundaries.
+     */
+    static Stream<Arguments> durationReferenceStrings() {
+        return Stream.of(
+                Arguments.of("PT-0.000000001S", Duration.ofNanos(-1)),
+                Arguments.of("PT-0.1S", Duration.ofMillis(-100)),
+                Arguments.of("PT-00.500000000S", Duration.ofMillis(-500)),
+                Arguments.of("PT-000.999999999S", Duration.ofNanos(-999_999_999)),
+                Arguments.of("+PT-0,1S", Duration.ofMillis(-100)),
+                Arguments.of("pt-0,000000001s", Duration.ofNanos(-1)),
+                Arguments.of("-PT-0.000000001S", Duration.ofNanos(1)),
+                Arguments.of("-pt-00,1s", Duration.ofMillis(100)),
+                Arguments.of("PT-0.S", Duration.ZERO),
+                Arguments.of("PT-0,S", Duration.ZERO),
+                Arguments.of("PT-0.000000000S", Duration.ZERO),
+                Arguments.of("PT-0S", Duration.ZERO),
+                Arguments.of("PT0.000000001S", Duration.ofNanos(1)),
+                Arguments.of("-PT0.000000001S", Duration.ofNanos(-1)),
+                Arguments.of("PT-1M-0.000000001S", Duration.ofSeconds(-60, -1)),
+                Arguments.of("PT1M-0.5S", Duration.ofMillis(59_500)),
+                Arguments.of("-PT1M-0.5S", Duration.ofMillis(-59_500)),
+                Arguments.of("PT-1H-0.1S", Duration.ofMillis(-3_600_100)),
+                Arguments.of("PT1H-1M-0.1S", Duration.ofMillis(3_539_900)),
+                Arguments.of("P-1DT2H-3M-0.1S", Duration.ofMillis(-79_380_100)),
+                Arguments.of("-P-1DT2H-3M-0.1S", Duration.ofMillis(79_380_100)),
+                Arguments.of("PT2562047788015215H30M-0.000000001S", Duration.ofSeconds(Long.MAX_VALUE - 8, 999_999_999)),
+                Arguments.of("-PT2562047788015215H30M-0.000000001S", Duration.ofSeconds(Long.MIN_VALUE + 8, 1)),
+                Arguments.of("PT-2562047788015215H-30M-0.000000001S", Duration.ofSeconds(Long.MIN_VALUE + 7, 999_999_999)),
+                Arguments.of("PT-9223372036854775808S", Duration.ofSeconds(Long.MIN_VALUE)),
+                Arguments.of("PT-9223372036854775807.999999999S", Duration.ofSeconds(Long.MIN_VALUE, 1)),
+                Arguments.of("PT9223372036854775807.999999999S", Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)));
+    }
+
     private static DriverAdapterCPDS newDataSource() throws Exception {
         final DriverAdapterCPDS source = new DriverAdapterCPDS();
         source.setDriver(TesterDriver.class.getName());
@@ -132,6 +183,49 @@ class TestDriverAdapterCPDSReference {
         assertEquals("p1", resolved.getPassword());
         assertTrue(resolved.isExportPasswordAsRefAddr());
         assertCanConnect(resolved);
+    }
+
+    /**
+     * Tests that JNDI References preserve eviction durations through reconstruction.
+     *
+     * @param duration the duration under test.
+     * @param modernOnly whether to omit the legacy millisecond properties.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @MethodSource("durationReferences")
+    void testDurationReferenceRoundTrip(final Duration duration, final boolean modernOnly) throws Exception {
+        final DriverAdapterCPDS source = newDataSource();
+        source.setDurationBetweenEvictionRuns(duration);
+        source.setMinEvictableIdleDuration(duration);
+        final Reference reference = source.getReference();
+        if (modernOnly) {
+            removeAddress(reference, "timeBetweenEvictionRunsMillis");
+            removeAddress(reference, "minEvictableIdleTimeMillis");
+        }
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(duration, restored.getDurationBetweenEvictionRuns());
+        assertEquals(duration, restored.getMinEvictableIdleDuration());
+    }
+
+    /**
+     * Tests duration parsing and precedence over legacy JNDI millisecond properties.
+     *
+     * @param text the duration text under test.
+     * @param expected the duration represented by the supplied text.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @MethodSource("durationReferenceStrings")
+    void testDurationReferenceStrings(final String text, final Duration expected) throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("durationBetweenEvictionRuns", text));
+        reference.add(new StringRefAddr("minEvictableIdleDuration", text));
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "0"));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "0"));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(expected, restored.getDurationBetweenEvictionRuns());
+        assertEquals(expected, restored.getMinEvictableIdleDuration());
     }
 
     @Test
@@ -229,6 +323,41 @@ class TestDriverAdapterCPDSReference {
         assertCanConnect(factory);
     }
 
+    /**
+     * Tests that malformed or overflowing duration properties fail instead of falling back to legacy values.
+     *
+     * @param text the duration text under test.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {"PT-0.1234567890S", "PT--0.1S", "PT-0.-1S", "P-0.1S", "PT-0.1Sx", " PT-0.1S", "PT-0.1S\n",
+            "PT1M-0.1S-0.1S", "PT-0.1", "PT-0,1.2S", "PT9223372036854775808S", "PT-9223372036854775809S"})
+    void testInvalidDurationReference(final String text) {
+        for (final String key : new String[] {"durationBetweenEvictionRuns", "minEvictableIdleDuration"}) {
+            final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+            reference.add(new StringRefAddr(key, text));
+            reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "0"));
+            reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "0"));
+            assertThrows(DateTimeParseException.class, () -> resolve(reference));
+        }
+    }
+
+    /**
+     * Tests that legacy JNDI millisecond properties accept the full long integer range.
+     *
+     * @param millis the legacy timeout in milliseconds.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @ValueSource(longs = {Long.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, 2_592_000_000L, Long.MAX_VALUE})
+    void testLegacyDurationReference(final long millis) throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", Long.toString(millis)));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", Long.toString(millis)));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofMillis(millis), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofMillis(millis), restored.getMinEvictableIdleDuration());
+    }
+
     @Test
     void testLegacyReferenceRetainsPasswordExport() throws Exception {
         final Reference reference = newDataSource().getReference();
@@ -263,6 +392,40 @@ class TestDriverAdapterCPDSReference {
         // Even an unsuccessful attempt ends the existing initialization phase.
         assertThrows(IllegalStateException.class, () -> resolved.setPassword("p1"));
         assertCanConnect(source);
+    }
+
+    /**
+     * Tests that valid duration properties take precedence over malformed legacy millisecond values.
+     *
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @Test
+    void testModernDurationReferenceOverridesMalformedLegacyValues() throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("durationBetweenEvictionRuns", "PT0.001S"));
+        reference.add(new StringRefAddr("minEvictableIdleDuration", "PT720H"));
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "invalid"));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "invalid"));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofMillis(1), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
+    }
+
+    /**
+     * Tests that null duration properties fall back to legacy millisecond values.
+     *
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @Test
+    void testNullModernDurationReferenceFallsBackToLegacy() throws Exception {
+        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
+        reference.add(new StringRefAddr("durationBetweenEvictionRuns", null));
+        reference.add(new StringRefAddr("minEvictableIdleDuration", null));
+        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "2592000000"));
+        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "2592000000"));
+        final DriverAdapterCPDS restored = resolve(reference);
+        assertEquals(Duration.ofDays(30), restored.getDurationBetweenEvictionRuns());
+        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
     }
 
     @ParameterizedTest
@@ -364,169 +527,6 @@ class TestDriverAdapterCPDSReference {
         assertEquals("p1", restored.getPassword());
         assertEquals(export, restored.getReference().get("password") != null);
         assertCanConnect(restored);
-    }
-
-    /**
-     * Supplies duration and property combinations for JNDI round-trip tests.
-     *
-     * @return duration boundaries with and without legacy millisecond properties.
-     */
-    static Stream<Arguments> durationReferences() {
-        return Stream.concat(Stream.of(Duration.ZERO, Duration.ofNanos(1), Duration.ofMillis(1_901),
-                Duration.ofDays(30), Duration.ofMillis(Long.MIN_VALUE), Duration.ofMillis(Long.MAX_VALUE),
-                Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)),
-                LongStream.of(-1, -2, -59, -60, -61, -3599, -3600, -3601, Long.MIN_VALUE)
-                        .boxed().flatMap(seconds -> IntStream.of(0, 1, 500_000_000, 999_999_999)
-                                .mapToObj(nanos -> Duration.ofSeconds(seconds, nanos))))
-                .flatMap(duration -> Stream.of(false, true).map(modernOnly -> Arguments.of(duration, modernOnly)));
-    }
-
-    /**
-     * Supplies JNDI duration strings with independently constructed expected values.
-     *
-     * @return duration text and value pairs covering signs, fractions, and range boundaries.
-     */
-    static Stream<Arguments> durationReferenceStrings() {
-        return Stream.of(
-                Arguments.of("PT-0.000000001S", Duration.ofNanos(-1)),
-                Arguments.of("PT-0.1S", Duration.ofMillis(-100)),
-                Arguments.of("PT-00.500000000S", Duration.ofMillis(-500)),
-                Arguments.of("PT-000.999999999S", Duration.ofNanos(-999_999_999)),
-                Arguments.of("+PT-0,1S", Duration.ofMillis(-100)),
-                Arguments.of("pt-0,000000001s", Duration.ofNanos(-1)),
-                Arguments.of("-PT-0.000000001S", Duration.ofNanos(1)),
-                Arguments.of("-pt-00,1s", Duration.ofMillis(100)),
-                Arguments.of("PT-0.S", Duration.ZERO),
-                Arguments.of("PT-0,S", Duration.ZERO),
-                Arguments.of("PT-0.000000000S", Duration.ZERO),
-                Arguments.of("PT-0S", Duration.ZERO),
-                Arguments.of("PT0.000000001S", Duration.ofNanos(1)),
-                Arguments.of("-PT0.000000001S", Duration.ofNanos(-1)),
-                Arguments.of("PT-1M-0.000000001S", Duration.ofSeconds(-60, -1)),
-                Arguments.of("PT1M-0.5S", Duration.ofMillis(59_500)),
-                Arguments.of("-PT1M-0.5S", Duration.ofMillis(-59_500)),
-                Arguments.of("PT-1H-0.1S", Duration.ofMillis(-3_600_100)),
-                Arguments.of("PT1H-1M-0.1S", Duration.ofMillis(3_539_900)),
-                Arguments.of("P-1DT2H-3M-0.1S", Duration.ofMillis(-79_380_100)),
-                Arguments.of("-P-1DT2H-3M-0.1S", Duration.ofMillis(79_380_100)),
-                Arguments.of("PT2562047788015215H30M-0.000000001S", Duration.ofSeconds(Long.MAX_VALUE - 8, 999_999_999)),
-                Arguments.of("-PT2562047788015215H30M-0.000000001S", Duration.ofSeconds(Long.MIN_VALUE + 8, 1)),
-                Arguments.of("PT-2562047788015215H-30M-0.000000001S", Duration.ofSeconds(Long.MIN_VALUE + 7, 999_999_999)),
-                Arguments.of("PT-9223372036854775808S", Duration.ofSeconds(Long.MIN_VALUE)),
-                Arguments.of("PT-9223372036854775807.999999999S", Duration.ofSeconds(Long.MIN_VALUE, 1)),
-                Arguments.of("PT9223372036854775807.999999999S", Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)));
-    }
-
-    /**
-     * Tests that JNDI References preserve eviction durations through reconstruction.
-     *
-     * @param duration the duration under test.
-     * @param modernOnly whether to omit the legacy millisecond properties.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @MethodSource("durationReferences")
-    void testDurationReferenceRoundTrip(final Duration duration, final boolean modernOnly) throws Exception {
-        final DriverAdapterCPDS source = newDataSource();
-        source.setDurationBetweenEvictionRuns(duration);
-        source.setMinEvictableIdleDuration(duration);
-        final Reference reference = source.getReference();
-        if (modernOnly) {
-            removeAddress(reference, "timeBetweenEvictionRunsMillis");
-            removeAddress(reference, "minEvictableIdleTimeMillis");
-        }
-        final DriverAdapterCPDS restored = resolve(reference);
-        assertEquals(duration, restored.getDurationBetweenEvictionRuns());
-        assertEquals(duration, restored.getMinEvictableIdleDuration());
-    }
-
-    /**
-     * Tests duration parsing and precedence over legacy JNDI millisecond properties.
-     *
-     * @param text the duration text under test.
-     * @param expected the duration represented by the supplied text.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @MethodSource("durationReferenceStrings")
-    void testDurationReferenceStrings(final String text, final Duration expected) throws Exception {
-        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
-        reference.add(new StringRefAddr("durationBetweenEvictionRuns", text));
-        reference.add(new StringRefAddr("minEvictableIdleDuration", text));
-        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "0"));
-        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "0"));
-        final DriverAdapterCPDS restored = resolve(reference);
-        assertEquals(expected, restored.getDurationBetweenEvictionRuns());
-        assertEquals(expected, restored.getMinEvictableIdleDuration());
-    }
-
-    /**
-     * Tests that malformed or overflowing duration properties fail instead of falling back to legacy values.
-     *
-     * @param text the duration text under test.
-     */
-    @ParameterizedTest
-    @ValueSource(strings = {"PT-0.1234567890S", "PT--0.1S", "PT-0.-1S", "P-0.1S", "PT-0.1Sx", " PT-0.1S", "PT-0.1S\n",
-            "PT1M-0.1S-0.1S", "PT-0.1", "PT-0,1.2S", "PT9223372036854775808S", "PT-9223372036854775809S"})
-    void testInvalidDurationReference(final String text) {
-        for (final String key : new String[] {"durationBetweenEvictionRuns", "minEvictableIdleDuration"}) {
-            final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
-            reference.add(new StringRefAddr(key, text));
-            reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "0"));
-            reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "0"));
-            assertThrows(DateTimeParseException.class, () -> resolve(reference));
-        }
-    }
-
-    /**
-     * Tests that legacy JNDI millisecond properties accept the full long integer range.
-     *
-     * @param millis the legacy timeout in milliseconds.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @ValueSource(longs = {Long.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, 2_592_000_000L, Long.MAX_VALUE})
-    void testLegacyDurationReference(final long millis) throws Exception {
-        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
-        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", Long.toString(millis)));
-        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", Long.toString(millis)));
-        final DriverAdapterCPDS restored = resolve(reference);
-        assertEquals(Duration.ofMillis(millis), restored.getDurationBetweenEvictionRuns());
-        assertEquals(Duration.ofMillis(millis), restored.getMinEvictableIdleDuration());
-    }
-
-    /**
-     * Tests that valid duration properties take precedence over malformed legacy millisecond values.
-     *
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @Test
-    void testModernDurationReferenceOverridesMalformedLegacyValues() throws Exception {
-        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
-        reference.add(new StringRefAddr("durationBetweenEvictionRuns", "PT0.001S"));
-        reference.add(new StringRefAddr("minEvictableIdleDuration", "PT720H"));
-        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "invalid"));
-        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "invalid"));
-        final DriverAdapterCPDS restored = resolve(reference);
-        assertEquals(Duration.ofMillis(1), restored.getDurationBetweenEvictionRuns());
-        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
-    }
-
-    /**
-     * Tests that null duration properties fall back to legacy millisecond values.
-     *
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @Test
-    void testNullModernDurationReferenceFallsBackToLegacy() throws Exception {
-        final Reference reference = new Reference(DriverAdapterCPDS.class.getName(), DriverAdapterCPDS.class.getName(), null);
-        reference.add(new StringRefAddr("durationBetweenEvictionRuns", null));
-        reference.add(new StringRefAddr("minEvictableIdleDuration", null));
-        reference.add(new StringRefAddr("timeBetweenEvictionRunsMillis", "2592000000"));
-        reference.add(new StringRefAddr("minEvictableIdleTimeMillis", "2592000000"));
-        final DriverAdapterCPDS restored = resolve(reference);
-        assertEquals(Duration.ofDays(30), restored.getDurationBetweenEvictionRuns());
-        assertEquals(Duration.ofDays(30), restored.getMinEvictableIdleDuration());
     }
 
 }

@@ -73,12 +73,6 @@ final class DriverFactory {
     private static final String SQL_STATE_UNABLE_TO_CONNECT = "08001";
 
     /**
-     * Constructs a driver factory.
-     */
-    DriverFactory() {
-    }
-
-    /**
      * Selects the JDBC driver for a data source, creating an instance when a driver class name is configured.
      * <p>
      * An explicitly configured driver takes precedence. Otherwise, a named class is loaded without initialization using the configured class loader, or DBCP's
@@ -141,5 +135,11 @@ final class DriverFactory {
             }
         }
         return driver;
+    }
+
+    /**
+     * Constructs a driver factory.
+     */
+    DriverFactory() {
     }
 }

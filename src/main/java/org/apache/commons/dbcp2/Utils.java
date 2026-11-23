@@ -234,19 +234,6 @@ public final class Utils {
     }
 
     /**
-     * Finds the first matching object in a chain, visiting each object by identity at most once.
-     *
-     * @param <T> the chain element type.
-     * @param start the first object to inspect, which may be null.
-     * @param matches tests whether the current object is the desired result.
-     * @param next gets the next object in the chain.
-     * @return the first match, or null if the chain ends or cycles before a match is found.
-     */
-    static <T> T findInChain(final T start, final Predicate<? super T> matches, final Function<? super T, ? extends T> next) {
-        return Utils.<T, RuntimeException>findInChain(start, matches::test, next::apply, current -> null);
-    }
-
-    /**
      * Finds the first matching object in a chain, allowing checked exceptions and caller-specific cycle handling.
      *
      * @param <T> the chain element type.
@@ -272,6 +259,19 @@ public final class Utils {
             current = next.apply(current);
         }
         return null;
+    }
+
+    /**
+     * Finds the first matching object in a chain, visiting each object by identity at most once.
+     *
+     * @param <T> the chain element type.
+     * @param start the first object to inspect, which may be null.
+     * @param matches tests whether the current object is the desired result.
+     * @param next gets the next object in the chain.
+     * @return the first match, or null if the chain ends or cycles before a match is found.
+     */
+    static <T> T findInChain(final T start, final Predicate<? super T> matches, final Function<? super T, ? extends T> next) {
+        return Utils.<T, RuntimeException>findInChain(start, matches::test, next::apply, current -> null);
     }
 
     /**

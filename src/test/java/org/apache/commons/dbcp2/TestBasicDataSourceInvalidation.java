@@ -69,13 +69,9 @@ class TestBasicDataSourceInvalidation {
     private static final AtomicInteger IDS = new AtomicInteger();
     private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
-    private BasicDataSource dataSource;
-    private Connection pooledConnection;
-
     private static Stream<Arguments> acyclicArguments() {
         return Stream.of(0, 1, 2, 16, 256).flatMap(length -> Stream.of(false, true).map(external -> Arguments.of(length, external)));
     }
-
     private static Stream<Arguments> cyclicArguments() {
         return Stream.of(0, 1, 8).flatMap(prefixLength -> Stream.of(1, 2, 3, 16).flatMap(cycleLength ->
             Stream.of(false, true).flatMap(external -> Stream.of(false, true).map(bridged -> Arguments.of(prefixLength, cycleLength, external, bridged)))));
@@ -91,6 +87,10 @@ class TestBasicDataSourceInvalidation {
                     }
                 });
     }
+
+    private BasicDataSource dataSource;
+
+    private Connection pooledConnection;
 
     private void assertCyclicChain(final int prefixLength, final int cycleLength, final boolean external, final boolean bridged) throws SQLException {
         final List<DelegatingConnection<Connection>> nodes = new ArrayList<>();
@@ -225,6 +225,12 @@ class TestBasicDataSourceInvalidation {
         assertTrue(pooledConnection.isValid(1));
     }
 
+    @Test
+    void testInvalidateInteriorCycle() throws SQLException {
+        // A -> B -> C -> B never returns to A and has no self-loop.
+        assertCyclicChain(1, 2, false, false);
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 16})
     void testInvalidateInterleavedWrappers(final int length) throws SQLException {
@@ -236,12 +242,6 @@ class TestBasicDataSourceInvalidation {
         assertTimeoutPreemptively(TIMEOUT, () -> dataSource.invalidateConnection(input));
         assertEquals(0, dataSource.getNumActive());
         assertTrue(pooledConnection.isClosed());
-    }
-
-    @Test
-    void testInvalidateInteriorCycle() throws SQLException {
-        // A -> B -> C -> B never returns to A and has no self-loop.
-        assertCyclicChain(1, 2, false, false);
     }
 
     @ParameterizedTest

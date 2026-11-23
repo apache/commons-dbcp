@@ -276,16 +276,6 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
         return Utils.getInnermostDelegate(this, DelegatingDatabaseMetaData.class, DelegatingDatabaseMetaData::getDelegate);
     }
 
-    /**
-     * Tests whether access to the underlying {@link DatabaseMetaData} is allowed, consulting the connection that
-     * created me.
-     *
-     * @return false only when the connection that created me forbids access to the underlying connection.
-     */
-    private boolean isAccessToUnderlyingConnectionAllowed() {
-        return connection.isAccessToUnderlyingConnectionAllowed();
-    }
-
     @Override
     public int getJDBCMajorVersion() throws SQLException {
         return getI(databaseMetaData::getJDBCMajorVersion);
@@ -567,6 +557,16 @@ public class DelegatingDatabaseMetaData implements DatabaseMetaData {
     @Override
     public boolean insertsAreDetected(final int type) throws SQLException {
         return getB(() -> databaseMetaData.insertsAreDetected(type));
+    }
+
+    /**
+     * Tests whether access to the underlying {@link DatabaseMetaData} is allowed, consulting the connection that
+     * created me.
+     *
+     * @return false only when the connection that created me forbids access to the underlying connection.
+     */
+    private boolean isAccessToUnderlyingConnectionAllowed() {
+        return connection.isAccessToUnderlyingConnectionAllowed();
     }
 
     @Override

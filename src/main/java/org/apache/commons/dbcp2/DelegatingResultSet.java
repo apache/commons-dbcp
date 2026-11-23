@@ -608,24 +608,6 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         return Utils.getInnermostDelegate(this, DelegatingResultSet.class, DelegatingResultSet::getDelegate);
     }
 
-    /**
-     * Tests whether access to the underlying {@link ResultSet} is allowed.
-     * <p>
-     * Consults the creating statement or connection while it is attached, and retains the last policy when close clears those references.
-     * </p>
-     *
-     * @return true if access to the underlying result set is allowed.
-     */
-    private boolean isAccessToUnderlyingConnectionAllowed() {
-        if (statement instanceof DelegatingStatement) {
-            return ((DelegatingStatement) statement).isAccessToUnderlyingConnectionAllowed();
-        }
-        if (connection instanceof DelegatingConnection) {
-            return ((DelegatingConnection<?>) connection).isAccessToUnderlyingConnectionAllowed();
-        }
-        return accessToUnderlyingConnectionAllowed;
-    }
-
     @Override
     public int getInt(final int columnIndex) throws SQLException {
         try {
@@ -1078,6 +1060,24 @@ public final class DelegatingResultSet extends AbandonedTrace implements ResultS
         } catch (final SQLException e) {
             handleException(e);
         }
+    }
+
+    /**
+     * Tests whether access to the underlying {@link ResultSet} is allowed.
+     * <p>
+     * Consults the creating statement or connection while it is attached, and retains the last policy when close clears those references.
+     * </p>
+     *
+     * @return true if access to the underlying result set is allowed.
+     */
+    private boolean isAccessToUnderlyingConnectionAllowed() {
+        if (statement instanceof DelegatingStatement) {
+            return ((DelegatingStatement) statement).isAccessToUnderlyingConnectionAllowed();
+        }
+        if (connection instanceof DelegatingConnection) {
+            return ((DelegatingConnection<?>) connection).isAccessToUnderlyingConnectionAllowed();
+        }
+        return accessToUnderlyingConnectionAllowed;
     }
 
     @Override

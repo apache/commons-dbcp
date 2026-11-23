@@ -600,6 +600,22 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
         return innerCon.equals(c);
     }
 
+    /**
+     * Tests whether this wrapper allows access to its underlying connection.
+     * <p>
+     * This policy applies to delegate getters and JDBC unwrapping on this connection and its statements, result sets, and database metadata.
+     * Unwrapping an interface implemented by the wrapper itself remains allowed. The default implementation returns {@code true}; pool guard
+     * wrappers override it to consult their configuration. This policy helps prevent accidental misuse and is not a security boundary against
+     * code running in the same JVM. Internal accessors used by pool lifecycle operations bypass it.
+     * </p>
+     *
+     * @return true if access to the underlying connection is allowed.
+     * @since 2.15.0
+     */
+    protected boolean isAccessToUnderlyingConnectionAllowed() {
+        return true;
+    }
+
     @Override
     public boolean isClosed() throws SQLException {
         return closed || connection == null || connection.isClosed();
@@ -666,22 +682,6 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     @Override
     public boolean isValid(final int timeoutSeconds) throws SQLException {
         return isValid(Duration.ofSeconds(timeoutSeconds));
-    }
-
-    /**
-     * Tests whether this wrapper allows access to its underlying connection.
-     * <p>
-     * This policy applies to delegate getters and JDBC unwrapping on this connection and its statements, result sets, and database metadata.
-     * Unwrapping an interface implemented by the wrapper itself remains allowed. The default implementation returns {@code true}; pool guard
-     * wrappers override it to consult their configuration. This policy helps prevent accidental misuse and is not a security boundary against
-     * code running in the same JVM. Internal accessors used by pool lifecycle operations bypass it.
-     * </p>
-     *
-     * @return true if access to the underlying connection is allowed.
-     * @since 2.15.0
-     */
-    protected boolean isAccessToUnderlyingConnectionAllowed() {
-        return true;
     }
 
     @Override

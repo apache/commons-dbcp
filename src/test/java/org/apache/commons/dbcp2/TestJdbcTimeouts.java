@@ -55,6 +55,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TestJdbcTimeouts {
 
     /**
+     * Supplies statement types and timeout changes for delegate replacement tests.
+     *
+     * @return callable-statement and timeout-change flag combinations.
+     */
+    static Stream<Arguments> changedDelegates() {
+        return Stream.of(false, true).flatMap(callable -> Stream.of(false, true).map(changeTimeout -> Arguments.of(callable, changeTimeout)));
+    }
+
+    /**
      * Creates a statement using one of the JDBC statement creation overloads.
      *
      * @param connection the connection that creates the statement.
@@ -95,6 +104,15 @@ class TestJdbcTimeouts {
     }
 
     /**
+     * Supplies statement types and failure modes for timeout setter tests.
+     *
+     * @return callable-statement and unchecked-failure flag combinations.
+     */
+    static Stream<Arguments> failedTimeoutSetters() {
+        return Stream.of(false, true).flatMap(callable -> Stream.of(false, true).map(unchecked -> Arguments.of(callable, unchecked)));
+    }
+
+    /**
      * Creates a callable statement test double backed by a mutable query timeout.
      *
      * @param timeout the value read and updated by the timeout accessors.
@@ -127,24 +145,6 @@ class TestJdbcTimeouts {
         source.setPoolPreparedStatements(true);
         source.setDefaultQueryTimeout(defaultTimeout);
         return source;
-    }
-
-    /**
-     * Supplies statement types and timeout changes for delegate replacement tests.
-     *
-     * @return callable-statement and timeout-change flag combinations.
-     */
-    static Stream<Arguments> changedDelegates() {
-        return Stream.of(false, true).flatMap(callable -> Stream.of(false, true).map(changeTimeout -> Arguments.of(callable, changeTimeout)));
-    }
-
-    /**
-     * Supplies statement types and failure modes for timeout setter tests.
-     *
-     * @return callable-statement and unchecked-failure flag combinations.
-     */
-    static Stream<Arguments> failedTimeoutSetters() {
-        return Stream.of(false, true).flatMap(callable -> Stream.of(false, true).map(unchecked -> Arguments.of(callable, unchecked)));
     }
 
     /**
@@ -212,6 +212,27 @@ class TestJdbcTimeouts {
                     statement.setQueryTimeout(7);
                     statement.setQueryTimeout(9);
                 }
+            }
+        }
+    }
+
+    /**
+     * Tests that closing a connection restores the timeout of a statement left open by its borrower.
+     *
+     * @param callable whether to exercise callable statements instead of prepared statements.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testConnectionCloseRestoresUnclosedStatementTimeout(final boolean callable) throws Exception {
+        try (BasicDataSource source = newDataSource(null)) {
+            try (Connection connection = source.getConnection()) {
+                final PreparedStatement statement = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1");
+                statement.setQueryTimeout(7);
+            }
+            try (Connection connection = source.getConnection();
+                    PreparedStatement statement = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
+                assertEquals(1000, statement.getQueryTimeout());
             }
         }
     }
@@ -362,6 +383,24 @@ class TestJdbcTimeouts {
     }
 
     /**
+     * Tests that setting a nonpooled statement timeout does not require driver support for reading it.
+     *
+     * @param callable whether to exercise callable statements instead of prepared statements.
+     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testNonPooledQueryTimeoutDoesNotRequireGetter(final boolean callable) throws SQLException {
+        final CallableStatement raw = mock(CallableStatement.class);
+        when(raw.getQueryTimeout()).thenThrow(new SQLFeatureNotSupportedException("Getter unavailable"));
+        try (PreparedStatement statement = callable ? new DelegatingCallableStatement(null, raw) : new DelegatingPreparedStatement(null, raw)) {
+            statement.setQueryTimeout(7);
+            verify(raw).setQueryTimeout(7);
+            verify(raw, never()).getQueryTimeout();
+        }
+    }
+
+    /**
      * Tests that a statement is discarded when its original query timeout cannot be restored.
      *
      * @param callable whether to exercise callable statements instead of prepared statements.
@@ -384,132 +423,6 @@ class TestJdbcTimeouts {
             borrowed.close();
             assertEquals(0, pool.getNumIdle());
             verify(statement).close();
-        }
-    }
-
-    /**
-     * Tests duration conversion to bounded JDBC timeout seconds.
-     *
-     * @param timeout the duration under test.
-     * @param expected the expected timeout passed to JDBC, in seconds.
-     */
-    @ParameterizedTest
-    @MethodSource("timeouts")
-    void testToJdbcSeconds(final Duration timeout, final int expected) {
-        assertEquals(expected, Utils.toJdbcSeconds(timeout));
-    }
-
-    /**
-     * Tests that JDBC timeout conversion rejects a null duration.
-     */
-    @Test
-    void testToJdbcSecondsNull() {
-        assertThrows(NullPointerException.class, () -> Utils.toJdbcSeconds(null));
-    }
-
-    /**
-     * Tests that closing a connection restores the timeout of a statement left open by its borrower.
-     *
-     * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void testConnectionCloseRestoresUnclosedStatementTimeout(final boolean callable) throws Exception {
-        try (BasicDataSource source = newDataSource(null)) {
-            try (Connection connection = source.getConnection()) {
-                final PreparedStatement statement = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1");
-                statement.setQueryTimeout(7);
-            }
-            try (Connection connection = source.getConnection();
-                    PreparedStatement statement = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
-                assertEquals(1000, statement.getQueryTimeout());
-            }
-        }
-    }
-
-    /**
-     * Tests that an unchanged pooled statement does not access the driver query timeout.
-     *
-     * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void testUntouchedPooledStatementDoesNotReadOrWriteTimeout(final boolean callable) throws Exception {
-        final Connection raw = mock(Connection.class);
-        final CallableStatement statement = mock(CallableStatement.class);
-        when(raw.prepareStatement("SELECT 1")).thenReturn(statement);
-        when(raw.prepareCall("SELECT 1")).thenReturn(statement);
-        try (PoolingConnection connection = new PoolingConnection(raw);
-                GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool = new GenericKeyedObjectPool<>(connection)) {
-            connection.setStatementPool(pool);
-            for (int i = 0; i < 2; i++) {
-                try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
-                    assertFalse(borrowed.isClosed());
-                }
-            }
-            verify(statement, never()).getQueryTimeout();
-            verify(statement, never()).setQueryTimeout(anyInt());
-        }
-    }
-
-    /**
-     * Tests that setting a nonpooled statement timeout does not require driver support for reading it.
-     *
-     * @param callable whether to exercise callable statements instead of prepared statements.
-     * @throws SQLException if JDBC setup, an operation, or cleanup unexpectedly fails.
-     */
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void testNonPooledQueryTimeoutDoesNotRequireGetter(final boolean callable) throws SQLException {
-        final CallableStatement raw = mock(CallableStatement.class);
-        when(raw.getQueryTimeout()).thenThrow(new SQLFeatureNotSupportedException("Getter unavailable"));
-        try (PreparedStatement statement = callable ? new DelegatingCallableStatement(null, raw) : new DelegatingPreparedStatement(null, raw)) {
-            statement.setQueryTimeout(7);
-            verify(raw).setQueryTimeout(7);
-            verify(raw, never()).getQueryTimeout();
-        }
-    }
-
-    /**
-     * Tests restoration after a driver changes the timeout and then throws from the setter.
-     *
-     * @param callable whether to exercise callable statements instead of prepared statements.
-     * @param unchecked whether the timeout setter throws an unchecked exception.
-     * @throws Exception if setting up, using, or closing the test resources fails.
-     */
-    @ParameterizedTest
-    @MethodSource("failedTimeoutSetters")
-    void testPooledTimeoutRestoredAfterSetterMutatesAndThrows(final boolean callable, final boolean unchecked) throws Exception {
-        final Connection raw = mock(Connection.class);
-        final CallableStatement statement = mock(CallableStatement.class);
-        final AtomicInteger timeout = new AtomicInteger(5);
-        final Exception failure = unchecked ? new IllegalStateException("Timeout changed before failure")
-                : new SQLException("Timeout changed before failure");
-        when(raw.prepareStatement("SELECT 1")).thenReturn(statement);
-        when(raw.prepareCall("SELECT 1")).thenReturn(statement);
-        when(statement.getQueryTimeout()).thenAnswer(invocation -> timeout.get());
-        doAnswer(invocation -> {
-            final int seconds = invocation.getArgument(0);
-            timeout.set(seconds);
-            if (seconds == 7) {
-                throw failure;
-            }
-            return null;
-        }).when(statement).setQueryTimeout(anyInt());
-        try (PoolingConnection connection = new PoolingConnection(raw);
-                GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool = new GenericKeyedObjectPool<>(connection)) {
-            connection.setStatementPool(pool);
-            try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
-                assertSame(failure, assertThrows(failure.getClass(), () -> borrowed.setQueryTimeout(7)));
-                assertEquals(7, timeout.get());
-            }
-            assertEquals(5, timeout.get());
-            assertEquals(1, pool.getNumIdle());
-            try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
-                assertEquals(5, borrowed.getQueryTimeout());
-            }
         }
     }
 
@@ -573,6 +486,93 @@ class TestJdbcTimeouts {
                 borrowed.setDelegate(statement);
             }
             assertEquals(5, timeout.get());
+        }
+    }
+
+    /**
+     * Tests restoration after a driver changes the timeout and then throws from the setter.
+     *
+     * @param callable whether to exercise callable statements instead of prepared statements.
+     * @param unchecked whether the timeout setter throws an unchecked exception.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @MethodSource("failedTimeoutSetters")
+    void testPooledTimeoutRestoredAfterSetterMutatesAndThrows(final boolean callable, final boolean unchecked) throws Exception {
+        final Connection raw = mock(Connection.class);
+        final CallableStatement statement = mock(CallableStatement.class);
+        final AtomicInteger timeout = new AtomicInteger(5);
+        final Exception failure = unchecked ? new IllegalStateException("Timeout changed before failure")
+                : new SQLException("Timeout changed before failure");
+        when(raw.prepareStatement("SELECT 1")).thenReturn(statement);
+        when(raw.prepareCall("SELECT 1")).thenReturn(statement);
+        when(statement.getQueryTimeout()).thenAnswer(invocation -> timeout.get());
+        doAnswer(invocation -> {
+            final int seconds = invocation.getArgument(0);
+            timeout.set(seconds);
+            if (seconds == 7) {
+                throw failure;
+            }
+            return null;
+        }).when(statement).setQueryTimeout(anyInt());
+        try (PoolingConnection connection = new PoolingConnection(raw);
+                GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool = new GenericKeyedObjectPool<>(connection)) {
+            connection.setStatementPool(pool);
+            try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
+                assertSame(failure, assertThrows(failure.getClass(), () -> borrowed.setQueryTimeout(7)));
+                assertEquals(7, timeout.get());
+            }
+            assertEquals(5, timeout.get());
+            assertEquals(1, pool.getNumIdle());
+            try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
+                assertEquals(5, borrowed.getQueryTimeout());
+            }
+        }
+    }
+
+    /**
+     * Tests duration conversion to bounded JDBC timeout seconds.
+     *
+     * @param timeout the duration under test.
+     * @param expected the expected timeout passed to JDBC, in seconds.
+     */
+    @ParameterizedTest
+    @MethodSource("timeouts")
+    void testToJdbcSeconds(final Duration timeout, final int expected) {
+        assertEquals(expected, Utils.toJdbcSeconds(timeout));
+    }
+
+    /**
+     * Tests that JDBC timeout conversion rejects a null duration.
+     */
+    @Test
+    void testToJdbcSecondsNull() {
+        assertThrows(NullPointerException.class, () -> Utils.toJdbcSeconds(null));
+    }
+
+    /**
+     * Tests that an unchanged pooled statement does not access the driver query timeout.
+     *
+     * @param callable whether to exercise callable statements instead of prepared statements.
+     * @throws Exception if setting up, using, or closing the test resources fails.
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void testUntouchedPooledStatementDoesNotReadOrWriteTimeout(final boolean callable) throws Exception {
+        final Connection raw = mock(Connection.class);
+        final CallableStatement statement = mock(CallableStatement.class);
+        when(raw.prepareStatement("SELECT 1")).thenReturn(statement);
+        when(raw.prepareCall("SELECT 1")).thenReturn(statement);
+        try (PoolingConnection connection = new PoolingConnection(raw);
+                GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool = new GenericKeyedObjectPool<>(connection)) {
+            connection.setStatementPool(pool);
+            for (int i = 0; i < 2; i++) {
+                try (PreparedStatement borrowed = callable ? connection.prepareCall("SELECT 1") : connection.prepareStatement("SELECT 1")) {
+                    assertFalse(borrowed.isClosed());
+                }
+            }
+            verify(statement, never()).getQueryTimeout();
+            verify(statement, never()).setQueryTimeout(anyInt());
         }
     }
 

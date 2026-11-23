@@ -1153,6 +1153,15 @@ public class TestBasicDataSource extends TestConnectionPool {
     }
 
     @Test
+    void testValidationQueryTimeoutSubSecondFail() {
+        ds.setTestOnBorrow(true);
+        // A positive sub-second timeout must not be truncated to 0 (no timeout); it becomes 1 second, too fast for TesterStatement.
+        ds.setValidationQueryTimeout(Duration.ofMillis(100));
+        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
+        assertTrue(e.toString().contains("timeout"));
+    }
+
+    @Test
     void testValidationQueryTimeoutSucceed() throws Exception {
         ds.setTestOnBorrow(true);
         ds.setTestOnReturn(true);
@@ -1160,15 +1169,6 @@ public class TestBasicDataSource extends TestConnectionPool {
         try (final Connection con = ds.getConnection()) {
             // close right away.
         }
-    }
-
-    @Test
-    void testValidationQueryTimeoutSubSecondFail() {
-        ds.setTestOnBorrow(true);
-        // A positive sub-second timeout must not be truncated to 0 (no timeout); it becomes 1 second, too fast for TesterStatement.
-        ds.setValidationQueryTimeout(Duration.ofMillis(100));
-        final SQLException e = assertThrows(SQLException.class, ds::getConnection);
-        assertTrue(e.toString().contains("timeout"));
     }
 
     @Test

@@ -61,18 +61,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class TestObjectNameWrapper {
 
     /**
-     * Management interface for distinguishing registrations on different servers.
-     */
-    public interface ValueMBean {
-        /**
-         * Gets the value identifying this registration.
-         *
-         * @return The value.
-         */
-        int getValue();
-    }
-
-    /**
      * Initializes a separate wrapper class with unavailable management support, without changing the platform server or system properties.
      */
     private static final class UnavailableManagementClassLoader extends URLClassLoader {
@@ -107,6 +95,18 @@ public class TestObjectNameWrapper {
                 return type;
             }
         }
+    }
+
+    /**
+     * Management interface for distinguishing registrations on different servers.
+     */
+    public interface ValueMBean {
+        /**
+         * Gets the value identifying this registration.
+         *
+         * @return The value.
+         */
+        int getValue();
     }
 
     private static Method accessibleMethod(final Class<?> type, final String name, final Class<?>... parameterTypes) throws NoSuchMethodException {
@@ -156,16 +156,16 @@ public class TestObjectNameWrapper {
         return Stream.of(new SecurityException("Access denied"), new NoClassDefFoundError("Missing dependency"), new AssertionError("Unexpected failure"));
     }
 
-    private static Stream<Throwable> unregistrationFailures() {
-        return Stream.of(new InstanceNotFoundException("Registration was removed"),
-                new MBeanRegistrationException(new Exception("Unregistration callback failed")),
-                new SecurityException("Unregistration denied"), new NoClassDefFoundError("Missing dependency"));
-    }
-
     private static void unregisterIfPresent(final MBeanServer server, final ObjectName name) throws Exception {
         if (server.isRegistered(name)) {
             server.unregisterMBean(name);
         }
+    }
+
+    private static Stream<Throwable> unregistrationFailures() {
+        return Stream.of(new InstanceNotFoundException("Registration was removed"),
+                new MBeanRegistrationException(new Exception("Unregistration callback failed")),
+                new SecurityException("Unregistration denied"), new NoClassDefFoundError("Missing dependency"));
     }
 
     @Test

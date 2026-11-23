@@ -559,6 +559,24 @@ public class TestDriverFactory {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(LoaderMode.class)
+    void testCreateDriver(final LoaderMode loaderMode) throws SQLException {
+        final Class<? extends Driver> driverClass = loaderMode.driverClass;
+        assertFalse(INITIALIZED_CLASSES.contains(driverClass));
+        assertFalse(CONSTRUCTED_CLASSES.contains(driverClass));
+        try (BasicDataSource dataSource = new BasicDataSource(); LoaderScope loaders = new LoaderScope(dataSource, loaderMode)) {
+            dataSource.setDriverClassName(driverClass.getName());
+            dataSource.setUrl(URL);
+            final Driver driver = DriverFactory.createDriver(dataSource);
+            assertSame(driverClass, driver.getClass());
+            assertTrue(INITIALIZED_CLASSES.contains(driverClass));
+            assertTrue(CONSTRUCTED_CLASSES.contains(driverClass));
+            assertTrue(driver.acceptsURL(URL));
+            loaders.assertUsed(driverClass.getName());
+        }
+    }
+
     @ParameterizedTest(name = "{0}, nonDriver={1}")
     @MethodSource("definingLoaderCases")
     void testDefiningClassLoader(final LoaderMode loaderMode, final boolean nonDriver) throws Exception {
@@ -595,24 +613,6 @@ public class TestDriverFactory {
             assertEquals(contextFallback ? Collections.singletonList(className) : Collections.emptyList(), otherLoader.requests);
         } finally {
             thread.setContextClassLoader(original);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(LoaderMode.class)
-    void testCreateDriver(final LoaderMode loaderMode) throws SQLException {
-        final Class<? extends Driver> driverClass = loaderMode.driverClass;
-        assertFalse(INITIALIZED_CLASSES.contains(driverClass));
-        assertFalse(CONSTRUCTED_CLASSES.contains(driverClass));
-        try (BasicDataSource dataSource = new BasicDataSource(); LoaderScope loaders = new LoaderScope(dataSource, loaderMode)) {
-            dataSource.setDriverClassName(driverClass.getName());
-            dataSource.setUrl(URL);
-            final Driver driver = DriverFactory.createDriver(dataSource);
-            assertSame(driverClass, driver.getClass());
-            assertTrue(INITIALIZED_CLASSES.contains(driverClass));
-            assertTrue(CONSTRUCTED_CLASSES.contains(driverClass));
-            assertTrue(driver.acceptsURL(URL));
-            loaders.assertUsed(driverClass.getName());
         }
     }
 
@@ -838,6 +838,22 @@ public class TestDriverFactory {
 
     @ParameterizedTest
     @EnumSource(LoaderMode.class)
+    void testRejectNonDriverWithoutPublicConstructor(final LoaderMode loaderMode) throws SQLException {
+        final Class<?> nonDriverClass = NonDriverWithoutPublicConstructor.class;
+        assertFalse(INITIALIZED_CLASSES.contains(nonDriverClass));
+        try (BasicDataSource dataSource = new BasicDataSource(); LoaderScope loaders = new LoaderScope(dataSource, loaderMode)) {
+            dataSource.setDriverClassName(nonDriverClass.getName());
+            dataSource.setUrl(URL);
+            final SQLException exception = assertThrows(SQLException.class, () -> DriverFactory.createDriver(dataSource));
+            assertConnectionFailure(exception);
+            assertInstanceOf(ClassCastException.class, exception.getCause());
+            assertFalse(INITIALIZED_CLASSES.contains(nonDriverClass), "A non-driver must not be initialized");
+            loaders.assertUsed(nonDriverClass.getName());
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(LoaderMode.class)
     void testRejectNonDriverWithoutSideEffects(final LoaderMode loaderMode) throws SQLException {
         // Class literals and getName() do not initialize these fixtures.
         final Class<?> nonDriverClass = loaderMode.nonDriverClass;
@@ -850,22 +866,6 @@ public class TestDriverFactory {
             assertEquals("Cannot create JDBC driver of class '" + nonDriverClass.getName() + "' for connect URL '" + URL + "'", exception.getMessage());
             assertInstanceOf(ClassCastException.class, exception.getCause());
             assertNoSideEffects(nonDriverClass);
-            loaders.assertUsed(nonDriverClass.getName());
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(LoaderMode.class)
-    void testRejectNonDriverWithoutPublicConstructor(final LoaderMode loaderMode) throws SQLException {
-        final Class<?> nonDriverClass = NonDriverWithoutPublicConstructor.class;
-        assertFalse(INITIALIZED_CLASSES.contains(nonDriverClass));
-        try (BasicDataSource dataSource = new BasicDataSource(); LoaderScope loaders = new LoaderScope(dataSource, loaderMode)) {
-            dataSource.setDriverClassName(nonDriverClass.getName());
-            dataSource.setUrl(URL);
-            final SQLException exception = assertThrows(SQLException.class, () -> DriverFactory.createDriver(dataSource));
-            assertConnectionFailure(exception);
-            assertInstanceOf(ClassCastException.class, exception.getCause());
-            assertFalse(INITIALIZED_CLASSES.contains(nonDriverClass), "A non-driver must not be initialized");
             loaders.assertUsed(nonDriverClass.getName());
         }
     }

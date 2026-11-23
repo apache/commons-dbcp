@@ -80,16 +80,6 @@ final class ObjectNameWrapper {
     }
 
     /**
-     * Wraps an object name using the platform MBean server.
-     *
-     * @param objectName The object name, may be {@code null} to disable registration and unregistration.
-     * @return A new wrapper for the name, associated with the platform MBean server or a {@code null} server if unavailable.
-     */
-    static ObjectNameWrapper wrap(final ObjectName objectName) {
-        return new ObjectNameWrapper(MBEAN_SERVER, objectName);
-    }
-
-    /**
      * Wraps an object name using the supplied MBean server.
      *
      * @param server The server to use, may be {@code null} to disable registration and unregistration; no platform server fallback is performed.
@@ -98,6 +88,16 @@ final class ObjectNameWrapper {
      */
     static ObjectNameWrapper wrap(final MBeanServer server, final ObjectName objectName) {
         return new ObjectNameWrapper(server, objectName);
+    }
+
+    /**
+     * Wraps an object name using the platform MBean server.
+     *
+     * @param objectName The object name, may be {@code null} to disable registration and unregistration.
+     * @return A new wrapper for the name, associated with the platform MBean server or a {@code null} server if unavailable.
+     */
+    static ObjectNameWrapper wrap(final ObjectName objectName) {
+        return new ObjectNameWrapper(MBEAN_SERVER, objectName);
     }
 
     /**

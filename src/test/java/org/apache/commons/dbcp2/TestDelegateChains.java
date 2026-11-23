@@ -193,11 +193,6 @@ class TestDelegateChains {
     }
 
     @Test
-    void testInteriorConnectionCycle() throws Exception {
-        testCyclicChain(Kind.CONNECTION, 1, 2);
-    }
-
-    @Test
     void testIdentityRatherThanEquality() throws Exception {
         final Object terminal = Kind.CONNECTION.terminal();
         Connection head = (Connection) terminal;
@@ -216,5 +211,10 @@ class TestDelegateChains {
         }
         assertSame(terminal, Kind.CONNECTION.innermost(head));
         assertSame(terminal, Kind.CONNECTION_INTERNAL.innermost(head));
+    }
+
+    @Test
+    void testInteriorConnectionCycle() throws Exception {
+        testCyclicChain(Kind.CONNECTION, 1, 2);
     }
 }
