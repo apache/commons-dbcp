@@ -48,6 +48,8 @@ import javax.transaction.xa.Xid;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for LocalXAConnectionFactory$LocalXAResource
@@ -449,6 +451,56 @@ public class TestLocalXaResource {
     void testIsSame() {
         assertTrue(resource.isSameRM(resource));
         assertFalse(resource.isSameRM(new LocalXAConnectionFactory.LocalXAResource(conn)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { false, true })
+    void testPrepareReadOnlyEndsTransactionBranch(final boolean autoCommit) throws SQLException, XAException {
+        final Xid xid = new TestXid();
+        conn.setAutoCommit(autoCommit);
+        conn.setReadOnly(true);
+        resource.start(xid, XAResource.TMNOFLAGS);
+        resource.end(xid, XAResource.TMSUCCESS);
+        assertEquals(XAResource.XA_RDONLY, resource.prepare(xid));
+        assertNull(resource.getXid());
+        assertEquals(autoCommit, conn.getAutoCommit());
+        assertFalse(((TestConnection) conn).committed);
+        assertFalse(((TestConnection) conn).rolledback);
+        final Xid nextXid = new TestXid();
+        resource.start(nextXid, XAResource.TMNOFLAGS);
+        assertEquals(nextXid, resource.getXid());
+        assertFalse(conn.getAutoCommit());
+    }
+
+    @Test
+    void testPrepareReadOnlyKeepsTransactionBranchWhenAutoCommitRestoreFails() throws SQLException, XAException {
+        final Xid xid = new TestXid();
+        conn.setAutoCommit(true);
+        conn.setReadOnly(true);
+        resource.start(xid, XAResource.TMNOFLAGS);
+        resource.end(xid, XAResource.TMSUCCESS);
+        ((TestConnection) conn).throwWhenSetAutoCommit = true;
+        assertEquals(XAResource.XA_OK, resource.prepare(xid));
+        assertEquals(xid, resource.getXid());
+        assertFalse(conn.getAutoCommit());
+        ((TestConnection) conn).throwWhenSetAutoCommit = false;
+        resource.rollback(xid);
+        assertTrue(((TestConnection) conn).rolledback);
+        assertTrue(conn.getAutoCommit());
+        assertNull(resource.getXid());
+    }
+
+    @Test
+    void testPrepareReadWriteKeepsTransactionBranch() throws SQLException, XAException {
+        final Xid xid = new TestXid();
+        conn.setReadOnly(false);
+        resource.start(xid, XAResource.TMNOFLAGS);
+        resource.end(xid, XAResource.TMSUCCESS);
+        assertEquals(XAResource.XA_OK, resource.prepare(xid));
+        assertEquals(xid, resource.getXid());
+        resource.commit(xid, false);
+        assertTrue(((TestConnection) conn).committed);
+        assertNull(resource.getXid());
     }
 
     @Test

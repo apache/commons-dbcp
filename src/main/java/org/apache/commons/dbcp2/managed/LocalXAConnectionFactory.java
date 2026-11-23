@@ -184,14 +184,26 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
         }
 
         /**
-         * This method does nothing since the LocalXAConnection does not support two-phase-commit. This method will
-         * return XAResource.XA_RDONLY if the connection isReadOnly(). This assumes that the physical connection is
-         * wrapped with a proxy that prevents an application from changing the read-only flag while enrolled in a
-         * transaction.
+         * Prepares the transaction branch for completion.
+         *
+         * <p>
+         * For a read-only connection, restores the original auto-commit setting and clears the transaction association before returning
+         * {@link XAResource#XA_RDONLY}. The transaction manager will not call {@link #commit(Xid, boolean)} or {@link #rollback(Xid)} for that branch.
+         * </p>
+         *
+         * <p>
+         * Otherwise, or if checking the read-only setting or restoring auto-commit throws an {@link SQLException}, retains the transaction association
+         * and returns {@link XAResource#XA_OK}. The local connection does not support an actual two-phase prepare operation.
+         * </p>
+         *
+         * <p>
+         * Assumes that the physical connection is wrapped with a proxy that prevents an application from changing the read-only flag while enrolled
+         * in a transaction.
+         * </p>
          *
          * @param xid
          *            the id of the transaction branch for this connection
-         * @return XAResource.XA_RDONLY if the connection.isReadOnly(); XAResource.XA_OK otherwise
+         * @return {@link XAResource#XA_RDONLY} if the read-only branch completes successfully; {@link XAResource#XA_OK} otherwise.
          */
         @Override
         public synchronized int prepare(final Xid xid) {
@@ -202,6 +214,9 @@ public class LocalXAConnectionFactory implements XAConnectionFactory {
                 if (connection.isReadOnly()) {
                     // update the auto commit flag
                     connection.setAutoCommit(originalAutoCommit);
+
+                    // A read-only vote completes the branch without a subsequent commit or rollback call.
+                    this.currentXid = null;
 
                     // tell the transaction manager we are read only
                     return XA_RDONLY;
