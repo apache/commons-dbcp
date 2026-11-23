@@ -176,8 +176,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         final ConnectionPoolDataSource cpds = testCPDS(userName, password);
         // Create an object pool to contain our PooledConnections
         factory = new KeyedCPDSConnectionFactory(cpds, getValidationQuery(), getValidationQueryTimeoutDuration(), isRollbackAfterValidation(),
-                this::getConfiguredLoginTimeout);
-        factory.setMaxConn(getMaxConnDuration());
+                getMaxConnDuration(), this::getConfiguredLoginTimeout);
         final GenericKeyedObjectPoolConfig<PooledConnectionAndInfo> config = new GenericKeyedObjectPoolConfig<>();
         config.setBlockWhenExhausted(getDefaultBlockWhenExhausted());
         config.setEvictionPolicyClassName(getDefaultEvictionPolicyClassName());
