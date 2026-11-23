@@ -55,12 +55,14 @@ final class CPDSConnectionFactory extends AbstractConnectionFactory
      * @param rollbackAfterValidation        whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
      * @param userName                       The user name to use to create connections.
      * @param userPassword                   The password to use to create connections.
+     * @param maxConnDuration                The maximum lifetime of a connection after which the connection will always fail activation, passivation and
+     *                                       validation. A value of zero or less indicates an infinite lifetime.
      * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
      */
-    CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final Duration validationQueryTimeoutDuration, final boolean rollbackAfterValidation, final String userName,
-            final char[] userPassword, Supplier<Duration> loginTimeoutSupplier) {
-        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, loginTimeoutSupplier);
+    CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
+            final boolean rollbackAfterValidation, final String userName, final char[] userPassword, final Duration maxConnDuration,
+            Supplier<Duration> loginTimeoutSupplier) {
+        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, maxConnDuration, loginTimeoutSupplier);
         this.userPassKey = new UserPassKey(userName, userPassword);
     }
 

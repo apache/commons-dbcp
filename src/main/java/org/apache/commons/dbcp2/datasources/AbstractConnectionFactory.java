@@ -42,7 +42,7 @@ class AbstractConnectionFactory {
 
     protected final ConnectionPoolDataSource cpds;
     private final Supplier<Duration> loginTimeoutSupplier;
-    protected Duration maxConnDuration = Duration.ofMillis(-1);
+    protected final Duration maxConnDuration;
     protected final boolean rollbackAfterValidation;
 
     /**
@@ -58,28 +58,17 @@ class AbstractConnectionFactory {
     protected final Duration validationQueryTimeoutDuration;
 
     AbstractConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
-            final boolean rollbackAfterValidation, Supplier<Duration> loginTimeoutSupplier) {
+            final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutDuration = validationQueryTimeoutDuration;
         this.rollbackAfterValidation = rollbackAfterValidation;
+        this.maxConnDuration = Objects.requireNonNull(maxConnDuration, "maxConnDuration");
         this.loginTimeoutSupplier = Objects.requireNonNull(loginTimeoutSupplier, "loginTimeoutSupplier");
     }
 
     protected PooledConnection getPooledConnection(final UserPassKey userPassKey) throws SQLException {
         return ConnectionPoolDataSourceUtils.getPooledConnection(cpds, userPassKey.getUserName(), userPassKey.getPassword(), loginTimeoutSupplier.get());
-    }
-
-    /**
-     * Sets the maximum lifetime of a connection after which the connection will always fail activation,
-     * passivation and validation.
-     *
-     * @param duration
-     *            A value of zero or less indicates an infinite lifetime. The default value is -1 milliseconds.
-     * @since 2.10.0
-     */
-    void setMaxConn(final Duration duration) {
-        this.maxConnDuration = duration;
     }
 
     /**

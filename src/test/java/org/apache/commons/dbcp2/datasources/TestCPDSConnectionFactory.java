@@ -66,7 +66,7 @@ public class TestCPDSConnectionFactory {
     void testConnectionErrorCleanup() throws Exception {
         // Setup factory
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
-                () -> null);
+                Duration.ofMillis(-1), () -> null);
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
             // Checkout a pair of connections
@@ -117,7 +117,7 @@ public class TestCPDSConnectionFactory {
     @Test
     void testNullValidationQuery() throws Exception {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
-                () -> null);
+                Duration.ofMillis(-1), () -> null);
         try (final GenericObjectPool<PooledConnectionAndInfo> pool = new GenericObjectPool<>(factory)) {
             factory.setPool(pool);
             pool.setTestOnBorrow(true);
@@ -130,7 +130,7 @@ public class TestCPDSConnectionFactory {
     @Test
     void testSetPasswordCharArray() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
-                () -> null);
+                Duration.ofMillis(-1), () -> null);
         final char[] pwd = { 'a' };
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));
@@ -141,7 +141,7 @@ public class TestCPDSConnectionFactory {
     @Test
     void testSetPasswordString() {
         final CPDSConnectionFactory factory = new CPDSConnectionFactory(cpds, null, Duration.ofMillis(-1), false, "userName", "password".toCharArray(),
-                () -> null);
+                Duration.ofMillis(-1), () -> null);
         final String pwd = "a";
         factory.setPassword(pwd);
         assertEquals("a", String.valueOf(factory.getPasswordCharArray()));

@@ -51,11 +51,13 @@ final class KeyedCPDSConnectionFactory extends AbstractConnectionFactory
      *                                       {@code null} in which case3 {@link Connection#isValid(int)} will be used to validate connections.
      * @param validationQueryTimeoutDuration The Duration to allow for the validation query to complete
      * @param rollbackAfterValidation        Whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param maxConnDuration                The maximum lifetime of a connection after which the connection will always fail activation, passivation and
+     *                                       validation. A value of zero or less indicates an infinite lifetime.
      * @param loginTimeoutSupplier           Supplies the login timeout, may not be null.
      */
     KeyedCPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery, final Duration validationQueryTimeoutDuration,
-            final boolean rollbackAfterValidation, Supplier<Duration> loginTimeoutSupplier) {
-        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, loginTimeoutSupplier);
+            final boolean rollbackAfterValidation, final Duration maxConnDuration, Supplier<Duration> loginTimeoutSupplier) {
+        super(cpds, validationQuery, validationQueryTimeoutDuration, rollbackAfterValidation, maxConnDuration, loginTimeoutSupplier);
     }
 
     @Override
