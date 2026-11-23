@@ -1162,9 +1162,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      *
      * @param loginTimeout a nonnegative timeout in seconds.
      * @throws IllegalArgumentException if loginTimeout is negative.
-     * @deprecated Use {@link #setLoginTimeout(Duration)}.
      */
-    @Deprecated
     @Override
     public void setLoginTimeout(final int loginTimeout) {
         setLoginTimeout(Duration.ofSeconds(loginTimeout));
