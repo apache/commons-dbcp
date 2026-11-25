@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -48,12 +49,17 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
      */
     private final class PoolGuardConnectionWrapper<D extends Connection> extends DelegatingConnection<D> {
 
+        private final AtomicBoolean closing = new AtomicBoolean();
+
         PoolGuardConnectionWrapper(final D delegate) {
             super(delegate);
         }
 
         @Override
         public void close() throws SQLException {
+            if (!closing.compareAndSet(false, true)) {
+                return;
+            }
             try {
                 super.close();
             } finally {

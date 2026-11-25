@@ -30,13 +30,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Properties;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.pool2.BaseObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -56,6 +60,19 @@ public class TestPoolingDataSource extends TestConnectionPool {
                 physicalStatement.setSqlExceptionOnClose(false);
             }
         }
+    }
+
+    private static Thread startAfter(final CyclicBarrier barrier, final AtomicReference<Throwable> failure, final Executable task) {
+        final Thread thread = new Thread(() -> {
+            try {
+                barrier.await();
+                task.execute();
+            } catch (final Throwable t) {
+                failure.compareAndSet(null, t);
+            }
+        });
+        thread.start();
+        return thread;
     }
 
     protected PoolingDataSource<PoolableConnection> ds;
@@ -232,6 +249,36 @@ public class TestPoolingDataSource extends TestConnectionPool {
             assertNull(guard.getDelegateInternal());
             assertThrows(SQLException.class, guard::createStatement);
             guard.close();
+        }
+    }
+
+    /**
+     * Two threads close the same connection while a third thread waits for one. Only one close may return the
+     * pooled connection; otherwise it is returned again while the waiting thread holds it.
+     */
+    @Test
+    void testConcurrentCloseDoesNotReturnBorrowedConnection() throws Exception {
+        pool.setMaxTotal(1);
+        pool.setMaxWait(Duration.ofSeconds(5));
+        for (int i = 0; i < 500; i++) {
+            final Connection first = ds.getConnection();
+            final CyclicBarrier barrier = new CyclicBarrier(3);
+            final AtomicReference<Connection> second = new AtomicReference<>();
+            final AtomicReference<Throwable> failure = new AtomicReference<>();
+            final Thread[] threads = {
+                startAfter(barrier, failure, first::close),
+                startAfter(barrier, failure, first::close),
+                startAfter(barrier, failure, () -> second.set(ds.getConnection()))};
+            for (final Thread thread : threads) {
+                thread.join();
+            }
+            assertNull(failure.get());
+            try (Connection borrowed = second.get()) {
+                assertNotNull(borrowed);
+                assertEquals(1, pool.getNumActive(), "round " + i);
+                assertEquals(0, pool.getNumIdle(), "round " + i);
+                assertFalse(borrowed.isClosed(), "round " + i);
+            }
         }
     }
 
