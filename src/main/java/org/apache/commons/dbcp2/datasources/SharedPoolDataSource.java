@@ -75,19 +75,23 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Closes pool being maintained by this data source.
+     * Closes the pool maintained by this data source and prevents further connection requests.
      */
     @Override
     public void close() throws SQLException {
-        if (pool != null) {
-            pool.close();
+        final SharedPoolDataSource source = getPoolSource();
+        synchronized (source) {
+            setClosed();
+            if (source.pool != null) {
+                source.pool.close();
+            }
+            InstanceKeyDataSourceFactory.removeInstance(getInstanceKey(), getLifecycleLock());
         }
-        InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
     }
 
     @Override
     protected PooledConnectionManager getConnectionManager(final UserPassKey userPassKey) {
-        return factory;
+        return getPoolSource().factory;
     }
 
     /**
@@ -105,6 +109,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * @return The number of active connections in the pool.
      */
     public int getNumActive() {
+        final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = getPoolSource().pool;
         return pool == null ? 0 : pool.getNumActive();
     }
 
@@ -114,6 +119,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * @return The number of idle connections in the pool.
      */
     public int getNumIdle() {
+        final KeyedObjectPool<UserPassKey, PooledConnectionAndInfo> pool = getPoolSource().pool;
         return pool == null ? 0 : pool.getNumIdle();
     }
 
@@ -121,10 +127,12 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     protected PooledConnectionAndInfo getPooledConnectionAndInfo(final String userName, final String userPassword)
             throws SQLException {
 
-        synchronized (this) {
-            if (pool == null) {
+        final SharedPoolDataSource source = getPoolSource();
+        synchronized (source) {
+            assertOpen();
+            if (source.pool == null) {
                 try {
-                    registerPool(userName, userPassword);
+                    source.registerPool(userName, userPassword);
                 } catch (final NamingException e) {
                     throw new SQLException("registerPool failed", e);
                 }
@@ -132,10 +140,19 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
         }
 
         try {
-            return pool.borrowObject(new UserPassKey(userName, userPassword));
+            return source.pool.borrowObject(new UserPassKey(userName, userPassword));
         } catch (final Exception e) {
             throw new SQLException("Could not retrieve connection info from pool", e);
         }
+    }
+
+    /**
+     * Gets the owner of the pool, including when deserialization precedes pool initialization.
+     *
+     * @return the registered source when sharing pools, or this instance.
+     */
+    private SharedPoolDataSource getPoolSource() {
+        return (SharedPoolDataSource) getLifecycleLock();
     }
 
     /**
@@ -152,8 +169,8 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
      * Deserializes an instance from an ObjectInputStream.
      *
      * <p>
-     * When the registration key resolves to an existing data source, its pool and live login timeout configuration are reused. An instance serialized
-     * without a key retains its own login timeout setting.
+     * When the registration key resolves to an existing data source, its pool, shutdown state, and live login timeout configuration are reused.
+     * An instance serialized without a key retains its own login timeout setting.
      * </p>
      *
      * @param in The source ObjectInputStream.
@@ -163,7 +180,7 @@ public class SharedPoolDataSource extends InstanceKeyDataSource {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         final SharedPoolDataSource source = readObjectImpl();
-        this.pool = source.pool;
+        setLifecycleSource(source);
         setLoginTimeoutSource(source);
     }
 

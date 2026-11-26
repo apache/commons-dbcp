@@ -89,6 +89,16 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     /** Guards property setters - once true, setters throw IllegalStateException */
     private volatile boolean getConnectionCalled;
 
+    /**
+     * Prevents borrowing or creating pools after shutdown.
+     */
+    private volatile boolean closed;
+
+    /**
+     * Registered data source owning the shutdown state and initialization monitor for shared pools, or null for local pools.
+     */
+    private transient InstanceKeyDataSource lifecycleSource;
+
     /** Underlying source of PooledConnections */
     private ConnectionPoolDataSource dataSource;
 
@@ -199,7 +209,23 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
-     * Closes the connection pool being maintained by this datasource.
+     * Checks whether this data source has been closed.
+     *
+     * @throws SQLException Thrown if this data source has been closed.
+     */
+    final void assertOpen() throws SQLException {
+        if (getLifecycleLock().closed) {
+            throw new SQLException("Data source is closed");
+        }
+    }
+
+    /**
+     * Closes the connection pools maintained by this data source and prevents further connection requests.
+     *
+     * <p>
+     * Connections already borrowed remain usable and are destroyed when returned. Repeated calls have no effect.
+     * Deserialized instances that reuse these pools share the same shutdown state.
+     * </p>
      */
     @Override
     public abstract void close() throws SQLException;
@@ -250,6 +276,7 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
      */
     @Override
     public Connection getConnection(final String userName, final String userPassword) throws SQLException {
+        assertOpen();
         if (instanceKey == null) {
             throw new SQLException("Must set the ConnectionPoolDataSource "
                     + "through setDataSourceName or setConnectionPoolDataSource before calling getConnection.");
@@ -602,6 +629,15 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     }
 
     /**
+     * Gets the owner of the shutdown state and monitor used to initialize or close shared pools.
+     *
+     * @return the registered source when sharing pools, or this instance.
+     */
+    final InstanceKeyDataSource getLifecycleLock() {
+        return lifecycleSource == null ? this : lifecycleSource;
+    }
+
+    /**
      * Gets the configured login timeout converted to JDBC seconds, or zero if none was configured.
      * Positive durations are truncated to whole seconds, with a minimum of one and a maximum of {@link Integer#MAX_VALUE}.
      *
@@ -772,6 +808,13 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return iface.isInstance(this);
+    }
+
+    /**
+     * Marks this data source closed while holding the monitor used for pool initialization.
+     */
+    final void setClosed() {
+        getLifecycleLock().closed = true;
     }
 
     /**
@@ -1144,6 +1187,15 @@ public abstract class InstanceKeyDataSource implements DataSource, Referenceable
             jndiEnvironment = new Properties();
         }
         jndiEnvironment.setProperty(key, value);
+    }
+
+    /**
+     * Shares the shutdown state and initialization monitor of a registered data source when reusing its pools.
+     *
+     * @param source The source whose pools are reused after deserialization.
+     */
+    final void setLifecycleSource(final InstanceKeyDataSource source) {
+        lifecycleSource = instanceKey == null ? null : source.getLifecycleLock();
     }
 
     /**
