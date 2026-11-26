@@ -160,8 +160,16 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
     }
 
     /**
-     * Closes the underlying connection and closes any Statements that were not explicitly closed. Sub-classes that
-     * override this method must:
+     * Closes the underlying connection and closes any Statements that were not explicitly closed.
+     *
+     * <p>
+     * Concurrent calls to this implementation are serialized. Each call checks the closed state after the previous call finishes, so an already closed
+     * wrapper cannot close a delegate that has been borrowed again. This does not make other operations on the connection thread-safe.
+     * </p>
+     *
+     * <p>
+     * Subclasses that override this method must preserve this serialization or provide equivalent protection against concurrent closing, and must:
+     * </p>
      * <ol>
      * <li>Call {@link #passivate()}</li>
      * <li>Call close (or the equivalent appropriate action) on the wrapped connection</li>
@@ -169,7 +177,7 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
      * </ol>
      */
     @Override
-    public void close() throws SQLException {
+    public synchronized void close() throws SQLException {
         if (!closed) {
             closeInternal();
         }
@@ -177,6 +185,10 @@ public class DelegatingConnection<C extends Connection> extends AbandonedTrace i
 
     /**
      * Closes the underlying connection for {@link #close()}.
+     *
+     * <p>
+     * This method also performs physical cleanup of passivated pooled connections, so it does not skip cleanup when this instance is already closed.
+     * </p>
      *
      * @throws SQLException Thrown if a database access error occurs.
      */
