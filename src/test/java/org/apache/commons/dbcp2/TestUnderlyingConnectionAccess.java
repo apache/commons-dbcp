@@ -49,16 +49,12 @@ import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.h2.Driver;
-import org.h2.jdbc.JdbcCallableStatement;
-import org.h2.jdbc.JdbcConnection;
-import org.h2.jdbc.JdbcDatabaseMetaData;
-import org.h2.jdbc.JdbcPreparedStatement;
-import org.h2.jdbc.JdbcResultSet;
-import org.h2.jdbc.JdbcStatement;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.ClearSystemProperty;
@@ -68,7 +64,13 @@ import org.junitpioneer.jupiter.ReadsSystemProperty;
  * Exercises delegate access through every pool guard and JDBC wrapper, with and without statement pooling and nested wrappers.
  */
 @ReadsSystemProperty
+@ParameterizedClass(name = "{0}")
+@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 class TestUnderlyingConnectionAccess {
+
+    /** Database used by this invocation. */
+    @Parameter
+    TestDatabase database;
 
     private enum CloseWith {
         RESULT_SET, STATEMENT, CONNECTION
@@ -102,7 +104,7 @@ class TestUnderlyingConnectionAccess {
         PREPARED, PREPARED_TYPE, PREPARED_HOLDABILITY, PREPARED_KEYS, PREPARED_INDEXES, PREPARED_NAMES,
         CALLABLE, CALLABLE_TYPE, CALLABLE_HOLDABILITY;
 
-        private Statement create(final Connection connection) throws SQLException {
+        private Statement create(final Connection connection, final TestDatabase database) throws SQLException {
             switch (this) {
             case STATEMENT:
                 return connection.createStatement();
@@ -111,23 +113,23 @@ class TestUnderlyingConnectionAccess {
             case STATEMENT_HOLDABILITY:
                 return connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
             case PREPARED:
-                return connection.prepareStatement(SELECT_SQL);
+                return connection.prepareStatement(database.selectParameter());
             case PREPARED_TYPE:
-                return connection.prepareStatement(SELECT_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+                return connection.prepareStatement(database.selectParameter(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             case PREPARED_HOLDABILITY:
-                return connection.prepareStatement(SELECT_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+                return connection.prepareStatement(database.selectParameter(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
             case PREPARED_KEYS:
-                return connection.prepareStatement(SELECT_SQL, Statement.RETURN_GENERATED_KEYS);
+                return connection.prepareStatement(database.selectParameter(), Statement.RETURN_GENERATED_KEYS);
             case PREPARED_INDEXES:
-                return connection.prepareStatement(SELECT_SQL, new int[] {1});
+                return connection.prepareStatement(database.selectParameter(), new int[] {1});
             case PREPARED_NAMES:
-                return connection.prepareStatement(SELECT_SQL, new String[] {"ID"});
+                return connection.prepareStatement(database.selectParameter(), new String[] {"ID"});
             case CALLABLE:
-                return connection.prepareCall(CALL_SQL);
+                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL);
             case CALLABLE_TYPE:
-                return connection.prepareCall(CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             case CALLABLE_HOLDABILITY:
-                return connection.prepareCall(CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
             default:
                 throw new IllegalStateException(name());
             }
@@ -135,7 +137,6 @@ class TestUnderlyingConnectionAccess {
     }
 
     private static final AtomicInteger IDS = new AtomicInteger();
-    private static final String SELECT_SQL = "SELECT ? AS ID";
     private static final String CALL_SQL = "{? = call ABS(?)}";
 
     private static void assertAccess(final Wrapper wrapper, final Class<?> standardType, final Class<?> driverType, final boolean allowed)
@@ -152,44 +153,44 @@ class TestUnderlyingConnectionAccess {
         }
     }
 
-    private static void assertConnectionAccess(final Connection connection, final boolean allowed) throws SQLException {
-        assertAccess(connection, Connection.class, JdbcConnection.class, allowed);
+    private void assertConnectionAccess(final Connection connection, final boolean allowed) throws SQLException {
+        assertAccess(connection, Connection.class, database.getJdbcType(Connection.class), allowed);
         final DelegatingConnection<?> delegate = (DelegatingConnection<?>) connection;
         if (allowed) {
             assertNotNull(delegate.getDelegate());
-            assertSame(connection.unwrap(JdbcConnection.class), delegate.getInnermostDelegate());
+            assertSame(connection.unwrap(database.getJdbcType(Connection.class)), delegate.getInnermostDelegate());
         } else {
             assertNull(delegate.getInnermostDelegate());
         }
     }
 
-    private static void assertMetadataAccess(final DatabaseMetaData metadata, final boolean allowed) throws SQLException {
-        assertAccess(metadata, DatabaseMetaData.class, JdbcDatabaseMetaData.class, allowed);
+    private void assertMetadataAccess(final DatabaseMetaData metadata, final boolean allowed) throws SQLException {
+        assertAccess(metadata, DatabaseMetaData.class, database.getJdbcType(DatabaseMetaData.class), allowed);
         final DelegatingDatabaseMetaData delegate = (DelegatingDatabaseMetaData) metadata;
         if (allowed) {
             assertNotNull(delegate.getDelegate());
-            assertSame(metadata.unwrap(JdbcDatabaseMetaData.class), delegate.getInnermostDelegate());
+            assertSame(metadata.unwrap(database.getJdbcType(DatabaseMetaData.class)), delegate.getInnermostDelegate());
         } else {
             assertNull(delegate.getInnermostDelegate());
         }
     }
 
-    private static void assertResultSetAccess(final ResultSet resultSet, final boolean allowed) throws SQLException {
-        assertAccess(resultSet, ResultSet.class, JdbcResultSet.class, allowed);
+    private void assertResultSetAccess(final ResultSet resultSet, final boolean allowed) throws SQLException {
+        assertAccess(resultSet, ResultSet.class, database.getJdbcType(ResultSet.class), allowed);
         final DelegatingResultSet delegate = (DelegatingResultSet) resultSet;
         if (allowed) {
             assertNotNull(delegate.getDelegate());
-            assertSame(resultSet.unwrap(JdbcResultSet.class), delegate.getInnermostDelegate());
+            assertSame(resultSet.unwrap(database.getJdbcType(ResultSet.class)), delegate.getInnermostDelegate());
         } else {
             assertNull(delegate.getInnermostDelegate());
         }
     }
 
-    private static void assertStatementAccess(final Statement statement, final boolean allowed) throws SQLException {
+    private void assertStatementAccess(final Statement statement, final boolean allowed) throws SQLException {
         final Class<?> standardType = statement instanceof CallableStatement ? CallableStatement.class
                 : statement instanceof PreparedStatement ? PreparedStatement.class : Statement.class;
-        final Class<?> driverType = statement instanceof CallableStatement ? JdbcCallableStatement.class
-                : statement instanceof PreparedStatement ? JdbcPreparedStatement.class : JdbcStatement.class;
+        final Class<?> driverType = statement instanceof CallableStatement ? database.getJdbcType(CallableStatement.class)
+                : statement instanceof PreparedStatement ? database.getJdbcType(PreparedStatement.class) : database.getJdbcType(Statement.class);
         assertAccess(statement, standardType, driverType, allowed);
         final DelegatingStatement delegate = (DelegatingStatement) statement;
         if (allowed) {
@@ -207,16 +208,16 @@ class TestUnderlyingConnectionAccess {
                     Arrays.stream(CloseWith.values()).map(closeWith -> Arguments.of(source, allowed, nested, kind, closeWith))))));
     }
 
-    private static void configure(final BasicDataSource dataSource, final boolean allowed, final boolean poolStatements) {
-        dataSource.setDriver(new Driver());
+    private void configure(final BasicDataSource dataSource, final boolean allowed, final boolean poolStatements) throws SQLException {
+        dataSource.setDriver(database.getDriver());
         dataSource.setUrl(newUrl());
-        dataSource.setUsername("sa");
+        dataSource.setUsername(database.getUser());
         dataSource.setPassword("");
         dataSource.setAccessToUnderlyingConnectionAllowed(allowed);
         dataSource.setPoolPreparedStatements(poolStatements);
     }
 
-    private static Fixture createFixture(final Source source, final boolean allowed, final boolean poolStatements, final boolean nested) throws Exception {
+    private Fixture createFixture(final Source source, final boolean allowed, final boolean poolStatements, final boolean nested) throws Exception {
         if (source == Source.BASIC || source == Source.MANAGED) {
             final BasicDataSource dataSource;
             if (source == Source.MANAGED) {
@@ -231,11 +232,11 @@ class TestUnderlyingConnectionAccess {
         }
         if (source == Source.CPDS) {
             final DriverAdapterCPDS dataSource = new DriverAdapterCPDS();
-            dataSource.setDriver(Driver.class.getName());
+            dataSource.setDriver(database.getDriverClassName());
             dataSource.setUrl(newUrl());
             dataSource.setAccessToUnderlyingConnectionAllowed(allowed);
             dataSource.setPoolPreparedStatements(poolStatements);
-            final PooledConnection pooledConnection = dataSource.getPooledConnection("sa", "");
+            final PooledConnection pooledConnection = dataSource.getPooledConnection(database.getUser(), "");
             return new Fixture(pooledConnection.getConnection(), pooledConnection::close, nested);
         }
         final GenericObjectPool<PoolableConnection> pool = newPool(poolStatements);
@@ -250,11 +251,16 @@ class TestUnderlyingConnectionAccess {
         return new Fixture(driver.connect(PoolingDriver.URL_PREFIX + name, new Properties()), () -> driver.closePool(name), nested);
     }
 
-    private static ResultSet execute(final Statement statement) throws SQLException {
+    private ResultSet execute(final Statement statement) throws SQLException {
         if (statement instanceof CallableStatement) {
             final CallableStatement callable = (CallableStatement) statement;
-            callable.registerOutParameter(1, Types.INTEGER);
-            callable.setInt(2, -7);
+            if (database == TestDatabase.HSQLDB) {
+                // HyperSQL exposes this scalar function through its result set.
+                callable.setInt(1, -7);
+            } else {
+                callable.registerOutParameter(1, Types.INTEGER);
+                callable.setInt(2, -7);
+            }
             assertTrue(callable.execute());
             return callable.getResultSet();
         }
@@ -263,13 +269,13 @@ class TestUnderlyingConnectionAccess {
             prepared.setInt(1, 7);
             return prepared.executeQuery();
         }
-        return statement.executeQuery("SELECT 7");
+        return statement.executeQuery(database.select(7));
     }
 
-    private static GenericObjectPool<PoolableConnection> newPool(final boolean poolStatements) {
+    private GenericObjectPool<PoolableConnection> newPool(final boolean poolStatements) throws SQLException {
         final Properties properties = new Properties();
-        properties.setProperty("user", "sa");
-        final PoolableConnectionFactory factory = new PoolableConnectionFactory(new DriverConnectionFactory(new Driver(), newUrl(), properties), null);
+        properties.setProperty("user", database.getUser());
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(new DriverConnectionFactory(database.getDriver(), newUrl(), properties), null);
         factory.setPoolStatements(poolStatements);
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         config.setJmxEnabled(false);
@@ -278,8 +284,8 @@ class TestUnderlyingConnectionAccess {
         return pool;
     }
 
-    private static String newUrl() {
-        return "jdbc:h2:mem:underlying-access-" + IDS.incrementAndGet();
+    private String newUrl() {
+        return database.newUrl();
     }
 
     private static Stream<Arguments> statementArguments() {
@@ -292,7 +298,7 @@ class TestUnderlyingConnectionAccess {
     @MethodSource("closeArguments")
     void testAccessAfterClose(final Source source, final boolean allowed, final boolean nested, final StatementKind kind,
             final CloseWith closeWith) throws Exception {
-        try (Fixture fixture = createFixture(source, allowed, true, nested); Statement statement = kind.create(fixture.connection)) {
+        try (Fixture fixture = createFixture(source, allowed, true, nested); Statement statement = kind.create(fixture.connection, database)) {
             final ResultSet resultSet = execute(statement);
             assertResultSetAccess(resultSet, allowed);
             switch (closeWith) {
@@ -380,7 +386,7 @@ class TestUnderlyingConnectionAccess {
             assertConnectionAccess(connection, allowed);
             assertFalse(connection.isWrapperFor(String.class));
             assertThrows(SQLException.class, () -> connection.unwrap(String.class));
-            try (Statement statement = kind.create(connection)) {
+            try (Statement statement = kind.create(connection, database)) {
                 assertSame(connection, statement.getConnection());
                 assertStatementAccess(statement, allowed);
                 assertNotEquals("NULL", statement.toString());
@@ -390,7 +396,7 @@ class TestUnderlyingConnectionAccess {
                     assertResultSetAccess(resultSet, allowed);
                     assertTrue(resultSet.next());
                     assertEquals(7, resultSet.getInt(1));
-                    if (statement instanceof CallableStatement) {
+                    if (database == TestDatabase.H2 && statement instanceof CallableStatement) {
                         assertEquals(7, ((CallableStatement) statement).getInt(1));
                     }
                     if (!allowed && !nested) {
@@ -421,7 +427,7 @@ class TestUnderlyingConnectionAccess {
     void testGeneratedKeys(final boolean allowed) throws Exception {
         try (Fixture fixture = createFixture(Source.BASIC, allowed, true, true);
                 Statement setup = fixture.connection.createStatement()) {
-            setup.execute("CREATE TABLE T (ID BIGINT GENERATED ALWAYS AS IDENTITY, VALUE_COLUMN INT)");
+            setup.execute("CREATE TABLE T (ID BIGINT GENERATED ALWAYS AS IDENTITY (START WITH 1), VALUE_COLUMN INT)");
             try (PreparedStatement statement = fixture.connection.prepareStatement("INSERT INTO T (VALUE_COLUMN) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
                 statement.setInt(1, 9);
                 assertEquals(1, statement.executeUpdate());
@@ -437,13 +443,13 @@ class TestUnderlyingConnectionAccess {
 
     @Test
     void testGuardHookAndInternalAccess() throws Exception {
-        try (Connection physical = new Driver().connect(newUrl(), new Properties());
+        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
                 DelegatingConnection<Connection> connection = new DelegatingConnection<Connection>(physical) {
                     @Override
                     protected boolean isAccessToUnderlyingConnectionAllowed() {
                         return false;
                     }
-                }; Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT 7")) {
+                }; Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(database.select(7))) {
             assertNull(connection.getDelegate());
             assertConnectionAccess(connection, false);
             assertStatementAccess(statement, false);
@@ -475,7 +481,7 @@ class TestUnderlyingConnectionAccess {
                 assertTrue(connection.isClosed());
             }
             dataSource.invalidateConnection(null);
-            try (Connection foreign = new Driver().connect(newUrl(), new Properties())) {
+            try (Connection foreign = database.getDriver().connect(newUrl(), new Properties())) {
                 assertThrows(IllegalStateException.class, () -> dataSource.invalidateConnection(foreign));
             }
         }
@@ -491,7 +497,7 @@ class TestUnderlyingConnectionAccess {
             transactionManager.begin();
             try {
                 try (Connection connection = dataSource.getConnection(); Connection shared = dataSource.getConnection();
-                        PreparedStatement statement = connection.prepareStatement(SELECT_SQL)) {
+                        PreparedStatement statement = connection.prepareStatement(database.selectParameter())) {
                     assertConnectionAccess(connection, allowed);
                     assertConnectionAccess(shared, allowed);
                     assertMetadataAccess(shared.getMetaData(), allowed);
@@ -516,7 +522,7 @@ class TestUnderlyingConnectionAccess {
     void testMutablePolicyAndClose() throws Exception {
         try (PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(newPool(false));
                 Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement()) {
-            final ResultSet resultSet = statement.executeQuery("SELECT 7");
+            final ResultSet resultSet = statement.executeQuery(database.select(7));
             final DatabaseMetaData metadata = connection.getMetaData();
             assertResultSetAccess(resultSet, false);
             dataSource.setAccessToUnderlyingConnectionAllowed(true);
@@ -536,9 +542,9 @@ class TestUnderlyingConnectionAccess {
 
     @Test
     void testParentlessWrappers() throws Exception {
-        try (Connection physical = new Driver().connect(newUrl(), new Properties());
+        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
                 DelegatingStatement statement = new DelegatingStatement(null, physical.createStatement());
-                ResultSet resultSet = statement.executeQuery("SELECT 7")) {
+                ResultSet resultSet = statement.executeQuery(database.select(7))) {
             assertStatementAccess(statement, true);
             assertResultSetAccess(resultSet, true);
             final ResultSet metadata = DelegatingResultSet.wrapResultSet((Connection) null, physical.getMetaData().getTables(null, null, null, null));
@@ -553,9 +559,9 @@ class TestUnderlyingConnectionAccess {
     @ClearSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY)
     void testPlainWrappersAndDriverDefault() throws Exception {
         assertTrue(new PoolingDriver().isAccessToUnderlyingConnectionAllowed());
-        try (Connection physical = new Driver().connect(newUrl(), new Properties());
+        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
                 DelegatingConnection<Connection> connection = new DelegatingConnection<>(physical);
-                Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT 7")) {
+                Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(database.select(7))) {
             assertConnectionAccess(connection, true);
             assertStatementAccess(statement, true);
             assertResultSetAccess(resultSet, true);

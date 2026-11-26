@@ -48,6 +48,7 @@
         <item name="Class&#xA0;Diagrams"    href="/guide/classdiagrams.html"/>
         <item name="Sequence&#xA0;Diagrams" href="/guide/sequencediagrams.html"/>
         <item name="Building"               href="/building.html"/>
+        <item name="Database Tests"         href="/testing.html"/>
       </item>
       <item name="Examples"               href="https://gitbox.apache.org/repos/asf?p=commons-dbcp.git;a=tree;f=doc;hb=HEAD"/>
       <item name="Downloads"              href="/download_dbcp.cgi"/>

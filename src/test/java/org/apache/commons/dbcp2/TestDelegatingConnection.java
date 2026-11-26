@@ -27,19 +27,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Savepoint;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.EnumSource;
 
 /**
  * Tests {@link DelegatingConnection}.
  */
+@ParameterizedClass(name = "{0}")
+@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 public class TestDelegatingConnection {
+
+    /** Database used by this invocation. */
+    @Parameter
+    TestDatabase database;
 
     /**
      * Delegate that will throw RTE on toString Used to validate fix for DBCP-241
@@ -65,7 +74,7 @@ public class TestDelegatingConnection {
     private DelegatingConnection<? extends Connection> delegatingConnection;
     private Connection connection;
     private Connection connection2;
-    private DelegatingConnection<? extends Connection> h2DConnection;
+    private DelegatingConnection<? extends Connection> databaseConnection;
     private TesterStatement testerStatement;
     private TesterResultSet testerResultSet;
 
@@ -73,7 +82,7 @@ public class TestDelegatingConnection {
     public void afterEach() throws SQLException {
         testerStatement.setSqlExceptionOnClose(false);
         testerResultSet.setSqlExceptionOnClose(false);
-        h2DConnection.close();
+        databaseConnection.close();
     }
 
     @BeforeEach
@@ -83,12 +92,12 @@ public class TestDelegatingConnection {
         delegatingConnection = new DelegatingConnection<>(connection);
         testerStatement = new TesterStatement(delegatingConnection);
         testerResultSet = new TesterResultSet(testerStatement);
-        h2DConnection = new DelegatingConnection<>(DriverManager.getConnection("jdbc:h2:mem:test"));
+        databaseConnection = new DelegatingConnection<>(database.connect());
     }
 
     @Test
     void testAbort() throws Exception {
-        h2DConnection.abort(r -> {
+        databaseConnection.abort(r -> {
         });
     }
 
@@ -159,7 +168,7 @@ public class TestDelegatingConnection {
 
     @Test
     void testCommit() throws Exception {
-        h2DConnection.commit();
+        databaseConnection.commit();
     }
 
     @Test
@@ -171,58 +180,62 @@ public class TestDelegatingConnection {
 
     @Test
     void testCreateArrayOf() throws Exception {
-        assertNotNull(h2DConnection.createArrayOf("CHARACTER", new Object[] { "A", "B" }));
+        assertNotNull(databaseConnection.createArrayOf("CHARACTER", new Object[] { "A", "B" }));
     }
 
     @Test
     void testCreateBlob() throws Exception {
-        assertNotNull(h2DConnection.createBlob());
+        assertNotNull(databaseConnection.createBlob());
     }
 
     @Test
     void testCreateClob() throws Exception {
-        assertNotNull(h2DConnection.createClob());
+        assertNotNull(databaseConnection.createClob());
     }
 
     @Test
     void testCreateNClob() throws Exception {
-        assertNotNull(h2DConnection.createNClob());
+        assertNotNull(databaseConnection.createNClob());
     }
 
     @Test
     void testCreateSQLXML() throws Exception {
-        assertNotNull(h2DConnection.createSQLXML());
+        assertNotNull(databaseConnection.createSQLXML());
     }
 
     @Test
     void testCreateStruct() throws Exception {
-        // not supported by H2
-        assertThrows(SQLException.class, () -> h2DConnection.createStruct("CHARACTER", new Object[] { "A", "B" }));
+        // Neither embedded driver supports SQL structured types.
+        assertThrows(SQLException.class, () -> databaseConnection.createStruct("CHARACTER", new Object[] { "A", "B" }));
     }
 
     @Test
     void testGetCacheState() throws Exception {
-        assertTrue(h2DConnection.getCacheState());
+        assertTrue(databaseConnection.getCacheState());
     }
 
     @Test
     void testGetClientInfo() throws Exception {
-        assertNotNull(h2DConnection.getClientInfo());
+        if (database == TestDatabase.HSQLDB) {
+            assertNull(databaseConnection.getClientInfo());
+        } else {
+            assertNotNull(databaseConnection.getClientInfo());
+        }
     }
 
     @Test
     void testGetClientInfoString() throws Exception {
-        assertNull(h2DConnection.getClientInfo("xyz"));
+        assertNull(databaseConnection.getClientInfo("xyz"));
     }
 
     @Test
     void testGetDefaultQueryTimeout() throws Exception {
-        assertNull(h2DConnection.getDefaultQueryTimeout());
+        assertNull(databaseConnection.getDefaultQueryTimeout());
     }
 
     @Test
     void testGetDefaultQueryTimeoutDuration() throws Exception {
-        assertNull(h2DConnection.getDefaultQueryTimeoutDuration());
+        assertNull(databaseConnection.getDefaultQueryTimeoutDuration());
     }
 
     @Test
@@ -232,17 +245,17 @@ public class TestDelegatingConnection {
 
     @Test
     void testGetHoldability() throws Exception {
-        assertEquals(1, h2DConnection.getHoldability());
+        assertEquals(1, databaseConnection.getHoldability());
     }
 
     @Test
     void testGetNetworkTimeout() throws Exception {
-        assertEquals(0, h2DConnection.getNetworkTimeout());
+        assertEquals(0, databaseConnection.getNetworkTimeout());
     }
 
     @Test
     void testGetTypeMap() throws Exception {
-        assertNull(h2DConnection.getTypeMap());
+        assertEquals(databaseConnection.getDelegate().getTypeMap(), databaseConnection.getTypeMap());
     }
 
     @Test
@@ -271,7 +284,7 @@ public class TestDelegatingConnection {
 
     @Test
     void testNativeSQL() throws Exception {
-        assertNotNull(h2DConnection.nativeSQL("select 1"));
+        assertNotNull(databaseConnection.nativeSQL("select 1"));
     }
 
     @Test
@@ -305,29 +318,30 @@ public class TestDelegatingConnection {
 
     @Test
     void testReleaseSavepoint() throws Exception {
-        final Savepoint s = h2DConnection.setSavepoint();
-        h2DConnection.releaseSavepoint(s);
+        databaseConnection.setAutoCommit(false);
+        final Savepoint s = databaseConnection.setSavepoint();
+        databaseConnection.releaseSavepoint(s);
     }
 
     @Test
     void testRollback() throws Exception {
-        h2DConnection.rollback();
+        databaseConnection.rollback();
     }
 
     @Test
     void testRollbackSavepoint() throws Exception {
-        h2DConnection.setAutoCommit(false);
+        databaseConnection.setAutoCommit(false);
         try {
-            h2DConnection.rollback(h2DConnection.setSavepoint());
+            databaseConnection.rollback(databaseConnection.setSavepoint());
         } finally {
-            h2DConnection.setAutoCommit(true);
+            databaseConnection.setAutoCommit(true);
         }
     }
 
     @Test
     void testSetClientInfo() throws Exception {
         // TODO
-        // h2DConnection.setClientInfo("ApplicationName", "app1");
+        // databaseConnection.setClientInfo("ApplicationName", "app1");
     }
 
     @Test
@@ -340,20 +354,24 @@ public class TestDelegatingConnection {
     @Test
     void testSetHoldability() throws Exception {
         final int expected = 1;
-        h2DConnection.setHoldability(expected);
-        assertEquals(expected, h2DConnection.getHoldability());
+        databaseConnection.setHoldability(expected);
+        assertEquals(expected, databaseConnection.getHoldability());
     }
 
     @Test
     void testSetNetworkTimeout() throws Exception {
-        h2DConnection.setNetworkTimeout(r -> {
-        }, 1);
-        assertEquals(0, h2DConnection.getNetworkTimeout());
+        if (database == TestDatabase.HSQLDB) {
+            assertThrows(SQLFeatureNotSupportedException.class, () -> databaseConnection.setNetworkTimeout(Runnable::run, 1));
+        } else {
+            databaseConnection.setNetworkTimeout(Runnable::run, 1);
+        }
+        assertEquals(0, databaseConnection.getNetworkTimeout());
     }
 
     @Test
     void testSetSavepoint() throws Exception {
-        h2DConnection.setSavepoint();
+        databaseConnection.setAutoCommit(false);
+        databaseConnection.setSavepoint();
     }
 
     @SuppressWarnings("javadoc")

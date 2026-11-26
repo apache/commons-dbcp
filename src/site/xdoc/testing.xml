@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+ <!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Database tests</title>
+  </properties>
+  <body>
+    <section name="Embedded databases">
+      <p>
+        <code>mvn -B -ntp test</code> runs the database-backed regression tests against both H2 and HSQLDB,
+        as well as the existing JDBC test doubles. HSQLDB uses the <code>jdk8</code> classifier of version 2.7.4;
+        its ordinary artifact requires Java 11. Each database fixture gets a unique embedded database,
+        which shuts down when its last physical connection closes.
+      </p>
+    </section>
+    <section name="PostgreSQL and MySQL">
+      <p>
+        With a running Docker daemon, use <code>mvn -B -ntp -Pdocker-it verify</code> to also run the shared
+        connection-pool tests against PostgreSQL and MySQL. The
+        <a href="https://dmp.fabric8.io/">Docker Maven plugin</a> starts the databases, waits for the final
+        server startup log after initialization, and passes dynamically allocated ports to Failsafe.
+        Maven removes the containers and their volumes after the tests, including after test failures.
+      </p>
+      <p>
+        Use <code>verify</code>, since stopping at <code>integration-test</code> omits container cleanup and
+        test-result verification. A missing daemon or failed database startup fails the build rather than
+        skipping tests. <code>-DskipITs</code> skips both container startup and integration tests;
+        <code>-DskipTests</code> alone should not be used to skip Docker.
+      </p>
+      <p>
+        The shared tests cover pool reuse, validation, invalidation, state restoration, rollback on return,
+        CPDS logical handles, prepared statements, generated keys, and managed local/XA transactions with
+        Geronimo and Narayana. XA commit tests enlist a second resource to exercise two-phase commit.
+        PostgreSQL enables <code>max_prepared_transactions</code> for these tests.
+      </p>
+      <p>
+        Image versions are pinned in <code>dbcp.docker.postgresql.image</code> and
+        <code>dbcp.docker.mysql.image</code> and can be overridden with Maven properties. Ports bind to
+        loopback by default. For a remote Docker host, set <code>DOCKER_HOST</code> and override
+        <code>dbcp.docker.bindAddress</code> with a suitable address on that host. The configured database
+        users and passwords are only for these disposable test databases.
+      </p>
+    </section>
+    <section name="Reports and cleanup">
+      <p>
+        Surefire reports are in <code>target/surefire-reports</code>; Failsafe reports are in
+        <code>target/failsafe-reports</code>. The database is included in parameterized test display names,
+        and container logs appear in Maven output. Docker CI jobs run on Java 8 and 25. The normal Java
+        matrix runs both embedded databases without Docker.
+      </p>
+      <p>For cleanup after an interrupted local build, use a unique run identifier:</p>
+      <source><![CDATA[mvn -B -ntp -Pdocker-it -Ddbcp.docker.runId=my-dbcp-run verify
+docker ps -a --filter label=org.apache.commons.dbcp.testRun=my-dbcp-run]]></source>
+      <p>
+        Remove only the listed test containers with <code>docker rm -f -v &lt;container-id&gt;</code>.
+        CI performs this cleanup automatically, including after startup failures.
+      </p>
+    </section>
+  </body>
+</document>

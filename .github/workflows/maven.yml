@@ -55,3 +55,33 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Build with Maven
       run: mvn --errors --show-version --batch-mode --no-transfer-progress
+
+  database-integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [8, 25]
+    env:
+      DBCP_TEST_RUN: dbcp-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.java }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java }}
+        cache: maven
+    - name: Test PostgreSQL and MySQL
+      run: mvn -B -ntp -Pdocker-it -Ddbcp.docker.runId="$DBCP_TEST_RUN" verify
+    - name: Collect remaining database logs and clean up
+      if: always()
+      shell: bash
+      run: |
+        while read -r container; do
+          [ -n "$container" ] || continue
+          docker logs "$container" || true
+          docker rm --force --volumes "$container"
+        done < <(docker ps --all --quiet --filter "label=org.apache.commons.dbcp.testRun=$DBCP_TEST_RUN")

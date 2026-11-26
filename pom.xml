@@ -134,6 +134,26 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>2.7.4</version>
+      <!-- The unclassified artifact requires Java 11. -->
+      <classifier>jdk8</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.15</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>26.10.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.narayana.jta</groupId>
       <artifactId>narayana-jta</artifactId>
       <!-- Versions >= 5.13.0 require Java 11 -->
@@ -195,6 +215,14 @@
     <!-- spdx 0.6.0 can require Java 11 depending on undocumented behavior which kicks in for us here. -->
     <commons.spdx.version>0.5.5</commons.spdx.version>
     <surefire.argline></surefire.argline>
+    <skipITs>false</skipITs>
+    <dbcp.docker.postgresql.image>postgres:18.7-bookworm</dbcp.docker.postgresql.image>
+    <dbcp.docker.mysql.image>mysql:8.4.13</dbcp.docker.mysql.image>
+    <dbcp.docker.bindAddress>127.0.0.1</dbcp.docker.bindAddress>
+    <dbcp.docker.runId>${maven.build.timestamp}</dbcp.docker.runId>
+    <dbcp.docker.waitMillis>120000</dbcp.docker.waitMillis>
+    <!-- Keep coverage arguments separate so command-line argLine overrides remain effective. -->
+    <dbcp.jacoco.argLine></dbcp.jacoco.argLine>
     <!-- JaCoCo: Don't make code coverage worse than: -->
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
     <!-- Keep the jacoco property order below which matches console output -->
@@ -241,6 +269,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <configuration>
+            <propertyName>dbcp.jacoco.argLine</propertyName>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -248,8 +283,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${argLine} ${surefire.argline}</argLine>
+          <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline}</argLine>
           <excludes>
+            <!-- Integration tests are run only by Failsafe in the Docker profile. -->
+            <exclude>**/*IT.java</exclude>
             <!-- Test support files -->
             <exclude>**/Tester*.java</exclude>
             <!-- Exclude nested classes which Surefire cannot handle -->
@@ -362,6 +399,126 @@
   </reporting>
   <profiles>
     <profile>
+      <id>jdk8-to20</id>
+      <activation>
+        <jdk>[1.8,21)</jdk>
+      </activation>
+      <properties>
+        <!-- Default JVM arguments; the parent supplies argLine on Java 21+. -->
+        <argLine></argLine>
+      </properties>
+    </profile>
+    <profile>
+      <id>docker-it</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.49.0</version>
+            <configuration>
+              <skip>${skipITs}</skip>
+              <containerNamePattern>dbcp-%a-%t</containerNamePattern>
+              <removeVolumes>true</removeVolumes>
+              <images>
+                <image>
+                  <alias>postgresql</alias>
+                  <name>${dbcp.docker.postgresql.image}</name>
+                  <run>
+                    <env>
+                      <POSTGRES_DB>dbcp</POSTGRES_DB>
+                      <POSTGRES_USER>dbcp</POSTGRES_USER>
+                      <POSTGRES_PASSWORD>dbcp-test</POSTGRES_PASSWORD>
+                    </env>
+                    <cmd>postgres -c max_prepared_transactions=100</cmd>
+                    <ports>
+                      <port>${dbcp.docker.bindAddress}:dbcp.postgresql.port:5432</port>
+                    </ports>
+                    <labels>
+                      <org.apache.commons.dbcp.testRun>${dbcp.docker.runId}</org.apache.commons.dbcp.testRun>
+                    </labels>
+                    <wait>
+                      <log>(?s)PostgreSQL init process complete; ready for start up.*database system is ready to accept connections</log>
+                      <time>${dbcp.docker.waitMillis}</time>
+                    </wait>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
+                <image>
+                  <alias>mysql</alias>
+                  <name>${dbcp.docker.mysql.image}</name>
+                  <run>
+                    <env>
+                      <MYSQL_DATABASE>dbcp</MYSQL_DATABASE>
+                      <MYSQL_USER>dbcp</MYSQL_USER>
+                      <MYSQL_PASSWORD>dbcp-test</MYSQL_PASSWORD>
+                      <MYSQL_ROOT_PASSWORD>dbcp-root-test</MYSQL_ROOT_PASSWORD>
+                    </env>
+                    <ports>
+                      <port>${dbcp.docker.bindAddress}:dbcp.mysql.port:3306</port>
+                    </ports>
+                    <labels>
+                      <org.apache.commons.dbcp.testRun>${dbcp.docker.runId}</org.apache.commons.dbcp.testRun>
+                    </labels>
+                    <wait>
+                      <log>ready for connections.*port: 3306</log>
+                      <time>${dbcp.docker.waitMillis}</time>
+                    </wait>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-test-databases</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-test-databases</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <jvm>${commons.surefire.java}</jvm>
+              <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline}</argLine>
+              <failIfNoTests>true</failIfNoTests>
+              <systemPropertyVariables>
+                <dbcp.test.postgresql.url>jdbc:postgresql://${docker.host.address}:${dbcp.postgresql.port}/dbcp?connectTimeout=10&amp;socketTimeout=30</dbcp.test.postgresql.url>
+                <dbcp.test.postgresql.user>dbcp</dbcp.test.postgresql.user>
+                <dbcp.test.postgresql.password>dbcp-test</dbcp.test.postgresql.password>
+                <dbcp.test.mysql.url>jdbc:mysql://${docker.host.address}:${dbcp.mysql.port}/dbcp?sslMode=DISABLED&amp;allowPublicKeyRetrieval=true&amp;connectTimeout=10000&amp;socketTimeout=30000</dbcp.test.mysql.url>
+                <dbcp.test.mysql.user>dbcp</dbcp.test.mysql.user>
+                <dbcp.test.mysql.password>dbcp-test</dbcp.test.mysql.password>
+              </systemPropertyVariables>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>jdk9-plus</id>
       <activation>
         <jdk>[1.9,)</jdk>
@@ -405,7 +562,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <!-- Temporarily allow Mockito/Objenesis to construct test doubles on Java 28 and later. -->
-              <argLine>@{argLine} ${surefire.argline} -Djdk.reflect.allowNonSerializableConstruction=true</argLine>
+              <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline} -Djdk.reflect.allowNonSerializableConstruction=true</argLine>
             </configuration>
           </plugin>
         </plugins>

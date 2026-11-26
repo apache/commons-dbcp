@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +34,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -43,7 +44,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests cached connection properties across successful writes and driver failures.
  */
+@ParameterizedClass(name = "{0}")
+@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 class TestDelegatingConnectionCachedState {
+
+    /** Database used by this invocation. */
+    @Parameter
+    TestDatabase database;
 
     private static final class CacheConfig {
         private final boolean enabled;
@@ -496,7 +503,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testReturnAfterAutoCommitErrorRollsBackAndRestoresState() throws Exception {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dbcp522_pool_return")) {
+        try (Connection physical = database.connect()) {
             try (Statement statement = physical.createStatement()) {
                 statement.execute("CREATE TABLE items (id INT)");
             }
@@ -573,7 +580,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testSetAutoCommitErrorAfterPhysicalChange() throws SQLException {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_error")) {
+        try (Connection physical = database.connect()) {
             physical.setAutoCommit(true);
             final AssertionError failure = new AssertionError("setAutoCommit failed");
             final Connection faulty = new DelegatingConnection<Connection>(physical) {
@@ -595,7 +602,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testSetAutoCommitErrorFromDelegateGetter() throws SQLException {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_getter_error")) {
+        try (Connection physical = database.connect()) {
             physical.setAutoCommit(true);
             final AssertionError failure = new AssertionError("getAutoCommit failed");
             final Connection faulty = new DelegatingConnection<Connection>(physical) {
@@ -622,7 +629,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testSetAutoCommitErrorWithCacheStateDisabled() throws SQLException {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_no_cache")) {
+        try (Connection physical = database.connect()) {
             physical.setAutoCommit(true);
             final AssertionError failure = new AssertionError("setAutoCommit failed");
             final DelegatingConnection<Connection> faulty = new DelegatingConnection<Connection>(physical) {
@@ -646,7 +653,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testSetAutoCommitSqlExceptionAfterPhysicalChange() throws SQLException {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_sql_exception")) {
+        try (Connection physical = database.connect()) {
             physical.setAutoCommit(true);
             final SQLException failure = new SQLException("setAutoCommit failed");
             final Connection faulty = new DelegatingConnection<Connection>(physical) {
@@ -668,7 +675,7 @@ class TestDelegatingConnectionCachedState {
 
     @Test
     void testSetAutoCommitSuccessUpdatesCache() throws SQLException {
-        try (Connection physical = DriverManager.getConnection("jdbc:h2:mem:dcp522_autocommit_success")) {
+        try (Connection physical = database.connect()) {
             final AtomicInteger getAutoCommitCalls = new AtomicInteger();
             final Connection counting = new DelegatingConnection<Connection>(physical) {
                 @Override

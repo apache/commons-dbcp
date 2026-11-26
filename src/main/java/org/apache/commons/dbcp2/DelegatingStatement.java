@@ -133,9 +133,14 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
 
     /**
      * Closes this DelegatingStatement and closes any ResultSets that were not explicitly closed.
+     *
+     * <p>
+     * Concurrent calls to this implementation are serialized so a closed wrapper cannot return a pooled delegate again after it has been borrowed by
+     * another caller. This does not make other statement operations thread-safe. Overrides must provide equivalent protection against concurrent closing.
+     * </p>
      */
     @Override
-    public void close() throws SQLException {
+    public synchronized void close() throws SQLException {
         if (isClosed()) {
             return;
         }

@@ -188,14 +188,17 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
     }
 
     /**
-     * Closes pool(s) maintained by this data source.
+     * Closes pools maintained by this data source and prevents further connection requests.
      *
      * @see org.apache.commons.pool2.ObjectPool#close()
      */
     @Override
     public void close() {
-        managers.values().forEach(manager -> Utils.closeQuietly(getCPDSConnectionFactoryPool(manager)));
-        InstanceKeyDataSourceFactory.removeInstance(getInstanceKey());
+        synchronized (getLifecycleLock()) {
+            setClosed();
+            managers.values().forEach(manager -> Utils.closeQuietly(getCPDSConnectionFactoryPool(manager)));
+            InstanceKeyDataSourceFactory.removeInstance(getInstanceKey(), getLifecycleLock());
+        }
     }
 
     /**
@@ -589,7 +592,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         final PoolKey key = getPoolKey(userName);
         ObjectPool<PooledConnectionAndInfo> pool;
         PooledConnectionManager manager;
-        synchronized (this) {
+        synchronized (getLifecycleLock()) {
+            assertOpen();
             manager = managers.get(key);
             if (manager == null) {
                 try {
@@ -607,6 +611,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         } catch (final NoSuchElementException ex) {
             throw new SQLException("Could not retrieve connection info from pool", ex);
         } catch (final Exception e) {
+            assertOpen();
             // See if failure is due to CPDSConnectionFactory authentication failure
             try {
                 testCPDS(userName, password);
@@ -615,14 +620,15 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
             }
             // New password works, so kill the old pool, create a new one, and borrow
             manager.closePool(userName);
-            synchronized (this) {
+            synchronized (getLifecycleLock()) {
+                assertOpen();
                 managers.remove(key);
-            }
-            try {
-                registerPool(userName, password);
-                pool = getPool(key);
-            } catch (final NamingException ne) {
-                throw new SQLException("RegisterPool failed", ne);
+                try {
+                    registerPool(userName, password);
+                    pool = getPool(key);
+                } catch (final NamingException ne) {
+                    throw new SQLException("RegisterPool failed", ne);
+                }
             }
             try {
                 info = pool.borrowObject();
@@ -666,8 +672,8 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
      * Deserializes an instance from an ObjectInputStream.
      *
      * <p>
-     * When the registration key resolves to an existing data source, its pool managers and live login timeout configuration are reused. An instance serialized
-     * without a key retains its own login timeout setting.
+     * When the registration key resolves to an existing data source, its pool managers, shutdown state, and live login timeout configuration are reused.
+     * An instance serialized without a key retains its own login timeout setting.
      * </p>
      *
      * @param in The source ObjectInputStream.
@@ -679,6 +685,7 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         in.defaultReadObject();
         final PerUserPoolDataSource source = readObjectImpl();
         this.managers = source.managers;
+        setLifecycleSource(source);
         setLoginTimeoutSource(source);
     }
 
@@ -690,7 +697,9 @@ public class PerUserPoolDataSource extends InstanceKeyDataSource {
         }
     }
 
-    private synchronized void registerPool(final String userName, final String password) throws NamingException, SQLException {
+    // Called with the lifecycle monitor held, including during password-change recovery.
+    private void registerPool(final String userName, final String password) throws NamingException, SQLException {
+        assertOpen();
         final ConnectionPoolDataSource cpds = testCPDS(userName, password);
         // Set up the factory we will use (passing the pool associates
         // the factory with the pool, so we do not have to do so
