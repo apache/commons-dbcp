@@ -109,6 +109,18 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         }
     }
 
+    /**
+     * Removes a registration only if it still belongs to the specified data source.
+     *
+     * @param key The registration key, or null if the data source was not registered.
+     * @param dataSource The owner of the registration.
+     */
+    static void removeInstance(final String key, final InstanceKeyDataSource dataSource) {
+        if (key != null) {
+            INSTANCE_MAP.remove(key, dataSource);
+        }
+    }
+
     private Boolean booleanValueOf(final RefAddr refAddr) {
         return Boolean.valueOf(toString(refAddr));
     }

@@ -127,7 +127,16 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             lock.lock();
             try {
                 if (transactionContext == null || transactionContext.isTransactionComplete()) {
-                    super.close();
+                    if (isSharedConnection) {
+                        setDelegate(null);
+                        isSharedConnection = false;
+                    }
+                    try {
+                        super.close();
+                    } finally {
+                        // A completion callback must not close this delegate after it has been borrowed again.
+                        setDelegate(null);
+                    }
                 }
             } finally {
                 try {
@@ -225,25 +234,24 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
                 setDelegate(null);
                 isSharedConnection = false;
             }
+            // autoCommit may have been changed directly on the underlying connection
+            clearCachedState();
+            // Keep delegate cleanup under the same lock as close(), so only one path can return it to the pool.
+            final Connection delegate = getDelegateInternal();
+            if (isClosedInternal() && delegate != null) {
+                try {
+                    setDelegate(null);
+                    if (!delegate.isClosed()) {
+                        delegate.close();
+                    }
+                } catch (final SQLException ignored) {
+                    // Not a whole lot we can do here as connection is closed
+                    // and this is a transaction callback so there is no
+                    // way to report the error.
+                }
+            }
         } finally {
             lock.unlock();
-        }
-        // autoCommit may have been changed directly on the underlying connection
-        clearCachedState();
-        // If this connection was closed during the transaction and there is
-        // still a delegate present close it
-        final Connection delegate = getDelegateInternal();
-        if (isClosedInternal() && delegate != null) {
-            try {
-                setDelegate(null);
-                if (!delegate.isClosed()) {
-                    delegate.close();
-                }
-            } catch (final SQLException ignored) {
-                // Not a whole lot we can do here as connection is closed
-                // and this is a transaction callback so there is no
-                // way to report the error.
-            }
         }
     }
 
