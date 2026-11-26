@@ -67,14 +67,18 @@ final class ConnectionImpl extends DelegatingConnection<Connection> {
      * Marks the Connection as closed, and notifies the pool that the pooled connection is available.
      *
      * <p>
-     * In accordance with the JDBC specification this Connection cannot be used after closed() is called. Any further
-     * usage will result in an SQLException.
+     * Concurrent calls are serialized so the pool is notified only once, including when closing statements fails. A concurrent caller waits for cleanup
+     * and notification to finish before returning.
+     * </p>
+     *
+     * <p>
+     * After closing, operations that require an open connection throw an {@link SQLException}.
      * </p>
      *
      * @throws SQLException Thrown if the database connection cannot be closed.
      */
     @Override
-    public void close() throws SQLException {
+    public synchronized void close() throws SQLException {
         if (!isClosedInternal()) {
             try {
                 passivate();

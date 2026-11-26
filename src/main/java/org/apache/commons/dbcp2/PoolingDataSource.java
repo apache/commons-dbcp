@@ -53,7 +53,8 @@ public class PoolingDataSource<C extends Connection> implements DataSource, Auto
         }
 
         @Override
-        public void close() throws SQLException {
+        public synchronized void close() throws SQLException {
+            // Keep detachment serialized with closing, including failures before the base closed flag is set.
             try {
                 super.close();
             } finally {
