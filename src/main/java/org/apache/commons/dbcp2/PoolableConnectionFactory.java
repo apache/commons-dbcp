@@ -848,7 +848,7 @@ public class PoolableConnectionFactory implements PooledObjectFactory<PoolableCo
      * @throws SQLException Thrown if the connection is closed or validate fails.
      */
     public void validateConnection(final PoolableConnection conn) throws SQLException {
-        if (conn.isClosed()) {
+        if (conn.isClosedForValidation()) {
             throw new SQLException("validateConnection: connection closed");
         }
         conn.validate(validationQuery, validationQueryTimeoutDuration);

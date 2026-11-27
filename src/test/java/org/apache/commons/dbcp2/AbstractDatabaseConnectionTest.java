@@ -115,12 +115,16 @@ abstract class AbstractDatabaseConnectionTest {
         }
     }
 
+    /** Supplies the same validation configurations as the unit-test recovery fixture. */
+    private static Stream<Arguments> deadIdleConfigurations() {
+        return TestConnectionValidation.databaseConfigurations();
+    }
+
     /** Combines transaction managers, resource types, and completion outcomes. */
     static Stream<Arguments> transactions() {
         return Stream.of(false, true).flatMap(narayana -> Stream.of(false, true)
                 .flatMap(xa -> Stream.of(false, true).map(commit -> Arguments.of(narayana, xa, commit))));
     }
-
     /** Database selected by the concrete test class. */
     @Parameter
     TestDatabase database;
@@ -128,6 +132,7 @@ abstract class AbstractDatabaseConnectionTest {
     private Connection anchor;
     /** URL shared by this test's physical connections. */
     private String url;
+
     /** Unique table name, also isolating concurrent integration-test runs. */
     private String table;
 
@@ -234,6 +239,17 @@ abstract class AbstractDatabaseConnectionTest {
                 assertEquals(1, countRows());
             }
             assertEquals(0, pool.getNumActive());
+        }
+    }
+
+    /** Runs the shared capacity regression against a real JDBC driver. */
+    @ParameterizedTest
+    @MethodSource("deadIdleConfigurations")
+    void testDeadIdleConnections(final boolean query, final boolean statements, final boolean evict) throws Throwable {
+        try (BasicDataSource pool = createPool()) {
+            pool.setValidationQuery(query ? database.select(1) : null);
+            pool.setPoolPreparedStatements(statements);
+            TestConnectionValidation.assertDeadIdleConnections(pool, evict, Connection::close);
         }
     }
 

@@ -55,10 +55,6 @@ import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchroniza
 @EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 public class TestBasicManagedDataSource extends TestBasicDataSource {
 
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
-
     /**
      * A second transaction participant that votes {@link XAResource#XA_OK} and does nothing else.
      */
@@ -109,6 +105,10 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         public void start(final Xid xid, final int flags) {
         }
     }
+
+    /** Database used by this invocation. */
+    @Parameter
+    TestDatabase database;
 
     @Override
     protected BasicDataSource createDataSource() throws Exception {

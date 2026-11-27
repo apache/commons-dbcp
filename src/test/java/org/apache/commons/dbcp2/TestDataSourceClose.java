@@ -111,16 +111,6 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     }
 
     /**
-     * Checks that shutdown cannot be undone through either borrowing overload.
-     */
-    private void assertRejectsBorrowing(final InstanceKeyDataSource dataSource, final TrackingCPDS cpds) {
-        final int attempts = cpds.attempts.get();
-        assertThrows(SQLException.class, dataSource::getConnection);
-        assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), ""));
-        assertEquals(attempts, cpds.attempts.get(), "A closed data source contacted its provider");
-    }
-
-    /**
      * Combines each data-source implementation, lifecycle state, and getConnection overload.
      */
     static Stream<Arguments> closeCases() {
@@ -170,6 +160,16 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     static Stream<Arguments> serializationCases() {
         return Stream.of(false, true).flatMap(shared -> Stream.of(false, true)
                 .flatMap(initialized -> Stream.of(false, true).map(closeCopy -> Arguments.of(shared, initialized, closeCopy))));
+    }
+
+    /**
+     * Checks that shutdown cannot be undone through either borrowing overload.
+     */
+    private void assertRejectsBorrowing(final InstanceKeyDataSource dataSource, final TrackingCPDS cpds) {
+        final int attempts = cpds.attempts.get();
+        assertThrows(SQLException.class, dataSource::getConnection);
+        assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), ""));
+        assertEquals(attempts, cpds.attempts.get(), "A closed data source contacted its provider");
     }
 
     @ParameterizedTest

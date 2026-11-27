@@ -242,6 +242,28 @@ class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
         ds.setDefaultMaxWait(Duration.ofSeconds(5));
     }
 
+    /** Exercises each client wrapper with successful and failing cleanup. */
+    private static Stream<Arguments> poolArguments() {
+        return Stream.of(PoolPath.values()).flatMap(path -> Stream.of(PoolFailure.values()).map(failure -> Arguments.of(path, failure)));
+    }
+
+    private static Thread startAfter(final CyclicBarrier barrier, final AtomicReference<Throwable> failure, final Executable task) {
+        final Thread thread = new Thread(() -> {
+            try {
+                barrier.await();
+                task.execute();
+            } catch (final Throwable t) {
+                failure.compareAndSet(null, t);
+            }
+        });
+        thread.start();
+        return thread;
+    }
+
+    private PoolingDataSource<PoolableConnection> ds;
+
+    private GenericObjectPool<PoolableConnection> pool;
+
     /** Creates a CPDS-backed pool and observes notifications after its factory has processed them. */
     private PoolFixture createCpdsPool(final PoolPath path, final CloseGates gates) throws Exception {
         final AtomicReference<PooledConnection> pooled = new AtomicReference<>();
@@ -288,7 +310,6 @@ class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
         });
         return fixture;
     }
-
     /** Creates a pool whose physical connection can be reborrowed while the original close is still executing. */
     private PoolFixture createPool(final PoolPath path, final CloseGates gates) throws Exception {
         if (path == PoolPath.PER_USER || path == PoolPath.SHARED) {
@@ -336,27 +357,6 @@ class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
         }
         return new PoolFixture(borrow, pool::getNumActive, pool::getNumIdle, owner, gates);
     }
-
-    /** Exercises each client wrapper with successful and failing cleanup. */
-    private static Stream<Arguments> poolArguments() {
-        return Stream.of(PoolPath.values()).flatMap(path -> Stream.of(PoolFailure.values()).map(failure -> Arguments.of(path, failure)));
-    }
-
-    private static Thread startAfter(final CyclicBarrier barrier, final AtomicReference<Throwable> failure, final Executable task) {
-        final Thread thread = new Thread(() -> {
-            try {
-                barrier.await();
-                task.execute();
-            } catch (final Throwable t) {
-                failure.compareAndSet(null, t);
-            }
-        });
-        thread.start();
-        return thread;
-    }
-
-    private PoolingDataSource<PoolableConnection> ds;
-    private GenericObjectPool<PoolableConnection> pool;
 
     @BeforeEach
     void setUp() {
