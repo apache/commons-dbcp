@@ -32,7 +32,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,7 +58,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests terminal data-source shutdown, including initialization and password-recovery races.
  */
-class TestDataSourceClose {
+class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Data-source lifecycle states in which shutdown must prevent new requests.
@@ -82,9 +81,9 @@ class TestDataSourceClose {
         /**
          * Uses independent in-memory databases so tests do not share credentials or state.
          */
-        TrackingCPDS() throws ClassNotFoundException {
-            setDriver("org.h2.Driver");
-            setUrl("jdbc:h2:mem:");
+        TrackingCPDS(final TestDatabase database) throws ClassNotFoundException {
+            setDriver(database.getDriverClassName());
+            setUrl(database.newUrl());
         }
 
         /**
@@ -114,10 +113,10 @@ class TestDataSourceClose {
     /**
      * Checks that shutdown cannot be undone through either borrowing overload.
      */
-    private static void assertRejectsBorrowing(final InstanceKeyDataSource dataSource, final TrackingCPDS cpds) {
+    private void assertRejectsBorrowing(final InstanceKeyDataSource dataSource, final TrackingCPDS cpds) {
         final int attempts = cpds.attempts.get();
         assertThrows(SQLException.class, dataSource::getConnection);
-        assertThrows(SQLException.class, () -> dataSource.getConnection("sa", ""));
+        assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), ""));
         assertEquals(attempts, cpds.attempts.get(), "A closed data source contacted its provider");
     }
 
@@ -176,7 +175,7 @@ class TestDataSourceClose {
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void testBorrowWaitingToInitializeRechecksClosedState(final boolean shared) throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (InstanceKeyDataSource dataSource = create(shared)) {
             configure(dataSource, cpds);
             Task borrower = null;
@@ -198,7 +197,7 @@ class TestDataSourceClose {
 
     @Test
     void testClearDoesNotCloseDataSource() throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
             configure(dataSource, cpds);
             dataSource.getConnection().close();
@@ -213,8 +212,12 @@ class TestDataSourceClose {
 
     @Test
     void testCloseAllUserPools() throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
-        try (PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
+        final TrackingCPDS cpds = new TrackingCPDS(database);
+        try (Connection anchor = database.createDataSource(cpds.getUrl()).getConnection();
+                Statement setup = anchor.createStatement(); PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
+            for (String user : new String[] {"first", "second", "third"}) {
+                setup.execute("CREATE USER \"" + user + "\" PASSWORD ''");
+            }
             configure(dataSource, cpds);
             dataSource.getConnection("first", "").close();
             dataSource.getConnection("second", "").close();
@@ -232,8 +235,8 @@ class TestDataSourceClose {
     @MethodSource("serializationCases")
     void testClosedPoolIsNotRecreatedThroughDeserializedDataSource(final boolean shared, final boolean initialized, final boolean closeCopy) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver("org.h2.Driver");
-        cpds.setUrl("jdbc:h2:mem:");
+        cpds.setDriver(database.getDriverClassName());
+        cpds.setUrl(database.newUrl());
         try (InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             if (initialized) {
@@ -261,7 +264,7 @@ class TestDataSourceClose {
     @ParameterizedTest
     @MethodSource("creationCases")
     void testCloseDuringConnectionCreation(final boolean shared, final int pauseAt) throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         cpds.pauseAt = pauseAt;
         try (InstanceKeyDataSource dataSource = create(shared)) {
             configure(dataSource, cpds);
@@ -294,7 +297,7 @@ class TestDataSourceClose {
     @ParameterizedTest
     @ValueSource(ints = {4, 5})
     void testCloseDuringPasswordRecovery(final int pauseAt) throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
             configure(dataSource, cpds);
             dataSource.setDefaultMaxIdle(0);
@@ -334,13 +337,13 @@ class TestDataSourceClose {
     @ParameterizedTest
     @MethodSource("closeCases")
     void testCloseIsTerminal(final boolean shared, final State state, final boolean credentials) throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (InstanceKeyDataSource dataSource = create(shared)) {
             if (state != State.UNCONFIGURED) {
                 configure(dataSource, cpds);
             }
             if (state == State.INITIALIZED) {
-                try (Connection connection = credentials ? dataSource.getConnection("sa", "") : dataSource.getConnection()) {
+                try (Connection connection = credentials ? dataSource.getConnection(database.getUser(), "") : dataSource.getConnection()) {
                     assertFalse(connection.isClosed());
                 }
             }
@@ -358,7 +361,7 @@ class TestDataSourceClose {
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void testCloseWakesWaitersAndPreservesBorrowedConnection(final boolean shared) throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (InstanceKeyDataSource dataSource = create(shared)) {
             configure(dataSource, cpds);
             dataSource.setDefaultMaxWait(Duration.ofMillis(-1));
@@ -382,8 +385,8 @@ class TestDataSourceClose {
     @ValueSource(booleans = {false, true})
     void testDeserializedDataSourceSharesInitializationMonitor(final boolean shared) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver("org.h2.Driver");
-        cpds.setUrl("jdbc:h2:mem:");
+        cpds.setDriver(database.getDriverClassName());
+        cpds.setUrl(database.newUrl());
         try (InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             try (InstanceKeyDataSource copy = SerializationUtils.clone(dataSource)) {
@@ -408,38 +411,38 @@ class TestDataSourceClose {
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void testPasswordChangeThroughDeserializedDataSource(final boolean shared) throws Exception {
-        final String url = "jdbc:h2:mem:" + UUID.randomUUID();
+        final String url = database.newUrl();
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver("org.h2.Driver");
+        cpds.setDriver(database.getDriverClassName());
         cpds.setUrl(url);
         // Keep the database alive while password recovery replaces its pooled connections.
-        try (Connection anchor = DriverManager.getConnection(url, "sa", "before"); InstanceKeyDataSource dataSource = create(shared)) {
+        try (Connection anchor = DriverManager.getConnection(url, database.getUser(), "before"); InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             dataSource.setDefaultMaxTotal(1);
             dataSource.setDefaultBlockWhenExhausted(false);
-            dataSource.getConnection("sa", "before").close();
+            dataSource.getConnection(database.getUser(), "before").close();
             try (InstanceKeyDataSource copy = SerializationUtils.clone(dataSource)) {
                 try (Statement statement = anchor.createStatement()) {
                     statement.execute("ALTER USER SA SET PASSWORD 'after'");
                 }
-                try (Connection connection = copy.getConnection("sa", "after")) {
+                try (Connection connection = copy.getConnection(database.getUser(), "after")) {
                     assertTrue(connection.isValid(1));
-                    assertEquals(1, shared ? ((SharedPoolDataSource) dataSource).getNumActive() : ((PerUserPoolDataSource) dataSource).getNumActive("sa"));
-                    assertEquals(1, shared ? ((SharedPoolDataSource) copy).getNumActive() : ((PerUserPoolDataSource) copy).getNumActive("sa"));
+                    assertEquals(1, shared ? ((SharedPoolDataSource) dataSource).getNumActive() : ((PerUserPoolDataSource) dataSource).getNumActive(database.getUser()));
+                    assertEquals(1, shared ? ((SharedPoolDataSource) copy).getNumActive() : ((PerUserPoolDataSource) copy).getNumActive(database.getUser()));
                 }
-                try (Connection connection = dataSource.getConnection("sa", "after")) {
+                try (Connection connection = dataSource.getConnection(database.getUser(), "after")) {
                     assertTrue(connection.isValid(1));
                 }
-                assertThrows(SQLException.class, () -> copy.getConnection("sa", "before"));
+                assertThrows(SQLException.class, () -> copy.getConnection(database.getUser(), "before"));
                 copy.close();
-                assertThrows(SQLException.class, () -> dataSource.getConnection("sa", "after"));
+                assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), "after"));
             }
         }
     }
 
     @Test
     void testPasswordRecoveryWhileOpen() throws Exception {
-        final TrackingCPDS cpds = new TrackingCPDS();
+        final TrackingCPDS cpds = new TrackingCPDS(database);
         try (PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
             configure(dataSource, cpds);
             dataSource.setDefaultMaxIdle(0);
@@ -457,8 +460,8 @@ class TestDataSourceClose {
     @MethodSource("serializationCases")
     void testRepeatedClosePreservesNewRegistration(final boolean shared, final boolean initialized, final boolean closeCopy) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver("org.h2.Driver");
-        cpds.setUrl("jdbc:h2:mem:");
+        cpds.setDriver(database.getDriverClassName());
+        cpds.setUrl(database.newUrl());
         final ObjectFactory factory = shared ? new SharedPoolDataSourceFactory() : new PerUserPoolDataSourceFactory();
         try (InstanceKeyDataSource first = create(shared)) {
             first.setConnectionPoolDataSource(cpds);

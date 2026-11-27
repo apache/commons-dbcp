@@ -32,10 +32,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import org.h2.Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +45,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests termination and identity-based traversal when invalidating wrapped connections.
  */
-class TestBasicDataSourceInvalidation {
+class TestBasicDataSourceInvalidation extends AbstractEmbeddedDatabaseTest {
 
     /** Distinct instances compare equal, but must remain distinct nodes in a delegate chain. */
     private static final class EqualConnection extends DelegatingConnection<Connection> {
@@ -66,7 +64,6 @@ class TestBasicDataSourceInvalidation {
         }
     }
 
-    private static final AtomicInteger IDS = new AtomicInteger();
     private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
     private static Stream<Arguments> acyclicArguments() {
@@ -124,8 +121,8 @@ class TestBasicDataSourceInvalidation {
     @BeforeEach
     void setUp() throws SQLException {
         dataSource = new BasicDataSource();
-        dataSource.setDriver(new Driver());
-        dataSource.setUrl("jdbc:h2:mem:invalidate-cycle-" + IDS.incrementAndGet());
+        dataSource.setDriver(database.getDriver());
+        dataSource.setUrl(database.newUrl());
         pooledConnection = dataSource.getConnection();
     }
 

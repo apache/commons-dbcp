@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -54,6 +55,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests for {@link DriverFactory}.
  */
+@Isolated("Temporarily changes the DriverManager registry")
 public class TestDriverFactory {
 
     /**
@@ -668,13 +670,22 @@ public class TestDriverFactory {
     @NullSource
     @ValueSource(strings = "jdbc:apache:commons:missing-driver")
     void testDriverManagerFailure(final String url) throws SQLException {
+        // A vendor driver's acceptsURL(null) may throw a runtime exception. Test DriverManager's own failure with an empty registry.
+        final List<Driver> drivers = Collections.list(DriverManager.getDrivers());
         try (BasicDataSource dataSource = new BasicDataSource()) {
+            for (final Driver driver : drivers) {
+                DriverManager.deregisterDriver(driver);
+            }
             dataSource.setUrl(url);
             final SQLException exception = assertThrows(SQLException.class, () -> DriverFactory.createDriver(dataSource));
             assertConnectionFailure(exception);
             assertEquals("Cannot create JDBC driver of class '' for connect URL '" + url + "'", exception.getMessage());
             final SQLException cause = assertInstanceOf(SQLException.class, exception.getCause());
             assertEquals("08001", cause.getSQLState());
+        } finally {
+            for (final Driver driver : drivers) {
+                DriverManager.registerDriver(driver);
+            }
         }
     }
 

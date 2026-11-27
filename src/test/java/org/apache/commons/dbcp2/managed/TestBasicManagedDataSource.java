@@ -37,11 +37,13 @@ import javax.transaction.xa.Xid;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
+import org.apache.commons.dbcp2.TestDatabase;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.h2.Driver;
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchronizationRegistryImple;
@@ -49,7 +51,13 @@ import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchroniza
 /**
  * TestSuite for BasicManagedDataSource
  */
+@ParameterizedClass(name = "{0}")
+@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 public class TestBasicManagedDataSource extends TestBasicDataSource {
+
+    /** Database used by this invocation. */
+    @Parameter
+    TestDatabase database;
 
     /**
      * A second transaction participant that votes {@link XAResource#XA_OK} and does nothing else.
@@ -114,8 +122,8 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     @Test
     void testCreateXaDataSourceNewInstance() throws SQLException, XAException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.setXADataSource(JdbcDataSource.class.getCanonicalName());
-            basicManagedDataSource.setDriverClassName(Driver.class.getName());
+            basicManagedDataSource.setXADataSource(database.createXaDataSource(database.newUrl()).getClass().getName());
+            basicManagedDataSource.setDriverClassName(database.getDriverClassName());
             basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
             assertNotNull(basicManagedDataSource.createConnectionFactory());
         }
@@ -262,7 +270,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             basicManagedDataSource.setUsername("userName");
             basicManagedDataSource.setPassword("password");
             basicManagedDataSource.setMaxIdle(1);
-            basicManagedDataSource.setXaDataSourceInstance(new JdbcDataSource());
+            basicManagedDataSource.setXaDataSourceInstance(database.createXaDataSource(database.newUrl()));
             assertNotNull(basicManagedDataSource.createConnectionFactory());
         }
     }
@@ -280,8 +288,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
             basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
             final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
             basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
-            final JdbcDataSource xaDataSource = new JdbcDataSource();
-            xaDataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+            final XADataSource xaDataSource = database.createXaDataSource(database.newUrl());
             basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
             basicManagedDataSource.setMaxIdle(1);
 
@@ -312,7 +319,7 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     @Test
     void testXaDataSourceInstance() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            final XADataSource ds = new JdbcDataSource();
+            final XADataSource ds = database.createXaDataSource(database.newUrl());
             basicManagedDataSource.setXaDataSourceInstance(ds);
             assertEquals(ds, basicManagedDataSource.getXaDataSourceInstance());
         }

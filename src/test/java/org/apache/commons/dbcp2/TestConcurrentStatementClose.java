@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +43,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests concurrent explicit and connection-driven statement cleanup.
  */
-class TestConcurrentStatementClose {
+class TestConcurrentStatementClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Cleanup failures must still leave the wrapper closed and its delegate detached.
@@ -78,8 +77,8 @@ class TestConcurrentStatementClose {
     /**
      * Prepares a statement that uses a single reusable pool entry.
      */
-    private static PreparedStatement prepare(final Connection connection, final boolean callable) throws SQLException {
-        return callable ? connection.prepareCall("CALL ABS(?)") : connection.prepareStatement("SELECT ?");
+    private PreparedStatement prepare(final Connection connection, final boolean callable) throws SQLException {
+        return callable ? connection.prepareCall("CALL ABS(?)") : connection.prepareStatement(database.selectParameter());
     }
 
     @ParameterizedTest
@@ -172,7 +171,7 @@ class TestConcurrentStatementClose {
         final CountDownLatch returned = new CountDownLatch(1);
         final CountDownLatch release = new CountDownLatch(1);
         final AtomicInteger returns = new AtomicInteger();
-        try (PoolingConnection pooling = new PoolingConnection(DriverManager.getConnection("jdbc:h2:mem:"))) {
+        try (PoolingConnection pooling = new PoolingConnection(database.connect())) {
             final GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement> pool = new GenericKeyedObjectPool<PStmtKey, DelegatingPreparedStatement>(pooling) {
                 @Override
                 public void returnObject(final PStmtKey key, final DelegatingPreparedStatement statement) {

@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,7 +52,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests ownership of managed delegates when close overlaps a transaction callback.
  */
-class TestConcurrentManagedConnectionClose {
+class TestConcurrentManagedConnectionClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Failures during delegate inspection or close must not leave the delegate attached.
@@ -63,17 +62,20 @@ class TestConcurrentManagedConnectionClose {
     }
 
     /**
-     * Uses a real transaction manager, managed connection factory, and single-entry H2 pool.
+     * Uses a real transaction manager, managed connection factory, and single-entry database pool.
      */
     private static final class Fixture implements AutoCloseable {
         private final TransactionManagerImpl manager = new TransactionManagerImpl();
-        private final LocalXAConnectionFactory factory = new LocalXAConnectionFactory(manager, () -> DriverManager.getConnection("jdbc:h2:mem:"));
+        private final LocalXAConnectionFactory factory;
+        private final TestDatabase database;
         private final GenericObjectPool<PoolableConnection> pool;
 
         /**
          * Creates a pool that rejects a second borrower instead of waiting indefinitely.
          */
-        Fixture() throws Exception {
+        Fixture(final TestDatabase database) throws Exception {
+            this.database = database;
+            factory = new LocalXAConnectionFactory(manager, database::connect);
             final PoolableManagedConnectionFactory connectionFactory = new PoolableManagedConnectionFactory(factory, null);
             pool = new GenericObjectPool<>(connectionFactory);
             connectionFactory.setPool(pool);
@@ -193,7 +195,7 @@ class TestConcurrentManagedConnectionClose {
         assertEquals(0, fixture.pool.getNumIdle());
         assertFalse(connection.isClosed());
         assertThrows(SQLException.class, fixture::borrow);
-        try (Statement statement = connection.createStatement(); ResultSet result = statement.executeQuery("SELECT 42")) {
+        try (Statement statement = connection.createStatement(); ResultSet result = statement.executeQuery(fixture.database.select(42))) {
             assertTrue(result.next());
             assertEquals(42, result.getInt(1));
         }
@@ -203,7 +205,7 @@ class TestConcurrentManagedConnectionClose {
     @ValueSource(booleans = {false, true})
     void testClosedDuringTransactionReturnsOnlyOnCompletion(final boolean commit) throws Exception {
         final Gate gate = new Gate(Phase.BEFORE_CALLBACK);
-        try (Fixture fixture = new Fixture()) {
+        try (Fixture fixture = new Fixture(database)) {
             fixture.manager.begin();
             final GatedConnection owner = new GatedConnection(fixture.pool, fixture.factory.getTransactionRegistry(), gate);
             final ManagedConnection<PoolableConnection> shared = fixture.borrow();
@@ -307,7 +309,7 @@ class TestConcurrentManagedConnectionClose {
     @ValueSource(booleans = {false, true})
     void testCloseWaitsForCompletionCleanup(final boolean commit) throws Exception {
         final Gate gate = new Gate(Phase.CHECK_CLOSED);
-        try (Fixture fixture = new Fixture()) {
+        try (Fixture fixture = new Fixture(database)) {
             fixture.manager.begin();
             final GatedConnection original = new GatedConnection(fixture.pool, fixture.factory.getTransactionRegistry(), gate);
             final Connection physical = original.getInnermostDelegateInternal();
@@ -341,7 +343,7 @@ class TestConcurrentManagedConnectionClose {
     @ValueSource(booleans = {false, true})
     void testCompletionAfterCloseDoesNotReturnBorrowedConnection(final boolean commit) throws Exception {
         final Gate gate = new Gate(Phase.BEFORE_CALLBACK);
-        try (Fixture fixture = new Fixture()) {
+        try (Fixture fixture = new Fixture(database)) {
             fixture.manager.begin();
             final GatedConnection original = new GatedConnection(fixture.pool, fixture.factory.getTransactionRegistry(), gate);
             try (Task completion = fixture.complete(fixture.manager.suspend(), commit)) {
@@ -368,7 +370,7 @@ class TestConcurrentManagedConnectionClose {
     @ValueSource(booleans = {false, true})
     void testSharedCloseDoesNotReturnOwnersConnection(final boolean commit) throws Exception {
         final Gate gate = new Gate(Phase.AFTER_CALLBACK);
-        try (Fixture fixture = new Fixture()) {
+        try (Fixture fixture = new Fixture(database)) {
             fixture.manager.begin();
             final GatedConnection owner = new GatedConnection(fixture.pool, fixture.factory.getTransactionRegistry(), gate);
             final ManagedConnection<PoolableConnection> shared = fixture.borrow();
