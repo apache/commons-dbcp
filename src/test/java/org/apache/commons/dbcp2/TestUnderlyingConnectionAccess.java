@@ -144,6 +144,19 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
         }
     }
 
+    private static Stream<Arguments> closeArguments() {
+        return Arrays.stream(Source.values()).flatMap(source -> Stream.of(false, true).flatMap(allowed ->
+            Stream.of(false, true).flatMap(nested ->
+                Stream.of(StatementKind.STATEMENT, StatementKind.PREPARED, StatementKind.CALLABLE).flatMap(kind ->
+                    Arrays.stream(CloseWith.values()).map(closeWith -> Arguments.of(source, allowed, nested, kind, closeWith))))));
+    }
+
+    private static Stream<Arguments> statementArguments() {
+        return Arrays.stream(Source.values()).flatMap(source -> Stream.of(false, true).flatMap(allowed ->
+            Stream.of(false, true).flatMap(poolStatements -> Stream.of(false, true).flatMap(nested ->
+                Arrays.stream(StatementKind.values()).map(kind -> Arguments.of(source, allowed, poolStatements, nested, kind))))));
+    }
+
     private void assertConnectionAccess(final Connection connection, final boolean allowed) throws SQLException {
         assertAccess(connection, Connection.class, database.getJdbcType(Connection.class), allowed);
         final DelegatingConnection<?> delegate = (DelegatingConnection<?>) connection;
@@ -190,13 +203,6 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
         } else {
             assertNull(delegate.getInnermostDelegate());
         }
-    }
-
-    private static Stream<Arguments> closeArguments() {
-        return Arrays.stream(Source.values()).flatMap(source -> Stream.of(false, true).flatMap(allowed ->
-            Stream.of(false, true).flatMap(nested ->
-                Stream.of(StatementKind.STATEMENT, StatementKind.PREPARED, StatementKind.CALLABLE).flatMap(kind ->
-                    Arrays.stream(CloseWith.values()).map(closeWith -> Arguments.of(source, allowed, nested, kind, closeWith))))));
     }
 
     private void configure(final BasicDataSource dataSource, final boolean allowed, final boolean poolStatements) throws SQLException {
@@ -277,12 +283,6 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
 
     private String newUrl() {
         return database.newUrl();
-    }
-
-    private static Stream<Arguments> statementArguments() {
-        return Arrays.stream(Source.values()).flatMap(source -> Stream.of(false, true).flatMap(allowed ->
-            Stream.of(false, true).flatMap(poolStatements -> Stream.of(false, true).flatMap(nested ->
-                Arrays.stream(StatementKind.values()).map(kind -> Arguments.of(source, allowed, poolStatements, nested, kind))))));
     }
 
     @ParameterizedTest

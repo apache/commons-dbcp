@@ -292,6 +292,20 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     }
 
     /**
+     * Tests for closure without returning or invalidating this connection. Pool validation must leave destruction to the pool.
+     *
+     * @return Whether this connection or its delegate is closed.
+     * @throws SQLException If the delegate cannot report its state.
+     */
+    final boolean isClosedForValidation() throws SQLException {
+        if (isClosedInternal()) {
+            return true;
+        }
+        final Connection delegate = getDelegateInternal();
+        return delegate == null || delegate.isClosed();
+    }
+
+    /**
      * Tests whether the SQL state of the input exception indicates a fatal disconnection.
      *
      * <p>
@@ -346,6 +360,25 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
      */
     boolean isFatalException(final SQLException e) {
         return Utils.findInChain(e, this::isDisconnectionSqlException, SQLException::getNextException) != null;
+    }
+
+    /**
+     * Validates through JDBC without invoking the public closure check, which can invalidate this connection.
+     *
+     * @param timeoutSeconds The JDBC validation timeout.
+     * @return Whether the delegate is valid.
+     * @throws SQLException If validation fails with an exception.
+     */
+    private boolean isValidForValidation(final int timeoutSeconds) throws SQLException {
+        if (isClosedForValidation()) {
+            return false;
+        }
+        try {
+            return getDelegateInternal().isValid(timeoutSeconds);
+        } catch (final SQLException e) {
+            handleException(e);
+            return false;
+        }
     }
 
     @Override
@@ -420,7 +453,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
         // JDBC timeouts are whole seconds where 0 means no timeout, so a positive sub-second timeout becomes 1 second.
         final int timeoutSeconds = timeoutDuration.isNegative() ? 0 : Utils.toJdbcSeconds(timeoutDuration);
         if (sql == null || sql.isEmpty()) {
-            if (!isValid(Duration.ofSeconds(timeoutSeconds))) {
+            if (!isValidForValidation(timeoutSeconds)) {
                 throw new SQLException("isValid() returned false");
             }
             return;

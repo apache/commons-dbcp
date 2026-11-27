@@ -91,6 +91,7 @@ The <action> type attribute can be add,update,fix,remove.
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Serialize DelegatingStatement.close() to prevent concurrent closes from returning prepared and callable statements after they have been borrowed again.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Coordinate PerUserPoolDataSource and SharedPoolDataSource shutdown with pool initialization, and prevent connection requests and password-change recovery from reopening closed data sources.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Prevent repeated PerUserPoolDataSource and SharedPoolDataSource closes from unregistering another data source that reuses the same instance key.</action>
+      <action type="fix" dev="ggregory" due-to="Vladimir Zhilin, Gary Gregory">Prevent dead-connection validation from destroying pooled connections twice and allowing the pool to exceed maxTotal. Preserve application-facing connection cleanup.</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add DriverAdapterCPDS.exportPasswordAsRefAddr to optionally omit the password address from JNDI References. Password export remains enabled by default for compatibility; the setting survives JNDI lookup and Java serialization.</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add PoolingDriver.Builder and PoolingDriver.builder() to configure delegate access when creating drivers, preserving the existing permissive default.</action>
