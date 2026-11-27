@@ -32,15 +32,12 @@ import java.time.Duration;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 
-import org.apache.commons.dbcp2.TestDatabase;
+import org.apache.commons.dbcp2.AbstractEmbeddedDatabaseTest;
 import org.apache.commons.dbcp2.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.provider.EnumSource;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
 import com.arjuna.ats.jta.common.jtaPropertyManager;
@@ -49,13 +46,8 @@ import com.arjuna.ats.jta.common.jtaPropertyManager;
  * Requires Java 8 or above.
  */
 @Timeout(30)
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-public class TestConnectionWithNarayana {
+public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
 
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
     private static final String CREATE_STMT = "CREATE TABLE TEST_DATA (KEY1 VARCHAR(100), ID BIGINT, VALUE1 DOUBLE PRECISION, INFO VARCHAR(100000), TS TIMESTAMP)";
     private static final String INSERT_STMT = "INSERT INTO TEST_DATA   (KEY1, ID, VALUE1, INFO, TS) VALUES (?,?,?,?,?)";
     private static final String SELECT_STMT = "SELECT KEY1, ID, VALUE1, INFO, TS FROM TEST_DATA";

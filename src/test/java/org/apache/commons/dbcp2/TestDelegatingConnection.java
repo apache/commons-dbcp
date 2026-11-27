@@ -35,20 +35,11 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.provider.EnumSource;
 
 /**
  * Tests {@link DelegatingConnection}.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-public class TestDelegatingConnection {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Delegate that will throw RTE on toString Used to validate fix for DBCP-241

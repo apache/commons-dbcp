@@ -34,8 +34,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -44,13 +42,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests cached connection properties across successful writes and driver failures.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestDelegatingConnectionCachedState {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestDelegatingConnectionCachedState extends AbstractEmbeddedDatabaseTest {
 
     private static final class CacheConfig {
         private final boolean enabled;

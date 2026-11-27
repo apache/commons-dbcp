@@ -34,21 +34,12 @@ import java.sql.Statement;
 import java.sql.Types;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mockito;
 
 /**
  * Tests {@link Jdbc41Bridge}.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class Jdbc41BridgeTest {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
 
     private Connection getConnection() throws SQLException {
         return database.connect();

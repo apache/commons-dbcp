@@ -36,23 +36,14 @@ import java.util.stream.Stream;
 
 import org.apache.commons.dbcp2.ConcurrentCloseTestSupport.Task;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests concurrent explicit and connection-driven statement cleanup.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestConcurrentStatementClose {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestConcurrentStatementClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Cleanup failures must still leave the wrapper closed and its delegate detached.

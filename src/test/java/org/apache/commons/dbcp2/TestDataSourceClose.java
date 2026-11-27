@@ -50,24 +50,15 @@ import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSourceFactory;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests terminal data-source shutdown, including initialization and password-recovery races.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestDataSourceClose {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Data-source lifecycle states in which shutdown must prevent new requests.

@@ -45,8 +45,6 @@ import org.apache.commons.dbcp2.managed.TransactionRegistry;
 import org.apache.commons.pool2.BaseObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -54,13 +52,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests ownership of managed delegates when close overlaps a transaction callback.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestConcurrentManagedConnectionClose {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestConcurrentManagedConnectionClose extends AbstractEmbeddedDatabaseTest {
 
     /**
      * Failures during delegate inspection or close must not leave the delegate attached.

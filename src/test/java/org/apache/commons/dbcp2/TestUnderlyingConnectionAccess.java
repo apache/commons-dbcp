@@ -50,11 +50,8 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.ClearSystemProperty;
@@ -64,13 +61,7 @@ import org.junitpioneer.jupiter.ReadsSystemProperty;
  * Exercises delegate access through every pool guard and JDBC wrapper, with and without statement pooling and nested wrappers.
  */
 @ReadsSystemProperty
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestUnderlyingConnectionAccess {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
 
     private enum CloseWith {
         RESULT_SET, STATEMENT, CONNECTION

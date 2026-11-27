@@ -59,8 +59,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -68,13 +66,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests overlapping closes, including reborrowing before the original close finishes. */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-class TestConcurrentConnectionClose {
-
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
+class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
 
     /** A traced resource that pauses closing before the delegate is returned to its pool. */
     private static final class CleanupTrace extends AbandonedTrace {
