@@ -64,9 +64,16 @@ mvn -B -ntp -Pdocker-it "-Ddbcp.test.databases=oracle,sqlserver" verify]]></sour
       <p>
         Use <code>verify</code>, since stopping at <code>integration-test</code> omits container cleanup and
         test-result verification. A missing daemon or failed database startup fails the build rather than
-        skipping tests. <code>-DskipITs</code> skips both container startup and integration tests;
-        <code>-DskipTests</code> alone should not be used to skip Docker.
+        skipping tests. <code>-DskipITs</code> skips both container startup and integration tests.
+        With the configured Failsafe 3.6.1, <code>-DskipTests</code> skips only Surefire tests; it still compiles
+        the test sources and runs the Docker integration tests. <code>-Dmaven.test.skip=true</code> also skips
+        test compilation and Failsafe, so it must not be used for an integration-only run.
       </p>
+      <p>
+        To run only the Docker integration tests, use the following command. Coverage collection and checks
+        are disabled for this partial suite; the main CI build enforces the full-suite coverage thresholds.
+      </p>
+      <source><![CDATA[mvn -B -ntp -Pdocker-it -DskipTests "-Djacoco.skip=true" "-Ddbcp.test.databases=mariadb" verify]]></source>
       <p>
         The shared tests cover pool reuse, validation, invalidation, state restoration, rollback on return,
         CPDS logical handles, prepared statements, generated keys, and managed local/XA transactions with
@@ -91,7 +98,13 @@ mvn -B -ntp -Pdocker-it "-Ddbcp.test.databases=oracle,sqlserver" verify]]></sour
         Surefire reports are in <code>target/surefire-reports</code>; Failsafe reports are in
         <code>target/failsafe-reports</code>. The database is included in parameterized test display names,
         and container logs appear in Maven output. Docker CI jobs run each database separately on Java 8 and 25
-        using Linux x86-64 runners. The normal Java matrix runs both embedded databases without Docker.
+        using Linux x86-64 runners. These jobs skip Surefire tests and JaCoCo. The normal Java matrix runs
+        the unit tests, both embedded databases, quality checks, and coverage checks without Docker.
+      </p>
+      <p>
+        Both matrices run concurrently. The required <code>Java CI results</code> check succeeds only when
+        both matrices succeed, including their cleanup steps. The experimental Java build remains allowed
+        to fail. The required check is configured in the repository's ASF ruleset.
       </p>
       <p>For cleanup after an interrupted local build, use a unique run identifier:</p>
       <source><![CDATA[mvn -B -ntp -Pdocker-it "-Ddbcp.docker.runId=my-dbcp-run" verify

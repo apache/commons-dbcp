@@ -76,8 +76,11 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
         cache: maven
-    - name: Test ${{ matrix.database }}
-      run: mvn -B -ntp -Pdocker-it -Ddbcp.docker.runId="$DBCP_TEST_RUN" -Ddbcp.test.databases="$DBCP_TEST_DATABASE" verify
+    - name: Integration tests for ${{ matrix.database }}
+      # Failsafe 3.6+ runs integration tests with skipTests; the build matrix owns coverage checks.
+      run: >-
+        mvn -B -ntp -Pdocker-it -DskipTests -Djacoco.skip=true
+        -Ddbcp.docker.runId="$DBCP_TEST_RUN" -Ddbcp.test.databases="$DBCP_TEST_DATABASE" verify
     - name: Collect remaining database logs and clean up
       if: always()
       shell: bash
@@ -87,3 +90,18 @@ jobs:
           docker logs "$container" || true
           docker rm --force --volumes "$container"
         done < <(docker ps --all --quiet --filter "label=org.apache.commons.dbcp.testRun=$DBCP_TEST_RUN")
+
+  ci-results:
+    name: Java CI results
+    if: ${{ always() }}
+    needs: [build, database-integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Require both test matrices to succeed
+      env:
+        BUILD_RESULT: ${{ needs.build.result }}
+        DATABASE_RESULT: ${{ needs.database-integration-tests.result }}
+      shell: bash
+      run: |
+        test "$BUILD_RESULT" = success
+        test "$DATABASE_RESULT" = success

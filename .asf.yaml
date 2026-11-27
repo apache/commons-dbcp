@@ -39,6 +39,9 @@ github:
         - root
       restrict_deletion: true
       restrict_force_push: true
+      required_status_checks:
+        - name: "Java CI results"
+          app_slug: github-actions
 
 notifications:
     commits:      commits@commons.apache.org

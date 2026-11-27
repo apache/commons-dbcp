@@ -169,6 +169,9 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
                                     ResultSet rs = ps2.executeQuery()) {
                                 // Exercise borrowing while the reaper rolls back the transaction.
                             }
+                            // Each borrow retains a completion listener until the transaction ends. Pace allocation and
+                            // let JUnit interrupt this wait if the transaction reaper stalls.
+                            Thread.sleep(10);
                         } while (n < 2);
                     } catch (final SQLException e) {
                         // Reject unrelated connection or SQL failures before the transaction times out.
