@@ -20,7 +20,9 @@ package org.apache.commons.dbcp2;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -31,11 +33,17 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.h2.jdbcx.JdbcDataSource;
 import org.hsqldb.jdbc.JDBCDataSource;
 import org.hsqldb.jdbc.pool.JDBCXADataSource;
+import org.mariadb.jdbc.MariaDbDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.postgresql.xa.PGXADataSource;
 
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerXADataSource;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.jdbc.MysqlXADataSource;
+
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.jdbc.xa.client.OracleXADataSource;
 
 /**
  * Database-specific configuration shared by embedded tests and Docker integration tests.
@@ -56,7 +64,25 @@ public enum TestDatabase {
     /**
      * MySQL started by the Docker Maven plugin.
      */
-    MYSQL("com.mysql.cj.jdbc.Driver");
+    MYSQL("com.mysql.cj.jdbc.Driver"),
+    /**
+     * MariaDB started by the Docker Maven plugin.
+     *
+     * @since 2.15.0
+     */
+    MARIADB("org.mariadb.jdbc.Driver"),
+    /**
+     * Oracle Database Express Edition started by the Docker Maven plugin.
+     *
+     * @since 2.15.0
+     */
+    ORACLE("oracle.jdbc.OracleDriver"),
+    /**
+     * Microsoft SQL Server started by the Docker Maven plugin.
+     *
+     * @since 2.15.0
+     */
+    SQLSERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
     /** JDBC driver class name. */
     private final String driverClassName;
@@ -64,16 +90,6 @@ public enum TestDatabase {
     /** Stores the JDBC driver class name. */
     TestDatabase(final String driverClassName) {
         this.driverClassName = driverClassName;
-    }
-
-    /**
-     * Opens an isolated embedded database, or connects to the configured server database.
-     *
-     * @return a physical connection.
-     * @throws SQLException if the connection cannot be opened.
-     */
-    public Connection connect() throws SQLException {
-        return DriverManager.getConnection(newUrl(), getUser(), getPassword());
     }
 
     /**
@@ -104,12 +120,23 @@ public enum TestDatabase {
     }
 
     /**
+     * Opens an isolated embedded database, or connects to the configured server database.
+     *
+     * @return a physical connection.
+     * @throws SQLException if the connection cannot be opened.
+     */
+    public Connection connect() throws SQLException {
+        return DriverManager.getConnection(newUrl(), getUser(), getPassword());
+    }
+
+    /**
      * Creates a vendor data source.
      *
      * @param url the database URL.
      * @return the configured data source.
+     * @throws SQLException if the data source cannot be configured.
      */
-    public DataSource createDataSource(final String url) {
+    public DataSource createDataSource(final String url) throws SQLException {
         switch (this) {
         case H2:
             final JdbcDataSource h2 = new JdbcDataSource();
@@ -135,6 +162,23 @@ public enum TestDatabase {
             mysql.setUser(getUser());
             mysql.setPassword(getPassword());
             return mysql;
+        case MARIADB:
+            final MariaDbDataSource maria = new MariaDbDataSource(url);
+            maria.setUser(getUser());
+            maria.setPassword(getPassword());
+            return maria;
+        case ORACLE:
+            final OracleDataSource oracle = new OracleDataSource();
+            oracle.setURL(url);
+            oracle.setUser(getUser());
+            oracle.setPassword(getPassword());
+            return oracle;
+        case SQLSERVER:
+            final SQLServerDataSource sqlserver = new SQLServerDataSource();
+            sqlserver.setURL(url);
+            sqlserver.setUser(getUser());
+            sqlserver.setPassword(getPassword());
+            return sqlserver;
         default:
             throw new IllegalStateException(name());
         }
@@ -169,6 +213,20 @@ public enum TestDatabase {
             mysql.setUser(getUser());
             mysql.setPassword(getPassword());
             return mysql;
+        case MARIADB:
+            return (XADataSource) createDataSource(url);
+        case ORACLE:
+            final OracleXADataSource oracle = new OracleXADataSource();
+            oracle.setURL(url);
+            oracle.setUser(getUser());
+            oracle.setPassword(getPassword());
+            return oracle;
+        case SQLSERVER:
+            final SQLServerXADataSource sqlserver = new SQLServerXADataSource();
+            sqlserver.setURL(url);
+            sqlserver.setUser(getUser());
+            sqlserver.setPassword(getPassword());
+            return sqlserver;
         default:
             throw new IllegalStateException(name());
         }
@@ -191,6 +249,23 @@ public enum TestDatabase {
      */
     public String getDriverClassName() {
         return driverClassName;
+    }
+
+    /**
+     * Gets the identity-column definition used by the shared database contract.
+     *
+     * @return the SQL identity-column definition.
+     */
+    String getIdentityColumnDefinition() {
+        switch (this) {
+        case MYSQL:
+        case MARIADB:
+            return "INTEGER AUTO_INCREMENT";
+        case SQLSERVER:
+            return "INTEGER IDENTITY(1,1)";
+        default:
+            return "INTEGER GENERATED BY DEFAULT AS IDENTITY (START WITH 1)";
+        }
     }
 
     /**
@@ -250,6 +325,18 @@ public enum TestDatabase {
         }
     }
 
+    /**
+     * Prepares an insert that returns the identity value instead of Oracle's default ROWID.
+     *
+     * @param connection the connection.
+     * @param sql the insert statement.
+     * @return the prepared statement.
+     * @throws SQLException if the statement cannot be prepared.
+     */
+    PreparedStatement prepareInsertWithGeneratedKeys(final Connection connection, final String sql) throws SQLException {
+        return this == ORACLE ? connection.prepareStatement(sql, new String[] {"ID"}) : connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+    }
+
     /** Gets a required server property without silently skipping integration tests. */
     private String property(final String suffix) {
         final String name = "dbcp.test." + name().toLowerCase(Locale.ROOT) + "." + suffix;
@@ -267,7 +354,7 @@ public enum TestDatabase {
      * @return the SQL.
      */
     public String select(final int value) {
-        return this == HSQLDB ? "VALUES (" + value + ")" : "SELECT " + value;
+        return this == HSQLDB ? "VALUES (" + value + ")" : "SELECT " + value + (this == ORACLE ? " FROM DUAL" : "");
     }
 
     /**
@@ -276,6 +363,6 @@ public enum TestDatabase {
      * @return the SQL.
      */
     public String selectParameter() {
-        return this == HSQLDB ? "VALUES (CAST(? AS INTEGER))" : "SELECT ? AS ID";
+        return this == HSQLDB ? "VALUES (CAST(? AS INTEGER))" : "SELECT ? AS ID" + (this == ORACLE ? " FROM DUAL" : "");
     }
 }

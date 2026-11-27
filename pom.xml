@@ -154,6 +154,24 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>3.5.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc8</artifactId>
+      <version>21.24.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>13.6.3.jre8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.narayana.jta</groupId>
       <artifactId>narayana-jta</artifactId>
       <!-- Versions >= 5.13.0 require Java 11 -->
@@ -218,6 +236,14 @@
     <skipITs>false</skipITs>
     <dbcp.docker.postgresql.image>postgres:18.7-bookworm</dbcp.docker.postgresql.image>
     <dbcp.docker.mysql.image>mysql:8.4.13</dbcp.docker.mysql.image>
+    <dbcp.docker.mariadb.image>mariadb:11.8.6</dbcp.docker.mariadb.image>
+    <dbcp.docker.oracle.image>gvenzl/oracle-xe:21.3.0-slim-faststart</dbcp.docker.oracle.image>
+    <dbcp.docker.sqlserver.image>mcr.microsoft.com/mssql/server:2022-CU28-ubuntu-22.04</dbcp.docker.sqlserver.image>
+    <dbcp.docker.oracle.password>DbcpOracle_123</dbcp.docker.oracle.password>
+    <dbcp.docker.sqlserver.password>PoolTest_123!</dbcp.docker.sqlserver.password>
+    <dbcp.test.databases>postgresql,mysql,mariadb,oracle,sqlserver</dbcp.test.databases>
+    <docker.filter>${dbcp.test.databases}</docker.filter>
+    <dbcp.docker.oracle.waitMillis>300000</dbcp.docker.oracle.waitMillis>
     <dbcp.docker.bindAddress>127.0.0.1</dbcp.docker.bindAddress>
     <dbcp.docker.runId>${maven.build.timestamp}</dbcp.docker.runId>
     <dbcp.docker.waitMillis>120000</dbcp.docker.waitMillis>
@@ -471,6 +497,85 @@
                     </log>
                   </run>
                 </image>
+                <image>
+                  <alias>mariadb</alias>
+                  <name>${dbcp.docker.mariadb.image}</name>
+                  <run>
+                    <env>
+                      <MARIADB_DATABASE>dbcp</MARIADB_DATABASE>
+                      <MARIADB_USER>dbcp</MARIADB_USER>
+                      <MARIADB_PASSWORD>dbcp-test</MARIADB_PASSWORD>
+                      <MARIADB_ROOT_PASSWORD>dbcp-root-test</MARIADB_ROOT_PASSWORD>
+                    </env>
+                    <ports>
+                      <port>${dbcp.docker.bindAddress}:dbcp.mariadb.port:3306</port>
+                    </ports>
+                    <labels>
+                      <org.apache.commons.dbcp.testRun>${dbcp.docker.runId}</org.apache.commons.dbcp.testRun>
+                    </labels>
+                    <wait>
+                      <log>(?s)ready for connections.*port: 3306</log>
+                      <time>${dbcp.docker.waitMillis}</time>
+                    </wait>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
+                <image>
+                  <alias>oracle</alias>
+                  <name>${dbcp.docker.oracle.image}</name>
+                  <run>
+                    <platform>linux/amd64</platform>
+                    <shmSize>1073741824</shmSize>
+                    <env>
+                      <ORACLE_PASSWORD>${dbcp.docker.oracle.password}</ORACLE_PASSWORD>
+                      <APP_USER>dbcp</APP_USER>
+                      <APP_USER_PASSWORD>dbcp-test</APP_USER_PASSWORD>
+                    </env>
+                    <ports>
+                      <port>${dbcp.docker.bindAddress}:dbcp.oracle.port:1521</port>
+                    </ports>
+                    <labels>
+                      <org.apache.commons.dbcp.testRun>${dbcp.docker.runId}</org.apache.commons.dbcp.testRun>
+                    </labels>
+                    <wait>
+                      <log>DATABASE IS READY TO USE!</log>
+                      <time>${dbcp.docker.oracle.waitMillis}</time>
+                    </wait>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
+                <image>
+                  <alias>sqlserver</alias>
+                  <name>${dbcp.docker.sqlserver.image}</name>
+                  <run>
+                    <platform>linux/amd64</platform>
+                    <env>
+                      <ACCEPT_EULA>Y</ACCEPT_EULA>
+                      <MSSQL_PID>Developer</MSSQL_PID>
+                      <MSSQL_SA_PASSWORD>${dbcp.docker.sqlserver.password}</MSSQL_SA_PASSWORD>
+                      <MSSQL_MEMORY_LIMIT_MB>2048</MSSQL_MEMORY_LIMIT_MB>
+                      <MSSQL_RPC_PORT>13500</MSSQL_RPC_PORT>
+                      <MSSQL_DTC_TCP_PORT>51000</MSSQL_DTC_TCP_PORT>
+                    </env>
+                    <ports>
+                      <port>${dbcp.docker.bindAddress}:dbcp.sqlserver.port:1433</port>
+                    </ports>
+                    <labels>
+                      <org.apache.commons.dbcp.testRun>${dbcp.docker.runId}</org.apache.commons.dbcp.testRun>
+                    </labels>
+                    <wait>
+                      <log>SQL Server is now ready for client connections</log>
+                      <time>${dbcp.docker.waitMillis}</time>
+                    </wait>
+                    <log>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
               </images>
             </configuration>
             <executions>
@@ -498,12 +603,24 @@
               <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline}</argLine>
               <failIfNoTests>true</failIfNoTests>
               <systemPropertyVariables>
+                <dbcp.test.databases>${dbcp.test.databases}</dbcp.test.databases>
                 <dbcp.test.postgresql.url>jdbc:postgresql://${docker.host.address}:${dbcp.postgresql.port}/dbcp?connectTimeout=10&amp;socketTimeout=30</dbcp.test.postgresql.url>
                 <dbcp.test.postgresql.user>dbcp</dbcp.test.postgresql.user>
                 <dbcp.test.postgresql.password>dbcp-test</dbcp.test.postgresql.password>
                 <dbcp.test.mysql.url>jdbc:mysql://${docker.host.address}:${dbcp.mysql.port}/dbcp?sslMode=DISABLED&amp;allowPublicKeyRetrieval=true&amp;connectTimeout=10000&amp;socketTimeout=30000</dbcp.test.mysql.url>
                 <dbcp.test.mysql.user>dbcp</dbcp.test.mysql.user>
                 <dbcp.test.mysql.password>dbcp-test</dbcp.test.mysql.password>
+                <dbcp.test.mariadb.url>jdbc:mariadb://${docker.host.address}:${dbcp.mariadb.port}/dbcp?connectTimeout=10000&amp;socketTimeout=30000</dbcp.test.mariadb.url>
+                <dbcp.test.mariadb.user>dbcp</dbcp.test.mariadb.user>
+                <dbcp.test.mariadb.password>dbcp-test</dbcp.test.mariadb.password>
+                <dbcp.test.oracle.url>jdbc:oracle:thin:@//${docker.host.address}:${dbcp.oracle.port}/XEPDB1?oracle.net.CONNECT_TIMEOUT=10000&amp;oracle.jdbc.ReadTimeout=30000</dbcp.test.oracle.url>
+                <dbcp.test.oracle.user>dbcp</dbcp.test.oracle.user>
+                <dbcp.test.oracle.password>dbcp-test</dbcp.test.oracle.password>
+                <dbcp.test.oracle.adminPassword>${dbcp.docker.oracle.password}</dbcp.test.oracle.adminPassword>
+                <dbcp.test.sqlserver.url>jdbc:sqlserver://${docker.host.address}:${dbcp.sqlserver.port};databaseName=dbcp;encrypt=true;trustServerCertificate=true;loginTimeout=10;socketTimeout=30000</dbcp.test.sqlserver.url>
+                <dbcp.test.sqlserver.adminUrl>jdbc:sqlserver://${docker.host.address}:${dbcp.sqlserver.port};databaseName=master;encrypt=true;trustServerCertificate=true;loginTimeout=10;socketTimeout=30000</dbcp.test.sqlserver.adminUrl>
+                <dbcp.test.sqlserver.user>dbcp</dbcp.test.sqlserver.user>
+                <dbcp.test.sqlserver.password>${dbcp.docker.sqlserver.password}</dbcp.test.sqlserver.password>
               </systemPropertyVariables>
             </configuration>
             <executions>
