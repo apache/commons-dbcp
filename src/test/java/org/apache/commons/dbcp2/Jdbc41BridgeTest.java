@@ -21,26 +21,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
+import java.sql.Types;
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
  * Tests {@link Jdbc41Bridge}.
  */
-class Jdbc41BridgeTest {
+class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:h2:mem:test");
+        return database.connect();
     }
 
     @SuppressWarnings("resource")
@@ -101,9 +103,12 @@ class Jdbc41BridgeTest {
     void testGetNetworkTimeout() throws SQLException {
         // Normal
         try (Connection conn = getConnection()) {
-            Jdbc41Bridge.setNetworkTimeout(conn, r -> {
-            }, 30_000);
-            // noop in H2
+            if (database == TestDatabase.HSQLDB) {
+                assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_000));
+            } else {
+                Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_000);
+            }
+            // Embedded drivers do not use a network timeout.
             assertEquals(0, Jdbc41Bridge.getNetworkTimeout(conn));
         }
     }
@@ -113,13 +118,22 @@ class Jdbc41BridgeTest {
         // Normal
         try (Connection conn = getConnection();
                 ResultSet rs = conn.getMetaData().getTypeInfo()) {
-            rs.next();
+            // Metadata ordering and the range of type codes differ between drivers.
+            while (rs.next() && rs.getInt("DATA_TYPE") != Types.INTEGER) {
+                // Find a type whose code also fits in a byte.
+            }
+            assertEquals(Types.INTEGER, rs.getInt("DATA_TYPE"));
             assertNotNull(Jdbc41Bridge.getObject(rs, 1, String.class));
             //
             assertNotNull(Jdbc41Bridge.getObject(rs, 2, Integer.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, 2, Long.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, 2, Double.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Float.class));
+            if (database == TestDatabase.HSQLDB) {
+                // HyperSQL does not implement typed retrieval as Float.
+                assertThrows(SQLSyntaxErrorException.class, () -> Jdbc41Bridge.getObject(rs, 2, Float.class));
+            } else {
+                assertNotNull(Jdbc41Bridge.getObject(rs, 2, Float.class));
+            }
             assertNotNull(Jdbc41Bridge.getObject(rs, 2, Byte.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, 2, BigDecimal.class));
             //
@@ -133,13 +147,22 @@ class Jdbc41BridgeTest {
         // Normal
         try (Connection conn = getConnection();
                 ResultSet rs = conn.getMetaData().getTypeInfo()) {
-            rs.next();
+            // Metadata ordering and the range of type codes differ between drivers.
+            while (rs.next() && rs.getInt("DATA_TYPE") != Types.INTEGER) {
+                // Find a type whose code also fits in a byte.
+            }
+            assertEquals(Types.INTEGER, rs.getInt("DATA_TYPE"));
             assertNotNull(Jdbc41Bridge.getObject(rs, "TYPE_NAME", String.class));
             //
             assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Integer.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Long.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Double.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
+            if (database == TestDatabase.HSQLDB) {
+                // HyperSQL does not implement typed retrieval as Float.
+                assertThrows(SQLSyntaxErrorException.class, () -> Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
+            } else {
+                assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
+            }
             assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Byte.class));
             assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", BigDecimal.class));
             //
@@ -154,7 +177,11 @@ class Jdbc41BridgeTest {
         try (Connection conn = getConnection();
                 Statement stmt = conn.createStatement()) {
             // returns null for H2 (not supported).
-            Jdbc41Bridge.getParentLogger(new JdbcDataSource());
+            if (database == TestDatabase.HSQLDB) {
+                assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.getParentLogger(database.createDataSource(database.newUrl())));
+            } else {
+                assertNull(Jdbc41Bridge.getParentLogger(database.createDataSource(database.newUrl())));
+            }
         }
     }
 
@@ -184,10 +211,12 @@ class Jdbc41BridgeTest {
         // Normal
         try (Connection conn = getConnection();
                 Statement stmt = conn.createStatement()) {
-            // noop in H2
-            Jdbc41Bridge.setNetworkTimeout(conn, r -> {
-                // empty for now
-            }, 30_0000);
+            // Embedded drivers do not use a network timeout.
+            if (database == TestDatabase.HSQLDB) {
+                assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_0000));
+            } else {
+                Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_0000);
+            }
             assertEquals(0, Jdbc41Bridge.getNetworkTimeout(conn));
         }
     }

@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Properties;
@@ -67,7 +66,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests overlapping closes, including reborrowing before the original close finishes. */
-class TestConcurrentConnectionClose {
+class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
 
     /** A traced resource that pauses closing before the delegate is returned to its pool. */
     private static final class CleanupTrace extends AbandonedTrace {
@@ -244,7 +243,7 @@ class TestConcurrentConnectionClose {
     }
 
     /** Creates a CPDS-backed pool and observes notifications after its factory has processed them. */
-    private static PoolFixture createCpdsPool(final PoolPath path, final CloseGates gates) throws Exception {
+    private PoolFixture createCpdsPool(final PoolPath path, final CloseGates gates) throws Exception {
         final AtomicReference<PooledConnection> pooled = new AtomicReference<>();
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS() {
 
@@ -255,8 +254,8 @@ class TestConcurrentConnectionClose {
                 return connection;
             }
         };
-        cpds.setDriver("org.h2.Driver");
-        cpds.setUrl("jdbc:h2:mem:");
+        cpds.setDriver(database.getDriverClassName());
+        cpds.setUrl(database.newUrl());
         final InstanceKeyDataSource ds;
         final PoolFixture fixture;
         if (path == PoolPath.PER_USER) {
@@ -291,15 +290,15 @@ class TestConcurrentConnectionClose {
     }
 
     /** Creates a pool whose physical connection can be reborrowed while the original close is still executing. */
-    private static PoolFixture createPool(final PoolPath path, final CloseGates gates) throws Exception {
+    private PoolFixture createPool(final PoolPath path, final CloseGates gates) throws Exception {
         if (path == PoolPath.PER_USER || path == PoolPath.SHARED) {
             return createCpdsPool(path, gates);
         }
-        final PoolableConnectionFactory factory = new PoolableConnectionFactory(() -> DriverManager.getConnection("jdbc:h2:mem:"), null) {
+        final PoolableConnectionFactory factory = new PoolableConnectionFactory(() -> database.connect(), null) {
 
             @Override
             public PooledObject<PoolableConnection> makeObject() throws SQLException {
-                return new DefaultPooledObject<>(new PoolableConnection(DriverManager.getConnection("jdbc:h2:mem:"), getPool(), null) {
+                return new DefaultPooledObject<>(new PoolableConnection(database.connect(), getPool(), null) {
 
                     @Override
                     public void close() throws SQLException {
@@ -598,8 +597,8 @@ class TestConcurrentConnectionClose {
     @Test
     void testCpdsCloseListenerCanCloseAndReborrow() throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver("org.h2.Driver");
-        cpds.setUrl("jdbc:h2:mem:");
+        cpds.setDriver(database.getDriverClassName());
+        cpds.setUrl(database.newUrl());
         final PooledConnection pooled = cpds.getPooledConnection();
         try {
             final Connection first = pooled.getConnection();
