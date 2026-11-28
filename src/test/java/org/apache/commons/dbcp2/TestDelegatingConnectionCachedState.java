@@ -27,10 +27,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.jupiter.api.Test;
@@ -42,7 +45,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests cached connection properties across successful writes and driver failures.
  */
-class TestDelegatingConnectionCachedState extends AbstractEmbeddedDatabaseTest {
+class TestDelegatingConnectionCachedState extends AbstractDatabaseTest {
 
     private static final class CacheConfig {
         private final boolean enabled;
@@ -495,56 +498,62 @@ class TestDelegatingConnectionCachedState extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testReturnAfterAutoCommitErrorRollsBackAndRestoresState() throws Exception {
-        try (Connection physical = database.connect()) {
-            try (Statement statement = physical.createStatement()) {
-                statement.execute("CREATE TABLE items (id INT)");
-            }
-            final AssertionError failure = new AssertionError("setAutoCommit failed");
-            final Connection faulty = new DelegatingConnection<Connection>(physical) {
-                private boolean failedOnce;
+        final String table = "DBCP_" + UUID.randomUUID().toString().replace("-", "").substring(0, 20);
+        final DataSource dataSource = database.createDataSource(database.newUrl());
+        // Keep an independent connection for cleanup after closing the pool's physical connection.
+        try (Connection anchor = dataSource.getConnection(); Statement setup = anchor.createStatement()) {
+            setup.execute("CREATE TABLE " + table + " (id INT)");
+            try (Connection physical = dataSource.getConnection()) {
+                final AssertionError failure = new AssertionError("setAutoCommit failed");
+                final Connection faulty = new DelegatingConnection<Connection>(physical) {
+                    private boolean failedOnce;
 
-                @Override
-                public void setAutoCommit(final boolean autoCommit) throws SQLException {
-                    super.setAutoCommit(autoCommit);
-                    if (!autoCommit && !failedOnce) {
-                        failedOnce = true;
-                        throw failure;
+                    @Override
+                    public void setAutoCommit(final boolean autoCommit) throws SQLException {
+                        super.setAutoCommit(autoCommit);
+                        if (!autoCommit && !failedOnce) {
+                            failedOnce = true;
+                            throw failure;
+                        }
                     }
-                }
-            };
-            final PoolableConnectionFactory factory = new PoolableConnectionFactory(() -> faulty, null);
-            factory.setCacheState(true);
-            factory.setDefaultAutoCommit(Boolean.TRUE);
-            factory.setRollbackOnReturn(true);
-            factory.setAutoCommitOnReturn(true);
-            try (GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(factory)) {
-                factory.setPool(connectionPool);
-                connectionPool.setMaxTotal(1);
-                final PoolableConnection first = connectionPool.borrowObject();
-                try (Connection connection = first) {
-                    assertTrue(connection.getAutoCommit());
-                    assertSame(failure, assertThrows(AssertionError.class, () -> connection.setAutoCommit(false)));
-                    assertFalse(physical.getAutoCommit());
-                    // DBCP-522: An application may catch the Error and continue using the connection.
-                    try (Statement statement = connection.createStatement()) {
-                        statement.executeUpdate("INSERT INTO items VALUES (1)");
+                };
+                final PoolableConnectionFactory factory = new PoolableConnectionFactory(() -> faulty, null);
+                factory.setCacheState(true);
+                factory.setDefaultAutoCommit(Boolean.TRUE);
+                factory.setRollbackOnReturn(true);
+                factory.setAutoCommitOnReturn(true);
+                try (GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(factory)) {
+                    factory.setPool(connectionPool);
+                    connectionPool.setMaxTotal(1);
+                    final PoolableConnection first = connectionPool.borrowObject();
+                    try (Connection connection = first) {
+                        assertTrue(connection.getAutoCommit());
+                        assertSame(failure, assertThrows(AssertionError.class, () -> connection.setAutoCommit(false)));
+                        assertFalse(physical.getAutoCommit());
+                        // DBCP-522: An application may catch the Error and continue using the connection.
+                        try (Statement statement = connection.createStatement()) {
+                            statement.executeUpdate("INSERT INTO " + table + " VALUES (1)");
+                        }
                     }
-                }
 
-                assertEquals(0, connectionPool.getNumActive());
-                assertEquals(1, connectionPool.getNumIdle());
-                assertTrue(physical.getAutoCommit(), "Returning the connection should restore auto-commit");
-                try (PoolableConnection second = connectionPool.borrowObject()) {
-                    assertSame(first, second, "The test must reuse the same pooled connection");
-                    assertTrue(second.getAutoCommit());
-                    try (Statement statement = second.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM items")) {
-                        assertTrue(resultSet.next());
-                        assertEquals(0, resultSet.getInt(1), "Returning the connection should roll back the previous borrower's transaction");
+                    assertEquals(0, connectionPool.getNumActive());
+                    assertEquals(1, connectionPool.getNumIdle());
+                    assertTrue(physical.getAutoCommit(), "Returning the connection should restore auto-commit");
+                    try (PoolableConnection second = connectionPool.borrowObject()) {
+                        assertSame(first, second, "The test must reuse the same pooled connection");
+                        assertTrue(second.getAutoCommit());
+                        try (Statement statement = second.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM " + table)) {
+                            assertTrue(resultSet.next());
+                            assertEquals(0, resultSet.getInt(1), "Returning the connection should roll back the previous borrower's transaction");
+                        }
                     }
                 }
+            } finally {
+                setup.execute("DROP TABLE " + table);
             }
         }
     }
+
     @Test
     void testSchemaGetterCompatibilityFallbackDoesNotRetainOldCache() throws SQLException {
         try (StateConnection physical = new StateConnection(); TrackingConnection wrapper = new TrackingConnection(physical)) {

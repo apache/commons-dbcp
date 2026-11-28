@@ -162,7 +162,20 @@
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
       <artifactId>ojdbc8</artifactId>
-      <version>21.24.0.0</version>
+      <version>${commons.oracle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Oracle SQLXML support used by the shared JDBC tests. -->
+    <dependency>
+      <groupId>com.oracle.database.xml</groupId>
+      <artifactId>xdb</artifactId>
+      <version>${commons.oracle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.xml</groupId>
+      <artifactId>xmlparserv2</artifactId>
+      <version>${commons.oracle.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -220,6 +233,7 @@
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
     <commons.jira.id>DBCP</commons.jira.id>
     <commons.jira.pid>12310469</commons.jira.pid>
+    <commons.oracle.version>21.24.0.0</commons.oracle.version>
     <commons.pool.version>2.13.1</commons.pool.version>
     <!-- See DBCP-445 and DBCP-454 -->
     <commons.osgi.import>javax.transaction;version="1.1.0",javax.transaction.xa;version="1.1.0";partial=true;mandatory:=partial,*</commons.osgi.import>
@@ -310,6 +324,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline}</argLine>
+          <properties>
+            <configurationParameters>dbcp.test.mode=embedded</configurationParameters>
+          </properties>
           <excludes>
             <!-- Integration tests are run only by Failsafe in the Docker profile. -->
             <exclude>**/*IT.java</exclude>
@@ -602,15 +619,25 @@
               <jvm>${commons.surefire.java}</jvm>
               <argLine>@{dbcp.jacoco.argLine} ${argLine} ${surefire.argline}</argLine>
               <failIfNoTests>true</failIfNoTests>
+              <includes>
+                <include>**/Test*.java</include>
+                <include>**/*Test.java</include>
+              </includes>
+              <groups>database</groups>
+              <properties>
+                <configurationParameters>dbcp.test.mode=docker</configurationParameters>
+              </properties>
               <systemPropertyVariables>
                 <dbcp.test.databases>${dbcp.test.databases}</dbcp.test.databases>
                 <dbcp.test.postgresql.url>jdbc:postgresql://${docker.host.address}:${dbcp.postgresql.port}/dbcp?connectTimeout=10&amp;socketTimeout=30</dbcp.test.postgresql.url>
                 <dbcp.test.postgresql.user>dbcp</dbcp.test.postgresql.user>
                 <dbcp.test.postgresql.password>dbcp-test</dbcp.test.postgresql.password>
                 <dbcp.test.mysql.url>jdbc:mysql://${docker.host.address}:${dbcp.mysql.port}/dbcp?sslMode=DISABLED&amp;allowPublicKeyRetrieval=true&amp;connectTimeout=10000&amp;socketTimeout=30000</dbcp.test.mysql.url>
+                <dbcp.test.mysql.adminPassword>dbcp-root-test</dbcp.test.mysql.adminPassword>
                 <dbcp.test.mysql.user>dbcp</dbcp.test.mysql.user>
                 <dbcp.test.mysql.password>dbcp-test</dbcp.test.mysql.password>
                 <dbcp.test.mariadb.url>jdbc:mariadb://${docker.host.address}:${dbcp.mariadb.port}/dbcp?connectTimeout=10000&amp;socketTimeout=30000</dbcp.test.mariadb.url>
+                <dbcp.test.mariadb.adminPassword>dbcp-root-test</dbcp.test.mariadb.adminPassword>
                 <dbcp.test.mariadb.user>dbcp</dbcp.test.mariadb.user>
                 <dbcp.test.mariadb.password>dbcp-test</dbcp.test.mariadb.password>
                 <dbcp.test.oracle.url>jdbc:oracle:thin:@//${docker.host.address}:${dbcp.oracle.port}/XEPDB1?oracle.net.CONNECT_TIMEOUT=10000&amp;oracle.jdbc.ReadTimeout=30000</dbcp.test.oracle.url>

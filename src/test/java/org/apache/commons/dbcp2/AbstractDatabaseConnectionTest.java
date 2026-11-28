@@ -45,7 +45,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -57,7 +56,7 @@ import com.arjuna.ats.jta.common.jtaPropertyManager;
  * Shared connection-pool behavior exercised against every supported test database.
  */
 @Timeout(30)
-abstract class AbstractDatabaseConnectionTest {
+abstract class AbstractDatabaseConnectionTest extends AbstractDatabaseTest {
 
     /** Forces the transaction manager to use two-phase commit with the real database resource. */
     private static final class AdditionalResource implements XAResource {
@@ -125,9 +124,6 @@ abstract class AbstractDatabaseConnectionTest {
         return Stream.of(false, true).flatMap(narayana -> Stream.of(false, true)
                 .flatMap(xa -> Stream.of(false, true).map(commit -> Arguments.of(narayana, xa, commit))));
     }
-    /** Database selected by the concrete test class. */
-    @Parameter
-    TestDatabase database;
     /** Keeps embedded state alive across physical connection replacement. */
     private Connection anchor;
     /** URL shared by this test's physical connections. */

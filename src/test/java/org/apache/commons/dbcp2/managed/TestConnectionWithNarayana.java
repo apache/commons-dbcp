@@ -32,7 +32,7 @@ import java.time.Duration;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 
-import org.apache.commons.dbcp2.AbstractEmbeddedDatabaseTest;
+import org.apache.commons.dbcp2.AbstractDatabaseTest;
 import org.apache.commons.dbcp2.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,13 +46,9 @@ import com.arjuna.ats.jta.common.jtaPropertyManager;
  * Requires Java 8 or above.
  */
 @Timeout(30)
-public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
+public class TestConnectionWithNarayana extends AbstractDatabaseTest {
 
-    private static final String CREATE_STMT = "CREATE TABLE TEST_DATA (KEY1 VARCHAR(100), ID BIGINT, VALUE1 DOUBLE PRECISION, INFO VARCHAR(100000), TS TIMESTAMP)";
-    private static final String INSERT_STMT = "INSERT INTO TEST_DATA   (KEY1, ID, VALUE1, INFO, TS) VALUES (?,?,?,?,?)";
-    private static final String SELECT_STMT = "SELECT KEY1, ID, VALUE1, INFO, TS FROM TEST_DATA";
     private static final String PAYLOAD;
-    private static final String DROP_STMT = "DROP TABLE TEST_DATA";
 
     static {
         final StringBuilder sb = new StringBuilder();
@@ -69,6 +65,10 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
     }
 
     private BasicManagedDataSource mds;
+    /**
+     * Table isolated from other tests using the same server.
+     */
+    private String table;
     /** Keeps the database alive while timeout handling discards pooled connections. */
     private Connection databaseAnchor;
     /** Timeout inherited from the current test thread before this fixture changes it. */
@@ -78,6 +78,7 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+        table = "DBCP_" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         jtaPropertyManager.getJTAEnvironmentBean()
                 .setLastResourceOptimisationInterfaceClassName("org.apache.commons.dbcp2.managed.LocalXAConnectionFactory$LocalXAResource");
         final TransactionManagerImple transactionManager = new TransactionManagerImple();
@@ -102,7 +103,8 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
         mds.setLifo(false);
 
         try (final Connection conn = mds.getConnection()) {
-            try (final PreparedStatement ps = conn.prepareStatement(CREATE_STMT)) {
+            try (final PreparedStatement ps = conn.prepareStatement("CREATE TABLE " + table + " (KEY1 VARCHAR(100), ID INTEGER, VALUE1 DOUBLE PRECISION, INFO "
+                    + database.getLargeTextType() + ", TS " + database.getTimestampType() + ")")) {
                 ps.execute();
                 tableCreated = true;
             }
@@ -116,7 +118,7 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
                 mds.getTransactionManager().rollback();
             }
             if (tableCreated) {
-                try (PreparedStatement statement = connection.prepareStatement(DROP_STMT)) {
+                try (PreparedStatement statement = connection.prepareStatement("DROP TABLE " + table)) {
                     statement.execute();
                 }
             }
@@ -151,7 +153,7 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
             mds.getTransactionManager().setTransactionTimeout(1);
             mds.getTransactionManager().begin();
             try {
-                try (Connection conn = mds.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_STMT)) {
+                try (Connection conn = mds.getConnection(); PreparedStatement ps = conn.prepareStatement("INSERT INTO " + table + " (KEY1, ID, VALUE1, INFO, TS) VALUES (?,?,?,?,?)")) {
                     ps.setString(1, Thread.currentThread().getName());
                     ps.setLong(2, i);
                     ps.setDouble(3, new java.util.Random().nextDouble());
@@ -165,7 +167,7 @@ public class TestConnectionWithNarayana extends AbstractEmbeddedDatabaseTest {
                             if (mds.getTransactionManager().getTransaction().getStatus() != Status.STATUS_ACTIVE) {
                                 n++;
                             }
-                            try (Connection c = mds.getConnection(); PreparedStatement ps2 = c.prepareStatement(SELECT_STMT);
+                            try (Connection c = mds.getConnection(); PreparedStatement ps2 = c.prepareStatement("SELECT KEY1, ID, VALUE1, INFO, TS FROM " + table);
                                     ResultSet rs = ps2.executeQuery()) {
                                 // Exercise borrowing while the reaper rolls back the transaction.
                             }

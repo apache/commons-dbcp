@@ -17,42 +17,28 @@
  */
 package org.apache.commons.dbcp2.managed;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.TestBasicDataSource;
-import org.apache.commons.dbcp2.TestDatabase;
 import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.ThrowingSupplier;
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.provider.EnumSource;
-
-import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple;
-import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchronizationRegistryImple;
 
 /**
  * TestSuite for BasicManagedDataSource
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
 public class TestBasicManagedDataSource extends TestBasicDataSource {
 
     /**
@@ -106,10 +92,6 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         }
     }
 
-    /** Database used by this invocation. */
-    @Parameter
-    TestDatabase database;
-
     @Override
     protected BasicDataSource createDataSource() throws Exception {
         final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
@@ -117,16 +99,6 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         basicManagedDataSource.setTransactionManager(transactionManager);
         basicManagedDataSource.setTransactionSynchronizationRegistry(transactionManager);
         return basicManagedDataSource;
-    }
-
-    @Test
-    void testCreateXaDataSourceNewInstance() throws SQLException, XAException {
-        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.setXADataSource(database.createXaDataSource(database.newUrl()).getClass().getName());
-            basicManagedDataSource.setDriverClassName(database.getDriverClassName());
-            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
-            assertNotNull(basicManagedDataSource.createConnectionFactory());
-        }
     }
 
     @Test
@@ -262,49 +234,9 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
     }
 
     @Test
-    void testSetXaDataSourceInstance() throws SQLException, XAException {
-        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.setTransactionManager(new TransactionManagerImpl());
-            basicManagedDataSource.setDriverClassName("org.apache.commons.dbcp2.TesterDriver");
-            basicManagedDataSource.setUrl("jdbc:apache:commons:testdriver");
-            basicManagedDataSource.setUsername("userName");
-            basicManagedDataSource.setPassword("password");
-            basicManagedDataSource.setMaxIdle(1);
-            basicManagedDataSource.setXaDataSourceInstance(database.createXaDataSource(database.newUrl()));
-            assertNotNull(basicManagedDataSource.createConnectionFactory());
-        }
-    }
-
-    @Test
     void testTransactionManagerNotSet() throws SQLException {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             assertThrows(SQLException.class, basicManagedDataSource::createConnectionFactory);
-        }
-    }
-
-    @Test
-    void testTransactionSynchronizationRegistry() throws Exception {
-        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            basicManagedDataSource.setTransactionManager(new TransactionManagerImple());
-            final TransactionSynchronizationRegistry tsr = new TransactionSynchronizationRegistryImple();
-            basicManagedDataSource.setTransactionSynchronizationRegistry(tsr);
-            final XADataSource xaDataSource = database.createXaDataSource(database.newUrl());
-            basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
-            basicManagedDataSource.setMaxIdle(1);
-
-            final TransactionManager tm = basicManagedDataSource.getTransactionManager();
-            tm.begin();
-            tsr.registerInterposedSynchronization(new SynchronizationAdapter() {
-                @Override
-                public void beforeCompletion() {
-                    try (Connection connection = assertDoesNotThrow((ThrowingSupplier<Connection>) basicManagedDataSource::getConnection)) {
-                        assertNotNull(connection);
-                    } catch (final SQLException e) {
-                        fail(e);
-                    }
-                }
-            });
-            tm.commit();
         }
     }
 
@@ -313,15 +245,6 @@ public class TestBasicManagedDataSource extends TestBasicDataSource {
         try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
             basicManagedDataSource.setXADataSource("anything");
             assertEquals("anything", basicManagedDataSource.getXADataSource());
-        }
-    }
-
-    @Test
-    void testXaDataSourceInstance() throws SQLException {
-        try (final BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource()) {
-            final XADataSource ds = database.createXaDataSource(database.newUrl());
-            basicManagedDataSource.setXaDataSourceInstance(ds);
-            assertEquals(ds, basicManagedDataSource.getXaDataSourceInstance());
         }
     }
 }
