@@ -29,8 +29,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
 
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
 
 import org.apache.commons.dbcp2.AbstractEmbeddedDatabaseTest;
 import org.apache.commons.dbcp2.Utils;
