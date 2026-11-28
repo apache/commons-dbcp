@@ -27,9 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -58,7 +56,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests terminal data-source shutdown, including initialization and password-recovery races.
  */
-class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
+class TestDataSourceClose extends AbstractDatabaseTest {
 
     /**
      * Data-source lifecycle states in which shutdown must prevent new requests.
@@ -79,11 +77,10 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
         private volatile int failAt;
 
         /**
-         * Uses independent in-memory databases so tests do not share credentials or state.
+         * Uses the selected database and its configured credentials.
          */
         TrackingCPDS(final TestDatabase database) throws ClassNotFoundException {
-            setDriver(database.getDriverClassName());
-            setUrl(database.newUrl());
+            database.configure(this, database.newUrl());
         }
 
         /**
@@ -168,7 +165,7 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     private void assertRejectsBorrowing(final InstanceKeyDataSource dataSource, final TrackingCPDS cpds) {
         final int attempts = cpds.attempts.get();
         assertThrows(SQLException.class, dataSource::getConnection);
-        assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), ""));
+        assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), database.getPassword()));
         assertEquals(attempts, cpds.attempts.get(), "A closed data source contacted its provider");
     }
 
@@ -214,18 +211,22 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     void testCloseAllUserPools() throws Exception {
         final TrackingCPDS cpds = new TrackingCPDS(database);
         try (Connection anchor = database.createDataSource(cpds.getUrl()).getConnection();
-                Statement setup = anchor.createStatement(); PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
-            for (String user : new String[] {"first", "second", "third"}) {
-                setup.execute("CREATE USER \"" + user + "\" PASSWORD ''");
-            }
+                DatabaseTestUser first = new DatabaseTestUser(database, cpds.getUrl(), "Before_dbcp123!");
+                DatabaseTestUser second = new DatabaseTestUser(database, cpds.getUrl(), "Before_dbcp123!");
+                DatabaseTestUser third = new DatabaseTestUser(database, cpds.getUrl(), "Before_dbcp123!");
+                PerUserPoolDataSource dataSource = new PerUserPoolDataSource()) {
             configure(dataSource, cpds);
-            dataSource.getConnection("first", "").close();
-            dataSource.getConnection("second", "").close();
-            try (Connection active = dataSource.getConnection("third", "")) {
+            dataSource.getConnection(first.getName(), first.getPassword()).close();
+            dataSource.getConnection(second.getName(), second.getPassword()).close();
+            try (Connection active = dataSource.getConnection(third.getName(), third.getPassword())) {
                 dataSource.close();
                 assertTrue(active.isValid(1));
-                assertThrows(SQLException.class, () -> dataSource.getConnection("first", ""));
-                assertThrows(SQLException.class, () -> dataSource.getConnection("fourth", ""));
+                final int attempts = cpds.attempts.get();
+                assertThrows(SQLException.class, () -> dataSource.getConnection(first.getName(), first.getPassword()));
+                assertThrows(SQLException.class, () -> dataSource.getConnection(second.getName(), second.getPassword()));
+                assertThrows(SQLException.class, () -> dataSource.getConnection(third.getName(), third.getPassword()));
+                assertThrows(SQLException.class, () -> dataSource.getConnection("unused", first.getPassword()));
+                assertEquals(attempts, cpds.attempts.get(), "A closed data source contacted its provider");
             }
             cpds.assertClosed();
         }
@@ -235,8 +236,7 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     @MethodSource("serializationCases")
     void testClosedPoolIsNotRecreatedThroughDeserializedDataSource(final boolean shared, final boolean initialized, final boolean closeCopy) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(database.newUrl());
+        database.configure(cpds, database.newUrl());
         try (InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             if (initialized) {
@@ -343,7 +343,7 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
                 configure(dataSource, cpds);
             }
             if (state == State.INITIALIZED) {
-                try (Connection connection = credentials ? dataSource.getConnection(database.getUser(), "") : dataSource.getConnection()) {
+                try (Connection connection = credentials ? dataSource.getConnection(database.getUser(), database.getPassword()) : dataSource.getConnection()) {
                     assertFalse(connection.isClosed());
                 }
             }
@@ -385,8 +385,7 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     @ValueSource(booleans = {false, true})
     void testDeserializedDataSourceSharesInitializationMonitor(final boolean shared) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(database.newUrl());
+        database.configure(cpds, database.newUrl());
         try (InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             try (InstanceKeyDataSource copy = SerializationUtils.clone(dataSource)) {
@@ -413,29 +412,28 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     void testPasswordChangeThroughDeserializedDataSource(final boolean shared) throws Exception {
         final String url = database.newUrl();
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(url);
+        database.configure(cpds, url);
         // Keep the database alive while password recovery replaces its pooled connections.
-        try (Connection anchor = DriverManager.getConnection(url, database.getUser(), "before"); InstanceKeyDataSource dataSource = create(shared)) {
+        try (Connection anchor = database.createDataSource(url).getConnection();
+                DatabaseTestUser user = new DatabaseTestUser(database, url, "Before_dbcp123!");
+                InstanceKeyDataSource dataSource = create(shared)) {
             dataSource.setConnectionPoolDataSource(cpds);
             dataSource.setDefaultMaxTotal(1);
             dataSource.setDefaultBlockWhenExhausted(false);
-            dataSource.getConnection(database.getUser(), "before").close();
+            dataSource.getConnection(user.getName(), "Before_dbcp123!").close();
             try (InstanceKeyDataSource copy = SerializationUtils.clone(dataSource)) {
-                try (Statement statement = anchor.createStatement()) {
-                    statement.execute("ALTER USER SA SET PASSWORD 'after'");
-                }
-                try (Connection connection = copy.getConnection(database.getUser(), "after")) {
+                user.changePassword("After_dbcp123!");
+                try (Connection connection = copy.getConnection(user.getName(), "After_dbcp123!")) {
                     assertTrue(connection.isValid(1));
-                    assertEquals(1, shared ? ((SharedPoolDataSource) dataSource).getNumActive() : ((PerUserPoolDataSource) dataSource).getNumActive(database.getUser()));
-                    assertEquals(1, shared ? ((SharedPoolDataSource) copy).getNumActive() : ((PerUserPoolDataSource) copy).getNumActive(database.getUser()));
+                    assertEquals(1, shared ? ((SharedPoolDataSource) dataSource).getNumActive() : ((PerUserPoolDataSource) dataSource).getNumActive(user.getName()));
+                    assertEquals(1, shared ? ((SharedPoolDataSource) copy).getNumActive() : ((PerUserPoolDataSource) copy).getNumActive(user.getName()));
                 }
-                try (Connection connection = dataSource.getConnection(database.getUser(), "after")) {
+                try (Connection connection = dataSource.getConnection(user.getName(), "After_dbcp123!")) {
                     assertTrue(connection.isValid(1));
                 }
-                assertThrows(SQLException.class, () -> copy.getConnection(database.getUser(), "before"));
+                assertThrows(SQLException.class, () -> copy.getConnection(user.getName(), "Before_dbcp123!"));
                 copy.close();
-                assertThrows(SQLException.class, () -> dataSource.getConnection(database.getUser(), "after"));
+                assertThrows(SQLException.class, () -> dataSource.getConnection(user.getName(), "After_dbcp123!"));
             }
         }
     }
@@ -460,8 +458,7 @@ class TestDataSourceClose extends AbstractEmbeddedDatabaseTest {
     @MethodSource("serializationCases")
     void testRepeatedClosePreservesNewRegistration(final boolean shared, final boolean initialized, final boolean closeCopy) throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(database.newUrl());
+        database.configure(cpds, database.newUrl());
         final ObjectFactory factory = shared ? new SharedPoolDataSourceFactory() : new PerUserPoolDataSourceFactory();
         try (InstanceKeyDataSource first = create(shared)) {
             first.setConnectionPoolDataSource(cpds);

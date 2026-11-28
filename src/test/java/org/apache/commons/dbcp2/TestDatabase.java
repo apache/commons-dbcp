@@ -24,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -83,12 +84,37 @@ public enum TestDatabase {
      */
     SQLSERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
+    /**
+     * Whether server initialization has completed in this test JVM.
+     */
+    private boolean initialized;
+
     /** JDBC driver class name. */
     private final String driverClassName;
 
     /** Stores the JDBC driver class name. */
     TestDatabase(final String driverClassName) {
         this.driverClassName = driverClassName;
+    }
+
+    /**
+     * Opens an administrative connection for isolated test accounts.
+     */
+    Connection adminConnection(final String url) throws SQLException {
+        if (this == ORACLE) {
+            final Properties properties = new Properties();
+            properties.setProperty("user", "sys");
+            properties.setProperty("password", property("adminPassword"));
+            properties.setProperty("internal_logon", "sysdba");
+            return DriverManager.getConnection(url, properties);
+        }
+        if (this == SQLSERVER) {
+            return DriverManager.getConnection(property("adminUrl"), "sa", getPassword());
+        }
+        if (this == MYSQL || this == MARIADB) {
+            return DriverManager.getConnection(url, "root", property("adminPassword"));
+        }
+        return DriverManager.getConnection(url, getUser(), getPassword());
     }
 
     /**
@@ -232,6 +258,47 @@ public enum TestDatabase {
     }
 
     /**
+     * Initializes XA support and the test account once per database and test JVM.
+     */
+    synchronized void initialize() throws SQLException {
+        if (initialized) {
+            return;
+        }
+        if (this == TestDatabase.ORACLE) {
+            final Properties properties = new Properties();
+            properties.setProperty("user", "sys");
+            properties.setProperty("password", System.getProperty("dbcp.test.oracle.adminPassword"));
+            properties.setProperty("internal_logon", "sysdba");
+            try (Connection connection = DriverManager.getConnection(newUrl(), properties);
+                    Statement statement = connection.createStatement()) {
+                statement.execute("GRANT SELECT ON SYS.DBA_PENDING_TRANSACTIONS TO dbcp");
+                statement.execute("GRANT SELECT ON SYS.PENDING_TRANS$ TO dbcp");
+                statement.execute("GRANT SELECT ON SYS.DBA_2PC_PENDING TO dbcp");
+                statement.execute("GRANT EXECUTE ON SYS.DBMS_XA TO dbcp");
+            }
+        } else if (this == TestDatabase.SQLSERVER) {
+            try (Connection connection = DriverManager.getConnection(System.getProperty("dbcp.test.sqlserver.adminUrl"), "sa", getPassword());
+                    Statement statement = connection.createStatement()) {
+                statement.execute("EXEC sp_sqljdbc_xa_install");
+                statement.execute("IF DB_ID('dbcp') IS NULL CREATE DATABASE dbcp");
+                statement.execute("IF SUSER_ID('dbcp') IS NULL CREATE LOGIN dbcp WITH PASSWORD = '"
+                        + getPassword().replace("'", "''") + "'");
+                statement.execute("IF DATABASE_PRINCIPAL_ID('dbcp') IS NULL CREATE USER dbcp FOR LOGIN dbcp");
+                statement.execute("ALTER ROLE SqlJDBCXAUser ADD MEMBER dbcp");
+                statement.execute("USE dbcp");
+                statement.execute("IF DATABASE_PRINCIPAL_ID('dbcp') IS NULL CREATE USER dbcp FOR LOGIN dbcp");
+                statement.execute("ALTER ROLE db_owner ADD MEMBER dbcp");
+            }
+        }
+        if (this == MYSQL || this == MARIADB) {
+            try (Connection connection = connect(); Statement statement = connection.createStatement()) {
+                statement.execute("CREATE PROCEDURE IF NOT EXISTS DBCP_QUERY(IN VALUE_ARG INT) SELECT VALUE_ARG AS ID");
+            }
+        }
+        initialized = true;
+    }
+
+    /**
      * Gets the registered JDBC driver.
      *
      * @return the JDBC driver.
@@ -268,7 +335,7 @@ public enum TestDatabase {
     }
 
     /**
-     * Gets the expected concrete JDBC class for an embedded driver.
+     * Gets the vendor JDBC type used by unwrapping assertions.
      *
      * @param jdbcType the standard JDBC interface.
      * @return the vendor implementation class.
@@ -279,11 +346,35 @@ public enum TestDatabase {
             prefix = "org.h2.jdbc.Jdbc";
         } else if (this == HSQLDB) {
             prefix = "org.hsqldb.jdbc.JDBC";
+        } else if (this == POSTGRESQL) {
+            prefix = "org.postgresql.jdbc.Pg";
+        } else if (this == SQLSERVER) {
+            prefix = "com.microsoft.sqlserver.jdbc.SQLServer";
+        } else if (this == ORACLE) {
+            prefix = jdbcType == java.sql.DatabaseMetaData.class ? "oracle.jdbc.driver.Oracle" : "oracle.jdbc.Oracle";
+        } else if (this == MARIADB) {
+            prefix = "org.mariadb.jdbc.";
         } else {
-            throw new IllegalStateException("Concrete class assertions are for embedded drivers: " + this);
+            prefix = "com.mysql.cj.jdbc.";
+        }
+        String type = jdbcType.getSimpleName();
+        if (this == MYSQL) {
+            if (jdbcType == java.sql.ResultSet.class) {
+                type = "result.ResultSetImpl";
+            } else if (jdbcType == java.sql.Connection.class || jdbcType == java.sql.Statement.class) {
+                type += "Impl";
+            } else if (jdbcType == java.sql.PreparedStatement.class) {
+                type = "ClientPreparedStatement";
+            }
+        } else if (this == MARIADB && jdbcType == java.sql.ResultSet.class) {
+            type = "client.result.Result";
+        } else if (this == MARIADB && jdbcType == java.sql.PreparedStatement.class) {
+            type = "BasePreparedStatement";
+        } else if (this == MARIADB && jdbcType == java.sql.CallableStatement.class) {
+            type = "BaseCallableStatement";
         }
         try {
-            return Class.forName(prefix + jdbcType.getSimpleName());
+            return Class.forName(prefix + type);
         } catch (final ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
@@ -344,6 +435,44 @@ public enum TestDatabase {
             throw new IllegalStateException("Missing " + name + "; run mvn -Pdocker-it verify");
         }
         return value;
+    }
+
+    /**
+     * Gets a query that can be prepared as a callable statement.
+     */
+    String callQuery() {
+        return this == H2 ? "{? = call ABS(?)}" : this == HSQLDB ? "CALL ABS(?)"
+                : this == MYSQL || this == MARIADB ? "{call DBCP_QUERY(?)}" : selectParameter();
+    }
+
+    /**
+     * Gets the SQL type for a large text payload.
+     *
+     * @return the type.
+     * @since 2.15.0
+     */
+    public String getLargeTextType() {
+        switch (this) {
+        case MYSQL:
+        case MARIADB:
+            return "LONGTEXT";
+        case ORACLE:
+            return "CLOB";
+        case SQLSERVER:
+            return "VARCHAR(MAX)";
+        default:
+            return "VARCHAR(100000)";
+        }
+    }
+
+    /**
+     * Gets the SQL type for a timestamp value.
+     *
+     * @return the type.
+     * @since 2.15.0
+     */
+    public String getTimestampType() {
+        return this == SQLSERVER ? "DATETIME2" : "TIMESTAMP";
     }
 
     /**

@@ -17,20 +17,8 @@
 
 package org.apache.commons.dbcp2;
 
-import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.provider.EnumSource;
-
 /**
- * Parameterizes tests over the supported embedded databases.
+ * Runs the common database contract against each selected database.
  */
-@ParameterizedClass(name = "{0}")
-@EnumSource(value = TestDatabase.class, names = {"H2", "HSQLDB"})
-public abstract class AbstractEmbeddedDatabaseTest {
-
-    /**
-     * Database used by this invocation.
-     */
-    @Parameter
-    protected TestDatabase database;
+class DatabaseConnectionTest extends AbstractDatabaseConnectionTest {
 }

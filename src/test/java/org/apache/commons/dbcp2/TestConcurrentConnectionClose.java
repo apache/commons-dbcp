@@ -66,7 +66,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests overlapping closes, including reborrowing before the original close finishes. */
-class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
+class TestConcurrentConnectionClose extends AbstractDatabaseTest {
 
     /** A traced resource that pauses closing before the delegate is returned to its pool. */
     private static final class CleanupTrace extends AbandonedTrace {
@@ -276,8 +276,7 @@ class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
                 return connection;
             }
         };
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(database.newUrl());
+        database.configure(cpds, database.newUrl());
         final InstanceKeyDataSource ds;
         final PoolFixture fixture;
         if (path == PoolPath.PER_USER) {
@@ -597,8 +596,7 @@ class TestConcurrentConnectionClose extends AbstractEmbeddedDatabaseTest {
     @Test
     void testCpdsCloseListenerCanCloseAndReborrow() throws Exception {
         final DriverAdapterCPDS cpds = new DriverAdapterCPDS();
-        cpds.setDriver(database.getDriverClassName());
-        cpds.setUrl(database.newUrl());
+        database.configure(cpds, database.newUrl());
         final PooledConnection pooled = cpds.getPooledConnection();
         try {
             final Connection first = pooled.getConnection();

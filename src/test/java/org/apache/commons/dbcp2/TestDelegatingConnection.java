@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link DelegatingConnection}.
  */
-public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
+public class TestDelegatingConnection extends AbstractDatabaseTest {
 
     /**
      * Delegate that will throw RTE on toString Used to validate fix for DBCP-241
@@ -86,10 +87,60 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
         databaseConnection = new DelegatingConnection<>(database.connect());
     }
 
+    /**
+     * A JDBC object factory that may report an unsupported feature.
+     */
+    @FunctionalInterface
+    private interface JdbcFactory {
+        Object create() throws SQLException;
+    }
+
+    /**
+     * Checks successful delegation or propagation of the driver's unsupported-feature exception.
+     */
+    private static void assertCreation(final JdbcFactory physical, final JdbcFactory wrapped) throws SQLException {
+        final Object expected;
+        try {
+            expected = physical.create();
+        } catch (final SQLException e) {
+            if (!(e instanceof SQLFeatureNotSupportedException) && !"0A000".equals(e.getSQLState())) {
+                throw e;
+            }
+            final SQLException actual = assertThrowsExactly(e.getClass(), wrapped::create);
+            assertEquals(e.getSQLState(), actual.getSQLState());
+            return;
+        }
+        try {
+            final Object actual = wrapped.create();
+            try {
+                assertNotNull(actual);
+                assertEquals(expected.getClass(), actual.getClass());
+            } finally {
+                free(actual);
+            }
+        } finally {
+            free(expected);
+        }
+    }
+
+    /**
+     * Frees the temporary JDBC values allocated by the factory checks.
+     */
+    private static void free(final Object value) throws SQLException {
+        if (value instanceof java.sql.Blob) {
+            ((java.sql.Blob) value).free();
+        } else if (value instanceof java.sql.Clob) {
+            ((java.sql.Clob) value).free();
+        } else if (value instanceof java.sql.Array) {
+            ((java.sql.Array) value).free();
+        } else if (value instanceof java.sql.SQLXML) {
+            ((java.sql.SQLXML) value).free();
+        }
+    }
+
     @Test
     void testAbort() throws Exception {
-        databaseConnection.abort(r -> {
-        });
+        databaseConnection.abort(Runnable::run);
     }
 
     @Test
@@ -159,6 +210,7 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testCommit() throws Exception {
+        databaseConnection.setAutoCommit(false);
         databaseConnection.commit();
     }
 
@@ -171,32 +223,38 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testCreateArrayOf() throws Exception {
-        assertNotNull(databaseConnection.createArrayOf("CHARACTER", new Object[] { "A", "B" }));
+        if (database == TestDatabase.SQLSERVER) {
+            // SQL Server reports unsupported array creation as a generic SQLException.
+            assertThrows(SQLException.class, () -> databaseConnection.createArrayOf("VARCHAR", new Object[] {"A", "B"}));
+            return;
+        }
+        assertCreation(() -> databaseConnection.getDelegate().createArrayOf("VARCHAR", new Object[] {"A", "B"}),
+                () -> databaseConnection.createArrayOf("VARCHAR", new Object[] {"A", "B"}));
     }
 
     @Test
     void testCreateBlob() throws Exception {
-        assertNotNull(databaseConnection.createBlob());
+        assertCreation(() -> databaseConnection.getDelegate().createBlob(), databaseConnection::createBlob);
     }
 
     @Test
     void testCreateClob() throws Exception {
-        assertNotNull(databaseConnection.createClob());
+        assertCreation(() -> databaseConnection.getDelegate().createClob(), databaseConnection::createClob);
     }
 
     @Test
     void testCreateNClob() throws Exception {
-        assertNotNull(databaseConnection.createNClob());
+        assertCreation(() -> databaseConnection.getDelegate().createNClob(), databaseConnection::createNClob);
     }
 
     @Test
     void testCreateSQLXML() throws Exception {
-        assertNotNull(databaseConnection.createSQLXML());
+        assertCreation(() -> databaseConnection.getDelegate().createSQLXML(), databaseConnection::createSQLXML);
     }
 
     @Test
     void testCreateStruct() throws Exception {
-        // Neither embedded driver supports SQL structured types.
+        // CHARACTER is not a user-defined SQL structured type.
         assertThrows(SQLException.class, () -> databaseConnection.createStruct("CHARACTER", new Object[] { "A", "B" }));
     }
 
@@ -216,7 +274,11 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testGetClientInfoString() throws Exception {
-        assertNull(databaseConnection.getClientInfo("xyz"));
+        if (database == TestDatabase.ORACLE) {
+            assertThrows(java.sql.SQLClientInfoException.class, () -> databaseConnection.getClientInfo("xyz"));
+        } else {
+            assertNull(databaseConnection.getClientInfo("xyz"));
+        }
     }
 
     @Test
@@ -236,12 +298,12 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testGetHoldability() throws Exception {
-        assertEquals(1, databaseConnection.getHoldability());
+        assertEquals(databaseConnection.getDelegate().getHoldability(), databaseConnection.getHoldability());
     }
 
     @Test
     void testGetNetworkTimeout() throws Exception {
-        assertEquals(0, databaseConnection.getNetworkTimeout());
+        assertEquals(databaseConnection.getDelegate().getNetworkTimeout(), databaseConnection.getNetworkTimeout());
     }
 
     @Test
@@ -311,11 +373,16 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
     void testReleaseSavepoint() throws Exception {
         databaseConnection.setAutoCommit(false);
         final Savepoint s = databaseConnection.setSavepoint();
-        databaseConnection.releaseSavepoint(s);
+        if (database == TestDatabase.ORACLE || database == TestDatabase.SQLSERVER) {
+            assertThrows(SQLFeatureNotSupportedException.class, () -> databaseConnection.releaseSavepoint(s));
+        } else {
+            databaseConnection.releaseSavepoint(s);
+        }
     }
 
     @Test
     void testRollback() throws Exception {
+        databaseConnection.setAutoCommit(false);
         databaseConnection.rollback();
     }
 
@@ -352,11 +419,11 @@ public class TestDelegatingConnection extends AbstractEmbeddedDatabaseTest {
     @Test
     void testSetNetworkTimeout() throws Exception {
         if (database == TestDatabase.HSQLDB) {
-            assertThrows(SQLFeatureNotSupportedException.class, () -> databaseConnection.setNetworkTimeout(Runnable::run, 1));
+            assertThrows(SQLFeatureNotSupportedException.class, () -> databaseConnection.setNetworkTimeout(Runnable::run, 30_000));
         } else {
-            databaseConnection.setNetworkTimeout(Runnable::run, 1);
+            databaseConnection.setNetworkTimeout(Runnable::run, 30_000);
         }
-        assertEquals(0, databaseConnection.getNetworkTimeout());
+        assertEquals(databaseConnection.getDelegate().getNetworkTimeout(), databaseConnection.getNetworkTimeout());
     }
 
     @Test

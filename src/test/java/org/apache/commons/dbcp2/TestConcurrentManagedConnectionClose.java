@@ -52,7 +52,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests ownership of managed delegates when close overlaps a transaction callback.
  */
-class TestConcurrentManagedConnectionClose extends AbstractEmbeddedDatabaseTest {
+class TestConcurrentManagedConnectionClose extends AbstractDatabaseTest {
 
     /**
      * Failures during delegate inspection or close must not leave the delegate attached.

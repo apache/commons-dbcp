@@ -43,7 +43,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests concurrent explicit and connection-driven statement cleanup.
  */
-class TestConcurrentStatementClose extends AbstractEmbeddedDatabaseTest {
+class TestConcurrentStatementClose extends AbstractDatabaseTest {
 
     /**
      * Cleanup failures must still leave the wrapper closed and its delegate detached.
@@ -78,7 +78,7 @@ class TestConcurrentStatementClose extends AbstractEmbeddedDatabaseTest {
      * Prepares a statement that uses a single reusable pool entry.
      */
     private PreparedStatement prepare(final Connection connection, final boolean callable) throws SQLException {
-        return callable ? connection.prepareCall("CALL ABS(?)") : connection.prepareStatement(database.selectParameter());
+        return callable ? connection.prepareCall(database.callQuery()) : connection.prepareStatement(database.selectParameter());
     }
 
     @ParameterizedTest
@@ -216,7 +216,12 @@ class TestConcurrentStatementClose extends AbstractEmbeddedDatabaseTest {
                         assertEquals(0, pool.getNumIdle());
                         assertFalse(next.isClosed());
                         assertThrows(SQLException.class, () -> prepare(nextConnection, callable));
-                        next.setInt(1, 42);
+                        if (callable && database == TestDatabase.H2) {
+                            ((CallableStatement) next).registerOutParameter(1, java.sql.Types.INTEGER);
+                            next.setInt(2, 42);
+                        } else {
+                            next.setInt(1, 42);
+                        }
                         try (ResultSet result = next.executeQuery()) {
                             assertTrue(result.next());
                             assertEquals(42, result.getInt(1));

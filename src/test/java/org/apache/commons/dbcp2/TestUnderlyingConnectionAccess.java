@@ -61,7 +61,7 @@ import org.junitpioneer.jupiter.ReadsSystemProperty;
  * Exercises delegate access through every pool guard and JDBC wrapper, with and without statement pooling and nested wrappers.
  */
 @ReadsSystemProperty
-class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
+class TestUnderlyingConnectionAccess extends AbstractDatabaseTest {
 
     private enum CloseWith {
         RESULT_SET, STATEMENT, CONNECTION
@@ -116,11 +116,11 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
             case PREPARED_NAMES:
                 return connection.prepareStatement(database.selectParameter(), new String[] {"ID"});
             case CALLABLE:
-                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL);
+                return connection.prepareCall(database.callQuery());
             case CALLABLE_TYPE:
-                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+                return connection.prepareCall(database.callQuery(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             case CALLABLE_HOLDABILITY:
-                return connection.prepareCall(database == TestDatabase.HSQLDB ? "CALL ABS(?)" : CALL_SQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+                return connection.prepareCall(database.callQuery(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
             default:
                 throw new IllegalStateException(name());
             }
@@ -128,7 +128,6 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
     }
 
     private static final AtomicInteger IDS = new AtomicInteger();
-    private static final String CALL_SQL = "{? = call ABS(?)}";
 
     private static void assertAccess(final Wrapper wrapper, final Class<?> standardType, final Class<?> driverType, final boolean allowed)
             throws SQLException {
@@ -209,7 +208,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
         dataSource.setDriver(database.getDriver());
         dataSource.setUrl(newUrl());
         dataSource.setUsername(database.getUser());
-        dataSource.setPassword("");
+        dataSource.setPassword(database.getPassword());
         dataSource.setAccessToUnderlyingConnectionAllowed(allowed);
         dataSource.setPoolPreparedStatements(poolStatements);
     }
@@ -233,7 +232,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
             dataSource.setUrl(newUrl());
             dataSource.setAccessToUnderlyingConnectionAllowed(allowed);
             dataSource.setPoolPreparedStatements(poolStatements);
-            final PooledConnection pooledConnection = dataSource.getPooledConnection(database.getUser(), "");
+            final PooledConnection pooledConnection = dataSource.getPooledConnection(database.getUser(), database.getPassword());
             return new Fixture(pooledConnection.getConnection(), pooledConnection::close, nested);
         }
         final GenericObjectPool<PoolableConnection> pool = newPool(poolStatements);
@@ -251,12 +250,11 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
     private ResultSet execute(final Statement statement) throws SQLException {
         if (statement instanceof CallableStatement) {
             final CallableStatement callable = (CallableStatement) statement;
-            if (database == TestDatabase.HSQLDB) {
-                // HyperSQL exposes this scalar function through its result set.
-                callable.setInt(1, -7);
-            } else {
+            if (database == TestDatabase.H2) {
                 callable.registerOutParameter(1, Types.INTEGER);
                 callable.setInt(2, -7);
+            } else {
+                callable.setInt(1, 7);
             }
             assertTrue(callable.execute());
             return callable.getResultSet();
@@ -272,6 +270,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
     private GenericObjectPool<PoolableConnection> newPool(final boolean poolStatements) throws SQLException {
         final Properties properties = new Properties();
         properties.setProperty("user", database.getUser());
+        properties.setProperty("password", database.getPassword());
         final PoolableConnectionFactory factory = new PoolableConnectionFactory(new DriverConnectionFactory(database.getDriver(), newUrl(), properties), null);
         factory.setPoolStatements(poolStatements);
         final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
@@ -375,8 +374,18 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
         try (Fixture fixture = createFixture(source, allowed, poolStatements, nested)) {
             final Connection connection = fixture.connection;
             assertConnectionAccess(connection, allowed);
-            assertFalse(connection.isWrapperFor(String.class));
+            if (database == TestDatabase.ORACLE && allowed) {
+                // Oracle rejects non-interface arguments to isWrapperFor rather than returning false.
+                assertThrows(SQLException.class, () -> connection.isWrapperFor(String.class));
+            } else {
+                assertFalse(connection.isWrapperFor(String.class));
+            }
             assertThrows(SQLException.class, () -> connection.unwrap(String.class));
+            if (database == TestDatabase.POSTGRESQL && kind == StatementKind.PREPARED_INDEXES) {
+                // PostgreSQL supports generated-key column names, but not column indexes.
+                assertThrows(SQLException.class, () -> kind.create(connection, database));
+                return;
+            }
             try (Statement statement = kind.create(connection, database)) {
                 assertSame(connection, statement.getConnection());
                 assertStatementAccess(statement, allowed);
@@ -404,7 +413,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
             if (!allowed && !nested) {
                 assertNull(((DelegatingDatabaseMetaData) metadata).getDelegate());
             }
-            final ResultSet tables = metadata.getTables(null, null, null, null);
+            final ResultSet tables = metadata.getTables(connection.getCatalog(), connection.getSchema(), "DBCP_%", new String[] {"TABLE"});
             try (ResultSet ignored = tables) {
                 assertResultSetAccess(tables, allowed);
                 assertNull(tables.getStatement());
@@ -418,8 +427,9 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
     void testGeneratedKeys(final boolean allowed) throws Exception {
         try (Fixture fixture = createFixture(Source.BASIC, allowed, true, true);
                 Statement setup = fixture.connection.createStatement()) {
-            setup.execute("CREATE TABLE T (ID BIGINT GENERATED ALWAYS AS IDENTITY (START WITH 1), VALUE_COLUMN INT)");
-            try (PreparedStatement statement = fixture.connection.prepareStatement("INSERT INTO T (VALUE_COLUMN) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            final String table = "DBCP_" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 20);
+            setup.execute("CREATE TABLE " + table + " (ID " + database.getIdentityColumnDefinition() + " PRIMARY KEY, VALUE_COLUMN INT)");
+            try (PreparedStatement statement = database.prepareInsertWithGeneratedKeys(fixture.connection, "INSERT INTO " + table + " (VALUE_COLUMN) VALUES (?)")) {
                 statement.setInt(1, 9);
                 assertEquals(1, statement.executeUpdate());
                 try (ResultSet keys = statement.getGeneratedKeys()) {
@@ -428,13 +438,15 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
                     assertSame(statement, keys.getStatement());
                     assertResultSetAccess(keys, allowed);
                 }
+            } finally {
+                setup.execute("DROP TABLE " + table);
             }
         }
     }
 
     @Test
     void testGuardHookAndInternalAccess() throws Exception {
-        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
+        try (Connection physical = database.connect();
                 DelegatingConnection<Connection> connection = new DelegatingConnection<Connection>(physical) {
                     @Override
                     protected boolean isAccessToUnderlyingConnectionAllowed() {
@@ -472,7 +484,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
                 assertTrue(connection.isClosed());
             }
             dataSource.invalidateConnection(null);
-            try (Connection foreign = database.getDriver().connect(newUrl(), new Properties())) {
+            try (Connection foreign = database.connect()) {
                 assertThrows(IllegalStateException.class, () -> dataSource.invalidateConnection(foreign));
             }
         }
@@ -533,7 +545,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
 
     @Test
     void testParentlessWrappers() throws Exception {
-        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
+        try (Connection physical = database.connect();
                 DelegatingStatement statement = new DelegatingStatement(null, physical.createStatement());
                 ResultSet resultSet = statement.executeQuery(database.select(7))) {
             assertStatementAccess(statement, true);
@@ -550,7 +562,7 @@ class TestUnderlyingConnectionAccess extends AbstractEmbeddedDatabaseTest {
     @ClearSystemProperty(key = PoolingDriver.ACCESS_TO_UNDERLYING_CONNECTION_ALLOWED_SYSTEM_PROPERTY)
     void testPlainWrappersAndDriverDefault() throws Exception {
         assertTrue(new PoolingDriver().isAccessToUnderlyingConnectionAllowed());
-        try (Connection physical = database.getDriver().connect(newUrl(), new Properties());
+        try (Connection physical = database.connect();
                 DelegatingConnection<Connection> connection = new DelegatingConnection<>(physical);
                 Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(database.select(7))) {
             assertConnectionAccess(connection, true);

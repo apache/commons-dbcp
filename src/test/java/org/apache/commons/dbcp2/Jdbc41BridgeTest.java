@@ -19,9 +19,9 @@ package org.apache.commons.dbcp2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -29,9 +29,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
-import java.sql.Types;
+import java.util.concurrent.Executor;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,7 +38,7 @@ import org.mockito.Mockito;
 /**
  * Tests {@link Jdbc41Bridge}.
  */
-class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
+class Jdbc41BridgeTest extends AbstractDatabaseTest {
 
     private Connection getConnection() throws SQLException {
         return database.connect();
@@ -49,20 +48,21 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
     @Test
     void testAbort() throws SQLException {
         // Normal
-        try (Connection conn = getConnection()) {
-            Jdbc41Bridge.abort(conn, r -> {
-                // empty for now
-            });
+        try (Connection conn = getConnection(); Connection physical = getConnection()) {
+            physical.abort(Runnable::run);
+            Jdbc41Bridge.abort(conn, Runnable::run);
+            assertEquals(physical.isClosed(), conn.isClosed());
         }
         // Force AbstractMethodError
         try (Connection conn = getConnection()) {
-            final Connection spy = Mockito.spy(conn);
-            Mockito.doThrow(new AbstractMethodError()).when(spy).abort(r -> {
-                // empty for now
-            });
-            Jdbc41Bridge.abort(spy, r -> {
-                // empty for now
-            });
+            final Connection legacy = new DelegatingConnection<Connection>(conn) {
+                @Override
+                public void abort(final Executor executor) {
+                    throw new AbstractMethodError();
+                }
+            };
+            Jdbc41Bridge.abort(legacy, Runnable::run);
+            assertTrue(conn.isClosed());
         }
     }
 
@@ -88,7 +88,7 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
     void testGeneratedKeyAlwaysReturned() throws SQLException {
         // Normal
         try (Connection conn = getConnection()) {
-            assertTrue(Jdbc41Bridge.generatedKeyAlwaysReturned(conn.getMetaData()));
+            assertEquals(conn.getMetaData().generatedKeyAlwaysReturned(), Jdbc41Bridge.generatedKeyAlwaysReturned(conn.getMetaData()));
         }
         // Cannot mock a final class
         // Force AbstractMethodError
@@ -108,66 +108,70 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
             } else {
                 Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_000);
             }
-            // Embedded drivers do not use a network timeout.
-            assertEquals(0, Jdbc41Bridge.getNetworkTimeout(conn));
+            // Check the behavior reported by the selected driver.
+            assertEquals(conn.getNetworkTimeout(), Jdbc41Bridge.getNetworkTimeout(conn));
         }
+    }
+
+    /**
+     * A typed ResultSet lookup.
+     */
+    @FunctionalInterface
+    private interface JdbcLookup {
+        Object get() throws SQLException;
+    }
+
+    /**
+     * Checks typed values and driver-specific conversion exceptions against the JDBC implementation.
+     */
+    private static void assertLookup(final JdbcLookup physical, final JdbcLookup bridge) throws SQLException {
+        final Object expected;
+        try {
+            expected = physical.get();
+        } catch (final SQLException e) {
+            final SQLException actual = assertThrowsExactly(e.getClass(), bridge::get);
+            assertEquals(e.getSQLState(), actual.getSQLState());
+            return;
+        }
+        assertEquals(expected, bridge.get());
+    }
+
+    /**
+     * Finds a metadata type whose JDBC code also fits in a byte.
+     */
+    private static void findType(final ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            final int type = rs.getInt("DATA_TYPE");
+            if (type >= Byte.MIN_VALUE && type <= Byte.MAX_VALUE) {
+                return;
+            }
+        }
+        org.junit.jupiter.api.Assertions.fail("No JDBC type with a byte-sized code");
     }
 
     @Test
     void testGetObjectIndex() throws SQLException {
-        // Normal
-        try (Connection conn = getConnection();
-                ResultSet rs = conn.getMetaData().getTypeInfo()) {
-            // Metadata ordering and the range of type codes differ between drivers.
-            while (rs.next() && rs.getInt("DATA_TYPE") != Types.INTEGER) {
-                // Find a type whose code also fits in a byte.
+        try (Connection conn = getConnection(); ResultSet rs = conn.getMetaData().getTypeInfo()) {
+            findType(rs);
+            assertLookup(() -> rs.getObject(1, String.class), () -> Jdbc41Bridge.getObject(rs, 1, String.class));
+            for (Class<?> type : new Class<?>[] {Integer.class, Long.class, Double.class, Float.class, Byte.class, BigDecimal.class}) {
+                assertLookup(() -> rs.getObject(2, type), () -> Jdbc41Bridge.getObject(rs, 2, type));
             }
-            assertEquals(Types.INTEGER, rs.getInt("DATA_TYPE"));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 1, String.class));
-            //
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Integer.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Long.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Double.class));
-            if (database == TestDatabase.HSQLDB) {
-                // HyperSQL does not implement typed retrieval as Float.
-                assertThrows(SQLSyntaxErrorException.class, () -> Jdbc41Bridge.getObject(rs, 2, Float.class));
-            } else {
-                assertNotNull(Jdbc41Bridge.getObject(rs, 2, Float.class));
-            }
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, Byte.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 2, BigDecimal.class));
-            //
-            assertNotNull(Jdbc41Bridge.getObject(rs, 7, Short.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, 8, Boolean.class));
+            assertLookup(() -> rs.getObject(7, Short.class), () -> Jdbc41Bridge.getObject(rs, 7, Short.class));
+            assertLookup(() -> rs.getObject(8, Boolean.class), () -> Jdbc41Bridge.getObject(rs, 8, Boolean.class));
         }
     }
 
     @Test
     void testGetObjectName() throws SQLException {
-        // Normal
-        try (Connection conn = getConnection();
-                ResultSet rs = conn.getMetaData().getTypeInfo()) {
-            // Metadata ordering and the range of type codes differ between drivers.
-            while (rs.next() && rs.getInt("DATA_TYPE") != Types.INTEGER) {
-                // Find a type whose code also fits in a byte.
+        try (Connection conn = getConnection(); ResultSet rs = conn.getMetaData().getTypeInfo()) {
+            findType(rs);
+            assertLookup(() -> rs.getObject("TYPE_NAME", String.class), () -> Jdbc41Bridge.getObject(rs, "TYPE_NAME", String.class));
+            for (Class<?> type : new Class<?>[] {Integer.class, Long.class, Double.class, Float.class, Byte.class, BigDecimal.class}) {
+                assertLookup(() -> rs.getObject("DATA_TYPE", type), () -> Jdbc41Bridge.getObject(rs, "DATA_TYPE", type));
             }
-            assertEquals(Types.INTEGER, rs.getInt("DATA_TYPE"));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "TYPE_NAME", String.class));
-            //
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Integer.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Long.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Double.class));
-            if (database == TestDatabase.HSQLDB) {
-                // HyperSQL does not implement typed retrieval as Float.
-                assertThrows(SQLSyntaxErrorException.class, () -> Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
-            } else {
-                assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Float.class));
-            }
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", Byte.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "DATA_TYPE", BigDecimal.class));
-            //
-            assertNotNull(Jdbc41Bridge.getObject(rs, "NULLABLE", Short.class));
-            assertNotNull(Jdbc41Bridge.getObject(rs, "CASE_SENSITIVE", Boolean.class));
+            assertLookup(() -> rs.getObject("NULLABLE", Short.class), () -> Jdbc41Bridge.getObject(rs, "NULLABLE", Short.class));
+            assertLookup(() -> rs.getObject("CASE_SENSITIVE", Boolean.class), () -> Jdbc41Bridge.getObject(rs, "CASE_SENSITIVE", Boolean.class));
         }
     }
 
@@ -180,7 +184,8 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
             if (database == TestDatabase.HSQLDB) {
                 assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.getParentLogger(database.createDataSource(database.newUrl())));
             } else {
-                assertNull(Jdbc41Bridge.getParentLogger(database.createDataSource(database.newUrl())));
+                final javax.sql.DataSource source = database.createDataSource(database.newUrl());
+                assertEquals(source.getParentLogger(), Jdbc41Bridge.getParentLogger(source));
             }
         }
     }
@@ -190,7 +195,7 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
     void testGetSchema() throws SQLException {
         // Normal
         try (Connection conn = getConnection()) {
-            assertNotNull(Jdbc41Bridge.getSchema(conn));
+            assertEquals(conn.getSchema(), Jdbc41Bridge.getSchema(conn));
             final Connection spy = Mockito.spy(conn);
             Mockito.when(spy.getSchema()).thenThrow(AbstractMethodError.class);
             assertNull(Jdbc41Bridge.getSchema(spy));
@@ -211,13 +216,13 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
         // Normal
         try (Connection conn = getConnection();
                 Statement stmt = conn.createStatement()) {
-            // Embedded drivers do not use a network timeout.
+            // Check the behavior reported by the selected driver.
             if (database == TestDatabase.HSQLDB) {
-                assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_0000));
+                assertThrows(SQLFeatureNotSupportedException.class, () -> Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_000));
             } else {
-                Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_0000);
+                Jdbc41Bridge.setNetworkTimeout(conn, Runnable::run, 30_000);
             }
-            assertEquals(0, Jdbc41Bridge.getNetworkTimeout(conn));
+            assertEquals(conn.getNetworkTimeout(), Jdbc41Bridge.getNetworkTimeout(conn));
         }
     }
 
@@ -227,7 +232,7 @@ class Jdbc41BridgeTest extends AbstractEmbeddedDatabaseTest {
         try (Connection conn = getConnection();
                 Statement stmt = conn.createStatement()) {
             Jdbc41Bridge.setSchema(conn, Jdbc41Bridge.getSchema(conn));
-            final String expected = "PUBLIC";
+            final String expected = conn.getSchema();
             Jdbc41Bridge.setSchema(conn, expected);
             assertEquals(expected, Jdbc41Bridge.getSchema(conn));
         }

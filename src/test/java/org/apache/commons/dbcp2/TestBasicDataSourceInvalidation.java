@@ -45,7 +45,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests termination and identity-based traversal when invalidating wrapped connections.
  */
-class TestBasicDataSourceInvalidation extends AbstractEmbeddedDatabaseTest {
+class TestBasicDataSourceInvalidation extends AbstractDatabaseTest {
 
     /** Distinct instances compare equal, but must remain distinct nodes in a delegate chain. */
     private static final class EqualConnection extends DelegatingConnection<Connection> {
@@ -122,7 +122,7 @@ class TestBasicDataSourceInvalidation extends AbstractEmbeddedDatabaseTest {
     void setUp() throws SQLException {
         dataSource = new BasicDataSource();
         dataSource.setDriver(database.getDriver());
-        dataSource.setUrl(database.newUrl());
+        database.configure(dataSource, database.newUrl());
         pooledConnection = dataSource.getConnection();
     }
 

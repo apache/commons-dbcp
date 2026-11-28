@@ -33,7 +33,7 @@
     <section name="Docker databases">
       <p>
         With a running Docker daemon, use <code>mvn -B -ntp -Pdocker-it verify</code> to also run the shared
-        connection-pool tests against PostgreSQL, MySQL, MariaDB, Oracle Database Express Edition (XE),
+        database regression tests against PostgreSQL, MySQL, MariaDB, Oracle Database Express Edition (XE),
         and Microsoft SQL Server. The
         <a href="https://dmp.fabric8.io/">Docker Maven plugin</a> starts the databases, waits for the final
         server startup log after initialization, and passes dynamically allocated ports to Failsafe.
@@ -74,13 +74,33 @@ mvn -B -ntp -Pdocker-it "-Ddbcp.test.databases=oracle,sqlserver" verify]]></sour
         are disabled for this partial suite; the main CI build enforces the full-suite coverage thresholds.
       </p>
       <source><![CDATA[mvn -B -ntp -Pdocker-it -DskipTests "-Djacoco.skip=true" "-Ddbcp.test.databases=mariadb" verify]]></source>
+      <p>To select one shared test class for a Docker run:</p>
+      <source><![CDATA[mvn -B -ntp -Pdocker-it -DskipTests "-Djacoco.skip=true" "-Ddbcp.test.databases=postgresql" "-Dit.test=TestUnderlyingConnectionAccess" verify]]></source>
       <p>
         The shared tests cover pool reuse, validation, invalidation, state restoration, rollback on return,
         CPDS logical handles, prepared statements, generated keys, and managed local/XA transactions with
-        Geronimo and Narayana. XA commit tests enlist a second resource to exercise two-phase commit.
+        Geronimo and Narayana. They also cover concurrent connection and statement close, terminal data-source
+        shutdown, cached state, JDBC bridge methods, and access to underlying driver objects. The same test
+        classes and parameter combinations run against the embedded engines and the selected Docker databases.
+        Driver-specific unsupported operations are checked explicitly. XA commit tests enlist a second resource
+        to exercise two-phase commit.
         PostgreSQL enables <code>max_prepared_transactions</code> for these tests. Oracle grants the test
         user access to the XA recovery views and package. SQL Server installs the JDBC XA procedures
         and grants the test login membership in <code>SqlJDBCXAUser</code> before running the tests.
+      </p>
+      <p>
+        Database tests inherit <code>AbstractDatabaseTest</code>, which provides the <code>database</code> JUnit tag
+        and a common argument provider. Surefire sets <code>dbcp.test.mode=embedded</code>; Failsafe sets
+        <code>dbcp.test.mode=docker</code> through JUnit configuration parameters and includes only the tagged
+        tests. Failsafe discovers these shared classes even though their names end in <code>Test</code> or
+        start with <code>Test</code>. Ordinary mock-based unit tests remain in Surefire. Selecting Docker
+        aliases does not change the embedded databases exercised by Surefire.
+      </p>
+      <p>
+        Tables and temporary accounts use unique names and are removed after their pools close. Password-change
+        tests use disposable accounts instead of modifying the common test user. MySQL and MariaDB initialize
+        a small stored procedure for callable-statement tests. Oracle SQLXML tests include the driver's XML
+        support libraries. All server initialization uses JDBC.
       </p>
       <p>
         Image versions are pinned in <code>dbcp.docker.postgresql.image</code>,
